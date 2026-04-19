@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD-4 ทะเบียนพนักงาน - Sangwijit ERP Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F8FAFC;
+            color: #1F2937;
+            min-width: 1440px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: #1E3A5F;
+            color: white;
+            overflow-y: auto;
+            padding: 24px 0;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            padding: 0 16px 24px;
+            font-weight: 700;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .sidebar-section {
+            margin-bottom: 16px;
+        }
+
+        .sidebar-section-title {
+            padding: 8px 16px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .sidebar-item {
+            padding: 10px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-item.active {
+            background: #2563EB;
+            font-weight: 600;
+        }
+
+        .sidebar-item .star {
+            margin-left: auto;
+            font-size: 14px;
+        }
+
+        /* Main Content */
+        .main-container {
+            margin-left: 240px;
+            min-height: 100vh;
+            padding: 24px;
+            background: #F8FAFC;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .sync-dot {
+            width: 8px;
+            height: 8px;
+            background: #10B981;
+            border-radius: 50%;
+        }
+
+        .sync-btn {
+            padding: 6px 12px;
+            background: #F3F4F6;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        .sync-btn:hover {
+            background: #E5E7EB;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #6B7280;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-subtext {
+            font-size: 12px;
+            color: #9CA3AF;
+        }
+
+        .stat-value.green { color: #10B981; }
+        .stat-value.amber { color: #F59E0B; }
+        .stat-value.red { color: #EF4444; }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #E5E7EB;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 8px 12px;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            cursor: pointer;
+        }
+
+        .btn-add {
+            padding: 8px 16px;
+            background: #2563EB;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-add:hover {
+            background: #1D4ED8;
+        }
+
+        /* Table Container */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #E5E7EB;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: #F9FAFB;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #6B7280;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        tbody tr:hover {
+            background: #F1F5F9;
+            cursor: pointer;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge.active {
+            background: #DBEAFE;
+            color: #0369A1;
+        }
+
+        .badge.trial {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge.leave {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .badge.pause {
+            background: #F3F4F6;
+            color: #6B7280;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 4px 8px;
+            background: #F3F4F6;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #E5E7EB;
+        }
+
+        /* Detail Panel */
+        .detail-panel {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 450px;
+            height: 100vh;
+            background: white;
+            border-left: 1px solid #E5E7EB;
+            box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            z-index: 200;
+            transform: translateX(450px);
+            transition: transform 0.3s;
+            display: none;
+        }
+
+        .detail-panel.open {
+            transform: translateX(0);
+            display: block;
+        }
+
+        .detail-header {
+            padding: 20px;
+            border-bottom: 1px solid #E5E7EB;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .detail-close {
+            font-size: 20px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #6B7280;
+        }
+
+        .detail-photo-section {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .detail-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #D1D5DB;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+        }
+
+        .detail-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .detail-id {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        /* Tabs */
+        .detail-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 16px 20px;
+            border-bottom: 1px solid #E5E7EB;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 8px 12px;
+            background: #F3F4F6;
+            border: none;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .tab-btn.active {
+            background: #2563EB;
+            color: white;
+        }
+
+        .tab-btn:hover {
+            background: #E5E7EB;
+        }
+
+        .tab-btn.active:hover {
+            background: #1D4ED8;
+        }
+
+        .detail-content {
+            padding: 20px;
+        }
+
+        .detail-row {
+            margin-bottom: 16px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #6B7280;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 13px;
+            color: #1F2937;
+        }
+
+        .detail-value.masked {
+            letter-spacing: 2px;
+        }
+
+        .role-badge {
+            display: inline-block;
+            background: #DBEAFE;
+            color: #0369A1;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #E5E7EB;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #10B981;
+            border-radius: 3px;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -28px;
+            top: 2px;
+            width: 12px;
+            height: 12px;
+            background: #2563EB;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px #2563EB;
+        }
+
+        .timeline-date {
+            font-size: 12px;
+            color: #6B7280;
+            margin-bottom: 4px;
+        }
+
+        .timeline-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 4px;
+        }
+
+        .timeline-desc {
+            font-size: 12px;
+            color: #9CA3AF;
+        }
+
+        .kpi-score {
+            display: inline-block;
+            background: #DBEAFE;
+            color: #0369A1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .kpi-chart {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            align-items: flex-end;
+            height: 40px;
+        }
+
+        .kpi-bar {
+            flex: 1;
+            background: #DBEAFE;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .kpi-bar.q1 { height: 60%; }
+        .kpi-bar.q2 { height: 75%; }
+        .kpi-bar.q3 { height: 85%; }
+        .kpi-bar.q4 { height: 100%; }
+
+        .kpi-label {
+            font-size: 10px;
+            text-align: center;
+            margin-top: 4px;
+            color: #6B7280;
+        }
+
+        /* Quick Nav Float */
+        .quick-nav {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            background: #1E3A5F;
+            color: white;
+            width: 200px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 150;
+            overflow: hidden;
+        }
+
+        .quick-nav-btn {
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            text-align: left;
+            transition: background 0.2s;
+        }
+
+        .quick-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .quick-nav-btn.active {
+            background: #2563EB;
+            font-weight: 600;
+        }
+
+        .quick-nav-list {
+            display: none;
+            background: white;
+            color: #1F2937;
+            max-height: 300px;
+            overflow-y: auto;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .quick-nav-list.show {
+            display: block;
+        }
+
+        .quick-nav-item {
+            padding: 8px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #F3F4F6;
+            transition: background 0.2s;
+        }
+
+        .quick-nav-item:hover {
+            background: #F9FAFB;
+        }
+
+        .quick-nav-item.active {
+            background: #DBEAFE;
+            color: #0369A1;
+            font-weight: 600;
+        }
+
+        .quick-nav-item .star {
+            margin-left: auto;
+            color: #FCD34D;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" style="width:240px;background:#1E3A5F;overflow-y:auto;position:fixed;height:100vh;left:0;top:0;padding:16px 12px;z-index:100;font-family:'Inter',sans-serif;">
+  <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;margin-bottom:20px">
+    <div style="font-size:20px;font-weight:700;width:32px;height:32px;background:#2563EB;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0">ส</div>
+    <div style="font-size:11px;font-weight:600;color:#fff;line-height:1.3">Sangwijit<br>ERP Portal</div>
+  </div>
+  <a href="portal-mockup-index.html" style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:6px;text-decoration:none;color:#9CA3AF;font-size:12px;margin-bottom:16px;background:rgba(255,255,255,0.05)" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='#9CA3AF'">🏠 Index — ภาพรวมทั้งหมด</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:6px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">การขาย (Sales)</div>
+    <a href="slq-sales-queue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-Q Sales Queue</a>
+<a href="sl1-quotation-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-1 ใบเสนอราคา</a>
+  <a href="sl2-reservation-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-2 ใบจอง</a>
+  <a href="sl3-deposit-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-3 ใบมัดจำ</a>
+  <a href="sl4-invoice-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-4 บิลขาย</a>
+  <a href="sl5-crm-followup-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-5 ติดตาม CRM</a>
+  <a href="sl6-promotion-setup-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-6 โปรโมชั่น</a>
+  <a href="sl7-sales-report-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-7 รายงานยอดขาย</a>
+  <a href="cm1-commission-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CM-1 Commission</a>
+  <a href="cl1-claims-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CL-1 Claims</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">คลังสินค้า (Warehouse)</div>
+  <a href="wh-queue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-Q คิวรับสินค้า</a>
+  <a href="wh1-grn-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-1 GRN รับสินค้า</a>
+  <a href="wh2-stock-transfer-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-2 โอนย้ายสต็อก</a>
+  <a href="wh3-stock-count-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-3 นับสต็อก</a>
+  <a href="whr-goods-issue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-R เบิกสินค้า</a>
+
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">จัดซื้อ (Purchase)</div>
+    <a href="poq-purchase-queue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">PO-Q คิวจัดซื้อ</a>
+<a href="po4-purchase-order-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">PO-4 ใบสั่งซื้อ</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">การเงิน / บัญชี</div>
+  <a href="fi1-ar-receive-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-1 รับชำระ AR</a>
+  <a href="fi2-ap-payment-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-2 จ่ายชำระ AP</a>
+  <a href="fi3-tax-reconciliation-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-3 กระทบยอดภาษี</a>
+  <a href="fi4-expense-wht-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-4 ค่าใช้จ่าย/WHT</a>
+  <a href="fi5-ar-audit-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-5 ตรวจสอบ AR</a>
+  <a href="tr1-treasury-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">TR-1 Treasury</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">บริหารพื้นที่ (SM)</div>
+  <a href="sm1-sku-slot-planner-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SM-1 SKU Slot Planner</a>
+  <a href="sm2-sku-health-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SM-2 SKU Health</a>
+  <a href="sm3-vendor-report-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SM-3 Vendor Report</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">ศูนย์บริการ (Service)</div>
+  <a href="sv1-service-queue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SV-1 คิวงานซ่อม</a>
+  <a href="sv2-service-invoice-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SV-2 ใบแจ้งหนี้บริการ</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">จัดส่ง / ผู้บริหาร</div>
+  <a href="dl1-delivery-planning-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">DL-1 วางแผนจัดส่ง</a>
+  <a href="ex1-executive-dashboard-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">EX-1 Dashboard ผู้บริหาร</a>
+  <a href="rp1-report-center-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">RP-1 Report Center</a>
+  <a href="cf1-rbac-permission-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-1 สิทธิ์ RBAC</a>
+  <a href="ap1-approval-center-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">AP-1 ศูนย์อนุมัติ</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">ตั้งค่าระบบ (CF-2)</div>
+    <a href="cf2-config-hub-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2 Hub ตั้งค่า</a>
+    <a href="cf2-1-tax-setup-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.1 ภาษี (BC)</a>
+    <a href="cf2-2-number-series-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.2 Running No. (BC)</a>
+    <a href="cf2-5-tech-template-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.5 Template ช่าง</a>
+    <a href="cf2-6-approval-matrix-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.6 Approval Matrix</a>
+    <a href="cf2-7-doc-template-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.7 Doc Template</a>
+    <a href="cf2-9-general-parameter-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.9 ค่าตั้งต้น (BC)</a>
+
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">Master Data</div>
+  <a href="md1-item-master-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-1 ทะเบียนสินค้า</a>
+  <a href="md2-customer-master-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-2 ทะเบียนลูกค้า</a>
+  <a href="md3-vendor-master-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-3 ทะเบียน Vendor</a>
+  <a href="md4-employee-master-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-4 ทะเบียนพนักงาน</a>
+  <a href="md5-branch-warehouse-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-5 สาขา & คลัง</a>
+
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">Shared Components</div>
+  <a href="sc1-customer-search-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SC-1 ค้นหาลูกค้า</a>
+  <a href="sc2-item-search-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SC-2 ค้นหาสินค้า</a>
+  <a href="sc7-timeline-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SC-7 Timeline</a>
+</div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>ทะเบียนพนักงาน</h1>
+            <div class="sync-status">
+                <div class="sync-dot"></div>
+                <span>ซิงค์ล่าสุด: 14 เม.ย. 2569 08:30</span>
+                <button class="sync-btn">🔄 Sync Now</button>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">พนักงานทั้งหมด</div>
+                <div class="stat-value">148</div>
+                <div class="stat-subtext">คน</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">ปฏิบัติงาน</div>
+                <div class="stat-value green">142</div>
+                <div class="stat-subtext">95.9%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">ทดลองงาน</div>
+                <div class="stat-value amber">4</div>
+                <div class="stat-subtext">2.7%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">ลาออก/พักงาน</div>
+                <div class="stat-value red">2</div>
+                <div class="stat-subtext">1.4%</div>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <input type="text" class="search-input" placeholder="ค้นหาชื่อ/รหัสพนักงาน">
+            <select class="filter-select">
+                <option>สาขา: ทั้งหมด</option>
+                <option>สาขาหลัก - กรุงเทพ</option>
+                <option>สาขา 2 - เชียงใหม่</option>
+                <option>สาขา 3 - ขอนแก่น</option>
+                <option>สาขา 4 - ชลบุรี</option>
+            </select>
+            <select class="filter-select">
+                <option>แผนก: ทั้งหมด</option>
+                <option>ขาย</option>
+                <option>คลัง</option>
+                <option>จัดซื้อ</option>
+                <option>บัญชี</option>
+                <option>บริการ</option>
+                <option>จัดส่ง</option>
+                <option>IT</option>
+                <option>บริหาร</option>
+            </select>
+            <select class="filter-select">
+                <option>สถานะ: ทั้งหมด</option>
+                <option>ปฏิบัติงาน</option>
+                <option>ทดลองงาน</option>
+                <option>ลาออก</option>
+                <option>พักงาน</option>
+            </select>
+            <button class="btn-add">+ เพิ่มพนักงาน</button>
+        </div>
+
+        <!-- Employee Table -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>รหัส</th>
+                        <th>ชื่อ-นามสกุล</th>
+                        <th>ตำแหน่ง</th>
+                        <th>แผนก</th>
+                        <th>สาขา</th>
+                        <th>วันเริ่มงาน</th>
+                        <th>สถานะ</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onclick="openDetail('EMP-001')">
+                        <td>EMP-001</td>
+                        <td>สิทธิพร นาควัฒน์</td>
+                        <td>ผู้จัดการขาย</td>
+                        <td>ขาย</td>
+                        <td>สาขาหลัก</td>
+                        <td>01 มค. 2562</td>
+                        <td><span class="badge active">ปฏิบัติงาน</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn">ดู</button>
+                                <button class="action-btn">แก้ไข</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EMP-002</td>
+                        <td>วรรณษา สินศิริ</td>
+                        <td>ผู้จัดการขาย</td>
+                        <td>ขาย</td>
+                        <td>สาขา 2</td>
+                        <td>15 เม.ย. 2562</td>
+                        <td><span class="badge active">ปฏิบัติงาน</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn">ดู</button>
+                                <button class="action-btn">แก้ไข</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EMP-003</td>
+                        <td>กิตติ เจริงรัตน์</td>
+                        <td>เจ้าหน้าที่ขาย</td>
+                        <td>ขาย</td>
+                        <td>สาขาหลัก</td>
+                        <td>03 มิ.ย. 2565</td>
+                        <td><span class="badge trial">ทดลองงาน</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn">ดู</button>
+                                <button class="action-btn">แก้ไข</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EMP-004</td>
+                        <td>สมศรี ศิริสวัสดิ์</td>
+                        <td>ผู้จัดการคลัง</td>
+                        <td>คลัง</td>
+                        <td>สาขาหลัก</td>
+                        <td>20 ม.ค. 2562</td>
+                        <td><span class="badge active">ปฏิบัติงาน</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn">ดู</button>
+                                <button class="action-btn">แก้ไข</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EMP-005</td>
+                        <td>นิตย์ มีชัยชนะ</td>
+                        <td>เจ้าหน้าที่คลัง</td>
+                        <td>คลัง</td>
+                        <td>สาขา 3</td>
+                        <td>12 กพ. 2564</td>
+                        <td><span class="badge active">ปฏิบัติงาน</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn">ดู</button>
+                                <button class="action-btn">แก้ไข</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EMP-006</td>
+                        <td>ประกอบ วรรณศิริ</td>
+                        <td>เจ้าหน้าที่จัดซื้อ</td>
+                        <td>จัดซื้อ</td>
+                        <td>สาขาหลัก</td>
+                        <td>25 มี.ค. 2563</td>
+                        <td><span class="badge active">ปฏิบัติงาน</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn">ดู</button>
+                                <button class="action-btn">แก้ไข</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EMP-007</td>
+                        <td>ศรีเพ็ญ ผลเดช</td>
+                        <td>หัวหน้าบัญชี</td>
+                        <td>บัญชี</td>
+                        <td>สาขาหลัก</td>
+                        <td>10 ก.ค. 2561</td>
+                        <td><span class="badge active">ปฏิบัติงาน</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn">ดู</button>
+                                <button class="action-btn">แก้ไข</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EMP-008</td>
+                        <td>วิชัย กฤษณสุนท์</td>
+                        <td>เจ้าหน้าที่บัญชี</td>
+                        <td>บัญชี</td>
+                        <td>สาขาหลัก</td>
+                        <td>18 เม.ย. 2564</td>
+                        <td><span class="badge active">ปฏิบัติงาน</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn">ดู</button>
+                                <button class="action-btn">แก้ไข</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EMP-009</td>
+                        <td>ชนกันท์ รักษ์พัฒน์</td>
+                        <td>Technician</td>
+                        <td>บริการ</td>
+                        <td>สาขา 2</td>
+                        <td>05 ก.ย. 2564</td>
+                        <td><span class="badge active">ปฏิบัติงาน</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn">ดู</button>
+                                <button class="action-btn">แก้ไข</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EMP-010</td>
+                        <td>อนิษฐ จิรสิทธิ์</td>
+                        <td>ผู้จัดส่ง</td>
+                        <td>จัดส่ง</td>
+                        <td>สาขาหลัก</td>
+                        <td>22 พ.ย. 2563</td>
+                        <td><span class="badge leave">ลาออก</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn">ดู</button>
+                                <button class="action-btn">แก้ไข</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EMP-011</td>
+                        <td>สาธิต พรหมรักษ์</td>
+                        <td>IT Manager</td>
+                        <td>IT</td>
+                        <td>สาขาหลัก</td>
+                        <td>08 มค. 2563</td>
+                        <td><span class="badge active">ปฏิบัติงาน</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn">ดู</button>
+                                <button class="action-btn">แก้ไข</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EMP-012</td>
+                        <td>สมหญิง บัวผั่น</td>
+                        <td>Human Resources</td>
+                        <td>บริหาร</td>
+                        <td>สาขาหลัก</td>
+                        <td>14 กุม. 2563</td>
+                        <td><span class="badge pause">พักงาน</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn">ดู</button>
+                                <button class="action-btn">แก้ไข</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Detail Panel -->
+    <div class="detail-panel" id="detailPanel">
+        <div class="detail-header">
+            <div></div>
+            <button class="detail-close" onclick="closeDetail()">✕</button>
+        </div>
+
+        <div class="detail-photo-section">
+            <div class="detail-photo">👤</div>
+            <div class="detail-name">สิทธิพร นาควัฒน์</div>
+            <div class="detail-id">EMP-001</div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="detail-tabs">
+            <button class="tab-btn active" onclick="switchTab(this, 'tab1')">ข้อมูลทั่วไป</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab2')">ข้อมูลงาน</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab3')">เงินเดือน</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab4')">ประวัติการทำงาน</button>
+            <button class="tab-btn" onclick="switchTab(this, 'tab5')">KPI / Performance</button>
+        </div>
+
+        <!-- Tab 1: ข้อมูลทั่วไป -->
+        <div class="detail-content" id="tab1">
+            <div class="detail-row">
+                <div class="detail-label">ชื่อ-นามสกุล</div>
+                <div class="detail-value">สิทธิพร นาควัฒน์</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">ชื่อเล่น</div>
+                <div class="detail-value">เพ็ญ</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">รหัสพนักงาน</div>
+                <div class="detail-value">EMP-001</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">เลขบัตรประชาชน</div>
+                <div class="detail-value masked">xxxx-xxxxx-xx-x</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">วันเกิด</div>
+                <div class="detail-value">15 มิถุนายน 2537</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">อายุ</div>
+                <div class="detail-value">32 ปี</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">เพศ</div>
+                <div class="detail-value">หญิง</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">ที่อยู่</div>
+                <div class="detail-value">123/45 ซ.สุขสวัสดิ์ ถ.พหลโยธิน กรุงเทพ 10400</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">โทรศัพท์</div>
+                <div class="detail-value">081-234-5678</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Email</div>
+                <div class="detail-value">sitthiporn@sangwijit.com</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">LINE ID</div>
+                <div class="detail-value">@penpenn2537</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">ผู้ติดต่อฉุกเฉิน</div>
+                <div class="detail-value">วรรณษา นาควัฒน์ (085-987-6543)</div>
+            </div>
+        </div>
+
+        <!-- Tab 2: ข้อมูลงาน -->
+        <div class="detail-content" id="tab2" style="display: none;">
+            <div class="detail-row">
+                <div class="detail-label">ตำแหน่ง</div>
+                <div class="detail-value">ผู้จัดการขาย</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">แผนก</div>
+                <div class="detail-value">ขาย</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">สาขา</div>
+                <div class="detail-value">สาขาหลัก - กรุงเทพ</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">นิติบุคคล</div>
+                <div class="detail-value">SWT</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">หัวหน้างาน</div>
+                <div class="detail-value">ผู้อำนวยการสายขาย</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">ระดับ</div>
+                <div class="detail-value">Senior Manager</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">วันเริ่มงาน</div>
+                <div class="detail-value">01 มกราคม 2562</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">ผ่านทดลองงาน</div>
+                <div class="detail-value">01 เมษายน 2562</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">อายุงาน</div>
+                <div class="detail-value">2 ปี 3 เดือน</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">ประเภทสัญญา</div>
+                <div class="detail-value">ประจำ (Full-time)</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">สิทธิ์ระบบ ERP</div>
+                <div class="detail-value"><span class="role-badge">Sales Manager</span></div>
+            </div>
+        </div>
+
+        <!-- Tab 3: เงินเดือน/สวัสดิการ -->
+        <div class="detail-content" id="tab3" style="display: none;">
+            <div class="detail-row">
+                <div class="detail-label">เงินเดือนปัจจุบัน</div>
+                <div class="detail-value masked">*****</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">ค่าตำแหน่ง</div>
+                <div class="detail-value masked">****</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">ค่าครองชีพ</div>
+                <div class="detail-value masked">****</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">บัญชีธนาคาร</div>
+                <div class="detail-value masked">xxxx-xxxxx-xxx</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">ธนาคาร</div>
+                <div class="detail-value">ธนาคารกสิกรไทย</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">ประกันสังคม</div>
+                <div class="detail-value">สิ้นสุด 30 มิถุนายน 2567</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">กองทุนสำรองเลี้ยงชีพ</div>
+                <div class="detail-value">อยู่ในการจดทะเบียน</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">สิทธิ์ลาพักร้อน</div>
+                <div class="progress-container">
+                    <span class="progress-text">ใช้ไป 12 / ทั้งหมด 15 วัน</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 80%"></div>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">สิทธิ์ลาป่วย</div>
+                <div class="progress-container">
+                    <span class="progress-text">ใช้ไป 1 / ทั้งหมด 30 วัน</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 3%"></div>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">สิทธิ์ลากิจ</div>
+                <div class="progress-container">
+                    <span class="progress-text">ใช้ไป 0 / ทั้งหมด 6 วัน</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: ประวัติการทำงาน -->
+        <div class="detail-content" id="tab4" style="display: none;">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">01 มกราคม 2562</div>
+                    <div class="timeline-title">เริ่มงาน</div>
+                    <div class="timeline-desc">เจ้าหน้าที่ขาย สาขาหลัก</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">01 เมษายน 2562</div>
+                    <div class="timeline-title">ผ่านทดลองงาน</div>
+                    <div class="timeline-desc">สิ้นสุดวงเงาบและยืนยันเป็นพนักงานประจำ</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">15 มิถุนายน 2563</div>
+                    <div class="timeline-title">ปรับตำแหน่ง</div>
+                    <div class="timeline-desc">จากเจ้าหน้าที่ขาย เป็น ผู้จัดการขาย</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">01 กรกฎาคม 2563</div>
+                    <div class="timeline-title">ปรับเงินเดือน</div>
+                    <div class="timeline-desc">เพิ่มตามอัตราปรับเงินเดือนประจำปี</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">01 กรกฎาคม 2564</div>
+                    <div class="timeline-title">ปรับเงินเดือน</div>
+                    <div class="timeline-desc">เพิ่มตามอัตราปรับเงินเดือนประจำปี และตามโบนัสผลงาน</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: KPI / Performance -->
+        <div class="detail-content" id="tab5" style="display: none;">
+            <div class="detail-row">
+                <div class="detail-label">KPI ล่าสุด</div>
+                <div class="kpi-score">A</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Commission สะสมเดือนนี้</div>
+                <div class="detail-value">฿ 45,500</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Link</div>
+                <div class="detail-value"><a href="#" style="color: #2563EB; text-decoration: none;">ดูรายละเอียด Commission (CM-1)</a></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">ประวัติ KPI 4 Quarters</div>
+                <div class="kpi-chart">
+                    <div style="text-align: center; flex: 1;">
+                        <div class="kpi-bar q1"></div>
+                        <div class="kpi-label">Q1</div>
+                    </div>
+                    <div style="text-align: center; flex: 1;">
+                        <div class="kpi-bar q2"></div>
+                        <div class="kpi-label">Q2</div>
+                    </div>
+                    <div style="text-align: center; flex: 1;">
+                        <div class="kpi-bar q3"></div>
+                        <div class="kpi-label">Q3</div>
+                    </div>
+                    <div style="text-align: center; flex: 1;">
+                        <div class="kpi-bar q4"></div>
+                        <div class="kpi-label">Q4</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Nav Float -->
+    <div class="quick-nav">
+        <button class="quick-nav-btn" onclick="toggleQuickNav()">☰ Quick Pages</button>
+        <div class="quick-nav-list" id="quickNavList">
+            <div class="quick-nav-item">SL-Q</div>
+            <div class="quick-nav-item">SL-1</div>
+            <div class="quick-nav-item">CM-1</div>
+            <div class="quick-nav-item">WH-Q</div>
+            <div class="quick-nav-item">WH-1</div>
+            <div class="quick-nav-item">FI-1</div>
+            <div class="quick-nav-item">FI-2</div>
+            <div class="quick-nav-item">MD-1</div>
+            <div class="quick-nav-item">MD-2</div>
+            <div class="quick-nav-item">MD-3</div>
+            <div class="quick-nav-item active">MD-4 <span class="star">★</span></div>
+            <div class="quick-nav-item">MD-5</div>
+            <div class="quick-nav-item">SC-1</div>
+            <div class="quick-nav-item">SC-2</div>
+        </div>
+    </div>
+
+    <script>
+        function openDetail(empId) {
+            document.getElementById('detailPanel').classList.add('open');
+        }
+
+        function closeDetail() {
+            document.getElementById('detailPanel').classList.remove('open');
+        }
+
+        function switchTab(element, tabId) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.detail-content');
+            tabs.forEach(tab => tab.style.display = 'none');
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab and mark button as active
+            document.getElementById(tabId).style.display = 'block';
+            element.classList.add('active');
+        }
+
+        function toggleQuickNav() {
+            document.getElementById('quickNavList').classList.toggle('show');
+        }
+
+        // Close detail panel when clicking outside
+        document.addEventListener('click', function(event) {
+            const detailPanel = document.getElementById('detailPanel');
+            const isClickInsidePanel = detailPanel.contains(event.target);
+            const isClickOnTable = event.target.closest('table') || event.target.closest('.action-btn');
+
+            if (!isClickInsidePanel && !isClickOnTable && detailPanel.classList.contains('open')) {
+                // Allow clicks on table rows to open detail
+                if (event.target.closest('tr')) {
+                    return;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

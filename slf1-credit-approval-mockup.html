@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>SL-F1 Credit Approval — อนุมัติวงเงิน | Sangwijit ERP Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Inter','Noto Sans Thai',sans-serif; background:#F3F4F6; color:#111827; min-width:1440px; }
+.layout { display:flex; min-height:100vh; }
+.main { flex:1; display:flex; flex-direction:column; }
+
+.topbar { height:56px; background:#fff; border-bottom:1px solid #E5E7EB; display:flex; align-items:center; padding:0 24px; gap:16px; }
+.topbar-breadcrumb { display:flex; align-items:center; gap:6px; font-size:12px; color:#6B7280; }
+.topbar-breadcrumb .current { color:#2563EB; font-weight:600; }
+.topbar-breadcrumb .sep { color:#D1D5DB; }
+.topbar-spacer { flex:1; }
+.topbar-search { display:flex; align-items:center; gap:8px; background:#F3F4F6; border-radius:8px; padding:6px 12px; font-size:13px; color:#9CA3AF; width:220px; cursor:pointer; }
+.topbar-icon { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#F3F4F6; cursor:pointer; font-size:16px; position:relative; }
+.topbar-dot { position:absolute; top:6px; right:6px; width:8px; height:8px; background:#EF4444; border-radius:50%; border:2px solid #fff; }
+.topbar-avatar { width:32px; height:32px; border-radius:50%; background:#2563EB; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; }
+.branch-tag { background:#EFF6FF; border:1px solid #BFDBFE; color:#1D4ED8; font-size:11px; font-weight:600; padding:4px 10px; border-radius:20px; }
+
+.page { flex:1; overflow-y:auto; padding:28px 32px; display:flex; flex-direction:column; gap:22px; }
+.page-head { display:flex; align-items:flex-start; gap:14px; }
+.page-title { font-size:22px; font-weight:700; color:#111827; }
+.page-sub { font-size:13px; color:#6B7280; margin-top:4px; }
+.code-badge { background:rgba(124,58,237,0.1); color:#7C3AED; font-size:12px; font-weight:700; padding:4px 12px; border-radius:20px; border:1px solid rgba(124,58,237,0.2); }
+
+/* KPI cards */
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.kpi { background:#fff; border:1px solid #E5E7EB; border-radius:12px; padding:16px 18px; }
+.kpi-lbl { font-size:11px; color:#6B7280; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; }
+.kpi-val { font-size:24px; font-weight:700; color:#111827; margin-top:6px; }
+.kpi-sub { font-size:11px; color:#94A3B8; margin-top:3px; }
+.kpi.urgent { border-left:3px solid #EF4444; }
+.kpi.warn { border-left:3px solid #F59E0B; }
+.kpi.ok { border-left:3px solid #10B981; }
+
+/* layout 2 cols */
+.split { display:grid; grid-template-columns: 1.2fr 1fr; gap:20px; }
+.card { background:#fff; border:1px solid #E5E7EB; border-radius:12px; overflow:hidden; }
+.card-head { padding:14px 22px; border-bottom:1px solid #F1F5F9; display:flex; align-items:center; gap:10px; background:#FAFBFC; }
+.card-title { font-size:14px; font-weight:600; color:#374151; flex:1; }
+.card-tag { font-size:10px; font-weight:600; padding:2px 8px; border-radius:10px; background:rgba(124,58,237,0.1); color:#7C3AED; }
+.card-body { padding:18px 22px; }
+
+/* queue */
+.queue-row { display:grid; grid-template-columns:36px 1.2fr 1fr 1fr auto; gap:14px; padding:14px 22px; border-bottom:1px solid #F3F4F6; align-items:center; cursor:pointer; transition:background .12s; }
+.queue-row:last-child { border-bottom:none; }
+.queue-row:hover { background:#F8FAFC; }
+.queue-row.active { background:#EFF6FF; border-left:3px solid #2563EB; padding-left:19px; }
+.q-num { background:#F1F5F9; color:#475569; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; }
+.q-doc { font-size:13px; font-weight:600; color:#2563EB; }
+.q-cust { font-size:12px; color:#374151; margin-top:2px; }
+.q-amt { font-size:14px; font-weight:700; color:#111827; font-variant-numeric:tabular-nums; }
+.q-amt-sub { font-size:11px; color:#6B7280; margin-top:2px; }
+.q-flag { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:10px; font-size:10.5px; font-weight:700; }
+.q-flag.over { background:#FEE2E2; color:#991B1B; }
+.q-flag.aging { background:#FEF3C7; color:#92400E; }
+.q-flag.tier { background:#EDE9FE; color:#5B21B6; }
+.q-age { font-size:11px; color:#6B7280; }
+
+/* credit detail card */
+.gauge { position:relative; height:14px; background:#F1F5F9; border-radius:7px; overflow:hidden; margin-top:10px; }
+.gauge-fill { height:100%; transition:width .4s; border-radius:7px; }
+.gauge-fill.ok { background:linear-gradient(90deg,#10B981,#059669); }
+.gauge-fill.warn { background:linear-gradient(90deg,#F59E0B,#D97706); }
+.gauge-fill.over { background:linear-gradient(90deg,#EF4444,#DC2626); }
+.gauge-marks { display:flex; justify-content:space-between; margin-top:6px; font-size:10px; color:#94A3B8; }
+.metric-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed #E5E7EB; font-size:13px; }
+.metric-row:last-child { border-bottom:none; }
+.metric-row .l { color:#6B7280; }
+.metric-row .v { font-weight:600; color:#111827; font-variant-numeric:tabular-nums; }
+.metric-row .v.bad { color:#DC2626; }
+
+.aging-bar { display:flex; height:36px; border-radius:8px; overflow:hidden; margin-top:14px; border:1px solid #E5E7EB; }
+.aging-seg { display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; padding:0 8px; }
+.aging-seg.b1 { background:#10B981; }
+.aging-seg.b2 { background:#84CC16; }
+.aging-seg.b3 { background:#F59E0B; }
+.aging-seg.b4 { background:#EF4444; }
+.aging-legend { display:flex; gap:14px; margin-top:8px; font-size:11px; color:#475569; }
+.aging-legend span::before { content:""; display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:-1px; }
+.aging-legend .l1::before { background:#10B981; }
+.aging-legend .l2::before { background:#84CC16; }
+.aging-legend .l3::before { background:#F59E0B; }
+.aging-legend .l4::before { background:#EF4444; }
+
+/* approval workflow */
+.flow { display:flex; align-items:center; gap:0; padding:8px 0; }
+.flow-step { flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; }
+.flow-circle { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; border:3px solid; }
+.flow-circle.done { background:#10B981; border-color:#10B981; color:#fff; }
+.flow-circle.current { background:#EFF6FF; border-color:#2563EB; color:#2563EB; }
+.flow-circle.next { background:#F8FAFC; border-color:#E5E7EB; color:#9CA3AF; }
+.flow-line { flex:1; height:3px; margin-bottom:34px; }
+.flow-line.done { background:#10B981; }
+.flow-line.pending { background:#E5E7EB; }
+.flow-label { font-size:11px; font-weight:600; color:#374151; text-align:center; }
+.flow-meta { font-size:10px; color:#6B7280; text-align:center; }
+
+/* action bar */
+.act-bar { padding:18px 22px; background:#FAFBFC; border-top:1px solid #F1F5F9; display:flex; align-items:center; gap:10px; }
+.btn { padding:9px 18px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; border:1px solid transparent; transition:all .12s; display:inline-flex; align-items:center; gap:6px; }
+.btn-approve { background:#10B981; color:#fff; }
+.btn-approve:hover { background:#059669; }
+.btn-reject { background:#fff; color:#DC2626; border-color:#FECACA; }
+.btn-reject:hover { background:#FEF2F2; }
+.btn-ghost { background:#fff; color:#374151; border-color:#E5E7EB; }
+.btn-ghost:hover { background:#F8FAFC; }
+.btn-warn { background:#F59E0B; color:#fff; }
+.btn-warn:hover { background:#D97706; }
+
+.alert { display:flex; gap:12px; padding:12px 16px; border-radius:10px; font-size:12.5px; line-height:1.5; }
+.alert.danger { background:#FEF2F2; border:1px solid #FECACA; color:#7F1D1D; }
+.alert.warn { background:#FFFBEB; border:1px solid #FDE68A; color:#78350F; }
+.alert.info { background:#EFF6FF; border:1px solid #BFDBFE; color:#1E3A8A; }
+
+.checker-warn { background:#FEF2F2; border:2px dashed #FCA5A5; padding:14px 18px; border-radius:10px; font-size:13px; color:#7F1D1D; display:flex; align-items:center; gap:12px; }
+</style>
+</head>
+<body>
+<!-- SWT_SIDEBAR_START -->
+<style>
+.swt-sb,.swt-sb *{box-sizing:border-box}
+.swt-sb{position:fixed;left:0;top:0;width:240px;height:100vh;background:#1E3A5F;color:#D1D5DB;overflow-y:auto;padding:14px 10px 32px;z-index:500;font-family:'Inter','Noto Sans Thai',sans-serif;font-size:13px;line-height:1.4}
+.swt-sb::-webkit-scrollbar{width:6px}
+.swt-sb::-webkit-scrollbar-thumb{background:#334E70;border-radius:3px}
+.swt-sb-brand{display:flex;align-items:center;gap:9px;padding:4px 8px 14px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:12px}
+.swt-sb-logo{width:34px;height:34px;border-radius:9px;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0}
+.swt-sb-brand h1{font-size:12px;font-weight:700;color:#fff;letter-spacing:-0.2px;margin:0}
+.swt-sb-brand p{font-size:10px;color:#94A3B8;margin:1px 0 0}
+.swt-sb-search{position:relative;margin:0 4px 12px}
+.swt-sb-search input{width:100%;padding:7px 10px 7px 28px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:#fff;font-size:12px;font-family:inherit;outline:none}
+.swt-sb-search input::placeholder{color:#6B7F99}
+.swt-sb-search input:focus{border-color:#2563EB;background:rgba(37,99,235,0.1)}
+.swt-sb-search::before{content:"🔍";position:absolute;left:9px;top:7px;font-size:10px;opacity:0.55}
+.swt-sb-home{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;text-decoration:none;color:#9CA3AF;font-size:11px;margin:0 4px 10px;background:rgba(255,255,255,0.05);transition:all 0.15s}
+.swt-sb-home:hover{background:rgba(255,255,255,0.12);color:#fff}
+.swt-sb details{margin:1px 0}
+.swt-sb details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:7px 9px;border-radius:6px;font-size:10.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;user-select:none;margin:0 2px}
+.swt-sb details>summary::-webkit-details-marker{display:none}
+.swt-sb details>summary:hover{background:rgba(255,255,255,0.06);color:#fff}
+.swt-sb-ico{font-size:13px;width:17px;text-align:center;flex-shrink:0}
+.swt-sb-lbl{flex:1}
+.swt-sb-cnt{font-size:9px;font-weight:600;background:rgba(255,255,255,0.08);color:#CBD5E1;padding:1px 5px;border-radius:9px;letter-spacing:0}
+.swt-sb-chv{font-size:8px;color:#6B7F99;transition:transform 0.2s}
+.swt-sb details[open]>summary .swt-sb-chv{transform:rotate(180deg)}
+.swt-sb-links{padding:1px 0 4px 6px}
+.swt-sb-links a{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:5px;text-decoration:none;color:#D1D5DB;font-size:11.5px;margin:1px 0;transition:all 0.1s;line-height:1.3}
+.swt-sb-links a:hover{background:rgba(255,255,255,0.08);color:#fff}
+.swt-sb-links a .c{font-family:'Inter',monospace;font-size:9.5px;font-weight:700;color:#94A3B8;min-width:36px;flex-shrink:0}
+.swt-sb-links a:hover .c{color:#60A5FA}
+.swt-sb-links a.swt-active{background:#2563EB;color:#fff;font-weight:600}
+.swt-sb-links a.swt-active .c{color:#BFDBFE}
+.swt-sb-links a.swt-new::after{content:"NEW";font-size:7.5px;font-weight:700;background:#DC2626;color:#fff;padding:1px 4px;border-radius:3px;margin-left:auto}
+.swt-sb a.swt-hide,.swt-sb details.swt-hide{display:none}
+body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
+</style>
+<aside class="swt-sb" id="swtSb">
+  <div class="swt-sb-brand">
+    <div class="swt-sb-logo">ส</div>
+    <div><h1>Sangwijit ERP</h1><p>Web Portal · v3.0</p></div>
+  </div>
+  <div class="swt-sb-search"><input placeholder="ค้นหาเมนู…" oninput="swtSbFilter(this.value)"></div>
+  <a class="swt-sb-home" href="index.html">🏠 Master Index</a>
+
+  <details><summary><span class="swt-sb-ico">🏠</span><span class="swt-sb-lbl">Overview</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="index.html"><span class="c">IDX</span>Master Index</a>
+    <a href="sangwijit-portal-architecture.html"><span class="c">ARCH</span>Architecture</a>
+    <a href="dev-handoff-spec.html"><span class="c">SPEC</span>Dev Handoff</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">💼</span><span class="swt-sb-lbl">งานขาย (SL)</span><span class="swt-sb-cnt">12</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="slq-sales-queue-mockup.html"><span class="c">SL-Q</span>Sales Queue</a>
+    <a href="sl1-quotation-mockup.html"><span class="c">SL-1</span>ใบเสนอราคา</a>
+    <a href="slf1-credit-approval-mockup.html" class="swt-new"><span class="c">SL-F1</span>อนุมัติวงเงิน</a>
+    <a href="sl2-reservation-mockup.html"><span class="c">SL-2</span>ใบจอง</a>
+    <a href="sl3-deposit-mockup.html"><span class="c">SL-3</span>ใบมัดจำ</a>
+    <a href="sl4-invoice-mockup.html"><span class="c">SL-4</span>บิลขาย/Invoice</a>
+    <a href="sl5-crm-followup-mockup.html"><span class="c">SL-5</span>CRM Follow-up</a>
+    <a href="sl6-promotion-setup-mockup.html"><span class="c">SL-6</span>โปรโมชั่น</a>
+    <a href="pm5-vat-simulator-mockup.html" class="swt-new"><span class="c">PM-5</span>VAT Simulator</a>
+    <a href="sl7-sales-report-mockup.html"><span class="c">SL-7</span>รายงานยอดขาย</a>
+    <a href="cm1-commission-mockup.html"><span class="c">CM-1</span>Commission</a>
+    <a href="cl1-claims-mockup.html"><span class="c">CL-1</span>Claims</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">📦</span><span class="swt-sb-lbl">คลังสินค้า (WH)</span><span class="swt-sb-cnt">5</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="wh-queue-mockup.html"><span class="c">WH-Q</span>คิวรับสินค้า</a>
+    <a href="wh1-grn-mockup.html"><span class="c">WH-1</span>ใบรับสินค้า (GRN)</a>
+    <a href="wh2-stock-transfer-mockup.html"><span class="c">WH-2</span>โอนย้ายสต็อก</a>
+    <a href="wh3-stock-count-mockup.html"><span class="c">WH-3</span>นับสต็อก</a>
+    <a href="whr-goods-issue-mockup.html"><span class="c">WH-R</span>เบิกสินค้า</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🛒</span><span class="swt-sb-lbl">จัดซื้อ (PO)</span><span class="swt-sb-cnt">6</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="poq-purchase-queue-mockup.html"><span class="c">PO-Q</span>Purchase Queue</a>
+    <a href="po1-purchase-request-mockup.html" class="swt-new"><span class="c">PO-1</span>ใบขอซื้อ (PR)</a>
+    <a href="po2-rfq-mockup.html" class="swt-new"><span class="c">PO-2</span>RFQ / เปรียบเทียบราคา</a>
+    <a href="po3-vendor-invoice-mockup.html" class="swt-new"><span class="c">PO-3</span>ใบวางบิล Vendor</a>
+    <a href="po4-purchase-order-mockup.html"><span class="c">PO-4</span>ใบสั่งซื้อ (PO)</a>
+    <a href="po-rebate-dashboard.html"><span class="c">PO-R</span>Rebate Dashboard</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🧭</span><span class="swt-sb-lbl">SKU &amp; Vendor (SM)</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sm1-sku-slot-planner-mockup.html"><span class="c">SM-1</span>SKU Slot Planner</a>
+    <a href="sm2-sku-health-mockup.html"><span class="c">SM-2</span>SKU Health</a>
+    <a href="sm3-vendor-report-mockup.html"><span class="c">SM-3</span>Vendor Report</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">💵</span><span class="swt-sb-lbl">บัญชี/การเงิน</span><span class="swt-sb-cnt">9</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="fiq-finance-queue-mockup.html" class="swt-new"><span class="c">FI-Q</span>Finance Queue</a>
+    <a href="fi1-ar-receive-mockup.html"><span class="c">FI-1</span>รับชำระ AR</a>
+    <a href="fi1q-apply-queue-mockup.html" class="swt-new"><span class="c">FI-1Q</span>Apply Queue</a>
+    <a href="fi2-ap-payment-mockup.html"><span class="c">FI-2</span>จ่ายชำระ AP</a>
+    <a href="fi3-tax-reconciliation-mockup.html"><span class="c">FI-3</span>กระทบยอดภาษี</a>
+    <a href="fi4-expense-wht-mockup.html"><span class="c">FI-4</span>ค่าใช้จ่าย/WHT</a>
+    <a href="fi5-ar-audit-mockup.html"><span class="c">FI-5</span>ตรวจสอบ AR</a>
+    <a href="fi13-dual-book-mockup.html" class="swt-new"><span class="c">FI-13</span>Dual-Book/Entity Tag</a>
+    <a href="tr1-treasury-mockup.html"><span class="c">TR-1</span>Treasury</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🔗</span><span class="swt-sb-lbl">Integration (IA)</span><span class="swt-sb-cnt">1</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="iaq-bc-sync-monitor-mockup.html" class="swt-new"><span class="c">IA-Q</span>BC Sync Monitor</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🔧</span><span class="swt-sb-lbl">บริการ (SV)</span><span class="swt-sb-cnt">5</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sv1-service-queue-mockup.html"><span class="c">SV-1</span>คิวงานซ่อม</a>
+    <a href="sv2-service-invoice-mockup.html"><span class="c">SV-2</span>ใบแจ้งหนี้บริการ</a>
+    <a href="sv3-spare-part-issue-mockup.html" class="swt-new"><span class="c">SV-3</span>เบิกอะไหล่</a>
+    <a href="sv4-warranty-check-mockup.html" class="swt-new"><span class="c">SV-4</span>ตรวจสอบประกัน</a>
+    <a href="sv5-job-card-mockup.html" class="swt-new"><span class="c">SV-5</span>Job Card ช่าง</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🚚</span><span class="swt-sb-lbl">ส่ง/รายงาน/อนุมัติ</span><span class="swt-sb-cnt">4</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="dl1-delivery-planning-mockup.html"><span class="c">DL-1</span>วางแผนจัดส่ง</a>
+    <a href="ex1-executive-dashboard-mockup.html"><span class="c">EX-1</span>Executive Dashboard</a>
+    <a href="rp1-report-center-mockup.html"><span class="c">RP-1</span>Report Center</a>
+    <a href="ap1-approval-center-mockup.html"><span class="c">AP-1</span>ศูนย์อนุมัติ</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">⚙️</span><span class="swt-sb-lbl">ตั้งค่าระบบ (CF)</span><span class="swt-sb-cnt">8</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="cf1-rbac-permission-mockup.html"><span class="c">CF-1</span>สิทธิ์ RBAC</a>
+    <a href="cf2-config-hub-mockup.html"><span class="c">CF-2</span>Config Hub</a>
+    <a href="cf2-1-tax-setup-mockup.html"><span class="c">CF-2.1</span>ภาษี (Tax)</a>
+    <a href="cf2-2-number-series-mockup.html"><span class="c">CF-2.2</span>Running No.</a>
+    <a href="cf2-5-tech-template-mockup.html"><span class="c">CF-2.5</span>Template ช่าง</a>
+    <a href="cf2-6-approval-matrix-mockup.html"><span class="c">CF-2.6</span>Approval Matrix</a>
+    <a href="cf2-7-doc-template-mockup.html"><span class="c">CF-2.7</span>Doc Template</a>
+    <a href="cf2-9-general-parameter-mockup.html"><span class="c">CF-2.9</span>ค่าตั้งต้น</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">📚</span><span class="swt-sb-lbl">Master Data (MD)</span><span class="swt-sb-cnt">5</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="md1-item-master-mockup-v3.html"><span class="c">MD-1</span>ทะเบียนสินค้า</a>
+    <a href="md2-customer-master-mockup-v3.html"><span class="c">MD-2</span>ทะเบียนลูกค้า</a>
+    <a href="md3-vendor-master-mockup-v3.html"><span class="c">MD-3</span>ทะเบียน Vendor</a>
+    <a href="md4-employee-master-mockup-v3.html"><span class="c">MD-4</span>ทะเบียนพนักงาน</a>
+    <a href="md5-branch-warehouse-mockup-v3.html"><span class="c">MD-5</span>สาขา &amp; คลัง</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🧩</span><span class="swt-sb-lbl">Shared Components</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sc1-customer-search-mockup.html"><span class="c">SC-1</span>ค้นหาลูกค้า</a>
+    <a href="sc2-item-search-mockup.html"><span class="c">SC-2</span>ค้นหาสินค้า</a>
+    <a href="sc7-timeline-mockup.html"><span class="c">SC-7</span>Timeline</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">👤</span><span class="swt-sb-lbl">ระบบ &amp; บัญชีผู้ใช้</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="login-mockup.html" class="swt-new"><span class="c">AUTH</span>Login / SSO</a>
+    <a href="user-profile-mockup.html" class="swt-new"><span class="c">PROF</span>User Profile</a>
+    <a href="notification-center-mockup.html" class="swt-new"><span class="c">NOTI</span>Notification Center</a>
+  </div></details>
+</aside>
+<script>
+(function(){
+  var sb=document.getElementById('swtSb');if(!sb)return;
+  if(!document.querySelector('.main-content, main.main, .app-container, .app'))
+    document.body.classList.add('swt-body-pad');
+  var cur=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  sb.querySelectorAll('a[href]').forEach(function(a){
+    var h=(a.getAttribute('href')||'').split('/').pop().toLowerCase();
+    if(h===cur){a.classList.add('swt-active');var p=a.closest('details');if(p)p.open=true;}
+  });
+  window.swtSbFilter=function(q){
+    q=(q||'').trim().toLowerCase();
+    sb.querySelectorAll('.swt-sb-links a').forEach(function(a){
+      var m=!q||a.textContent.toLowerCase().indexOf(q)>-1;
+      a.classList.toggle('swt-hide',!m);
+    });
+    sb.querySelectorAll('details').forEach(function(d){
+      var any=[].some.call(d.querySelectorAll('.swt-sb-links a'),function(a){return !a.classList.contains('swt-hide');});
+      d.classList.toggle('swt-hide',!!q&&!any);
+      if(q&&any)d.open=true;
+    });
+  };
+})();
+</script>
+<!-- SWT_SIDEBAR_END -->
+<div class="layout">
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <span>งานขาย</span><span class="sep">›</span>
+        <span class="current">SL-F1 อนุมัติวงเงินเครดิต</span>
+      </div>
+      <span class="branch-tag">SWT · บจก.สังวิจิตร</span>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search" onclick="if(window.swtOpenSearch)swtOpenSearch()">🔍 ค้นหา (กด /)</div>
+      <div class="topbar-icon">🔔<div class="topbar-dot"></div></div>
+      <div class="topbar-avatar">วช</div>
+    </div>
+
+    <div class="page">
+      <div class="page-head">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="page-title">อนุมัติวงเงินเครดิต (SL Credit Approval)</span>
+            <span class="code-badge">SL-F1</span>
+          </div>
+          <div class="page-sub">เฉพาะ SL — ใบเสนอราคา/ใบสั่งขายที่ <b>เกินวงเงิน</b> หรือ <b>ลูกค้าค้างชำระเกิน term</b> · ผ่าน CF-2.6 Approval Matrix · Maker ≠ Checker</div>
+        </div>
+      </div>
+
+      <!-- KPI -->
+      <div class="kpi-grid">
+        <div class="kpi urgent">
+          <div class="kpi-lbl">รอ Approve</div>
+          <div class="kpi-val">8</div>
+          <div class="kpi-sub" style="color:#DC2626">↑ 3 จากเมื่อวาน</div>
+        </div>
+        <div class="kpi warn">
+          <div class="kpi-lbl">เกิน SLA (>4 ชม.)</div>
+          <div class="kpi-val">2</div>
+          <div class="kpi-sub">ต้องอนุมัติก่อน 17:00</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-lbl">ยอดรวมรอ</div>
+          <div class="kpi-val">฿ 4.2M</div>
+          <div class="kpi-sub">8 ใบ · เฉลี่ย ฿ 525K</div>
+        </div>
+        <div class="kpi ok">
+          <div class="kpi-lbl">วันนี้อนุมัติแล้ว</div>
+          <div class="kpi-val">12</div>
+          <div class="kpi-sub">ผ่าน 11 · ปฏิเสธ 1</div>
+        </div>
+      </div>
+
+      <!-- SPLIT -->
+      <div class="split">
+        <!-- LEFT: queue -->
+        <div class="card">
+          <div class="card-head">
+            <span class="card-title">คิวรออนุมัติ</span>
+            <span class="card-tag">8 รายการ</span>
+            <select style="font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid #E5E7EB">
+              <option>ทั้งหมด</option><option>เกิน SLA</option><option>Tier 3 ขึ้นไป</option>
+            </select>
+          </div>
+
+          <div class="queue-row active">
+            <div class="q-num">1</div>
+            <div>
+              <div class="q-doc">SO-2604-0042 · บจก.สยามอุตสาหกรรม</div>
+              <div class="q-cust">เซลส์: K.มานพ · QT-2604-0098</div>
+            </div>
+            <div>
+              <div class="q-amt">฿ 1,850,000</div>
+              <div class="q-amt-sub">เกินวงเงิน ฿ 350,000</div>
+            </div>
+            <div>
+              <span class="q-flag over">⚠️ เกินวงเงิน</span><br>
+              <span class="q-flag tier" style="margin-top:4px;display:inline-flex">Tier 3</span>
+            </div>
+            <div class="q-age" style="color:#DC2626;font-weight:600">3h 42m</div>
+          </div>
+
+          <div class="queue-row">
+            <div class="q-num">2</div>
+            <div>
+              <div class="q-doc">SO-2604-0041 · บจก.รุ่งเรืองพาณิชย์</div>
+              <div class="q-cust">เซลส์: K.สมชาย · QT-2604-0095</div>
+            </div>
+            <div>
+              <div class="q-amt">฿ 620,000</div>
+              <div class="q-amt-sub">วงเงินคงเหลือ ฿ 0</div>
+            </div>
+            <div>
+              <span class="q-flag aging">📆 ค้าง 35 วัน</span><br>
+              <span class="q-flag tier" style="margin-top:4px;display:inline-flex">Tier 2</span>
+            </div>
+            <div class="q-age">2h 15m</div>
+          </div>
+
+          <div class="queue-row">
+            <div class="q-num">3</div>
+            <div>
+              <div class="q-doc">SO-2604-0040 · บจก.มหาชัยกรุ๊ป</div>
+              <div class="q-cust">เซลส์: K.ปอย · QT-2604-0091</div>
+            </div>
+            <div>
+              <div class="q-amt">฿ 2,400,000</div>
+              <div class="q-amt-sub">เกินวงเงิน ฿ 400,000</div>
+            </div>
+            <div>
+              <span class="q-flag over">⚠️ เกินวงเงิน</span><br>
+              <span class="q-flag tier" style="margin-top:4px;display:inline-flex">Tier 3</span>
+            </div>
+            <div class="q-age">1h 50m</div>
+          </div>
+
+          <div class="queue-row">
+            <div class="q-num">4</div>
+            <div>
+              <div class="q-doc">SO-2604-0039 · หจก.เจริญทรัพย์</div>
+              <div class="q-cust">เซลส์: K.วิทยา · QT-2604-0089</div>
+            </div>
+            <div>
+              <div class="q-amt">฿ 280,000</div>
+              <div class="q-amt-sub">เกินวงเงิน ฿ 80,000</div>
+            </div>
+            <div>
+              <span class="q-flag over">⚠️ เกินวงเงิน</span><br>
+              <span class="q-flag tier" style="margin-top:4px;display:inline-flex">Tier 1</span>
+            </div>
+            <div class="q-age">1h 12m</div>
+          </div>
+
+          <div class="queue-row">
+            <div class="q-num">5</div>
+            <div>
+              <div class="q-doc">SO-2604-0038 · บจก.ไทยเทคโนโลยี</div>
+              <div class="q-cust">เซลส์: K.อร · QT-2604-0085</div>
+            </div>
+            <div>
+              <div class="q-amt">฿ 950,000</div>
+              <div class="q-amt-sub">วงเงินคงเหลือ ฿ 150,000</div>
+            </div>
+            <div>
+              <span class="q-flag aging">📆 ค้าง 42 วัน</span><br>
+              <span class="q-flag tier" style="margin-top:4px;display:inline-flex">Tier 2</span>
+            </div>
+            <div class="q-age">52m</div>
+          </div>
+        </div>
+
+        <!-- RIGHT: detail -->
+        <div class="card">
+          <div class="card-head">
+            <span class="card-title">รายละเอียด — SO-2604-0042</span>
+            <span class="card-tag" style="background:rgba(220,38,38,0.1);color:#DC2626">Tier 3 · เกินวงเงิน</span>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;gap:14px;align-items:center;margin-bottom:14px">
+              <div style="width:48px;height:48px;border-radius:10px;background:#EDE9FE;color:#5B21B6;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700">สอ</div>
+              <div style="flex:1">
+                <div style="font-size:15px;font-weight:700;color:#111827">บจก.สยามอุตสาหกรรม</div>
+                <div style="font-size:12px;color:#6B7280">C-00088 · Tier Platinum · Sales: K.มานพ</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:11px;color:#6B7280">ยอด SO ที่ขออนุมัติ</div>
+                <div style="font-size:18px;font-weight:700;color:#DC2626">฿ 1,850,000</div>
+              </div>
+            </div>
+
+            <!-- Credit gauge -->
+            <div style="margin-top:18px">
+              <div style="display:flex;justify-content:space-between;font-size:12px">
+                <span style="color:#6B7280">การใช้วงเงิน</span>
+                <span style="font-weight:700;color:#DC2626">115% (เกิน ฿ 350,000)</span>
+              </div>
+              <div class="gauge"><div class="gauge-fill over" style="width:100%"></div></div>
+              <div class="gauge-marks"><span>0</span><span>วงเงิน ฿ 2,000,000</span></div>
+            </div>
+
+            <div style="margin-top:18px">
+              <div class="metric-row"><span class="l">วงเงินอนุมัติ (CF-2.6)</span><span class="v">฿ 2,000,000</span></div>
+              <div class="metric-row"><span class="l">ใช้ปัจจุบัน (AR คงค้าง)</span><span class="v">฿ 1,500,000</span></div>
+              <div class="metric-row"><span class="l">SO รอออกบิล</span><span class="v">฿ 0</span></div>
+              <div class="metric-row"><span class="l">SO ใหม่ที่ขออนุมัติ</span><span class="v bad">+ ฿ 1,850,000</span></div>
+              <div class="metric-row" style="background:#FEF2F2;margin:0 -22px;padding:10px 22px"><span class="l" style="color:#7F1D1D;font-weight:600">เกินวงเงิน</span><span class="v bad">฿ 350,000 (17.5%)</span></div>
+            </div>
+
+            <!-- Aging -->
+            <div style="margin-top:22px">
+              <div style="font-size:12px;color:#374151;font-weight:600;margin-bottom:6px">AR Aging ลูกค้า (FI-5)</div>
+              <div class="aging-bar">
+                <div class="aging-seg b1" style="width:60%">฿ 900K</div>
+                <div class="aging-seg b2" style="width:25%">฿ 375K</div>
+                <div class="aging-seg b3" style="width:15%">฿ 225K</div>
+              </div>
+              <div class="aging-legend">
+                <span class="l1">0-30d</span><span class="l2">31-60d</span><span class="l3">61-90d</span><span class="l4">90d+</span>
+              </div>
+            </div>
+
+            <!-- Approval workflow -->
+            <div style="margin-top:24px">
+              <div style="font-size:12px;color:#374151;font-weight:600;margin-bottom:8px">เส้นทางอนุมัติ (CF-2.6 Tier 3)</div>
+              <div class="flow">
+                <div class="flow-step">
+                  <div class="flow-circle done">✓</div>
+                  <div class="flow-label">เซลส์ขอ</div>
+                  <div class="flow-meta">K.มานพ · 14:22</div>
+                </div>
+                <div class="flow-line done"></div>
+                <div class="flow-step">
+                  <div class="flow-circle done">✓</div>
+                  <div class="flow-label">หัวหน้าเซลส์</div>
+                  <div class="flow-meta">K.วิทยา · 14:35</div>
+                </div>
+                <div class="flow-line pending"></div>
+                <div class="flow-step">
+                  <div class="flow-circle current">⏳</div>
+                  <div class="flow-label">ผจก.ขาย <b>(คุณ)</b></div>
+                  <div class="flow-meta" style="color:#2563EB;font-weight:600">รอตัดสินใจ</div>
+                </div>
+                <div class="flow-line pending"></div>
+                <div class="flow-step">
+                  <div class="flow-circle next">CFO</div>
+                  <div class="flow-label">CFO</div>
+                  <div class="flow-meta">ถัดไป</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Maker = Checker warning (won't show because OK) -->
+            <div class="alert info" style="margin-top:14px">
+              <span style="font-size:18px">ℹ️</span>
+              <div>Maker (K.มานพ) ≠ Checker (คุณ) — ผ่าน policy. ครั้งสุดท้ายลูกค้าค้างเกินกำหนด 8 วัน (RV-2603-0019)</div>
+            </div>
+          </div>
+
+          <div class="act-bar">
+            <button class="btn btn-ghost">📝 บันทึกหมายเหตุ</button>
+            <button class="btn btn-warn">⚠️ อนุมัติแบบมีเงื่อนไข</button>
+            <div style="flex:1"></div>
+            <button class="btn btn-reject">✕ ปฏิเสธ</button>
+            <button class="btn btn-approve">✓ อนุมัติ</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- POLICY REMINDER -->
+      <div class="alert warn">
+        <span style="font-size:18px">⚖️</span>
+        <div><b>Maker ≠ Checker</b> — ผู้อนุมัติต้องไม่ใช่ผู้สร้างเอกสาร · <b>Tier ดูที่ CF-2.6 Approval Matrix</b> · ปฏิเสธต้องบันทึกเหตุผลเสมอ · เกิน SLA 4 ชม. = แจ้ง escalate ผู้บริหาร</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SWT_LINK_START -->
+<script src="swt-link.js" defer></script>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+  if (typeof swtRenderBreadcrumb === 'function') {
+    swtRenderBreadcrumb([
+      { type: 'QT',  no: 'QT-2604-0098',  label: 'ใบเสนอราคา' },
+      { type: 'SO',  no: 'SO-2604-0042',  label: 'ใบสั่งขาย' },
+      { type: 'CRD', no: 'SL-F1',         label: 'อนุมัติวงเงิน', current: true },
+      { type: 'INV', label: 'รอออกบิล', pending: true },
+      { type: 'RV',  label: 'รอรับชำระ', pending: true }
+    ]);
+  }
+  if (typeof swtAppendTimeline !== 'function') return;
+  swtAppendTimeline('Activity Timeline — SO-2604-0042 (Credit Approval)', [
+    { action: 'เซลส์สร้าง QT-2604-0098', time: '2026-04-16 09:30',
+      sub: 'K.มานพ · ลูกค้า: บจก.สยามอุตสาหกรรม', color: 'green' },
+    { action: 'ลูกค้ายืนยัน → สร้าง SO-2604-0042', time: '2026-04-17 14:22',
+      sub: 'ระบบเช็ค credit → เกินวงเงิน ฿ 350,000 → ส่งเข้า SL-F1', color: 'amber' },
+    { action: 'หัวหน้าเซลส์อนุมัติ (Tier 1)', time: '2026-04-17 14:35',
+      sub: 'K.วิทยา · เห็นชอบ', color: 'blue' },
+    { action: 'รอ ผจก.ขาย อนุมัติ (Tier 2)', time: 'ตอนนี้ · 3h 42m',
+      sub: 'เกิน SLA 4 ชม. ในอีก 18 นาที — ต้องเร่ง', color: 'amber' },
+    { action: 'หลังผ่าน Tier 2 → ส่งต่อ CFO (Tier 3)', time: 'ถัดไป',
+      sub: 'เพราะยอด > ฿ 1.5M และมีประวัติค้าง 60+ วัน', color: 'gray' }
+  ], { meta: 'QT → SO → Credit Approval (SL-F1) → Invoice → AR' });
+});
+</script>
+<!-- SWT_LINK_END -->
+
+</body>
+</html>

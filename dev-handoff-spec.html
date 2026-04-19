@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>Sangwijit ERP Portal — Dev Handoff Spec</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B;min-width:1440px;line-height:1.6}
+
+/* ─── Top Bar ─── */
+.topbar{background:#1E3A5F;color:#fff;padding:16px 40px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.topbar-logo{width:36px;height:36px;background:#2563EB;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800}
+.topbar h1{font-size:18px;font-weight:700;letter-spacing:-0.3px}
+.topbar-meta{margin-left:auto;font-size:12px;color:#93C5FD;display:flex;gap:20px}
+.topbar-meta span{display:flex;align-items:center;gap:4px}
+
+/* ─── Layout ─── */
+.page{display:flex;min-height:calc(100vh - 68px)}
+.sidebar-nav{width:260px;background:#fff;border-right:1px solid #E2E8F0;padding:20px 0;position:sticky;top:68px;height:calc(100vh - 68px);overflow-y:auto}
+.sidebar-nav a{display:block;padding:8px 24px;font-size:13px;color:#475569;text-decoration:none;border-left:3px solid transparent;transition:all 0.15s}
+.sidebar-nav a:hover{background:#F1F5F9;color:#1E3A5F}
+.sidebar-nav a.active{border-left-color:#2563EB;color:#1E3A5F;font-weight:600;background:#EFF6FF}
+.sidebar-nav .nav-section{padding:16px 24px 6px;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.1em}
+.main{flex:1;padding:32px 40px 60px;max-width:1180px}
+
+/* ─── Section ─── */
+.section{margin-bottom:48px}
+.section-anchor{display:block;position:relative;top:-80px;visibility:hidden}
+.section h2{font-size:22px;font-weight:800;color:#1E3A5F;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.section h2 .emoji{font-size:20px}
+.section-sub{font-size:13px;color:#64748B;margin-bottom:20px}
+.section h3{font-size:16px;font-weight:700;color:#334155;margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid #E2E8F0}
+
+/* ─── Cards ─── */
+.arch-card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:24px;margin-bottom:16px}
+.arch-card h4{font-size:14px;font-weight:700;color:#1E3A5F;margin-bottom:8px}
+
+/* ─── Diagram ─── */
+.arch-diagram{display:flex;align-items:center;justify-content:center;gap:12px;padding:32px 20px;background:linear-gradient(135deg,#F0F9FF,#EFF6FF);border-radius:12px;border:1px solid #BFDBFE;margin-bottom:24px;flex-wrap:wrap}
+.arch-box{padding:16px 20px;border-radius:10px;text-align:center;min-width:160px}
+.arch-box.portal{background:#2563EB;color:#fff}
+.arch-box.api{background:#F59E0B;color:#fff}
+.arch-box.bc{background:#059669;color:#fff}
+.arch-box .box-title{font-size:14px;font-weight:700}
+.arch-box .box-sub{font-size:11px;opacity:0.85;margin-top:2px}
+.arch-arrow{font-size:24px;color:#64748B;font-weight:700}
+
+/* ─── Module Table ─── */
+.mod-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px}
+.mod-table th{background:#F1F5F9;padding:10px 14px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#64748B;border-bottom:2px solid #E2E8F0}
+.mod-table td{padding:10px 14px;border-bottom:1px solid #F1F5F9;vertical-align:top}
+.mod-table tr:hover td{background:#F8FAFC}
+.mod-table .code{font-family:'SF Mono',Consolas,monospace;font-size:12px;color:#7C3AED;background:#F5F3FF;padding:2px 6px;border-radius:4px}
+.mod-table .file-link{color:#2563EB;text-decoration:none;font-weight:600}
+.mod-table .file-link:hover{text-decoration:underline}
+
+/* ─── Tags ─── */
+.tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin:1px 2px}
+.tag-portal{background:#DBEAFE;color:#1D4ED8}
+.tag-bc{background:#FEE2E2;color:#991B1B}
+.tag-phase2{background:#F3F4F6;color:#6B7280}
+.tag-shared{background:#E0E7FF;color:#4338CA}
+.tag-custom{background:#D1FAE5;color:#065F46}
+.tag-read{background:#FEF3C7;color:#92400E}
+.tag-write{background:#FEE2E2;color:#991B1B}
+.tag-crud{background:#EDE9FE;color:#5B21B6}
+
+/* ─── API Spec ─── */
+.api-block{background:#1E293B;border-radius:10px;padding:16px 20px;margin:12px 0;color:#E2E8F0;font-family:'SF Mono',Consolas,monospace;font-size:12px;line-height:1.8;overflow-x:auto}
+.api-method{font-weight:700}
+.api-get{color:#34D399}
+.api-post{color:#60A5FA}
+.api-patch{color:#FBBF24}
+.api-delete{color:#F87171}
+.api-comment{color:#64748B}
+
+/* ─── Audit Table ─── */
+.audit-table{width:100%;border-collapse:collapse;font-size:13px}
+.audit-table th{background:#1E3A5F;color:#fff;padding:10px 14px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.05em}
+.audit-table td{padding:10px 14px;border-bottom:1px solid #E2E8F0}
+.audit-table tr:nth-child(even) td{background:#F8FAFC}
+.audit-table .decision-portal{color:#059669;font-weight:700}
+.audit-table .decision-bc{color:#DC2626;font-weight:700}
+.audit-table .decision-phase2{color:#6B7280;font-weight:700}
+
+/* ─── Component List ─── */
+.comp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.comp-card{background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:16px;transition:border-color 0.15s}
+.comp-card:hover{border-color:#2563EB}
+.comp-card .comp-id{font-size:11px;font-weight:700;color:#7C3AED;margin-bottom:4px}
+.comp-card .comp-name{font-size:14px;font-weight:700;color:#1E3A5F;margin-bottom:4px}
+.comp-card .comp-desc{font-size:12px;color:#64748B;line-height:1.4}
+.comp-card .comp-used{font-size:11px;color:#94A3B8;margin-top:8px}
+
+/* ─── Tech Stack ─── */
+.stack-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.stack-item{background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:20px;display:flex;gap:14px;align-items:flex-start}
+.stack-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.stack-icon.fe{background:#DBEAFE}
+.stack-icon.be{background:#D1FAE5}
+.stack-icon.db{background:#FEF3C7}
+.stack-icon.infra{background:#EDE9FE}
+.stack-info .stack-name{font-size:14px;font-weight:700;color:#1E3A5F}
+.stack-info .stack-detail{font-size:12px;color:#64748B;margin-top:2px}
+
+/* ─── KPI Box ─── */
+.kpi-row{display:flex;gap:16px;margin-bottom:24px}
+.kpi{flex:1;background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:20px;text-align:center}
+.kpi-num{font-size:32px;font-weight:800;color:#2563EB}
+.kpi-label{font-size:12px;color:#64748B;margin-top:4px}
+
+/* ─── Print ─── */
+@media print{
+  .topbar,.sidebar-nav{display:none}
+  .page{display:block}
+  .main{padding:20px;max-width:100%}
+  .section{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<!-- SWT_SIDEBAR_START -->
+<style>
+.swt-sb,.swt-sb *{box-sizing:border-box}
+.swt-sb{position:fixed;left:0;top:0;width:240px;height:100vh;background:#1E3A5F;color:#D1D5DB;overflow-y:auto;padding:14px 10px 32px;z-index:500;font-family:'Inter','Noto Sans Thai',sans-serif;font-size:13px;line-height:1.4}
+.swt-sb::-webkit-scrollbar{width:6px}
+.swt-sb::-webkit-scrollbar-thumb{background:#334E70;border-radius:3px}
+.swt-sb-brand{display:flex;align-items:center;gap:9px;padding:4px 8px 14px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:12px}
+.swt-sb-logo{width:34px;height:34px;border-radius:9px;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0}
+.swt-sb-brand h1{font-size:12px;font-weight:700;color:#fff;letter-spacing:-0.2px;margin:0}
+.swt-sb-brand p{font-size:10px;color:#94A3B8;margin:1px 0 0}
+.swt-sb-search{position:relative;margin:0 4px 12px}
+.swt-sb-search input{width:100%;padding:7px 10px 7px 28px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:#fff;font-size:12px;font-family:inherit;outline:none}
+.swt-sb-search input::placeholder{color:#6B7F99}
+.swt-sb-search input:focus{border-color:#2563EB;background:rgba(37,99,235,0.1)}
+.swt-sb-search::before{content:"🔍";position:absolute;left:9px;top:7px;font-size:10px;opacity:0.55}
+.swt-sb-home{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;text-decoration:none;color:#9CA3AF;font-size:11px;margin:0 4px 10px;background:rgba(255,255,255,0.05);transition:all 0.15s}
+.swt-sb-home:hover{background:rgba(255,255,255,0.12);color:#fff}
+.swt-sb details{margin:1px 0}
+.swt-sb details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:7px 9px;border-radius:6px;font-size:10.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;user-select:none;margin:0 2px}
+.swt-sb details>summary::-webkit-details-marker{display:none}
+.swt-sb details>summary:hover{background:rgba(255,255,255,0.06);color:#fff}
+.swt-sb-ico{font-size:13px;width:17px;text-align:center;flex-shrink:0}
+.swt-sb-lbl{flex:1}
+.swt-sb-cnt{font-size:9px;font-weight:600;background:rgba(255,255,255,0.08);color:#CBD5E1;padding:1px 5px;border-radius:9px;letter-spacing:0}
+.swt-sb-chv{font-size:8px;color:#6B7F99;transition:transform 0.2s}
+.swt-sb details[open]>summary .swt-sb-chv{transform:rotate(180deg)}
+.swt-sb-links{padding:1px 0 4px 6px}
+.swt-sb-links a{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:5px;text-decoration:none;color:#D1D5DB;font-size:11.5px;margin:1px 0;transition:all 0.1s;line-height:1.3}
+.swt-sb-links a:hover{background:rgba(255,255,255,0.08);color:#fff}
+.swt-sb-links a .c{font-family:'Inter',monospace;font-size:9.5px;font-weight:700;color:#94A3B8;min-width:36px;flex-shrink:0}
+.swt-sb-links a:hover .c{color:#60A5FA}
+.swt-sb-links a.swt-active{background:#2563EB;color:#fff;font-weight:600}
+.swt-sb-links a.swt-active .c{color:#BFDBFE}
+.swt-sb-links a.swt-new::after{content:"NEW";font-size:7.5px;font-weight:700;background:#DC2626;color:#fff;padding:1px 4px;border-radius:3px;margin-left:auto}
+.swt-sb a.swt-hide,.swt-sb details.swt-hide{display:none}
+body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
+</style>
+<aside class="swt-sb" id="swtSb">
+  <div class="swt-sb-brand">
+    <div class="swt-sb-logo">ส</div>
+    <div><h1>Sangwijit ERP</h1><p>Web Portal · v3.0</p></div>
+  </div>
+  <div class="swt-sb-search"><input placeholder="ค้นหาเมนู…" oninput="swtSbFilter(this.value)"></div>
+  <a class="swt-sb-home" href="index.html">🏠 Master Index</a>
+
+  <details><summary><span class="swt-sb-ico">🏠</span><span class="swt-sb-lbl">Overview</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="index.html"><span class="c">IDX</span>Master Index</a>
+    <a href="sangwijit-portal-architecture.html"><span class="c">ARCH</span>Architecture</a>
+    <a href="dev-handoff-spec.html"><span class="c">SPEC</span>Dev Handoff</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">💼</span><span class="swt-sb-lbl">งานขาย (SL)</span><span class="swt-sb-cnt">12</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="slq-sales-queue-mockup.html"><span class="c">SL-Q</span>Sales Queue</a>
+    <a href="sl1-quotation-mockup.html"><span class="c">SL-1</span>ใบเสนอราคา</a>
+    <a href="slf1-credit-approval-mockup.html" class="swt-new"><span class="c">SL-F1</span>อนุมัติวงเงิน</a>
+    <a href="sl2-reservation-mockup.html"><span class="c">SL-2</span>ใบจอง</a>
+    <a href="sl3-deposit-mockup.html"><span class="c">SL-3</span>ใบมัดจำ</a>
+    <a href="sl4-invoice-mockup.html"><span class="c">SL-4</span>บิลขาย/Invoice</a>
+    <a href="sl5-crm-followup-mockup.html"><span class="c">SL-5</span>CRM Follow-up</a>
+    <a href="sl6-promotion-setup-mockup.html"><span class="c">SL-6</span>โปรโมชั่น</a>
+    <a href="pm5-vat-simulator-mockup.html" class="swt-new"><span class="c">PM-5</span>VAT Simulator</a>
+    <a href="sl7-sales-report-mockup.html"><span class="c">SL-7</span>รายงานยอดขาย</a>
+    <a href="cm1-commission-mockup.html"><span class="c">CM-1</span>Commission</a>
+    <a href="cl1-claims-mockup.html"><span class="c">CL-1</span>Claims</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">📦</span><span class="swt-sb-lbl">คลังสินค้า (WH)</span><span class="swt-sb-cnt">5</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="wh-queue-mockup.html"><span class="c">WH-Q</span>คิวรับสินค้า</a>
+    <a href="wh1-grn-mockup.html"><span class="c">WH-1</span>ใบรับสินค้า (GRN)</a>
+    <a href="wh2-stock-transfer-mockup.html"><span class="c">WH-2</span>โอนย้ายสต็อก</a>
+    <a href="wh3-stock-count-mockup.html"><span class="c">WH-3</span>นับสต็อก</a>
+    <a href="whr-goods-issue-mockup.html"><span class="c">WH-R</span>เบิกสินค้า</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🛒</span><span class="swt-sb-lbl">จัดซื้อ (PO)</span><span class="swt-sb-cnt">6</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="poq-purchase-queue-mockup.html"><span class="c">PO-Q</span>Purchase Queue</a>
+    <a href="po1-purchase-request-mockup.html" class="swt-new"><span class="c">PO-1</span>ใบขอซื้อ (PR)</a>
+    <a href="po2-rfq-mockup.html" class="swt-new"><span class="c">PO-2</span>RFQ / เปรียบเทียบราคา</a>
+    <a href="po3-vendor-invoice-mockup.html" class="swt-new"><span class="c">PO-3</span>ใบวางบิล Vendor</a>
+    <a href="po4-purchase-order-mockup.html"><span class="c">PO-4</span>ใบสั่งซื้อ (PO)</a>
+    <a href="po-rebate-dashboard.html"><span class="c">PO-R</span>Rebate Dashboard</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🧭</span><span class="swt-sb-lbl">SKU &amp; Vendor (SM)</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sm1-sku-slot-planner-mockup.html"><span class="c">SM-1</span>SKU Slot Planner</a>
+    <a href="sm2-sku-health-mockup.html"><span class="c">SM-2</span>SKU Health</a>
+    <a href="sm3-vendor-report-mockup.html"><span class="c">SM-3</span>Vendor Report</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">💵</span><span class="swt-sb-lbl">บัญชี/การเงิน</span><span class="swt-sb-cnt">9</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="fiq-finance-queue-mockup.html" class="swt-new"><span class="c">FI-Q</span>Finance Queue</a>
+    <a href="fi1-ar-receive-mockup.html"><span class="c">FI-1</span>รับชำระ AR</a>
+    <a href="fi1q-apply-queue-mockup.html" class="swt-new"><span class="c">FI-1Q</span>Apply Queue</a>
+    <a href="fi2-ap-payment-mockup.html"><span class="c">FI-2</span>จ่ายชำระ AP</a>
+    <a href="fi3-tax-reconciliation-mockup.html"><span class="c">FI-3</span>กระทบยอดภาษี</a>
+    <a href="fi4-expense-wht-mockup.html"><span class="c">FI-4</span>ค่าใช้จ่าย/WHT</a>
+    <a href="fi5-ar-audit-mockup.html"><span class="c">FI-5</span>ตรวจสอบ AR</a>
+    <a href="fi13-dual-book-mockup.html" class="swt-new"><span class="c">FI-13</span>Dual-Book/Entity Tag</a>
+    <a href="tr1-treasury-mockup.html"><span class="c">TR-1</span>Treasury</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🔗</span><span class="swt-sb-lbl">Integration (IA)</span><span class="swt-sb-cnt">1</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="iaq-bc-sync-monitor-mockup.html" class="swt-new"><span class="c">IA-Q</span>BC Sync Monitor</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🔧</span><span class="swt-sb-lbl">บริการ (SV)</span><span class="swt-sb-cnt">5</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sv1-service-queue-mockup.html"><span class="c">SV-1</span>คิวงานซ่อม</a>
+    <a href="sv2-service-invoice-mockup.html"><span class="c">SV-2</span>ใบแจ้งหนี้บริการ</a>
+    <a href="sv3-spare-part-issue-mockup.html" class="swt-new"><span class="c">SV-3</span>เบิกอะไหล่</a>
+    <a href="sv4-warranty-check-mockup.html" class="swt-new"><span class="c">SV-4</span>ตรวจสอบประกัน</a>
+    <a href="sv5-job-card-mockup.html" class="swt-new"><span class="c">SV-5</span>Job Card ช่าง</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🚚</span><span class="swt-sb-lbl">ส่ง/รายงาน/อนุมัติ</span><span class="swt-sb-cnt">4</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="dl1-delivery-planning-mockup.html"><span class="c">DL-1</span>วางแผนจัดส่ง</a>
+    <a href="ex1-executive-dashboard-mockup.html"><span class="c">EX-1</span>Executive Dashboard</a>
+    <a href="rp1-report-center-mockup.html"><span class="c">RP-1</span>Report Center</a>
+    <a href="ap1-approval-center-mockup.html"><span class="c">AP-1</span>ศูนย์อนุมัติ</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">⚙️</span><span class="swt-sb-lbl">ตั้งค่าระบบ (CF)</span><span class="swt-sb-cnt">8</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="cf1-rbac-permission-mockup.html"><span class="c">CF-1</span>สิทธิ์ RBAC</a>
+    <a href="cf2-config-hub-mockup.html"><span class="c">CF-2</span>Config Hub</a>
+    <a href="cf2-1-tax-setup-mockup.html"><span class="c">CF-2.1</span>ภาษี (Tax)</a>
+    <a href="cf2-2-number-series-mockup.html"><span class="c">CF-2.2</span>Running No.</a>
+    <a href="cf2-5-tech-template-mockup.html"><span class="c">CF-2.5</span>Template ช่าง</a>
+    <a href="cf2-6-approval-matrix-mockup.html"><span class="c">CF-2.6</span>Approval Matrix</a>
+    <a href="cf2-7-doc-template-mockup.html"><span class="c">CF-2.7</span>Doc Template</a>
+    <a href="cf2-9-general-parameter-mockup.html"><span class="c">CF-2.9</span>ค่าตั้งต้น</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">📚</span><span class="swt-sb-lbl">Master Data (MD)</span><span class="swt-sb-cnt">5</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="md1-item-master-mockup-v3.html"><span class="c">MD-1</span>ทะเบียนสินค้า</a>
+    <a href="md2-customer-master-mockup-v3.html"><span class="c">MD-2</span>ทะเบียนลูกค้า</a>
+    <a href="md3-vendor-master-mockup-v3.html"><span class="c">MD-3</span>ทะเบียน Vendor</a>
+    <a href="md4-employee-master-mockup-v3.html"><span class="c">MD-4</span>ทะเบียนพนักงาน</a>
+    <a href="md5-branch-warehouse-mockup-v3.html"><span class="c">MD-5</span>สาขา &amp; คลัง</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🧩</span><span class="swt-sb-lbl">Shared Components</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sc1-customer-search-mockup.html"><span class="c">SC-1</span>ค้นหาลูกค้า</a>
+    <a href="sc2-item-search-mockup.html"><span class="c">SC-2</span>ค้นหาสินค้า</a>
+    <a href="sc7-timeline-mockup.html"><span class="c">SC-7</span>Timeline</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">👤</span><span class="swt-sb-lbl">ระบบ &amp; บัญชีผู้ใช้</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="login-mockup.html" class="swt-new"><span class="c">AUTH</span>Login / SSO</a>
+    <a href="user-profile-mockup.html" class="swt-new"><span class="c">PROF</span>User Profile</a>
+    <a href="notification-center-mockup.html" class="swt-new"><span class="c">NOTI</span>Notification Center</a>
+  </div></details>
+</aside>
+<script>
+(function(){
+  var sb=document.getElementById('swtSb');if(!sb)return;
+  if(!document.querySelector('.main-content, main.main, .app-container, .app'))
+    document.body.classList.add('swt-body-pad');
+  var cur=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  sb.querySelectorAll('a[href]').forEach(function(a){
+    var h=(a.getAttribute('href')||'').split('/').pop().toLowerCase();
+    if(h===cur){a.classList.add('swt-active');var p=a.closest('details');if(p)p.open=true;}
+  });
+  window.swtSbFilter=function(q){
+    q=(q||'').trim().toLowerCase();
+    sb.querySelectorAll('.swt-sb-links a').forEach(function(a){
+      var m=!q||a.textContent.toLowerCase().indexOf(q)>-1;
+      a.classList.toggle('swt-hide',!m);
+    });
+    sb.querySelectorAll('details').forEach(function(d){
+      var any=[].some.call(d.querySelectorAll('.swt-sb-links a'),function(a){return !a.classList.contains('swt-hide');});
+      d.classList.toggle('swt-hide',!!q&&!any);
+      if(q&&any)d.open=true;
+    });
+  };
+})();
+</script>
+<!-- SWT_SIDEBAR_END -->
+
+<div class="topbar">
+  <div class="topbar-logo">ส</div>
+  <h1>Dev Handoff Spec — Sangwijit ERP Portal</h1>
+  <div class="topbar-meta">
+    <span>v2.0</span>
+    <span>44 Pages</span>
+    <span>16 เม.ย. 2569</span>
+    <span><a href="portal-mockup-index.html" style="color:#93C5FD;text-decoration:none">← กลับ Index</a></span>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ─── Sidebar ─── -->
+<nav class="sidebar-nav">
+  <div class="nav-section">Overview</div>
+  <a href="#overview" class="active">Project Overview</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#bc-audit">BC365 Audit</a>
+  <div class="nav-section">Module Specs</div>
+  <a href="#mod-sales">Sales (SL)</a>
+  <a href="#mod-warehouse">Warehouse (WH)</a>
+  <a href="#mod-purchase">Purchase (PO)</a>
+  <a href="#mod-finance">Finance (FI/TR)</a>
+  <a href="#mod-service">Service (SV)</a>
+  <a href="#mod-delivery">Delivery (DL)</a>
+  <a href="#mod-sku">SKU Management (SM)</a>
+  <a href="#mod-master">Master Data (MD)</a>
+  <a href="#mod-config">Config (CF)</a>
+  <a href="#mod-exec">Executive (EX)</a>
+  <a href="#mod-approval">Approval (AP)</a>
+  <div class="nav-section">Technical</div>
+  <a href="#components">Shared Components</a>
+  <a href="#api-patterns">API Patterns</a>
+  <a href="#tech-stack">Tech Stack</a>
+  <a href="#design-system">Design System</a>
+  <a href="#dev-notes">Dev Notes</a>
+</nav>
+
+<!-- ─── Main ─── -->
+<div class="main">
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: Overview -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="overview"></span>
+  <h2><span class="emoji">📋</span> Project Overview</h2>
+  <p class="section-sub">Frontend ERP Portal ครอบคลุม 4 นิติบุคคล, 10 สาขา, ~148 พนักงาน — วาง UI layer ทับ BC365</p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-num">44</div><div class="kpi-label">Mockup Pages</div></div>
+    <div class="kpi"><div class="kpi-num">11</div><div class="kpi-label">Module Groups</div></div>
+    <div class="kpi"><div class="kpi-num">3</div><div class="kpi-label">Shared Components</div></div>
+    <div class="kpi"><div class="kpi-num">4</div><div class="kpi-label">นิติบุคคล</div></div>
+    <div class="kpi"><div class="kpi-num">10</div><div class="kpi-label">สาขา</div></div>
+  </div>
+
+  <div class="arch-card">
+    <h4>4 นิติบุคคล</h4>
+    <table class="mod-table">
+      <tr><th>Code</th><th>ชื่อ</th><th>ประเภท</th><th>สาขา</th></tr>
+      <tr><td><strong>SWT</strong></td><td>แสงวิจิตร เทรดดิ้ง</td><td>ค้าส่ง (Wholesale)</td><td>โคราช HQ, ขอนแก่น, อุดร, อุบล, บุรีรัมย์</td></tr>
+      <tr><td><strong>SWE</strong></td><td>แสงวิจิตร อีเลคทริค</td><td>ค้าปลีก (Retail)</td><td>โคราช, ขอนแก่น, อุดร</td></tr>
+      <tr><td><strong>VMN</strong></td><td>วี เอ็ม เอ็น</td><td>ศูนย์บริการ (Service)</td><td>โคราช</td></tr>
+      <tr><td><strong>WPS</strong></td><td>WPS</td><td>ส่งออก (Export)</td><td>โคราช</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: Architecture -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="architecture"></span>
+  <h2><span class="emoji">🏗️</span> Architecture</h2>
+  <p class="section-sub">Portal = UI Layer เท่านั้น — ข้อมูลทั้งหมดมาจาก BC365 ผ่าน API</p>
+
+  <div class="arch-diagram">
+    <div class="arch-box portal">
+      <div class="box-title">Portal (React)</div>
+      <div class="box-sub">Frontend UI Layer</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-box api">
+      <div class="box-title">API Gateway</div>
+      <div class="box-sub">REST / OData</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-box bc">
+      <div class="box-title">BC365</div>
+      <div class="box-sub">Business Logic + DB</div>
+    </div>
+  </div>
+
+  <div class="arch-card">
+    <h4>Golden Rule — Portal ห้ามทำ</h4>
+    <table class="mod-table">
+      <tr><th style="width:30%">ห้าม</th><th>เหตุผล</th></tr>
+      <tr><td>❌ Post GL Entries</td><td>BC เป็นคนเดียวที่ post ลง General Ledger — Portal ส่ง document data ไป BC ทำ posting</td></tr>
+      <tr><td>❌ คำนวณ VAT/WHT</td><td>BC มี Tax Posting Setup ครบ — Portal แค่แสดงผลลัพธ์ที่ BC คำนวณ</td></tr>
+      <tr><td>❌ Generate เลขเอกสาร</td><td>BC Number Series จัดการ — Portal ได้เลขกลับมาหลัง Post</td></tr>
+      <tr><td>❌ จัดการ Bin / Inventory</td><td>BC Warehouse Module — Portal เรียก API ดู/ย้าย stock</td></tr>
+      <tr><td>❌ Approval Workflow engine</td><td>BC Approval Entries — Portal เรียก API approve/reject</td></tr>
+    </table>
+  </div>
+
+  <div class="arch-card">
+    <h4>Portal ทำอะไรได้ (Custom Logic)</h4>
+    <table class="mod-table">
+      <tr><th style="width:30%">Portal ทำ</th><th>รายละเอียด</th></tr>
+      <tr><td>✅ UI/UX Layer</td><td>หน้าจอ custom, dashboard, KPI aggregation, charts</td></tr>
+      <tr><td>✅ Tech Job Template (CF-2.5)</td><td>ข้อมูลเฉพาะธุรกิจแสงวิจิตร — BC ไม่มี Job Template</td></tr>
+      <tr><td>✅ Trade Agreement (MD-3)</td><td>Rebate/MDF/Co-op/Penalty — BC ไม่มี module นี้</td></tr>
+      <tr><td>✅ Commission Calculation (CM-1)</td><td>4-layer commission — custom formula</td></tr>
+      <tr><td>✅ CRM Pipeline (SL-5)</td><td>Kanban + Follow-up — BC CRM จำกัด</td></tr>
+      <tr><td>✅ Document Templates (CF-2.7)</td><td>Print format — ใบเสนอราคา, Invoice, DO, Service</td></tr>
+      <tr><td>✅ Approval Matrix UI (CF-2.6)</td><td>Visual matrix — Position × DocType × Threshold</td></tr>
+      <tr><td>✅ SKU Slot / Health (SM-1/2)</td><td>Space management — BC ไม่มี quota per branch</td></tr>
+      <tr><td>✅ Delivery Planning (DL-1)</td><td>Fleet + route + cubic meter — BC ไม่มี</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: BC365 Audit -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="bc-audit"></span>
+  <h2><span class="emoji">🔍</span> BC365 Audit Summary</h2>
+  <p class="section-sub">ตรวจสอบทุก mockup page เทียบกับ BC365 built-in — 16 เม.ย. 2569</p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-num" style="color:#DC2626">5</div><div class="kpi-label">🔴 ใช้ BC โดยตรง</div></div>
+    <div class="kpi"><div class="kpi-num" style="color:#F59E0B">18</div><div class="kpi-label">🟡 Portal UI Layer</div></div>
+    <div class="kpi"><div class="kpi-num" style="color:#059669">21</div><div class="kpi-label">🟢 Portal 100% Custom</div></div>
+    <div class="kpi"><div class="kpi-num" style="color:#6B7280">3</div><div class="kpi-label">⚠️ Phase 2</div></div>
+  </div>
+
+  <table class="audit-table">
+    <tr><th>รหัส</th><th>หน้า</th><th>ผลตรวจ</th><th>เหตุผล</th></tr>
+    <tr><td>CF-2.1</td><td>Tax Setup (VAT/WHT)</td><td class="decision-bc">🔴 ใช้ BC</td><td>BC VAT/WHT Posting Setup ครบ — ตั้งค่าใน BC โดยตรง</td></tr>
+    <tr><td>CF-2.2</td><td>Number Series</td><td class="decision-bc">🔴 ใช้ BC</td><td>BC No. Series — เลขเอกสารต้องออกจาก BC เท่านั้น</td></tr>
+    <tr><td>CF-2.3</td><td>Posting & GL</td><td class="decision-bc">🔴 ใช้ BC</td><td>BC Posting Groups (4-layer) — GL mapping เป็น core ของ BC</td></tr>
+    <tr><td>CF-2.4</td><td>Bin Setup</td><td class="decision-bc">🔴 ใช้ BC</td><td>BC Bin Content & Warehouse Setup — จัดการผ่าน BC</td></tr>
+    <tr><td>CF-2.9</td><td>General Parameters</td><td class="decision-bc">🔴 ใช้ BC</td><td>BC General Ledger Setup — Company Info, Fiscal Year</td></tr>
+    <tr><td>CF-2.5</td><td>Tech Job Template</td><td class="decision-portal">🟢 Portal</td><td>BC ไม่มี Job Template สำหรับช่าง — custom 100%</td></tr>
+    <tr><td>CF-2.6</td><td>Approval Matrix</td><td class="decision-portal">🟢 Portal</td><td>Portal สร้าง visual matrix → sync ไป BC Approval Entries</td></tr>
+    <tr><td>CF-2.7</td><td>Document Template</td><td class="decision-portal">🟢 Portal</td><td>Print format custom — BC Report ไม่ยืดหยุ่นพอ</td></tr>
+    <tr><td>CF-2.8</td><td>Notification Setup</td><td class="decision-phase2">⚠️ Phase 2</td><td>รอ Phase 2 — LINE/Email notification engine</td></tr>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- MODULE: Sales -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="mod-sales"></span>
+  <h2><span class="emoji">🛒</span> Sales Module</h2>
+  <p class="section-sub">9 หน้า — ครอบคลุม Quotation → Reservation → Deposit → Invoice + CRM, Promotion, Report, Commission</p>
+
+  <table class="mod-table">
+    <tr><th>Page</th><th>ชื่อ</th><th>Type</th><th>BC365 Entities</th><th>Key API</th></tr>
+    <tr>
+      <td><a class="file-link" href="slq-sales-queue-mockup.html">SL-Q</a></td>
+      <td>Sales Queue Dashboard</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Sales Header, Sales Line, Customer</td>
+      <td><span class="tag tag-read">GET</span> salesOrders, salesQuotes</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="sl1-quotation-mockup.html">SL-1</a></td>
+      <td>ใบเสนอราคา (Quotation)</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Sales Quote Header/Line, Customer, Item</td>
+      <td><span class="tag tag-crud">CRUD</span> salesQuotes, salesQuoteLines</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="sl2-reservation-mockup.html">SL-2</a></td>
+      <td>ใบจอง (Reservation)</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Sales Order (type=Reserve), Item Ledger</td>
+      <td><span class="tag tag-crud">CRUD</span> salesOrders <span class="tag tag-write">POST</span> reserve</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="sl3-deposit-mockup.html">SL-3</a></td>
+      <td>ใบมัดจำ (Deposit)</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Sales Prepayment, Payment Journal</td>
+      <td><span class="tag tag-write">POST</span> salesPrepayments</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="sl4-invoice-mockup.html">SL-4</a></td>
+      <td>บิลขาย (Invoice)</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Sales Invoice Header/Line, Payment, Shipment</td>
+      <td><span class="tag tag-crud">CRUD</span> salesInvoices <span class="tag tag-write">POST</span> post</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="sl5-crm-followup-mockup.html">SL-5</a></td>
+      <td>CRM Follow-up (Kanban)</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>Contact, Opportunity (BC CRM limited)</td>
+      <td>Portal DB — custom pipeline + activity log</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="sl6-promotion-setup-mockup.html">SL-6</a></td>
+      <td>ตั้งโปรโมชั่น</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>Sales Price, Sales Line Discount</td>
+      <td>Portal DB + BC <span class="tag tag-write">POST</span> salesPrices</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="sl7-sales-report-mockup.html">SL-7</a></td>
+      <td>Sales Report Dashboard</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Sales Invoice (Posted), Value Entry</td>
+      <td><span class="tag tag-read">GET</span> postedSalesInvoices, valueEntries</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="cm1-commission-mockup.html">CM-1</a></td>
+      <td>Commission พนักงานขาย</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>Sales Invoice (Posted), Employee, Salesperson</td>
+      <td>Portal DB — custom 4-layer calc + BC <span class="tag tag-read">GET</span></td>
+    </tr>
+  </table>
+
+  <h3>Key API Contracts — Sales</h3>
+  <div class="api-block">
+<span class="api-comment">// ─── Sales Quotes ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/salesQuotes?$filter=status eq 'Open'
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/salesQuotes({quoteId})/salesQuoteLines
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/salesQuotes
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/salesQuotes({quoteId})/Microsoft.NAV.makeInvoice
+
+<span class="api-comment">// ─── Sales Orders ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/salesOrders?$expand=salesOrderLines
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/salesOrders
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/salesOrders({orderId})/Microsoft.NAV.ship
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/salesOrders({orderId})/Microsoft.NAV.invoice
+
+<span class="api-comment">// ─── Sales Invoices ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/salesInvoices?$filter=status eq 'Open'
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/salesInvoices
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/salesInvoices({invoiceId})/Microsoft.NAV.post
+
+<span class="api-comment">// ─── Posted Sales Invoices (Read-only) ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/postedSalesInvoices?$filter=postingDate ge 2025-01-01
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/postedSalesInvoices({id})/postedSalesInvoiceLines
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- MODULE: Warehouse -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="mod-warehouse"></span>
+  <h2><span class="emoji">📦</span> Warehouse Module</h2>
+  <p class="section-sub">5 หน้า — GRN, Stock Transfer, Stock Count, Goods Issue + Queue Dashboard</p>
+
+  <table class="mod-table">
+    <tr><th>Page</th><th>ชื่อ</th><th>Type</th><th>BC365 Entities</th><th>Key API</th></tr>
+    <tr>
+      <td><a class="file-link" href="wh-queue-mockup.html">WH-Q</a></td>
+      <td>Warehouse Queue</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Purchase Order, Transfer Order, Item Ledger</td>
+      <td><span class="tag tag-read">GET</span> purchaseOrders, transferOrders</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="wh1-grn-mockup.html">WH-1</a></td>
+      <td>GRN รับสินค้า</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Purchase Receipt, Item Journal, Serial No.</td>
+      <td><span class="tag tag-write">POST</span> purchaseReceipts, itemJournalLines</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="wh2-stock-transfer-mockup.html">WH-2</a></td>
+      <td>โอนย้ายสต็อก</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Transfer Order, Transfer Shipment/Receipt</td>
+      <td><span class="tag tag-crud">CRUD</span> transferOrders <span class="tag tag-write">POST</span> ship/receive</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="wh3-stock-count-mockup.html">WH-3</a></td>
+      <td>นับสต็อก / ปรับยอด</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Physical Inventory Journal, Item Ledger</td>
+      <td><span class="tag tag-crud">CRUD</span> physicalInventoryJournalLines <span class="tag tag-write">POST</span> post</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="whr-goods-issue-mockup.html">WH-R</a></td>
+      <td>เบิกสินค้า (Goods Issue)</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Warehouse Pick, Sales Shipment</td>
+      <td><span class="tag tag-write">POST</span> warehousePicks, registerPick</td>
+    </tr>
+  </table>
+
+  <h3>Key API Contracts — Warehouse</h3>
+  <div class="api-block">
+<span class="api-comment">// ─── Items & Inventory ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/items?$expand=itemVariants
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/itemLedgerEntries?$filter=itemNo eq 'AC-DAI-18000'
+
+<span class="api-comment">// ─── Transfer Orders ───</span>
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/transferOrders
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/transferOrders({id})/Microsoft.NAV.ship
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/transferOrders({id})/Microsoft.NAV.receive
+
+<span class="api-comment">// ─── Item Journal (Stock Adjustment) ───</span>
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/itemJournalLines
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/itemJournals({jnlId})/Microsoft.NAV.post
+
+<span class="api-comment">// ─── Serial Numbers ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/itemTrackingCodes
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- MODULE: Purchase -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="mod-purchase"></span>
+  <h2><span class="emoji">🛍️</span> Purchase Module</h2>
+  <p class="section-sub">2 หน้า — Purchase Queue (PR → PO workflow) + Purchase Order</p>
+
+  <table class="mod-table">
+    <tr><th>Page</th><th>ชื่อ</th><th>Type</th><th>BC365 Entities</th><th>Key API</th></tr>
+    <tr>
+      <td><a class="file-link" href="poq-purchase-queue-mockup.html">PO-Q</a></td>
+      <td>Purchase Queue & PR</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Requisition Line, Purchase Header</td>
+      <td><span class="tag tag-read">GET</span> purchaseOrders <span class="tag tag-write">POST</span> requisitionLines</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="po4-purchase-order-mockup.html">PO-4</a></td>
+      <td>ใบสั่งซื้อ (PO)</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Purchase Order Header/Line, Vendor</td>
+      <td><span class="tag tag-crud">CRUD</span> purchaseOrders, purchaseOrderLines</td>
+    </tr>
+  </table>
+
+  <h3>Key API Contracts — Purchase</h3>
+  <div class="api-block">
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/purchaseOrders?$expand=purchaseOrderLines
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/purchaseOrders
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/purchaseOrders({id})/Microsoft.NAV.receive
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/purchaseOrders({id})/Microsoft.NAV.invoice
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/vendors?$filter=blocked eq 'No'
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- MODULE: Finance -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="mod-finance"></span>
+  <h2><span class="emoji">💰</span> Finance & Accounting Module</h2>
+  <p class="section-sub">6 หน้า — AR, AP, Tax Reconciliation, Expense/WHT, AR Audit, Treasury</p>
+
+  <table class="mod-table">
+    <tr><th>Page</th><th>ชื่อ</th><th>Type</th><th>BC365 Entities</th><th>Key API</th></tr>
+    <tr>
+      <td><a class="file-link" href="fi1-ar-receive-mockup.html">FI-1</a></td>
+      <td>AR รับชำระลูกหนี้</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Customer Ledger Entry, Payment Journal, Cash Receipt</td>
+      <td><span class="tag tag-write">POST</span> customerPaymentJournals <span class="tag tag-read">GET</span> customerLedgerEntries</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="fi2-ap-payment-mockup.html">FI-2</a></td>
+      <td>AP เจ้าหนี้ วางบิล/ทำจ่าย</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Vendor Ledger Entry, Payment Journal</td>
+      <td><span class="tag tag-write">POST</span> vendorPaymentJournals <span class="tag tag-read">GET</span> vendorLedgerEntries</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="fi3-tax-reconciliation-mockup.html">FI-3</a></td>
+      <td>กระทบยอดภาษี</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>VAT Entry, WHT Entry, GL Entry</td>
+      <td><span class="tag tag-read">GET</span> vatEntries, generalLedgerEntries + Portal reconciliation logic</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="fi4-expense-wht-mockup.html">FI-4</a></td>
+      <td>ค่าใช้จ่าย / WHT</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>General Journal, WHT Certificate</td>
+      <td><span class="tag tag-write">POST</span> generalJournalLines + Portal WHT cert generation</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="fi5-ar-audit-mockup.html">FI-5</a></td>
+      <td>ลูกหนี้ ตรวจสอบ/กระทบยอด</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>Customer Ledger, Detailed CLE</td>
+      <td><span class="tag tag-read">GET</span> customerLedgerEntries + Portal audit checks</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="tr1-treasury-mockup.html">TR-1</a></td>
+      <td>Treasury / Cash Flow</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>Bank Account, Bank Acc. Ledger Entry</td>
+      <td><span class="tag tag-read">GET</span> bankAccounts + Portal forecast engine</td>
+    </tr>
+  </table>
+
+  <h3>Key API Contracts — Finance</h3>
+  <div class="api-block">
+<span class="api-comment">// ─── Customer Payments (AR) ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/customerLedgerEntries?$filter=open eq true
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/customerPaymentJournals({jnlId})/customerPayments
+
+<span class="api-comment">// ─── Vendor Payments (AP) ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/vendorLedgerEntries?$filter=open eq true
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/vendorPaymentJournals({jnlId})/vendorPayments
+
+<span class="api-comment">// ─── General Ledger ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/generalLedgerEntries?$filter=postingDate ge 2025-01-01
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/accounts  <span class="api-comment">// Chart of Accounts</span>
+
+<span class="api-comment">// ─── Bank Accounts ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/bankAccounts
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- MODULE: Service -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="mod-service"></span>
+  <h2><span class="emoji">🔧</span> Service Center Module</h2>
+  <p class="section-sub">2 หน้า — Service Queue (Job Assignment) + Service Invoice (ในประกัน/นอกประกัน)</p>
+
+  <table class="mod-table">
+    <tr><th>Page</th><th>ชื่อ</th><th>Type</th><th>BC365 Entities</th><th>Key API</th></tr>
+    <tr>
+      <td><a class="file-link" href="sv1-service-queue-mockup.html">SV-1</a></td>
+      <td>คิวงานซ่อม</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>Service Order, Service Item, Resource</td>
+      <td>Portal DB (Job Queue) + BC <span class="tag tag-read">GET</span> serviceOrders</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="sv2-service-invoice-mockup.html">SV-2</a></td>
+      <td>Service Invoice</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Service Invoice, Service Ledger Entry</td>
+      <td><span class="tag tag-crud">CRUD</span> serviceInvoices</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- MODULE: Delivery -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="mod-delivery"></span>
+  <h2><span class="emoji">🚚</span> Delivery Module</h2>
+  <p class="section-sub">1 หน้า — Fleet planning, route, capacity, GPS tracking</p>
+
+  <table class="mod-table">
+    <tr><th>Page</th><th>ชื่อ</th><th>Type</th><th>BC365 Entities</th><th>Key API</th></tr>
+    <tr>
+      <td><a class="file-link" href="dl1-delivery-planning-mockup.html">DL-1</a></td>
+      <td>วางแผนจัดส่ง</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>Sales Shipment, Warehouse Shipment</td>
+      <td>Portal DB (Fleet/Route) + BC <span class="tag tag-read">GET</span> salesShipments</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- MODULE: SKU -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="mod-sku"></span>
+  <h2><span class="emoji">📊</span> SKU Management Module</h2>
+  <p class="section-sub">3 หน้า — SKU Slot Planner, SKU Health Monitor, Vendor Report Portal</p>
+
+  <table class="mod-table">
+    <tr><th>Page</th><th>ชื่อ</th><th>Type</th><th>BC365 Entities</th><th>Key API</th></tr>
+    <tr>
+      <td><a class="file-link" href="sm1-sku-slot-planner-mockup.html">SM-1</a></td>
+      <td>SKU Slot Planner</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>Stockkeeping Unit, Item</td>
+      <td>Portal DB (Quota) + BC <span class="tag tag-read">GET</span> stockkeepingUnits</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="sm2-sku-health-mockup.html">SM-2</a></td>
+      <td>SKU Health Monitor</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>Item Ledger Entry, Value Entry</td>
+      <td>Portal analysis + BC <span class="tag tag-read">GET</span> itemLedgerEntries</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="sm3-vendor-report-mockup.html">SM-3</a></td>
+      <td>Vendor Report & Portal</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>Item, Sales Line, Purchase Line</td>
+      <td>Portal DB (Vendor Portal login) + BC aggregated data</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- MODULE: Master Data -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="mod-master"></span>
+  <h2><span class="emoji">📁</span> Master Data Module</h2>
+  <p class="section-sub">5 หน้า (v3) — Item, Customer, Vendor, Employee, Branch & Warehouse — ทุกหน้าใช้ details + split layout pattern</p>
+
+  <table class="mod-table">
+    <tr><th>Page</th><th>ชื่อ</th><th>Type</th><th>BC365 Entities</th><th>Custom Sections</th></tr>
+    <tr>
+      <td><a class="file-link" href="md1-item-master-mockup-v3.html">MD-1 v3</a></td>
+      <td>Item Master สินค้า</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Item, Item Variant, Unit of Measure, Item Category</td>
+      <td>ราคา 5 กลุ่ม, สต็อกแยกคลัง, ประวัติ Serial/Lot</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="md2-customer-master-mockup-v3.html">MD-2 v3</a></td>
+      <td>ทะเบียนลูกค้า</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Customer, Customer Price Group, Ship-to Address</td>
+      <td>Special Pricing 3 sub-tabs, Purchase History chart, Notes</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="md3-vendor-master-mockup-v3.html">MD-3 v3</a></td>
+      <td>ทะเบียน Vendor</td>
+      <td><span class="tag tag-portal">UI Layer</span> <span class="tag tag-custom">Custom</span></td>
+      <td>Vendor, Vendor Bank Account</td>
+      <td><strong>Trade Agreement</strong> 4 sub-tabs (Rebate/MDF/Volume/Penalty) — Portal custom 100%</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="md4-employee-master-mockup-v3.html">MD-4 v3</a></td>
+      <td>ทะเบียนพนักงาน</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Employee, Employee Absence</td>
+      <td>Compensation, Leave sub-tabs, KPI, Training, System Access</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="md5-branch-warehouse-mockup-v3.html">MD-5 v3</a></td>
+      <td>สาขา & คลังสินค้า</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Location, Warehouse, Bin, No. Series</td>
+      <td>10-branch card grid, 4 warehouse sub-tabs, Assets, Stock Summary</td>
+    </tr>
+  </table>
+
+  <h3>Key API Contracts — Master Data</h3>
+  <div class="api-block">
+<span class="api-comment">// ─── Customers ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/customers?$top=50&$filter=contains(displayName,'สมชาย')
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/customers({custId})?$expand=shipToAddresses,customerFinancialDetails
+<span class="api-method api-patch">PATCH</span> /api/v2.0/companies({id})/customers({custId})
+
+<span class="api-comment">// ─── Vendors ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/vendors({vendorId})?$expand=vendorBankAccounts
+<span class="api-method api-patch">PATCH</span> /api/v2.0/companies({id})/vendors({vendorId})
+
+<span class="api-comment">// ─── Items ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/items({itemId})?$expand=itemVariants,defaultDimensions
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/items?$filter=itemCategoryCode eq 'AC'
+
+<span class="api-comment">// ─── Employees ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/employees
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/employees({empId})/employeeAbsences
+
+<span class="api-comment">// ─── Locations (Branches/Warehouses) ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/locations
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- MODULE: Config -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="mod-config"></span>
+  <h2><span class="emoji">⚙️</span> Config Module (CF)</h2>
+  <p class="section-sub">5 หน้า Portal (CF-1, CF-2 Hub, CF-2.5, CF-2.6, CF-2.7) — CF-2.1/2.2/2.3/2.4/2.9 ใช้ BC โดยตรง</p>
+
+  <table class="mod-table">
+    <tr><th>Page</th><th>ชื่อ</th><th>Type</th><th>หมายเหตุ</th></tr>
+    <tr>
+      <td><a class="file-link" href="cf1-rbac-permission-mockup.html">CF-1</a></td>
+      <td>RBAC Permission</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>2-Layer: Role (ทำอะไรได้) + Scope (เห็นอะไร) — Portal DB + BC Permission Set sync</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="cf2-config-hub-mockup.html">CF-2 Hub</a></td>
+      <td>Config Hub (Landing)</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>Landing page รวม 9 หมวด + BC365 Audit Summary</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="cf2-5-tech-template-mockup.html">CF-2.5</a></td>
+      <td>Tech Job Template</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>5 tabs — Job Type, Checklist, อุปกรณ์, เวลา&ทักษะ, Safety — Portal DB 100%</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="cf2-6-approval-matrix-mockup.html">CF-2.6</a></td>
+      <td>Approval Matrix</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>Position × DocType × Threshold — Portal visual → sync to BC Approval Entries</td>
+    </tr>
+    <tr>
+      <td><a class="file-link" href="cf2-7-doc-template-mockup.html">CF-2.7</a></td>
+      <td>Document Template</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>5 tabs — Quotation, Invoice, Receipt, DO, Service — Portal print engine</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- MODULE: Executive -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="mod-exec"></span>
+  <h2><span class="emoji">📈</span> Executive Dashboard</h2>
+  <p class="section-sub">1 หน้า — KPI 8 ตัว, กราฟยอดขาย 4 นิติบุคคล, Alerts, Branch Performance</p>
+
+  <table class="mod-table">
+    <tr><th>Page</th><th>ชื่อ</th><th>Type</th><th>Data Source</th></tr>
+    <tr>
+      <td><a class="file-link" href="ex1-executive-dashboard-mockup.html">EX-1</a></td>
+      <td>Dashboard ผู้บริหาร</td>
+      <td><span class="tag tag-custom">Custom</span></td>
+      <td>Aggregated from all BC entities + Portal analytics — read-only dashboard</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- MODULE: Approval -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="mod-approval"></span>
+  <h2><span class="emoji">✅</span> Approval Center</h2>
+  <p class="section-sub">1 หน้า — Pending queue ทุก module, Bulk approve, 4-Tier flow, SLA tracking</p>
+
+  <table class="mod-table">
+    <tr><th>Page</th><th>ชื่อ</th><th>Type</th><th>BC365 Entities</th><th>Key API</th></tr>
+    <tr>
+      <td><a class="file-link" href="ap1-approval-center-mockup.html">AP-1</a></td>
+      <td>ศูนย์อนุมัติรวม</td>
+      <td><span class="tag tag-portal">UI Layer</span></td>
+      <td>Approval Entry, Approval Comment</td>
+      <td><span class="tag tag-read">GET</span> approvalEntries <span class="tag tag-write">POST</span> approve/reject/delegate</td>
+    </tr>
+  </table>
+
+  <div class="api-block">
+<span class="api-comment">// ─── Approval Entries ───</span>
+<span class="api-method api-get">GET</span>  /api/v2.0/companies({id})/approvalEntries?$filter=status eq 'Open' and approverID eq '{userId}'
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/approvalEntries({entryId})/Microsoft.NAV.approve
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/approvalEntries({entryId})/Microsoft.NAV.reject
+<span class="api-method api-post">POST</span> /api/v2.0/companies({id})/approvalEntries({entryId})/Microsoft.NAV.delegate
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: Shared Components -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="components"></span>
+  <h2><span class="emoji">🧩</span> Shared Components</h2>
+  <p class="section-sub">3 components ที่ใช้ร่วมกันหลาย module — มี mockup + API spec แยก</p>
+
+  <div class="comp-grid">
+    <a href="sc1-customer-search-mockup.html" class="comp-card" style="text-decoration:none;color:inherit">
+      <div class="comp-id">SC-1</div>
+      <div class="comp-name">SharedCustomerSearch</div>
+      <div class="comp-desc">ค้นหาลูกค้า 4 variants — Standard, Quick-create, Credit Warning, ID Scan. รองรับ debounce search, blocked customer warning</div>
+      <div class="comp-used">ใช้ใน: SL-1, SL-2, SL-4, SV-1, FI-1</div>
+    </a>
+    <a href="sc2-item-search-mockup.html" class="comp-card" style="text-decoration:none;color:inherit">
+      <div class="comp-id">SC-2</div>
+      <div class="comp-name">SharedItemSearch</div>
+      <div class="comp-desc">ค้นหาสินค้า — Stock by location, Serial panel, Bundle suggest, Price priority resolution. Barcode scan ready</div>
+      <div class="comp-used">ใช้ใน: SL-1, SL-2, SL-4, PO-4, WH-1, WH-R</div>
+    </a>
+    <a href="sc7-timeline-mockup.html" class="comp-card" style="text-decoration:none;color:inherit">
+      <div class="comp-id">SC-7</div>
+      <div class="comp-name">SharedTimeline</div>
+      <div class="comp-desc">Document Chain + Activity Log + Approval Flow — 3 display variants. Tracks status changes, user actions, system events</div>
+      <div class="comp-used">ใช้ใน: SL-4, SL-5, PO-4, WH-2, FI-1, FI-2, AP-1</div>
+    </a>
+  </div>
+
+  <div class="arch-card">
+    <h4>Additional Shared Patterns (ไม่มี Mockup แยก — อยู่ในแต่ละ Page)</h4>
+    <table class="mod-table">
+      <tr><th>Pattern</th><th>รายละเอียด</th><th>ใช้ใน</th></tr>
+      <tr><td><span class="code">StatusBadge</span></td><td>Badge component — Draft(gray), Pending(yellow), Approved(blue), Posted(green), Rejected(red)</td><td>ทุกหน้าเอกสาร</td></tr>
+      <tr><td><span class="code">EntityHeader</span></td><td>Header card แสดง entity info — ชื่อ, รหัส, สถานะ, action buttons</td><td>MD-1~5, SL-1~4, PO-4</td></tr>
+      <tr><td><span class="code">DataTable</span></td><td>Sortable table + pagination + filter — รองรับ inline edit, checkbox select</td><td>ทุก Queue page, ทุก list view</td></tr>
+      <tr><td><span class="code">SplitLayout</span></td><td>Left list (30-40%) + Right detail (60-70%) — v3 Master Data pattern</td><td>MD-1~5, CF-2.5, CF-2.7</td></tr>
+      <tr><td><span class="code">CollapsibleSection</span></td><td><code>&lt;details class="collapse"&gt;</code> with ▼ rotation animation</td><td>MD-1~5 v3 (6 sections each)</td></tr>
+      <tr><td><span class="code">SubTabSwitcher</span></td><td><code>switchSubTab()</code> — tab within a details section</td><td>MD-2 Pricing, MD-3 Trade, MD-5 Warehouse</td></tr>
+      <tr><td><span class="code">StickyActionBar</span></td><td>Fixed bottom bar — Save, Cancel, Print, Post</td><td>SL-1~4, PO-4, FI-1~4, CF-2.5~7</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: API Patterns -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="api-patterns"></span>
+  <h2><span class="emoji">🔌</span> API Patterns & Conventions</h2>
+  <p class="section-sub">แนวปฏิบัติการเรียก BC365 API — ใช้ OData v4 / REST API v2.0</p>
+
+  <div class="arch-card">
+    <h4>Base URL Pattern</h4>
+    <div class="api-block">
+<span class="api-comment">// ─── Multi-company: ต้องระบุ company ID ทุกครั้ง ───</span>
+Base: https://{bc-host}/api/v2.0/companies({companyId})/{entity}
+
+<span class="api-comment">// ─── Company IDs (ตัวอย่าง) ───</span>
+SWT: companies('swt-guid-here')
+SWE: companies('swe-guid-here')
+VMN: companies('vmn-guid-here')
+WPS: companies('wps-guid-here')
+    </div>
+  </div>
+
+  <div class="arch-card">
+    <h4>Authentication</h4>
+    <table class="mod-table">
+      <tr><th>Method</th><th>รายละเอียด</th></tr>
+      <tr><td>OAuth 2.0</td><td>Azure AD — Client Credentials flow (service-to-service) หรือ Authorization Code (user-delegated)</td></tr>
+      <tr><td>Header</td><td><span class="code">Authorization: Bearer {access_token}</span></td></tr>
+      <tr><td>Scope</td><td><span class="code">https://api.businesscentral.dynamics.com/.default</span></td></tr>
+    </table>
+  </div>
+
+  <div class="arch-card">
+    <h4>Common Query Patterns</h4>
+    <div class="api-block">
+<span class="api-comment">// Pagination</span>
+?$top=50&$skip=0
+
+<span class="api-comment">// Filter + Sort</span>
+?$filter=status eq 'Open' and postingDate ge 2025-01-01&$orderby=postingDate desc
+
+<span class="api-comment">// Expand relations</span>
+?$expand=salesOrderLines,dimensionSetLines
+
+<span class="api-comment">// Select specific fields (performance)</span>
+?$select=no,customerName,totalAmountIncludingTax,status
+
+<span class="api-comment">// Multi-company ข้ามนิติบุคคล → Portal ต้อง call แยก company แล้ว merge ฝั่ง frontend</span>
+    </div>
+  </div>
+
+  <div class="arch-card">
+    <h4>Error Handling</h4>
+    <table class="mod-table">
+      <tr><th>HTTP Code</th><th>ความหมาย</th><th>Portal ทำอะไร</th></tr>
+      <tr><td>200/201</td><td>Success</td><td>แสดงผลปกติ / toast success</td></tr>
+      <tr><td>400</td><td>Bad Request — validation error</td><td>แสดง error message จาก BC ใน form field</td></tr>
+      <tr><td>401</td><td>Unauthorized — token expired</td><td>Refresh token → retry, ถ้าไม่ได้ redirect login</td></tr>
+      <tr><td>404</td><td>Not Found</td><td>แสดง "ไม่พบข้อมูล" + ให้ย้อนกลับ</td></tr>
+      <tr><td>409</td><td>Conflict — concurrent edit</td><td>แสดง "ข้อมูลถูกแก้ไขแล้ว" → reload</td></tr>
+      <tr><td>429</td><td>Rate Limit</td><td>Retry with exponential backoff</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: Tech Stack -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="tech-stack"></span>
+  <h2><span class="emoji">🛠️</span> Tech Stack (Recommended)</h2>
+  <p class="section-sub">Recommendation — ทีม dev ปรับตามความถนัดได้</p>
+
+  <div class="stack-grid">
+    <div class="stack-item">
+      <div class="stack-icon fe">⚛️</div>
+      <div class="stack-info">
+        <div class="stack-name">React 18+ / Next.js 14+</div>
+        <div class="stack-detail">TypeScript, App Router, Server Components สำหรับ SEO-optional pages</div>
+      </div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon fe">🎨</div>
+      <div class="stack-info">
+        <div class="stack-name">Tailwind CSS + shadcn/ui</div>
+        <div class="stack-detail">Design system ที่ consistent — สี, font, spacing ตาม mockup</div>
+      </div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon fe">📊</div>
+      <div class="stack-info">
+        <div class="stack-name">Recharts / Chart.js</div>
+        <div class="stack-detail">Dashboard charts — bar, line, pie, KPI cards</div>
+      </div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon fe">📋</div>
+      <div class="stack-info">
+        <div class="stack-name">TanStack Table</div>
+        <div class="stack-detail">Data tables — sort, filter, pagination, inline edit, virtual scroll</div>
+      </div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon be">🔗</div>
+      <div class="stack-info">
+        <div class="stack-name">BC365 API v2.0 (OData v4)</div>
+        <div class="stack-detail">Primary data source — REST + OData queries, OAuth 2.0</div>
+      </div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon be">🌐</div>
+      <div class="stack-info">
+        <div class="stack-name">API Middleware (Node/Express)</div>
+        <div class="stack-detail">Proxy layer — token management, rate limiting, response caching, multi-company merge</div>
+      </div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon db">💾</div>
+      <div class="stack-info">
+        <div class="stack-name">PostgreSQL / MySQL (Portal DB)</div>
+        <div class="stack-detail">Portal-only data: CRM pipeline, Trade Agreement, Commission rules, Tech templates, Approval matrix</div>
+      </div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-icon infra">☁️</div>
+      <div class="stack-info">
+        <div class="stack-name">Azure (recommended)</div>
+        <div class="stack-detail">Azure App Service + Azure AD (SSO with BC365) + Azure Redis (cache)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: Design System -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="design-system"></span>
+  <h2><span class="emoji">🎨</span> Design System & Standards</h2>
+  <p class="section-sub">ทุก Mockup ใช้ standards เดียวกัน — dev ควรสร้าง component library ตามนี้</p>
+
+  <div class="arch-card">
+    <h4>Layout</h4>
+    <table class="mod-table">
+      <tr><th style="width:25%">Element</th><th>Spec</th></tr>
+      <tr><td>Min Width</td><td><span class="code">1440px</span> (desktop-first, responsive optional Phase 2)</td></tr>
+      <tr><td>Sidebar</td><td><span class="code">240px</span> fixed, background <span class="code">#1E3A5F</span></td></tr>
+      <tr><td>Content Area</td><td>Remaining width, <span class="code">padding: 32px</span></td></tr>
+      <tr><td>Split Layout</td><td>Left <span class="code">35%</span> list + Right <span class="code">65%</span> detail (Master Data v3)</td></tr>
+    </table>
+  </div>
+
+  <div class="arch-card">
+    <h4>Typography</h4>
+    <table class="mod-table">
+      <tr><th>Element</th><th>Font</th><th>Size</th><th>Weight</th></tr>
+      <tr><td>Body</td><td>Inter</td><td>14px</td><td>400</td></tr>
+      <tr><td>Page Title</td><td>Inter</td><td>20px</td><td>700</td></tr>
+      <tr><td>Section Title</td><td>Inter</td><td>16px</td><td>700</td></tr>
+      <tr><td>Table Header</td><td>Inter</td><td>11px</td><td>700, uppercase</td></tr>
+      <tr><td>Label</td><td>Inter</td><td>12px</td><td>600</td></tr>
+      <tr><td>Monospace (codes)</td><td>SF Mono / Consolas</td><td>12px</td><td>500</td></tr>
+    </table>
+  </div>
+
+  <div class="arch-card">
+    <h4>Color Palette</h4>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px">
+        <div style="width:24px;height:24px;background:#1E3A5F;border-radius:4px"></div>
+        <div><div style="font-size:12px;font-weight:600">#1E3A5F</div><div style="font-size:10px;color:#64748B">Sidebar / Primary Dark</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px">
+        <div style="width:24px;height:24px;background:#2563EB;border-radius:4px"></div>
+        <div><div style="font-size:12px;font-weight:600">#2563EB</div><div style="font-size:10px;color:#64748B">Primary Blue</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px">
+        <div style="width:24px;height:24px;background:#059669;border-radius:4px"></div>
+        <div><div style="font-size:12px;font-weight:600">#059669</div><div style="font-size:10px;color:#64748B">Success Green</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px">
+        <div style="width:24px;height:24px;background:#F59E0B;border-radius:4px"></div>
+        <div><div style="font-size:12px;font-weight:600">#F59E0B</div><div style="font-size:10px;color:#64748B">Warning Yellow</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px">
+        <div style="width:24px;height:24px;background:#DC2626;border-radius:4px"></div>
+        <div><div style="font-size:12px;font-weight:600">#DC2626</div><div style="font-size:10px;color:#64748B">Danger Red</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px">
+        <div style="width:24px;height:24px;background:#F8FAFC;border:1px solid #CBD5E1;border-radius:4px"></div>
+        <div><div style="font-size:12px;font-weight:600">#F8FAFC</div><div style="font-size:10px;color:#64748B">Page Background</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arch-card">
+    <h4>Status Badges</h4>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+      <span style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:#F3F4F6;color:#6B7280">Draft</span>
+      <span style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:#FEF3C7;color:#92400E">Pending</span>
+      <span style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:#DBEAFE;color:#1D4ED8">Approved</span>
+      <span style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:#D1FAE5;color:#065F46">Posted</span>
+      <span style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:#FEE2E2;color:#991B1B">Rejected</span>
+      <span style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:#EDE9FE;color:#5B21B6">Partial</span>
+      <span style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:#F0FDF4;color:#166534">Completed</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: Dev Notes -->
+<!-- ════════════════════════════════════ -->
+<div class="section">
+  <span class="section-anchor" id="dev-notes"></span>
+  <h2><span class="emoji">📝</span> Dev Notes & Priority</h2>
+  <p class="section-sub">ข้อสังเกตสำหรับทีม dev — ลำดับพัฒนา, ข้อควรระวัง</p>
+
+  <div class="arch-card">
+    <h4>Recommended Build Order</h4>
+    <table class="mod-table">
+      <tr><th>Phase</th><th>Module</th><th>เหตุผล</th></tr>
+      <tr><td><strong>1. Foundation</strong></td><td>Shared Components (SC-1, SC-2, SC-7) + Design System + Auth (Azure AD)</td><td>ใช้ร่วมทุก module — ทำก่อนแล้วทำ module อื่นเร็วขึ้น</td></tr>
+      <tr><td><strong>2. Master Data</strong></td><td>MD-1~5 v3 + CF-1 RBAC</td><td>ข้อมูลพื้นฐานที่ทุก module ต้องอ้าง</td></tr>
+      <tr><td><strong>3. Sales Core</strong></td><td>SL-Q, SL-1, SL-2, SL-3, SL-4</td><td>Core revenue flow — Quotation → Invoice</td></tr>
+      <tr><td><strong>4. Warehouse</strong></td><td>WH-Q, WH-1, WH-2, WH-3, WH-R</td><td>เชื่อมต่อ Sales (เบิก/จัดส่ง)</td></tr>
+      <tr><td><strong>5. Purchase</strong></td><td>PO-Q, PO-4</td><td>เชื่อมต่อ Warehouse (รับสินค้า)</td></tr>
+      <tr><td><strong>6. Finance</strong></td><td>FI-1~5, TR-1</td><td>Settlement layer — ต้อง Sales/Purchase เสร็จก่อน</td></tr>
+      <tr><td><strong>7. Service</strong></td><td>SV-1, SV-2 + CF-2.5 Tech Template</td><td>VMN entity — อิสระจาก Sales flow</td></tr>
+      <tr><td><strong>8. Advanced</strong></td><td>SL-5 CRM, SL-6 Promo, SL-7 Report, CM-1, SM-1~3, DL-1</td><td>Add-on modules — ทำหลัง core เสร็จ</td></tr>
+      <tr><td><strong>9. Executive</strong></td><td>EX-1 Dashboard, AP-1 Approval, CF-2.6, CF-2.7</td><td>ต้อง data จากทุก module</td></tr>
+    </table>
+  </div>
+
+  <div class="arch-card">
+    <h4>Multi-company Considerations</h4>
+    <table class="mod-table">
+      <tr><th>ข้อควรระวัง</th><th>แนวทาง</th></tr>
+      <tr><td>User อาจมีสิทธิ์หลายนิติบุคคล</td><td>RBAC (CF-1) ต้อง scope per entity — user เห็นเฉพาะข้อมูลที่มีสิทธิ์</td></tr>
+      <tr><td>ข้อมูลข้ามนิติบุคคล (EX-1 Dashboard)</td><td>Portal middleware merge — call BC 4 companies → aggregate</td></tr>
+      <tr><td>เลขเอกสารแยก per entity</td><td>BC Number Series จัดการ — Portal ไม่ gen เลข, ได้เลขกลับจาก BC หลัง post</td></tr>
+      <tr><td>Inter-company transactions</td><td>Stock transfer SWT↔SWE → BC Inter-company entries, Portal แค่ UI</td></tr>
+    </table>
+  </div>
+
+  <div class="arch-card">
+    <h4>Portal DB Schema (Custom Tables)</h4>
+    <table class="mod-table">
+      <tr><th>Table</th><th>Module</th><th>หมายเหตุ</th></tr>
+      <tr><td><span class="code">crm_pipeline</span></td><td>SL-5</td><td>Lead stages, activities, follow-up dates</td></tr>
+      <tr><td><span class="code">trade_agreement</span></td><td>MD-3</td><td>Rebate/MDF/Volume/Penalty per vendor</td></tr>
+      <tr><td><span class="code">commission_rule</span></td><td>CM-1</td><td>4-layer commission config</td></tr>
+      <tr><td><span class="code">commission_calc</span></td><td>CM-1</td><td>Monthly calculated results</td></tr>
+      <tr><td><span class="code">tech_job_template</span></td><td>CF-2.5</td><td>Job types, checklists, tools, safety</td></tr>
+      <tr><td><span class="code">approval_matrix</span></td><td>CF-2.6</td><td>Position × DocType × Threshold → synced to BC</td></tr>
+      <tr><td><span class="code">doc_template</span></td><td>CF-2.7</td><td>Print templates — HTML/PDF generation</td></tr>
+      <tr><td><span class="code">promotion</span></td><td>SL-6</td><td>Promo rules → synced to BC Sales Price</td></tr>
+      <tr><td><span class="code">sku_quota</span></td><td>SM-1</td><td>SKU slot limits per branch per category</td></tr>
+      <tr><td><span class="code">delivery_plan</span></td><td>DL-1</td><td>Fleet, routes, schedule</td></tr>
+      <tr><td><span class="code">service_job_queue</span></td><td>SV-1</td><td>Job assignment, technician board</td></tr>
+      <tr><td><span class="code">rbac_role</span>, <span class="code">rbac_scope</span></td><td>CF-1</td><td>Portal roles + data scope</td></tr>
+      <tr><td><span class="code">vendor_portal_user</span></td><td>SM-3</td><td>Vendor login credentials</td></tr>
+    </table>
+  </div>
+
+  <div class="arch-card">
+    <h4>File Index — ไฟล์ Mockup ทั้งหมด</h4>
+    <p style="font-size:12px;color:#64748B;margin-bottom:8px">เปิดดูทุกไฟล์ได้ที่ <a href="portal-mockup-index.html" style="color:#2563EB;font-weight:600">portal-mockup-index.html</a></p>
+    <div style="column-count:3;column-gap:24px;font-size:12px;font-family:monospace;color:#475569;line-height:2">
+      slq-sales-queue-mockup.html<br>
+      sl1-quotation-mockup.html<br>
+      sl2-reservation-mockup.html<br>
+      sl3-deposit-mockup.html<br>
+      sl4-invoice-mockup.html<br>
+      sl5-crm-followup-mockup.html<br>
+      sl6-promotion-setup-mockup.html<br>
+      sl7-sales-report-mockup.html<br>
+      cm1-commission-mockup.html<br>
+      wh-queue-mockup.html<br>
+      wh1-grn-mockup.html<br>
+      wh2-stock-transfer-mockup.html<br>
+      wh3-stock-count-mockup.html<br>
+      whr-goods-issue-mockup.html<br>
+      poq-purchase-queue-mockup.html<br>
+      po4-purchase-order-mockup.html<br>
+      fi1-ar-receive-mockup.html<br>
+      fi2-ap-payment-mockup.html<br>
+      fi3-tax-reconciliation-mockup.html<br>
+      fi4-expense-wht-mockup.html<br>
+      fi5-ar-audit-mockup.html<br>
+      tr1-treasury-mockup.html<br>
+      sv1-service-queue-mockup.html<br>
+      sv2-service-invoice-mockup.html<br>
+      dl1-delivery-planning-mockup.html<br>
+      sm1-sku-slot-planner-mockup.html<br>
+      sm2-sku-health-mockup.html<br>
+      sm3-vendor-report-mockup.html<br>
+      md1-item-master-mockup-v3.html<br>
+      md2-customer-master-mockup-v3.html<br>
+      md3-vendor-master-mockup-v3.html<br>
+      md4-employee-master-mockup-v3.html<br>
+      md5-branch-warehouse-mockup-v3.html<br>
+      ex1-executive-dashboard-mockup.html<br>
+      cf1-rbac-permission-mockup.html<br>
+      cf2-config-hub-mockup.html<br>
+      cf2-5-tech-template-mockup.html<br>
+      cf2-6-approval-matrix-mockup.html<br>
+      cf2-7-doc-template-mockup.html<br>
+      ap1-approval-center-mockup.html<br>
+      sc1-customer-search-mockup.html<br>
+      sc2-item-search-mockup.html<br>
+      sc7-timeline-mockup.html<br>
+      portal-mockup-index.html<br>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /page -->
+
+<footer style="text-align:center;padding:24px;color:#94A3B8;font-size:12px;border-top:1px solid #E2E8F0">
+  Sangwijit ERP Portal — Dev Handoff Spec v2.0 · 44 Mockup Pages · 16 เมษายน 2569<br>
+  เจ้าของโปรเจกต์: Peerapat (พีรพัฒน์) — GM, กลุ่มแสงวิจิตร
+</footer>
+
+<script>
+// Sidebar active state
+document.querySelectorAll('.sidebar-nav a:not(.nav-section)').forEach(link => {
+  link.addEventListener('click', function() {
+    document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Scroll spy
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.sidebar-nav a[href="#${id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-100px 0px -60% 0px' });
+
+document.querySelectorAll('.section-anchor').forEach(anchor => observer.observe(anchor));
+</script>
+
+<!-- SWT_ITEM_SEARCH_START -->
+<style>
+/* ---- SC-2 shared item-search modal (prefix swt-is-*) ---- */
+#swtIsRoot{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.45);z-index:1000;align-items:flex-start;justify-content:center;padding:40px 20px 30px;overflow-y:auto;font-family:'Inter','Noto Sans Thai',sans-serif;font-size:12.5px;line-height:1.45;color:#1F2937}
+#swtIsRoot.swt-is-open{display:flex}
+#swtIsTestBtn{position:fixed;bottom:22px;right:22px;z-index:900;background:#1E3A5F;color:#fff;border:none;padding:10px 16px;border-radius:24px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 6px 18px rgba(15,23,42,0.25);font-family:'Inter','Noto Sans Thai',sans-serif;display:inline-flex;align-items:center;gap:6px}
+#swtIsTestBtn:hover{background:#2563EB}
+.swt-is-dlg,.swt-is-dlg *{box-sizing:border-box}
+.swt-is-dlg{background:#fff;border-radius:10px;box-shadow:0 20px 60px rgba(15,23,42,0.3);width:1140px;max-width:calc(100vw - 40px);overflow:hidden;border:1px solid #E2E8F0}
+.swt-is-title{background:linear-gradient(180deg,#1E3A5F 0%,#172A47 100%);color:#fff;padding:9px 14px;display:flex;align-items:center;gap:10px}
+.swt-is-title .ico{font-size:15px}
+.swt-is-title h1{font-size:13px;font-weight:600;flex:1;margin:0}
+.swt-is-title .winbtn{width:24px;height:22px;display:flex;align-items:center;justify-content:center;font-size:13px;opacity:0.75;cursor:pointer;border-radius:3px}
+.swt-is-title .winbtn:hover{background:rgba(255,255,255,0.12);opacity:1}
+.swt-is-title .winbtn.close:hover{background:#DC2626}
+.swt-is-tb{background:linear-gradient(180deg,#F8FAFC 0%,#E2E8F0 100%);border-bottom:1px solid #CBD5E1;padding:6px 10px;display:flex;align-items:center;gap:3px;flex-wrap:wrap}
+.swt-is-tbbtn{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:transparent;border:1px solid transparent;border-radius:4px;font-size:11.5px;color:#334155;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap}
+.swt-is-tbbtn:hover{background:#fff;border-color:#CBD5E1}
+.swt-is-tbbtn.nav{padding:5px 7px;color:#64748B}
+.swt-is-tbbtn.histon{background:#FCD34D;border-color:#F59E0B;color:#78350F;font-weight:700}
+.swt-is-tbbtn.cbtn{background:#FEE2E2;border-color:#FCA5A5;color:#B91C1C;margin-left:auto}
+.swt-is-tbbtn.cbtn:hover{background:#DC2626;color:#fff;border-color:#DC2626}
+.swt-is-tbbtn.act{background:#FEF9E7;border-color:#FCD34D;color:#92400E}
+.swt-is-tbsep{width:1px;height:22px;background:#CBD5E1;margin:0 4px}
+.swt-is-sr{background:#F8FAFC;border-bottom:1px solid #CBD5E1;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.swt-is-sr label{font-size:12px;color:#475569;font-weight:600}
+.swt-is-sbox{display:flex;align-items:center;gap:0;flex:0 0 320px}
+.swt-is-sbox input{flex:1;padding:7px 10px;border:1.5px solid #CBD5E1;border-right:none;border-radius:5px 0 0 5px;font-size:13px;font-family:inherit;outline:none;background:#fff}
+.swt-is-sbox input:focus{border-color:#2563EB}
+.swt-is-sbox button{padding:7px 12px;background:#2563EB;color:#fff;border:1.5px solid #2563EB;border-radius:0 5px 5px 0;font-size:13px;cursor:pointer}
+.swt-is-hint{font-size:11.5px;color:#94A3B8;font-style:italic}
+.swt-is-hint b{color:#64748B;font-style:normal;font-weight:500}
+.swt-is-kbd{display:inline-flex;padding:1px 6px;background:#fff;border:1px solid #CBD5E1;border-bottom-width:2px;border-radius:3px;font-size:10px;color:#64748B;font-family:monospace;font-weight:600;margin-left:6px}
+.swt-is-ckb{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:#475569;cursor:pointer}
+.swt-is-ckb input{cursor:pointer}
+.swt-is-rcount{padding:6px 14px;background:#F8FAFC;border-bottom:1px solid #CBD5E1;font-size:11px;color:#64748B;display:flex;align-items:center;gap:12px}
+.swt-is-rcount b{color:#1E3A5F}
+.swt-is-rwrap{background:#fff;max-height:220px;overflow:auto;border-bottom:1px solid #CBD5E1}
+.swt-is-rtbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.swt-is-rtbl thead th{background:linear-gradient(180deg,#EFF6FF 0%,#DBEAFE 100%);color:#1E3A5F;font-weight:700;padding:7px 10px;text-align:left;border-bottom:2px solid #93C5FD;border-right:1px solid #BFDBFE;position:sticky;top:0;white-space:nowrap;cursor:pointer}
+.swt-is-rtbl thead th .arrow{font-size:9px;color:#60A5FA;margin-left:2px}
+.swt-is-rtbl tbody td{padding:6px 10px;border-bottom:1px solid #F1F5F9;border-right:1px solid #F8FAFC;font-feature-settings:"tnum";color:#1F2937;height:28px;white-space:nowrap}
+.swt-is-rtbl tbody tr:nth-child(even){background:#FAFBFC}
+.swt-is-rtbl tbody tr.sel,.swt-is-rtbl tbody tr.sel:nth-child(even){background:#FEF3C7 !important}
+.swt-is-rtbl tbody tr.sel td{border-right-color:#FCD34D;font-weight:500}
+.swt-is-rtbl tbody tr:hover{background:#EFF6FF;cursor:pointer}
+.swt-is-rtbl tbody tr.sel:hover{background:#FDE68A}
+.swt-is-code{font-family:monospace;color:#1D4ED8;font-weight:700}
+.swt-is-name{font-weight:500;color:#0F172A}
+.swt-is-n{text-align:right;font-weight:600}
+.swt-is-n.pos{color:#047857}.swt-is-n.low{color:#B45309}.swt-is-n.alert{color:#B91C1C;font-weight:700}
+.swt-is-bgS{background:#FEF3C7}.swt-is-bgSO{background:#FECACA}.swt-is-bgNE{background:#CFFAFE}
+.swt-is-bgPO{background:#DDD6FE}.swt-is-bgOU{background:#FED7AA}.swt-is-bgTF{background:#BBF7D0}
+.swt-is-rtbl tr.sel td.swt-is-bgS,.swt-is-rtbl tr.sel td.swt-is-bgSO,.swt-is-rtbl tr.sel td.swt-is-bgNE,.swt-is-rtbl tr.sel td.swt-is-bgPO,.swt-is-rtbl tr.sel td.swt-is-bgOU,.swt-is-rtbl tr.sel td.swt-is-bgTF{background:transparent}
+.swt-is-db{background:linear-gradient(180deg,#1E3A5F 0%,#1D4ED8 100%);color:#fff;padding:8px 14px;display:flex;align-items:center;gap:12px}
+.swt-is-db h2{font-size:13px;font-weight:700;margin:0}
+.swt-is-db .meta{margin-left:auto;display:flex;gap:8px;font-size:10.5px;opacity:0.88}
+.swt-is-db .pill{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:10px}
+.swt-is-dt{background:#F1F5F9;border-bottom:1px solid #CBD5E1;display:flex;overflow-x:auto}
+.swt-is-tab{padding:9px 14px;font-size:11.5px;font-weight:600;color:#64748B;cursor:pointer;border-right:1px solid #CBD5E1;white-space:nowrap;border-top:2px solid transparent;position:relative;top:1px;background:transparent}
+.swt-is-tab:hover{background:#E2E8F0;color:#1E3A5F}
+.swt-is-tab.act{background:#fff;color:#1D4ED8;border-top-color:#2563EB;box-shadow:0 -2px 4px rgba(37,99,235,0.08)}
+.swt-is-body{background:#fff}
+.swt-is-pane{display:none}
+.swt-is-pane.act{display:block}
+.swt-is-pb{padding:8px 12px;background:#F8FAFC;border-bottom:1px solid #E2E8F0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.swt-is-pb label{font-size:11px;color:#64748B;font-weight:500}
+.swt-is-pb input,.swt-is-pb select{padding:4px 8px;border:1px solid #CBD5E1;border-radius:4px;font-size:11px;font-family:inherit;background:#fff;outline:none}
+.swt-is-refbtn{padding:5px 12px;background:#fff;border:1px solid #CBD5E1;border-radius:4px;font-size:11px;color:#1E3A5F;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.swt-is-refbtn:hover{background:#DBEAFE;border-color:#93C5FD}
+.swt-is-pbody{max-height:320px;overflow:auto}
+.swt-is-stbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.swt-is-stbl thead th{background:linear-gradient(180deg,#EFF6FF 0%,#DBEAFE 100%);color:#1E3A5F;font-weight:700;padding:6px 10px;text-align:left;border-bottom:1px solid #93C5FD;border-right:1px solid #BFDBFE;white-space:nowrap}
+.swt-is-stbl tbody td{padding:5px 10px;border-bottom:1px solid #F1F5F9;border-right:1px solid #F8FAFC;font-feature-settings:"tnum";color:#334155}
+.swt-is-stbl tbody tr:nth-child(even){background:#FAFBFC}
+.swt-is-stbl tbody tr:hover{background:#EFF6FF}
+.swt-is-stbl tbody tr.empty td{color:#CBD5E1;font-style:italic;text-align:center;height:24px}
+.swt-is-tp{display:inline-flex;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700}
+.swt-is-tp.sw{background:#DBEAFE;color:#1D4ED8}
+.swt-is-tp.swe{background:#D1FAE5;color:#047857}
+.swt-is-tp.vm{background:#FEF3C7;color:#92400E}
+.swt-is-ft{background:linear-gradient(180deg,#F8FAFC 0%,#E2E8F0 100%);border-top:1px solid #CBD5E1;padding:7px 14px;display:flex;align-items:center;gap:10px;font-size:11px;color:#64748B}
+.swt-is-ft .d{width:8px;height:8px;border-radius:50%;background:#10B981;display:inline-block}
+.swt-is-ft b{color:#1E3A5F}
+.swt-is-ft .sp{flex:1}
+.swt-is-ft .kh{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#fff;border:1px solid #CBD5E1;border-radius:4px;color:#475569}
+.swt-is-imgpane{display:grid;grid-template-columns:280px 1fr;gap:18px;padding:18px}
+.swt-is-thumb{background:#F1F5F9;border:1px solid #CBD5E1;border-radius:8px;padding:18px;text-align:center;font-size:56px;color:#94A3B8;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.swt-is-info{font-size:12px;line-height:1.6}
+.swt-is-info .grp{display:grid;grid-template-columns:120px 1fr;gap:5px 14px;margin-bottom:10px}
+.swt-is-info .grp label{color:#64748B;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.03em}
+.swt-is-info .grp span{color:#0F172A;font-weight:500}
+</style>
+
+<button id="swtIsTestBtn" type="button" onclick="window.openItemSearch()">🔍 ค้นหาสินค้า <span style="opacity:0.6;font-size:10px">Alt+I</span></button>
+
+<div id="swtIsRoot" role="dialog" aria-modal="true" aria-label="ค้นหาสินค้า">
+  <div class="swt-is-dlg" onclick="event.stopPropagation()">
+    <div class="swt-is-title">
+      <span class="ico">🔍</span>
+      <h1>Product Search — SC-2 (Shared Component)</h1>
+      <span class="winbtn">─</span><span class="winbtn">▢</span>
+      <span class="winbtn close" onclick="window.closeItemSearch()">✕</span>
+    </div>
+    <div class="swt-is-tb">
+      <button class="swt-is-tbbtn act">📦 สินค้า</button>
+      <button class="swt-is-tbbtn">🛠️ บริการ</button>
+      <button class="swt-is-tbbtn">📚 สินค้าชุด</button>
+      <div class="swt-is-tbsep"></div>
+      <button class="swt-is-tbbtn nav">⏮</button>
+      <button class="swt-is-tbbtn nav">⏭</button>
+      <div class="swt-is-tbsep"></div>
+      <button class="swt-is-tbbtn">📂 ค้นตามกลุ่ม</button>
+      <button class="swt-is-tbbtn histon" onclick="swtIsToggleHist(this)">ℹ️ แสดงประวัติ</button>
+      <button class="swt-is-tbbtn">📝 Memo</button>
+      <button class="swt-is-tbbtn">📋 Multi ใส่ปริมาณ</button>
+      <button class="swt-is-tbbtn" style="color:#2563EB">❓</button>
+      <button class="swt-is-tbbtn cbtn" onclick="window.closeItemSearch()">✕ ปิด</button>
+    </div>
+    <div class="swt-is-sr">
+      <label>ค้นหา:</label>
+      <div class="swt-is-sbox">
+        <input type="text" value="tt10" id="swtIsQ">
+        <button>🔍</button>
+      </div>
+      <span class="swt-is-hint">ตัวอย่างเช่น: <b>ไขควง ซันโต แบน</b></span>
+      <span class="swt-is-kbd">F3</span>
+      <label class="swt-is-ckb"><input type="checkbox"> Only Cust Product</label>
+    </div>
+    <div class="swt-is-rcount">
+      <span>พบ <b>3</b> รายการ · keyword "tt10"</span>
+      <span>·</span><span>Branch: <b>HO · สนง.ใหญ่</b></span>
+      <span>·</span><span>BC365 sync: <b>2 นาทีที่แล้ว</b></span>
+      <span style="margin-left:auto">Click row เพื่อดูประวัติ</span>
+    </div>
+    <div class="swt-is-rwrap">
+      <table class="swt-is-rtbl">
+        <thead><tr>
+          <th style="width:110px">รหัสสินค้า <span class="arrow">▲</span></th>
+          <th style="width:340px">ชื่อสินค้า <span class="arrow">▼</span></th>
+          <th style="width:60px">หน่วย</th>
+          <th style="width:72px" class="swt-is-bgS">สต็อก</th>
+          <th style="width:72px" class="swt-is-bgSO">สั่งขาย</th>
+          <th style="width:72px" class="swt-is-bgNE">สุทธิ</th>
+          <th style="width:72px" class="swt-is-bgPO">สั่งซื้อ</th>
+          <th style="width:72px" class="swt-is-bgOU">ขอจ่าย</th>
+          <th style="width:72px" class="swt-is-bgTF">ขอโอน</th>
+          <th>หมายเหตุ</th>
+        </tr></thead>
+        <tbody>
+          <tr class="sel" onclick="swtIsSelRow(this)">
+            <td class="swt-is-code">7XXX71XX…</td>
+            <td class="swt-is-name">เครื่องซักผ้า 2 ถัง LG TT10NARG (10 kg.)</td>
+            <td style="text-align:center;color:#64748B">เครื่อง</td>
+            <td class="swt-is-n swt-is-bgS">145</td>
+            <td class="swt-is-n swt-is-bgSO">2</td>
+            <td class="swt-is-n swt-is-bgNE pos"><b>143</b></td>
+            <td class="swt-is-n swt-is-bgPO">19</td>
+            <td class="swt-is-n swt-is-bgOU">103</td>
+            <td class="swt-is-n swt-is-bgTF">15</td>
+            <td style="color:#64748B">2-Tub Washing machine LG Thinq</td>
+          </tr>
+          <tr onclick="swtIsSelRow(this)">
+            <td class="swt-is-code">7XXX71XY…</td>
+            <td class="swt-is-name">เครื่องซักผ้า 2 ถัง LG TT10NBRG (10 kg.) รุ่นใหม่</td>
+            <td style="text-align:center;color:#64748B">เครื่อง</td>
+            <td class="swt-is-n swt-is-bgS">62</td>
+            <td class="swt-is-n swt-is-bgSO">—</td>
+            <td class="swt-is-n swt-is-bgNE pos"><b>62</b></td>
+            <td class="swt-is-n swt-is-bgPO">10</td>
+            <td class="swt-is-n swt-is-bgOU">—</td>
+            <td class="swt-is-n swt-is-bgTF">—</td>
+            <td style="color:#64748B">Successor model TT10N</td>
+          </tr>
+          <tr onclick="swtIsSelRow(this)">
+            <td class="swt-is-code">8XXX71ZZ…</td>
+            <td class="swt-is-name">Drum Belt สำหรับ TT10NARG (อะไหล่)</td>
+            <td style="text-align:center;color:#64748B">เส้น</td>
+            <td class="swt-is-n swt-is-bgS low">3</td>
+            <td class="swt-is-n swt-is-bgSO">1</td>
+            <td class="swt-is-n swt-is-bgNE low"><b>2</b></td>
+            <td class="swt-is-n swt-is-bgPO alert">0</td>
+            <td class="swt-is-n swt-is-bgOU">—</td>
+            <td class="swt-is-n swt-is-bgTF">—</td>
+            <td style="color:#B45309">⚠ Low-stock · BC reorder needed</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="swtIsDetail">
+      <div class="swt-is-db">
+        <span style="font-size:14px">📦</span>
+        <h2>เครื่องซักผ้า 2 ถัง LG TT10NARG (10 kg.)</h2>
+        <div class="meta">
+          <span class="pill">SKU <b>7XXX71XX</b></span>
+          <span class="pill">📊 Sale Rank #47</span>
+          <span class="pill">✓ BC synced</span>
+        </div>
+      </div>
+      <div class="swt-is-dt">
+        <div class="swt-is-tab act" onclick="swtIsSwTab(event,'p1')">สต็อกแต่ละคลัง</div>
+        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p2')">ราคาขาย</div>
+        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p3')">รายการสั่งซื้อ</div>
+        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p4')">ค้างส่ง</div>
+        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p5')">รูปสินค้า</div>
+        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p6')">ยอดขายตามช่วงวันที่</div>
+        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p7')">ยอดขายแต่ละคลัง</div>
+        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p8')">Rebate</div>
+      </div>
+      <div class="swt-is-body">
+
+        <div class="swt-is-pane act" id="p1">
+          <div class="swt-is-pb">
+            <button class="swt-is-refbtn">🔄 Refresh</button>
+            <label>Entity:</label>
+            <select><option>ทั้งหมด</option><option>Tag 1 · SWT</option><option>Tag 2 · SWE</option><option>Tag 3 · VMN</option></select>
+            <span style="margin-left:auto;font-size:11px;color:#64748B">รวม <b style="color:#1E3A5F">145 เครื่อง</b> กระจาย 12 คลัง · BC live</span>
+          </div>
+          <div class="swt-is-pbody">
+            <table class="swt-is-stbl">
+              <thead><tr>
+                <th style="width:32px">#</th><th style="width:90px">รหัสคลัง</th><th>คลังสินค้า</th>
+                <th style="width:120px">ที่เก็บ</th><th style="width:70px">หน่วย</th>
+                <th style="width:70px;text-align:right">สต็อก</th><th style="width:70px;text-align:right">สั่งขาย</th>
+                <th style="width:70px;text-align:right">สุทธิ</th><th style="width:70px;text-align:right">สั่งซื้อ</th>
+                <th style="width:70px;text-align:right">ขอจ่าย</th><th style="width:70px;text-align:right">ขอโอน</th>
+                <th style="width:80px;text-align:right">จุดต่ำสุด</th><th style="width:80px">Entity</th>
+              </tr></thead>
+              <tbody>
+                <tr><td>1</td><td class="swt-is-code">AK</td><td>คลังสาขาอากาศ…</td><td>อากาศ</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700">5</td><td style="text-align:right">—</td><td style="text-align:right">17</td><td style="text-align:right">7</td><td style="text-align:right;color:#94A3B8">5</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
+                <tr><td>2</td><td class="swt-is-code">HO</td><td>สนง.ใหญ่</td><td>HO</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857"><b>119</b></td><td style="text-align:right">2</td><td style="text-align:right;font-weight:700;color:#047857"><b>117</b></td><td style="text-align:right">19</td><td style="text-align:right">2</td><td style="text-align:right">1</td><td style="text-align:right;color:#94A3B8">30</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
+                <tr><td>3</td><td class="swt-is-code">OIR</td><td>ทวีศักดิ์ธาดา…</td><td>OIR</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="swt-is-tp vm">VMN</span></td></tr>
+                <tr><td>4</td><td class="swt-is-code">S08</td><td>เซกา</td><td>S08</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700">5</td><td style="text-align:right">11</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">3</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
+                <tr><td>5</td><td class="swt-is-code">SD</td><td>สว่างฯ</td><td>SD</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">8</td><td style="text-align:right">4</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
+                <tr><td>6</td><td class="swt-is-code">SHO</td><td>ปลีกโกดัง</td><td>SHO</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857">1</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700">1</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">2</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
+                <tr class="empty"><td colspan="13">— ย่อ 6 คลังที่ไม่มีสต็อก — คลิก Refresh เพื่อดูทั้งหมด —</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="swt-is-pane" id="p2">
+          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><span style="margin-left:10px;font-size:11px;color:#64748B">⚖ VAT Golden Rule — ราคา ex-VAT · <b style="color:#2563EB">PM-5</b></span></div>
+          <div class="swt-is-pbody"><table class="swt-is-stbl">
+            <thead><tr><th>#</th><th>หน่วย</th><th style="text-align:right">ราคาปลีก</th><th style="text-align:right">Disc1</th><th style="text-align:right">ราคาส่ง</th><th style="text-align:right">Disc2</th><th style="text-align:right">ต้นทุน INV</th><th style="text-align:right">ต้นทุน ผปย</th><th style="text-align:right">Price5</th></tr></thead>
+            <tbody><tr><td>1</td><td>เครื่อง</td><td style="text-align:right;font-weight:700">5,990.00</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600">5,450.00</td><td style="text-align:right">—</td><td style="text-align:right">5,636.76</td><td style="text-align:right">5,268.00</td><td style="text-align:right;color:#94A3B8">—</td></tr></tbody>
+          </table></div>
+        </div>
+
+        <div class="swt-is-pane" id="p3">
+          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><label>ช่วง:</label><select><option>6 เดือนล่าสุด</option><option>1 ปีล่าสุด</option></select><span style="margin-left:auto;font-size:11px;color:#64748B">1 ใบสั่งซื้อ · 42 เครื่อง · คงค้าง 19</span></div>
+          <div class="swt-is-pbody"><table class="swt-is-stbl">
+            <thead><tr><th>#</th><th>วันที่สั่งซื้อ</th><th>ใบสั่งซื้อ</th><th>กลุ่มเอกสาร</th><th>คลัง</th><th>หน่วย</th><th style="text-align:right">Qty</th><th style="text-align:right">Remain</th><th>กำหนดรับ</th><th>$</th><th style="text-align:right">Rate</th></tr></thead>
+            <tbody><tr><td>1</td><td>24/03/69</td><td class="swt-is-code">TVPO690324…</td><td>ใบสั่งซื้อเทร…</td><td>HO</td><td>เครื่อง</td><td style="text-align:right">42</td><td style="text-align:right;font-weight:700;color:#B45309">19</td><td>24/03/69</td><td>฿</td><td style="text-align:right">1.00000</td></tr></tbody>
+          </table></div>
+        </div>
+
+        <div class="swt-is-pane" id="p4">
+          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><span style="margin-left:auto;font-size:11px;color:#64748B">ค้างส่ง <b style="color:#B91C1C">11 ใบ · 19 เครื่อง</b></span></div>
+          <div class="swt-is-pbody"><table class="swt-is-stbl">
+            <thead><tr><th>#</th><th>วันที่สั่ง</th><th>ใบสั่งขาย</th><th>กลุ่มเอกสาร</th><th>คลัง</th><th>หน่วย</th><th style="text-align:right">Qty</th><th style="text-align:right">Remain</th><th>หมายเหตุ</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>24/06/63</td><td class="swt-is-code">TSRT6306…</td><td>ใบขอโอนสิ…</td><td>AK</td><td>เครื่อง</td><td style="text-align:right">1</td><td style="text-align:right;color:#B45309">1</td><td></td></tr>
+              <tr><td>2</td><td>31/12/63</td><td class="swt-is-code">SWEPO631…</td><td>SWEPO</td><td>SL</td><td>เครื่อง</td><td style="text-align:right">2</td><td style="text-align:right;color:#B45309">2</td><td style="color:#94A3B8">ร้าน อุดมทร…</td></tr>
+              <tr><td>3</td><td>16/06/65</td><td class="swt-is-code">SWEPO650…</td><td>SWEPO</td><td>HO</td><td>เครื่อง</td><td style="text-align:right">30</td><td style="text-align:right;color:#B45309">30</td><td style="color:#94A3B8">ร้าน ก.เจริญ…</td></tr>
+              <tr class="empty"><td colspan="9">— ย่อ 8 รายการ —</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <div class="swt-is-pane" id="p5">
+          <div class="swt-is-imgpane">
+            <div class="swt-is-thumb">🧺</div>
+            <div class="swt-is-info">
+              <div class="grp">
+                <label>ชื่อเต็ม</label><span>เครื่องซักผ้า 2 ถัง LG รุ่น TT10NARG 10 กก.</span>
+                <label>Brand</label><span>LG Thinq</span>
+                <label>รุ่น</label><span>TT10NARG</span>
+                <label>Barcode</label><span>8801234567890</span>
+                <label>UOM</label><span>เครื่อง</span>
+                <label>Warranty</label><span>12 เดือน · บริษัท</span>
+              </div>
+              <div class="grp">
+                <label>หมวด</label><span>WH-LG-01 Washer</span>
+                <label>Dimension</label><span>960×540×880 mm · 38 kg</span>
+                <label>Country</label><span>ไทย</span>
+                <label>VAT</label><span>V07 — 7% Output</span>
+                <label>Status</label><span style="color:#047857;font-weight:600">Active</span>
+                <label>BC Sync</label><span style="color:#047857">✓ last 2 นาที</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swt-is-pane" id="p6">
+          <div class="swt-is-pb" style="background:#1E3A5F;color:#fff">
+            <span style="color:#fff;font-weight:700;margin-right:10px">หจก.สกลนครศรีเจริญ</span>
+            <label style="color:#CBD5E1">จาก:</label><input type="text" value="01/01/2569" style="width:100px">
+            <label style="color:#CBD5E1">ถึง:</label><input type="text" value="16/04/2569" style="width:100px">
+            <label style="color:#CBD5E1">Group:</label><select><option>No</option><option>Document</option></select>
+            <button class="swt-is-refbtn">…</button>
+            <span style="margin-left:auto;font-size:11px;color:#FCA5A5">⚠ เคสนี้เมนูยังไม่ได้ระบุร้าน</span>
+          </div>
+          <div class="swt-is-pbody"><table class="swt-is-stbl">
+            <thead><tr><th>#</th><th>DocDate</th><th>DocNo</th><th>DocName</th><th>Unit</th><th style="text-align:right">Qty</th><th style="text-align:right">UnitPrice</th><th>DiscWord</th><th>Customer</th><th>TaxType</th></tr></thead>
+            <tbody><tr class="empty"><td colspan="10">— กรุณาเลือกลูกค้าเพื่อดูยอดขาย —</td></tr><tr class="empty"><td colspan="10"></td></tr><tr class="empty"><td colspan="10"></td></tr><tr class="empty"><td colspan="10"></td></tr></tbody>
+          </table></div>
+        </div>
+
+        <div class="swt-is-pane" id="p7">
+          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><span style="margin-left:auto;font-size:11px;color:#64748B">YTD: 1 ม.ค. 26 → 17 เม.ย. 26</span></div>
+          <div class="swt-is-pbody"><table class="swt-is-stbl">
+            <thead><tr><th>#</th><th>คลังสินค้า</th><th>หน่วย</th><th style="text-align:right">จุดต่ำสุด</th><th style="text-align:right">สต็อก</th><th style="text-align:right">YTD</th><th style="text-align:right">WTD</th><th style="text-align:right">Today</th><th style="text-align:right">เฉลี่ย 60 วัน</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>SL</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700;color:#047857"><b>213</b></td><td style="text-align:right;font-weight:600">26</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600">2</td></tr>
+              <tr><td>2</td><td>SM</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">2</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">1</td><td style="text-align:right">—</td><td style="text-align:right">0</td></tr>
+              <tr><td>3</td><td>S08</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">5</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">0</td></tr>
+              <tr><td>4</td><td>ST</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">3</td><td style="text-align:right;color:#047857">2</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">0</td></tr>
+              <tr class="empty"><td colspan="9">— ย่อ 7 คลัง —</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <div class="swt-is-pane" id="p8">
+          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><label>Year:</label><select><option>2026 Q1-Q2</option></select><span style="margin-left:auto;font-size:11px;color:#64748B">⚖ Rebate ≠ Discount · ดู <b style="color:#2563EB">PM-5</b> · <b style="color:#2563EB">PO-Rebate</b></span></div>
+          <div class="swt-is-pbody"><table class="swt-is-stbl">
+            <thead><tr><th>#</th><th>Program</th><th>Period</th><th style="text-align:right">Target</th><th style="text-align:right">Sold</th><th style="text-align:right">Progress</th><th style="text-align:right">Rebate %</th><th style="text-align:right">Rebate THB</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>LG Washer Q2 2026 Sell-In</td><td>Apr-Jun 26</td><td style="text-align:right">100</td><td style="text-align:right;color:#047857">68</td><td style="text-align:right;font-weight:700;color:#B45309">68%</td><td style="text-align:right">3.00%</td><td style="text-align:right;font-weight:700">฿122,236</td><td><span style="color:#B45309;font-weight:600">🟡 กำลังทำ</span></td></tr>
+              <tr><td>2</td><td>LG Q1 2026 (ปิด)</td><td>Jan-Mar 26</td><td style="text-align:right">80</td><td style="text-align:right;color:#047857"><b>87</b></td><td style="text-align:right;font-weight:700;color:#047857">109%</td><td style="text-align:right">2.50%</td><td style="text-align:right;font-weight:700;color:#047857">฿130,282</td><td><span style="color:#047857;font-weight:600">✓ Achieved</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="swt-is-ft">
+      <span class="d"></span><b>Ready</b> · 3 รายการ · row 1/3
+      <div class="sp"></div>
+      <span class="kh">↑↓ เลือก row</span>
+      <span class="kh">Enter ใส่ลงเอกสาร</span>
+      <span class="kh">Tab สลับ</span>
+      <span class="kh">Esc ปิด</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var root=document.getElementById('swtIsRoot');
+  window.openItemSearch=function(){root.classList.add('swt-is-open');setTimeout(function(){var q=document.getElementById('swtIsQ');if(q)q.focus();},50);};
+  window.closeItemSearch=function(){root.classList.remove('swt-is-open');};
+  // click outside → close
+  root.addEventListener('click',function(e){if(e.target===root)window.closeItemSearch();});
+  // keyboard
+  document.addEventListener('keydown',function(e){
+    if(e.altKey && !e.ctrlKey && e.key && e.key.toLowerCase()==='i'){e.preventDefault();window.openItemSearch();}
+    if(e.key==='Escape' && root.classList.contains('swt-is-open')){window.closeItemSearch();}
+  });
+  // tab switch
+  window.swtIsSwTab=function(e,id){
+    root.querySelectorAll('.swt-is-tab').forEach(function(t){t.classList.remove('act');});
+    root.querySelectorAll('.swt-is-pane').forEach(function(p){p.classList.remove('act');});
+    e.currentTarget.classList.add('act');
+    document.getElementById(id).classList.add('act');
+  };
+  window.swtIsSelRow=function(r){
+    root.querySelectorAll('.swt-is-rtbl tbody tr').forEach(function(x){x.classList.remove('sel');});
+    r.classList.add('sel');
+  };
+  window.swtIsToggleHist=function(btn){
+    btn.classList.toggle('histon');
+    var d=document.getElementById('swtIsDetail');
+    d.style.display=btn.classList.contains('histon')?'':'none';
+  };
+  // auto-wire triggers
+  function wire(){
+    var sel='button,a,[role="button"]';
+    document.querySelectorAll(sel).forEach(function(el){
+      if(el.id==='swtIsTestBtn'||el.closest('#swtIsRoot'))return;
+      var txt=(el.textContent||'').trim().toLowerCase();
+      var ds=el.getAttribute('data-item-search');
+      if(ds!==null||txt==='ค้นหาสินค้า'||txt==='search item'||txt==='item search'||/🔍\s*ค้นหาสินค้า/.test(el.textContent||'')){
+        if(el.dataset.swtIsBound)return;
+        el.dataset.swtIsBound='1';
+        el.addEventListener('click',function(e){e.preventDefault();window.openItemSearch();});
+      }
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
+})();
+</script>
+<!-- SWT_ITEM_SEARCH_END -->
+
+<!-- SWT_LINK_START -->
+<script src="swt-link.js" defer></script>
+<!-- SWT_LINK_END -->
+
+</body>
+</html>

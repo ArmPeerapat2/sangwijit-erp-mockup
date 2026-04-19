@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD-3 ทะเบียน Vendor — Vendor Master</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F8FAFC;
+            min-width: 1440px;
+        }
+
+        .container-flex {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: #1E3A5F;
+            color: white;
+            padding: 24px 16px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            line-height: 1.4;
+        }
+
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            padding: 0 8px;
+        }
+
+        .sidebar-item {
+            padding: 8px 12px;
+            margin-bottom: 4px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-item.active {
+            background: rgba(37, 99, 235, 0.2);
+            font-weight: 600;
+        }
+
+        .sidebar-item.section-active {
+            background: rgba(37, 99, 235, 0.15);
+            font-weight: 600;
+            color: #60A5FA;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 240px;
+            padding: 32px;
+            flex: 1;
+            background: #F8FAFC;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1E3A5F;
+            margin-bottom: 8px;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            display: flex;
+            gap: 32px;
+            border-bottom: 1px solid #E5E7EB;
+            margin-bottom: 32px;
+        }
+
+        .tab {
+            padding: 12px 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6B7280;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: #1E3A5F;
+        }
+
+        .tab.active {
+            color: #2563EB;
+            border-bottom-color: #2563EB;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Tab 1: List */
+        .action-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #2563EB;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1D4ED8;
+        }
+
+        .btn-secondary {
+            background: #E5E7EB;
+            color: #1F2937;
+        }
+
+        .btn-secondary:hover {
+            background: #D1D5DB;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6B7280;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .filter-input, .filter-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-select {
+            cursor: pointer;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6B7280;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E3A5F;
+        }
+
+        /* Table */
+        .table-wrapper {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: #F9FAFB;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #E5E7EB;
+            color: #1F2937;
+        }
+
+        tr:hover {
+            background: #F9FAFB;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+
+        .status-inactive {
+            background: rgba(156, 163, 175, 0.1);
+            color: #6B7280;
+        }
+
+        .status-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+
+        .status-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .action-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-link {
+            color: #2563EB;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .action-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Tab 2: Detail */
+        .detail-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 32px;
+        }
+
+        .inner-tabs-container {
+            display: flex;
+            gap: 16px;
+            border-bottom: 1px solid #E5E7EB;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .inner-tab {
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6B7280;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .inner-tab:hover {
+            color: #1E3A5F;
+        }
+
+        .inner-tab.active {
+            color: #2563EB;
+            border-bottom-color: #2563EB;
+        }
+
+        .inner-tab-content {
+            display: none;
+        }
+
+        .inner-tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #374151;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .form-value {
+            font-size: 13px;
+            color: #1F2937;
+            padding: 8px 0;
+            line-height: 1.5;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .contact-table, .agreement-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 12px;
+        }
+
+        .contact-table th, .agreement-table th {
+            background: #F9FAFB;
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid #E5E7EB;
+            color: #374151;
+        }
+
+        .contact-table td, .agreement-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #E5E7EB;
+            color: #1F2937;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #DBEAFE;
+            color: #1E40AF;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .checkbox-item input {
+            cursor: pointer;
+        }
+
+        .agreement-banner {
+            background: #DBEAFE;
+            border-left: 4px solid #2563EB;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #1E40AF;
+            font-weight: 500;
+        }
+
+        .agreement-card {
+            background: #F0F9FF;
+            border-left: 4px solid #2563EB;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .agreement-title {
+            font-weight: 600;
+            color: #1E3A5F;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .agreement-item {
+            font-size: 12px;
+            color: #1F2937;
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #E5E7EB;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #10B981;
+        }
+
+        .right-panel {
+            position: sticky;
+            top: 32px;
+            height: fit-content;
+        }
+
+        .right-panel .card {
+            margin-bottom: 16px;
+        }
+
+        .right-panel .form-label {
+            font-size: 11px;
+        }
+
+        .right-panel .form-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .quick-link {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #DBEAFE;
+            color: #2563EB;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-decoration: none;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            cursor: pointer;
+        }
+
+        .quick-link:hover {
+            background: #BFDBFE;
+        }
+
+        .sync-info {
+            font-size: 11px;
+            color: #6B7280;
+            margin-top: 8px;
+        }
+
+        .document-list {
+            font-size: 12px;
+        }
+
+        .document-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #E5E7EB;
+            color: #2563EB;
+            cursor: pointer;
+        }
+
+        .document-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Sticky Action Bar */
+        .action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 240px;
+            right: 0;
+            background: white;
+            border-top: 1px solid #E5E7EB;
+            padding: 16px 32px;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        .main {
+            padding-bottom: 80px;
+        }
+
+        /* Chart */
+        .mini-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 100px;
+            margin-top: 12px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: #BFDBFE;
+            border-radius: 4px 4px 0 0;
+            min-height: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .chart-bar:hover {
+            background: #93C5FD;
+        }
+
+        /* Quick Nav */
+        #quickNavBtn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            background: #1E3A5F;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            font-size: 20px;
+            transition: transform 0.2s;
+        }
+
+        #quickNavBtn:hover {
+            transform: scale(1.1);
+        }
+
+        #quickNavPanel {
+            position: fixed;
+            bottom: 80px;
+            right: 24px;
+            width: 300px;
+            max-height: 70vh;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            z-index: 9998;
+            overflow-y: auto;
+            transform: scale(0.8);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            padding: 16px;
+        }
+
+        #quickNavPanel.qn-open {
+            transform: scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .qn-header {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: #1E3A5F;
+        }
+
+        .qn-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #6B7280;
+            margin: 8px 0 4px;
+            text-transform: uppercase;
+        }
+
+        .qn-link {
+            display: block;
+            padding: 4px 8px;
+            font-size: 12px;
+            color: #2563EB;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .qn-link:hover {
+            background: #F0F9FF;
+        }
+
+        .qn-link.current {
+            color: #F59E0B;
+            font-weight: 600;
+        }
+
+        .qn-divider {
+            margin: 8px 0;
+            border: none;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .qn-home-link {
+            display: block;
+            padding: 4px 8px;
+            font-size: 12px;
+            color: #1E3A5F;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .qn-home-link:hover {
+            background: #F3F4F6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-flex">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar" style="width:240px;background:#1E3A5F;overflow-y:auto;position:fixed;height:100vh;left:0;top:0;padding:16px 12px;z-index:100;font-family:'Inter',sans-serif;">
+  <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;margin-bottom:20px">
+    <div style="font-size:20px;font-weight:700;width:32px;height:32px;background:#2563EB;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0">ส</div>
+    <div style="font-size:11px;font-weight:600;color:#fff;line-height:1.3">Sangwijit<br>ERP Portal</div>
+  </div>
+  <a href="portal-mockup-index.html" style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:6px;text-decoration:none;color:#9CA3AF;font-size:12px;margin-bottom:16px;background:rgba(255,255,255,0.05)" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='#9CA3AF'">🏠 Index — ภาพรวมทั้งหมด</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:6px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">การขาย (Sales)</div>
+    <a href="slq-sales-queue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-Q Sales Queue</a>
+<a href="sl1-quotation-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-1 ใบเสนอราคา</a>
+  <a href="sl2-reservation-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-2 ใบจอง</a>
+  <a href="sl3-deposit-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-3 ใบมัดจำ</a>
+  <a href="sl4-invoice-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-4 บิลขาย</a>
+  <a href="sl5-crm-followup-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-5 ติดตาม CRM</a>
+  <a href="sl6-promotion-setup-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-6 โปรโมชั่น</a>
+  <a href="sl7-sales-report-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-7 รายงานยอดขาย</a>
+  <a href="cm1-commission-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CM-1 Commission</a>
+  <a href="cl1-claims-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CL-1 Claims</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">คลังสินค้า (Warehouse)</div>
+  <a href="wh-queue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-Q คิวรับสินค้า</a>
+  <a href="wh1-grn-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-1 GRN รับสินค้า</a>
+  <a href="wh2-stock-transfer-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-2 โอนย้ายสต็อก</a>
+  <a href="wh3-stock-count-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-3 นับสต็อก</a>
+  <a href="whr-goods-issue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-R เบิกสินค้า</a>
+
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">จัดซื้อ (Purchase)</div>
+    <a href="poq-purchase-queue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">PO-Q คิวจัดซื้อ</a>
+<a href="po4-purchase-order-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">PO-4 ใบสั่งซื้อ</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">การเงิน / บัญชี</div>
+  <a href="fi1-ar-receive-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-1 รับชำระ AR</a>
+  <a href="fi2-ap-payment-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-2 จ่ายชำระ AP</a>
+  <a href="fi3-tax-reconciliation-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-3 กระทบยอดภาษี</a>
+  <a href="fi4-expense-wht-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-4 ค่าใช้จ่าย/WHT</a>
+  <a href="fi5-ar-audit-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-5 ตรวจสอบ AR</a>
+  <a href="tr1-treasury-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">TR-1 Treasury</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">บริหารพื้นที่ (SM)</div>
+  <a href="sm1-sku-slot-planner-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SM-1 SKU Slot Planner</a>
+  <a href="sm2-sku-health-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SM-2 SKU Health</a>
+  <a href="sm3-vendor-report-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SM-3 Vendor Report</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">ศูนย์บริการ (Service)</div>
+  <a href="sv1-service-queue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SV-1 คิวงานซ่อม</a>
+  <a href="sv2-service-invoice-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SV-2 ใบแจ้งหนี้บริการ</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">จัดส่ง / ผู้บริหาร</div>
+  <a href="dl1-delivery-planning-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">DL-1 วางแผนจัดส่ง</a>
+  <a href="ex1-executive-dashboard-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">EX-1 Dashboard ผู้บริหาร</a>
+  <a href="rp1-report-center-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">RP-1 Report Center</a>
+  <a href="cf1-rbac-permission-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-1 สิทธิ์ RBAC</a>
+  <a href="ap1-approval-center-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">AP-1 ศูนย์อนุมัติ</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">ตั้งค่าระบบ (CF-2)</div>
+    <a href="cf2-config-hub-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2 Hub ตั้งค่า</a>
+    <a href="cf2-1-tax-setup-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.1 ภาษี (BC)</a>
+    <a href="cf2-2-number-series-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.2 Running No. (BC)</a>
+    <a href="cf2-5-tech-template-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.5 Template ช่าง</a>
+    <a href="cf2-6-approval-matrix-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.6 Approval Matrix</a>
+    <a href="cf2-7-doc-template-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.7 Doc Template</a>
+    <a href="cf2-9-general-parameter-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.9 ค่าตั้งต้น (BC)</a>
+
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">Master Data</div>
+  <a href="md1-item-master-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-1 ทะเบียนสินค้า</a>
+  <a href="md2-customer-master-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-2 ทะเบียนลูกค้า</a>
+  <a href="md3-vendor-master-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#fff;font-size:12px;margin:1px 0;background:#2563EB;font-weight:600">MD-3 ทะเบียน Vendor</a>
+  <a href="md4-employee-master-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-4 ทะเบียนพนักงาน</a>
+  <a href="md5-branch-warehouse-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-5 สาขา & คลัง</a>
+
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">Shared Components</div>
+  <a href="sc1-customer-search-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SC-1 ค้นหาลูกค้า</a>
+  <a href="sc2-item-search-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SC-2 ค้นหาสินค้า</a>
+  <a href="sc7-timeline-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SC-7 Timeline</a>
+</div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">ขายสินค้า</div>
+                <div class="sidebar-item">SL-1 ใบเสนอราคา</div>
+                <div class="sidebar-item">SL-2 จองสินค้า</div>
+                <div class="sidebar-item">SL-3 รับมัดจำ</div>
+                <div class="sidebar-item">SL-4 ออก Invoice</div>
+                <div class="sidebar-item">SL-5 ติดตามลูกค้า</div>
+                <div class="sidebar-item">SL-6 โปรโมชั่น</div>
+                <div class="sidebar-item">SL-7 รายงานยอดขาย</div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">คลังสินค้า</div>
+                <div class="sidebar-item">WH คิวจัดสินค้า</div>
+                <div class="sidebar-item">WH-1 รับสินค้า GRN</div>
+                <div class="sidebar-item">WH-2 โอนย้ายสต็อก</div>
+                <div class="sidebar-item">WH-3 นับสต็อก</div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">จัดซื้อ</div>
+                <div class="sidebar-item">PO-4 ใบสั่งซื้อ</div>
+                <div class="sidebar-item">SM-1 SKU Planner</div>
+                <div class="sidebar-item">SM-2 SKU Health</div>
+                <div class="sidebar-item">SM-3 Vendor Report</div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Master Data</div>
+                <div class="sidebar-item">MD-1 Item Master</div>
+                <div class="sidebar-item">MD-2 Customer Master</div>
+                <div class="sidebar-item section-active">MD-3 Vendor Master</div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">การเงิน</div>
+                <div class="sidebar-item">FI-1 รับชำระ AR</div>
+                <div class="sidebar-item">FI-2 จ่ายชำระ AP</div>
+                <div class="sidebar-item">FI-3 กระทบยอดภาษี</div>
+                <div class="sidebar-item">FI-4 ค่าใช้จ่าย/WHT</div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="page-header">
+                <h1 class="page-title">ทะเบียน Vendor — Vendor Master</h1>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <div class="tab active" onclick="switchTab(event, 'list')">รายชื่อ Vendor</div>
+                <div class="tab" onclick="switchTab(event, 'detail')">รายละเอียด</div>
+            </div>
+
+            <!-- Tab 1: List -->
+            <div id="list" class="tab-content active">
+                <div class="action-row">
+                    <button class="btn btn-primary">+ เพิ่ม Vendor ใหม่</button>
+                    <button class="btn btn-secondary">📥 Import</button>
+                </div>
+
+                <div class="filter-bar">
+                    <div class="filter-item">
+                        <label class="filter-label">ค้นหา</label>
+                        <input type="text" class="filter-input" placeholder="รหัส, ชื่อ...">
+                    </div>
+                    <div class="filter-item">
+                        <label class="filter-label">ประเภท</label>
+                        <select class="filter-select">
+                            <option>ทั้งหมด</option>
+                            <option>Supplier</option>
+                            <option>Service Provider</option>
+                            <option>Contractor</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label class="filter-label">หมวดสินค้า</label>
+                        <select class="filter-select">
+                            <option>ทั้งหมด</option>
+                            <option>แอร์</option>
+                            <option>ทีวี</option>
+                            <option>ตู้เย็น</option>
+                            <option>อะไหล่</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label class="filter-label">สถานะ</label>
+                        <select class="filter-select">
+                            <option>ทั้งหมด</option>
+                            <option>Active</option>
+                            <option>Inactive</option>
+                            <option>Blacklist</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label class="filter-label">นิติบุคคล</label>
+                        <select class="filter-select">
+                            <option>ทั้งหมด</option>
+                            <option>SWT</option>
+                            <option>SWE</option>
+                            <option>VMN</option>
+                            <option>WPS</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-label">Vendor ทั้งหมด</div>
+                        <div class="stat-value">142</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Active</div>
+                        <div class="stat-value">128</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Supplier</div>
+                        <div class="stat-value">89</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Service Provider</div>
+                        <div class="stat-value">53</div>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;">รหัส</th>
+                                <th style="width: 25%;">ชื่อ Vendor</th>
+                                <th style="width: 15%;">หมวดหลัก</th>
+                                <th style="width: 10%;">เครดิตเทอม</th>
+                                <th style="width: 8%;">WHT%</th>
+                                <th style="width: 15%;">ยอดค้าง AP</th>
+                                <th style="width: 12%;">ข้อตกลง</th>
+                                <th style="width: 8%;">สถานะ</th>
+                                <th style="width: 12%;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>V-0021</strong></td>
+                                <td>บจก.ไดกิ้น อินดัสทรีส์</td>
+                                <td>แอร์</td>
+                                <td>45 วัน</td>
+                                <td>1%</td>
+                                <td>฿1,250,000</td>
+                                <td><span style="color: #10B981; font-weight: 600;">มี Agreement</span></td>
+                                <td><span class="status-badge status-active">● Active</span></td>
+                                <td><div class="action-links"><span class="action-link" onclick="switchTab({}, 'detail')">ดู</span><span class="action-link">แก้ไข</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>V-0022</strong></td>
+                                <td>มิตซูบิชิ อิเล็คทริค ไทย</td>
+                                <td>แอร์, เครื่องใช้ไฟฟ้า</td>
+                                <td>30 วัน</td>
+                                <td>1%</td>
+                                <td>฿850,000</td>
+                                <td><span style="color: #10B981; font-weight: 600;">มี Agreement</span></td>
+                                <td><span class="status-badge status-active">● Active</span></td>
+                                <td><div class="action-links"><span class="action-link">ดู</span><span class="action-link">แก้ไข</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>V-0031</strong></td>
+                                <td>บจก.ซัมซุง อิเล็คโทรนิคส์</td>
+                                <td>ทีวี, ตู้เย็น, เครื่องซักผ้า</td>
+                                <td>30 วัน</td>
+                                <td>1%</td>
+                                <td>฿2,100,000</td>
+                                <td><span style="color: #10B981; font-weight: 600;">มี Agreement</span></td>
+                                <td><span class="status-badge status-active">● Active</span></td>
+                                <td><div class="action-links"><span class="action-link">ดู</span><span class="action-link">แก้ไข</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>V-0045</strong></td>
+                                <td>บจก.แอลจี อีเลคทรอนิคส์</td>
+                                <td>ทีวี, เครื่องใช้ไฟฟ้า</td>
+                                <td>45 วัน</td>
+                                <td>1%</td>
+                                <td>฿680,000</td>
+                                <td><span style="color: #10B981; font-weight: 600;">มี Agreement</span></td>
+                                <td><span class="status-badge status-active">● Active</span></td>
+                                <td><div class="action-links"><span class="action-link">ดู</span><span class="action-link">แก้ไข</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>V-0089</strong></td>
+                                <td>ร้านอะไหล่ XYZ</td>
+                                <td>อะไหล่บริการ</td>
+                                <td>0 วัน</td>
+                                <td>3%</td>
+                                <td>฿0</td>
+                                <td>—</td>
+                                <td><span class="status-badge status-active">● Active</span></td>
+                                <td><div class="action-links"><span class="action-link">ดู</span><span class="action-link">แก้ไข</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>V-0115</strong></td>
+                                <td>บจก.ฮิตาชิ เซลส์ ไทย</td>
+                                <td>แอร์, ทีวี</td>
+                                <td>45 วัน</td>
+                                <td>1%</td>
+                                <td>฿1,920,000</td>
+                                <td><span style="color: #10B981; font-weight: 600;">มี Agreement</span></td>
+                                <td><span class="status-badge status-active">● Active</span></td>
+                                <td><div class="action-links"><span class="action-link">ดู</span><span class="action-link">แก้ไข</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>V-0128</strong></td>
+                                <td>บจก.ชาร์ป อิเล็คโทรนิคส์ (ไทย)</td>
+                                <td>ตู้เย็น, เครื่องใช้ไฟฟ้า</td>
+                                <td>30 วัน</td>
+                                <td>1%</td>
+                                <td>฿1,450,000</td>
+                                <td><span style="color: #10B981; font-weight: 600;">มี Agreement</span></td>
+                                <td><span class="status-badge status-active">● Active</span></td>
+                                <td><div class="action-links"><span class="action-link">ดู</span><span class="action-link">แก้ไข</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>V-0142</strong></td>
+                                <td>บจก.โตชิบา ไทยแลนด์</td>
+                                <td>แอร์, ตู้เย็น</td>
+                                <td>45 วัน</td>
+                                <td>1%</td>
+                                <td>฿2,320,000</td>
+                                <td><span style="color: #10B981; font-weight: 600;">มี Agreement</span></td>
+                                <td><span class="status-badge status-active">● Active</span></td>
+                                <td><div class="action-links"><span class="action-link">ดู</span><span class="action-link">แก้ไข</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>V-0156</strong></td>
+                                <td>บจก.ปานาโซนิค (ประเทศไทย)</td>
+                                <td>ทีวี, เครื่องใช้ไฟฟ้า</td>
+                                <td>30 วัน</td>
+                                <td>1%</td>
+                                <td>฿980,000</td>
+                                <td><span style="color: #10B981; font-weight: 600;">มี Agreement</span></td>
+                                <td><span class="status-badge status-active">● Active</span></td>
+                                <td><div class="action-links"><span class="action-link">ดู</span><span class="action-link">แก้ไข</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>V-0178</strong></td>
+                                <td>บจก.อีซี อิเล็คทรอนิคส์</td>
+                                <td>อะไหล่บริการ</td>
+                                <td>0 วัน</td>
+                                <td>3%</td>
+                                <td>฿125,000</td>
+                                <td>—</td>
+                                <td><span class="status-badge status-inactive">○ Inactive</span></td>
+                                <td><div class="action-links"><span class="action-link">ดู</span><span class="action-link">แก้ไข</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>V-0189</strong></td>
+                                <td>สหกรณ์ซ่อมแอร์ จ.นนทบุรี</td>
+                                <td>บริการซ่อมแอร์</td>
+                                <td>15 วัน</td>
+                                <td>0%</td>
+                                <td>฿45,000</td>
+                                <td>—</td>
+                                <td><span class="status-badge status-active">● Active</span></td>
+                                <td><div class="action-links"><span class="action-link">ดู</span><span class="action-link">แก้ไข</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>V-0201</strong></td>
+                                <td>บจก.วอร์เร้นตี้ เซ็นเตอร์</td>
+                                <td>บริการแล้วขาย</td>
+                                <td>30 วัน</td>
+                                <td>0%</td>
+                                <td>฿320,000</td>
+                                <td>—</td>
+                                <td><span class="status-badge status-warning">⚠ Blacklist</span></td>
+                                <td><div class="action-links"><span class="action-link">ดู</span><span class="action-link">แก้ไข</span></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 2: Detail -->
+            <div id="detail" class="tab-content">
+                <div class="detail-layout">
+                    <!-- Left Column -->
+                    <div>
+                        <!-- Inner Tabs -->
+                        <div class="inner-tabs-container">
+                            <div class="inner-tab active" onclick="switchInnerTab(event, 'general')">ข้อมูลทั่วไป</div>
+                            <div class="inner-tab" onclick="switchInnerTab(event, 'terms')">เงื่อนไขการค้า</div>
+                            <div class="inner-tab" onclick="switchInnerTab(event, 'agreement')">ข้อตกลง</div>
+                            <div class="inner-tab" onclick="switchInnerTab(event, 'history')">ประวัติการซื้อ</div>
+                            <div class="inner-tab" onclick="switchInnerTab(event, 'warranty')">WARRANTY</div>
+                        </div>
+
+                        <!-- Inner Tab: General -->
+                        <div id="general" class="inner-tab-content active">
+                            <div class="card">
+                                <div class="form-group">
+                                    <label class="form-label">รหัส Vendor</label>
+                                    <div class="form-value"><strong>V-0021</strong> <span class="badge">BC365 sync</span></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">ชื่อบริษัท</label>
+                                    <div class="form-value">บจก.ไดกิ้น อินดัสทรีส์ (ประเทศไทย) จำกัด</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">เลขผู้เสียภาษี</label>
+                                    <div class="form-value">0-1055-55555-XX-X</div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">ที่อยู่</label>
+                                        <div class="form-value">123 หมู่ 5 ถ.พหลโยธิน เขต สายไหม กรุงเทพฯ 10220</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">โทรศัพท์</label>
+                                        <div class="form-value">02-XXX-XXXX</div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">อีเมล</label>
+                                        <div class="form-value">info@daikin.co.th</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">เว็บไซต์</label>
+                                        <div class="form-value">www.daikin.co.th</div>
+                                    </div>
+                                </div>
+
+                                <hr style="margin: 20px 0; border: none; border-top: 1px solid #E5E7EB;">
+
+                                <div class="form-group">
+                                    <label class="form-label">ผู้ติดต่อฝ่ายขาย</label>
+                                    <table class="contact-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ชื่อ</th>
+                                                <th>ตำแหน่ง</th>
+                                                <th>โทรศัพท์</th>
+                                                <th>อีเมล</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>นายสมชาย ด</td>
+                                                <td>Sales Mgr</td>
+                                                <td>08-XXXX-XXXX</td>
+                                                <td>somchai@daikin.co.th</td>
+                                            </tr>
+                                            <tr>
+                                                <td>นางสาวนิดา ป</td>
+                                                <td>Sales Rep</td>
+                                                <td>08-XXXX-XXXX</td>
+                                                <td>nida@daikin.co.th</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">ผู้ติดต่อฝ่าย Claim/บริการ</label>
+                                    <table class="contact-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ชื่อ</th>
+                                                <th>ตำแหน่ง</th>
+                                                <th>โทรศัพท์</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>นายวิทยา ช</td>
+                                                <td>Service Manager</td>
+                                                <td>02-XXX-XXXX ext.104</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">หมวดสินค้าที่จำหน่าย</label>
+                                    <div style="margin-top: 8px;">
+                                        <span class="badge">แอร์</span>
+                                        <span class="badge">อะไหล่แอร์</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Inner Tab: Terms -->
+                        <div id="terms" class="inner-tab-content">
+                            <div class="card">
+                                <div class="form-group">
+                                    <label class="form-label">เครดิตเทอม</label>
+                                    <div class="form-value">45 วัน</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">สกุลเงิน</label>
+                                    <div class="form-value">THB (บาท)</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">อัตรา WHT</label>
+                                    <div class="form-value">1% (ภ.ง.ด.53 - ค่าแรง/บริการ)</div>
+                                </div>
+
+                                <hr style="margin: 20px 0; border: none; border-top: 1px solid #E5E7EB;">
+
+                                <div class="form-group">
+                                    <label class="form-label">วิธีชำระเงิน</label>
+                                    <div class="form-value" style="margin-bottom: 12px;">โอนธนาคาร</div>
+                                    <table class="agreement-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ธนาคาร</th>
+                                                <th>ชื่อบัญชี</th>
+                                                <th>เลขบัญชี</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>ธนาคารกสิกร</td>
+                                                <td>บจก.ไดกิ้น อินดัสทรีส์</td>
+                                                <td>XXX-X-XXXXX-X</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">นิติบุคคลที่ซื้อด้วย</label>
+                                    <div class="checkbox-group">
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="swt" checked>
+                                            <label for="swt">SWT</label>
+                                        </div>
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="swe" checked>
+                                            <label for="swe">SWE</label>
+                                        </div>
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="vmn">
+                                            <label for="vmn">VMN</label>
+                                        </div>
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="wps">
+                                            <label for="wps">WPS</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Inner Tab: Agreement -->
+                        <div id="agreement" class="inner-tab-content">
+                            <div class="card">
+                                <div class="agreement-banner">
+                                    📊 ข้อมูลนี้เชื่อมกับ SM-3 Vendor Report
+                                </div>
+
+                                <div class="agreement-card">
+                                    <div class="agreement-title">📦 Rebate / Volume Discount</div>
+                                    <div class="agreement-item">เงื่อนไข: ซื้อ ≥ ฿5M/ไตรมาส → Rebate 2%</div>
+                                    <div class="agreement-item">ซื้อ ≥ ฿10M/ไตรมาส → Rebate 3.5%</div>
+                                    <div class="agreement-item">ยอดปัจจุบัน: ฿4.2M / ฿5M (84%)</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 84%;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="agreement-card">
+                                    <div class="agreement-title">📣 MDF (Marketing Development Fund)</div>
+                                    <div class="agreement-item">วงเงิน: ฿500,000/ปี</div>
+                                    <div class="agreement-item">ใช้แล้ว: ฿320,000</div>
+                                    <div class="agreement-item">คงเหลือ: ฿180,000</div>
+                                    <div class="agreement-item">เงื่อนไข: ต้องส่งรายงานใช้จ่ายภายใน 30 วัน</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 64%; background: #F59E0B;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="agreement-card">
+                                    <div class="agreement-title">🛒 Co-op Advertising</div>
+                                    <div class="agreement-item">เงื่อนไข: Daikin ออก 50%, แสงวิจิตร 50%</div>
+                                    <div class="agreement-item">วงเงินร่วม: ฿1,000,000/ปี</div>
+                                    <div class="agreement-item">ใช้แล้ว: ฿650,000</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 65%;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="agreement-card">
+                                    <div class="agreement-title">🚚 Delivery Term</div>
+                                    <div class="agreement-item">FOB Warehouse, Delivery included</div>
+                                    <div class="agreement-item">Lead time: 7-14 วันทำการ</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Inner Tab: History -->
+                        <div id="history" class="inner-tab-content">
+                            <div class="card">
+                                <div class="form-group">
+                                    <label class="form-label">ยอดสั่งซื้อรวมปีนี้</label>
+                                    <div class="form-value" style="font-size: 18px; font-weight: 700; color: #2563EB;">฿18,500,000</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">PO ล่าสุด 5 รายการ</label>
+                                    <table class="agreement-table">
+                                        <thead>
+                                            <tr>
+                                                <th>PO No.</th>
+                                                <th>วันที่</th>
+                                                <th>ยอดเงิน</th>
+                                                <th>รับแล้ว</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>PO-2024-00451</td>
+                                                <td>2024-04-10</td>
+                                                <td>฿850,000</td>
+                                                <td>✓ 100%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>PO-2024-00425</td>
+                                                <td>2024-03-28</td>
+                                                <td>฿1,200,000</td>
+                                                <td>✓ 100%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>PO-2024-00398</td>
+                                                <td>2024-03-15</td>
+                                                <td>฿950,000</td>
+                                                <td>✓ 100%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>PO-2024-00367</td>
+                                                <td>2024-02-29</td>
+                                                <td>฿1,450,000</td>
+                                                <td>✓ 100%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>PO-2024-00341</td>
+                                                <td>2024-02-14</td>
+                                                <td>฿875,000</td>
+                                                <td>✓ 100%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">ยอดซื้อรายเดือน (6 เดือนล่าสุด)</label>
+                                    <div class="mini-chart">
+                                        <div class="chart-bar" style="height: 65%;"></div>
+                                        <div class="chart-bar" style="height: 72%;"></div>
+                                        <div class="chart-bar" style="height: 58%;"></div>
+                                        <div class="chart-bar" style="height: 80%;"></div>
+                                        <div class="chart-bar" style="height: 75%;"></div>
+                                        <div class="chart-bar" style="height: 88%;"></div>
+                                    </div>
+                                    <div style="display: flex; gap: 8px; font-size: 11px; color: #6B7280; margin-top: 8px;">
+                                        <span style="flex: 1; text-align: center;">Nov</span>
+                                        <span style="flex: 1; text-align: center;">Dec</span>
+                                        <span style="flex: 1; text-align: center;">Jan</span>
+                                        <span style="flex: 1; text-align: center;">Feb</span>
+                                        <span style="flex: 1; text-align: center;">Mar</span>
+                                        <span style="flex: 1; text-align: center;">Apr</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Inner Tab: Warranty -->
+                        <div id="warranty" class="inner-tab-content">
+                            <div class="card">
+                                <div class="form-group">
+                                    <label class="form-label">เงื่อนไขรับประกัน</label>
+                                    <table class="agreement-table">
+                                        <thead>
+                                            <tr>
+                                                <th>หมวดสินค้า</th>
+                                                <th>ระยะเวลา</th>
+                                                <th>เงื่อนไข</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>แอร์ติดผนัง</td>
+                                                <td>1 ปี</td>
+                                                <td>ชิ้นส่วนและแรง Daikin ชดเชย</td>
+                                            </tr>
+                                            <tr>
+                                                <td>แอร์กระบบท่อส่ง</td>
+                                                <td>2 ปี</td>
+                                                <td>ชิ้นส่วนอะไหล่ Daikin ชดเชย</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">อัตราค่าแรง</label>
+                                        <div class="form-value">฿800/งาน (Daikin ชดเชย)</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">อัตราค่าเดินทาง</label>
+                                        <div class="form-value">฿350/เที่ยว (Daikin ชดเชย)</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">วิธีส่งคืนอะไหล่</label>
+                                    <div class="form-value">
+                                        1. ติดต่อ Service Manager เพื่อขออนุมัติ<br>
+                                        2. เตรียมอะไหล่พร้อมกล่องและลงหมายเลข RMA<br>
+                                        3. จัดส่งวิธี Kerry/Flash Express<br>
+                                        4. ค่าส่งฝ่ายซื้อเรียกเก็บจาก Daikin
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel -->
+                    <div class="right-panel">
+                        <div class="card">
+                            <div class="form-group">
+                                <label class="form-label">สถานะ</label>
+                                <div class="form-value">
+                                    <span class="status-badge status-active">● Active</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="form-group">
+                                <label class="form-label">ผู้จัดการ Vendor</label>
+                                <div class="form-value">นาย สมคิด มูลสิงห์</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">BC365 Vendor No.</label>
+                                <div class="form-value">V10021</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last sync</label>
+                                <div class="sync-info">2024-04-14 14:30:45</div>
+                                <button class="btn btn-secondary" style="width: 100%; margin-top: 8px; padding: 6px;">🔄 Refresh</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="form-group">
+                                <label class="form-label">AP Balance</label>
+                                <div class="form-value" style="color: #EF4444;">฿1,250,000</div>
+                                <a href="#" class="quick-link">→ ดู FI-2</a>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="form-group">
+                                <label class="form-label">Quick Links</label>
+                                <div style="margin-top: 8px;">
+                                    <a href="#" class="quick-link">+ สร้าง PO</a>
+                                    <a href="#" class="quick-link">📋 ดู AP</a>
+                                    <a href="#" class="quick-link">📊 ดู SM-3</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="form-group">
+                                <label class="form-label">เอกสาร</label>
+                                <div class="document-list">
+                                    <div class="document-item">📄 สัญญาซื้อขาย.pdf</div>
+                                    <div class="document-item">📄 Trade Agreement 2024.pdf</div>
+                                    <div class="document-item">📄 Tax ID Cert.pdf</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Sticky Action Bar -->
+    <div class="action-bar">
+        <button class="btn btn-secondary">ยกเลิก</button>
+        <button class="btn btn-secondary">🔄 Sync BC365</button>
+        <button class="btn btn-primary">💾 บันทึกการแก้ไข</button>
+    </div>
+
+    <!-- Quick Navigation -->
+    <div id="quickNavBtn" onclick="document.getElementById('quickNavPanel').classList.toggle('qn-open')">☰</div>
+    <div id="quickNavPanel">
+        <div class="qn-header">☰ Quick Navigation</div>
+
+        <div class="qn-section-title">📋 งานขาย</div>
+        <a href="slq-sales-queue-mockup.html" style="display:block;padding:4px 8px;font-size:12px;color:#2563EB;text-decoration:none;">SL-Q Sales Queue</a>
+<a href="sl1-quotation-mockup.html" class="qn-link">SL-1 ใบเสนอราคา</a>
+        <a href="sl2-reservation-mockup.html" class="qn-link">SL-2 จองสินค้า</a>
+        <a href="sl3-deposit-mockup.html" class="qn-link">SL-3 รับมัดจำ</a>
+        <a href="sl4-invoice-mockup.html" class="qn-link">SL-4 ออก Invoice</a>
+        <a href="sl5-crm-followup-mockup.html" class="qn-link">SL-5 ติดตามลูกค้า CRM</a>
+        <a href="sl6-promotion-setup-mockup.html" class="qn-link">SL-6 ตั้งค่าโปรโมชั่น</a>
+        <a href="sl7-sales-report-mockup.html" class="qn-link">SL-7 รายงานยอดขาย</a>
+        <a href="cm1-commission-mockup.html" class="qn-link">CM-1 คอมมิชชั่น</a>
+<a href="cl1-claims-mockup.html" style="display:block;padding:4px 8px;font-size:12px;color:#2563EB;text-decoration:none;">CL-1 Claims</a>
+
+        <div class="qn-section-title">📦 คลังสินค้า</div>
+        <a href="wh-queue-mockup.html" class="qn-link">WH คิวจัดสินค้า</a>
+        <a href="wh1-grn-mockup.html" class="qn-link">WH-1 รับสินค้าเข้า GRN</a>
+        <a href="wh2-stock-transfer-mockup.html" class="qn-link">WH-2 โอนย้ายสต็อก</a>
+        <a href="wh3-stock-count-mockup.html" class="qn-link">WH-3 นับสต็อก</a>
+
+        <div class="qn-section-title">🛒 จัดซื้อ / Space</div>
+        <a href="poq-purchase-queue-mockup.html" style="display:block;padding:4px 8px;font-size:12px;color:#2563EB;text-decoration:none;">PO-Q คิวจัดซื้อ</a>
+<a href="po4-purchase-order-mockup.html" class="qn-link">PO-4 ใบสั่งซื้อ</a>
+        <a href="sm1-sku-slot-planner-mockup.html" class="qn-link">SM-1 SKU Slot Planner</a>
+        <a href="sm2-sku-health-mockup.html" class="qn-link">SM-2 SKU Health Monitor</a>
+        <a href="sm3-vendor-report-mockup.html" class="qn-link">SM-3 Vendor Report</a>
+
+        <div class="qn-section-title">💰 บัญชี / การเงิน</div>
+        <a href="fi1-ar-receive-mockup.html" class="qn-link">FI-1 รับชำระ AR</a>
+        <a href="fi2-ap-payment-mockup.html" class="qn-link">FI-2 จ่ายชำระ AP</a>
+        <a href="fi3-tax-reconciliation-mockup.html" class="qn-link">FI-3 กระทบยอดภาษี</a>
+        <a href="fi4-expense-wht-mockup.html" class="qn-link">FI-4 ค่าใช้จ่าย/WHT</a>
+        <a href="fi5-ar-audit-mockup.html" class="qn-link">FI-5 ตรวจสอบ AR</a>
+        <a href="tr1-treasury-mockup.html" class="qn-link">TR-1 Treasury</a>
+
+        <div class="qn-section-title">🔧 ศูนย์บริการ / อื่นๆ</div>
+        <a href="sv1-service-queue-mockup.html" class="qn-link">SV-1 คิวงานซ่อม</a>
+        <a href="sv2-service-invoice-mockup.html" class="qn-link">SV-2 ใบแจ้งหนี้บริการ</a>
+        <a href="dl1-delivery-planning-mockup.html" class="qn-link">DL-1 วางแผนจัดส่ง</a>
+        <a href="ex1-executive-dashboard-mockup.html" class="qn-link">EX-1 Dashboard ผู้บริหาร</a>
+<a href="rp1-report-center-mockup.html" style="display:block;padding:4px 8px;font-size:12px;color:#2563EB;text-decoration:none;">RP-1 Report Center</a>
+        <a href="cf1-rbac-permission-mockup.html" class="qn-link">CF-1 สิทธิ์ผู้ใช้ RBAC</a>
+<div style="font-size:11px;font-weight:600;color:#6B7280;margin:8px 0 4px;">⚙️ ตั้งค่าระบบ (CF-2)</div>
+<a href="cf2-config-hub-mockup.html" style="display:block;padding:4px 8px;font-size:12px;color:#2563EB;text-decoration:none;">CF-2 Hub ตั้งค่า</a>
+<a href="cf2-1-tax-setup-mockup.html" style="display:block;padding:4px 8px;font-size:12px;color:#2563EB;text-decoration:none;">CF-2.1 ภาษี (BC)</a>
+<a href="cf2-2-number-series-mockup.html" style="display:block;padding:4px 8px;font-size:12px;color:#2563EB;text-decoration:none;">CF-2.2 Running No. (BC)</a>
+<a href="cf2-5-tech-template-mockup.html" style="display:block;padding:4px 8px;font-size:12px;color:#2563EB;text-decoration:none;">CF-2.5 Template ช่าง</a>
+<a href="cf2-6-approval-matrix-mockup.html" style="display:block;padding:4px 8px;font-size:12px;color:#2563EB;text-decoration:none;">CF-2.6 Approval Matrix</a>
+<a href="cf2-7-doc-template-mockup.html" style="display:block;padding:4px 8px;font-size:12px;color:#2563EB;text-decoration:none;">CF-2.7 Doc Template</a>
+<a href="cf2-9-general-parameter-mockup.html" style="display:block;padding:4px 8px;font-size:12px;color:#2563EB;text-decoration:none;">CF-2.9 ค่าตั้งต้น (BC)</a>
+
+        <div class="qn-section-title">🔎 Shared / Master</div>
+        <a href="sc1-customer-search-mockup.html" class="qn-link">SC-1 ค้นหาลูกค้า</a>
+        <a href="sc2-item-search-mockup.html" class="qn-link">SC-2 ค้นหาสินค้า</a>
+        <a href="sc7-timeline-mockup.html" class="qn-link">SC-7 Timeline</a>
+        <a href="md1-item-master-mockup-v3.html" class="qn-link">MD-1 Item Master</a>
+        <a href="md2-customer-master-mockup-v3.html" class="qn-link">MD-2 Customer Master</a>
+        <a href="md3-vendor-master-mockup-v3.html" class="qn-link current">★ MD-3 Vendor Master</a>
+
+        <hr class="qn-divider">
+        <a href="portal-mockup-index.html" class="qn-home-link">🏠 กลับหน้า Index</a>
+    </div>
+
+    <script>
+        function switchTab(event, tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tabs-container .tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function switchInnerTab(event, tabName) {
+            // Hide all inner tab contents
+            const contents = document.querySelectorAll('.inner-tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all inner tabs
+            const tabs = document.querySelectorAll('.inner-tabs-container .inner-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected inner tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

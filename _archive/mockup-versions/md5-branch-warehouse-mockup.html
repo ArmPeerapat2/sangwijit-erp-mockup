@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD-5 ทะเบียนสาขา & คลังสินค้า - Sangwijit ERP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F8FAFC;
+            min-width: 1440px;
+            overflow-x: auto;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: #1E3A5F;
+            color: white;
+            overflow-y: auto;
+            padding: 20px 0;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 0 16px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #93C5FD;
+        }
+
+        .sidebar-group {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-group-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748B;
+            padding: 8px 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-item {
+            padding: 10px 16px;
+            font-size: 13px;
+            color: #CBD5E1;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+
+        .sidebar-item.active {
+            background: #2563EB;
+            color: white;
+            font-weight: 600;
+        }
+
+        .sidebar-item.active::before {
+            content: "★";
+            margin-right: 4px;
+        }
+
+        /* MAIN LAYOUT */
+        .main {
+            margin-left: 240px;
+            background: #F8FAFC;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            padding: 24px 32px;
+            border-bottom: 1px solid #E2E8F0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E293B;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            color: #64748B;
+            margin-top: 4px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #2563EB;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1D4ED8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #2563EB;
+            border: 1px solid #2563EB;
+        }
+
+        .btn-secondary:hover {
+            background: #EFF6FF;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 0;
+            background: white;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 0 32px;
+            margin: 0;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748B;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: #1E293B;
+            background: #F1F5F9;
+        }
+
+        .tab.active {
+            color: #2563EB;
+            border-bottom-color: #2563EB;
+        }
+
+        .content {
+            padding: 32px;
+        }
+
+        /* STATS BAR */
+        .stats-bar {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 24px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2563EB;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #64748B;
+            margin-top: 4px;
+        }
+
+        /* CARDS GRID */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #E2E8F0;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+            border-color: #2563EB;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E293B;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .badge-retail {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .badge-wholesale {
+            background: #DCFCE7;
+            color: #166534;
+        }
+
+        .badge-export {
+            background: #F3E8FF;
+            color: #6B21A8;
+        }
+
+        .badge-online {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-entity {
+            background: #F0F4F8;
+            color: #334155;
+            margin-left: 8px;
+        }
+
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #F1F5F9;
+            font-size: 13px;
+        }
+
+        .card-row:last-child {
+            border-bottom: none;
+        }
+
+        .card-label {
+            color: #64748B;
+            font-weight: 500;
+        }
+
+        .card-value {
+            color: #1E293B;
+            font-weight: 500;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #F1F5F9;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22C55E;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        /* TABLE */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #F8FAFC;
+            border-bottom: 2px solid #E2E8F0;
+        }
+
+        th {
+            padding: 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        td {
+            padding: 16px;
+            font-size: 13px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        tbody tr:hover {
+            background: #F8FAFC;
+        }
+
+        .link {
+            color: #2563EB;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        /* EXPANDABLE SECTION */
+        .expandable-row {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .expand-icon {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+            margin-right: 8px;
+            transition: transform 0.2s;
+        }
+
+        .expand-icon.open {
+            transform: rotate(90deg);
+        }
+
+        .detail-row {
+            display: none;
+            background: #F8FAFC;
+        }
+
+        .detail-row.open {
+            display: table-row;
+        }
+
+        .detail-content {
+            padding: 24px;
+            background: #F8FAFC;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .zone-table {
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .zone-table th,
+        .zone-table td {
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .zone-table th {
+            background: #F0F4F8;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* PROGRESS BAR */
+        .progress {
+            width: 100%;
+            height: 6px;
+            background: #E2E8F0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #2563EB;
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        /* ENTITY CARDS */
+        .entity-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .entity-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .entity-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 4px;
+        }
+
+        .entity-tax {
+            font-size: 12px;
+            color: #64748B;
+            margin-bottom: 16px;
+        }
+
+        .entity-section {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .entity-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .entity-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748B;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .entity-list {
+            list-style: none;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .entity-list li {
+            color: #334155;
+        }
+
+        /* SETTINGS SECTION */
+        .settings-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .settings-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 16px;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: #2563EB;
+        }
+
+        /* FLOATING QUICK NAV */
+        .quick-nav {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 56px;
+            height: 56px;
+            background: #2563EB;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+            transition: all 0.2s;
+            z-index: 90;
+        }
+
+        .quick-nav:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(37,99,235,0.4);
+        }
+
+        /* HIDDEN TABS CONTENT */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .centered-message {
+            text-align: center;
+            padding: 48px 32px;
+            color: #64748B;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <div class="sidebar" style="width:240px;background:#1E3A5F;overflow-y:auto;position:fixed;height:100vh;left:0;top:0;padding:16px 12px;z-index:100;font-family:'Inter',sans-serif;">
+  <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;margin-bottom:20px">
+    <div style="font-size:20px;font-weight:700;width:32px;height:32px;background:#2563EB;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0">ส</div>
+    <div style="font-size:11px;font-weight:600;color:#fff;line-height:1.3">Sangwijit<br>ERP Portal</div>
+  </div>
+  <a href="portal-mockup-index.html" style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:6px;text-decoration:none;color:#9CA3AF;font-size:12px;margin-bottom:16px;background:rgba(255,255,255,0.05)" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='#9CA3AF'">🏠 Index — ภาพรวมทั้งหมด</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:6px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">การขาย (Sales)</div>
+    <a href="slq-sales-queue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-Q Sales Queue</a>
+<a href="sl1-quotation-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-1 ใบเสนอราคา</a>
+  <a href="sl2-reservation-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-2 ใบจอง</a>
+  <a href="sl3-deposit-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-3 ใบมัดจำ</a>
+  <a href="sl4-invoice-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-4 บิลขาย</a>
+  <a href="sl5-crm-followup-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-5 ติดตาม CRM</a>
+  <a href="sl6-promotion-setup-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-6 โปรโมชั่น</a>
+  <a href="sl7-sales-report-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SL-7 รายงานยอดขาย</a>
+  <a href="cm1-commission-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CM-1 Commission</a>
+  <a href="cl1-claims-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CL-1 Claims</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">คลังสินค้า (Warehouse)</div>
+  <a href="wh-queue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-Q คิวรับสินค้า</a>
+  <a href="wh1-grn-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-1 GRN รับสินค้า</a>
+  <a href="wh2-stock-transfer-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-2 โอนย้ายสต็อก</a>
+  <a href="wh3-stock-count-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-3 นับสต็อก</a>
+  <a href="whr-goods-issue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">WH-R เบิกสินค้า</a>
+
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">จัดซื้อ (Purchase)</div>
+    <a href="poq-purchase-queue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">PO-Q คิวจัดซื้อ</a>
+<a href="po4-purchase-order-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">PO-4 ใบสั่งซื้อ</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">การเงิน / บัญชี</div>
+  <a href="fi1-ar-receive-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-1 รับชำระ AR</a>
+  <a href="fi2-ap-payment-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-2 จ่ายชำระ AP</a>
+  <a href="fi3-tax-reconciliation-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-3 กระทบยอดภาษี</a>
+  <a href="fi4-expense-wht-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-4 ค่าใช้จ่าย/WHT</a>
+  <a href="fi5-ar-audit-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">FI-5 ตรวจสอบ AR</a>
+  <a href="tr1-treasury-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">TR-1 Treasury</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">บริหารพื้นที่ (SM)</div>
+  <a href="sm1-sku-slot-planner-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SM-1 SKU Slot Planner</a>
+  <a href="sm2-sku-health-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SM-2 SKU Health</a>
+  <a href="sm3-vendor-report-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SM-3 Vendor Report</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">ศูนย์บริการ (Service)</div>
+  <a href="sv1-service-queue-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SV-1 คิวงานซ่อม</a>
+  <a href="sv2-service-invoice-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SV-2 ใบแจ้งหนี้บริการ</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">จัดส่ง / ผู้บริหาร</div>
+  <a href="dl1-delivery-planning-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">DL-1 วางแผนจัดส่ง</a>
+  <a href="ex1-executive-dashboard-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">EX-1 Dashboard ผู้บริหาร</a>
+  <a href="rp1-report-center-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">RP-1 Report Center</a>
+  <a href="cf1-rbac-permission-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-1 สิทธิ์ RBAC</a>
+  <a href="ap1-approval-center-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">AP-1 ศูนย์อนุมัติ</a>
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">ตั้งค่าระบบ (CF-2)</div>
+    <a href="cf2-config-hub-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2 Hub ตั้งค่า</a>
+    <a href="cf2-1-tax-setup-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.1 ภาษี (BC)</a>
+    <a href="cf2-2-number-series-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.2 Running No. (BC)</a>
+    <a href="cf2-5-tech-template-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.5 Template ช่าง</a>
+    <a href="cf2-6-approval-matrix-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.6 Approval Matrix</a>
+    <a href="cf2-7-doc-template-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.7 Doc Template</a>
+    <a href="cf2-9-general-parameter-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">CF-2.9 ค่าตั้งต้น (BC)</a>
+
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">Master Data</div>
+  <a href="md1-item-master-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-1 ทะเบียนสินค้า</a>
+  <a href="md2-customer-master-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-2 ทะเบียนลูกค้า</a>
+  <a href="md3-vendor-master-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-3 ทะเบียน Vendor</a>
+  <a href="md4-employee-master-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-4 ทะเบียนพนักงาน</a>
+  <a href="md5-branch-warehouse-mockup-v3.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">MD-5 สาขา & คลัง</a>
+
+
+  <div style="font-size:10px;font-weight:600;color:#6B7280;padding:10px 12px 4px;text-transform:uppercase;letter-spacing:0.08em">Shared Components</div>
+  <a href="sc1-customer-search-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SC-1 ค้นหาลูกค้า</a>
+  <a href="sc2-item-search-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SC-2 ค้นหาสินค้า</a>
+  <a href="sc7-timeline-mockup.html" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;text-decoration:none;color:#D1D5DB;font-size:12px;margin:1px 0" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#D1D5DB'">SC-7 Timeline</a>
+</div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-content">
+                <div>
+                    <div class="header-title">MD-5 ทะเบียนสาขา & คลังสินค้า</div>
+                    <div class="header-subtitle">Branch & Warehouse Master</div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary btn-small">นำเข้า</button>
+                    <button class="btn btn-secondary btn-small">ส่งออก</button>
+                    <button class="btn btn-primary btn-small">+ เพิ่มใหม่</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(0)">สาขา (Branches)</div>
+            <div class="tab" onclick="switchTab(1)">คลังสินค้า (Warehouses)</div>
+            <div class="tab" onclick="switchTab(2)">ตั้งค่า (Settings)</div>
+        </div>
+
+        <!-- TAB 1: BRANCHES -->
+        <div class="tab-content active">
+            <div class="content">
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <div class="stat-number">10</div>
+                        <div class="stat-label">สาขา</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">ช่องทาง</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">นิติบุคคล</div>
+                    </div>
+                </div>
+
+                <div class="cards-grid">
+                    <!-- BRANCH 1: HQ -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">สนง.ใหญ่ (HQ)</div>
+                            <div>
+                                <span class="badge badge-retail">ค้าปลีก</span>
+                                <span class="badge badge-entity">SWE</span>
+                            </div>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ที่อยู่</span>
+                            <span class="card-value">108 หมู่ 4 ซอยสุจริต 36 แขวงหลักสี่ กรุงเทพฯ</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">โทรศัพท์</span>
+                            <span class="card-value">02-123-4567</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ผจก.สาขา</span>
+                            <span class="card-value">นางสาวสิริมา ธนวิมลรัตน์</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">จำนวนพนักงาน</span>
+                            <span class="card-value">42 คน</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">คลังที่ผูก</span>
+                            <span class="card-value"><a class="link" href="#">คลังหลัก + โชว์รูม</a></span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">สถานะ</span>
+                            <span class="card-value"><span class="status-dot"></span>เปิดทำการ</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small">แก้ไข</button>
+                            <button class="btn btn-secondary btn-small">ดูคลัง</button>
+                        </div>
+                    </div>
+
+                    <!-- BRANCH 2: RANGSIT -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">รังสิต</div>
+                            <div>
+                                <span class="badge badge-retail">ค้าปลีก</span>
+                                <span class="badge badge-entity">SWE</span>
+                            </div>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ที่อยู่</span>
+                            <span class="card-value">99/9 หมู่ 1 ซ.พหลโยธิน ต.คลองเก้า อ.ธัญบุรี ปทุมธานี</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">โทรศัพท์</span>
+                            <span class="card-value">02-500-5500</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ผจก.สาขา</span>
+                            <span class="card-value">นายสมชายศักดิ์ จันทร์สว่าง</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">จำนวนพนักงาน</span>
+                            <span class="card-value">28 คน</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">คลังที่ผูก</span>
+                            <span class="card-value"><a class="link" href="#">คลังสาขา + โชว์รูม</a></span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">สถานะ</span>
+                            <span class="card-value"><span class="status-dot"></span>เปิดทำการ</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small">แก้ไข</button>
+                            <button class="btn btn-secondary btn-small">ดูคลัง</button>
+                        </div>
+                    </div>
+
+                    <!-- BRANCH 3: BANGNA -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">บางนา</div>
+                            <div>
+                                <span class="badge badge-retail">ค้าปลีก</span>
+                                <span class="badge badge-entity">SWE</span>
+                            </div>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ที่อยู่</span>
+                            <span class="card-value">1 ซ.บางนาใต้ 32 แขวงบางนา กรุงเทพฯ</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">โทรศัพท์</span>
+                            <span class="card-value">02-399-8888</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ผจก.สาขา</span>
+                            <span class="card-value">นายวิษณุ ศรีมวล</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">จำนวนพนักงาน</span>
+                            <span class="card-value">35 คน</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">คลังที่ผูก</span>
+                            <span class="card-value"><a class="link" href="#">คลังสาขา + โชว์รูม</a></span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">สถานะ</span>
+                            <span class="card-value"><span class="status-dot"></span>เปิดทำการ</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small">แก้ไข</button>
+                            <button class="btn btn-secondary btn-small">ดูคลัง</button>
+                        </div>
+                    </div>
+
+                    <!-- BRANCH 4: NAKHON PATHOM -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">นครปฐม</div>
+                            <div>
+                                <span class="badge badge-retail">ค้าปลีก</span>
+                                <span class="badge badge-entity">SWE</span>
+                            </div>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ที่อยู่</span>
+                            <span class="card-value">78/5 ซ.แพร่งนิเวศน์ ต.บางแม่ นครปฐม</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">โทรศัพท์</span>
+                            <span class="card-value">034-123-456</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ผจก.สาขา</span>
+                            <span class="card-value">นางอัญชลี ปิยะสุวรรณ</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">จำนวนพนักงาน</span>
+                            <span class="card-value">18 คน</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">คลังที่ผูก</span>
+                            <span class="card-value"><a class="link" href="#">คลังสาขา + โชว์รูม</a></span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">สถานะ</span>
+                            <span class="card-value"><span class="status-dot"></span>เปิดทำการ</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small">แก้ไข</button>
+                            <button class="btn btn-secondary btn-small">ดูคลัง</button>
+                        </div>
+                    </div>
+
+                    <!-- BRANCH 5: CHONBURI -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">ชลบุรี</div>
+                            <div>
+                                <span class="badge badge-retail">ค้าปลีก</span>
+                                <span class="badge badge-entity">VMN</span>
+                            </div>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ที่อยู่</span>
+                            <span class="card-value">255/88 ซ.เพชรเกษม ต.บ้านบึง ชลบุรี</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">โทรศัพท์</span>
+                            <span class="card-value">038-765-4321</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ผจก.สาขา</span>
+                            <span class="card-value">นายประเสริฐ ธรรมสรณ์</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">จำนวนพนักงาน</span>
+                            <span class="card-value">24 คน</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">คลังที่ผูก</span>
+                            <span class="card-value"><a class="link" href="#">คลังสาขา + โชว์รูม</a></span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">สถานะ</span>
+                            <span class="card-value"><span class="status-dot"></span>เปิดทำการ</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small">แก้ไข</button>
+                            <button class="btn btn-secondary btn-small">ดูคลัง</button>
+                        </div>
+                    </div>
+
+                    <!-- BRANCH 6: KHONKAEN -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">ขอนแก่น</div>
+                            <div>
+                                <span class="badge badge-retail">ค้าปลีก</span>
+                                <span class="badge badge-entity">SWT</span>
+                            </div>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ที่อยู่</span>
+                            <span class="card-value">199 ซ.ประเสริฐสุข ต.น้ำส้อม ขอนแก่น</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">โทรศัพท์</span>
+                            <span class="card-value">043-222-8888</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ผจก.สาขา</span>
+                            <span class="card-value">นายสิทธิพร ธนะสิน</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">จำนวนพนักงาน</span>
+                            <span class="card-value">22 คน</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">คลังที่ผูก</span>
+                            <span class="card-value"><a class="link" href="#">คลังสาขา + โชว่รูม</a></span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">สถานะ</span>
+                            <span class="card-value"><span class="status-dot"></span>เปิดทำการ</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small">แก้ไข</button>
+                            <button class="btn btn-secondary btn-small">ดูคลัง</button>
+                        </div>
+                    </div>
+
+                    <!-- BRANCH 7: HQ STOCK -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">สต็อก HQ</div>
+                            <div>
+                                <span class="badge badge-wholesale">ค้าส่ง</span>
+                                <span class="badge badge-entity">SWT</span>
+                            </div>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ที่อยู่</span>
+                            <span class="card-value">999 ซ.ทุ่งมหาเมฆ 8 แขวงหนองแขม กรุงเทพฯ</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">โทรศัพท์</span>
+                            <span class="card-value">02-456-7890</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ผจก.สาขา</span>
+                            <span class="card-value">นายสมศักดิ์ อาจวิจิตร</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">จำนวนพนักงาน</span>
+                            <span class="card-value">56 คน</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">คลังที่ผูก</span>
+                            <span class="card-value"><a class="link" href="#">คลังส่ง (ใหญ่)</a></span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">สถานะ</span>
+                            <span class="card-value"><span class="status-dot"></span>เปิดทำการ</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small">แก้ไข</button>
+                            <button class="btn btn-secondary btn-small">ดูคลัง</button>
+                        </div>
+                    </div>
+
+                    <!-- BRANCH 8: CORPORATE -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">บริษัท</div>
+                            <div>
+                                <span class="badge badge-wholesale">ค้าส่ง</span>
+                                <span class="badge badge-entity">SWT</span>
+                            </div>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ที่อยู่</span>
+                            <span class="card-value">108 หมู่ 4 ซอยสุจริต 36 แขวงหลักสี่ กรุงเทพฯ</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">โทรศัพท์</span>
+                            <span class="card-value">02-123-4567</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ผจก.สาขา</span>
+                            <span class="card-value">-</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">จำนวนพนักงาน</span>
+                            <span class="card-value">-</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">คลังที่ผูก</span>
+                            <span class="card-value">ไม่มี</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">สถานะ</span>
+                            <span class="card-value"><span class="status-dot"></span>เปิดทำการ</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small">แก้ไข</button>
+                            <button class="btn btn-secondary btn-small">ดูคลัง</button>
+                        </div>
+                    </div>
+
+                    <!-- BRANCH 9: EXPORT -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">ส่งออก</div>
+                            <div>
+                                <span class="badge badge-export">Export</span>
+                                <span class="badge badge-entity">WPS</span>
+                            </div>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ที่อยู่</span>
+                            <span class="card-value">58 ซ.เทพลีลา 15 แขวงธนบุรี กรุงเทพฯ</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">โทรศัพท์</span>
+                            <span class="card-value">02-888-3333</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ผจก.สาขา</span>
+                            <span class="card-value">นายอนุชา ศรีนุ่น</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">จำนวนพนักงาน</span>
+                            <span class="card-value">12 คน</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">คลังที่ผูก</span>
+                            <span class="card-value"><a class="link" href="#">คลังส่งออก</a></span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">สถานะ</span>
+                            <span class="card-value"><span class="status-dot"></span>เปิดทำการ</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small">แก้ไข</button>
+                            <button class="btn btn-secondary btn-small">ดูคลัง</button>
+                        </div>
+                    </div>
+
+                    <!-- BRANCH 10: ONLINE -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">ออนไลน์</div>
+                            <div>
+                                <span class="badge badge-online">Online</span>
+                                <span class="badge badge-entity">SWE</span>
+                            </div>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ที่อยู่</span>
+                            <span class="card-value">108 หมู่ 4 ซอยสุจริต 36 แขวงหลักสี่ กรุงเทพฯ</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">โทรศัพท์</span>
+                            <span class="card-value">02-123-4567</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">ผจก.สาขา</span>
+                            <span class="card-value">นายปริศนา จันทรกลม</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">จำนวนพนักงาน</span>
+                            <span class="card-value">8 คน</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">คลังที่ผูก</span>
+                            <span class="card-value"><a class="link" href="#">คลัง HQ</a></span>
+                        </div>
+                        <div class="card-row">
+                            <span class="card-label">สถานะ</span>
+                            <span class="card-value"><span class="status-dot"></span>เปิดทำการ</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-small">แก้ไข</button>
+                            <button class="btn btn-secondary btn-small">ดูคลัง</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: WAREHOUSES -->
+        <div class="tab-content">
+            <div class="content">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>รหัสคลัง</th>
+                                <th>ชื่อคลัง</th>
+                                <th>สาขา</th>
+                                <th>ประเภท</th>
+                                <th>Bin Locations</th>
+                                <th>สินค้า SKU</th>
+                                <th>มูลค่าสต็อก</th>
+                                <th>สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="expandable-row" onclick="toggleRow(this)">
+                                <td><span class="expand-icon">▶</span>WH-001</td>
+                                <td>คลังหลัก</td>
+                                <td>สนง.ใหญ่ (HQ)</td>
+                                <td><span class="badge" style="background:#DBEAFE;color:#1E40AF;">คลังหลัก</span></td>
+                                <td>2,450 ช่อง</td>
+                                <td>856</td>
+                                <td>14,250,000 บาท</td>
+                                <td><span class="status-dot"></span>ใช้งาน</td>
+                            </tr>
+                            <tr class="detail-row">
+                                <td colspan="8">
+                                    <div class="detail-content">
+                                        <div class="detail-grid">
+                                            <div>
+                                                <h3 style="font-size:13px;font-weight:600;color:#1E293B;margin-bottom:12px;">Zone Distribution</h3>
+                                                <table class="zone-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Zone</th>
+                                                            <th>ชื่อ</th>
+                                                            <th>Shelf</th>
+                                                            <th>Level</th>
+                                                            <th>จำนวน Bin</th>
+                                                            <th>% ใช้งาน</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>A</td>
+                                                            <td>แอร์</td>
+                                                            <td>10</td>
+                                                            <td>4</td>
+                                                            <td>400</td>
+                                                            <td>
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" style="width:92%;"></div>
+                                                                </div>
+                                                                92%
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>B</td>
+                                                            <td>เครื่องซักผ้า</td>
+                                                            <td>8</td>
+                                                            <td>3</td>
+                                                            <td>240</td>
+                                                            <td>
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" style="width:88%;"></div>
+                                                                </div>
+                                                                88%
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>C</td>
+                                                            <td>ตู้เย็น</td>
+                                                            <td>6</td>
+                                                            <td>2</td>
+                                                            <td>120</td>
+                                                            <td>
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" style="width:76%;"></div>
+                                                                </div>
+                                                                76%
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>D</td>
+                                                            <td>เบ็ดเตล็ด</td>
+                                                            <td>12</td>
+                                                            <td>5</td>
+                                                            <td>1,690</td>
+                                                            <td>
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" style="width:64%;"></div>
+                                                                </div>
+                                                                64%
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div>
+                                                <h3 style="font-size:13px;font-weight:600;color:#1E293B;margin-bottom:12px;">Bin Policy</h3>
+                                                <div style="background:#F8FAFC;padding:12px;border-radius:8px;border:1px solid #E2E8F0;">
+                                                    <div style="margin-bottom:8px;"><strong style="font-size:12px;color:#1E293B;">FIFO Method:</strong> <span style="color:#64748B;font-size:12px;">First In First Out</span></div>
+                                                    <div style="margin-bottom:8px;"><strong style="font-size:12px;color:#1E293B;">Serial Required:</strong></div>
+                                                    <ul style="font-size:12px;color:#64748B;margin-left:16px;">
+                                                        <li>Zone A (แอร์) - บังคับ Serial</li>
+                                                        <li>Zone B (เครื่องซักผ้า) - บังคับ Serial</li>
+                                                        <li>Zone C (ตู้เย็น) - บังคับ Serial</li>
+                                                        <li>Zone D (เบ็ดเตล็ด) - ไม่บังคับ</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>WH-002</td>
+                                <td>โชว์รูม HQ</td>
+                                <td>สนง.ใหญ่ (HQ)</td>
+                                <td><span class="badge" style="background:#FEF3C7;color:#92400E;">โชว่รูม</span></td>
+                                <td>180 ช่อง</td>
+                                <td>248</td>
+                                <td>3,890,000 บาท</td>
+                                <td><span class="status-dot"></span>ใช้งาน</td>
+                            </tr>
+
+                            <tr>
+                                <td>WH-003</td>
+                                <td>คลังสาขา รังสิต</td>
+                                <td>รังสิต</td>
+                                <td><span class="badge" style="background:#DCFCE7;color:#166534;">คลังสาขา</span></td>
+                                <td>640 ช่อง</td>
+                                <td>312</td>
+                                <td>2,150,000 บาท</td>
+                                <td><span class="status-dot"></span>ใช้งาน</td>
+                            </tr>
+
+                            <tr>
+                                <td>WH-004</td>
+                                <td>โชว่รูม รังสิต</td>
+                                <td>รังสิต</td>
+                                <td><span class="badge" style="background:#FEF3C7;color:#92400E;">โชว่รูม</span></td>
+                                <td>120 ช่อง</td>
+                                <td>156</td>
+                                <td>1,580,000 บาท</td>
+                                <td><span class="status-dot"></span>ใช้งาน</td>
+                            </tr>
+
+                            <tr>
+                                <td>WH-005</td>
+                                <td>คลังสาขา บางนา</td>
+                                <td>บางนา</td>
+                                <td><span class="badge" style="background:#DCFCE7;color:#166534;">คลังสาขา</span></td>
+                                <td>720 ช่อง</td>
+                                <td>380</td>
+                                <td>2,890,000 บาท</td>
+                                <td><span class="status-dot"></span>ใช้งาน</td>
+                            </tr>
+
+                            <tr>
+                                <td>WH-006</td>
+                                <td>โชว่รูม บางนา</td>
+                                <td>บางนา</td>
+                                <td><span class="badge" style="background:#FEF3C7;color:#92400E;">โชว่รูม</span></td>
+                                <td>140 ช่อง</td>
+                                <td>174</td>
+                                <td>1,950,000 บาท</td>
+                                <td><span class="status-dot"></span>ใช้งาน</td>
+                            </tr>
+
+                            <tr>
+                                <td>WH-007</td>
+                                <td>คลังส่ง (ใหญ่)</td>
+                                <td>สต็อก HQ</td>
+                                <td><span class="badge" style="background:#DCFCE7;color:#166534;">คลังส่ง</span></td>
+                                <td>4,200 ช่อง</td>
+                                <td>1,245</td>
+                                <td>28,500,000 บาท</td>
+                                <td><span class="status-dot"></span>ใช้งาน</td>
+                            </tr>
+
+                            <tr>
+                                <td>WH-008</td>
+                                <td>คลังส่งออก</td>
+                                <td>ส่งออก</td>
+                                <td><span class="badge" style="background:#F3E8FF;color:#6B21A8;">คลังส่งออก</span></td>
+                                <td>890 ช่อง</td>
+                                <td>456</td>
+                                <td>5,670,000 บาท</td>
+                                <td><span class="status-dot"></span>ใช้งาน</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: SETTINGS -->
+        <div class="tab-content">
+            <div class="content">
+                <h2 style="font-size:18px;font-weight:700;color:#1E293B;margin-bottom:24px;">Entity Configuration</h2>
+
+                <div class="entity-cards">
+                    <!-- ENTITY 1: SWT -->
+                    <div class="entity-card">
+                        <div class="entity-name">แสงวิจิตรเทรดดิ้ง</div>
+                        <div class="entity-tax">เลขประจำตัวผู้เสียภาษี: 0975555002391</div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">สาขา</div>
+                            <ul class="entity-list">
+                                <li>ขอนแก่น</li>
+                                <li>สต็อก HQ</li>
+                                <li>บริษัท (Head Office)</li>
+                            </ul>
+                        </div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">GL Account</div>
+                            <div style="font-size:13px;color:#334155;"><a class="link" href="#">4000-GL-SWT</a></div>
+                        </div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">สกุลเงิน & ภาษี</div>
+                            <ul class="entity-list">
+                                <li>สกุลเงิน: THB (บาท)</li>
+                                <li>ภาษี VAT: 7%</li>
+                            </ul>
+                        </div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">Bank Accounts</div>
+                            <ul class="entity-list">
+                                <li>ธนาคารกรุงเทพ (BKK) - 123-456-7890</li>
+                                <li>ธนาคารไทยพาณิชย์ (SCB) - 098-765-4321</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- ENTITY 2: SWE -->
+                    <div class="entity-card">
+                        <div class="entity-name">แสงวิจิตรอิเล็คทริค</div>
+                        <div class="entity-tax">เลขประจำตัวผู้เสียภาษี: 0975555002382</div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">สาขา</div>
+                            <ul class="entity-list">
+                                <li>สนง.ใหญ่ (HQ)</li>
+                                <li>รังสิต</li>
+                                <li>บางนา</li>
+                                <li>นครปฐม</li>
+                                <li>ออนไลน์</li>
+                            </ul>
+                        </div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">GL Account</div>
+                            <div style="font-size:13px;color:#334155;"><a class="link" href="#">4100-GL-SWE</a></div>
+                        </div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">สกุลเงิน & ภาษี</div>
+                            <ul class="entity-list">
+                                <li>สกุลเงิน: THB (บาท)</li>
+                                <li>ภาษี VAT: 7%</li>
+                            </ul>
+                        </div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">Bank Accounts</div>
+                            <ul class="entity-list">
+                                <li>ธนาคารกรุงเทพ (BKK) - 987-654-3210</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- ENTITY 3: VMN -->
+                    <div class="entity-card">
+                        <div class="entity-name">วี.เอ็ม.เอ็น.</div>
+                        <div class="entity-tax">เลขประจำตัวผู้เสียภาษี: 0975555002373</div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">สาขา</div>
+                            <ul class="entity-list">
+                                <li>ชลบุรี</li>
+                            </ul>
+                        </div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">GL Account</div>
+                            <div style="font-size:13px;color:#334155;"><a class="link" href="#">4200-GL-VMN</a></div>
+                        </div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">สกุลเงิน & ภาษี</div>
+                            <ul class="entity-list">
+                                <li>สกุลเงิน: THB (บาท)</li>
+                                <li>ภาษี VAT: 7%</li>
+                            </ul>
+                        </div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">Bank Accounts</div>
+                            <ul class="entity-list">
+                                <li>ธนาคารยูโอบี (UOB) - 555-666-7777</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- ENTITY 4: WPS -->
+                    <div class="entity-card">
+                        <div class="entity-name">ดับบลิวพีเอส</div>
+                        <div class="entity-tax">เลขประจำตัวผู้เสียภาษี: 0975555002364</div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">สาขา</div>
+                            <ul class="entity-list">
+                                <li>ส่งออก</li>
+                            </ul>
+                        </div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">GL Account</div>
+                            <div style="font-size:13px;color:#334155;"><a class="link" href="#">4300-GL-WPS</a></div>
+                        </div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">สกุลเงิน & ภาษี</div>
+                            <ul class="entity-list">
+                                <li>สกุลเงิน: THB (บาท), USD (ดอลลาร์)</li>
+                                <li>ภาษี VAT: 7%</li>
+                            </ul>
+                        </div>
+
+                        <div class="entity-section">
+                            <div class="entity-section-title">Bank Accounts</div>
+                            <ul class="entity-list">
+                                <li>ธนาคารกรุงเทพ (BKK) - 456-123-7890</li>
+                                <li>ธนาคารกสิกรไทย (KBANK) - 777-888-9999</li>
+                                <li>HSBC - USD 00123456789</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 style="font-size:18px;font-weight:700;color:#1E293B;margin-bottom:24px;margin-top:40px;">Warehouse Policy</h2>
+
+                <div class="settings-section">
+                    <div class="settings-title">Default Bin Assignment</div>
+                    <div class="checkbox-row">
+                        <input type="checkbox" class="checkbox" checked>
+                        <label style="font-size:13px;color:#1E293B;cursor:pointer;flex:1;">Auto Bin Assignment (แนะนำชั้นเก็บอัตโนมัติ)</label>
+                    </div>
+                    <div style="font-size:12px;color:#64748B;margin-top:8px;margin-left:30px;">เมื่อเปิด ระบบจะแนะนำชั้นเก็บว่างตามนโยบาย FIFO โดยอัตโนมัติ</div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-title">Serial Number Policy</div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>หมวดสินค้า</th>
+                                    <th>บังคับ Serial</th>
+                                    <th>Scan at GRN</th>
+                                    <th>Scan at Issue</th>
+                                    <th>หมายเหตุ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>แอร์</td>
+                                    <td style="text-align:center;">✅</td>
+                                    <td style="text-align:center;">✅</td>
+                                    <td style="text-align:center;">✅</td>
+                                    <td style="font-size:12px;color:#64748B;">สินค้าราคาสูง</td>
+                                </tr>
+                                <tr>
+                                    <td>เครื่องซักผ้า</td>
+                                    <td style="text-align:center;">✅</td>
+                                    <td style="text-align:center;">✅</td>
+                                    <td style="text-align:center;">✅</td>
+                                    <td style="font-size:12px;color:#64748B;">สินค้าราคาสูง</td>
+                                </tr>
+                                <tr>
+                                    <td>ตู้เย็น</td>
+                                    <td style="text-align:center;">✅</td>
+                                    <td style="text-align:center;">✅</td>
+                                    <td style="text-align:center;">✅</td>
+                                    <td style="font-size:12px;color:#64748B;">สินค้าราคาสูง</td>
+                                </tr>
+                                <tr>
+                                    <td>เครื่องใช้ไฟฟ้าเล็ก</td>
+                                    <td style="text-align:center;">❌</td>
+                                    <td style="text-align:center;">❌</td>
+                                    <td style="text-align:center;">❌</td>
+                                    <td style="font-size:12px;color:#64748B;">สินค้าราคาต่ำ</td>
+                                </tr>
+                                <tr>
+                                    <td>อะไหล่</td>
+                                    <td style="text-align:center;">❌</td>
+                                    <td style="text-align:center;">❌</td>
+                                    <td style="text-align:center;">❌</td>
+                                    <td style="font-size:12px;color:#64748B;">สินค้าราคาต่ำ</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-title">Number Series</div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ประเภทเอกสาร</th>
+                                    <th>รูปแบบ</th>
+                                    <th>ตัวอย่าง</th>
+                                    <th>ขอบเขต</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ใบเสนอราคา</td>
+                                    <td style="font-size:12px;">QT-{YY}{MM}-{NNNN}</td>
+                                    <td style="font-size:12px;">QT-6904-0001</td>
+                                    <td style="font-size:12px;">All entities</td>
+                                </tr>
+                                <tr>
+                                    <td>บิลขาย</td>
+                                    <td style="font-size:12px;">INV-{YY}{MM}-{NNNN}</td>
+                                    <td style="font-size:12px;">INV-6904-0001</td>
+                                    <td style="font-size:12px;">Per entity</td>
+                                </tr>
+                                <tr>
+                                    <td>PO (ใบสั่งซื้อ)</td>
+                                    <td style="font-size:12px;">PO-{YY}{MM}-{NNNN}</td>
+                                    <td style="font-size:12px;">PO-6904-0001</td>
+                                    <td style="font-size:12px;">Per entity</td>
+                                </tr>
+                                <tr>
+                                    <td>ใบรับสินค้า (GRN)</td>
+                                    <td style="font-size:12px;">GRN-{YY}{MM}-{NNNN}</td>
+                                    <td style="font-size:12px;">GRN-6904-0001</td>
+                                    <td style="font-size:12px;">Per branch</td>
+                                </tr>
+                                <tr>
+                                    <td>โอนคลัง</td>
+                                    <td style="font-size:12px;">TR-{YY}{MM}-{NNNN}</td>
+                                    <td style="font-size:12px;">TR-6904-0001</td>
+                                    <td style="font-size:12px;">All entities</td>
+                                </tr>
+                                <tr>
+                                    <td>ส่งมอบ (DO)</td>
+                                    <td style="font-size:12px;">DO-{YY}{MM}-{NNNN}</td>
+                                    <td style="font-size:12px;">DO-6904-0001</td>
+                                    <td style="font-size:12px;">Per entity</td>
+                                </tr>
+                                <tr>
+                                    <td>ส่งคืน (Return)</td>
+                                    <td style="font-size:12px;">RET-{YY}{MM}-{NNNN}</td>
+                                    <td style="font-size:12px;">RET-6904-0001</td>
+                                    <td style="font-size:12px;">Per entity</td>
+                                </tr>
+                                <tr>
+                                    <td>ใบเสร็จ (Receipt)</td>
+                                    <td style="font-size:12px;">RCP-{YY}{MM}-{NNNN}</td>
+                                    <td style="font-size:12px;">RCP-6904-0001</td>
+                                    <td style="font-size:12px;">Per branch</td>
+                                </tr>
+                                <tr>
+                                    <td>ตรวจสต็อก</td>
+                                    <td style="font-size:12px;">STK-{YY}{MM}-{NNNN}</td>
+                                    <td style="font-size:12px;">STK-6904-0001</td>
+                                    <td style="font-size:12px;">Per warehouse</td>
+                                </tr>
+                                <tr>
+                                    <td>ปรับยอด</td>
+                                    <td style="font-size:12px;">ADJ-{YY}{MM}-{NNNN}</td>
+                                    <td style="font-size:12px;">ADJ-6904-0001</td>
+                                    <td style="font-size:12px;">Per warehouse</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING QUICK NAV -->
+    <div class="quick-nav" onclick="showQuickNav()">☰</div>
+
+    <script>
+        function switchTab(index) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach((tab, i) => {
+                tab.classList.toggle('active', i === index);
+            });
+
+            contents.forEach((content, i) => {
+                content.classList.toggle('active', i === index);
+            });
+        }
+
+        function toggleRow(row) {
+            const icon = row.querySelector('.expand-icon');
+            const detailRow = row.nextElementSibling;
+
+            if (detailRow && detailRow.classList.contains('detail-row')) {
+                icon.classList.toggle('open');
+                detailRow.classList.toggle('open');
+            }
+        }
+
+        function showQuickNav() {
+            alert('MD-5 ทะเบียนสาขา & คลังสินค้า\n\n★ Currently Active\n\nOther modules available in sidebar');
+        }
+    </script>
+</body>
+</html>

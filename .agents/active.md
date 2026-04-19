@@ -1,0 +1,127 @@
+---
+updated_at: "2026-04-19T12:00:00+07:00"
+status: "active"
+current_focus: "Payment QR layer (Customer-code + Invoice-code) + FI-1Q Apply Queue"
+branch: "main"
+project_type: "frontend-mockup (HTML + docs)"
+---
+
+# Active Context
+
+## Objective
+ออกแบบ Frontend ERP Web Portal (Sangwijit Group) เหนือ Dynamics 365 Business Central — สร้าง HTML mockup ครบทุกหน้า, เตรียม handoff ให้ทีม dev
+
+## Current State (2026-04-19 — latest)
+- **Payment QR 2 ชั้น ✅ NEW 2026-04-19** — Tier-A 5 ใน `swt-link.js` (~260 บรรทัดเพิ่ม)
+  - **ชั้น 1 — Customer QR (modal)** — ปุ่มม่วง `📱 QR` auto-inject ข้างทุก `[data-customer-search]` (9 หน้า: SL-1/2/3/4, SV-2/3, WHR + MD-2 combo)
+    - Modal: picker · Biller ID (099-4-12345-6) · Ref1 = รหัสลูกค้า · Ref2 = YYMM · amount mode (ว่าง/ค้างรวม/ระบุ) · PNG / Copy / ส่ง LINE
+  - **ชั้น 2 — Invoice QR (inline card)** — helper `swtRenderInvoiceQR()` · ฝังใน SL-3 (มัดจำ ฿30,000) + SL-4 (ยอดคงเหลือ ฿24,385)
+    - Ref1 = เลขที่บิล · Ref2 = CustCode · ยอด fix
+    - `@media print` — เก็บ QR พิมพ์บนกระดาษได้ clean (hide ปุ่ม, border ดำ)
+  - Payload mockup = URL (`pay.sangwijit.co.th/c/...` หรือ `/d/...`); prod → EMVCo PromptPay ผ่าน BC API
+  - Sidebar rollout FI-1Q entry ✅ — 65 ไฟล์ได้ entry ใหม่ (Python script idempotent)
+- **FI-1Q Apply Queue ✅ NEW 2026-04-19** — หน้าใหม่ `fi1q-apply-queue-mockup.html` (+หน้าใหม่ที่ 66)
+  - 3 categories: 🟢 Auto-ready (Ref1+ยอดตรงเป๊ะ 1-click) · 🟡 Partial (FIFO/เกินยอด/ปิดหลายบิล) · 🔴 Unmatched (Ref1 ผิด/ไม่มี/advance ก่อนบิล)
+  - Link จาก FI-Q (AR card: "📥 23 รอจัดสรร") + FI-1 topbar ("📥 Apply Queue 23")
+  - DOC_MAP `URC` / `UAR` → fi1q · doc-chain: QR → URC → RV → INV
+  - Flow: ลูกค้าสแกน QR → เงินเข้าบัญชี → IA-Q sync bank statement → สร้าง URC → เข้าคิวนี้ → Auto-apply หรือจัดสรรเอง → BC post RV ปิด AR
+- **Tier-A 1+2+3+4 ✅** — `swt-link.js` shared component (~430 บรรทัด)
+  - **Universal Doc Linker** — ทุกข้อความที่ตรง pattern `PREFIX-YYYY-####` (QT/SO/INV/PO/GRN/RV/JOB/RFQ/CRD/...) จะกลายเป็นลิงก์อัตโนมัติ
+  - **Embedded SC-7 Timeline + Breadcrumb** — ฝังใน **16 หน้า transaction**:
+    - งานขาย: SL-1, SL-2, SL-3, SL-4, SL-F1
+    - จัดซื้อ: PO-1, PO-2, PO-3, PO-4
+    - คลัง: WH-1, WH-2, WHR
+    - บริการ: SV-1, SV-2
+    - การเงิน: FI-1, FI-2
+  - **Cross-module Doc-Chain Breadcrumb** — bar ใต้ topbar, current/pending/jump states
+  - **Global Search palette** — hotkey `/` หรือ `Ctrl+K` · ค้น Doc No. + เมนู + mock customers/items · arrow keys
+  - **Rolled out 65 หน้า** ✅ NEW 2026-04-17 — ทุก HTML root file มี `<script src="swt-link.js">` แล้ว (Python loop, idempotent)
+- **Add-Item Standardization ✅ 2026-04-17 + ขยาย 2026-04-18** — Pattern: ถ้าหน้าใดเพิ่มสินค้าได้ ใช้ icon 🔍 + attribute `data-item-search` → auto-wire ของ SC-2 modal ผูก `openItemSearch()` ให้อัตโนมัติ
+  - เปลี่ยน `+`/`➕` → 🔍 ใน 5 ไฟล์ (sl4 add-row, sl6 promo, wh2 transfer, poq queue, sv3 spare-part)
+  - **เพิ่ม `<tr class="swt-add-line">` ใต้ tbody ใน 8 ตารางใหม่** ✅ 2026-04-18: sl1, sl2, po1, po4, wh1, whr (1 ตาราง each) · sv2 (2 ตาราง). PO-1 ใช้ header "SKU/PSI/ขอสั่ง" — audit รอบแรกเลยไม่จับ, แก้แล้ว
+  - **รวม 13 หน้าที่กด 🔍 เปิด SC-2 modal ได้** — sl1, sl2, sl4, sl6, po1, po4, poq, wh1, wh2, whr, sv2, sv3 และอื่นๆ ที่มี data-item-search
+- **Line-editable + Search-Combo Pattern ✅ NEW 2026-04-18** — ทุก transaction page ที่มี line item:
+  - **Header:** ลูกค้า/Vendor field แรก เป็น `<div class="swt-search-combo">` (textbox + ปุ่ม 🔍) · attr `data-customer-search` / `data-vendor-search` → เปิด global palette
+  - **Line items:** จำนวน (input number class=line-input qty), หน่วย (select class=line-select), ราคา (input text class=line-input price), คลัง (select class=line-select) — editable ได้ทุก row
+  - **Add-row:** `<tr class="swt-add-line">` เปลี่ยนเป็น swt-search-combo (textbox + ปุ่ม 🔍 ค้นหาสินค้า · Enter key ก็เปิด modal)
+  - **Shared CSS + JS:** ย้ายเข้า `swt-link.js` แล้ว (ไม่ต้อง inline ในแต่ละไฟล์)
+  - **หน้าที่ rollout:** SL-1/2/3/4, PO-1/3/4, WH-1/2, WHR, SV-2/3 (11 หน้า) · โอนย้าย (WH-2) ไม่มีราคา, มี FROM/TO คลังอยู่แล้ว
+- **Tier-B ✅ NEW 2026-04-17**
+  - **PO-2 RFQ / Vendor Compare** — เปรียบ 3 vendor side-by-side (ราคา/lead time/payment/QC/rebate), score 0-100, line-item compare, award → สร้าง PO + route ผ่าน CF-2.6
+  - **SL-F1 Credit Approval** — แยกจาก AP-1; queue เฉพาะ SL ที่เกินวงเงิน/ลูกค้าค้าง · credit gauge + AR aging + workflow tier 1→2→3 · enforce Maker ≠ Checker
+  - sidebar nav อัปเดตทุกไฟล์: SL group 11→12 entries, PO group 5→6 entries
+  - DOC_MAP เพิ่ม `RFQ`, `CRD`, `CRA`
+- **index.html** (master index v2.0) — sidebar collapse 13 groups · live search · BC365 matrix · 64 pages
+- **Unified sidebar rolled out** → ทุกหน้า mockup ใช้ sidebar เดียวกัน (auto-inject ด้วย Python script, idempotent)
+- **Tier-1 new mockups (2026-04-17)** — 4 หน้าใหม่ปิด gap critical:
+  - **FI-13 Dual-Book / Entity Tag** ✅ NEW — Tag 1/2/3/novat allocation · ห้องหลัก+ห้องภาษี · ภพ.30 แยกบริษัท
+  - **IA-Q BC Sync Monitor** ✅ NEW — Entity sync grid · Live feed · Error queue · Batch schedule
+  - **PM-5 VAT Simulator** ✅ NEW — Golden Rule sandbox · ถูก vs ผิด side-by-side · Discount vs Rebate
+  - **FI-Q Finance Queue** ✅ NEW — 6 queue cards (AR/AP/Tax/WHT/JV/Close) · Aging · SLA
+- Portal Index v1.5 (ก่อนหน้า) → 60 หน้า + ของรอบนี้ 4 = 64 หน้า + FI-1Q (2026-04-19) = **66 หน้า**
+- **CF-2.5 Tech Template** — 5 tabs (Job Type / Checklist / อุปกรณ์ / เวลา&ทักษะ / Safety) ✅
+- **MD-2 Customer v3** — 6 details + split layout + sub-tabs ✅
+- **MD-3 Vendor v3** — 6 details + Trade Agreement 4 sub-tabs ✅
+- **MD-4 Employee v3** — 6 details + leave sub-tabs + KPI ✅
+- **MD-5 Warehouse v3** — branch cards + 6 details + bin layout ✅
+- **BC365 Audit** — ตรวจครบ 39 หน้า จัด 4 กลุ่ม ✅
+- MD-1 v3 / CF-2 Hub / CF-2.6 / CF-2.7 / etc. — ✅ เสร็จก่อนหน้า
+
+## Decisions Confirmed
+- **CF-2 Structure**: Option C = Hub + sub-pages (ปรับหลัง audit)
+- **CF-2.4 Bin Policy** → อยู่ CF-2 (เพราะเป็น config ไม่ใช่ transaction)
+- **CF-2.5 Tech Template** → อยู่ CF-2 (🟢 BC ไม่มี — ทำเอง)
+- **CF-2.7 Doc Template** → ทำเองใน Portal 100% (🟢 BC ไม่มี)
+- **CF-2.9 General System Parameter** → เพิ่มเป็นข้อที่ 9 (global)
+- **Date format** → ใช้ ค.ศ. (YY = 26) ไม่ใช่ พ.ศ.
+- **Running reset** → ทุกเดือน (YYMM เปลี่ยน → running กลับ 0001)
+- **หลักการ**: แยก Config (admin-only) ออกจาก Transaction (staff)
+
+### BC365 Audit Decision (2026-04-16)
+- 🔴 **ตัด 5 หน้า (ใช้ BC ตรง)**: CF-2.1 Tax, CF-2.2 Number Series, CF-2.3 Posting & GL, CF-2.4 Bin Policy, CF-2.9 General Parameter
+  - เหตุผล: BC มี built-in ครบ, ทำ Portal ซ้ำ = double maintenance + sync risk
+  - mockup ที่ทำแล้วเก็บเป็น reference "ตั้งค่าที่ BC หน้าไหน"
+- 🟡 **18 หน้า Portal เป็น UI layer**: เรียก BC API, ไม่ duplicate logic
+- 🟢 **21 หน้า Portal ทำเอง 100%**: BC ไม่มีฟังก์ชันนี้
+- ⚠️ **เลื่อน Phase 2**: CL-1 Claims, SM-3 Vendor Portal, CF-2.8 Entity Tag
+
+## Blockers
+- ❌ ไม่มี blocker ปัจจุบัน
+
+## Next Action (Priority Order — หลัง Tier-1 build)
+1. ~~CF-2.5 Tech Template~~ ✅
+2. ~~MD-2/3/4/5 v3~~ ✅
+3. ~~index.html + unified sidebar~~ ✅
+4. ~~Tier-1 mockups (FI-13 / IA-Q / PM-5 / FI-Q)~~ ✅
+5. ~~Tier-A 1+2 (Universal Doc Linker + Embedded Timeline 6 หน้า)~~ ✅ 2026-04-17
+6. ~~Tier-A 3 (Cross-module Doc-Chain Breadcrumb)~~ ✅ 2026-04-17
+7. ~~Tier-A 4 (Global Search palette + hotkey)~~ ✅ 2026-04-17
+8. ~~Tier-A rollout — `swt-link.js` 65 หน้า~~ ✅ 2026-04-17
+9. ~~Tier-B PO-2 RFQ + SL-F1 Credit Approval~~ ✅ 2026-04-17
+10. ~~Customer QR + FI-1Q Apply Queue~~ ✅ 2026-04-19
+11. ~~Sidebar rollout FI-1Q entry~~ ✅ 2026-04-19 (65 ไฟล์)
+12. ~~Invoice QR ชั้น 2 (SL-3/SL-4)~~ ✅ 2026-04-19
+13. **ขยาย Invoice QR** — ฝังบน SV-2 (บริการ), PO-3 (vendor invoice reverse? — optional)
+14. **Tier-A rollout เพิ่ม** — ขยาย `swt-link.js` ไปอีก ~30 หน้า (แค่ใส่ `<script src>` 1 บรรทัด)
+15. **Tier-B remaining**: FI-9 Fixed Asset (เฉพาะถ้า SWT มี FA — รอ confirm)
+11. **Tier-C (polish/cleanup)**:
+   - Deprecate / redirect portal-mockup-index.html → index.html
+   - Banner "BC Direct" บน CF-2.1/2/9
+   - Update 01-module-list.md ให้ SV-3/4/5 scope ตรงกับ mockup จริง
+10. **Dev handoff prep** — สรุป spec, API contract, component list
+11. ~~CF-2.1 Tax~~ / ~~CF-2.2 Number Series~~ / ~~CF-2.3 Posting~~ / ~~CF-2.4 Bin~~ / ~~CF-2.9 General~~ → ใช้ BC ตรง
+12. ~~CF-2.8 Entity Tag~~ → เลื่อน Phase 2
+
+## Reference Files
+- `sangwijit-portal-skill/SKILL.md` v2.1 — knowledge base (Rule 1: อ่าน Flowchart ก่อน)
+- `sangwijit-portal-skill/modules/CF_config.md` — spec CF-1 ถึง CF-9
+- `md1-item-master-mockup-v3.html` — pattern อ้างอิงสำหรับ detail/tab
+- `cf2-config-hub-mockup.html` — pattern landing Hub
+- `cf2-7-doc-template-mockup.html` — pattern sub-page + multi-tab + split layout
+- `swt-link.js` — universal doc-linker + `swtAppendTimeline()` API (Tier-A shared component)
+
+## Design Standards (Locked)
+- Min width 1440px · Inter font · Sidebar #1E3A5F (240px fixed) · Accent #2563EB · BG #F8FAFC
+- Collapse: `<details class="collapse">` + `▼` rotation
+- Sub-tabs: JavaScript `switchSubTab()` scoped per section
+- Status badges: green=ยืนยัน / amber=พิจารณา / gray=ไม่แน่ใจ
