@@ -23,7 +23,7 @@
 | Service | SV-3 | Warranty Check | ประกัน ใน/นอก |
 | Service | SV-4 | Technician Schedule | ตารางช่าง |
 | Service | SV-5 | Job Incentive Dashboard | ค่าแรง + Incentive |
-| Delivery | DL-1 | Delivery Schedule | ส่งงาน |
+| Delivery & Install | SV-6 | Delivery + Installation | ส่งงาน/ติดตั้ง |
 | Delivery | DL-2 | Installation Job | งานติดตั้ง |
 | Warehouse | WH-2 | GRN (รับอะไหล่) | อะไหล่เข้าคลัง |
 | Master | MD-3 | Spare Parts Master | พาร์ทนัมเบอร์ |

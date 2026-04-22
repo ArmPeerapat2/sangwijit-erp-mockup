@@ -353,7 +353,7 @@ sv6_job
 | SV-3 | Parts Requisition | [sv3-spare-part-issue-mockup.html](../../sv3-spare-part-issue-mockup.html) |
 | SV-4 | Warranty Check | [sv4-warranty-check-mockup.html](../../sv4-warranty-check-mockup.html) |
 | SV-5 | **Job Card** (ซ่อม) | [sv5-job-card-mockup.html](../../sv5-job-card-mockup.html) |
-| **SV-6** | **Delivery & Install** | **รอ rename จาก dl1** → [dl1-delivery-planning-mockup.html](../../dl1-delivery-planning-mockup.html) |
+| **SV-6** | **Delivery & Install** | [sv6-delivery-install-mockup.html](../../sv6-delivery-install-mockup.html) ✅ renamed 2026-04-22 |
 | CL-1 | Claim Intake | [cl1-claims-mockup.html](../../cl1-claims-mockup.html) |
 
 > ⚠️ **Spec drift:** `SV_service.md` เคยระบุ SV-5 = Delivery · แต่ mockup ใช้ SV-5 = Job Card → ต้อง update spec ให้ SV-5 = Job Card, SV-6 = Delivery

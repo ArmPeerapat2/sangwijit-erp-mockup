@@ -89,7 +89,7 @@
 |-----|--------|-------------|----------|
 | `sv1-service-queue-mockup.html` | SV-Q/SV-1 | คิวงานซ่อม + intake | Job card, priority, SLA, technician |
 | `sv2-service-invoice-mockup.html` | SV-2 | ใบแจ้งหนี้งานบริการ | Labor, parts, warranty status |
-| `dl1-delivery-planning-mockup.html` | DL-1 / SV-5 | วางแผนจัดส่ง + truck capacity | Route, truck load, installation |
+| `sv6-delivery-install-mockup.html` | SV-6 | จัดส่ง & ติดตั้ง + truck capacity | Route, truck load, installation |
 
 ---
 

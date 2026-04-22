@@ -17,7 +17,8 @@
 | SV-2 | ใบงานช่าง (Job Card) | P2 | ดำเนินงาน |
 | SV-3 | เบิกอะไหล่ (Parts Requisition) | P2 | เบิก |
 | SV-4 | ปิดงาน / QA (Service Close & QA) | P2 | ปิดงาน |
-| SV-5 | จัดส่งและติดตั้ง (Delivery & Installation) | P2 | Sub-module ใหม่ |
+| SV-5 | ใบงานช่าง / Job Card (งานซ่อม) | P2 | ดำเนินงาน |
+| SV-6 | จัดส่งและติดตั้ง (Delivery & Installation) | P2 | Sub-module ใหม่ (renamed from DL-1, 2026-04-22) |
 | CL-1 | รับเรื่องเคลม Supplier (Claim Intake) | P2 | เคลม |
 | CL-2 | ส่งเคลม & ติดตาม | P2 | เคลม |
 | CL-3 | ใบลดหนี้เคลม (Claim Credit Note) | P2 | เคลม |
@@ -241,7 +242,10 @@ Rating: ⭐⭐⭐⭐⭐
 
 ---
 
-## SV-5 — จัดส่งและติดตั้ง (Delivery & Installation)
+## SV-6 — จัดส่งและติดตั้ง (Delivery & Installation)
+
+> **Note:** renamed from DL-1 (2026-04-22) to align with Service module scope.
+> File: `sv6-delivery-install-mockup.html` · Previous: `dl1-delivery-planning-mockup.html`
 
 ### Module Brief
 ```

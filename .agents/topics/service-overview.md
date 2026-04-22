@@ -27,7 +27,7 @@
 - MD-1..5 (Master Data)
 - SC-1, SC-2, SC-7 (Search/Timeline)
 - SM-1, SM-2 (SKU Management)
-- CM-1, DL-1, EX-1 (Commission/Delivery/Exec)
+- CM-1, SV-6, EX-1 (Commission/Delivery/Exec)
 - CF-1, AP-1 (Config/Approval)
 - RP-1 (Report Center)
 - CL-1, CL-2 (Claims)

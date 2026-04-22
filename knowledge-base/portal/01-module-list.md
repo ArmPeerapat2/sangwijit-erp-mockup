@@ -132,7 +132,7 @@
 | SV-2 | Job Card / Service Invoice | ✅ | 📋 `sv2-service-invoice-mockup.html` |
 | SV-3 | Parts Requisition | ✅ | — |
 | SV-4 | QA Close | ✅ | — |
-| SV-5 | Delivery & Installation | ✅ | 📋 `dl1-delivery-planning-mockup.html` (DL-1) |
+| SV-6 | Delivery & Installation | ✅ | 📋 `sv6-delivery-install-mockup.html` |
 | CL-1 | Claim Intake | ✅ | 📋 `cl1-claims-mockup.html` |
 | CL-2 | Claim Tracking | ✅ | — |
 | CL-3 | Claim Credit Note | ✅ | — |
