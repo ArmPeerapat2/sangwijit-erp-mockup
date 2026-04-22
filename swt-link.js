@@ -87,7 +87,16 @@
     'a.swt-doc-link::after{content:" ↗";font-size:0.85em;opacity:0.55;font-weight:400}',
 
     '.swt-tl-card{background:#fff;border:1px solid #E5E7EB;border-radius:12px;overflow:hidden;margin:24px 0;font-family:Inter,"Noto Sans Thai",sans-serif}',
+    'details.swt-tl-card[open]>.swt-tl-wrap{display:block}',
+    'details.swt-tl-card:not([open])>.swt-tl-wrap{display:none}',
     '.swt-tl-head{display:flex;align-items:center;gap:10px;padding:14px 22px;border-bottom:1px solid #F3F4F6;background:#FAFBFC}',
+    'summary.swt-tl-head{cursor:pointer;user-select:none;list-style:none}',
+    'summary.swt-tl-head::-webkit-details-marker{display:none}',
+    'summary.swt-tl-head:hover{background:#F1F5F9}',
+    'details.swt-tl-card:not([open]) summary.swt-tl-head{border-bottom:none}',
+    '.swt-tl-chev{font-size:11px;color:#6B7280;transition:transform 0.15s;display:inline-block}',
+    'details.swt-tl-card[open] .swt-tl-chev{transform:rotate(90deg)}',
+    '.swt-tl-count{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:10px;background:#EFF6FF;color:#1D4ED8;letter-spacing:0.03em}',
     '.swt-tl-title{font-size:13px;font-weight:600;color:#374151;flex:1}',
     '.swt-tl-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;background:rgba(124,58,237,0.1);color:#7C3AED;letter-spacing:0.04em}',
     '.swt-tl-meta{font-size:11px;color:#9CA3AF}',
@@ -358,10 +367,20 @@
     var c = document.getElementById(mountId);
     if (!c) return;
     opts = opts || {};
-    var html = '<div class="swt-tl-card"><div class="swt-tl-head">' +
+    var count = (items || []).length;
+    // Collapsible mode: render as <details>. Default opens unless opts.collapsed === true
+    var useDetails = (opts.collapsed === true || opts.collapsed === false);
+    var openAttr = (opts.collapsed === true) ? '' : ' open';
+    var openTag = useDetails ? ('<details class="swt-tl-card"' + openAttr + '>') : '<div class="swt-tl-card">';
+    var closeTag = useDetails ? '</details>' : '</div>';
+    var headTag = useDetails ? 'summary' : 'div';
+
+    var html = openTag + '<' + headTag + ' class="swt-tl-head' + (useDetails ? ' collapsible' : '') + '">' +
+               (useDetails ? '<span class="swt-tl-chev">▸</span>' : '') +
                '<span class="swt-tl-title">' + esc(title || 'Activity Timeline') + '</span>' +
+               (useDetails ? '<span class="swt-tl-count">' + count + ' รายการ</span>' : '') +
                (opts.meta ? '<span class="swt-tl-meta">' + esc(opts.meta) + '</span>' : '') +
-               '<span class="swt-tl-tag">SC-7 TIMELINE</span></div>' +
+               '<span class="swt-tl-tag">SC-7 TIMELINE</span></' + headTag + '>' +
                '<div class="swt-tl-wrap"><div class="swt-tl">';
     (items || []).forEach(function (it, i) {
       var color = (it.color || 'gray').toLowerCase();
@@ -377,7 +396,7 @@
               (it.sub ? '<div class="swt-tl-sub">' + esc(it.sub) + '</div>' : '') +
               '</div></div>';
     });
-    html += '</div></div></div>';
+    html += '</div></div>' + closeTag;
     c.innerHTML = html;
     scan(c); // re-scan so doc-no inside subs become links
   };
