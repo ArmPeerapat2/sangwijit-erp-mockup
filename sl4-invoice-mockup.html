@@ -1059,11 +1059,69 @@
                 <option>17:00 - 21:00</option>
               </select>
             </div>
-            <div class="bb-field-row">
-              <span class="lbl">🔧 บริการติดตั้ง</span>
-              <span class="val" style="color:#2563EB;font-weight:700">✓ ต้องการ (2 ชุด)</span>
+
+            <!-- 🆕 Editable install list -->
+            <div style="margin-top:10px;padding-top:8px;border-top:1px dashed #BFDBFE">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                <span style="font-size:11px;font-weight:700;color:#0C4A6E;text-transform:uppercase;letter-spacing:0.03em">🔧 รายการติดตั้ง</span>
+                <button class="card-btn primary" style="padding:2px 8px;font-size:10.5px" onclick="addInstallLine()">+ เพิ่ม</button>
+              </div>
+
+              <div id="installList" style="display:flex;flex-direction:column;gap:5px">
+                <!-- Item 1 -->
+                <div class="install-line" style="display:grid;grid-template-columns:auto 1fr auto auto;gap:6px;align-items:center;padding:6px 8px;background:#fff;border:1px solid #E0E7FF;border-radius:5px">
+                  <input type="checkbox" checked style="accent-color:#2563EB">
+                  <div>
+                    <div style="font-size:11.5px;font-weight:600;color:#0F172A">Daikin FTKM35 · 12k BTU</div>
+                    <div style="font-size:10px;color:#64748B;font-family:monospace">INS-AC-9k12k</div>
+                  </div>
+                  <div style="display:inline-flex;align-items:center;gap:0;border:1px solid #CBD5E1;border-radius:4px;overflow:hidden">
+                    <button onclick="adjustInstallQty(this, -1)" style="border:none;background:#F1F5F9;width:22px;height:22px;cursor:pointer;font-size:13px;font-weight:700;color:#64748B">−</button>
+                    <input type="number" value="2" min="0" max="2" style="width:34px;height:22px;border:none;border-left:1px solid #CBD5E1;border-right:1px solid #CBD5E1;text-align:center;font-size:11.5px;font-weight:700;font-family:inherit;outline:none">
+                    <button onclick="adjustInstallQty(this, 1)" style="border:none;background:#F1F5F9;width:22px;height:22px;cursor:pointer;font-size:13px;font-weight:700;color:#64748B">+</button>
+                  </div>
+                  <button onclick="removeInstallLine(this)" style="border:none;background:transparent;color:#EF4444;cursor:pointer;font-size:13px;padding:2px 4px" title="ลบรายการ">🗑</button>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="install-line" style="display:grid;grid-template-columns:auto 1fr auto auto;gap:6px;align-items:center;padding:6px 8px;background:#fff;border:1px solid #E0E7FF;border-radius:5px">
+                  <input type="checkbox" checked style="accent-color:#2563EB">
+                  <div>
+                    <div style="font-size:11.5px;font-weight:600;color:#0F172A">Mitsubishi MSY-GN18 · 18k</div>
+                    <div style="font-size:10px;color:#64748B;font-family:monospace">INS-AC-18k24k</div>
+                  </div>
+                  <div style="display:inline-flex;align-items:center;gap:0;border:1px solid #CBD5E1;border-radius:4px;overflow:hidden">
+                    <button onclick="adjustInstallQty(this, -1)" style="border:none;background:#F1F5F9;width:22px;height:22px;cursor:pointer;font-size:13px;font-weight:700;color:#64748B">−</button>
+                    <input type="number" value="1" min="0" max="1" style="width:34px;height:22px;border:none;border-left:1px solid #CBD5E1;border-right:1px solid #CBD5E1;text-align:center;font-size:11.5px;font-weight:700;font-family:inherit;outline:none">
+                    <button onclick="adjustInstallQty(this, 1)" style="border:none;background:#F1F5F9;width:22px;height:22px;cursor:pointer;font-size:13px;font-weight:700;color:#64748B">+</button>
+                  </div>
+                  <button onclick="removeInstallLine(this)" style="border:none;background:transparent;color:#EF4444;cursor:pointer;font-size:13px;padding:2px 4px" title="ลบรายการ">🗑</button>
+                </div>
+
+                <!-- Item 3 (unchecked — ลูกค้าขอติดตั้งเอง) -->
+                <div class="install-line" style="display:grid;grid-template-columns:auto 1fr auto auto;gap:6px;align-items:center;padding:6px 8px;background:#F8FAFC;border:1px dashed #CBD5E1;border-radius:5px;opacity:0.6">
+                  <input type="checkbox" style="accent-color:#2563EB">
+                  <div>
+                    <div style="font-size:11.5px;font-weight:600;color:#0F172A">Samsung AR13TY · 12k</div>
+                    <div style="font-size:10px;color:#64748B;font-style:italic">ลูกค้าขอติดตั้งเอง</div>
+                  </div>
+                  <div style="display:inline-flex;align-items:center;gap:0;border:1px solid #CBD5E1;border-radius:4px;overflow:hidden;opacity:0.5">
+                    <button style="border:none;background:#F1F5F9;width:22px;height:22px;cursor:pointer;font-size:13px;font-weight:700;color:#64748B" disabled>−</button>
+                    <input type="number" value="0" min="0" max="1" style="width:34px;height:22px;border:none;border-left:1px solid #CBD5E1;border-right:1px solid #CBD5E1;text-align:center;font-size:11.5px;font-weight:700;font-family:inherit;outline:none" disabled>
+                    <button style="border:none;background:#F1F5F9;width:22px;height:22px;cursor:pointer;font-size:13px;font-weight:700;color:#64748B" disabled>+</button>
+                  </div>
+                  <button onclick="removeInstallLine(this)" style="border:none;background:transparent;color:#EF4444;cursor:pointer;font-size:13px;padding:2px 4px" title="ลบรายการ">🗑</button>
+                </div>
+              </div>
+
+              <!-- Summary -->
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:6px 10px;background:#1E40AF;border-radius:5px;color:#fff">
+                <span style="font-size:11px;font-weight:700">รวมติดตั้ง</span>
+                <span id="installTotal" style="font-size:12.5px;font-weight:800;font-family:'Inter',monospace">3 ชุด · ฿9,000</span>
+              </div>
             </div>
-            <div class="bb-field-row">
+
+            <div class="bb-field-row" style="margin-top:8px">
               <span class="lbl">🔒 Stock Lock</span>
               <span class="val" style="color:#10B981;font-size:11px">ล็อกตั้งแต่วันนี้ถึงวันนัด</span>
             </div>
@@ -1987,6 +2045,57 @@
           '  • MOV-AC-Wall · ฿1,200/ชุด\n\n' +
           'เลือก Job Type → ระบบ gen parent line + children BOM อัตโนมัติ');
   }
+
+  /* ── Install list editor (Delivery card) ── */
+  function adjustInstallQty(btn, delta){
+    const input = btn.parentElement.querySelector('input[type="number"]');
+    if (!input) return;
+    const min = parseInt(input.min || '0', 10);
+    const max = parseInt(input.max || '999', 10);
+    let v = (parseInt(input.value, 10) || 0) + delta;
+    if (v < min) v = min;
+    if (v > max) v = max;
+    input.value = v;
+    recalcInstallTotal();
+  }
+
+  function removeInstallLine(btn){
+    const line = btn.closest('.install-line');
+    if (!line) return;
+    if (!confirm('ลบรายการติดตั้งนี้?')) return;
+    line.remove();
+    recalcInstallTotal();
+  }
+
+  function addInstallLine(){
+    // Stub — in real app: open Install Job Type selector
+    alert('+ เพิ่มรายการติดตั้ง\n\nเปิด Job Type selector จาก CF-2.5\n(ยังไม่ implement ใน mock)');
+  }
+
+  function recalcInstallTotal(){
+    const lines = document.querySelectorAll('#installList .install-line');
+    // Mock price map (should come from CF-2.5 per Job Type)
+    const priceMap = { 'INS-AC-9k12k': 3000, 'INS-AC-18k24k': 4500, 'INS-WM-TopLoad': 500 };
+    let qty = 0, amt = 0;
+    lines.forEach(line => {
+      const cb = line.querySelector('input[type="checkbox"]');
+      if (!cb || !cb.checked) return;
+      const n = parseInt(line.querySelector('input[type="number"]').value, 10) || 0;
+      const code = (line.querySelector('[class*="mono"], [style*="monospace"]')?.textContent || '').trim();
+      const unit = priceMap[code] || 3000;
+      qty += n;
+      amt += n * unit;
+    });
+    const out = document.getElementById('installTotal');
+    if (out) out.textContent = qty + ' ชุด · ฿' + amt.toLocaleString('en-US', {minimumFractionDigits:0});
+  }
+
+  // Wire up checkbox change
+  document.addEventListener('change', e => {
+    if (e.target.matches('#installList input[type="checkbox"], #installList input[type="number"]')){
+      recalcInstallTotal();
+    }
+  });
 
   /* ── Modal helpers ── */
   function openModal(id){ document.getElementById(id).classList.add('open'); }
