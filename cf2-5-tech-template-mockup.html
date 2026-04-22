@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=1440">
 <title>CF-2.5 Tech Template — Sangwijit ERP Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B;min-width:1440px;display:flex}
@@ -293,6 +294,8 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
     <div class="tab" onclick="sw(event,'tab3')">อุปกรณ์ & อะไหล่<span class="tab-count">4</span></div>
     <div class="tab" onclick="sw(event,'tab4')">เวลา & ทักษะ</div>
     <div class="tab" onclick="sw(event,'tab5')">ความปลอดภัย (Safety)</div>
+    <div class="tab" onclick="sw(event,'tab6')">Install BOM<span class="tab-count" style="background:#FEF3C7;color:#92400E">NEW</span></div>
+    <div class="tab" onclick="sw(event,'tab7')">Tech Rate Override<span class="tab-count" style="background:#FEF3C7;color:#92400E">NEW</span></div>
   </div>
 
   <!-- ═══════════════════════════════════════════ -->
@@ -905,6 +908,271 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
               3. แจ้งหัวหน้าช่าง<br>
               4. พาไป รพ. ถ้าจำเป็น → บันทึก Incident
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- TAB 6: Install BOM — อุปกรณ์มาตรฐานต่อ Job Type -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="tab6" class="tab-panel">
+    <div class="info-banner blue">
+      ℹ️ <b>Install BOM (Bill of Materials)</b> — กำหนดรายการอุปกรณ์มาตรฐานที่ช่างต้องเบิกไปใช้ต่อ Job Type · เมื่อเลือก Job Type ในบิลขาย (SL-4) ระบบจะ <b>gen line + attached parts</b> อัตโนมัติ
+      <br>
+      💡 <b>หมายเหตุ:</b> สำหรับช่างนอก (รับเหมา) — ช่างนำอุปกรณ์มาเอง → ระบบจะไม่ auto-issue parts (flag `issue_parts=false`)
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">📦 BOM per Job Type</div>
+        <button class="btn btn-primary btn-sm">+ เพิ่ม BOM</button>
+      </div>
+
+      <!-- Job Type selector -->
+      <div style="padding:16px 20px;border-bottom:1px solid #E2E8F0;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:12px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:0.04em">เลือก Job Type:</span>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-sm" style="background:#2563EB;color:#fff;border:1px solid #2563EB">INS-AC-9k12k · ติดตั้งแอร์ผนัง 9k-12k BTU</button>
+          <button class="btn btn-sm btn-ghost">INS-AC-18k24k</button>
+          <button class="btn btn-sm btn-ghost">INS-WM-TopLoad</button>
+          <button class="btn btn-sm btn-ghost">INS-WM-FrontLoad</button>
+          <button class="btn btn-sm btn-ghost">INS-REF-Side</button>
+          <button class="btn btn-sm btn-ghost">MOV-AC-Wall</button>
+        </div>
+      </div>
+
+      <!-- BOM detail for INS-AC-9k12k -->
+      <div style="padding:20px">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:14px;margin-bottom:16px">
+          <div>
+            <div style="font-size:15px;font-weight:700;color:#0F172A;margin-bottom:4px">INS-AC-9k12k — ติดตั้งแอร์ผนัง 9,000-12,000 BTU</div>
+            <div style="font-size:12px;color:#64748B">ราคาขายลูกค้า: <b style="color:#2563EB">฿3,000/ชุด</b> · ค่าแรงช่างมาตรฐาน: <b style="color:#F59E0B">฿800/ชุด</b> · Gross Margin: <b style="color:#10B981">฿2,200 (73%)</b></div>
+          </div>
+          <div>
+            <span class="swt-chip info">ใช้ใน SL-4 Bundle</span>
+            <span class="swt-chip success">BOM synced</span>
+          </div>
+        </div>
+
+        <!-- Parts table -->
+        <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+          <thead>
+            <tr style="background:#F1F5F9">
+              <th style="padding:10px;text-align:left;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:0.04em">Part No.</th>
+              <th style="padding:10px;text-align:left;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:0.04em">ชื่ออุปกรณ์</th>
+              <th style="padding:10px;text-align:center;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:0.04em">Qty (default)</th>
+              <th style="padding:10px;text-align:center;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:0.04em">หน่วย</th>
+              <th style="padding:10px;text-align:right;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:0.04em">ต้นทุน</th>
+              <th style="padding:10px;text-align:center;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:0.04em">บังคับ?</th>
+              <th style="padding:10px;text-align:center;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase;letter-spacing:0.04em">ปรับ Qty ได้</th>
+              <th style="padding:10px;width:60px"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #F1F5F9">
+              <td style="padding:10px;font-family:monospace;font-weight:600;color:#1D4ED8">CU-PIPE-3M</td>
+              <td style="padding:10px">ท่อทองแดง 3/8" x 3 เมตร</td>
+              <td style="padding:10px;text-align:center;font-weight:600">2</td>
+              <td style="padding:10px;text-align:center;color:#64748B">เส้น</td>
+              <td style="padding:10px;text-align:right;font-family:monospace">฿ 450.00</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip danger">บังคับ</span></td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip success">✓ ได้</span></td>
+              <td style="text-align:center"><button class="btn btn-sm btn-ghost">✏️</button></td>
+            </tr>
+            <tr style="border-bottom:1px solid #F1F5F9">
+              <td style="padding:10px;font-family:monospace;font-weight:600;color:#1D4ED8">BKT-AC-WALL-01</td>
+              <td style="padding:10px">ขายึดคอยล์ร้อน (เหล็กชุบ)</td>
+              <td style="padding:10px;text-align:center;font-weight:600">1</td>
+              <td style="padding:10px;text-align:center;color:#64748B">ชุด</td>
+              <td style="padding:10px;text-align:right;font-family:monospace">฿ 180.00</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip danger">บังคับ</span></td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip neutral">ไม่ได้</span></td>
+              <td style="text-align:center"><button class="btn btn-sm btn-ghost">✏️</button></td>
+            </tr>
+            <tr style="border-bottom:1px solid #F1F5F9">
+              <td style="padding:10px;font-family:monospace;font-weight:600;color:#1D4ED8">INS-TAPE-10M</td>
+              <td style="padding:10px">ฉนวนท่อ 10 เมตร</td>
+              <td style="padding:10px;text-align:center;font-weight:600">1</td>
+              <td style="padding:10px;text-align:center;color:#64748B">ม้วน</td>
+              <td style="padding:10px;text-align:right;font-family:monospace">฿ 120.00</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip danger">บังคับ</span></td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip success">✓ ได้</span></td>
+              <td style="text-align:center"><button class="btn btn-sm btn-ghost">✏️</button></td>
+            </tr>
+            <tr style="border-bottom:1px solid #F1F5F9">
+              <td style="padding:10px;font-family:monospace;font-weight:600;color:#1D4ED8">REF-GAS-R32-500G</td>
+              <td style="padding:10px">น้ำยา R32 500g (เติมเสริม)</td>
+              <td style="padding:10px;text-align:center;font-weight:600">0</td>
+              <td style="padding:10px;text-align:center;color:#64748B">กระป๋อง</td>
+              <td style="padding:10px;text-align:right;font-family:monospace">฿ 280.00</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip warn">Optional</span></td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip success">✓ ได้</span></td>
+              <td style="text-align:center"><button class="btn btn-sm btn-ghost">✏️</button></td>
+            </tr>
+            <tr style="border-bottom:1px solid #F1F5F9">
+              <td style="padding:10px;font-family:monospace;font-weight:600;color:#1D4ED8">SCREW-SET-AC</td>
+              <td style="padding:10px">ชุดสกรู + พุก (10 ตัว)</td>
+              <td style="padding:10px;text-align:center;font-weight:600">1</td>
+              <td style="padding:10px;text-align:center;color:#64748B">ชุด</td>
+              <td style="padding:10px;text-align:right;font-family:monospace">฿ 45.00</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip danger">บังคับ</span></td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip neutral">ไม่ได้</span></td>
+              <td style="text-align:center"><button class="btn btn-sm btn-ghost">✏️</button></td>
+            </tr>
+            <tr>
+              <td style="padding:10px;font-family:monospace;font-weight:600;color:#1D4ED8">CABLE-AC-3M</td>
+              <td style="padding:10px">สายไฟ 3x2.5 sqmm x 3 เมตร</td>
+              <td style="padding:10px;text-align:center;font-weight:600">1</td>
+              <td style="padding:10px;text-align:center;color:#64748B">เส้น</td>
+              <td style="padding:10px;text-align:right;font-family:monospace">฿ 85.00</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip danger">บังคับ</span></td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip success">✓ ได้</span></td>
+              <td style="text-align:center"><button class="btn btn-sm btn-ghost">✏️</button></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr style="background:#F8FAFC;font-weight:700">
+              <td colspan="4" style="padding:12px 10px;color:#0F172A">รวมต้นทุนอุปกรณ์มาตรฐาน (6 รายการ)</td>
+              <td style="padding:12px 10px;text-align:right;font-family:monospace;color:#B45309;font-size:13.5px">฿ 1,780.00</td>
+              <td colspan="3"></td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div style="margin-top:14px;padding:12px 16px;background:#ECFDF5;border:1px solid #6EE7B7;border-radius:8px;font-size:12px;color:#065F46">
+          💰 <b>Gross Margin คำนวณ:</b> ราคาขาย ฿3,000 − ต้นทุนอุปกรณ์ ฿1,780 − ค่าแรงช่าง ฿800 = <b style="font-size:14px">฿420 (14% margin)</b>
+          <div style="font-size:11px;color:#047857;margin-top:3px">* ตัวเลขนี้ admin ใช้ประเมินว่าราคาขายคุ้มหรือไม่ · ถ้าต่ำเกินอาจปรับ Tech Rate Override</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- TAB 7: Tech Rate Override — per ช่าง/พื้นที่ -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="tab7" class="tab-panel">
+    <div class="info-banner blue">
+      ℹ️ <b>Tech Rate Override</b> — ช่างบางคน/พื้นที่ห่างไกลอาจมีค่าแรงสูง/ต่ำกว่ามาตรฐาน · ตั้งค่าครั้งแรกตอนตกลงสัญญา → ระบบจะ lock จนกว่าจะปรับใหม่
+      <br>
+      💡 Logic: ตอนสร้างงานใน SV-6 ถ้าช่างมี override → ใช้ rate override · ถ้าไม่มี → fallback ไปใช้ Standard Rate
+    </div>
+
+    <!-- Override grid -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">👷 Rate Override ต่อ ช่าง / พื้นที่</div>
+        <button class="btn btn-primary btn-sm">+ เพิ่ม Override</button>
+      </div>
+      <div style="padding:0">
+        <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+          <thead>
+            <tr style="background:#F1F5F9">
+              <th style="padding:10px;text-align:left;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase">ประเภท</th>
+              <th style="padding:10px;text-align:left;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase">ช่าง/พื้นที่</th>
+              <th style="padding:10px;text-align:left;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase">Job Type</th>
+              <th style="padding:10px;text-align:right;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase">Standard Rate</th>
+              <th style="padding:10px;text-align:right;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase">Override</th>
+              <th style="padding:10px;text-align:center;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase">Δ %</th>
+              <th style="padding:10px;text-align:left;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase">ตกลงเมื่อ</th>
+              <th style="padding:10px;text-align:center;font-size:10.5px;color:#64748B;font-weight:700;text-transform:uppercase">สถานะ</th>
+              <th style="padding:10px;width:50px"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #F1F5F9;background:#FEF9E7">
+              <td style="padding:10px"><span class="swt-chip info">ช่างใน</span></td>
+              <td style="padding:10px"><a href="md4-employee-master-mockup-v3.html" style="color:#2563EB;font-weight:600">TECH-007 สมศักดิ์ ดีเยี่ยม</a></td>
+              <td style="padding:10px;font-family:monospace;font-size:11.5px">ALL (ทุกประเภท)</td>
+              <td style="padding:10px;text-align:right;color:#64748B;font-family:monospace">฿800</td>
+              <td style="padding:10px;text-align:right;font-weight:700;color:#10B981;font-family:monospace">฿900</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip success">+12.5%</span></td>
+              <td style="padding:10px;font-size:11.5px;color:#64748B">15 ม.ค. 26</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip success">🔒 Locked</span></td>
+              <td style="text-align:center"><button class="btn btn-sm btn-ghost">✏️</button></td>
+            </tr>
+            <tr style="border-bottom:1px solid #F1F5F9">
+              <td style="padding:10px"><span class="swt-chip warn">ช่างนอก</span></td>
+              <td style="padding:10px"><a href="md3-vendor-master-mockup-v3.html" style="color:#2563EB;font-weight:600">V-00034 ช่างวิชัย (ลาดพร้าว)</a></td>
+              <td style="padding:10px;font-family:monospace;font-size:11.5px">INS-AC-9k12k</td>
+              <td style="padding:10px;text-align:right;color:#64748B;font-family:monospace">฿800</td>
+              <td style="padding:10px;text-align:right;font-weight:700;color:#2563EB;font-family:monospace">฿800</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip neutral">±0%</span></td>
+              <td style="padding:10px;font-size:11.5px;color:#64748B">01 ก.พ. 26</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip success">🔒 Locked</span></td>
+              <td style="text-align:center"><button class="btn btn-sm btn-ghost">✏️</button></td>
+            </tr>
+            <tr style="border-bottom:1px solid #F1F5F9;background:#FEF2F2">
+              <td style="padding:10px"><span class="swt-chip accent">พื้นที่</span></td>
+              <td style="padding:10px;color:#991B1B;font-weight:600">🗺️ นครนายก · ปราจีน · สระแก้ว (ห่างไกล &gt; 80 km)</td>
+              <td style="padding:10px;font-family:monospace;font-size:11.5px">INS-AC-ALL</td>
+              <td style="padding:10px;text-align:right;color:#64748B;font-family:monospace">฿800</td>
+              <td style="padding:10px;text-align:right;font-weight:700;color:#EF4444;font-family:monospace">฿1,200</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip danger">+50%</span></td>
+              <td style="padding:10px;font-size:11.5px;color:#64748B">10 มี.ค. 26</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip success">🔒 Locked</span></td>
+              <td style="text-align:center"><button class="btn btn-sm btn-ghost">✏️</button></td>
+            </tr>
+            <tr style="border-bottom:1px solid #F1F5F9">
+              <td style="padding:10px"><span class="swt-chip warn">ช่างนอก</span></td>
+              <td style="padding:10px"><a href="md3-vendor-master-mockup-v3.html" style="color:#2563EB;font-weight:600">V-00057 ช่างสมหมาย (ต่างจังหวัด)</a></td>
+              <td style="padding:10px;font-family:monospace;font-size:11.5px">INS-AC-18k24k</td>
+              <td style="padding:10px;text-align:right;color:#64748B;font-family:monospace">฿1,200</td>
+              <td style="padding:10px;text-align:right;font-weight:700;color:#EF4444;font-family:monospace">฿1,800</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip danger">+50%</span></td>
+              <td style="padding:10px;font-size:11.5px;color:#64748B">22 มี.ค. 26</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip warn">⏳ Pending review</span></td>
+              <td style="text-align:center"><button class="btn btn-sm btn-ghost">✏️</button></td>
+            </tr>
+            <tr>
+              <td style="padding:10px"><span class="swt-chip info">ช่างใน</span></td>
+              <td style="padding:10px"><a href="md4-employee-master-mockup-v3.html" style="color:#2563EB;font-weight:600">TECH-012 ประเสริฐ (ช่างใหม่)</a></td>
+              <td style="padding:10px;font-family:monospace;font-size:11.5px">ALL</td>
+              <td style="padding:10px;text-align:right;color:#64748B;font-family:monospace">฿800</td>
+              <td style="padding:10px;text-align:right;font-weight:700;color:#F59E0B;font-family:monospace">฿600</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip warn">−25%</span></td>
+              <td style="padding:10px;font-size:11.5px;color:#64748B">05 เม.ย. 26</td>
+              <td style="padding:10px;text-align:center"><span class="swt-chip neutral">Trainee rate</span></td>
+              <td style="text-align:center"><button class="btn btn-sm btn-ghost">✏️</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Override Rules explanation -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">📐 Priority Rule</div>
+        </div>
+        <div style="padding:16px;font-size:12.5px;line-height:1.7;color:#334155">
+          <div style="margin-bottom:8px"><b>ลำดับการเลือก rate:</b></div>
+          <ol style="padding-left:22px;line-height:1.8">
+            <li><b>ช่าง-specific override</b> (ถ้ามี) — priority สูงสุด</li>
+            <li><b>พื้นที่ override</b> (ถ้างานอยู่ในพื้นที่ที่กำหนด)</li>
+            <li><b>Standard rate</b> จาก tab "เวลา & ทักษะ"</li>
+          </ol>
+          <div style="margin-top:10px;padding:10px 12px;background:#EFF6FF;border-radius:6px;font-size:11.5px;color:#1E40AF">
+            💡 <b>ตัวอย่าง:</b> ช่างสมหมาย ไปติดตั้งที่นครนายก → ถ้ามี override ตัวเอง = ใช้ตัวเอง · ถ้าไม่มี = ใช้ override พื้นที่ ฿1,200 · ถ้าไม่มีเลย = ฿800 มาตรฐาน
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">🔒 Lock Rule</div>
+        </div>
+        <div style="padding:16px;font-size:12.5px;line-height:1.7;color:#334155">
+          <div style="margin-bottom:8px"><b>ตกลง rate ครั้งแรก → lock:</b></div>
+          <ul style="padding-left:22px;line-height:1.8">
+            <li>ใช้ rate นี้สำหรับงานทุกครั้งของช่าง/พื้นที่นี้</li>
+            <li>ปรับใหม่ได้แต่ต้อง <b>approval ระดับ Manager</b></li>
+            <li>ประวัติการปรับเก็บไว้ใน audit log</li>
+          </ul>
+          <div style="margin-top:10px;padding:10px 12px;background:#FEF3C7;border-radius:6px;font-size:11.5px;color:#92400E">
+            ⚠ <b>กรณีฉุกเฉิน:</b> ถ้า job ด่วนและยังไม่มี rate → ใช้ Standard + flag "ต้องกลับมาตกลง rate ภายใน 7 วัน"
           </div>
         </div>
       </div>
