@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=1440">
 <title>SL-4 Invoice — บิลขาย (v2 UI + bcsale UX) | Sangwijit ERP Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
 <style>
   /* ═══════════════════════════════════════════════════════════
      SL-4 Invoice
@@ -285,6 +286,96 @@
     cursor: pointer; background: #FAFBFC;
   }
   .add-row-bar:hover { background: #EFF6FF; }
+
+  /* ─── BUNDLE LINE (Installation / Service bundle) ── */
+  table.items tr.bundle-parent { background: linear-gradient(90deg, #EFF6FF 0%, #F0FDF4 100%); }
+  table.items tr.bundle-parent:hover { background: linear-gradient(90deg, #DBEAFE 0%, #D1FAE5 100%); }
+  table.items tr.bundle-parent td { border-bottom: none; font-weight: 600; }
+  .bundle-expand-btn {
+    background: transparent; border: none; cursor: pointer;
+    color: #2563EB; font-size: 11px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 4px; padding: 0;
+    font-family: inherit;
+  }
+  .bundle-expand-btn::before {
+    content: '▶'; font-size: 9px;
+    display: inline-block; transition: transform 0.15s;
+  }
+  details[open] .bundle-expand-btn::before,
+  tr.bundle-parent.expanded .bundle-expand-btn::before { transform: rotate(90deg); }
+  .bundle-type-chip {
+    display: inline-block;
+    padding: 2px 8px; border-radius: 10px;
+    font-size: 9.5px; font-weight: 700;
+    background: #2563EB; color: #fff;
+    letter-spacing: 0.03em; margin-left: 6px;
+  }
+  table.items tr.bundle-child td {
+    background: #FAFBFC; padding: 6px 12px;
+    font-size: 11.5px; color: #4B5563;
+    border-bottom: 1px solid #F3F4F6;
+  }
+  table.items tr.bundle-child td.child-name { padding-left: 32px; position: relative; }
+  table.items tr.bundle-child td.child-name::before {
+    content: '└';
+    position: absolute; left: 14px; color: #9CA3AF; font-size: 11px;
+  }
+  table.items tr.bundle-child.last td { border-bottom: 1px solid #E5E7EB; }
+  .child-no-price {
+    color: #9CA3AF; font-style: italic; font-size: 10.5px;
+  }
+  tr.bundle-header-note td {
+    background: #F8FAFC;
+    padding: 6px 12px 6px 32px;
+    font-size: 10.5px; color: #6B7280;
+    border-bottom: 1px solid #F3F4F6;
+  }
+  tr.bundle-header-note td b { color: #2563EB; }
+
+  /* Bundle price toggle (ราคาเหมา) */
+  .bundle-toggle {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 5px;
+    background: #FEF3C7; border: 1px solid #FCD34D;
+    font-size: 11px; font-weight: 600; color: #92400E;
+    cursor: pointer;
+  }
+  .bundle-toggle input { accent-color: #F59E0B; }
+  .bundle-toggle:hover { background: #FDE68A; }
+
+  /* When "ราคาเหมา" mode → hide child detail prices entirely */
+  table.items.bundle-wholesale tr.bundle-child { display: none; }
+  table.items.bundle-wholesale tr.bundle-header-note td::after {
+    content: ' (ซ่อนรายการใน mode ราคาเหมา)';
+    color: #D97706; font-weight: 700;
+  }
+
+  /* Delivery/Install schedule strip */
+  .install-schedule {
+    padding: 10px 14px;
+    background: linear-gradient(90deg, #F0F9FF 0%, #ECFDF5 100%);
+    border-top: 1px dashed #E5E7EB; border-bottom: 1px dashed #E5E7EB;
+    display: grid; grid-template-columns: auto 1fr auto auto;
+    gap: 12px; align-items: center;
+    font-size: 12px;
+  }
+  .install-schedule .ico-large { font-size: 18px; }
+  .install-schedule .label { font-weight: 700; color: #0C4A6E; }
+  .install-schedule .value { color: #1E40AF; font-weight: 600; }
+  .install-schedule .lock-note {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 9px; border-radius: 10px;
+    background: #1E40AF; color: #fff;
+    font-size: 10.5px; font-weight: 700;
+  }
+  .install-schedule input[type="date"] {
+    padding: 4px 8px; border: 1px solid #BFDBFE; border-radius: 4px;
+    font-size: 11.5px; font-family: inherit; background: #fff;
+  }
+  .install-schedule .need-install {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11.5px; color: #374151; font-weight: 600;
+  }
 
   /* ─── BOTTOM (Delivery | Payment | Summary) ── */
   .bb-field-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 12px; }
@@ -759,13 +850,33 @@
           <div class="card-title"><span class="ico">📦</span>รายการสินค้า (Line Items)</div>
           <div class="card-spacer"></div>
           <div class="items-header-actions">
+            <label class="bundle-toggle" title="ซ่อนรายการย่อยของ Bundle — แสดงเฉพาะราคาเหมา">
+              <input type="checkbox" id="wholesaleToggle" onchange="toggleWholesale()">
+              🎁 ราคาเหมา (ซ่อน Bundle children)
+            </label>
             <button class="card-btn" onclick="openTaxInvoice()">⚙️ ใบกำกับภาษี</button>
+            <button class="card-btn primary" onclick="openInstallSelector()">🔧 เพิ่มบริการติดตั้ง</button>
             <button class="card-btn primary" onclick="openItemSearch()">🔍 เพิ่มสินค้า</button>
           </div>
         </div>
 
+        <!-- Install schedule strip -->
+        <div class="install-schedule">
+          <span class="ico-large">📅</span>
+          <div>
+            <span class="label">วันนัดจัดส่ง/ติดตั้ง:</span>
+            <input type="date" value="2026-04-25" id="installDate" onchange="updateStockLockHint()">
+            <span style="margin-left:10px;color:#64748B;font-size:11px">(เหลือ <b>3 วัน</b> จากวันนี้)</span>
+          </div>
+          <div class="need-install">
+            <input type="checkbox" checked id="needInstall" onchange="toggleInstallSchedule()">
+            <label for="needInstall">✅ ต้องการติดตั้ง → ส่ง SV-6</label>
+          </div>
+          <span class="lock-note">🔒 Stock locked ตั้งแต่วันนี้</span>
+        </div>
+
         <div class="items-wrap">
-          <table class="items">
+          <table class="items" id="itemsTable">
             <thead>
               <tr>
                 <th style="width:36px;">#</th>
@@ -836,21 +947,87 @@
                 <td style="text-align:center;"><button class="serial-btn" onclick="openSerial()">📋 S/N</button></td>
                 <td><button class="row-del" title="ลบ">🗑</button></td>
               </tr>
-              <tr>
+              <!-- 🆕 BUNDLE LINE: Installation (parent + 6 children) -->
+              <tr class="bundle-parent expanded" onclick="toggleBundleExpand(this)">
                 <td>4</td>
-                <td><div class="item-code">CU-PIPE-3M</div></td>
+                <td><div class="item-code">INS-AC-9k12k</div></td>
                 <td>
-                  <div class="item-name">ท่อทองแดง 3 เมตร</div>
-                  <div class="item-model">Accessories</div>
-                  <div class="promo-pills"><span class="promo-pill gift">🎁 Free w/ AC</span></div>
+                  <div class="item-name">
+                    <button class="bundle-expand-btn" onclick="event.stopPropagation();toggleBundleExpand(this.closest('tr'))"></button>
+                    ค่าติดตั้งแอร์ผนัง 9k-12k BTU
+                    <span class="bundle-type-chip">📦 BUNDLE</span>
+                  </div>
+                  <div class="item-model">Job Type · from CF-2.5 · link: <a href="sv6-delivery-install-mockup.html" style="color:#2563EB;font-weight:600" onclick="event.stopPropagation()">SV-6</a></div>
+                  <div class="promo-pills">
+                    <span class="promo-pill">🎯 Summer Install</span>
+                  </div>
                 </td>
                 <td><span class="wh-badge">HQ</span></td>
-                <td class="item-qty"><input type="number" class="item-qty-input" value="4" min="1"></td>
-                <td class="item-price">450.00</td>
+                <td class="item-qty"><input type="number" class="item-qty-input" value="2" min="1" onclick="event.stopPropagation()" onfocus="event.stopPropagation()"></td>
+                <td class="item-price">3,000.00</td>
                 <td class="item-price">0%</td>
-                <td class="item-total">1,800.00</td>
-                <td style="text-align:center;color:#9CA3AF;">—</td>
-                <td><button class="row-del" title="ลบ">🗑</button></td>
+                <td class="item-total">6,000.00</td>
+                <td style="text-align:center;color:#9CA3AF;font-size:10.5px">BUNDLE</td>
+                <td><button class="row-del" title="ลบ" onclick="event.stopPropagation()">🗑</button></td>
+              </tr>
+              <tr class="bundle-header-note">
+                <td colspan="10">
+                  📦 <b>อุปกรณ์มาตรฐานในแพ็คเกจ</b> (6 รายการ · auto-issue เมื่อช่างในมา · ช่างนอกมีเอง) — ลูกค้าเห็นรายการ · <b>ไม่เห็นราคา</b> แต่ละชิ้น
+                </td>
+              </tr>
+              <tr class="bundle-child">
+                <td></td>
+                <td><div class="item-code">CU-PIPE-3M</div></td>
+                <td class="child-name">ท่อทองแดง 3/8" x 3 เมตร × 4 เส้น</td>
+                <td><span class="wh-badge">HQ</span></td>
+                <td class="item-qty" style="text-align:center;color:#6B7280">4</td>
+                <td colspan="3" class="child-no-price">รวมในแพ็คเกจ</td>
+                <td colspan="2"></td>
+              </tr>
+              <tr class="bundle-child">
+                <td></td>
+                <td><div class="item-code">BKT-AC-WALL-01</div></td>
+                <td class="child-name">ขายึดคอยล์ร้อน (เหล็กชุบ) × 2 ชุด</td>
+                <td><span class="wh-badge">HQ</span></td>
+                <td class="item-qty" style="text-align:center;color:#6B7280">2</td>
+                <td colspan="3" class="child-no-price">รวมในแพ็คเกจ</td>
+                <td colspan="2"></td>
+              </tr>
+              <tr class="bundle-child">
+                <td></td>
+                <td><div class="item-code">INS-TAPE-10M</div></td>
+                <td class="child-name">ฉนวนท่อ 10 เมตร × 2 ม้วน</td>
+                <td><span class="wh-badge">HQ</span></td>
+                <td class="item-qty" style="text-align:center;color:#6B7280">2</td>
+                <td colspan="3" class="child-no-price">รวมในแพ็คเกจ</td>
+                <td colspan="2"></td>
+              </tr>
+              <tr class="bundle-child">
+                <td></td>
+                <td><div class="item-code">REF-GAS-R32-500G</div></td>
+                <td class="child-name">น้ำยา R32 500g (เติมเสริม) × 1 กระป๋อง</td>
+                <td><span class="wh-badge">HQ</span></td>
+                <td class="item-qty" style="text-align:center;color:#6B7280">1</td>
+                <td colspan="3" class="child-no-price">รวมในแพ็คเกจ · <span style="color:#B45309">Optional</span></td>
+                <td colspan="2"></td>
+              </tr>
+              <tr class="bundle-child">
+                <td></td>
+                <td><div class="item-code">SCREW-SET-AC</div></td>
+                <td class="child-name">ชุดสกรู + พุก × 2 ชุด</td>
+                <td><span class="wh-badge">HQ</span></td>
+                <td class="item-qty" style="text-align:center;color:#6B7280">2</td>
+                <td colspan="3" class="child-no-price">รวมในแพ็คเกจ</td>
+                <td colspan="2"></td>
+              </tr>
+              <tr class="bundle-child last">
+                <td></td>
+                <td><div class="item-code">CABLE-AC-3M</div></td>
+                <td class="child-name">สายไฟ 3x2.5 sqmm x 3 เมตร × 2 เส้น</td>
+                <td><span class="wh-badge">HQ</span></td>
+                <td class="item-qty" style="text-align:center;color:#6B7280">2</td>
+                <td colspan="3" class="child-no-price">รวมในแพ็คเกจ</td>
+                <td colspan="2"></td>
               </tr>
             </tbody>
           </table>
@@ -906,14 +1083,17 @@
           <div class="card-header">
             <div class="card-title"><span class="ico">💰</span>สรุปยอด (Summary)</div>
           </div>
-          <div class="summary-row"><span class="lbl">ยอดรวมสินค้า</span><span class="val">101,723.00</span></div>
+          <div class="summary-row"><span class="lbl">ยอดสินค้า (3 เครื่อง)</span><span class="val">99,923.00</span></div>
+          <div class="summary-row"><span class="lbl">ค่าติดตั้ง (Bundle × 2)</span><span class="val">6,000.00</span></div>
+          <div class="summary-row"><span class="lbl" style="font-size:10.5px;color:#9CA3AF;padding-left:12px">↳ อุปกรณ์ 6 รายการ</span><span class="val" style="color:#9CA3AF;font-style:italic;font-size:11px">รวมในแพ็คเกจ</span></div>
           <div class="summary-row"><span class="lbl">ส่วนลด</span><span class="val" style="color:#10B981;">-5,100.00</span></div>
           <div class="summary-row"><span class="lbl">หักมัดจำ</span><span class="val">-0.00</span></div>
           <div class="summary-row divider"></div>
-          <div class="summary-row"><span class="lbl">VAT 7%</span><span class="val">6,816.00</span></div>
+          <div class="summary-row"><span class="lbl">ก่อน VAT</span><span class="val">100,823.00</span></div>
+          <div class="summary-row"><span class="lbl">VAT 7% <span style="color:#8B5CF6;font-size:10px;">⚖ Golden Rule</span></span><span class="val">7,057.61</span></div>
           <div class="summary-total">
             <span>รวมทั้งสิ้น</span>
-            <span class="val">103,439.00</span>
+            <span class="val">107,880.61</span>
           </div>
         </div>
 
@@ -1742,6 +1922,58 @@
     var on   = wrap.classList.toggle('pinned');
     btn.classList.toggle('pinned', on);
     try { localStorage.setItem('sl4_saab_pinned', on ? '1' : '0'); } catch(e){}
+  }
+
+  /* ── Bundle line pattern (ค่าติดตั้ง) ── */
+  function toggleBundleExpand(parentTr){
+    if (!parentTr) return;
+    parentTr.classList.toggle('expanded');
+    const expanded = parentTr.classList.contains('expanded');
+    let el = parentTr.nextElementSibling;
+    while (el && (el.classList.contains('bundle-child') || el.classList.contains('bundle-header-note'))){
+      el.style.display = expanded ? '' : 'none';
+      el = el.nextElementSibling;
+    }
+  }
+
+  function toggleWholesale(){
+    const cb = document.getElementById('wholesaleToggle');
+    const table = document.getElementById('itemsTable');
+    if (cb.checked){
+      table.classList.add('bundle-wholesale');
+    } else {
+      table.classList.remove('bundle-wholesale');
+    }
+  }
+
+  function toggleInstallSchedule(){
+    const need = document.getElementById('needInstall').checked;
+    const sched = document.querySelector('.install-schedule');
+    // Dim the strip when install not needed
+    sched.style.opacity = need ? '1' : '0.5';
+    const lockNote = sched.querySelector('.lock-note');
+    if (lockNote) lockNote.textContent = need ? '🔒 Stock locked ตั้งแต่วันนี้' : '⚪ ไม่ล็อกสต็อก';
+  }
+
+  function updateStockLockHint(){
+    const dateStr = document.getElementById('installDate').value;
+    const d = new Date(dateStr);
+    const today = new Date();
+    const days = Math.ceil((d - today) / (1000 * 60 * 60 * 24));
+    // Just a hint recalculation — actual UI updates are mocked
+    console.log('Stock lock until', dateStr, '(' + days + ' days from now)');
+  }
+
+  function openInstallSelector(){
+    alert('🔧 เปิด Install Job Type selector\n\n' +
+          'ตัวเลือกจาก CF-2.5:\n' +
+          '  • INS-AC-9k12k (ติดตั้งแอร์ผนัง 9-12k BTU) · ฿3,000/ชุด\n' +
+          '  • INS-AC-18k24k · ฿4,500/ชุด\n' +
+          '  • INS-WM-TopLoad · ฿500/ชุด\n' +
+          '  • INS-WM-FrontLoad · ฿600/ชุด\n' +
+          '  • INS-REF-Side · ฿800/ชุด\n' +
+          '  • MOV-AC-Wall · ฿1,200/ชุด\n\n' +
+          'เลือก Job Type → ระบบ gen parent line + children BOM อัตโนมัติ');
   }
 
   /* ── Modal helpers ── */
