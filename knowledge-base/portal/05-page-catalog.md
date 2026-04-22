@@ -38,8 +38,8 @@
 | `wh-queue-mockup.html` | WH-Q | Queue คลังทั้งระบบ (receive/transfer/issue/count) | SLA, priority, aging |
 | `wh1-grn-mockup.html` | WH-1 | รับสินค้า GRN จาก PO | PO ref, expected vs received, serial/lot |
 | `wh2-stock-transfer-mockup.html` | WH-2 | โอนย้ายระหว่างคลัง/สาขา | From-To location, transit, receive status |
-| `wh3-stock-count-mockup.html` | WH-3 | นับสต็อก + ปรับยอด | Count sheet, variance, adjustment reason |
-| `whr-goods-issue-mockup.html` | WH-R | เบิกสินค้า / Goods Issue | Issue type (sales/service), stock card |
+| `wh4-stock-count-mockup.html` | WH-3 | นับสต็อก + ปรับยอด | Count sheet, variance, adjustment reason |
+| `wh3-sales-issue-mockup.html` | WH-R | เบิกสินค้า / Goods Issue | Issue type (sales/service), stock card |
 
 ---
 
@@ -49,7 +49,7 @@
 |-----|--------|-------------|----------|
 | `poq-purchase-queue-mockup.html` | PO-Q | Queue จัดซื้อ + PR ที่รอ | Pending PR, PO status, vendor |
 | `po4-purchase-order-mockup.html` | PO-4 | ใบสั่งซื้อ PO + Approval | Vendor, item, price, terms, approvals |
-| `po-rebate-dashboard.html` | (support) | Dashboard ติดตาม Rebate ควรได้/เบิก | Vendor, target, actual, rebate amount |
+| `po7-rebate-dashboard.html` | (support) | Dashboard ติดตาม Rebate ควรได้/เบิก | Vendor, target, actual, rebate amount |
 
 ---
 

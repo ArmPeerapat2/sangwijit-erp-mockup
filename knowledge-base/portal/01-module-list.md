@@ -74,7 +74,7 @@
 | PO-6 | AP Invoice | ✅ | — |
 | PO-7 | Sale-In Accrual | 🆕 | — |
 | PO-8 | Deposit Bill (บิลฝาก) | 🆕 | — |
-| — | Rebate Dashboard | (support) | 📋 `po-rebate-dashboard.html` |
+| — | Rebate Dashboard | (support) | 📋 `po7-rebate-dashboard.html` |
 | SM-1 | SKU Slot Planner | ✅ | 📋 `sm1-sku-slot-planner-mockup.html` |
 | SM-2 | SKU Health Monitor | ✅ | 📋 `sm2-sku-health-mockup.html` |
 | SM-3 | Vendor Report | ✅ | 📋 `sm3-vendor-report-mockup.html` |
@@ -91,9 +91,9 @@
 | WH-Q | Warehouse Queue (SLA) | ✅ | 📋 `wh-queue-mockup.html` |
 | WH-1 | GRN + Transfer Receipt | ✅ | 📋 `wh1-grn-mockup.html` |
 | WH-2 | Stock Transfer | ✅ | 📋 `wh2-stock-transfer-mockup.html` |
-| WH-3 | Sales Issue / Stock Count | ✅ | 📋 `wh3-stock-count-mockup.html` |
+| WH-3 | Sales Issue / Stock Count | ✅ | 📋 `wh4-stock-count-mockup.html` |
 | WH-4 | Stock Count | ✅ | (รวมกับ WH-3) |
-| WH-R | Stock Card / Goods Issue | ✅ | 📋 `whr-goods-issue-mockup.html` |
+| WH-R | Stock Card / Goods Issue | ✅ | 📋 `wh3-sales-issue-mockup.html` |
 | WH-NM | Non-Move Report | 🆕 | — |
 | ⭐ Auto Replenishment | Phase ถัดไป |  | — |
 | ⭐ Pick / Pack / Ship | Phase ถัดไป |  | — |

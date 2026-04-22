@@ -1,0 +1,232 @@
+<!-- SWT_PAY_START -->
+<style>
+.swt-pay,.swt-pay *{box-sizing:border-box}
+#swtPayRoot{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.45);z-index:1100;align-items:flex-start;justify-content:center;padding:40px 20px 30px;overflow-y:auto;font-family:'Inter','Noto Sans Thai',sans-serif;font-size:13px;color:#1F2937}
+#swtPayRoot.swt-pay-open{display:flex}
+.swt-pay-dlg{background:#fff;border-radius:10px;box-shadow:0 20px 60px rgba(15,23,42,0.3);width:960px;max-width:calc(100vw - 40px);overflow:hidden;border:1px solid #E2E8F0}
+.swt-pay-hd{background:linear-gradient(180deg,#1E3A5F 0%,#172A47 100%);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.swt-pay-hd h2{font-size:14px;font-weight:600;margin:0;flex:1}
+.swt-pay-hd .doc{font-size:11px;background:rgba(255,255,255,0.12);padding:2px 8px;border-radius:10px;font-family:monospace}
+.swt-pay-hd .x{width:26px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:3px;opacity:0.8}
+.swt-pay-hd .x:hover{background:#DC2626;opacity:1}
+.swt-pay-sum{background:#F8FAFC;border-bottom:1px solid #E2E8F0;padding:12px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.swt-pay-sum .c{text-align:center}
+.swt-pay-sum .lbl{font-size:10.5px;color:#64748B;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:2px}
+.swt-pay-sum .val{font-size:15px;font-weight:700;color:#0F172A;font-feature-settings:"tnum"}
+.swt-pay-sum .val.due{color:#D97706}
+.swt-pay-sum .val.paid{color:#047857}
+.swt-pay-sum .val.chg{color:#2563EB}
+.swt-pay-chips{display:flex;gap:8px;flex-wrap:wrap;padding:14px 16px;background:#fff;border-bottom:1px solid #F1F5F9}
+.swt-pay-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:1.5px solid #E5E7EB;background:#F8FAFC;color:#64748B;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s;font-family:inherit}
+.swt-pay-chip:hover{border-color:#93C5FD;background:#EFF6FF;color:#2563EB}
+.swt-pay-chip.act{background:#2563EB;border-color:#2563EB;color:#fff;font-weight:600}
+.swt-pay-body{padding:16px;background:#fff;min-height:280px}
+.swt-pay-pane{display:none}
+.swt-pay-pane.act{display:block}
+.swt-pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.swt-pay-grp{display:flex;flex-direction:column;gap:8px}
+.swt-pay-grp label{font-size:11px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:0.03em}
+.swt-pay-inp,.swt-pay-sel{width:100%;padding:8px 10px;border:1px solid #CBD5E1;border-radius:6px;font-size:13px;font-family:inherit;outline:none;background:#fff}
+.swt-pay-inp:focus,.swt-pay-sel:focus{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,0.08)}
+.swt-pay-inp.amt{text-align:right;font-weight:700;font-feature-settings:"tnum";font-size:15px;color:#047857}
+.swt-pay-inp.mono{font-family:monospace}
+.swt-pay-qr{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:center}
+.swt-pay-qrbox{background:#fff;border:2px solid #1E3A5F;border-radius:8px;padding:14px;text-align:center}
+.swt-pay-qrimg{width:172px;height:172px;background:#F1F5F9;display:flex;align-items:center;justify-content:center;font-size:64px;color:#CBD5E1;border-radius:4px;margin-bottom:8px}
+.swt-pay-qrbox .bank{font-size:11px;color:#64748B}
+.swt-pay-qrbox .ref{font-size:10.5px;color:#94A3B8;font-family:monospace;margin-top:2px}
+.swt-pay-info{font-size:12.5px;line-height:1.7;color:#334155}
+.swt-pay-info b{color:#1E3A5F}
+.swt-pay-hist{border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;margin-top:12px}
+.swt-pay-hist h4{margin:0;padding:8px 12px;background:#F8FAFC;border-bottom:1px solid #E5E7EB;font-size:12px;font-weight:600;color:#334155}
+.swt-pay-hist table{width:100%;border-collapse:collapse;font-size:12px}
+.swt-pay-hist th{background:#FAFBFC;padding:6px 10px;text-align:left;font-size:10.5px;color:#64748B;font-weight:600;text-transform:uppercase;border-bottom:1px solid #E5E7EB}
+.swt-pay-hist td{padding:7px 10px;border-bottom:1px solid #F1F5F9;font-feature-settings:"tnum"}
+.swt-pay-hist td.n{text-align:right;font-weight:600}
+.swt-pay-hist tr:last-child td{border-bottom:none}
+.swt-pay-bd{background:#F8FAFC;border-top:1px solid #E2E8F0;padding:12px 16px;display:flex;gap:10px;align-items:center}
+.swt-pay-bd .sp{flex:1;font-size:11.5px;color:#64748B}
+.swt-pay-bd .sp b{color:#0F172A}
+.swt-pay-btn{padding:9px 18px;border-radius:6px;border:1px solid #CBD5E1;background:#fff;color:#334155;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.swt-pay-btn:hover{background:#F1F5F9}
+.swt-pay-btn.prim{background:#2563EB;border-color:#2563EB;color:#fff}
+.swt-pay-btn.prim:hover{background:#1D4ED8}
+</style>
+<div id="swtPayRoot" role="dialog" aria-modal="true" aria-label="รับชำระเงิน">
+  <div class="swt-pay-dlg swt-pay" onclick="event.stopPropagation()">
+    <div class="swt-pay-hd">
+      <span style="font-size:15px">💵</span>
+      <h2>รับชำระเงิน — SC-3 (Shared Component)</h2>
+      <span class="doc" id="swtPayDoc">INV-26-0001</span>
+      <span class="x" onclick="swtClosePay()">✕</span>
+    </div>
+    <div class="swt-pay-sum">
+      <div class="c"><div class="lbl">ยอดรวม</div><div class="val" id="swtPaySumTotal">0.00</div></div>
+      <div class="c"><div class="lbl">ชำระแล้ว</div><div class="val paid" id="swtPaySumPaid">0.00</div></div>
+      <div class="c"><div class="lbl">คงเหลือ</div><div class="val due" id="swtPaySumDue">0.00</div></div>
+      <div class="c"><div class="lbl">เงินทอน</div><div class="val chg" id="swtPaySumChg">0.00</div></div>
+    </div>
+    <div class="swt-pay-chips">
+      <div class="swt-pay-chip act" data-m="cash" onclick="swtPaySw(this,'cash')">💵 เงินสด</div>
+      <div class="swt-pay-chip" data-m="transfer" onclick="swtPaySw(this,'transfer')">🏦 โอนธนาคาร</div>
+      <div class="swt-pay-chip" data-m="qr" onclick="swtPaySw(this,'qr')">📱 QR PromptPay</div>
+      <div class="swt-pay-chip" data-m="card" onclick="swtPaySw(this,'card')">💳 บัตรเครดิต/เดบิต</div>
+      <div class="swt-pay-chip" data-m="check" onclick="swtPaySw(this,'check')">📝 เช็ค</div>
+      <div class="swt-pay-chip" data-m="ar" onclick="swtPaySw(this,'ar')">📋 เครดิต (AR)</div>
+    </div>
+    <div class="swt-pay-body">
+      <!-- CASH -->
+      <div class="swt-pay-pane act" id="swtPayP-cash">
+        <div class="swt-pay-grid">
+          <div class="swt-pay-grp"><label>ยอดรับจากลูกค้า (บาท)</label><input type="text" class="swt-pay-inp amt" id="swtPayCashRcv" value="0.00" oninput="swtPayCalcChg()"></div>
+          <div class="swt-pay-grp"><label>สาขา/เครื่องเก็บเงิน</label><select class="swt-pay-sel"><option>HO · สนง.ใหญ่ · POS01</option><option>SL · สว่างฯ · POS01</option><option>S08 · เซกา · POS01</option></select></div>
+          <div class="swt-pay-grp"><label>หมายเหตุ</label><input type="text" class="swt-pay-inp" placeholder="เช่น รับเงินสดจากลูกค้า"></div>
+          <div class="swt-pay-grp"><label>ผู้รับเงิน</label><input type="text" class="swt-pay-inp" value="สมชาย · Cashier 01" readonly></div>
+        </div>
+      </div>
+      <!-- TRANSFER -->
+      <div class="swt-pay-pane" id="swtPayP-transfer">
+        <div class="swt-pay-grid">
+          <div class="swt-pay-grp"><label>ธนาคารที่โอนเข้า (SWT)</label>
+            <select class="swt-pay-sel"><option>KBank · 123-4-56789-0 · SWT</option><option>Bangkok Bank · 234-5-67890-1 · SWT</option><option>SCB · 345-6-78901-2 · SWE</option></select>
+          </div>
+          <div class="swt-pay-grp"><label>วันที่โอน</label><input type="date" class="swt-pay-inp"></div>
+          <div class="swt-pay-grp"><label>เวลา</label><input type="time" class="swt-pay-inp"></div>
+          <div class="swt-pay-grp"><label>ยอดโอน (บาท)</label><input type="text" class="swt-pay-inp amt" value="0.00"></div>
+          <div class="swt-pay-grp"><label>เลขอ้างอิง (Ref / slip ID)</label><input type="text" class="swt-pay-inp mono" placeholder="เช่น SLIP-2025-xxxxx"></div>
+          <div class="swt-pay-grp"><label>แนบสลิป</label><input type="file" class="swt-pay-inp" accept="image/*,.pdf"></div>
+        </div>
+      </div>
+      <!-- QR -->
+      <div class="swt-pay-pane" id="swtPayP-qr">
+        <div class="swt-pay-qr">
+          <div class="swt-pay-qrbox">
+            <div class="swt-pay-qrimg">◱</div>
+            <div class="bank"><b>PromptPay</b> · สังวิจิตร ประเทศไทย</div>
+            <div class="ref" id="swtPayQrRef">Ref1: INV-26-0001</div>
+          </div>
+          <div class="swt-pay-info">
+            <b>Biller ID:</b> 099-4-12345-6 (SWT)<br>
+            <b>Ref1:</b> เลขที่บิล (INV)<br>
+            <b>Ref2:</b> <span id="swtPayQrRef2">YYMM</span> + รหัสลูกค้า<br>
+            <b>ยอดตรึง:</b> <span id="swtPayQrAmt" style="color:#D97706;font-weight:700">0.00</span> บาท<br>
+            <br>
+            <button class="swt-pay-btn">📥 ดาวน์โหลด PNG</button>
+            <button class="swt-pay-btn">📤 ส่ง LINE</button>
+            <button class="swt-pay-btn">🖨️ พิมพ์</button>
+          </div>
+        </div>
+      </div>
+      <!-- CARD -->
+      <div class="swt-pay-pane" id="swtPayP-card">
+        <div class="swt-pay-grid">
+          <div class="swt-pay-grp"><label>ประเภทบัตร / ช่องทาง</label>
+            <select class="swt-pay-sel"><option>Visa</option><option>Mastercard</option><option>JCB</option><option>Shopee (Marketplace)</option><option>LAZADA (Marketplace)</option><option>NocNoc (Marketplace)</option></select>
+          </div>
+          <div class="swt-pay-grp"><label>เลขบัตร (4 ตัวท้าย)</label><input type="text" class="swt-pay-inp mono" placeholder="**** **** **** 1234" maxlength="19"></div>
+          <div class="swt-pay-grp"><label>ยอดชำระบัตร</label><input type="text" class="swt-pay-inp amt" value="0.00"></div>
+          <div class="swt-pay-grp"><label>ค่าธรรมเนียม (%)</label><input type="text" class="swt-pay-inp" value="0.00"></div>
+          <div class="swt-pay-grp"><label>เลข Transaction</label><input type="text" class="swt-pay-inp mono" placeholder="AUTH-xxxxxx"></div>
+          <div class="swt-pay-grp"><label>EDC Terminal</label><select class="swt-pay-sel"><option>KBank EDC-01</option><option>SCB EDC-02</option></select></div>
+        </div>
+      </div>
+      <!-- CHECK -->
+      <div class="swt-pay-pane" id="swtPayP-check">
+        <div class="swt-pay-grid">
+          <div class="swt-pay-grp"><label>เลขที่เช็ค</label><input type="text" class="swt-pay-inp mono" placeholder="เช่น CHK-26-0001"></div>
+          <div class="swt-pay-grp"><label>ธนาคาร</label><select class="swt-pay-sel"><option>KBank</option><option>Bangkok Bank</option><option>SCB</option><option>TTB</option><option>Krungsri</option></select></div>
+          <div class="swt-pay-grp"><label>สาขาธนาคาร</label><input type="text" class="swt-pay-inp" placeholder="เช่น สาขาสีลม"></div>
+          <div class="swt-pay-grp"><label>ลงวันที่ (เช็คลงวันที่)</label><input type="date" class="swt-pay-inp"></div>
+          <div class="swt-pay-grp"><label>มูลค่าเช็ค</label><input type="text" class="swt-pay-inp amt" value="0.00"></div>
+          <div class="swt-pay-grp"><label>สถานะ</label><select class="swt-pay-sel"><option>รอตรวจสอบ</option><option>นำส่งธนาคาร</option><option>ผ่าน</option><option>Bounce</option></select></div>
+        </div>
+      </div>
+      <!-- AR -->
+      <div class="swt-pay-pane" id="swtPayP-ar">
+        <div class="swt-pay-info" style="padding:16px;background:#FEF9E7;border:1px solid #FCD34D;border-radius:8px;margin-bottom:12px">
+          ⚠ <b>เครดิต AR</b> — ลูกค้ารับบิลไปก่อน แล้วชำระตาม Credit Term · ต้องตรวจ <b>วงเงินคงเหลือ</b> และ <b>Aging</b> ก่อนอนุมัติ
+        </div>
+        <div class="swt-pay-grid">
+          <div class="swt-pay-grp"><label>Credit Term</label><select class="swt-pay-sel"><option>Net 30</option><option>Net 45</option><option>Net 60</option><option>EOM</option></select></div>
+          <div class="swt-pay-grp"><label>ครบกำหนดชำระ</label><input type="date" class="swt-pay-inp" readonly></div>
+          <div class="swt-pay-grp"><label>วงเงินลูกค้า</label><input type="text" class="swt-pay-inp amt" value="500,000.00" readonly></div>
+          <div class="swt-pay-grp"><label>ค้างชำระปัจจุบัน</label><input type="text" class="swt-pay-inp amt" value="125,400.00" readonly style="color:#D97706"></div>
+          <div class="swt-pay-grp" style="grid-column:1/-1"><label>หมายเหตุ / อนุมัติโดย</label><input type="text" class="swt-pay-inp" placeholder="เช่น ผ่าน SL-F1 · อนุมัติโดย ผจก. สมชาย"></div>
+        </div>
+      </div>
+      <div class="swt-pay-hist">
+        <h4>ประวัติการชำระบิลนี้</h4>
+        <table>
+          <thead><tr><th>วันที่</th><th>วิธี</th><th>อ้างอิง</th><th style="text-align:right">ยอด (บาท)</th><th>สถานะ</th></tr></thead>
+          <tbody id="swtPayHistBody">
+            <tr><td colspan="5" style="color:#94A3B8;text-align:center;font-style:italic;padding:14px">— ยังไม่มีรายการชำระ —</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="swt-pay-bd">
+      <div class="sp">📎 Post เข้า BC365 อัตโนมัติเมื่อกดยืนยัน · BC gen เลข <b>RV-xxxx</b> · แจ้งลูกค้าผ่าน LINE OA</div>
+      <button class="swt-pay-btn" onclick="swtClosePay()">ยกเลิก</button>
+      <button class="swt-pay-btn">💾 บันทึกร่าง</button>
+      <button class="swt-pay-btn prim" onclick="swtConfirmPay()">✓ ยืนยันการชำระ</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var root=document.getElementById('swtPayRoot');
+  var STATE={total:0,paid:0};
+  function fmt(n){n=Number(n)||0;return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function parseAmt(s){return Number(String(s||'').replace(/,/g,''))||0;}
+  window.swtOpenPay=function(total,docNo,opts){
+    opts=opts||{};
+    STATE.total=Number(total)||0;
+    STATE.paid=Number(opts.paid)||0;
+    if(docNo)document.getElementById('swtPayDoc').textContent=docNo;
+    document.getElementById('swtPaySumTotal').textContent=fmt(STATE.total);
+    document.getElementById('swtPaySumPaid').textContent=fmt(STATE.paid);
+    document.getElementById('swtPaySumDue').textContent=fmt(STATE.total-STATE.paid);
+    document.getElementById('swtPaySumChg').textContent='0.00';
+    document.getElementById('swtPayCashRcv').value=fmt(STATE.total-STATE.paid);
+    document.getElementById('swtPayQrAmt').textContent=fmt(STATE.total-STATE.paid);
+    if(docNo)document.getElementById('swtPayQrRef').textContent='Ref1: '+docNo;
+    root.classList.add('swt-pay-open');
+  };
+  window.swtClosePay=function(){root.classList.remove('swt-pay-open');};
+  window.swtPaySw=function(el,m){
+    root.querySelectorAll('.swt-pay-chip').forEach(function(c){c.classList.remove('act');});
+    el.classList.add('act');
+    root.querySelectorAll('.swt-pay-pane').forEach(function(p){p.classList.remove('act');});
+    var p=document.getElementById('swtPayP-'+m);if(p)p.classList.add('act');
+  };
+  window.swtPayCalcChg=function(){
+    var rcv=parseAmt(document.getElementById('swtPayCashRcv').value);
+    var due=STATE.total-STATE.paid;
+    var chg=Math.max(0,rcv-due);
+    document.getElementById('swtPaySumChg').textContent=fmt(chg);
+  };
+  window.swtConfirmPay=function(){
+    alert('✓ บันทึกชำระเรียบร้อย\n\nBC365 จะ gen RV-xxxx และปิดบิลอัตโนมัติ');
+    swtClosePay();
+  };
+  root.addEventListener('click',function(e){if(e.target===root)swtClosePay();});
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&root.classList.contains('swt-pay-open'))swtClosePay();
+  });
+  function wire(){
+    document.querySelectorAll('[data-pay]').forEach(function(el){
+      if(el.dataset.swtPayBound)return;
+      el.dataset.swtPayBound='1';
+      el.addEventListener('click',function(e){
+        e.preventDefault();
+        var t=Number(el.getAttribute('data-pay-total'))||0;
+        var d=el.getAttribute('data-pay-doc')||'';
+        var p=Number(el.getAttribute('data-pay-paid'))||0;
+        window.swtOpenPay(t,d,{paid:p});
+      });
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
+})();
+</script>
+<!-- SWT_PAY_END -->

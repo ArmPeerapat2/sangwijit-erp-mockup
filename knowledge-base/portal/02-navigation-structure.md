@@ -103,7 +103,7 @@
 1. **BACK TO INDEX** — `portal-mockup-index.html`
 2. **งานขาย (SL)** — SL-Q, SL-1 ~ SL-7, CM-1, CL-1
 3. **คลังสินค้า (WH)** — WH-Q, WH-1, WH-2, WH-3, WH-R
-4. **จัดซื้อ (PO)** — PO-Q, PO-4, PO-Rebate
+4. **จัดซื้อ (PO)** — PO-Q, PO-4, PO-7
 5. **SKU & Vendor (SM)** — SM-1, SM-2, SM-3
 6. **บัญชี/การเงิน (FI/TR)** — FI-1 ~ FI-5, TR-1
 7. **บริการ (SV/DL)** — SV-1, SV-2, DL-1

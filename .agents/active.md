@@ -1,7 +1,7 @@
 ---
-updated_at: "2026-04-19T12:00:00+07:00"
+updated_at: "2026-04-21T12:00:00+07:00"
 status: "active"
-current_focus: "Payment QR layer (Customer-code + Invoice-code) + FI-1Q Apply Queue"
+current_focus: "PO/WH gap closure — Path 3 (rename cleanup) ✅ → Path 2 (build 5 gap mockups)"
 branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
@@ -11,7 +11,23 @@ project_type: "frontend-mockup (HTML + docs)"
 ## Objective
 ออกแบบ Frontend ERP Web Portal (Sangwijit Group) เหนือ Dynamics 365 Business Central — สร้าง HTML mockup ครบทุกหน้า, เตรียม handoff ให้ทีม dev
 
-## Current State (2026-04-19 — latest)
+## Current State (2026-04-21 — latest)
+- **PO/WH Rename Cleanup ✅ NEW 2026-04-21** — ปรับเลข mockup ให้ตรง `sangwijit-portal-skill` spec
+  - `po3-vendor-invoice-mockup.html` → `po6-ap-invoice-mockup.html` (เดิมผิดแมป — จริงๆ คือ PO-6 AP Invoice)
+  - `po-rebate-dashboard.html` → `po7-rebate-dashboard.html`
+  - `whr-goods-issue-mockup.html` → `wh3-sales-issue-mockup.html` (spec: WH-3 = Sales Issue)
+  - `wh3-stock-count-mockup.html` → `wh4-stock-count-mockup.html` (spec: WH-4 = Physical Count)
+  - Updated: 73 .html files + swt-link.js + 3 .md docs (filename refs + sidebar code labels + titles + breadcrumbs + stale `PO-Rebate` → `PO-7`)
+  - _archive/ ไม่แตะ
+- **Gap + KPI Matrix ✅ NEW 2026-04-21** — `.agents/topics/po-wh-gap-kpi-matrix.md` เทียบ spec vs mockup (PO 9 + WH 7), map 27 KPI, Priority P0-P3
+- **Next (Path 2 — build 5 gap mockups):**
+  - PO-3 Vendor Onboarding (ยังไม่มี)
+  - PO-5 Finance GRN (ยังไม่มี — แยกจาก WH-1)
+  - PO-8 Deposit Bill บิลฝาก (ยังไม่มี)
+  - WH-NM Non-Move Report (ยังไม่มี — spec ละเอียด)
+  - WH-R Stock Card (ยังไม่มี — spec สั้น ต้องเสริม Aging bucket)
+
+## Previous Focus (2026-04-19)
 - **Payment QR 2 ชั้น ✅ NEW 2026-04-19** — Tier-A 5 ใน `swt-link.js` (~260 บรรทัดเพิ่ม)
   - **ชั้น 1 — Customer QR (modal)** — ปุ่มม่วง `📱 QR` auto-inject ข้างทุก `[data-customer-search]` (9 หน้า: SL-1/2/3/4, SV-2/3, WHR + MD-2 combo)
     - Modal: picker · Biller ID (099-4-12345-6) · Ref1 = รหัสลูกค้า · Ref2 = YYMM · amount mode (ว่าง/ค้างรวม/ระบุ) · PNG / Copy / ส่ง LINE

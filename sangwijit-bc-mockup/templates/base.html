@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>{{PAGE_TITLE}} | Sangwijit ERP Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════════════════════════
+     Sangwijit BC ERP Mockup — Base Template
+     Design tokens (ตาม sl4-invoice-mockup-v2-redesign.html reference):
+       bg #F3F4F6 (inner UI cards ใช้ #F8FAFC/#F9FAFB) · primary #2563EB · sidebar #1E3A5F
+       min-width 1440px · Inter · compact 11-13px
+       Dates in ค.ศ. 2-digit (YY=26) · Amounts comma + 2 decimals
+     ═══════════════════════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', 'Noto Sans Thai', sans-serif;
+    background: #F3F4F6;
+    color: #111827;
+    min-width: 1440px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  /* ─── LAYOUT SHELL ──────────────────── */
+  .layout { display: flex; min-height: 100vh; }
+  .main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* ─── TOPBAR ─────────────────────────── */
+  .topbar {
+    height: 56px; background: #fff; border-bottom: 1px solid #E5E7EB;
+    display: flex; align-items: center; padding: 0 24px; gap: 16px;
+    position: sticky; top: 0; z-index: 40;
+  }
+  .topbar-breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6B7280; }
+  .topbar-breadcrumb .current { color: #2563EB; font-weight: 600; }
+  .topbar-breadcrumb .sep { color: #D1D5DB; }
+  .topbar-spacer { flex: 1; }
+  .topbar-search {
+    display: flex; align-items: center; gap: 8px;
+    background: #F3F4F6; border-radius: 8px; padding: 6px 12px;
+    font-size: 13px; color: #9CA3AF; width: 220px;
+  }
+  .topbar-icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: #F3F4F6; cursor: pointer; font-size: 16px;
+  }
+  .topbar-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #2563EB; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff;
+  }
+  .branch-tag {
+    background: #EFF6FF; border: 1px solid #BFDBFE; color: #1D4ED8;
+    font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
+  }
+
+  /* ─── MAIN HEADER (gradient) ─────────── */
+  .main-header {
+    background: linear-gradient(90deg, #1E3A5F 0%, #2563EB 100%);
+    color: #fff; padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    position: sticky; top: 56px; z-index: 30;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .mh-left { display: flex; align-items: center; gap: 18px; }
+  .mh-title { display: flex; align-items: center; gap: 10px; }
+  .mh-title .ico {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: rgba(255,255,255,0.15); backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+  }
+  .mh-title h1 { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; }
+  .mh-title p { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 1px; }
+  .mh-divider { width: 1px; height: 32px; background: rgba(255,255,255,0.2); }
+  .mh-meta { display: flex; gap: 20px; }
+  .mh-meta-item .lbl { font-size: 10px; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.04em; }
+  .mh-meta-item .val { font-size: 12px; font-weight: 600; margin-top: 1px; }
+  .mh-right { display: flex; align-items: center; gap: 8px; }
+  .mh-badge {
+    padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
+    background: rgba(251,191,36,0.2); color: #FCD34D; border: 1px solid rgba(251,191,36,0.3);
+  }
+  .mh-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 7px 13px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; border: 1px solid transparent;
+    font-family: inherit; text-decoration: none;
+  }
+  .mh-btn-ghost { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.2); }
+  .mh-btn-ghost:hover { background: rgba(255,255,255,0.22); }
+  .mh-btn-primary { background: #10B981; color: #fff; }
+  .mh-btn-primary:hover { background: #059669; }
+
+  /* ─── SUB ACTION BAR (hover+pin) ─── */
+  .saab-wrap { position: sticky; top: 120px; z-index: 25; }
+  .saab-trigger {
+    height: 5px; cursor: pointer; position: relative;
+    background: linear-gradient(90deg, transparent, rgba(37,99,235,0.35) 20%, rgba(37,99,235,0.55) 50%, rgba(37,99,235,0.35) 80%, transparent);
+    display: flex; align-items: center; justify-content: center; transition: background 0.15s;
+  }
+  .saab-trigger:hover { background: linear-gradient(90deg, transparent, #2563EB 20%, #1D4ED8 50%, #2563EB 80%, transparent); }
+  .saab-trigger::after {
+    content: '⌄ action bar ⌄'; letter-spacing: 1px;
+    position: absolute; top: 4px; padding: 1px 12px; border-radius: 0 0 8px 8px;
+    background: #2563EB; color: #fff; font-size: 9px; font-weight: 700; white-space: nowrap;
+    opacity: 0; transform: translateY(-4px); transition: opacity 0.15s, transform 0.15s; pointer-events: none;
+  }
+  .saab-wrap:hover .saab-trigger::after { opacity: 1; transform: translateY(0); }
+  .saab {
+    background: #fff; border-bottom: 2px solid #2563EB; padding: 0 24px;
+    display: flex; align-items: center; gap: 10px;
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.25s ease, padding 0.25s ease;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.12);
+  }
+  .saab-wrap:hover .saab,
+  .saab-wrap.pinned .saab { max-height: 70px; padding: 10px 24px; }
+  .saab-wrap.pinned .saab-trigger { display: none; }
+  .saab-status { font-size: 11.5px; color: #6B7280; }
+  .saab-status strong { color: #111827; }
+  .saab-status .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #F59E0B; margin-right: 4px; vertical-align: middle; }
+  .pin-btn {
+    width: 30px; height: 30px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: 1px solid transparent;
+    cursor: pointer; font-size: 14px; color: #9CA3AF;
+    transition: all 0.15s; font-family: inherit;
+  }
+  .pin-btn:hover { background: #F3F4F6; color: #6B7280; }
+  .pin-btn.pinned { background: #FEF3C7; border-color: #FCD34D; color: #92400E; transform: rotate(-30deg); }
+
+  /* ─── CONTENT ──────────────────── */
+  .content { flex: 1; padding: 16px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+  /* ─── CARD ────────────────────── */
+  .card { background: #fff; border-radius: 8px; border: 1px solid #E5E7EB; padding: 14px; overflow: hidden; }
+  .card-header { display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid #F3F4F6; margin-bottom: 10px; }
+  .card-title { font-size: 12px; font-weight: 600; color: #374151; display: flex; align-items: center; gap: 6px; }
+  .card-title .ico { font-size: 14px; }
+  .card-spacer { flex: 1; }
+  .card-btn {
+    padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 600;
+    background: transparent; border: 1px solid #E5E7EB; color: #6B7280;
+    cursor: pointer; font-family: inherit;
+  }
+  .card-btn:hover { background: #F9FAFB; color: #2563EB; border-color: #BFDBFE; }
+  .card-btn.primary { background: #EFF6FF; border-color: #BFDBFE; color: #2563EB; }
+  .card.compact { padding: 10px 12px; }
+  .card.compact .card-header { padding-bottom: 6px; margin-bottom: 6px; }
+  .card.compact .field { margin-bottom: 0; }
+
+  /* ─── ROW LAYOUTS ───────────── */
+  .row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .row-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  /* ─── FIELDS ──────────────────── */
+  .field { display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
+  .field-label { font-size: 10px; font-weight: 600; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.03em; }
+  .field-value { font-size: 12.5px; color: #111827; font-weight: 500; }
+  .field-value.highlight { font-weight: 700; color: #2563EB; font-family: 'IBM Plex Mono', monospace; }
+  .field-value.warn { color: #EF4444; font-weight: 600; }
+  .field-value.success { color: #10B981; font-weight: 600; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+  .field-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; }
+
+  /* ─── BUTTONS ─────────────────── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 1px solid transparent; transition: all 0.15s;
+    font-family: inherit;
+  }
+  .btn-primary { background: #2563EB; color: #fff; }
+  .btn-primary:hover { background: #1D4ED8; }
+  .btn-success { background: #10B981; color: #fff; }
+  .btn-outline { background: #fff; color: #374151; border-color: #E5E7EB; }
+  .btn-outline:hover { background: #F9FAFB; }
+  .btn-ghost { background: transparent; color: #6B7280; }
+  .btn-ghost:hover { background: #F3F4F6; color: #374151; }
+
+  /* ─── MODALS ──────────────────── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(15,23,42,0.5);
+    z-index: 1000; display: none; align-items: flex-start; justify-content: center;
+    padding: 40px 20px; overflow-y: auto;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #fff; border-radius: 10px; box-shadow: 0 20px 60px rgba(15,23,42,0.3);
+    width: 100%; max-width: 640px; overflow: hidden;
+  }
+  .modal.sm { max-width: 480px; }
+  .modal.md { max-width: 720px; }
+  .modal.lg { max-width: 900px; }
+  .modal.xl { max-width: 1040px; }
+  .modal-head {
+    padding: 14px 18px; background: linear-gradient(180deg, #1E3A5F 0%, #172A47 100%);
+    color: #fff; display: flex; align-items: center; gap: 10px;
+  }
+  .modal-head .ttl { flex: 1; font-size: 13px; font-weight: 600; }
+  .modal-close-x {
+    width: 24px; height: 22px; border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; cursor: pointer; opacity: 0.75; color: #fff; border: none; background: transparent;
+  }
+  .modal-close-x:hover { background: #DC2626; opacity: 1; }
+  .modal-body { padding: 18px; max-height: 70vh; overflow-y: auto; font-size: 13px; }
+  .modal-foot {
+    padding: 12px 18px; background: #F8FAFC; border-top: 1px solid #E5E7EB;
+    display: flex; gap: 8px; justify-content: flex-end;
+  }
+
+  /* ─── FORM ────────────────────── */
+  .form-label { font-size: 10.5px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 4px; display: block; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; padding: 7px 10px; border: 1px solid #CBD5E1; border-radius: 5px;
+    font-size: 12.5px; font-family: inherit; outline: none; background: #fff;
+  }
+  .form-input:focus { border-color: #2563EB; box-shadow: 0 0 0 2px rgba(37,99,235,0.1); }
+  .form-textarea { min-height: 60px; resize: vertical; }
+
+  /* ─── SIDEBAR hide + pin (applies to SWT_SIDEBAR) ─── */
+  .swt-sb { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+  body:not(.swt-sb-pinned) .swt-sb { transform: translateX(-240px); box-shadow: none; }
+  body:not(.swt-sb-pinned).swt-sb-show .swt-sb { transform: translateX(0); box-shadow: 6px 0 24px rgba(0,0,0,0.3); }
+  body.swt-sb-pinned .swt-sb { transform: translateX(0); }
+  body.swt-body-pad:not(.swt-sb-pinned) { padding-left: 0 !important; }
+  .swt-sb-trigger {
+    position: fixed; left: 0; top: 56px;
+    width: 6px; height: calc(100vh - 56px);
+    background: linear-gradient(180deg, rgba(37,99,235,0.4), rgba(30,58,95,0.5));
+    cursor: pointer; z-index: 498;
+    transition: width 0.15s, background 0.15s;
+  }
+  .swt-sb-trigger:hover { width: 12px; background: linear-gradient(180deg, #2563EB, #1E3A5F); }
+  body.swt-sb-pinned .swt-sb-trigger { display: none; }
+  .swt-sb-pin {
+    position: absolute; top: 12px; right: 10px;
+    width: 26px; height: 26px; border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    cursor: pointer; font-size: 12px; color: #94A3B8;
+    transition: all 0.15s; font-family: inherit;
+  }
+  .swt-sb-pin:hover { background: rgba(255,255,255,0.18); color: #fff; }
+  body.swt-sb-pinned .swt-sb-pin { background: #FCD34D; color: #92400E; border-color: #F59E0B; transform: rotate(-30deg); }
+
+  ::-webkit-scrollbar { width: 7px; height: 7px; }
+  ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <!-- SIDEBAR: injected via SWT_SIDEBAR block (bottom of body) -->
+
+  <div class="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <span>{{MODULE}}</span><span class="sep">›</span><span class="current">{{PAGE}}</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">🔍 Search...</div>
+      <div class="topbar-icon">🔔</div>
+      <div class="branch-tag">HQ</div>
+      <div class="topbar-avatar">สช</div>
+    </div>
+
+    <!-- MAIN HEADER -->
+    <header class="main-header">
+      <div class="mh-left">
+        <div class="mh-title">
+          <div class="ico">📄</div>
+          <div>
+            <h1>{{PAGE_TITLE_TH}}</h1>
+            <p>{{PAGE_TITLE_EN}} ({{CODE}})</p>
+          </div>
+        </div>
+        <div class="mh-divider"></div>
+        <div class="mh-meta">
+          <div class="mh-meta-item"><div class="lbl">เลขที่</div><div class="val mono">{{CODE}}-26-0001</div></div>
+          <div class="mh-meta-item"><div class="lbl">วันที่</div><div class="val">01 ม.ค. 26</div></div>
+          <div class="mh-meta-item"><div class="lbl">สาขา</div><div class="val">HQ · สนง.ใหญ่</div></div>
+        </div>
+      </div>
+      <div class="mh-right">
+        <span class="mh-badge">🕓 ฉบับร่าง</span>
+        <a href="index.html" class="mh-btn mh-btn-ghost">📋 รายการ</a>
+        <button class="mh-btn mh-btn-primary" onclick="startSaveFlow()">✔ บันทึก</button>
+      </div>
+    </header>
+
+    <!-- SUB ACTION BAR -->
+    <div class="saab-wrap" id="saabWrap">
+      <div class="saab-trigger" title="Hover เพื่อดูเครื่องมือ · กด 📌 เพื่อปักหมุด"></div>
+      <div class="saab">
+        <button class="btn btn-outline">💾 Save Draft</button>
+        <button class="btn btn-primary" onclick="startSaveFlow()">✅ Submit</button>
+        <button class="btn btn-outline">🖨️ พิมพ์</button>
+        <button class="btn btn-ghost">❌ ยกเลิก</button>
+        <button class="btn btn-ghost" style="color:#EF4444;">🗑️ ลบ</button>
+        <div style="flex:1;"></div>
+        <span class="saab-status"><span class="dot"></span>สถานะ: <strong>ฉบับร่าง</strong> · แก้ไขล่าสุด: เมื่อสักครู่</span>
+        <button class="pin-btn" id="pinBtn" onclick="togglePin()">📌</button>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+      <!-- TODO: Replace with page-specific cards
+           Typical:
+           - Status strip (SC11 pills + 3-Way Match) if applicable
+           - Row 1: 2-col cards (e.g. Customer | Doc Info)
+           - Main data table / items card
+           - Row 2: 3-col bottom (e.g. Delivery | Payment | Summary)
+           - Notes card -->
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="ico">📋</span>ตัวอย่าง Card</div>
+        </div>
+        <div class="field-grid-2">
+          <div class="field"><div class="field-label">Label</div><div class="field-value">ตัวอย่าง</div></div>
+          <div class="field"><div class="field-label">Code</div><div class="field-value highlight">XX-26-0001</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SHARED COMPONENTS — paste from assets/
+     1. SWT_SIDEBAR (assets/swt-sidebar.html)
+     2. SWT_PAY (assets/swt-pay.html) — SC-3
+     3. SWT_ITEM_SEARCH (assets/swt-item-search.html) — SC-2
+     ═══════════════════════════════════════════════════════════ -->
+<!-- PASTE: SWT_SIDEBAR_START ... SWT_SIDEBAR_END -->
+<!-- PASTE: SWT_PAY_START ... SWT_PAY_END -->
+<!-- PASTE: SWT_ITEM_SEARCH_START ... SWT_ITEM_SEARCH_END -->
+
+<script>
+  function openModal(id){ document.getElementById(id).classList.add('open'); }
+  function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+  document.querySelectorAll('.modal-overlay').forEach(ov => ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); }));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open')); });
+
+  (function initSaabPin(){
+    var w = document.getElementById('saabWrap'), b = document.getElementById('pinBtn');
+    var saved = false; try { saved = localStorage.getItem('{{CODE}}_saab_pinned') === '1'; } catch(e){}
+    if (saved) { w.classList.add('pinned'); b.classList.add('pinned'); }
+  })();
+  function togglePin(){
+    var w = document.getElementById('saabWrap'), b = document.getElementById('pinBtn');
+    var on = w.classList.toggle('pinned');
+    b.classList.toggle('pinned', on);
+    try { localStorage.setItem('{{CODE}}_saab_pinned', on ? '1' : '0'); } catch(e){}
+  }
+
+  const DOC_TOTAL = 0;
+  const DOC_NO = '{{CODE}}-26-0001';
+  function startSaveFlow(){ if (window.swtOpenPay) window.swtOpenPay(DOC_TOTAL, DOC_NO, {paid: 0}); }
+</script>
+</body>
+</html>
