@@ -860,21 +860,6 @@
           </div>
         </div>
 
-        <!-- Install schedule strip -->
-        <div class="install-schedule">
-          <span class="ico-large">📅</span>
-          <div>
-            <span class="label">วันนัดจัดส่ง/ติดตั้ง:</span>
-            <input type="date" value="2026-04-25" id="installDate" onchange="updateStockLockHint()">
-            <span style="margin-left:10px;color:#64748B;font-size:11px">(เหลือ <b>3 วัน</b> จากวันนี้)</span>
-          </div>
-          <div class="need-install">
-            <input type="checkbox" checked id="needInstall" onchange="toggleInstallSchedule()">
-            <label for="needInstall">✅ ต้องการติดตั้ง → ส่ง SV-6</label>
-          </div>
-          <span class="lock-note">🔒 Stock locked ตั้งแต่วันนี้</span>
-        </div>
-
         <div class="items-wrap">
           <table class="items" id="itemsTable">
             <thead>
@@ -1039,26 +1024,53 @@
       <!-- BOTTOM: Delivery | Payment | Summary (bcsale pattern inline) -->
       <div class="row-bottom">
 
-        <!-- Delivery -->
+        <!-- Delivery & Install Schedule (SV-6 link) -->
         <div class="card">
           <div class="card-header">
-            <div class="card-title"><span class="ico">🚚</span>การจัดส่ง (Delivery)</div>
+            <div class="card-title"><span class="ico">🚚</span>การจัดส่ง & ติดตั้ง (Schedule)</div>
             <div class="card-spacer"></div>
             <button class="card-btn" onclick="openDeliveryAddr()">✎ แก้ไข</button>
           </div>
+
+          <!-- Warning if no schedule but has install items -->
+          <div id="noScheduleWarning" style="display:none;padding:8px 10px;background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;margin-bottom:10px;font-size:11px;color:#991B1B">
+            ⚠ <b>มีรายการติดตั้งแต่ยังไม่นัดหมาย</b> — ควรระบุวันก่อน save
+          </div>
+
           <div class="delivery-box">
             <strong>ที่อยู่จัดส่ง</strong>
             99/1 หมู่บ้านสุขสันต์<br>
             ถ.ลาดพร้าว เขตลาดพร้าว<br>
             กรุงเทพฯ 10230
           </div>
-          <div class="bb-field-row" style="margin-top:10px;">
-            <span class="lbl">นัดหมาย</span>
-            <span class="val">24 เม.ย. 26 · 13:00-17:00</span>
-          </div>
-          <div class="bb-field-row">
-            <span class="lbl">บริการติดตั้ง</span>
-            <span class="val" style="color:#7C3AED;">✓ ต้องการ</span>
+
+          <!-- Install schedule block -->
+          <div style="margin-top:10px;padding:10px 12px;background:linear-gradient(90deg,#F0F9FF 0%,#ECFDF5 100%);border:1px solid #BFDBFE;border-radius:6px">
+            <div class="bb-field-row" style="margin-top:0;padding-top:0">
+              <span class="lbl">📅 วันนัด</span>
+              <input type="date" value="2026-04-25" id="installDate" onchange="updateStockLockHint()"
+                     style="padding:3px 6px;border:1px solid #BFDBFE;border-radius:4px;font-size:11.5px;font-family:inherit">
+            </div>
+            <div class="bb-field-row">
+              <span class="lbl">🕒 ช่วงเวลา</span>
+              <select style="padding:3px 6px;border:1px solid #BFDBFE;border-radius:4px;font-size:11.5px;font-family:inherit;background:#fff">
+                <option>08:00 - 12:00</option>
+                <option selected>13:00 - 17:00</option>
+                <option>17:00 - 21:00</option>
+              </select>
+            </div>
+            <div class="bb-field-row">
+              <span class="lbl">🔧 บริการติดตั้ง</span>
+              <span class="val" style="color:#2563EB;font-weight:700">✓ ต้องการ (2 ชุด)</span>
+            </div>
+            <div class="bb-field-row">
+              <span class="lbl">🔒 Stock Lock</span>
+              <span class="val" style="color:#10B981;font-size:11px">ล็อกตั้งแต่วันนี้ถึงวันนัด</span>
+            </div>
+            <div class="bb-field-row" style="border-top:1px dashed #BFDBFE;margin-top:6px;padding-top:6px">
+              <span class="lbl">🚚 Job Queue</span>
+              <a href="sv6-delivery-install-mockup.html" style="color:#2563EB;font-weight:700;font-size:11.5px">→ ส่งไป SV-6 (admin จัด)</a>
+            </div>
           </div>
         </div>
 
