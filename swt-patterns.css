@@ -1,0 +1,375 @@
+/* ═══════════════════════════════════════════════════════════
+   SWT Shared UI Patterns
+   ---
+   Design-system-agnostic CSS helpers ใช้ได้กับทุก mockup
+   ไม่ว่าจะเป็น v2 (sl1/sl4) หรือ local (sv5/md3/cl1)
+
+   Naming: .swt-* prefix (ไม่ชนกับ local class)
+   Tokens: #1E3A5F #2563EB #10B981 #F59E0B #EF4444 #8B5CF6 #6B7280
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── 1) TOGGLE CARD — radio card with icon + description ── */
+.swt-toggle-group {
+  display: grid;
+  gap: 10px;
+  margin: 10px 0;
+}
+.swt-toggle-group.cols-2 { grid-template-columns: 1fr 1fr; }
+.swt-toggle-group.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.swt-toggle-group.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.swt-toggle-card {
+  display: block;
+  padding: 12px 14px;
+  border: 2px solid #E5E7EB;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.swt-toggle-card:hover { border-color: #93C5FD; background: #F8FAFC; }
+
+.swt-toggle-card input[type="radio"],
+.swt-toggle-card input[type="checkbox"] {
+  accent-color: #2563EB;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.swt-toggle-card .swt-tc-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+}
+.swt-toggle-card .swt-tc-ico { font-size: 16px; }
+.swt-toggle-card .swt-tc-desc {
+  padding-left: 24px;
+  font-size: 11px;
+  color: #6B7280;
+  line-height: 1.45;
+}
+.swt-toggle-card .swt-tc-desc b { font-weight: 700; color: #374151; }
+
+/* Active states — 5 flavors */
+.swt-toggle-card.active,
+.swt-toggle-card.primary { border-color: #2563EB; background: #EFF6FF; }
+.swt-toggle-card.active .swt-tc-head,
+.swt-toggle-card.primary .swt-tc-head { color: #1E40AF; }
+
+.swt-toggle-card.warn { border-color: #F59E0B; background: #FEF3C7; }
+.swt-toggle-card.warn .swt-tc-head { color: #92400E; }
+
+.swt-toggle-card.success { border-color: #10B981; background: #ECFDF5; }
+.swt-toggle-card.success .swt-tc-head { color: #065F46; }
+
+.swt-toggle-card.accent { border-color: #8B5CF6; background: #F3E8FF; }
+.swt-toggle-card.accent .swt-tc-head { color: #6D28D9; }
+
+.swt-toggle-card.danger { border-color: #EF4444; background: #FEF2F2; }
+.swt-toggle-card.danger .swt-tc-head { color: #991B1B; }
+
+/* Compact variant */
+.swt-toggle-card.compact { padding: 8px 10px; }
+.swt-toggle-card.compact .swt-tc-head { font-size: 12.5px; margin-bottom: 2px; }
+.swt-toggle-card.compact .swt-tc-desc { font-size: 10.5px; padding-left: 22px; }
+
+/* Inline description (on same line as head) */
+.swt-toggle-card .swt-tc-desc.inline {
+  margin-left: auto;
+  padding-left: 0;
+  text-align: right;
+}
+
+
+/* ─── 2) REFERENCE BLOCK — highlighted box (Vendor Job Ref, etc.) ── */
+.swt-ref-block {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #E5E7EB;
+  background: #F8FAFC;
+  margin: 10px 0;
+}
+.swt-ref-block .swt-rb-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: #1F2937;
+  font-size: 13px;
+}
+.swt-ref-block .swt-rb-ico { font-size: 16px; }
+.swt-ref-block .swt-rb-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 14px;
+  font-size: 12px;
+}
+.swt-ref-block .swt-rb-grid.cols-1 { grid-template-columns: 1fr; }
+.swt-ref-block .swt-rb-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.swt-ref-block .swt-rb-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.swt-ref-block .swt-rb-field { display: flex; flex-direction: column; gap: 2px; }
+.swt-ref-block .swt-rb-lbl {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6B7280;
+}
+.swt-ref-block .swt-rb-val {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #0F172A;
+}
+.swt-ref-block .swt-rb-val.mono {
+  font-family: 'Inter', monospace;
+  font-weight: 700;
+}
+.swt-ref-block .swt-rb-val a { color: #2563EB; font-weight: 600; text-decoration: none; }
+.swt-ref-block .swt-rb-val a:hover { text-decoration: underline; }
+
+/* Variants */
+.swt-ref-block.warn {
+  background: linear-gradient(90deg, #FEF3C7 0%, #FDE68A 100%);
+  border-color: #F59E0B;
+}
+.swt-ref-block.warn .swt-rb-head { color: #78350F; }
+.swt-ref-block.warn .swt-rb-lbl { color: #92400E; }
+.swt-ref-block.warn .swt-rb-val { color: #78350F; }
+.swt-ref-block.warn .swt-rb-val.mono { color: #B45309; }
+
+.swt-ref-block.info {
+  background: #EFF6FF;
+  border-color: #93C5FD;
+}
+.swt-ref-block.info .swt-rb-head { color: #1E40AF; }
+.swt-ref-block.info .swt-rb-lbl { color: #1D4ED8; }
+
+.swt-ref-block.success {
+  background: #ECFDF5;
+  border-color: #6EE7B7;
+}
+.swt-ref-block.success .swt-rb-head { color: #065F46; }
+.swt-ref-block.success .swt-rb-lbl { color: #047857; }
+
+.swt-ref-block.danger {
+  background: #FEF2F2;
+  border-color: #FECACA;
+}
+.swt-ref-block.danger .swt-rb-head { color: #991B1B; }
+.swt-ref-block.danger .swt-rb-lbl { color: #B91C1C; }
+
+/* Inline strip variant — single-line */
+.swt-ref-strip {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #FEF3C7;
+  border-left: 3px solid #F59E0B;
+  border-radius: 0 4px 4px 0;
+  font-size: 12px;
+  color: #78350F;
+  margin: 4px 0;
+}
+.swt-ref-strip b {
+  font-family: 'Inter', monospace;
+  font-weight: 700;
+  color: #B45309;
+  margin-left: 4px;
+}
+
+
+/* ─── 3) STATUS FLOW — breadcrumb-style process flow ── */
+.swt-flow {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.swt-flow-node {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #F3F4F6;
+  color: #9CA3AF;
+  border: 1px solid #E5E7EB;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.swt-flow-node.done {
+  background: #ECFDF5;
+  color: #065F46;
+  border-color: #A7F3D0;
+}
+.swt-flow-node.current {
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border-color: #93C5FD;
+  font-weight: 700;
+}
+.swt-flow-node.warn {
+  background: #FEF3C7;
+  color: #92400E;
+  border-color: #FCD34D;
+  font-weight: 700;
+}
+.swt-flow-node.danger {
+  background: #FEF2F2;
+  color: #991B1B;
+  border-color: #FECACA;
+}
+.swt-flow-arrow {
+  color: #CBD5E1;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 2px;
+}
+
+/* Flow wrapper (with label) */
+.swt-flow-wrap {
+  padding: 8px 12px;
+  background: #F8FAFC;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  margin: 8px 0;
+}
+.swt-flow-wrap .swt-flow-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6B7280;
+  margin-bottom: 6px;
+  display: block;
+}
+
+
+/* ─── 4) STATUS CHIP — inline status badge ── */
+.swt-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.swt-chip.success { background: #ECFDF5; color: #065F46; }
+.swt-chip.warn    { background: #FEF3C7; color: #92400E; }
+.swt-chip.danger  { background: #FEF2F2; color: #991B1B; }
+.swt-chip.info    { background: #EFF6FF; color: #1E40AF; }
+.swt-chip.neutral { background: #F3F4F6; color: #4B5563; }
+.swt-chip.accent  { background: #F3E8FF; color: #6D28D9; }
+
+
+/* ─── 5) STATUS TABLE — line-items with status column ── */
+.swt-status-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin: 8px 0;
+}
+.swt-status-table thead th {
+  padding: 7px 10px;
+  background: #F8FAFC;
+  text-align: left;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid #E5E7EB;
+}
+.swt-status-table thead th.center { text-align: center; }
+.swt-status-table thead th.right { text-align: right; }
+.swt-status-table tbody td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #F3F4F6;
+  vertical-align: middle;
+}
+.swt-status-table tbody td.mono {
+  font-family: 'Inter', monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.swt-status-table tbody td.center { text-align: center; }
+.swt-status-table tbody td.right { text-align: right; font-family: 'Inter', monospace; }
+.swt-status-table tbody tr:hover { background: #FAFBFC; }
+.swt-status-table tbody tr:last-child td { border-bottom: none; }
+
+
+/* ─── 6) ACTION BAR — button group with separator ── */
+.swt-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.swt-actions.divider {
+  padding-top: 10px;
+  border-top: 1px dashed #E5E7EB;
+}
+.swt-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  border: 1px solid #E5E7EB;
+  background: #fff;
+  color: #374151;
+  transition: all 0.15s;
+}
+.swt-btn:hover { background: #F9FAFB; border-color: #D1D5DB; }
+.swt-btn.primary { background: #2563EB; border-color: #2563EB; color: #fff; }
+.swt-btn.primary:hover { background: #1D4ED8; }
+.swt-btn.success { background: #10B981; border-color: #10B981; color: #fff; }
+.swt-btn.success:hover { background: #059669; }
+.swt-btn.warn { background: #F59E0B; border-color: #F59E0B; color: #fff; }
+.swt-btn.warn:hover { background: #D97706; }
+.swt-btn.danger { background: #EF4444; border-color: #EF4444; color: #fff; }
+.swt-btn.danger:hover { background: #DC2626; }
+.swt-btn.ghost { background: transparent; border-color: transparent; color: #6B7280; }
+.swt-btn.ghost:hover { background: #F3F4F6; color: #374151; }
+
+
+/* ─── 7) SECTION HELPER — new-feature highlight banner ── */
+.swt-new-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: linear-gradient(90deg, #FEF3C7 0%, #FDE68A 100%);
+  color: #92400E;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+}
+
+/* ─── 8) HEADER BADGE — inline badge near page title ── */
+.swt-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #DBEAFE;
+  color: #1E40AF;
+}
+.swt-type-badge.goods    { background: #DBEAFE; color: #1E40AF; }
+.swt-type-badge.outsource{ background: #FEF3C7; color: #92400E; }
+.swt-type-badge.service  { background: #F3E8FF; color: #6D28D9; }
+.swt-type-badge.other    { background: #F3F4F6; color: #4B5563; }

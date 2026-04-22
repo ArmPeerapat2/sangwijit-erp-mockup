@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MD-3 ทะเบียน Vendor - Sangwijit ERP Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="swt-patterns.css">
     <style>
         * {
             margin: 0;
@@ -664,7 +665,7 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
                         <div class="vendor-title">
                             <h2 id="detailVendorName">Daikin Sales (Thailand)</h2>
                             <div style="display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap">
-                                <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:#DBEAFE;color:#1E40AF;border-radius:12px;font-size:11px;font-weight:700">🏭 ผู้ผลิต / Goods Supplier</span>
+                                <span class="swt-type-badge goods">🏭 ผู้ผลิต / Goods Supplier</span>
                                 <span style="font-size:11px;color:#6B7280">· หมวด: Vendor สินค้า (ซื้อ/เคลม)</span>
                             </div>
                             <div class="vendor-meta">
@@ -689,29 +690,41 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
                                 </div>
                                 <div class="form-group">
                                     <span class="form-label">ประเภท Vendor <span style="color:#DC2626;font-weight:700">*</span></span>
-                                    <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
-                                        <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid #2563EB;background:#EFF6FF;border-radius:6px;cursor:pointer">
-                                            <input type="radio" name="vtype" value="goods" checked style="accent-color:#2563EB">
-                                            <span style="font-weight:600;color:#1E40AF;font-size:12.5px">🏭 ผู้ผลิต / Goods Supplier</span>
-                                            <span style="font-size:10.5px;color:#6B7280;margin-left:auto">ซื้อสินค้า · รับเคลม · Rebate</span>
+                                    <div class="swt-toggle-group" style="grid-template-columns:1fr;margin-top:4px">
+                                        <label class="swt-toggle-card compact primary">
+                                            <div class="swt-tc-head">
+                                                <input type="radio" name="vtype" value="goods" checked>
+                                                <span class="swt-tc-ico">🏭</span>
+                                                ผู้ผลิต / Goods Supplier
+                                                <span class="swt-tc-desc inline">ซื้อสินค้า · รับเคลม · Rebate</span>
+                                            </div>
                                         </label>
-                                        <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:6px;cursor:pointer">
-                                            <input type="radio" name="vtype" value="outsource" style="accent-color:#F59E0B">
-                                            <span style="font-weight:600;color:#374151;font-size:12.5px">🚚 ช่างนอก / Outsource Technician</span>
-                                            <span style="font-size:10.5px;color:#6B7280;margin-left:auto">รับงานซ่อมเป็นครั้ง · AP ค่าแรง</span>
+                                        <label class="swt-toggle-card compact">
+                                            <div class="swt-tc-head">
+                                                <input type="radio" name="vtype" value="outsource">
+                                                <span class="swt-tc-ico">🚚</span>
+                                                ช่างนอก / Outsource Technician
+                                                <span class="swt-tc-desc inline">รับงานซ่อมเป็นครั้ง · AP ค่าแรง</span>
+                                            </div>
                                         </label>
-                                        <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:6px;cursor:pointer">
-                                            <input type="radio" name="vtype" value="service" style="accent-color:#8B5CF6">
-                                            <span style="font-weight:600;color:#374151;font-size:12.5px">🛠️ ผู้ให้บริการ / Service Provider</span>
-                                            <span style="font-size:10.5px;color:#6B7280;margin-left:auto">ขนส่ง · บัญชี · IT</span>
+                                        <label class="swt-toggle-card compact">
+                                            <div class="swt-tc-head">
+                                                <input type="radio" name="vtype" value="service">
+                                                <span class="swt-tc-ico">🛠️</span>
+                                                ผู้ให้บริการ / Service Provider
+                                                <span class="swt-tc-desc inline">ขนส่ง · บัญชี · IT</span>
+                                            </div>
                                         </label>
-                                        <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:6px;cursor:pointer">
-                                            <input type="radio" name="vtype" value="other" style="accent-color:#6B7280">
-                                            <span style="font-weight:600;color:#374151;font-size:12.5px">🏢 อื่นๆ / Other</span>
-                                            <span style="font-size:10.5px;color:#6B7280;margin-left:auto">General expense</span>
+                                        <label class="swt-toggle-card compact">
+                                            <div class="swt-tc-head">
+                                                <input type="radio" name="vtype" value="other">
+                                                <span class="swt-tc-ico">🏢</span>
+                                                อื่นๆ / Other
+                                                <span class="swt-tc-desc inline">General expense</span>
+                                            </div>
                                         </label>
                                     </div>
-                                    <div style="font-size:10.5px;color:#9CA3AF;margin-top:4px">💡 ประเภทนี้ใช้แยก workflow ตั้งหนี้ AP · ช่างนอกจะ link ไปที่ Service Job (SV-5)</div>
+                                    <div style="font-size:10.5px;color:#9CA3AF;margin-top:6px">💡 ประเภทนี้ใช้แยก workflow ตั้งหนี้ AP · ช่างนอกจะ link ไปที่ Service Job (SV-5)</div>
                                 </div>
                                 <div class="form-group">
                                     <span class="form-label">ที่อยู่</span>
