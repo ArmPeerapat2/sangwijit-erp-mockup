@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>SV-Print — Templates จัดส่ง/ติดตั้ง (Trip Sheet + Job Sheet)</title>
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', 'Noto Sans Thai', sans-serif; background: #F3F4F6; color: #111827; min-width: 1440px; -webkit-font-smoothing: antialiased; }
+  .layout { display: flex; min-height: 100vh; }
+  .main { flex: 1; display: flex; flex-direction: column; }
+
+  /* Topbar */
+  .topbar { height: 56px; background: #fff; border-bottom: 1px solid #E5E7EB; display: flex; align-items: center; padding: 0 24px; gap: 16px; }
+  .crumb { color: #6B7280; font-size: 13px; }
+  .crumb strong { color: #111827; }
+  .topbar .grow { flex: 1; }
+  .topbar .search { width: 280px; height: 34px; border: 1px solid #E5E7EB; border-radius: 8px; padding: 0 12px; font-size: 13px; background: #F9FAFB; }
+  .topbar .ic { width: 34px; height: 34px; border-radius: 8px; background: #F3F4F6; display: flex; align-items: center; justify-content: center; color: #6B7280; cursor: pointer; }
+  .branch-tag { font-size: 12px; color: #374151; background: #EEF2FF; border: 1px solid #C7D2FE; padding: 4px 10px; border-radius: 999px; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #1E3A5F, #2563EB); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
+
+  /* Main Header */
+  .main-header { background: linear-gradient(135deg, #1E3A5F 0%, #2563EB 100%); color: #fff; padding: 24px 28px; }
+  .mh-title { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+  .mh-ic { width: 44px; height: 44px; background: rgba(255,255,255,.16); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+  .mh-ic-title h1 { font-size: 22px; font-weight: 700; margin-bottom: 2px; }
+  .mh-ic-title p { font-size: 13px; opacity: .85; }
+  .mh-actions { display: flex; gap: 10px; margin-top: 12px; }
+  .mh-actions .mh-btn { background: rgba(255,255,255,.14); color: #fff; padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,.18); font-size: 13px; cursor: pointer; font-weight: 600; }
+  .mh-actions .mh-btn.primary { background: #fff; color: #1E3A5F; }
+
+  /* Content */
+  .content { padding: 24px 28px; }
+
+  /* Print Toolbar */
+  .print-toolbar { background: #fff; border-radius: 12px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.04); display: flex; align-items: center; gap: 16px; margin-bottom: 20px; border: 1px solid #E5E7EB; }
+  .tab-switch { display: flex; gap: 2px; background: #F3F4F6; padding: 4px; border-radius: 10px; }
+  .tab-switch button { border: none; background: transparent; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; color: #6B7280; font-family: inherit; }
+  .tab-switch button.active { background: #fff; color: #1E3A5F; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .pt-meta { color: #6B7280; font-size: 13px; }
+  .pt-meta strong { color: #111827; }
+  .pt-grow { flex: 1; }
+  .pt-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid #E5E7EB; background: #fff; font-size: 13px; font-weight: 600; color: #374151; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; }
+  .pt-btn.primary { background: #2563EB; color: #fff; border-color: #2563EB; }
+
+  /* Tab Panels */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ===== A4 Paper Wrappers ===== */
+  .a4-landscape { width: 1123px; min-height: 794px; background: #fff; margin: 0 auto; padding: 24px 28px; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,.08); font-size: 12px; color: #111827; }
+  .a4-portrait { width: 794px; min-height: 1123px; background: #fff; margin: 0 auto; padding: 28px 32px; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,.08); font-size: 12px; color: #111827; }
+
+  /* ===== Trip Sheet (Landscape) ===== */
+  .ts-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1E3A5F; padding-bottom: 10px; margin-bottom: 12px; }
+  .ts-brand { display: flex; gap: 12px; align-items: center; }
+  .ts-brand .logo-box { width: 54px; height: 54px; background: linear-gradient(135deg, #1E3A5F, #2563EB); color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; }
+  .ts-brand .brand-info .co { font-size: 14px; font-weight: 800; color: #1E3A5F; }
+  .ts-brand .brand-info .addr { font-size: 10.5px; color: #6B7280; line-height: 1.5; }
+  .ts-title { text-align: center; flex: 1; padding: 0 12px; }
+  .ts-title h2 { font-size: 18px; font-weight: 800; color: #1E3A5F; letter-spacing: .5px; }
+  .ts-title p { font-size: 11px; color: #6B7280; margin-top: 2px; }
+  .ts-doc-info { text-align: right; font-size: 10.5px; color: #374151; line-height: 1.7; }
+  .ts-doc-info strong { color: #1E3A5F; }
+
+  .ts-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; margin-bottom: 12px; }
+  .ts-info-grid { background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 6px; padding: 10px 12px; }
+  .ts-info-grid table { width: 100%; font-size: 11px; }
+  .ts-info-grid td { padding: 3px 0; vertical-align: top; }
+  .ts-info-grid td.lbl { color: #6B7280; width: 35%; }
+  .ts-info-grid td.val { color: #111827; font-weight: 600; }
+
+  /* Embedded map (multi-pin route) */
+  .ts-map { position: relative; height: 220px; background: linear-gradient(135deg, #DBEAFE 0%, #E0F2FE 100%); border: 1px solid #BFDBFE; border-radius: 6px; overflow: hidden; }
+  .ts-map::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0, transparent 24px, rgba(100,116,139,.08) 24px, rgba(100,116,139,.08) 25px), repeating-linear-gradient(90deg, transparent 0, transparent 24px, rgba(100,116,139,.08) 24px, rgba(100,116,139,.08) 25px); }
+  .ts-map .road { position: absolute; background: #fff; height: 5px; box-shadow: 0 0 0 1px #CBD5E1; }
+  .ts-map .r1 { left: 5%; top: 30%; width: 90%; transform: rotate(-3deg); }
+  .ts-map .r2 { left: 20%; top: 60%; width: 70%; transform: rotate(4deg); }
+  .ts-map .r3 { left: 40%; top: 10%; width: 4px; height: 80%; background: #fff; }
+  .ts-map .label { position: absolute; font-size: 9.5px; color: #475569; font-weight: 600; background: rgba(255,255,255,.85); padding: 1px 6px; border-radius: 3px; }
+  .ts-map .route-line { position: absolute; height: 3px; background: #2563EB; border-radius: 2px; }
+  .ts-map .pin { position: absolute; width: 22px; height: 22px; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,.3); border: 2px solid #fff; }
+  .ts-map .pin.start { background: #10B981; }
+  .ts-map .pin.stop  { background: #2563EB; }
+  .ts-map .pin.end   { background: #EF4444; }
+
+  /* Trip Table */
+  .ts-table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+  .ts-table thead th { background: #1E3A5F; color: #fff; padding: 8px 6px; text-align: left; font-weight: 700; font-size: 10.5px; border: 1px solid #1E3A5F; }
+  .ts-table td { border: 1px solid #D1D5DB; padding: 6px; vertical-align: top; }
+  .ts-table tbody tr:nth-child(even) td { background: #F9FAFB; }
+  .ts-table td.c { text-align: center; }
+  .ts-table td.r { text-align: right; font-variant-numeric: tabular-nums; }
+  .ts-table .job-code { font-weight: 700; color: #1E3A5F; }
+  .ts-table .addr-cell { font-size: 10px; line-height: 1.4; }
+  .ts-table .addr-cell small { color: #6B7280; display: block; margin-top: 2px; }
+  .ts-table .sign-box { height: 28px; background: #FAFAFA; border: 1px dashed #D1D5DB; border-radius: 3px; }
+  .ts-table tfoot td { background: #F3F4F6; font-weight: 700; border: 1px solid #9CA3AF; }
+
+  .ts-footer { margin-top: 14px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding-top: 10px; border-top: 1px dashed #D1D5DB; }
+  .ts-sig-block { text-align: center; }
+  .ts-sig-line { border-bottom: 1px solid #9CA3AF; height: 40px; margin-bottom: 4px; }
+  .ts-sig-block p { font-size: 10px; color: #374151; }
+  .ts-sig-block small { color: #6B7280; font-size: 9px; }
+
+  /* ===== Job Sheet (Portrait) ===== */
+  .js-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1E3A5F; padding-bottom: 10px; margin-bottom: 12px; }
+  .js-brand { display: flex; gap: 10px; align-items: center; }
+  .js-brand .logo-box { width: 48px; height: 48px; background: linear-gradient(135deg, #1E3A5F, #2563EB); color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; }
+  .js-brand .co { font-size: 13px; font-weight: 800; color: #1E3A5F; }
+  .js-brand .addr { font-size: 10px; color: #6B7280; line-height: 1.5; }
+  .js-doc-info { text-align: right; font-size: 10px; line-height: 1.7; color: #374151; }
+  .js-doc-info .row { display: flex; gap: 10px; justify-content: flex-end; }
+  .js-doc-info strong { color: #1E3A5F; min-width: 70px; display: inline-block; text-align: left; }
+
+  .js-title { text-align: center; font-size: 16px; font-weight: 800; color: #1E3A5F; margin: 8px 0 12px; padding: 8px 0; background: #F3F4F6; border-radius: 6px; letter-spacing: 1px; }
+
+  /* QR + Barcode row */
+  .js-code-row { display: grid; grid-template-columns: 1fr 1.2fr; gap: 16px; margin-bottom: 14px; align-items: center; }
+  .js-qr-box { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px; background: #FAFAFA; }
+  .js-qr { width: 130px; height: 130px; background:
+    repeating-conic-gradient(#111 0 25%, #fff 0 50%) 0 0/10px 10px,
+    repeating-conic-gradient(#111 0 25%, #fff 0 50%) 5px 5px/10px 10px;
+    border: 2px solid #111; }
+  .js-qr-caption { font-size: 9.5px; color: #6B7280; text-align: center; }
+  .js-qr-caption strong { color: #1E3A5F; font-size: 11px; display: block; margin-bottom: 2px; }
+  .js-barcode-box { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px; border: 1px solid #E5E7EB; border-radius: 6px; background: #FAFAFA; }
+  .js-barcode {
+    height: 70px; width: 100%;
+    background-image: linear-gradient(90deg,
+      #000 0, #000 2px, #fff 2px, #fff 4px,
+      #000 4px, #000 7px, #fff 7px, #fff 9px,
+      #000 9px, #000 10px, #fff 10px, #fff 13px,
+      #000 13px, #000 16px, #fff 16px, #fff 18px,
+      #000 18px, #000 19px, #fff 19px, #fff 22px,
+      #000 22px, #000 25px, #fff 25px, #fff 27px,
+      #000 27px, #000 29px, #fff 29px, #fff 31px,
+      #000 31px, #000 34px, #fff 34px, #fff 36px
+    );
+    background-size: 36px 100%;
+    background-repeat: repeat-x;
+  }
+  .js-barcode-text { font-family: 'Courier New', monospace; font-size: 12px; letter-spacing: 4px; font-weight: 700; }
+  .js-barcode-caption { font-size: 9.5px; color: #6B7280; text-align: center; }
+  .js-barcode-caption strong { color: #1E3A5F; font-size: 11px; display: block; margin-bottom: 2px; }
+
+  /* Body: 2-column */
+  .js-body { display: grid; grid-template-columns: 1fr 1.2fr; gap: 14px; margin-bottom: 12px; }
+  .js-panel { border: 1px solid #E5E7EB; border-radius: 6px; overflow: hidden; }
+  .js-panel-head { background: #1E3A5F; color: #fff; padding: 6px 10px; font-size: 11px; font-weight: 700; }
+  .js-panel-body { padding: 10px; font-size: 10.5px; line-height: 1.7; }
+  .js-panel-body table { width: 100%; }
+  .js-panel-body td { padding: 2px 0; vertical-align: top; }
+  .js-panel-body td.lbl { color: #6B7280; width: 38%; }
+  .js-panel-body td.val { color: #111827; font-weight: 600; }
+
+  .js-map-mini { margin-top: 8px; height: 140px; position: relative; background: linear-gradient(135deg, #DBEAFE 0%, #E0F2FE 100%); border: 1px solid #BFDBFE; border-radius: 4px; overflow: hidden; }
+  .js-map-mini::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0, transparent 18px, rgba(100,116,139,.08) 18px, rgba(100,116,139,.08) 19px), repeating-linear-gradient(90deg, transparent 0, transparent 18px, rgba(100,116,139,.08) 18px, rgba(100,116,139,.08) 19px); }
+  .js-map-mini .road { position: absolute; background: #fff; box-shadow: 0 0 0 1px #CBD5E1; }
+  .js-map-mini .r1 { left: 5%; top: 50%; width: 90%; height: 4px; transform: rotate(-4deg); }
+  .js-map-mini .r2 { left: 55%; top: 10%; width: 4px; height: 80%; }
+  .js-map-mini .pin { position: absolute; left: 58%; top: 46%; width: 22px; height: 22px; border-radius: 50%; background: #EF4444; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
+  .js-map-mini .label { position: absolute; background: rgba(255,255,255,.9); padding: 1px 5px; border-radius: 3px; font-size: 9px; color: #374151; font-weight: 600; }
+
+  /* Items table */
+  .js-items { width: 100%; border-collapse: collapse; font-size: 10px; }
+  .js-items thead th { background: #1E3A5F; color: #fff; padding: 6px 5px; text-align: left; font-size: 10px; font-weight: 700; border: 1px solid #1E3A5F; }
+  .js-items td { border: 1px solid #D1D5DB; padding: 4px 5px; }
+  .js-items td.c { text-align: center; }
+  .js-items td.r { text-align: right; font-variant-numeric: tabular-nums; }
+  .js-items tbody tr:nth-child(even) td { background: #F9FAFB; }
+  .js-items .code { font-family: 'Courier New', monospace; font-size: 9.5px; color: #1E3A5F; font-weight: 700; }
+  .js-items tfoot td { background: #EEF2FF; font-weight: 700; }
+
+  /* Notes + Cash Collection */
+  .js-notes { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; margin-bottom: 12px; }
+  .js-note-card { border: 1px solid #E5E7EB; border-radius: 6px; padding: 8px 10px; font-size: 10.5px; }
+  .js-note-card .ttl { font-weight: 700; color: #1E3A5F; margin-bottom: 4px; }
+  .js-cash-card { border: 2px solid #F59E0B; background: #FFFBEB; border-radius: 6px; padding: 8px 10px; font-size: 10.5px; }
+  .js-cash-card .ttl { font-weight: 700; color: #92400E; display: flex; align-items: center; gap: 4px; }
+  .js-cash-card .amt { font-size: 18px; font-weight: 800; color: #92400E; margin-top: 2px; }
+
+  /* Signature footer */
+  .js-sig-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px; padding-top: 10px; border-top: 1px dashed #D1D5DB; }
+  .js-sig { text-align: center; }
+  .js-sig-line { border-bottom: 1px solid #9CA3AF; height: 50px; margin-bottom: 4px; }
+  .js-sig p { font-size: 10px; color: #374151; }
+  .js-sig small { color: #6B7280; font-size: 9px; }
+
+  /* Page Footer (webshop promo + small qr) */
+  .js-pfooter { margin-top: 14px; padding: 8px 10px; background: #1E3A5F; color: #fff; border-radius: 6px; display: flex; align-items: center; gap: 12px; font-size: 10px; }
+  .js-pfooter .small-qr { width: 46px; height: 46px; background:
+    repeating-conic-gradient(#fff 0 25%, #1E3A5F 0 50%) 0 0/6px 6px,
+    repeating-conic-gradient(#fff 0 25%, #1E3A5F 0 50%) 3px 3px/6px 6px;
+    border: 2px solid #fff; border-radius: 4px; flex-shrink: 0; }
+  .js-pfooter .f-content { flex: 1; line-height: 1.5; }
+  .js-pfooter .f-content strong { display: block; font-size: 11px; margin-bottom: 2px; }
+
+  /* Print Media */
+  @media print {
+    .topbar, .main-header, .print-toolbar { display: none !important; }
+    .content { padding: 0 !important; background: #fff !important; }
+    body { background: #fff !important; min-width: 0 !important; }
+    .a4-landscape, .a4-portrait { box-shadow: none !important; margin: 0 !important; }
+    @page { margin: 8mm; }
+    .tab-panel { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <div class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="crumb">Portal &gt; Service / Delivery &gt; <strong>SV-Print Templates</strong></div>
+      <div class="grow"></div>
+      <input class="search" placeholder="ค้นหา Job / บิล / เลขเอกสาร" />
+      <div class="ic">🔔</div>
+      <span class="branch-tag">สาขา HQ — คลังแม่กลอง</span>
+      <div class="avatar">PS</div>
+    </div>
+
+    <!-- Main Header -->
+    <div class="main-header">
+      <div class="mh-title">
+        <div class="mh-ic">🖨️</div>
+        <div class="mh-ic-title">
+          <h1>SV-Print — Templates จัดส่ง/ติดตั้ง</h1>
+          <p>เทมเพลทสำหรับพิมพ์เอกสารส่งงานหน้างาน · Trip Sheet (รายรถ/รายทริป) + Job Sheet (รายบิล)</p>
+        </div>
+      </div>
+      <div class="mh-actions">
+        <button class="mh-btn">⬇️ ดาวน์โหลด PDF</button>
+        <button class="mh-btn">📧 ส่ง Email ให้คนขับ</button>
+        <button class="mh-btn primary">🖨️ พิมพ์ทันที</button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Print Toolbar -->
+      <div class="print-toolbar">
+        <div class="tab-switch">
+          <button id="tab-btn-trip" class="active" onclick="switchTab('trip')">🚛 Trip Sheet (ใบจ่ายงานรถ)</button>
+          <button id="tab-btn-job"  onclick="switchTab('job')">📋 Job Sheet (ใบส่งของรายบิล)</button>
+        </div>
+        <div class="pt-meta">เลขที่เอกสาร: <strong id="pt-doc">DLV26-04-0203</strong> · พิมพ์โดย: <strong>สมใจ ส. (DLV Coord)</strong> · วันที่: <strong>23 เม.ย. 26</strong></div>
+        <div class="pt-grow"></div>
+        <button class="pt-btn" onclick="window.print()">🖨️ พิมพ์</button>
+        <button class="pt-btn primary">📤 ส่งให้คนขับ</button>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- TAB 1: TRIP SHEET (A4 Landscape) -->
+      <!-- ============================================ -->
+      <div id="tab-trip" class="tab-panel active">
+        <div class="a4-landscape">
+
+          <!-- Header -->
+          <div class="ts-header">
+            <div class="ts-brand">
+              <div class="logo-box">ศว</div>
+              <div class="brand-info">
+                <div class="co">บริษัท แสงวิจิตร เทรดดิ้ง จำกัด (SWT)</div>
+                <div class="addr">123 ถนนสมุทรสงคราม ต.แม่กลอง อ.เมือง จ.สมุทรสงคราม 75000 · โทร. 034-711-xxx · เลขประจำตัวผู้เสียภาษี 0-7500-xxxxx-xx-x</div>
+              </div>
+            </div>
+            <div class="ts-title">
+              <h2>ใบรับมอบสินค้า / รายงานการทำงาน</h2>
+              <p>Trip Sheet — แผนกจัดส่ง & ติดตั้ง</p>
+            </div>
+            <div class="ts-doc-info">
+              <div><strong>เลขที่เอกสาร:</strong> DLV26-04-0203</div>
+              <div><strong>Print Date:</strong> 23 เม.ย. 26 · 08:15 น.</div>
+              <div><strong>พิมพ์โดย:</strong> สมใจ ส.</div>
+              <div><strong>ทริปวันที่:</strong> 23 เม.ย. 26</div>
+            </div>
+          </div>
+
+          <!-- Trip Info + Map -->
+          <div class="ts-row">
+            <div class="ts-info-grid">
+              <table>
+                <tr>
+                  <td class="lbl">รถ:</td><td class="val">CM-16 (Isuzu D-Max 6 ล้อ) ทะ. บม-9999 สส.</td>
+                  <td class="lbl">คนขับ:</td><td class="val">สมชาย ก. (Tel. 081-234-5678)</td>
+                </tr>
+                <tr>
+                  <td class="lbl">ผู้ช่วย:</td><td class="val">ประเสริฐ พ. · วิชัย ส.</td>
+                  <td class="lbl">ทีม:</td><td class="val">ภายใน (Internal)</td>
+                </tr>
+                <tr>
+                  <td class="lbl">เริ่มออก:</td><td class="val">09:00 น. (แม่กลอง HQ)</td>
+                  <td class="lbl">คาดกลับ:</td><td class="val">16:30 น.</td>
+                </tr>
+                <tr>
+                  <td class="lbl">รวมจุดส่ง:</td><td class="val">5 จุด (6 บิล)</td>
+                  <td class="lbl">น้ำหนักรวม:</td><td class="val">~425 กก.</td>
+                </tr>
+                <tr>
+                  <td class="lbl">ระยะทางรวม:</td><td class="val"><strong>33.61 กม.</strong></td>
+                  <td class="lbl">เวลาขับโดยรวม:</td><td class="val"><strong>~48 นาที</strong></td>
+                </tr>
+                <tr>
+                  <td class="lbl">เก็บเงินปลายทาง:</td><td class="val" style="color:#92400E;">฿12,800 (2 บิล)</td>
+                  <td class="lbl">โซน:</td><td class="val">Z-1 เมืองแม่กลอง + Z-2 ใกล้เคียง</td>
+                </tr>
+              </table>
+            </div>
+            <div class="ts-map">
+              <div class="road r1"></div>
+              <div class="road r2"></div>
+              <div class="road r3"></div>
+              <div class="label" style="left: 3%; top: 35%;">ถ.สมุทรสงคราม</div>
+              <div class="label" style="left: 42%; top: 72%;">ถ.เอกชัย</div>
+              <div class="label" style="left: 30%; top: 15%;">ถ.พระราม 2</div>
+
+              <div class="route-line" style="left: 12%; top: 50%; width: 14%; transform: rotate(-20deg);"></div>
+              <div class="route-line" style="left: 26%; top: 44%; width: 15%; transform: rotate(15deg);"></div>
+              <div class="route-line" style="left: 41%; top: 52%; width: 18%; transform: rotate(-10deg);"></div>
+              <div class="route-line" style="left: 58%; top: 48%; width: 16%; transform: rotate(12deg);"></div>
+              <div class="route-line" style="left: 74%; top: 56%; width: 14%; transform: rotate(-5deg);"></div>
+
+              <div class="pin start" style="left: 10%;  top: 47%;">S</div>
+              <div class="pin stop"  style="left: 25%;  top: 41%;">1</div>
+              <div class="pin stop"  style="left: 40%;  top: 49%;">2</div>
+              <div class="pin stop"  style="left: 57%;  top: 45%;">3</div>
+              <div class="pin stop"  style="left: 73%;  top: 53%;">4</div>
+              <div class="pin end"   style="left: 87%;  top: 55%;">E</div>
+
+              <div class="label" style="left: 2%; top: 38%; background: #10B981; color:#fff;">🏭 HQ แม่กลอง</div>
+              <div class="label" style="right: 2%; top: 62%; background: #EF4444; color:#fff;">🏁 จุดสุดท้าย</div>
+            </div>
+          </div>
+
+          <!-- Trip Table -->
+          <table class="ts-table">
+            <thead>
+              <tr>
+                <th style="width: 28px;">#</th>
+                <th style="width: 100px;">Job / บิล</th>
+                <th style="width: 180px;">สถานที่ส่ง / ติดตั้ง</th>
+                <th style="width: 140px;">ลูกค้า</th>
+                <th style="width: 88px;">โทร.</th>
+                <th style="width: 62px;">เวลานัด</th>
+                <th style="width: 150px;">รายการสินค้า</th>
+                <th style="width: 120px;">ลายมือชื่อลูกค้า</th>
+                <th style="width: 62px;">เก็บเงิน</th>
+                <th style="width: 70px;">หมายเหตุ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="c">1</td>
+                <td><span class="job-code">JOB26-00891</span><br><small style="color:#6B7280;">SL25-04-0891</small></td>
+                <td class="addr-cell">99/1 ม.4 ต.แม่กลอง<br><small>อ.เมือง สส. 75000 (ห่าง 3.2 กม.)</small></td>
+                <td>คุณวิชัย รุ่งเจริญ</td>
+                <td class="c">081-234-5678</td>
+                <td class="c">10:00</td>
+                <td class="addr-cell">LG Washer FV1408S4W × 1<br>Samsung TV 55" × 1</td>
+                <td><div class="sign-box"></div></td>
+                <td class="r" style="color:#92400E;">฿8,500</td>
+                <td class="addr-cell"><small>ติดตั้งด้วย</small></td>
+              </tr>
+              <tr>
+                <td class="c">2</td>
+                <td><span class="job-code">JOB26-00892</span><br><small style="color:#6B7280;">SL25-04-0895</small></td>
+                <td class="addr-cell">กาลพฤกษ์ ม.บางกอกบูเลอวาร์ด<br><small>ต.บางพรม อ.บางคนที สส. (ห่าง 8.7 กม.)</small></td>
+                <td>คุณสมหญิง ใจดี</td>
+                <td class="c">082-111-2222</td>
+                <td class="c">11:00</td>
+                <td class="addr-cell">Mitsubishi Fridge × 1</td>
+                <td><div class="sign-box"></div></td>
+                <td class="c">-</td>
+                <td class="addr-cell"><small>บ้านชั้น 2</small></td>
+              </tr>
+              <tr>
+                <td class="c">3</td>
+                <td><span class="job-code">JOB26-00893</span><br><small style="color:#6B7280;">SL25-04-0899</small></td>
+                <td class="addr-cell">ร้านอาหาร สุดใจ เลขที่ 45<br><small>ต.บ้านปรก อ.เมือง สส. (ห่าง 5.1 กม.)</small></td>
+                <td>ร้านสุดใจ (คุณอรุณ)</td>
+                <td class="c">089-777-8888</td>
+                <td class="c">13:00</td>
+                <td class="addr-cell">Hoshizaki Ice Maker × 1<br>Freezer 500L × 1<br>Food Warmer × 2</td>
+                <td><div class="sign-box"></div></td>
+                <td class="r" style="color:#92400E;">฿4,300</td>
+                <td class="addr-cell"><small>โซน Commercial</small></td>
+              </tr>
+              <tr>
+                <td class="c">4</td>
+                <td><span class="job-code">JOB26-00894</span><br><small style="color:#6B7280;">SL25-04-0902</small></td>
+                <td class="addr-cell">67/3 ซ.แม่กลอง-ดำเนิน<br><small>ต.แม่กลอง อ.เมือง สส. (ห่าง 2.8 กม.)</small></td>
+                <td>คุณประยุทธ นาคทอง</td>
+                <td class="c">061-555-6666</td>
+                <td class="c">14:30</td>
+                <td class="addr-cell">Samsung AC 18,000 BTU × 1</td>
+                <td><div class="sign-box"></div></td>
+                <td class="c">-</td>
+                <td class="addr-cell"><small>ติดตั้งแอร์</small></td>
+              </tr>
+              <tr>
+                <td class="c">5</td>
+                <td><span class="job-code">JOB26-00895</span><br><small style="color:#6B7280;">SL25-04-0907</small></td>
+                <td class="addr-cell">สำนักงาน อบต.บางช้าง<br><small>อ.อัมพวา สส. (ห่าง 13.6 กม.)</small></td>
+                <td>อบต.บางช้าง</td>
+                <td class="c">034-751-111</td>
+                <td class="c">15:30</td>
+                <td class="addr-cell">Panasonic Projector × 1<br>Screen 100" × 1</td>
+                <td><div class="sign-box"></div></td>
+                <td class="c">-</td>
+                <td class="addr-cell"><small>เก็บใบแทน<br>ใบกำกับภาษีต้นฉบับ</small></td>
+              </tr>
+              <tr>
+                <td class="c">6</td>
+                <td><span class="job-code">JOB26-00896</span><br><small style="color:#6B7280;">SL25-04-0907</small></td>
+                <td class="addr-cell">(จุดเดียวกันกับลำดับ 5)<br><small>งวดต่อเนื่อง</small></td>
+                <td>อบต.บางช้าง</td>
+                <td class="c">034-751-111</td>
+                <td class="c">15:30</td>
+                <td class="addr-cell">Whiteboard 4 × 8 ฟุต × 2</td>
+                <td><div class="sign-box"></div></td>
+                <td class="c">-</td>
+                <td class="addr-cell"><small>ต่อเนื่องจาก #5</small></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6" class="r">รวมทั้งหมด:</td>
+                <td class="c">6 บิล / 11 รายการ</td>
+                <td></td>
+                <td class="r" style="color:#92400E;">฿12,800</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <!-- Signature Footer -->
+          <div class="ts-footer">
+            <div class="ts-sig-block">
+              <div class="ts-sig-line"></div>
+              <p><strong>คนขับรถ</strong></p>
+              <small>(สมชาย ก.)   วันที่ ……… / ……… / ………</small>
+            </div>
+            <div class="ts-sig-block">
+              <div class="ts-sig-line"></div>
+              <p><strong>ผู้ช่วยขึ้น-ลงสินค้า</strong></p>
+              <small>(ประเสริฐ พ. · วิชัย ส.)</small>
+            </div>
+            <div class="ts-sig-block">
+              <div class="ts-sig-line"></div>
+              <p><strong>หัวหน้าแผนกจัดส่ง</strong></p>
+              <small>(ผู้มอบงาน)   วันที่ ……… / ……… / ………</small>
+            </div>
+            <div class="ts-sig-block">
+              <div class="ts-sig-line"></div>
+              <p><strong>แคชเชียร์ (รับเงินคืน)</strong></p>
+              <small>(ผู้รับเงิน)   วันที่ ……… / ……… / ………</small>
+            </div>
+          </div>
+
+        </div><!-- /a4-landscape -->
+      </div><!-- /tab-trip -->
+
+      <!-- ============================================ -->
+      <!-- TAB 2: JOB SHEET (A4 Portrait) -->
+      <!-- ============================================ -->
+      <div id="tab-job" class="tab-panel">
+        <div class="a4-portrait">
+
+          <!-- Header -->
+          <div class="js-header">
+            <div class="js-brand">
+              <div class="logo-box">ศว</div>
+              <div>
+                <div class="co">บริษัท แสงวิจิตร เทรดดิ้ง จำกัด (SWT)</div>
+                <div class="addr">
+                  123 ถ.สมุทรสงคราม ต.แม่กลอง อ.เมือง สส. 75000<br>
+                  โทร. 034-711-xxx · Fax 034-712-xxx · TAX ID 0-7500-xxxxx-xx-x
+                </div>
+              </div>
+            </div>
+            <div class="js-doc-info">
+              <div class="row"><strong>เลขที่เอกสาร:</strong> JOB26-00891</div>
+              <div class="row"><strong>Ref. บิล:</strong> SL25-04-0891</div>
+              <div class="row"><strong>Print Date:</strong> 23 เม.ย. 26 · 08:15</div>
+              <div class="row"><strong>Sale By:</strong> สมใจ ส.</div>
+              <div class="row"><strong>Print By:</strong> สมใจ ส.</div>
+            </div>
+          </div>
+
+          <div class="js-title">📍 แผนที่สำหรับจัดส่งสินค้า / ใบส่งของ (Job Sheet)</div>
+
+          <!-- QR + Barcode -->
+          <div class="js-code-row">
+            <div class="js-qr-box">
+              <div class="js-qr"></div>
+              <div class="js-qr-caption">
+                <strong>QR-Code สำหรับช่าง Scan เปิด Job</strong>
+                สแกนเพื่อเปิด WeService / ดูประวัติและรายละเอียดงาน
+              </div>
+            </div>
+            <div class="js-barcode-box">
+              <div class="js-barcode"></div>
+              <div class="js-barcode-text">JOB26 - 00891</div>
+              <div class="js-barcode-caption">
+                <strong>Barcode ระบบภายใน</strong>
+                สแกนเพื่อปิดงานและยืนยันส่งมอบที่ปลายทาง
+              </div>
+            </div>
+          </div>
+
+          <!-- Body 2-col -->
+          <div class="js-body">
+            <!-- Ship-To Panel -->
+            <div class="js-panel">
+              <div class="js-panel-head">📍 ข้อมูลผู้รับ (Ship-To)</div>
+              <div class="js-panel-body">
+                <table>
+                  <tr><td class="lbl">ชื่อผู้รับ:</td><td class="val">คุณวิชัย รุ่งเจริญ</td></tr>
+                  <tr><td class="lbl">เบอร์มือถือ:</td><td class="val">081-234-5678</td></tr>
+                  <tr><td class="lbl">เบอร์สำรอง:</td><td class="val">034-711-123</td></tr>
+                  <tr><td class="lbl">ที่อยู่:</td><td class="val">99/1 ม.4 ซ.แม่กลอง-ดำเนิน 3<br>ต.แม่กลอง อ.เมือง จ.สมุทรสงคราม 75000</td></tr>
+                  <tr><td class="lbl">Latitude:</td><td class="val">13.4098765</td></tr>
+                  <tr><td class="lbl">Longitude:</td><td class="val">99.9987654</td></tr>
+                  <tr><td class="lbl">Landmark:</td><td class="val">ตรงข้ามวัดเพชรสมุทรวรวิหาร</td></tr>
+                  <tr><td class="lbl">ประเภท:</td><td class="val" style="color:#2563EB;">🚛 จัดส่ง + ติดตั้ง</td></tr>
+                </table>
+                <div class="js-map-mini">
+                  <div class="road r1"></div>
+                  <div class="road r2"></div>
+                  <div class="pin">📍</div>
+                  <div class="label" style="left: 4%; top: 8%;">ถ.พระราม 2</div>
+                  <div class="label" style="left: 70%; top: 78%;">วัดเพชรสมุทร</div>
+                  <div class="label" style="left: 5%; bottom: 5%; background: rgba(37,99,235,.9); color:#fff;">ระยะทาง ~3.2 กม.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Items Panel -->
+            <div class="js-panel">
+              <div class="js-panel-head">📦 รายการสินค้า (Items) — 19 รายการ</div>
+              <table class="js-items">
+                <thead>
+                  <tr><th style="width: 24px;">#</th><th style="width: 70px;">รหัส</th><th>ชื่อสินค้า</th><th style="width: 40px;">จำนวน</th><th style="width: 40px;">หน่วย</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td class="c">1</td><td class="code">WSH-LG-FV14</td><td>LG Washer FV1408S4W 8 กก.</td><td class="c">1</td><td class="c">เครื่อง</td></tr>
+                  <tr><td class="c">2</td><td class="code">TV-SMS-55Q80</td><td>Samsung TV QLED 55" Q80D</td><td class="c">1</td><td class="c">เครื่อง</td></tr>
+                  <tr><td class="c">3</td><td class="code">REM-SMS-01</td><td>รีโมท Samsung (Smart Touch)</td><td class="c">1</td><td class="c">ชิ้น</td></tr>
+                  <tr><td class="c">4</td><td class="code">STD-TV-55</td><td>ขาตั้ง TV 55" (Tabletop)</td><td class="c">1</td><td class="c">ชุด</td></tr>
+                  <tr><td class="c">5</td><td class="code">WLM-TV-55</td><td>ขาแขวน TV 55" (Wall-mount)</td><td class="c">1</td><td class="c">ชุด</td></tr>
+                  <tr><td class="c">6</td><td class="code">CBL-HDMI-2M</td><td>สาย HDMI 2 เมตร (4K)</td><td class="c">2</td><td class="c">เส้น</td></tr>
+                  <tr><td class="c">7</td><td class="code">HOS-WSH-12</td><td>สายน้ำดี Washing 1.2 ม.</td><td class="c">1</td><td class="c">เส้น</td></tr>
+                  <tr><td class="c">8</td><td class="code">HOS-DRN-15</td><td>สายน้ำทิ้ง Washing 1.5 ม.</td><td class="c">1</td><td class="c">เส้น</td></tr>
+                  <tr><td class="c">9</td><td class="code">FIT-TAP-01</td><td>ข้อต่อก๊อกน้ำ (Universal)</td><td class="c">1</td><td class="c">ชิ้น</td></tr>
+                  <tr><td class="c">10</td><td class="code">DOC-WRN-LG</td><td>ใบรับประกัน LG (1 ปี)</td><td class="c">1</td><td class="c">ใบ</td></tr>
+                  <tr><td class="c">11</td><td class="code">DOC-WRN-SMS</td><td>ใบรับประกัน Samsung (2 ปี)</td><td class="c">1</td><td class="c">ใบ</td></tr>
+                  <tr><td class="c">12</td><td class="code">MAN-LG-FV14</td><td>คู่มือการใช้งาน LG Washer</td><td class="c">1</td><td class="c">เล่ม</td></tr>
+                  <tr><td class="c">13</td><td class="code">MAN-SMS-Q80</td><td>คู่มือการใช้งาน Samsung TV</td><td class="c">1</td><td class="c">เล่ม</td></tr>
+                  <tr><td class="c">14</td><td class="code">BAT-AAA-4P</td><td>ถ่าน AAA (4 ก้อน/แพ็ค)</td><td class="c">1</td><td class="c">แพ็ค</td></tr>
+                  <tr><td class="c">15</td><td class="code">CAP-DUS-TV</td><td>ผ้าคลุมกันฝุ่น TV</td><td class="c">1</td><td class="c">ผืน</td></tr>
+                  <tr><td class="c">16</td><td class="code">STK-BRN-SWT</td><td>สติกเกอร์ศูนย์บริการ SWT</td><td class="c">2</td><td class="c">ชิ้น</td></tr>
+                  <tr><td class="c">17</td><td class="code">BOL-ANC-01</td><td>สกรู/พุกยึดขาแขวน (ชุด)</td><td class="c">1</td><td class="c">ชุด</td></tr>
+                  <tr><td class="c">18</td><td class="code">TAP-SEL-01</td><td>เทปใสปิดกล่อง</td><td class="c">1</td><td class="c">ม้วน</td></tr>
+                  <tr><td class="c">19</td><td class="code">BAG-CUS-SWT</td><td>ถุงของแถม (โบรชัวร์สินค้า)</td><td class="c">1</td><td class="c">ใบ</td></tr>
+                </tbody>
+                <tfoot>
+                  <tr><td colspan="3" class="r">รวม:</td><td class="c">21</td><td class="c">รายการ</td></tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          <!-- Notes + Cash -->
+          <div class="js-notes">
+            <div class="js-note-card">
+              <div class="ttl">📝 หมายเหตุ / คำแนะนำพิเศษ</div>
+              • ลูกค้าแจ้งบ้านชั้น 2 — ต้องใช้บันได<br>
+              • ขอให้ช่างแต่งกายสุภาพ สวมรองเท้าผ้าใบ<br>
+              • ทดสอบเปิด-ปิดหน้าลูกค้า 1 รอบ ก่อนเซ็นรับมอบ<br>
+              • ขอถ่ายรูปส่งมอบก่อนออก (2 รูป: สินค้าติดตั้งเรียบร้อย + ลูกค้าเซ็นรับ)
+            </div>
+            <div class="js-cash-card">
+              <div class="ttl">💰 เก็บเงินปลายทาง (COD)</div>
+              <div class="amt">฿ 8,500.00</div>
+              <div style="color:#92400E; margin-top:4px;">เงินสด/โอน/บัตรเครดิต (PayPlus POS)<br>ใบเสร็จเล่มที่ RC26-03 หน้า 45</div>
+            </div>
+          </div>
+
+          <!-- Signature Row -->
+          <div class="js-sig-row">
+            <div class="js-sig">
+              <div class="js-sig-line"></div>
+              <p><strong>ผู้รับสินค้า</strong></p>
+              <small>(ลูกค้า)  วันที่ ……… / ……… / ………</small>
+            </div>
+            <div class="js-sig">
+              <div class="js-sig-line"></div>
+              <p><strong>ผู้ส่งสินค้า / ช่างติดตั้ง</strong></p>
+              <small>(แสงวิจิตร)  วันที่ ……… / ……… / ………</small>
+            </div>
+            <div class="js-sig">
+              <div class="js-sig-line"></div>
+              <p><strong>พยาน</strong></p>
+              <small>(……………………)  วันที่ ……… / ……… / ………</small>
+            </div>
+          </div>
+
+          <!-- Page Footer -->
+          <div class="js-pfooter">
+            <div class="small-qr"></div>
+            <div class="f-content">
+              <strong>แสงวิจิตร ERP · Tracking System</strong>
+              สแกน QR ด้านซ้ายเพื่อเช็คสถานะจัดส่ง / ประวัติการซ่อม / รับประกันออนไลน์ · Website: www.sangwichit.co.th<br>
+              หากสินค้ามีปัญหา กรุณาติดต่อศูนย์บริการแสงวิจิตรภายใน 7 วันทำการ โทร. 034-711-xxx กด 2
+            </div>
+          </div>
+
+        </div><!-- /a4-portrait -->
+      </div><!-- /tab-job -->
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-switch button').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.getElementById('tab-btn-' + name).classList.add('active');
+
+    // update doc number in toolbar
+    const doc = document.getElementById('pt-doc');
+    if (name === 'trip') doc.textContent = 'DLV26-04-0203';
+    else doc.textContent = 'JOB26-00891';
+  }
+</script>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 ---
-updated_at: "2026-04-21T12:00:00+07:00"
+updated_at: "2026-04-23T15:00:00+07:00"
 status: "active"
-current_focus: "PO/WH gap closure — Path 3 (rename cleanup) ✅ → Path 2 (build 5 gap mockups)"
+current_focus: "SV Module Loop Closure ✅ 2026-04-23 → next: PO/WH Path 2 (build 5 gap mockups)"
 branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
@@ -11,8 +11,20 @@ project_type: "frontend-mockup (HTML + docs)"
 ## Objective
 ออกแบบ Frontend ERP Web Portal (Sangwijit Group) เหนือ Dynamics 365 Business Central — สร้าง HTML mockup ครบทุกหน้า, เตรียม handoff ให้ทีม dev
 
-## Current State (2026-04-21 — latest)
-- **PO/WH Rename Cleanup ✅ NEW 2026-04-21** — ปรับเลข mockup ให้ตรง `sangwijit-portal-skill` spec
+## Current State (2026-04-23 — latest)
+- **SV Module Loop Closure ✅ NEW 2026-04-23** — ปิด gap บริการ P1 ครบ
+  - **Rename + Archive:**
+    - `sv1-service-queue-mockup.html` → `sv-q-service-queue-mockup.html` (เนื้อหาจริง = Queue Dashboard)
+    - `sv2-service-invoice-mockup.html` → `_archive/` (Service Invoice logic ย้ายเข้า SV-4 ตาม Q3=B)
+    - `sv4-warranty-check-mockup.html` → `_archive/` (**ไม่ใช้** — ทีมเช็คประกัน manual กับ Vendor · Q2 decision)
+  - **NEW 2 pages built:**
+    - `sv1-service-intake-mockup.html` — ERP Form 7 sections: Doc header · Customer · Product+Serial · Warranty toggle (3 options) · Appointment/Photo/Ref/Timeline tabs · ประมาณค่า · **ไม่มี auto warranty check** (manual field)
+    - `sv4-service-close-mockup.html` — Close/QA + Invoice merged: Job ref · QA Checklist 6 ข้อ · Before/After photos · Digital signature 2 เซ็น + Rating · **Billing mode dual** (🏢 Vendor / 👤 ลูกค้า split summary) · BC Sync post
+  - **Spec ambiguity resolved (Q1=A):** SV-2 Mobile Job Card ตัดออก — sv5 Desktop Job Card cover ทั้งหมด
+  - **Sidebar rollout:** 69 ไฟล์ updated (2-pass Python script) · 6 SV entries ใน group บริการ: SV-Q · SV-1 (NEW) · SV-3 · SV-4 (NEW) · SV-5 · SV-6
+  - **index.html:** Service section (5 cards · count 5 pages) + sidebar nav updated
+  - **dev-handoff-spec.html:** SV table + file list updated
+- **PO/WH Rename Cleanup ✅ 2026-04-21** — ปรับเลข mockup ให้ตรง `sangwijit-portal-skill` spec
   - `po3-vendor-invoice-mockup.html` → `po6-ap-invoice-mockup.html` (เดิมผิดแมป — จริงๆ คือ PO-6 AP Invoice)
   - `po-rebate-dashboard.html` → `po7-rebate-dashboard.html`
   - `whr-goods-issue-mockup.html` → `wh3-sales-issue-mockup.html` (spec: WH-3 = Sales Issue)
@@ -26,6 +38,18 @@ project_type: "frontend-mockup (HTML + docs)"
   - PO-8 Deposit Bill บิลฝาก (ยังไม่มี)
   - WH-NM Non-Move Report (ยังไม่มี — spec ละเอียด)
   - WH-R Stock Card (ยังไม่มี — spec สั้น ต้องเสริม Aging bucket)
+
+## SV Module — Final Structure (post 2026-04-23 closure)
+| รหัส | ไฟล์ | สถานะ |
+|---|---|---|
+| SV-Q | `sv-q-service-queue-mockup.html` | ✅ Queue dashboard + 5 KPI + SLA |
+| SV-1 | `sv1-service-intake-mockup.html` | ✅ NEW Intake form · warranty manual |
+| SV-3 | `sv3-spare-part-issue-mockup.html` | ✅ Parts Req (ใน/นอก Comp) |
+| SV-4 | `sv4-service-close-mockup.html` | ✅ NEW Close/QA + dual-billing Invoice (Vendor/ลูกค้า) |
+| SV-5 | `sv5-job-card-mockup.html` | ✅ Desktop Job Card (cover SV-2 spec too — ไม่มี mobile เพิ่ม) |
+| SV-6 | `sv6-delivery-install-mockup.html` + 2 sub (booking modal + print templates) | ✅ Delivery & Install |
+| CL-1 | `cl1-claims-mockup.html` | ⏳ Phase 2 deferred (BC365 audit) |
+| CL-2/3 | — | ⏳ Phase 2 deferred |
 
 ## Previous Focus (2026-04-19)
 - **Payment QR 2 ชั้น ✅ NEW 2026-04-19** — Tier-A 5 ใน `swt-link.js` (~260 บรรทัดเพิ่ม)

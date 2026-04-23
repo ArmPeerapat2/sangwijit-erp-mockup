@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>SV-6.1 Booking Modal — Ship-To + Slot | Sangwijit ERP Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+  /* ═══════════════════════════════════════════════════════════
+     SV-6.1 Booking Modal — Ship-To + Slot Picker (2-step wizard)
+     Reference: Siam TV รูป 10 (Ship-To) + รูป 11 (Slot)
+     ═══════════════════════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', 'Noto Sans Thai', sans-serif;
+    background: #F3F4F6; color: #111827; min-width: 1440px;
+    font-size: 13px; line-height: 1.45;
+  }
+  .layout { display: flex; min-height: 100vh; }
+  .main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* TOPBAR */
+  .topbar { height: 56px; background: #fff; border-bottom: 1px solid #E5E7EB; display: flex; align-items: center; padding: 0 24px; gap: 16px; position: sticky; top: 0; z-index: 40; }
+  .topbar-breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6B7280; }
+  .topbar-breadcrumb .current { color: #2563EB; font-weight: 600; }
+  .topbar-breadcrumb .sep { color: #D1D5DB; }
+  .topbar-spacer { flex: 1; }
+  .topbar-search { display: flex; align-items: center; gap: 8px; background: #F3F4F6; border-radius: 8px; padding: 6px 12px; font-size: 13px; color: #9CA3AF; width: 220px; }
+  .topbar-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #F3F4F6; cursor: pointer; font-size: 16px; }
+  .topbar-avatar { width: 32px; height: 32px; border-radius: 50%; background: #2563EB; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; }
+  .branch-tag { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1D4ED8; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
+
+  /* MAIN HEADER */
+  .main-header { background: linear-gradient(90deg, #1E3A5F 0%, #2563EB 100%); color: #fff; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; position: sticky; top: 56px; z-index: 30; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .mh-left { display: flex; align-items: center; gap: 18px; }
+  .mh-title { display: flex; align-items: center; gap: 10px; }
+  .mh-title .ico { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .mh-title h1 { font-size: 16px; font-weight: 700; line-height: 1.15; }
+  .mh-title p { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 1px; }
+  .mh-divider { width: 1px; height: 32px; background: rgba(255,255,255,0.2); }
+  .mh-meta { display: flex; gap: 20px; }
+  .mh-meta-item .lbl { font-size: 10px; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.04em; }
+  .mh-meta-item .val { font-size: 13px; font-weight: 700; margin-top: 1px; font-family: 'Inter', monospace; }
+  .mh-btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 13px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid transparent; font-family: inherit; }
+  .mh-btn-ghost { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.2); }
+  .mh-btn-ghost:hover { background: rgba(255,255,255,0.22); }
+
+  .content { flex: 1; padding: 16px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+  /* INTRO STRIP */
+  .context-strip {
+    display: grid; grid-template-columns: 1fr auto; gap: 14px;
+    background: #EFF6FF; border: 1px solid #BFDBFE;
+    border-radius: 8px; padding: 12px 16px;
+  }
+  .context-strip .ctx-title { font-size: 13px; font-weight: 800; color: #1E3A5F; display: flex; align-items: center; gap: 6px; }
+  .context-strip .ctx-sub { font-size: 11.5px; color: #475569; margin-top: 3px; }
+  .context-strip .ctx-ref {
+    background: #fff; border: 1px solid #93C5FD; border-radius: 6px;
+    padding: 8px 12px; display: flex; gap: 14px; font-size: 11.5px;
+  }
+  .context-strip .ctx-ref .f-lbl { color: #6B7280; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+  .context-strip .ctx-ref .f-val { color: #1E40AF; font-weight: 700; font-family: 'Inter', monospace; }
+
+  /* WIZARD STEP INDICATOR */
+  .wz-steps {
+    display: flex; align-items: center; gap: 0; padding: 14px 20px;
+    background: #fff; border: 1px solid #E5E7EB; border-radius: 8px;
+  }
+  .wz-step { display: flex; align-items: center; gap: 8px; padding: 4px 10px; }
+  .wz-step .num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #E5E7EB; color: #9CA3AF;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 13px;
+  }
+  .wz-step.active .num { background: #2563EB; color: #fff; }
+  .wz-step.done .num { background: #10B981; color: #fff; }
+  .wz-step .lbl { display: flex; flex-direction: column; gap: 1px; }
+  .wz-step .lbl .title { font-size: 12.5px; font-weight: 700; color: #9CA3AF; }
+  .wz-step.active .lbl .title { color: #1E3A5F; }
+  .wz-step.done .lbl .title { color: #065F46; }
+  .wz-step .lbl .sub { font-size: 10.5px; color: #9CA3AF; }
+  .wz-connector {
+    flex: 1; height: 2px; background: #E5E7EB; margin: 0 6px;
+    position: relative;
+  }
+  .wz-connector.done { background: #10B981; }
+  .wz-summary { margin-left: auto; font-size: 11.5px; color: #6B7280; display: flex; gap: 14px; }
+  .wz-summary b { color: #1E40AF; }
+
+  /* STEP PANEL */
+  .step-panel {
+    background: #fff; border: 1px solid #E5E7EB; border-radius: 8px;
+    overflow: hidden;
+  }
+  .step-panel-head {
+    padding: 12px 18px; background: #F8FAFC; border-bottom: 1px solid #E5E7EB;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .step-panel-head .step-no {
+    background: #2563EB; color: #fff; font-weight: 800; font-size: 12px;
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-panel-head .step-title { font-size: 14px; font-weight: 700; color: #1E3A5F; }
+  .step-panel-head .step-desc { font-size: 11.5px; color: #6B7280; margin-left: auto; }
+  .step-panel-body { padding: 16px; }
+
+  /* ─── MAP CANVAS ─── */
+  .map-wrap {
+    border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden;
+    background: #fff; margin-bottom: 14px;
+  }
+  .map-toolbar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border-bottom: 1px solid #E5E7EB; background: #F9FAFB;
+  }
+  .map-search {
+    flex: 1; display: flex; align-items: center; gap: 6px;
+    border: 1px solid #E5E7EB; background: #fff;
+    padding: 6px 10px; border-radius: 6px; font-size: 12px;
+  }
+  .map-search input { flex: 1; border: 0; outline: 0; font-family: inherit; font-size: 12px; }
+  .map-search button { border: 0; background: transparent; color: #2563EB; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .map-action { display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; font-size: 11px; font-weight: 600; border: 1px solid #E5E7EB; background: #fff; color: #374151; border-radius: 5px; cursor: pointer; font-family: inherit; }
+  .map-action:hover { border-color: #93C5FD; color: #2563EB; }
+
+  .map-canvas {
+    position: relative; height: 320px;
+    background: linear-gradient(180deg, #DDEBF7 0%, #E5F0F9 30%, #F4F8E8 70%, #FCF5DC 100%);
+    overflow: hidden;
+  }
+  .map-canvas .road { position: absolute; background: #fff; box-shadow: 0 0 0 1px #E5E7EB; }
+  .map-canvas .road.h { left: 0; right: 0; height: 6px; }
+  .map-canvas .road.v { top: 0; bottom: 0; width: 6px; }
+  .map-canvas .road.thick { background: #FFE08A; height: 9px; box-shadow: 0 0 0 1px #F59E0B; }
+  .map-canvas .label-tag {
+    position: absolute; background: rgba(255,255,255,0.92);
+    border: 1px solid #E5E7EB; border-radius: 4px;
+    padding: 2px 6px; font-size: 10px; color: #475569; font-weight: 600;
+  }
+  .map-canvas .compass { position: absolute; top: 10px; right: 10px; background: #fff; border: 1px solid #E5E7EB; border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #6B7280; flex-direction: column; }
+  .map-canvas .scale { position: absolute; bottom: 10px; left: 10px; background: rgba(255,255,255,0.92); border: 1px solid #E5E7EB; border-radius: 4px; padding: 3px 8px; font-size: 10px; font-weight: 700; color: #475569; display: flex; align-items: center; gap: 4px; }
+  .map-canvas .scale-bar { display: inline-block; width: 40px; height: 4px; background: #1F2937; }
+  .map-canvas .attr { position: absolute; bottom: 4px; right: 8px; font-size: 9px; color: #6B7280; }
+
+  .map-pin {
+    position: absolute; transform: translate(-50%, -100%);
+    cursor: pointer; z-index: 5;
+  }
+  .map-pin .head {
+    width: 28px; height: 28px; border-radius: 50% 50% 50% 0;
+    background: #EF4444; transform: rotate(-45deg);
+    border: 2px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .map-pin .pop { position: absolute; left: 50%; top: -36px; transform: translateX(-50%); background: #1F2937; color: #fff; font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; white-space: nowrap; }
+  .map-pin .pop::after { content: ''; position: absolute; left: 50%; bottom: -4px; transform: translateX(-50%); border: 4px solid transparent; border-top-color: #1F2937; }
+
+  /* ─── FORM GRID ─── */
+  .form-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px;
+  }
+  .form-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .form-grid .span-2 { grid-column: span 2; }
+  .f-group { display: flex; flex-direction: column; gap: 4px; }
+  .f-lbl {
+    font-size: 11px; font-weight: 700; color: #475569;
+    text-transform: uppercase; letter-spacing: 0.03em;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .f-lbl .req { color: #EF4444; }
+  .f-lbl .hint { color: #9CA3AF; font-weight: 500; text-transform: none; letter-spacing: 0; font-size: 10.5px; }
+  .f-input, .f-select, .f-textarea {
+    padding: 8px 10px; border: 1px solid #D1D5DB; border-radius: 5px;
+    font-family: inherit; font-size: 12.5px; color: #0F172A; background: #fff;
+  }
+  .f-input.mono { font-family: 'Inter', monospace; font-weight: 600; }
+  .f-input:focus, .f-select:focus, .f-textarea:focus { outline: 2px solid #93C5FD; outline-offset: 0; border-color: #2563EB; }
+  .f-textarea { min-height: 64px; resize: vertical; }
+  .f-with-icon { position: relative; }
+  .f-with-icon .icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 13px; color: #9CA3AF; pointer-events: none; }
+  .f-with-icon .f-input { padding-left: 30px; }
+  .f-helper { font-size: 10.5px; color: #6B7280; margin-top: 2px; }
+
+  /* ─── WIZARD FOOTER ─── */
+  .wz-footer {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 18px; background: #F8FAFC; border-top: 1px solid #E5E7EB;
+  }
+  .wz-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 9px 18px; border-radius: 6px; font-size: 12.5px; font-weight: 700;
+    cursor: pointer; font-family: inherit; border: 1px solid;
+  }
+  .wz-btn.ghost { background: #fff; border-color: #E5E7EB; color: #6B7280; }
+  .wz-btn.ghost:hover { background: #F3F4F6; color: #374151; }
+  .wz-btn.danger { background: #EF4444; border-color: #EF4444; color: #fff; }
+  .wz-btn.danger:hover { background: #DC2626; }
+  .wz-btn.primary { background: #2563EB; border-color: #2563EB; color: #fff; }
+  .wz-btn.primary:hover { background: #1D4ED8; }
+  .wz-btn.success { background: #10B981; border-color: #10B981; color: #fff; }
+  .wz-btn.success:hover { background: #059669; }
+
+  /* ─── SLOT GRID ─── */
+  .slot-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; }
+  .slot-toolbar {
+    padding: 10px 14px; border-bottom: 1px solid #E5E7EB;
+    background: #F8FAFC; display: flex; align-items: center; gap: 10px;
+  }
+  .slot-toolbar .date-pick {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #fff; border: 1px solid #BFDBFE; color: #1E40AF;
+    padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700;
+  }
+  .slot-toolbar .date-pick input { border: 0; background: transparent; color: #1E40AF; font-family: 'Inter', monospace; font-size: 12px; font-weight: 700; outline: none; width: 110px; }
+  .slot-toolbar .day-shift {
+    display: flex; gap: 0;
+  }
+  .slot-toolbar .day-shift button {
+    padding: 6px 10px; font-size: 12px; font-weight: 600;
+    background: #fff; border: 1px solid #E5E7EB; color: #6B7280;
+    cursor: pointer; font-family: inherit;
+  }
+  .slot-toolbar .day-shift button:first-child { border-radius: 5px 0 0 5px; }
+  .slot-toolbar .day-shift button:last-child { border-radius: 0 5px 5px 0; border-left: 0; }
+  .slot-toolbar .filter-zone {
+    margin-left: auto;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11.5px; color: #475569;
+  }
+  .slot-toolbar .filter-zone select {
+    padding: 5px 8px; border: 1px solid #D1D5DB; border-radius: 5px;
+    font-family: inherit; font-size: 12px; background: #fff;
+  }
+
+  /* Slot legend */
+  .slot-legend {
+    display: flex; gap: 14px; padding: 8px 14px;
+    background: #F8FAFC; border-bottom: 1px solid #E5E7EB;
+    font-size: 10.5px; color: #6B7280;
+  }
+  .slot-legend .lg-item { display: inline-flex; align-items: center; gap: 5px; }
+  .slot-legend .lg-swatch {
+    display: inline-block; width: 12px; height: 12px; border-radius: 3px;
+    border: 1px solid #E5E7EB;
+  }
+
+  .slot-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    padding: 14px;
+  }
+  .slot-cell {
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 9px 11px; border: 1px solid #E5E7EB; border-radius: 6px;
+    background: #fff; cursor: pointer; transition: all 0.15s;
+    font-family: inherit;
+  }
+  .slot-cell:hover { border-color: #93C5FD; background: #F0F9FF; }
+  .slot-cell .time {
+    font-family: 'Inter', monospace; font-size: 13px; font-weight: 800;
+    color: #0F172A; letter-spacing: -0.3px;
+  }
+  .slot-cell .load { font-size: 10.5px; color: #6B7280; }
+  .slot-cell .load b { color: #475569; font-weight: 700; }
+
+  /* Load color */
+  .slot-cell.free { background: #ECFDF5; border-color: #A7F3D0; }
+  .slot-cell.free .load b { color: #065F46; }
+  .slot-cell.light { background: #F0F9FF; border-color: #BFDBFE; }
+  .slot-cell.light .load b { color: #1E40AF; }
+  .slot-cell.busy { background: #FEF3C7; border-color: #FCD34D; }
+  .slot-cell.busy .load b { color: #92400E; }
+  .slot-cell.full { background: #FEE2E2; border-color: #FCA5A5; cursor: not-allowed; opacity: 0.85; }
+  .slot-cell.full .load b { color: #991B1B; }
+  .slot-cell.selected { border: 2px solid #2563EB; background: #DBEAFE; transform: scale(1.03); box-shadow: 0 4px 10px rgba(37,99,235,0.18); }
+  .slot-cell.selected .time { color: #1E3A5F; }
+  .slot-cell.selected .load b { color: #1E40AF; }
+  .slot-cell.selected::after {
+    content: '✓'; position: absolute; top: 4px; right: 6px;
+    width: 16px; height: 16px; border-radius: 50%; background: #2563EB;
+    color: #fff; font-size: 11px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .slot-cell { position: relative; }
+
+  /* RIGHT PANEL — shift summary + tech availability */
+  .slot-side {
+    border: 1px solid #E5E7EB; border-radius: 8px; background: #fff;
+    display: flex; flex-direction: column;
+  }
+  .slot-side .side-head {
+    padding: 10px 14px; border-bottom: 1px solid #E5E7EB;
+    background: #F8FAFC; font-size: 12.5px; font-weight: 700; color: #1F2937;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .slot-side .shift-chunk {
+    padding: 12px 14px; border-bottom: 1px solid #F3F4F6;
+  }
+  .slot-side .shift-chunk:last-child { border-bottom: 0; }
+  .slot-side .chunk-title { font-size: 11px; color: #6B7280; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .slot-side .shift-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 6px;
+    padding: 6px 0; font-size: 12px; align-items: center;
+  }
+  .slot-side .shift-row .tech {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .slot-side .shift-row .tech-ico {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #DBEAFE; color: #1E40AF; font-size: 10px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .slot-side .shift-row.out .tech-ico { background: #FEF3C7; color: #92400E; }
+  .slot-side .shift-row .tech-name { font-weight: 600; color: #1F2937; }
+  .slot-side .shift-row .tech-meta { font-size: 10.5px; color: #6B7280; }
+  .slot-side .shift-row .avail {
+    font-family: 'Inter', monospace; font-size: 11.5px; font-weight: 700; color: #10B981;
+  }
+  .slot-side .shift-row .avail.busy { color: #F59E0B; }
+  .slot-side .shift-row .avail.full { color: #EF4444; }
+
+  /* Summary preview */
+  .booking-summary {
+    margin-top: 14px;
+    background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%);
+    border: 1px solid #A7F3D0; border-radius: 8px; padding: 14px;
+  }
+  .booking-summary .bs-head { font-size: 12px; font-weight: 800; color: #065F46; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .booking-summary .bs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 16px; font-size: 11.5px; }
+  .booking-summary .bs-grid .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: #047857; font-weight: 600; }
+  .booking-summary .bs-grid .val { font-size: 12.5px; font-weight: 700; color: #064E3B; margin-top: 2px; }
+  .booking-summary .bs-grid .val.mono { font-family: 'Inter', monospace; }
+
+  .note-row {
+    display: flex; gap: 8px; align-items: center;
+    background: #FEF3C7; border: 1px solid #FCD34D; color: #78350F;
+    padding: 8px 12px; border-radius: 6px; font-size: 11.5px;
+    margin-bottom: 12px;
+  }
+
+  ::-webkit-scrollbar { width: 7px; height: 7px; }
+  ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <span>Sales</span><span class="sep">›</span><span>SL-4 บิลขาย</span><span class="sep">›</span><span class="current">SV-6.1 Booking Modal</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">🔍 Search...</div>
+      <div class="topbar-icon">🔔</div>
+      <div class="branch-tag">HQ</div>
+      <div class="topbar-avatar">ขจ</div>
+    </div>
+
+    <!-- MAIN HEADER -->
+    <header class="main-header">
+      <div class="mh-left">
+        <div class="mh-title">
+          <div class="ico">📅</div>
+          <div>
+            <h1>SV-6.1 Booking Modal — จองคิวจัดส่ง/ติดตั้ง</h1>
+            <p>2-Step Wizard · Ship-To + Slot Picker · ใช้ Component <a href="sc10-map-picker-mockup.html" style="color:#93C5FD;">SC-10 Map Picker</a></p>
+          </div>
+        </div>
+        <div class="mh-divider"></div>
+        <div class="mh-meta">
+          <div class="mh-meta-item"><div class="lbl">เรียกจาก</div><div class="val">SL-4 บิลขาย</div></div>
+          <div class="mh-meta-item"><div class="lbl">บิล Ref</div><div class="val">SL25-04-0891</div></div>
+          <div class="mh-meta-item"><div class="lbl">ลูกค้า</div><div class="val">น.ส.เดือนเพ็ญ ข.</div></div>
+        </div>
+      </div>
+      <div class="mh-right">
+        <a href="slq-sales-queue-mockup.html" class="mh-btn mh-btn-ghost">← กลับ Sales Queue</a>
+        <a href="sv6-delivery-install-mockup.html" class="mh-btn mh-btn-ghost">🚚 SV-6 Job Queue</a>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- CONTEXT -->
+      <div class="context-strip">
+        <div>
+          <div class="ctx-title">📋 บริบทการใช้งาน — Context</div>
+          <div class="ctx-sub">Sale กรอกบิลที่ SL-4 เสร็จ → ต้องการจองคิวส่ง/ติดตั้ง → เปิด Modal นี้ → (1) ยืนยัน Ship-To + ปักหมุด → (2) เลือก Slot → Confirm → ระบบสร้าง Job ใน SV-6 อัตโนมัติ</div>
+        </div>
+        <div class="ctx-ref">
+          <div><div class="f-lbl">รายการ</div><div class="f-val">3 SKU · 65 กก.</div></div>
+          <div><div class="f-lbl">มูลค่าบิล</div><div class="f-val">฿48,500</div></div>
+          <div><div class="f-lbl">ต้องติดตั้ง?</div><div class="f-val">ใช่ (Split AC)</div></div>
+        </div>
+      </div>
+
+      <!-- WIZARD STEPS -->
+      <div class="wz-steps">
+        <div class="wz-step active">
+          <div class="num">1</div>
+          <div class="lbl">
+            <div class="title">Ship-To + ปักหมุด</div>
+            <div class="sub">ที่อยู่ + พิกัด Lat/Lng</div>
+          </div>
+        </div>
+        <div class="wz-connector"></div>
+        <div class="wz-step">
+          <div class="num">2</div>
+          <div class="lbl">
+            <div class="title">เลือก Slot เวลา</div>
+            <div class="sub">วัน + ช่วงเวลา + ช่าง</div>
+          </div>
+        </div>
+        <div class="wz-connector"></div>
+        <div class="wz-step">
+          <div class="num">✓</div>
+          <div class="lbl">
+            <div class="title">ยืนยัน & สร้าง Job</div>
+            <div class="sub">ส่งเข้า SV-6 Queue</div>
+          </div>
+        </div>
+        <div class="wz-summary">
+          <span>ระยะจาก HQ: <b>9.4 กม.</b></span>
+          <span>ETA: <b>17 นาที</b></span>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════
+           STEP 1 — Ship-To + Map
+           ══════════════════════════════════════════════════════ -->
+      <section class="step-panel" id="step1">
+        <div class="step-panel-head">
+          <div class="step-no">1</div>
+          <div>
+            <div class="step-title">Ship To ที่อยู่ในการจัดส่งสินค้า · ปักหมุดบนแผนที่</div>
+            <div style="font-size:11px; color:#6B7280;">Reference: Siam TV รูป 10 — Form 2-column + Map ด้านบน</div>
+          </div>
+          <div class="step-desc">กรอก/ตรวจสอบที่อยู่ + ลากหมุดให้ตรงบ้านลูกค้า</div>
+        </div>
+
+        <div class="step-panel-body">
+
+          <!-- MAP -->
+          <div class="map-wrap">
+            <div class="map-toolbar">
+              <div class="map-search">
+                🔍 <input value="2 ซ.10 ถ.ห้วยแก้ว ต.ช้างเผือก อ.เมืองเชียงใหม่ 50300">
+                <button>ค้นหา</button>
+              </div>
+              <button class="map-action">📡 ตำแหน่งฉัน</button>
+              <button class="map-action">🛰️ Satellite</button>
+              <button class="map-action">🚶 Street View</button>
+              <button class="map-action">↺ รีเซ็ต</button>
+            </div>
+            <div class="map-canvas">
+              <div class="road h" style="top: 28%"></div>
+              <div class="road h thick" style="top: 58%"></div>
+              <div class="road h" style="top: 82%"></div>
+              <div class="road v" style="left: 22%"></div>
+              <div class="road v" style="left: 52%"></div>
+              <div class="road v thick" style="left: 78%"></div>
+              <div class="label-tag" style="top:16%; left:8%">วัดพระธาตุดอยขำ</div>
+              <div class="label-tag" style="top:31%; left:54%">ม.เชียงใหม่</div>
+              <div class="label-tag" style="top:61%; left:30%">ถ.ห้วยแก้ว</div>
+              <div class="label-tag" style="top:75%; left:78%">ตลาดต้นพยอม</div>
+              <div class="label-tag" style="top:86%; left:12%">ซ.10 ห้วยแก้ว</div>
+              <div class="compass">N<br><span style="font-size:14px;color:#EF4444">⬆</span></div>
+              <div class="scale"><span class="scale-bar"></span> 200 ม.</div>
+              <div class="attr">© Google Map Mockup · drag pin to reposition</div>
+              <div class="map-pin" style="top: 54%; left: 46%">
+                <div class="pop">ลากหมุดเพื่อย้ายตำแหน่ง</div>
+                <div class="head"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FORM 2-COLUMN (ตามรูป 10) -->
+          <div class="form-grid">
+            <!-- LEFT COL -->
+            <div class="f-group">
+              <label class="f-lbl">ชื่อผู้รับสินค้า/ชื่อบริษัท <span class="req">*</span></label>
+              <div class="f-with-icon">
+                <span class="icon">👤</span>
+                <input class="f-input" value="น.ส.เดือนเพ็ญ ขัยอนัตน์">
+              </div>
+            </div>
+            <div class="f-group">
+              <label class="f-lbl">เบอร์มือถือ <span class="req">*</span> <span class="hint">ตัวอย่าง 080-999-8888</span></label>
+              <div class="f-with-icon">
+                <span class="icon">📱</span>
+                <input class="f-input mono" value="087-303-0859">
+              </div>
+            </div>
+
+            <div class="f-group span-2">
+              <label class="f-lbl">บ้านเลขที่ + ถนน + ตำบล <span class="req">*</span></label>
+              <textarea class="f-textarea" rows="2">2 ซ.10 ถ.ห้วยแก้ว ต.ช้างเผือก อ.เมืองเชียงใหม่ จ.เชียงใหม่ 50300</textarea>
+            </div>
+
+            <div class="f-group">
+              <label class="f-lbl">เบอร์ติดต่อสำรอง <span class="hint">(ไม่จำเป็น)</span></label>
+              <input class="f-input mono" value="053-221-4088">
+            </div>
+            <div class="f-group">
+              <label class="f-lbl">รหัสไปรษณีย์</label>
+              <input class="f-input mono" value="50300">
+            </div>
+
+            <div class="f-group">
+              <label class="f-lbl">อำเภอ/เขต <span class="req">*</span></label>
+              <select class="f-select"><option>เมืองเชียงใหม่</option></select>
+            </div>
+            <div class="f-group">
+              <label class="f-lbl">จังหวัด <span class="req">*</span></label>
+              <select class="f-select"><option>เชียงใหม่</option></select>
+            </div>
+
+            <div class="f-group">
+              <label class="f-lbl">ประเภทการจัดส่ง <span class="req">*</span></label>
+              <select class="f-select">
+                <option selected>🚚 จัดส่ง + ติดตั้ง (Delivery + Install)</option>
+                <option>📦 จัดส่งอย่างเดียว (Delivery Only)</option>
+                <option>🔧 ติดตั้งอย่างเดียว (Install Only · ลูกค้ามีของแล้ว)</option>
+                <option>🏬 รับที่ร้าน (Pickup)</option>
+              </select>
+            </div>
+            <div class="f-group">
+              <label class="f-lbl">หมวดสินค้าที่ต้องติดตั้ง</label>
+              <select class="f-select">
+                <option selected>Air (แอร์) · ใช้ทีม Install AC</option>
+                <option>TV/Wall-mount · ใช้ทีม Install TV</option>
+                <option>Refrigerator · ทีม Home Appliance</option>
+                <option>Washing Machine · ทีม Home Appliance</option>
+              </select>
+            </div>
+
+            <div class="f-group span-2">
+              <label class="f-lbl">หมายเหตุสำหรับช่าง <span class="hint">(ระบุจุดรับ, อาคาร, ชั้น, ข้อควรระวัง)</span></label>
+              <textarea class="f-textarea" rows="2">คอนโดชั้น 6 · ลิฟต์ขนของอยู่หลังอาคาร · โทรก่อนถึง 30 นาที · ที่จอดรถจำกัด</textarea>
+            </div>
+
+            <div class="f-group">
+              <label class="f-lbl">พิกัด Latitude <span class="req">*</span> <span class="hint">(sync กับหมุดบนแผนที่)</span></label>
+              <input class="f-input mono" value="18.818433021181876">
+              <div class="f-helper">📍 จะอัปเดตอัตโนมัติเมื่อลากหมุด</div>
+            </div>
+            <div class="f-group">
+              <label class="f-lbl">พิกัด Longitude <span class="req">*</span></label>
+              <input class="f-input mono" value="98.99238271183741">
+              <div class="f-helper">📐 ระบบคำนวณระยะจาก HQ ให้อัตโนมัติ: <b style="color:#1E40AF;">9.4 กม. · ~17 นาที</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wizard footer (Step 1) -->
+        <div class="wz-footer">
+          <button class="wz-btn danger">❌ ยกเลิกการสร้างแผนที่</button>
+          <div style="font-size:11.5px; color:#6B7280;">Step 1 / 2 · ที่อยู่และพิกัด</div>
+          <button class="wz-btn primary" onclick="document.getElementById('step2').scrollIntoView({behavior:'smooth'})">ยืนยันการสร้างแผนที่ → เลือก Slot ➜</button>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════════
+           STEP 2 — Slot Picker
+           ══════════════════════════════════════════════════════ -->
+      <section class="step-panel" id="step2">
+        <div class="step-panel-head">
+          <div class="step-no">2</div>
+          <div>
+            <div class="step-title">เลือกช่วงเวลาจัดส่ง — Slot Picker</div>
+            <div style="font-size:11px; color:#6B7280;">Reference: Siam TV รูป 11 — Grid 30 นาที + แสดงงานที่จองแล้ว</div>
+          </div>
+          <div class="step-desc">เลือกวัน + ช่วงเวลา · ระบบแนะนำช่วงที่ว่างสุด</div>
+        </div>
+
+        <div class="step-panel-body">
+
+          <div class="note-row">
+            ⚠️ <b>หมายเหตุ:</b> ระบบจะล็อกช่างอัตโนมัติเมื่อเลือก Slot · Slot ที่ "เต็ม" (ช่างติดงานครบ) จะกดไม่ได้ · ถ้าลูกค้าต้องการส่งไกล > 80 กม. ระบบจะบังคับเป็นโหมด "ทั้งวัน"
+          </div>
+
+          <div class="slot-layout">
+            <!-- LEFT: Slot grid -->
+            <div class="map-wrap" style="margin:0">
+              <div class="slot-toolbar">
+                <div class="date-pick">📅 <input value="24/04/26 · ศ">↓</div>
+                <div class="day-shift">
+                  <button>◀ เมื่อวาน</button>
+                  <button>วันนี้</button>
+                  <button style="background:#EFF6FF; color:#1E40AF; border-color:#93C5FD; font-weight:700;">พรุ่งนี้ (ศ)</button>
+                  <button>เสาร์</button>
+                  <button>อาทิตย์ ▶</button>
+                </div>
+                <div class="filter-zone">
+                  🗺️ โซน:
+                  <select>
+                    <option>ทุกโซน</option>
+                    <option selected>โซนเมือง (≤ 15 กม.)</option>
+                    <option>โซนรอบเมือง (15-40 กม.)</option>
+                    <option>โซนไกล (> 40 กม.)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="slot-legend">
+                <span class="lg-item"><span class="lg-swatch" style="background:#ECFDF5; border-color:#A7F3D0"></span>ว่าง (0 งาน)</span>
+                <span class="lg-item"><span class="lg-swatch" style="background:#F0F9FF; border-color:#BFDBFE"></span>เบา (1-3)</span>
+                <span class="lg-item"><span class="lg-swatch" style="background:#FEF3C7; border-color:#FCD34D"></span>แน่น (4-7)</span>
+                <span class="lg-item"><span class="lg-swatch" style="background:#FEE2E2; border-color:#FCA5A5"></span>เต็ม (8+ · กดไม่ได้)</span>
+                <span class="lg-item" style="margin-left:auto"><span class="lg-swatch" style="background:#DBEAFE; border:2px solid #2563EB"></span>เลือก</span>
+              </div>
+
+              <!-- Slot Grid — 18 slots from 09:00 to 17:30 (ตามรูป 11) -->
+              <div class="slot-grid">
+                <button class="slot-cell light">
+                  <span class="time">09:00 น.</span>
+                  <span class="load">รอจัดส่ง <b>1 งาน</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">09:30 น.</span>
+                  <span class="load">รอจัดส่ง <b>0 งาน</b></span>
+                </button>
+                <button class="slot-cell full">
+                  <span class="time">10:00 น.</span>
+                  <span class="load">รอจัดส่ง <b>8 งาน · เต็ม</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">10:30 น.</span>
+                  <span class="load">รอจัดส่ง <b>0 งาน</b></span>
+                </button>
+                <button class="slot-cell light">
+                  <span class="time">11:00 น.</span>
+                  <span class="load">รอจัดส่ง <b>2 งาน</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">11:30 น.</span>
+                  <span class="load">รอจัดส่ง <b>0 งาน</b></span>
+                </button>
+                <button class="slot-cell full">
+                  <span class="time">12:00 น.</span>
+                  <span class="load">รอจัดส่ง <b>9 งาน · เต็ม</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">12:30 น.</span>
+                  <span class="load">รอจัดส่ง <b>0 งาน</b></span>
+                </button>
+                <button class="slot-cell light selected">
+                  <span class="time">13:00 น.</span>
+                  <span class="load">รอจัดส่ง <b>3 งาน</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">13:30 น.</span>
+                  <span class="load">รอจัดส่ง <b>0 งาน</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">14:00 น.</span>
+                  <span class="load">รอจัดส่ง <b>0 งาน</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">14:30 น.</span>
+                  <span class="load">รอจัดส่ง <b>0 งาน</b></span>
+                </button>
+                <button class="slot-cell busy">
+                  <span class="time">15:00 น.</span>
+                  <span class="load">รอจัดส่ง <b>4 งาน</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">15:30 น.</span>
+                  <span class="load">รอจัดส่ง <b>0 งาน</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">16:00 น.</span>
+                  <span class="load">รอจัดส่ง <b>0 งาน</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">16:30 น.</span>
+                  <span class="load">รอจัดส่ง <b>0 งาน</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">17:00 น.</span>
+                  <span class="load">รอจัดส่ง <b>0 งาน</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">17:30 น.</span>
+                  <span class="load">รอจัดส่ง <b>0 งาน</b></span>
+                </button>
+              </div>
+
+              <!-- Extra slots (ช่วงเย็น) -->
+              <div style="padding: 0 14px 8px; font-size:11px; color:#6B7280; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">
+                ⚡ ช่วงเพิ่มเติม (นอกเวลาทำการปกติ — ต้องอนุมัติจาก Admin)
+              </div>
+              <div class="slot-grid" style="padding-top: 0;">
+                <button class="slot-cell free">
+                  <span class="time">18:00 น.</span>
+                  <span class="load">หลังเลิกงาน · OT <b>+30%</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">19:00 น.</span>
+                  <span class="load">หลังเลิกงาน · OT <b>+30%</b></span>
+                </button>
+                <button class="slot-cell free">
+                  <span class="time">ทั้งวัน</span>
+                  <span class="load">ไกล >80กม · <b>+50%</b></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- RIGHT: Tech availability -->
+            <div class="slot-side">
+              <div class="side-head">
+                👥 ช่างที่พร้อมในสล็อตนี้ — 13:00 น. (โซนเมือง)
+                <span style="margin-left:auto; font-size:10px; background:#DBEAFE; color:#1E40AF; padding:2px 7px; border-radius:8px; font-weight:700;">4 คน</span>
+              </div>
+
+              <div class="shift-chunk">
+                <div class="chunk-title">
+                  🧑‍🔧 ช่างในบริษัท (Internal)
+                  <span style="color:#10B981;">3 ว่าง</span>
+                </div>
+                <div class="shift-row">
+                  <div class="tech">
+                    <div class="tech-ico">สม</div>
+                    <div>
+                      <div class="tech-name">สมศักดิ์ ช.</div>
+                      <div class="tech-meta">AC · 5 ปี · ⭐4.8 · TECH-001</div>
+                    </div>
+                  </div>
+                  <div class="avail">ว่าง</div>
+                </div>
+                <div class="shift-row">
+                  <div class="tech">
+                    <div class="tech-ico">ปร</div>
+                    <div>
+                      <div class="tech-name">ประเสริฐ ก.</div>
+                      <div class="tech-meta">AC+TV · 8 ปี · ⭐4.9 · TECH-002</div>
+                    </div>
+                  </div>
+                  <div class="avail">ว่าง</div>
+                </div>
+                <div class="shift-row">
+                  <div class="tech">
+                    <div class="tech-ico">วช</div>
+                    <div>
+                      <div class="tech-name">วิชัย ซ.</div>
+                      <div class="tech-meta">AC · 3 ปี · ⭐4.5 · TECH-003</div>
+                    </div>
+                  </div>
+                  <div class="avail busy">14:00</div>
+                </div>
+              </div>
+
+              <div class="shift-chunk">
+                <div class="chunk-title">
+                  🛺 ช่างภายนอก (Outsource)
+                  <span style="color:#F59E0B;">rate +50%</span>
+                </div>
+                <div class="shift-row out">
+                  <div class="tech">
+                    <div class="tech-ico">วน</div>
+                    <div>
+                      <div class="tech-name">วิชัย นอก (Outsource)</div>
+                      <div class="tech-meta">AC · 12 ปี · ⭐4.7 · VEND-101</div>
+                    </div>
+                  </div>
+                  <div class="avail">ว่าง</div>
+                </div>
+              </div>
+
+              <div style="padding: 10px 14px; background:#F8FAFC; border-top:1px solid #E5E7EB;">
+                <div class="f-lbl">เลือกช่างสำหรับงานนี้ <span class="req">*</span></div>
+                <select class="f-select" style="width:100%; margin-top:6px;">
+                  <option>🔵 ให้ระบบเลือกอัตโนมัติ (Auto-Assign ตามระยะทาง + คะแนน)</option>
+                  <option selected>สมศักดิ์ ช. (TECH-001) ✓ แนะนำ</option>
+                  <option>ประเสริฐ ก. (TECH-002)</option>
+                  <option>วิชัย นอก (VEND-101) · +50% rate</option>
+                </select>
+                <div class="f-helper" style="margin-top:6px">
+                  🔒 <b>Sticky Assignment:</b> เมื่อเลือกแล้ว ช่างคนนี้จะถูกล็อกกับ Job นี้ (เปลี่ยนตัวต้องให้ Admin อนุมัติ)
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Booking summary preview -->
+          <div class="booking-summary">
+            <div class="bs-head">✅ สรุปการจอง — ตรวจสอบก่อนยืนยัน</div>
+            <div class="bs-grid">
+              <div>
+                <div class="lbl">ลูกค้า</div>
+                <div class="val">น.ส.เดือนเพ็ญ ข.</div>
+              </div>
+              <div>
+                <div class="lbl">เบอร์โทร</div>
+                <div class="val mono">087-303-0859</div>
+              </div>
+              <div>
+                <div class="lbl">วันที่ส่ง</div>
+                <div class="val mono">24/04/26 (ศุกร์)</div>
+              </div>
+              <div>
+                <div class="lbl">เวลา Slot</div>
+                <div class="val mono">13:00 น.</div>
+              </div>
+              <div>
+                <div class="lbl">ประเภทงาน</div>
+                <div class="val">🚚 จัดส่ง + ติดตั้ง (AC)</div>
+              </div>
+              <div>
+                <div class="lbl">ช่าง</div>
+                <div class="val">สมศักดิ์ ช. · TECH-001</div>
+              </div>
+              <div>
+                <div class="lbl">ระยะจาก HQ</div>
+                <div class="val mono">9.4 กม. · ~17 นาที</div>
+              </div>
+              <div>
+                <div class="lbl">พิกัด</div>
+                <div class="val mono" style="font-size:11px;">18.8184, 98.9923</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Wizard footer (Step 2) -->
+        <div class="wz-footer">
+          <button class="wz-btn ghost">◀ กลับไปแก้ Ship-To</button>
+          <div style="font-size:11.5px; color:#6B7280;">Step 2 / 2 · เลือกเวลาและช่าง</div>
+          <button class="wz-btn success">✓ ยืนยัน + สร้าง Job ใน SV-6</button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // Slot picker — click to select
+  document.querySelectorAll('.slot-cell:not(.full)').forEach(cell => {
+    cell.addEventListener('click', () => {
+      document.querySelectorAll('.slot-cell').forEach(c => c.classList.remove('selected'));
+      cell.classList.add('selected');
+    });
+  });
+
+  // Map pin drag (demo — just updates pop)
+  const pin = document.querySelector('.map-pin');
+  if (pin) {
+    pin.addEventListener('mousedown', () => {
+      pin.querySelector('.pop').textContent = 'กำลังลาก...';
+    });
+  }
+</script>
+</body>
+</html>

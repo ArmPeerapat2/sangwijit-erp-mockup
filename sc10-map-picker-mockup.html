@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>SC-10 Map Picker — ปักหมุดแผนที่ | Sangwijit ERP Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+  /* ═══════════════════════════════════════════════════════════
+     SC-10 Map Picker — Shared Component
+     Demo: Single-Pin (Ship-To) + Multi-Pin (Trip Route) modes
+     ═══════════════════════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', 'Noto Sans Thai', sans-serif;
+    background: #F3F4F6; color: #111827; min-width: 1440px;
+    font-size: 13px; line-height: 1.45;
+  }
+  .layout { display: flex; min-height: 100vh; }
+  .main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* ─── TOPBAR ─── */
+  .topbar {
+    height: 56px; background: #fff; border-bottom: 1px solid #E5E7EB;
+    display: flex; align-items: center; padding: 0 24px; gap: 16px;
+    position: sticky; top: 0; z-index: 40;
+  }
+  .topbar-breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6B7280; }
+  .topbar-breadcrumb .current { color: #2563EB; font-weight: 600; }
+  .topbar-breadcrumb .sep { color: #D1D5DB; }
+  .topbar-spacer { flex: 1; }
+  .topbar-search {
+    display: flex; align-items: center; gap: 8px;
+    background: #F3F4F6; border-radius: 8px; padding: 6px 12px;
+    font-size: 13px; color: #9CA3AF; width: 220px;
+  }
+  .topbar-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #F3F4F6; cursor: pointer; font-size: 16px; }
+  .topbar-avatar { width: 32px; height: 32px; border-radius: 50%; background: #2563EB; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; }
+  .branch-tag { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1D4ED8; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
+
+  /* ─── MAIN HEADER ─── */
+  .main-header {
+    background: linear-gradient(90deg, #1E3A5F 0%, #2563EB 100%);
+    color: #fff; padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    position: sticky; top: 56px; z-index: 30;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .mh-left { display: flex; align-items: center; gap: 18px; }
+  .mh-title { display: flex; align-items: center; gap: 10px; }
+  .mh-title .ico { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .mh-title h1 { font-size: 16px; font-weight: 700; line-height: 1.15; }
+  .mh-title p { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 1px; }
+  .mh-divider { width: 1px; height: 32px; background: rgba(255,255,255,0.2); }
+  .mh-meta { display: flex; gap: 20px; }
+  .mh-meta-item .lbl { font-size: 10px; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.04em; }
+  .mh-meta-item .val { font-size: 13px; font-weight: 700; margin-top: 1px; font-family: 'Inter', monospace; }
+  .mh-btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 13px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid transparent; font-family: inherit; }
+  .mh-btn-ghost { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.2); }
+  .mh-btn-ghost:hover { background: rgba(255,255,255,0.22); }
+
+  /* ─── CONTENT ─── */
+  .content { flex: 1; padding: 16px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+  /* ─── INTRO BANNER ─── */
+  .intro {
+    display: grid; grid-template-columns: 1fr auto; gap: 18px;
+    background: linear-gradient(135deg, #EFF6FF 0%, #F0FDF4 100%);
+    border: 1px solid #BFDBFE; border-radius: 10px; padding: 16px 20px;
+  }
+  .intro h2 { font-size: 16px; color: #1E3A5F; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .intro p { font-size: 12.5px; color: #475569; line-height: 1.6; }
+  .intro .badge-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .intro-pill { background: #fff; border: 1px solid #BFDBFE; color: #1D4ED8; font-size: 10.5px; font-weight: 700; padding: 3px 10px; border-radius: 12px; }
+  .intro .quick-link {
+    background: #fff; border: 1px solid #93C5FD; padding: 10px 14px;
+    border-radius: 8px; display: flex; flex-direction: column; gap: 3px;
+    min-width: 160px;
+  }
+  .intro .quick-link .lbl { font-size: 10px; color: #6B7280; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+  .intro .quick-link .val { font-size: 13px; color: #1E40AF; font-weight: 700; }
+
+  /* ─── SECTION ─── */
+  .section { background: #fff; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden; }
+  .section-head {
+    padding: 12px 16px; border-bottom: 1px solid #F3F4F6;
+    display: flex; align-items: center; gap: 10px; background: #F8FAFC;
+  }
+  .section-head h3 { font-size: 14px; font-weight: 700; color: #1E3A5F; display: flex; align-items: center; gap: 6px; }
+  .section-head .badge {
+    margin-left: auto; background: #DBEAFE; color: #1E40AF;
+    font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 10px;
+  }
+  .section-head .badge.warn { background: #FEF3C7; color: #92400E; }
+  .section-body { padding: 16px; }
+
+  /* ─── MAP PICKER COMPONENT ─── */
+  .mp-wrap {
+    border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden;
+    background: #fff;
+  }
+  .mp-toolbar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border-bottom: 1px solid #E5E7EB;
+    background: #F9FAFB; flex-wrap: wrap;
+  }
+  .mp-search {
+    flex: 1; min-width: 240px;
+    display: flex; align-items: center; gap: 6px;
+    border: 1px solid #E5E7EB; background: #fff;
+    padding: 6px 10px; border-radius: 6px; font-size: 12px;
+  }
+  .mp-search input { flex: 1; border: 0; outline: 0; font-family: inherit; font-size: 12px; }
+  .mp-search button { border: 0; background: transparent; color: #2563EB; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .mp-tab-row { display: flex; gap: 4px; }
+  .mp-tab {
+    padding: 4px 10px; font-size: 11.5px; font-weight: 600;
+    border-radius: 5px; cursor: pointer; border: 1px solid #E5E7EB;
+    background: #fff; color: #6B7280; font-family: inherit;
+  }
+  .mp-tab.active { background: #2563EB; color: #fff; border-color: #2563EB; }
+  .mp-action { display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; font-size: 11px; font-weight: 600; border: 1px solid #E5E7EB; background: #fff; color: #374151; border-radius: 5px; cursor: pointer; font-family: inherit; }
+  .mp-action:hover { border-color: #93C5FD; color: #2563EB; }
+
+  /* Map canvas (faux render) */
+  .mp-canvas {
+    position: relative; height: 360px;
+    background:
+      linear-gradient(180deg, #DDEBF7 0%, #E5F0F9 30%, #F4F8E8 70%, #FCF5DC 100%);
+    overflow: hidden;
+  }
+  .mp-canvas.tall { height: 460px; }
+  .mp-canvas .road {
+    position: absolute; background: #fff;
+    box-shadow: 0 0 0 1px #E5E7EB;
+  }
+  .mp-canvas .road.h { left: 0; right: 0; height: 6px; }
+  .mp-canvas .road.v { top: 0; bottom: 0; width: 6px; }
+  .mp-canvas .road.thick { background: #FFE08A; height: 9px; box-shadow: 0 0 0 1px #F59E0B; }
+  .mp-canvas .label-tag {
+    position: absolute; background: rgba(255,255,255,0.92);
+    border: 1px solid #E5E7EB; border-radius: 4px;
+    padding: 2px 6px; font-size: 10px; color: #475569; font-weight: 600;
+    pointer-events: none;
+  }
+  .mp-canvas .compass {
+    position: absolute; top: 10px; right: 10px;
+    background: #fff; border: 1px solid #E5E7EB; border-radius: 50%;
+    width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800; color: #6B7280; flex-direction: column;
+  }
+  .mp-canvas .scale {
+    position: absolute; bottom: 10px; left: 10px;
+    background: rgba(255,255,255,0.92); border: 1px solid #E5E7EB;
+    border-radius: 4px; padding: 3px 8px;
+    font-size: 10px; font-weight: 700; color: #475569;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .mp-canvas .scale-bar { display: inline-block; width: 40px; height: 4px; background: #1F2937; }
+  .mp-canvas .attr {
+    position: absolute; bottom: 4px; right: 8px;
+    font-size: 9px; color: #6B7280;
+  }
+
+  /* Pins */
+  .mp-pin {
+    position: absolute; transform: translate(-50%, -100%);
+    cursor: pointer; z-index: 5;
+  }
+  .mp-pin .head {
+    width: 26px; height: 26px; border-radius: 50% 50% 50% 0;
+    background: #EF4444; transform: rotate(-45deg);
+    border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mp-pin .head .num {
+    transform: rotate(45deg); color: #fff; font-size: 11px; font-weight: 800;
+    font-family: 'Inter', monospace;
+  }
+  .mp-pin.start .head { background: #10B981; }
+  .mp-pin.end .head { background: #EF4444; }
+  .mp-pin.stop .head { background: #2563EB; }
+  .mp-pin.draggable .head::after {
+    content: '✥'; position: absolute; top: -4px; right: -4px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #F59E0B; color: #fff; font-size: 9px;
+    display: flex; align-items: center; justify-content: center;
+    transform: rotate(45deg); border: 1px solid #fff;
+  }
+  .mp-pin .pop {
+    position: absolute; left: 50%; top: -42px; transform: translateX(-50%);
+    background: #1F2937; color: #fff; font-size: 10px; font-weight: 600;
+    padding: 4px 8px; border-radius: 4px; white-space: nowrap;
+  }
+  .mp-pin .pop::after {
+    content: ''; position: absolute; left: 50%; bottom: -4px;
+    transform: translateX(-50%); border: 4px solid transparent;
+    border-top-color: #1F2937;
+  }
+
+  /* Route polyline (faked with thin div) */
+  .mp-route {
+    position: absolute; height: 3px; background: #2563EB;
+    border-radius: 2px; transform-origin: 0 0;
+    box-shadow: 0 1px 2px rgba(37,99,235,0.4);
+    z-index: 3;
+  }
+  .mp-route.dashed {
+    background: repeating-linear-gradient(90deg, #2563EB 0 6px, transparent 6px 11px);
+    box-shadow: none;
+  }
+
+  /* ─── COORDINATE INPUT ROW ─── */
+  .coord-row {
+    display: grid; grid-template-columns: 1fr 1fr auto auto; gap: 10px;
+    padding: 12px; border-top: 1px solid #E5E7EB; background: #F8FAFC;
+    align-items: end;
+  }
+  .coord-field { display: flex; flex-direction: column; gap: 4px; }
+  .coord-field label { font-size: 10px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.04em; }
+  .coord-field label .req { color: #EF4444; }
+  .coord-field input {
+    padding: 7px 10px; border: 1px solid #D1D5DB; border-radius: 5px;
+    font-family: 'Inter', monospace; font-size: 12px; color: #0F172A;
+    background: #fff;
+  }
+  .coord-field input:focus { outline: 2px solid #93C5FD; outline-offset: 0; border-color: #2563EB; }
+  .coord-row .mp-action { padding: 7px 12px; }
+  .coord-row .mp-action.primary { background: #10B981; border-color: #10B981; color: #fff; }
+  .coord-row .mp-action.primary:hover { background: #059669; }
+
+  /* ─── PIN LIST (multi-pin mode) ─── */
+  .pin-list { padding: 0; }
+  .pin-list-head {
+    padding: 10px 14px; border-bottom: 1px solid #E5E7EB;
+    background: #F8FAFC; display: flex; align-items: center; gap: 10px;
+    font-size: 12px; font-weight: 700; color: #1F2937;
+  }
+  .pin-list-row {
+    display: grid; grid-template-columns: 28px 80px 1fr 90px 100px auto;
+    gap: 10px; align-items: center;
+    padding: 10px 14px; border-bottom: 1px solid #F3F4F6; font-size: 12px;
+  }
+  .pin-list-row:hover { background: #F9FAFB; }
+  .pin-list-row .order {
+    width: 26px; height: 26px; border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg); background: #2563EB;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; color: #fff;
+  }
+  .pin-list-row .order span { transform: rotate(45deg); }
+  .pin-list-row.start .order { background: #10B981; }
+  .pin-list-row.end .order { background: #EF4444; }
+  .pin-list-row .lbl { font-size: 10px; color: #6B7280; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+  .pin-list-row .name { font-weight: 600; color: #1F2937; }
+  .pin-list-row .name .addr { display: block; font-weight: 400; color: #6B7280; font-size: 11px; margin-top: 2px; }
+  .pin-list-row .coord { font-family: 'Inter', monospace; font-size: 11px; color: #475569; }
+  .pin-list-row .dist { font-family: 'Inter', monospace; font-size: 11.5px; font-weight: 700; color: #1E40AF; text-align: right; }
+  .pin-list-row .row-actions { display: flex; gap: 4px; }
+  .pin-list-row .row-actions button { background: #fff; border: 1px solid #E5E7EB; padding: 3px 7px; border-radius: 4px; font-size: 11px; cursor: pointer; font-family: inherit; }
+  .pin-list-row .row-actions button:hover { border-color: #93C5FD; color: #2563EB; }
+
+  /* ─── PROPS / API DOC ─── */
+  .props-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .props-table {
+    width: 100%; border-collapse: collapse; font-size: 12px; background: #fff;
+    border: 1px solid #E5E7EB; border-radius: 6px; overflow: hidden;
+  }
+  .props-table thead th {
+    background: #F8FAFC; padding: 8px 10px; text-align: left; font-size: 10.5px;
+    font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.04em;
+    border-bottom: 1px solid #E5E7EB;
+  }
+  .props-table tbody td {
+    padding: 8px 10px; border-bottom: 1px solid #F3F4F6; vertical-align: top;
+  }
+  .props-table .prop-name { font-family: 'Inter', monospace; font-weight: 700; color: #2563EB; }
+  .props-table .prop-type { font-family: 'Inter', monospace; color: #6D28D9; font-size: 11px; }
+  .props-table .prop-req { color: #EF4444; font-weight: 700; }
+  .props-table tbody tr:last-child td { border-bottom: none; }
+
+  /* ─── CODE BLOCK ─── */
+  .code-block {
+    background: #1E293B; color: #E2E8F0;
+    border-radius: 6px; padding: 14px;
+    font-family: 'Inter', monospace; font-size: 11.5px; line-height: 1.6;
+    overflow-x: auto; white-space: pre;
+  }
+  .code-block .k { color: #F59E0B; }
+  .code-block .s { color: #86EFAC; }
+  .code-block .c { color: #94A3B8; font-style: italic; }
+  .code-block .n { color: #93C5FD; }
+
+  /* ─── WHERE-USED CARDS ─── */
+  .used-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+  .used-card {
+    border: 1px solid #E5E7EB; border-radius: 6px; padding: 11px 12px;
+    background: #fff; display: flex; flex-direction: column; gap: 5px;
+  }
+  .used-card .uc-head { display: flex; align-items: center; gap: 6px; }
+  .used-card .uc-code { font-family: 'Inter', monospace; font-weight: 800; font-size: 12px; color: #2563EB; }
+  .used-card .uc-name { font-size: 12px; font-weight: 600; color: #1F2937; }
+  .used-card .uc-mode { background: #F3E8FF; color: #6D28D9; font-size: 9.5px; font-weight: 700; padding: 2px 6px; border-radius: 8px; }
+  .used-card .uc-mode.multi { background: #FEF3C7; color: #92400E; }
+  .used-card .uc-desc { font-size: 11px; color: #6B7280; line-height: 1.5; }
+
+  /* ─── 2-COL BODY ─── */
+  .two-col { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; align-items: stretch; }
+  .two-col.flip { grid-template-columns: 1fr 1.4fr; }
+
+  /* ─── HELPERS ─── */
+  .hint { font-size: 11.5px; color: #6B7280; margin-bottom: 8px; }
+  .helper-strip {
+    display: flex; align-items: center; gap: 8px;
+    background: #FEF3C7; border: 1px solid #FCD34D; color: #78350F;
+    padding: 8px 12px; border-radius: 6px; font-size: 11.5px;
+  }
+  .helper-strip.info { background: #EFF6FF; border-color: #BFDBFE; color: #1E40AF; }
+
+  ::-webkit-scrollbar { width: 7px; height: 7px; }
+  ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <span>Shared Components</span><span class="sep">›</span><span class="current">SC-10 Map Picker</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">🔍 Search...</div>
+      <div class="topbar-icon">🔔</div>
+      <div class="branch-tag">SHARED</div>
+      <div class="topbar-avatar">PT</div>
+    </div>
+
+    <!-- MAIN HEADER -->
+    <header class="main-header">
+      <div class="mh-left">
+        <div class="mh-title">
+          <div class="ico">📍</div>
+          <div>
+            <h1>SC-10 Map Picker — ปักหมุดแผนที่</h1>
+            <p>Shared Component · Single-Pin & Multi-Pin · Lat/Lng sync</p>
+          </div>
+        </div>
+        <div class="mh-divider"></div>
+        <div class="mh-meta">
+          <div class="mh-meta-item"><div class="lbl">Version</div><div class="val">1.0</div></div>
+          <div class="mh-meta-item"><div class="lbl">Used in</div><div class="val">6 หน้า</div></div>
+          <div class="mh-meta-item"><div class="lbl">Map Provider</div><div class="val">Google Maps</div></div>
+        </div>
+      </div>
+      <div class="mh-right">
+        <a href="index.html" class="mh-btn mh-btn-ghost">🏠 Portal Index</a>
+        <a href="sv6-1-booking-modal-mockup.html" class="mh-btn mh-btn-ghost">▶ ดูตัวอย่างใช้งาน (SV-6.1)</a>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- INTRO -->
+      <div class="intro">
+        <div>
+          <h2>📍 SC-10 Map Picker</h2>
+          <p>
+            Shared Component สำหรับ <b>ปักหมุดแผนที่ + ซิงก์ Lat/Lng</b> ใช้แทนการพิมพ์พิกัดด้วยมือ
+            รองรับ 2 โหมด: <b>Single-Pin</b> (ที่อยู่เดียว) และ <b>Multi-Pin</b> (เส้นทางหลายจุด เช่น Trip จัดส่ง)
+          </p>
+          <div class="badge-row">
+            <span class="intro-pill">Single-Pin Mode</span>
+            <span class="intro-pill">Multi-Pin / Route Mode</span>
+            <span class="intro-pill">Drag Pin</span>
+            <span class="intro-pill">Search Address</span>
+            <span class="intro-pill">Manual Lat/Lng</span>
+            <span class="intro-pill">Auto Distance</span>
+          </div>
+        </div>
+        <div class="quick-link">
+          <span class="lbl">ตัวอย่างใช้งานจริง</span>
+          <span class="val">SV-6.1 Booking Modal</span>
+          <span class="lbl" style="margin-top:4px">Print Trip Map</span>
+          <span class="val">SV-Print Templates</span>
+        </div>
+      </div>
+
+      <!-- ─── DEMO 1: SINGLE-PIN MODE ─── -->
+      <section class="section">
+        <div class="section-head">
+          <h3>① Single-Pin Mode — ปักหมุดที่อยู่เดียว</h3>
+          <span class="badge">ใช้ใน MD-2, MD-3, MD-5, SL-1 (Ship-To)</span>
+        </div>
+        <div class="section-body">
+          <div class="hint">ใช้เมื่อต้องการ <b>ตำแหน่ง 1 จุด</b> เช่น ที่อยู่ลูกค้า, สาขา, ที่ตั้ง Vendor — ลากหมุดได้, พิมพ์ Lat/Lng เองได้, ค่าจะ sync กันอัตโนมัติ</div>
+
+          <div class="mp-wrap">
+            <!-- Toolbar -->
+            <div class="mp-toolbar">
+              <div class="mp-search">
+                🔍 <input value="2 ซ.10 ถ.ห้วยแก้ว ต.ช้างเผือก อ.เมืองเชียงใหม่">
+                <button>ค้นหา</button>
+              </div>
+              <button class="mp-action">📡 ตำแหน่งฉัน</button>
+              <button class="mp-action">🛰️ Satellite</button>
+              <button class="mp-action">↺ รีเซ็ต</button>
+            </div>
+
+            <!-- Map canvas -->
+            <div class="mp-canvas">
+              <!-- Roads -->
+              <div class="road h" style="top: 30%"></div>
+              <div class="road h thick" style="top: 60%"></div>
+              <div class="road v" style="left: 20%"></div>
+              <div class="road v" style="left: 50%"></div>
+              <div class="road v thick" style="left: 75%"></div>
+              <!-- Labels -->
+              <div class="label-tag" style="top:18%; left:6%">ห้วยแก้ว</div>
+              <div class="label-tag" style="top:33%; left:52%">ม.เชียงใหม่</div>
+              <div class="label-tag" style="top:62%; left:30%">ถ.ห้วยแก้ว</div>
+              <div class="label-tag" style="top:75%; left:78%">ตลาดต้นพยอม</div>
+              <!-- Compass -->
+              <div class="compass">N<br><span style="font-size:14px;color:#EF4444">⬆</span></div>
+              <div class="scale"><span class="scale-bar"></span> 200 ม.</div>
+              <div class="attr">© Google Map Mockup</div>
+              <!-- Pin -->
+              <div class="mp-pin draggable" style="top: 55%; left: 48%">
+                <div class="pop">ลากหมุดเพื่อย้ายตำแหน่ง</div>
+                <div class="head"><span class="num">📍</span></div>
+              </div>
+            </div>
+
+            <!-- Coordinate row -->
+            <div class="coord-row">
+              <div class="coord-field">
+                <label>Latitude <span class="req">*</span></label>
+                <input value="18.818433021181876">
+              </div>
+              <div class="coord-field">
+                <label>Longitude <span class="req">*</span></label>
+                <input value="98.99238271183741">
+              </div>
+              <button class="mp-action">📋 คัดลอก</button>
+              <button class="mp-action primary">✓ ยืนยันตำแหน่ง</button>
+            </div>
+          </div>
+
+          <div class="helper-strip info" style="margin-top:12px">
+            💡 <b>Sync 2 ทาง:</b> ลากหมุด → input อัปเดตทันที | พิมพ์ Lat/Lng → หมุดย้ายทันที | กด <b>ตำแหน่งฉัน</b> ใช้ HTML5 Geolocation
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── DEMO 2: MULTI-PIN MODE ─── -->
+      <section class="section">
+        <div class="section-head">
+          <h3>② Multi-Pin / Route Mode — เส้นทางหลายจุด</h3>
+          <span class="badge warn">ใช้ใน SV-6 Trip Sheet, EX-1 Heatmap</span>
+        </div>
+        <div class="section-body">
+          <div class="hint">ใช้เมื่อต้องการ <b>หลายจุด + เส้นทาง</b> เช่น แผนรถจัดส่งวันนี้ — ระบบคำนวณระยะทางและเวลาประมาณการเองจาก Google Directions API</div>
+
+          <div class="two-col">
+            <!-- LEFT: Map -->
+            <div class="mp-wrap">
+              <div class="mp-toolbar">
+                <div class="mp-tab-row">
+                  <button class="mp-tab active">📍 Route</button>
+                  <button class="mp-tab">🌡️ Heatmap</button>
+                  <button class="mp-tab">📊 Cluster</button>
+                </div>
+                <button class="mp-action" style="margin-left:auto">🛰️ Satellite</button>
+                <button class="mp-action">📥 Export KML</button>
+              </div>
+
+              <div class="mp-canvas tall">
+                <!-- Roads -->
+                <div class="road h" style="top: 18%"></div>
+                <div class="road h thick" style="top: 48%"></div>
+                <div class="road h" style="top: 80%"></div>
+                <div class="road v" style="left: 25%"></div>
+                <div class="road v thick" style="left: 50%"></div>
+                <div class="road v" style="left: 78%"></div>
+                <!-- Labels -->
+                <div class="label-tag" style="top:8%; left:48%">เชียงใหม่ตอนเหนือ</div>
+                <div class="label-tag" style="top:50%; left:28%">เมืองเชียงใหม่</div>
+                <div class="label-tag" style="top:82%; left:60%">หางดง</div>
+                <div class="label-tag" style="top:35%; left:75%">สันกำแพง</div>
+                <div class="compass">N<br><span style="font-size:14px;color:#EF4444">⬆</span></div>
+                <div class="scale"><span class="scale-bar"></span> 5 กม.</div>
+                <div class="attr">© Google Map Mockup</div>
+
+                <!-- Route polylines (faked rotations) -->
+                <div class="mp-route" style="top: 28%; left: 22%; width: 130px; transform: rotate(38deg);"></div>
+                <div class="mp-route" style="top: 48%; left: 48%; width: 110px; transform: rotate(-15deg);"></div>
+                <div class="mp-route" style="top: 53%; left: 65%; width: 120px; transform: rotate(35deg);"></div>
+                <div class="mp-route dashed" style="top: 78%; left: 70%; width: 160px; transform: rotate(-160deg);"></div>
+
+                <!-- Pins -->
+                <div class="mp-pin start" style="top: 28%; left: 22%">
+                  <div class="head"><span class="num">S</span></div>
+                </div>
+                <div class="mp-pin stop" style="top: 50%; left: 50%">
+                  <div class="head"><span class="num">1</span></div>
+                </div>
+                <div class="mp-pin stop" style="top: 56%; left: 67%">
+                  <div class="head"><span class="num">2</span></div>
+                </div>
+                <div class="mp-pin stop" style="top: 75%; left: 80%">
+                  <div class="head"><span class="num">3</span></div>
+                </div>
+                <div class="mp-pin end" style="top: 88%; left: 38%">
+                  <div class="pop">รวม 33.61 กม. · 48 นาที</div>
+                  <div class="head"><span class="num">E</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT: Pin list -->
+            <div class="mp-wrap">
+              <div class="pin-list-head">
+                📋 ลำดับจุดแวะ (4 จุด · กลับฐาน 1)
+                <span style="margin-left:auto; font-size:11px; color:#6B7280;">รวม <b style="color:#1E40AF">33.61 กม.</b> · <b style="color:#1E40AF">48 นาที</b></span>
+              </div>
+
+              <div class="pin-list">
+                <div class="pin-list-row start">
+                  <div class="order"><span>S</span></div>
+                  <div class="lbl">START</div>
+                  <div class="name">
+                    คลังเชียงใหม่ (HQ)
+                    <span class="addr">90 ถ.เชียงใหม่-ลำพูน อ.เมือง</span>
+                  </div>
+                  <div class="coord">18.7330,<br>98.9911</div>
+                  <div class="dist">0.0 กม.</div>
+                  <div class="row-actions"><button>✥</button></div>
+                </div>
+                <div class="pin-list-row">
+                  <div class="order"><span>1</span></div>
+                  <div class="lbl">JOB-001</div>
+                  <div class="name">
+                    น.ส.เดือนเพ็ญ ขัยอนัตน์
+                    <span class="addr">2 ซ.10 ถ.ห้วยแก้ว ต.ช้างเผือก</span>
+                  </div>
+                  <div class="coord">18.8184,<br>98.9923</div>
+                  <div class="dist">9.4 กม.</div>
+                  <div class="row-actions"><button>↑</button><button>↓</button><button>✕</button></div>
+                </div>
+                <div class="pin-list-row">
+                  <div class="order"><span>2</span></div>
+                  <div class="lbl">JOB-002</div>
+                  <div class="name">
+                    บริษัท สเปซ 4 จำกัด
+                    <span class="addr">หมู่ 4 ต.สันโป่ง อ.แม่ริม</span>
+                  </div>
+                  <div class="coord">18.8721,<br>98.9405</div>
+                  <div class="dist">11.2 กม.</div>
+                  <div class="row-actions"><button>↑</button><button>↓</button><button>✕</button></div>
+                </div>
+                <div class="pin-list-row">
+                  <div class="order"><span>3</span></div>
+                  <div class="lbl">JOB-003</div>
+                  <div class="name">
+                    Monotown 4 ต.สันติกราน
+                    <span class="addr">หมู่ 7 ต.สันทราย อ.สันทราย</span>
+                  </div>
+                  <div class="coord">18.8542,<br>99.0341</div>
+                  <div class="dist">8.7 กม.</div>
+                  <div class="row-actions"><button>↑</button><button>↓</button><button>✕</button></div>
+                </div>
+                <div class="pin-list-row end">
+                  <div class="order"><span>E</span></div>
+                  <div class="lbl">RETURN</div>
+                  <div class="name">
+                    คลังเชียงใหม่ (HQ)
+                    <span class="addr">กลับฐาน</span>
+                  </div>
+                  <div class="coord">18.7330,<br>98.9911</div>
+                  <div class="dist">4.3 กม.</div>
+                  <div class="row-actions"><button>—</button></div>
+                </div>
+              </div>
+
+              <div style="padding: 10px 14px; background:#F8FAFC; border-top:1px solid #E5E7EB; display:flex; gap:6px;">
+                <button class="mp-action">+ เพิ่มจุดแวะ</button>
+                <button class="mp-action">🔀 จัดเรียงอัตโนมัติ (TSP)</button>
+                <button class="mp-action" style="margin-left:auto">📋 ส่งพิกัดไปนำทาง</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── PROPS / API DOC ─── -->
+      <section class="section">
+        <div class="section-head">
+          <h3>③ Props / API — ข้อมูลที่รับเข้าและส่งออก</h3>
+          <span class="badge">สำหรับ Dev</span>
+        </div>
+        <div class="section-body">
+          <div class="props-grid">
+            <div>
+              <div style="font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px;">⬇ INPUT (Props)</div>
+              <table class="props-table">
+                <thead>
+                  <tr><th>Prop</th><th>Type</th><th>Default</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><span class="prop-name">mode</span></td><td><span class="prop-type">'single' | 'multi'</span></td><td>'single'</td></tr>
+                  <tr><td><span class="prop-name">initialCenter</span> <span class="prop-req">*</span></td><td><span class="prop-type">[lat, lng]</span></td><td>—</td></tr>
+                  <tr><td><span class="prop-name">zoom</span></td><td><span class="prop-type">number</span></td><td>15</td></tr>
+                  <tr><td><span class="prop-name">pins</span></td><td><span class="prop-type">PinObject[]</span></td><td>[]</td></tr>
+                  <tr><td><span class="prop-name">draggable</span></td><td><span class="prop-type">boolean</span></td><td>true</td></tr>
+                  <tr><td><span class="prop-name">showSearch</span></td><td><span class="prop-type">boolean</span></td><td>true</td></tr>
+                  <tr><td><span class="prop-name">showCoordInput</span></td><td><span class="prop-type">boolean</span></td><td>true</td></tr>
+                  <tr><td><span class="prop-name">layer</span></td><td><span class="prop-type">'roadmap' | 'satellite' | 'hybrid'</span></td><td>'roadmap'</td></tr>
+                  <tr><td><span class="prop-name">routeMode</span></td><td><span class="prop-type">'optimized' | 'manual'</span></td><td>'optimized'</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div>
+              <div style="font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px;">⬆ OUTPUT (Events)</div>
+              <table class="props-table">
+                <thead>
+                  <tr><th>Event</th><th>Payload</th><th>เกิดเมื่อ</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><span class="prop-name">@pin-drag</span></td><td><span class="prop-type">{lat, lng}</span></td><td>ลากหมุดเสร็จ</td></tr>
+                  <tr><td><span class="prop-name">@coord-change</span></td><td><span class="prop-type">{lat, lng}</span></td><td>พิมพ์ Lat/Lng เอง</td></tr>
+                  <tr><td><span class="prop-name">@search-select</span></td><td><span class="prop-type">PlaceObject</span></td><td>เลือกผลค้นหา</td></tr>
+                  <tr><td><span class="prop-name">@route-update</span></td><td><span class="prop-type">{distance, duration, polyline}</span></td><td>เปลี่ยนลำดับจุด</td></tr>
+                  <tr><td><span class="prop-name">@confirm</span></td><td><span class="prop-type">{lat, lng, address}</span></td><td>กด ✓ ยืนยัน</td></tr>
+                  <tr><td><span class="prop-name">@cancel</span></td><td><span class="prop-type">—</span></td><td>กด ✕ ยกเลิก</td></tr>
+                </tbody>
+              </table>
+
+              <div style="font-size:11.5px; font-weight:700; color:#475569; margin-top:14px; margin-bottom:6px;">⌨ ตัวอย่างเรียกใช้</div>
+              <div class="code-block"><span class="c">// Single-pin (Ship-To)</span>
+&lt;<span class="k">SC10MapPicker</span>
+  <span class="n">mode</span>=<span class="s">"single"</span>
+  <span class="n">:initialCenter</span>=<span class="s">"[18.7884, 98.9853]"</span>
+  <span class="n">:draggable</span>=<span class="s">"true"</span>
+  <span class="n">@confirm</span>=<span class="s">"saveShipTo"</span> /&gt;
+
+<span class="c">// Multi-pin (Trip Sheet)</span>
+&lt;<span class="k">SC10MapPicker</span>
+  <span class="n">mode</span>=<span class="s">"multi"</span>
+  <span class="n">:pins</span>=<span class="s">"todayJobs"</span>
+  <span class="n">routeMode</span>=<span class="s">"optimized"</span>
+  <span class="n">@route-update</span>=<span class="s">"updateETA"</span> /&gt;</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── WHERE USED ─── -->
+      <section class="section">
+        <div class="section-head">
+          <h3>④ ที่ใช้ Component นี้ — Where Used</h3>
+          <span class="badge">6 หน้าจอ · ครอบ 4 โมดูล</span>
+        </div>
+        <div class="section-body">
+          <div class="used-grid">
+            <a class="used-card" href="md2-customer-master-mockup-v3.html">
+              <div class="uc-head">
+                <span class="uc-code">MD-2</span>
+                <span class="uc-mode">Single</span>
+              </div>
+              <div class="uc-name">ทะเบียนลูกค้า — Ship-To</div>
+              <div class="uc-desc">ปักหมุดที่อยู่จัดส่งของลูกค้าแต่ละราย, รองรับหลาย Ship-To ต่อลูกค้า</div>
+            </a>
+            <a class="used-card" href="md3-vendor-master-mockup-v3.html">
+              <div class="uc-head">
+                <span class="uc-code">MD-3</span>
+                <span class="uc-mode">Single</span>
+              </div>
+              <div class="uc-name">ทะเบียน Vendor — ที่ตั้ง</div>
+              <div class="uc-desc">ปักหมุดโรงงาน/คลัง Vendor เพื่อคำนวณค่าขนส่ง</div>
+            </a>
+            <a class="used-card" href="md5-branch-warehouse-mockup-v3.html">
+              <div class="uc-head">
+                <span class="uc-code">MD-5</span>
+                <span class="uc-mode">Single</span>
+              </div>
+              <div class="uc-name">สาขา & คลัง</div>
+              <div class="uc-desc">ปักหมุดที่ตั้งสาขา/คลังย่อย, ใช้คำนวณ origin ของ Trip</div>
+            </a>
+            <a class="used-card" href="sv6-1-booking-modal-mockup.html">
+              <div class="uc-head">
+                <span class="uc-code">SV-6.1</span>
+                <span class="uc-mode">Single</span>
+              </div>
+              <div class="uc-name">Booking Modal — Ship-To Step</div>
+              <div class="uc-desc">ใช้ตอน Sale ทำใบเสนอราคา/บิลขาย เพื่อกำหนดจุดจัดส่ง</div>
+            </a>
+            <a class="used-card" href="sv6-print-templates-mockup.html">
+              <div class="uc-head">
+                <span class="uc-code">SV-Print</span>
+                <span class="uc-mode multi">Multi</span>
+              </div>
+              <div class="uc-name">Trip Sheet Print — Multi-stop</div>
+              <div class="uc-desc">แสดงเส้นทางวันนี้บนใบรับมอบ A4 (รูป Siam TV รูป 9)</div>
+            </a>
+            <a class="used-card" href="ex1-executive-dashboard-mockup.html">
+              <div class="uc-head">
+                <span class="uc-code">EX-1</span>
+                <span class="uc-mode multi">Multi/Heatmap</span>
+              </div>
+              <div class="uc-name">Executive Dashboard</div>
+              <div class="uc-desc">Heatmap ยอดขายตามพื้นที่, Cluster จุดร้านลูกค้า</div>
+            </a>
+          </div>
+
+          <div class="helper-strip" style="margin-top:14px">
+            ⚠️ <b>หมายเหตุ:</b> ต้องตั้ง <b>GOOGLE_MAPS_API_KEY</b> ใน <a href="cf2-9-general-parameter-mockup.html" style="color:#B45309; font-weight:700;">CF-2.9 General Parameter</a> ก่อนใช้งาน, รวมถึงเปิด Service: Maps JavaScript API + Directions API + Geocoding API
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── DESIGN NOTES ─── -->
+      <section class="section">
+        <div class="section-head">
+          <h3>⑤ Design Notes — รายละเอียดสำหรับ Dev</h3>
+          <span class="badge">Spec</span>
+        </div>
+        <div class="section-body" style="font-size:12px; color:#374151; line-height:1.7;">
+          <ul style="padding-left: 20px;">
+            <li><b>Pin colors:</b> 🟢 Start (#10B981), 🔵 Stop (#2563EB), 🔴 End/Single (#EF4444), 🟠 Draggable indicator (#F59E0B)</li>
+            <li><b>Map provider:</b> Google Maps JavaScript API v3 — fallback Leaflet+OSM ถ้า quota เกิน</li>
+            <li><b>ค่าเริ่มต้น:</b> Center = สาขาที่ user login (จาก MD-5), Zoom = 15</li>
+            <li><b>Lat/Lng precision:</b> 13 ตำแหน่งทศนิยม (ตามฟอร์แมต Google Maps native)</li>
+            <li><b>Drag debounce:</b> 300ms ก่อนยิง <code>@pin-drag</code> ป้องกัน spam event</li>
+            <li><b>Mobile fallback:</b> ถ้า user เปิดบนมือถือ → ใช้ <code>navigator.geolocation</code> auto-fill ตำแหน่งฉัน</li>
+            <li><b>Offline mode:</b> ถ้าโหลด map ไม่ได้ → แสดง Lat/Lng input + ปุ่ม "เปิดใน Google Maps" แทน</li>
+            <li><b>Permission:</b> ผู้ใช้ทุก role ใช้ได้ ยกเว้น Multi-Pin Mode → จำกัดเฉพาะ Admin/Dispatcher</li>
+            <li><b>RBAC field-level:</b> Lat/Lng input อาจถูกตั้งเป็น read-only ตาม role (เช่น Sale แก้ไม่ได้, Dispatcher แก้ได้)</li>
+          </ul>
+        </div>
+      </section>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+  // ─── Tab switcher (Multi-Pin tabs) ───
+  document.querySelectorAll('.mp-tab-row').forEach(row => {
+    row.addEventListener('click', e => {
+      if (e.target.classList.contains('mp-tab')) {
+        row.querySelectorAll('.mp-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+      }
+    });
+  });
+
+  // ─── Coord ↔ Pin sync demo ───
+  document.querySelectorAll('.coord-field input').forEach(input => {
+    input.addEventListener('input', () => {
+      const pin = document.querySelector('.mp-pin.draggable');
+      if (pin) pin.style.transition = 'all 0.25s';
+    });
+  });
+</script>
+</body>
+</html>

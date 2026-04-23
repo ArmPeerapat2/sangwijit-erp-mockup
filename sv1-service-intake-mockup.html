@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SV-1 รับเรื่องซ่อม — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
+.app-container{display:flex;min-height:100vh}
+.main-content{flex:1;margin-left:240px;padding:0;background:#F8FAFC}
+.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.breadcrumb{font-size:13px;color:#6B7280}
+.breadcrumb strong{color:#111827}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.search-box{width:320px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;background:#F9FAFB}
+.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.content-wrapper{padding:24px}
+.page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.page-title{font-size:24px;font-weight:700;color:#111827;margin-bottom:4px}
+.page-subtitle{font-size:13px;color:#6B7280}
+.header-actions{display:flex;gap:8px}
+.btn{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.btn-primary{background:#2563EB;color:#fff}
+.btn-secondary{background:#fff;color:#374151;border:1px solid #D1D5DB}
+.btn-success{background:#10B981;color:#fff}
+.btn-ghost{background:transparent;color:#6B7280;border:1px solid transparent}
+.section-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:20px;margin-bottom:16px}
+.section-title{font-size:15px;font-weight:600;color:#111827;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title .tag{font-size:11px;background:#EFF6FF;color:#1E40AF;padding:2px 8px;border-radius:4px;font-weight:600;margin-left:auto}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 16px}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
+.form-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 16px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;color:#6B7280;font-weight:500}
+.field label .req{color:#DC2626;margin-left:2px}
+.field input,.field select,.field textarea{padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;font-family:inherit;background:#fff;color:#111827;outline:none;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#2563EB;background:#fff}
+.field input[readonly]{background:#F9FAFB;color:#374151}
+.field textarea{min-height:64px;resize:vertical;line-height:1.5}
+.swt-search-combo{display:flex;gap:0}
+.swt-search-combo input{border-top-right-radius:0;border-bottom-right-radius:0;border-right:none}
+.swt-search-btn{padding:0 12px;background:#F8FAFC;border:1px solid #E5E7EB;border-top-right-radius:6px;border-bottom-right-radius:6px;cursor:pointer;font-size:14px;color:#64748B}
+.swt-search-btn:hover{background:#EFF6FF;color:#2563EB;border-color:#93C5FD}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#F9FAFB;padding:10px;text-align:left;font-weight:600;color:#374151;border-bottom:1px solid #E5E7EB;font-size:12px;text-transform:uppercase;letter-spacing:0.05em}
+td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.chip-green{background:#D1FAE5;color:#065F46}
+.chip-red{background:#FEE2E2;color:#991B1B}
+.chip-yellow{background:#FEF3C7;color:#92400E}
+.chip-blue{background:#DBEAFE;color:#1E40AF}
+.chip-gray{background:#F3F4F6;color:#374151}
+.status-pills{display:flex;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.status-pill{padding:6px 12px;border-radius:16px;font-size:12px;font-weight:600;border:1px solid #E5E7EB;background:#F9FAFB;color:#6B7280}
+.status-pill.active{background:#2563EB;color:#fff;border-color:#2563EB}
+.status-pill.done{background:#D1FAE5;color:#065F46;border-color:#86EFAC}
+.alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.alert-warn{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
+.alert-info{background:#DBEAFE;color:#1E40AF;border:1px solid #93C5FD}
+.alert strong{font-weight:700}
+/* Warranty toggle group */
+.warranty-group{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.warranty-card{border:2px solid #E5E7EB;border-radius:8px;padding:12px;cursor:pointer;background:#fff;transition:all 0.15s;display:flex;align-items:flex-start;gap:10px}
+.warranty-card:hover{border-color:#93C5FD;background:#F8FAFC}
+.warranty-card.selected{border-color:#2563EB;background:#EFF6FF}
+.warranty-card input[type=radio]{margin-top:2px}
+.warranty-card .wc-title{font-size:13px;font-weight:600;color:#111827}
+.warranty-card .wc-desc{font-size:11.5px;color:#6B7280;margin-top:2px;line-height:1.4}
+/* Tabs */
+.tabs{display:flex;gap:0;border-bottom:2px solid #E5E7EB;margin-bottom:16px}
+.tab-btn{padding:10px 16px;border:none;background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:#6B7280;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab-btn:hover{color:#2563EB}
+.tab-btn.active{color:#2563EB;border-bottom-color:#2563EB}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+/* Timeline */
+.timeline-list{display:flex;flex-direction:column;gap:12px}
+.tl-item{display:flex;gap:12px;align-items:flex-start}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:#D1D5DB;margin-top:5px;flex-shrink:0}
+.tl-item.done .tl-dot{background:#10B981}
+.tl-item.active .tl-dot{background:#2563EB;box-shadow:0 0 0 4px rgba(37,99,235,0.15)}
+.tl-content{flex:1}
+.tl-title{font-size:13px;font-weight:600;color:#111827}
+.tl-meta{font-size:11.5px;color:#6B7280;margin-top:1px}
+/* Photo grid */
+.photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.photo-slot{aspect-ratio:1;border:2px dashed #CBD5E1;border-radius:8px;background:#F8FAFC;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#94A3B8;font-size:11px;cursor:pointer;transition:all 0.15s}
+.photo-slot:hover{border-color:#2563EB;background:#EFF6FF;color:#2563EB}
+.photo-slot .ico{font-size:28px;margin-bottom:4px}
+.photo-slot.filled{border:1px solid #93C5FD;background:#EFF6FF;color:#1E40AF}
+/* Sticky footer */
+.footer-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid #E5E7EB;padding:14px 24px;margin:24px -24px -24px;display:flex;gap:8px;align-items:center;box-shadow:0 -4px 12px rgba(0,0,0,0.05)}
+.footer-actions .spacer{flex:1}
+.footer-actions .hint{font-size:12px;color:#6B7280}
+.action-tag{font-size:10px;background:#FEE2E2;color:#B91C1C;padding:1px 6px;border-radius:3px;font-weight:700;margin-left:6px}
+</style>
+</head>
+<body>
+<!-- SWT_SIDEBAR_START -->
+<style>
+.swt-sb,.swt-sb *{box-sizing:border-box}
+.swt-sb{position:fixed;left:0;top:0;width:240px;height:100vh;background:#1E3A5F;color:#D1D5DB;overflow-y:auto;padding:14px 10px 32px;z-index:500;font-family:'Inter','Noto Sans Thai',sans-serif;font-size:13px;line-height:1.4}
+.swt-sb::-webkit-scrollbar{width:6px}
+.swt-sb::-webkit-scrollbar-thumb{background:#334E70;border-radius:3px}
+.swt-sb-brand{display:flex;align-items:center;gap:9px;padding:4px 8px 14px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:12px}
+.swt-sb-logo{width:34px;height:34px;border-radius:9px;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0}
+.swt-sb-brand h1{font-size:12px;font-weight:700;color:#fff;letter-spacing:-0.2px;margin:0}
+.swt-sb-brand p{font-size:10px;color:#94A3B8;margin:1px 0 0}
+.swt-sb-search{position:relative;margin:0 4px 12px}
+.swt-sb-search input{width:100%;padding:7px 10px 7px 28px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:#fff;font-size:12px;font-family:inherit;outline:none}
+.swt-sb-search input::placeholder{color:#6B7F99}
+.swt-sb-search input:focus{border-color:#2563EB;background:rgba(37,99,235,0.1)}
+.swt-sb-search::before{content:"🔍";position:absolute;left:9px;top:7px;font-size:10px;opacity:0.55}
+.swt-sb-home{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;text-decoration:none;color:#9CA3AF;font-size:11px;margin:0 4px 10px;background:rgba(255,255,255,0.05);transition:all 0.15s}
+.swt-sb-home:hover{background:rgba(255,255,255,0.12);color:#fff}
+.swt-sb details{margin:1px 0}
+.swt-sb details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:7px 9px;border-radius:6px;font-size:10.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;user-select:none;margin:0 2px}
+.swt-sb details>summary::-webkit-details-marker{display:none}
+.swt-sb details>summary:hover{background:rgba(255,255,255,0.06);color:#fff}
+.swt-sb-ico{font-size:13px;width:17px;text-align:center;flex-shrink:0}
+.swt-sb-lbl{flex:1}
+.swt-sb-cnt{font-size:9px;font-weight:600;background:rgba(255,255,255,0.08);color:#CBD5E1;padding:1px 5px;border-radius:9px;letter-spacing:0}
+.swt-sb-chv{font-size:8px;color:#6B7F99;transition:transform 0.2s}
+.swt-sb details[open]>summary .swt-sb-chv{transform:rotate(180deg)}
+.swt-sb-links{padding:1px 0 4px 6px}
+.swt-sb-links a{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:5px;text-decoration:none;color:#D1D5DB;font-size:11.5px;margin:1px 0;transition:all 0.1s;line-height:1.3}
+.swt-sb-links a:hover{background:rgba(255,255,255,0.08);color:#fff}
+.swt-sb-links a .c{font-family:'Inter',monospace;font-size:9.5px;font-weight:700;color:#94A3B8;min-width:36px;flex-shrink:0}
+.swt-sb-links a:hover .c{color:#60A5FA}
+.swt-sb-links a.swt-active{background:#2563EB;color:#fff;font-weight:600}
+.swt-sb-links a.swt-active .c{color:#BFDBFE}
+.swt-sb-links a.swt-new::after{content:"NEW";font-size:7.5px;font-weight:700;background:#DC2626;color:#fff;padding:1px 4px;border-radius:3px;margin-left:auto}
+.swt-sb a.swt-hide,.swt-sb details.swt-hide{display:none}
+body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
+</style>
+<aside class="swt-sb" id="swtSb">
+  <div class="swt-sb-brand">
+    <div class="swt-sb-logo">ส</div>
+    <div><h1>Sangwijit ERP</h1><p>Web Portal · v3.0</p></div>
+  </div>
+  <div class="swt-sb-search"><input placeholder="ค้นหาเมนู…" oninput="swtSbFilter(this.value)"></div>
+  <a class="swt-sb-home" href="index.html">🏠 Master Index</a>
+
+  <details><summary><span class="swt-sb-ico">🏠</span><span class="swt-sb-lbl">Overview</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="index.html"><span class="c">IDX</span>Master Index</a>
+    <a href="sangwijit-portal-architecture.html"><span class="c">ARCH</span>Architecture</a>
+    <a href="dev-handoff-spec.html"><span class="c">SPEC</span>Dev Handoff</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">💼</span><span class="swt-sb-lbl">งานขาย (SL)</span><span class="swt-sb-cnt">12</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="slq-sales-queue-mockup.html"><span class="c">SL-Q</span>Sales Queue</a>
+    <a href="sl1-quotation-mockup.html"><span class="c">SL-1</span>ใบเสนอราคา</a>
+    <a href="slf1-credit-approval-mockup.html" class="swt-new"><span class="c">SL-F1</span>อนุมัติวงเงิน</a>
+    <a href="sl2-reservation-mockup.html"><span class="c">SL-2</span>ใบจอง</a>
+    <a href="sl3-deposit-mockup.html"><span class="c">SL-3</span>ใบมัดจำ</a>
+    <a href="sl4-invoice-mockup.html"><span class="c">SL-4</span>บิลขาย/Invoice</a>
+    <a href="sl5-crm-followup-mockup.html"><span class="c">SL-5</span>CRM Follow-up</a>
+    <a href="sl6-promotion-setup-mockup.html"><span class="c">SL-6</span>โปรโมชั่น</a>
+    <a href="pm5-vat-simulator-mockup.html" class="swt-new"><span class="c">PM-5</span>VAT Simulator</a>
+    <a href="sl7-sales-report-mockup.html"><span class="c">SL-7</span>รายงานยอดขาย</a>
+    <a href="cm1-commission-mockup.html"><span class="c">CM-1</span>Commission</a>
+    <a href="cl1-claims-mockup.html"><span class="c">CL-1</span>Claims</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">📦</span><span class="swt-sb-lbl">คลังสินค้า (WH)</span><span class="swt-sb-cnt">5</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="wh-queue-mockup.html"><span class="c">WH-Q</span>คิวรับสินค้า</a>
+    <a href="wh1-grn-mockup.html"><span class="c">WH-1</span>ใบรับสินค้า (GRN)</a>
+    <a href="wh2-stock-transfer-mockup.html"><span class="c">WH-2</span>โอนย้ายสต็อก</a>
+    <a href="wh4-stock-count-mockup.html"><span class="c">WH-4</span>นับสต็อก</a>
+    <a href="wh3-sales-issue-mockup.html"><span class="c">WH-3</span>เบิกสินค้า</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🛒</span><span class="swt-sb-lbl">จัดซื้อ (PO)</span><span class="swt-sb-cnt">6</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="poq-purchase-queue-mockup.html"><span class="c">PO-Q</span>Purchase Queue</a>
+    <a href="po1-purchase-request-mockup.html" class="swt-new"><span class="c">PO-1</span>ใบขอซื้อ (PR)</a>
+    <a href="po2-rfq-mockup.html" class="swt-new"><span class="c">PO-2</span>RFQ / เปรียบเทียบราคา</a>
+    <a href="po6-ap-invoice-mockup.html" class="swt-new"><span class="c">PO-6</span>ใบวางบิล Vendor</a>
+    <a href="po4-purchase-order-mockup.html"><span class="c">PO-4</span>ใบสั่งซื้อ (PO)</a>
+    <a href="po7-rebate-dashboard.html"><span class="c">PO-7</span>Rebate Dashboard</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🧭</span><span class="swt-sb-lbl">SKU &amp; Vendor (SM)</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sm1-sku-slot-planner-mockup.html"><span class="c">SM-1</span>SKU Slot Planner</a>
+    <a href="sm2-sku-health-mockup.html"><span class="c">SM-2</span>SKU Health</a>
+    <a href="sm3-vendor-report-mockup.html"><span class="c">SM-3</span>Vendor Report</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">💵</span><span class="swt-sb-lbl">บัญชี/การเงิน</span><span class="swt-sb-cnt">9</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="fiq-finance-queue-mockup.html" class="swt-new"><span class="c">FI-Q</span>Finance Queue</a>
+    <a href="fi1-ar-receive-mockup.html"><span class="c">FI-1</span>รับชำระ AR</a>
+    <a href="fi1q-apply-queue-mockup.html" class="swt-new"><span class="c">FI-1Q</span>Apply Queue</a>
+    <a href="fi2-ap-payment-mockup.html"><span class="c">FI-2</span>จ่ายชำระ AP</a>
+    <a href="fi3-tax-reconciliation-mockup.html"><span class="c">FI-3</span>กระทบยอดภาษี</a>
+    <a href="fi4-expense-wht-mockup.html"><span class="c">FI-4</span>ค่าใช้จ่าย/WHT</a>
+    <a href="fi5-ar-audit-mockup.html"><span class="c">FI-5</span>ตรวจสอบ AR</a>
+    <a href="fi13-dual-book-mockup.html" class="swt-new"><span class="c">FI-13</span>Dual-Book/Entity Tag</a>
+    <a href="tr1-treasury-mockup.html"><span class="c">TR-1</span>Treasury</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🔗</span><span class="swt-sb-lbl">Integration (IA)</span><span class="swt-sb-cnt">1</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="iaq-bc-sync-monitor-mockup.html" class="swt-new"><span class="c">IA-Q</span>BC Sync Monitor</a>
+  </div></details>
+
+  <details open><summary><span class="swt-sb-ico">🔧</span><span class="swt-sb-lbl">บริการ (SV)</span><span class="swt-sb-cnt">6</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sv-q-service-queue-mockup.html"><span class="c">SV-Q</span>คิวงานซ่อม</a>
+    <a href="sv1-service-intake-mockup.html" class="swt-new"><span class="c">SV-1</span>รับเรื่องซ่อม</a>
+    <a href="sv3-spare-part-issue-mockup.html"><span class="c">SV-3</span>เบิกอะไหล่</a>
+    <a href="sv4-service-close-mockup.html" class="swt-new"><span class="c">SV-4</span>ปิดงาน / QA</a>
+    <a href="sv5-job-card-mockup.html"><span class="c">SV-5</span>Job Card ช่าง</a>
+    <a href="sv6-delivery-install-mockup.html"><span class="c">SV-6</span>จัดส่ง &amp; ติดตั้ง</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🚚</span><span class="swt-sb-lbl">ส่ง/รายงาน/อนุมัติ</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="ex1-executive-dashboard-mockup.html"><span class="c">EX-1</span>Executive Dashboard</a>
+    <a href="rp1-report-center-mockup.html"><span class="c">RP-1</span>Report Center</a>
+    <a href="ap1-approval-center-mockup.html"><span class="c">AP-1</span>ศูนย์อนุมัติ</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">⚙️</span><span class="swt-sb-lbl">ตั้งค่าระบบ (CF)</span><span class="swt-sb-cnt">8</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="cf1-rbac-permission-mockup.html"><span class="c">CF-1</span>สิทธิ์ RBAC</a>
+    <a href="cf2-config-hub-mockup.html"><span class="c">CF-2</span>Config Hub</a>
+    <a href="cf2-1-tax-setup-mockup.html"><span class="c">CF-2.1</span>ภาษี (Tax)</a>
+    <a href="cf2-2-number-series-mockup.html"><span class="c">CF-2.2</span>Running No.</a>
+    <a href="cf2-5-tech-template-mockup.html"><span class="c">CF-2.5</span>Template ช่าง</a>
+    <a href="cf2-6-approval-matrix-mockup.html"><span class="c">CF-2.6</span>Approval Matrix</a>
+    <a href="cf2-7-doc-template-mockup.html"><span class="c">CF-2.7</span>Doc Template</a>
+    <a href="cf2-9-general-parameter-mockup.html"><span class="c">CF-2.9</span>ค่าตั้งต้น</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">📚</span><span class="swt-sb-lbl">Master Data (MD)</span><span class="swt-sb-cnt">5</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="md1-item-master-mockup-v3.html"><span class="c">MD-1</span>ทะเบียนสินค้า</a>
+    <a href="md2-customer-master-mockup-v3.html"><span class="c">MD-2</span>ทะเบียนลูกค้า</a>
+    <a href="md3-vendor-master-mockup-v3.html"><span class="c">MD-3</span>ทะเบียน Vendor</a>
+    <a href="md4-employee-master-mockup-v3.html"><span class="c">MD-4</span>ทะเบียนพนักงาน</a>
+    <a href="md5-branch-warehouse-mockup-v3.html"><span class="c">MD-5</span>สาขา &amp; คลัง</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🧩</span><span class="swt-sb-lbl">Shared Components</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sc1-customer-search-mockup.html"><span class="c">SC-1</span>ค้นหาลูกค้า</a>
+    <a href="sc2-item-search-mockup.html"><span class="c">SC-2</span>ค้นหาสินค้า</a>
+    <a href="sc7-timeline-mockup.html"><span class="c">SC-7</span>Timeline</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">👤</span><span class="swt-sb-lbl">ระบบ &amp; บัญชีผู้ใช้</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="login-mockup.html" class="swt-new"><span class="c">AUTH</span>Login / SSO</a>
+    <a href="user-profile-mockup.html" class="swt-new"><span class="c">PROF</span>User Profile</a>
+    <a href="notification-center-mockup.html" class="swt-new"><span class="c">NOTI</span>Notification Center</a>
+  </div></details>
+</aside>
+<script>
+(function(){
+  var sb=document.getElementById('swtSb');if(!sb)return;
+  if(!document.querySelector('.main-content, main.main, .app-container, .app'))
+    document.body.classList.add('swt-body-pad');
+  var cur=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  sb.querySelectorAll('a[href]').forEach(function(a){
+    var h=(a.getAttribute('href')||'').split('/').pop().toLowerCase();
+    if(h===cur){a.classList.add('swt-active');var p=a.closest('details');if(p)p.open=true;}
+  });
+  window.swtSbFilter=function(q){
+    q=(q||'').trim().toLowerCase();
+    sb.querySelectorAll('.swt-sb-links a').forEach(function(a){
+      var m=!q||a.textContent.toLowerCase().indexOf(q)>-1;
+      a.classList.toggle('swt-hide',!m);
+    });
+    sb.querySelectorAll('details').forEach(function(d){
+      var any=[].some.call(d.querySelectorAll('.swt-sb-links a'),function(a){return !a.classList.contains('swt-hide');});
+      d.classList.toggle('swt-hide',!!q&&!any);
+      if(q&&any)d.open=true;
+    });
+  };
+})();
+</script>
+<!-- SWT_SIDEBAR_END -->
+
+<div class="app-container"><div class="main-content"><div class="topbar">
+<div class="breadcrumb">หน้าแรก › ศูนย์บริการ › <strong>SV-1 รับเรื่องซ่อม</strong></div>
+<div class="topbar-right">
+<input class="search-box" placeholder="ค้นหา... (Ctrl+K)">
+<span>🔔</span>
+<span class="branch-tag">BKK-Service · SWE</span>
+<div class="avatar">P</div>
+</div>
+</div><div class="content-wrapper">
+
+<!-- Section 1: Page Header -->
+<div class="page-header">
+  <div>
+    <div class="page-title">SV-1 · รับเรื่องซ่อม (Service Intake)</div>
+    <div class="page-subtitle">สร้าง Service Order · นัดหมายช่าง · พิมพ์ใบรับสินค้าให้ลูกค้า</div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-secondary">📄 พิมพ์ใบรับสินค้า</button>
+    <button class="btn btn-secondary">💾 บันทึก Draft</button>
+    <button class="btn btn-primary">📅 นัดหมายช่าง</button>
+  </div>
+</div>
+
+<!-- Status pills -->
+<div class="status-pills">
+  <span class="status-pill active">1. รับเรื่อง</span>
+  <span class="status-pill">2. นัดหมาย</span>
+  <span class="status-pill">3. รอช่าง</span>
+  <span class="status-pill">4. ดำเนินงาน</span>
+  <span class="status-pill">5. ส่งงาน</span>
+  <span class="status-pill">6. ปิดงาน</span>
+</div>
+
+<!-- Section 2: Doc Header -->
+<div class="section-card">
+  <div class="section-title">📋 ส่วนที่ 1 · ข้อมูลเอกสาร
+    <span class="tag">BC: serviceOrders 5900</span>
+  </div>
+  <div class="form-grid">
+    <div class="field"><label>เลขที่รับซ่อม</label><input value="SV-2604-0146" readonly></div>
+    <div class="field"><label>วันที่รับ <span class="req">*</span></label><input type="text" value="23 เม.ย. 26"></div>
+    <div class="field"><label>สาขารับงาน</label>
+      <select><option>HQ · สนง.ใหญ่</option><option>รังสิต</option><option>บางนา</option><option>นครปฐม</option><option>ชลบุรี</option><option>ขอนแก่น</option></select>
+    </div>
+    <div class="field"><label>ประเภทงาน <span class="req">*</span></label>
+      <select><option>🔧 ซ่อม</option><option>🏗️ ติดตั้ง</option><option>🧪 ตรวจสภาพ</option><option>♻️ เคลม Vendor</option></select>
+    </div>
+    <div class="field"><label>ช่องทางรับเรื่อง</label>
+      <select><option>ลูกค้านำมาที่สาขา</option><option>โทรศัพท์</option><option>LINE</option><option>Walk-in</option><option>Service Request Online</option></select>
+    </div>
+    <div class="field"><label>Priority</label>
+      <select><option>🟡 ปกติ</option><option>🔴 เร่งด่วน</option><option>🟢 ไม่รีบ</option></select>
+    </div>
+  </div>
+</div>
+
+<!-- Section 3: Party -->
+<div class="section-card">
+  <div class="section-title">👤 ส่วนที่ 2 · ข้อมูลลูกค้า
+    <span class="tag">SC-1</span>
+  </div>
+  <div class="form-grid">
+    <div class="field"><label>ลูกค้า <span class="req">*</span></label>
+      <div class="swt-search-combo">
+        <input type="text" value="C-00125 · คุณสมหญิง เจริญสุข" data-customer-search>
+        <button class="swt-search-btn" data-customer-search title="ค้นหาลูกค้า (SC-1)">🔍</button>
+      </div>
+    </div>
+    <div class="field"><label>เบอร์โทร</label><input value="081-xxx-1234"></div>
+    <div class="field"><label>Email / LINE ID</label><input value="somying@email.com"></div>
+  </div>
+  <div class="form-grid-2" style="margin-top:14px">
+    <div class="field"><label>ที่อยู่รับ-ส่ง / สถานที่ซ่อม</label>
+      <select style="margin-bottom:6px"><option>🏠 ที่อยู่หลัก — 123 ซ.สุขุมวิท 71 คลองตัน</option><option>🏢 ที่อยู่ส่งของ</option><option>📍 ที่อยู่อื่น (ระบุเอง)</option></select>
+      <input value="123 ซ.สุขุมวิท 71 แขวงคลองตัน เขตวัฒนา กรุงเทพฯ 10110" readonly>
+    </div>
+    <div class="field"><label>หมายเหตุลูกค้า</label>
+      <textarea>ชั้น 5 ของตึก ห้อง A · เข้าประตูใหญ่แจ้งยาม</textarea>
+    </div>
+  </div>
+</div>
+
+<!-- Section 4: Product + Serial + Symptom + Warranty -->
+<div class="section-card">
+  <div class="section-title">📦 ส่วนที่ 3 · สินค้าที่นำมาซ่อม
+    <span class="tag">SC-2 + SC-8</span>
+  </div>
+
+  <div class="form-grid">
+    <div class="field"><label>รหัสสินค้า / รุ่น <span class="req">*</span></label>
+      <div class="swt-search-combo">
+        <input type="text" value="AC-DAI-FTKM24 · Daikin FTKM24SV2S (Inverter 24k BTU)" data-item-search>
+        <button class="swt-search-btn" data-item-search title="ค้นหาสินค้า (SC-2)">🔍</button>
+      </div>
+    </div>
+    <div class="field"><label>Serial No. <span class="req">*</span></label>
+      <div class="swt-search-combo">
+        <input type="text" value="SN 1234567890" placeholder="สแกน Barcode หรือพิมพ์">
+        <button class="swt-search-btn" title="สแกน Barcode">📷</button>
+      </div>
+    </div>
+    <div class="field"><label>วันที่ซื้อ</label><input value="10 มิ.ย. 24" type="text"></div>
+  </div>
+
+  <div class="alert alert-info" style="margin:14px 0 0">
+    ℹ️ <div><strong>หมายเหตุ:</strong> ระบบ <strong>ไม่ตรวจประกันอัตโนมัติ</strong> — พนักงานเช็คประกัน/เงื่อนไขกับทาง Vendor ด้วยตนเอง แล้วบันทึกผลในช่อง "ประเภทการรับประกัน" ด้านล่าง</div>
+  </div>
+
+  <div style="margin:16px 0 8px;font-size:13px;font-weight:600;color:#374151">ประเภทการรับประกัน <span class="req" style="color:#DC2626">*</span></div>
+  <div class="warranty-group">
+    <label class="warranty-card selected">
+      <input type="radio" name="warranty" value="in" checked>
+      <div>
+        <div class="wc-title">🟢 ในประกัน</div>
+        <div class="wc-desc">Vendor / ร้านรับผิดชอบ · ลูกค้าไม่มีค่าใช้จ่าย (หรือเฉพาะของนอก Comp)</div>
+      </div>
+    </label>
+    <label class="warranty-card">
+      <input type="radio" name="warranty" value="out">
+      <div>
+        <div class="wc-title">🟡 นอกประกัน</div>
+        <div class="wc-desc">ลูกค้าจ่ายเต็ม · ประมาณค่าใช้จ่ายก่อนเริ่มซ่อม</div>
+      </div>
+    </label>
+    <label class="warranty-card">
+      <input type="radio" name="warranty" value="vendor">
+      <div>
+        <div class="wc-title">🔴 เคลม Vendor</div>
+        <div class="wc-desc">ส่งคืน Vendor · trigger CL-1 (Phase 2) · อัปเดตสถานะจาก Vendor</div>
+      </div>
+    </label>
+  </div>
+
+  <div class="form-grid-2" style="margin-top:14px">
+    <div class="field"><label>Vendor อ้างอิง (ถ้าในประกัน)</label>
+      <input value="Daikin Thailand · เคลม Ref: DKN-CLM-2604-0089">
+    </div>
+    <div class="field"><label>หมายเหตุประกัน (พนักงานกรอก)</label>
+      <input value="เช็คกับ Daikin โทร. 02-xxx แล้ว · คอมเพรสเซอร์เข้า Comp 7 ปี (เหลือ 5 ปี 2 ด.)">
+    </div>
+  </div>
+
+  <div class="form-grid-2" style="margin-top:14px">
+    <div class="field"><label>อาการที่ลูกค้าแจ้ง <span class="req">*</span></label>
+      <textarea>เปิดแล้วไม่เย็น · มีน้ำหยดจากเครื่องตัวเมียข้างใน · ได้ยินเสียงดังตอนคอมทำงาน</textarea>
+    </div>
+    <div class="field"><label>การตรวจสอบเบื้องต้น (พนักงานรับเรื่อง)</label>
+      <textarea>เปิดลองเย็นเล็กน้อยแต่ไม่เย็นพอ · น่าจะเป็น Compressor หรือน้ำยารั่ว · ต้องส่งช่างตรวจที่บ้าน</textarea>
+    </div>
+  </div>
+
+  <div class="form-grid-4" style="margin-top:14px">
+    <div class="field"><label>ประมาณค่าอะไหล่</label><input value="8,500.00 ฿"></div>
+    <div class="field"><label>ประมาณค่าแรง</label><input value="1,500.00 ฿"></div>
+    <div class="field"><label>ประมาณค่าเดินทาง</label><input value="300.00 ฿"></div>
+    <div class="field"><label>รวมประมาณ</label><input value="10,300.00 ฿" readonly style="font-weight:700;color:#111827"></div>
+  </div>
+</div>
+
+<!-- Section 5: Tabs (Appointment / Photos / Refs / Timeline) -->
+<div class="section-card">
+  <div class="section-title">📎 ส่วนที่ 4 · รายละเอียดเพิ่มเติม</div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(event,'tab-appt')">📅 นัดหมายช่าง</button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-photo')">📸 รูปถ่ายก่อนซ่อม</button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-ref')">🔗 อ้างอิง</button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-tl')">🕑 ประวัติ / Timeline</button>
+  </div>
+
+  <!-- Tab 1: Appointment -->
+  <div class="tab-pane active" id="tab-appt">
+    <div class="form-grid">
+      <div class="field"><label>วันที่นัด <span class="req">*</span></label><input value="25 เม.ย. 26"></div>
+      <div class="field"><label>ช่วงเวลา</label>
+        <select><option>09:00 - 12:00 (ช่วงเช้า)</option><option>13:00 - 17:00 (ช่วงบ่าย)</option><option>ระบุเวลาชัด...</option></select>
+      </div>
+      <div class="field"><label>สถานที่นัด</label>
+        <select><option>🏠 ที่บ้านลูกค้า</option><option>🏢 สาขา HQ</option><option>📍 ที่อื่น (ระบุ)</option></select>
+      </div>
+      <div class="field"><label>ช่างที่มอบหมาย <span class="req">*</span></label>
+        <select><option>TECH-007 · สมศักดิ์ ดีเยี่ยม (แอร์ · BKK)</option><option>TECH-012 · วิชัย ใจดี (แอร์ · RSN)</option><option>— รอมอบหมาย —</option></select>
+      </div>
+      <div class="field"><label>ประเภทช่าง</label>
+        <select><option>🏢 ช่างภายใน (Incentive)</option><option>🚚 ช่างภายนอก (ค่าแรง AP)</option></select>
+      </div>
+      <div class="field"><label>SLA Target</label>
+        <input value="ต้องเริ่มซ่อม ≤ 24 ชม. · เสร็จ ≤ 3 วันทำการ" readonly>
+      </div>
+    </div>
+    <div class="alert alert-warn" style="margin-top:14px">
+      ⏰ <div><strong>SLA Countdown:</strong> เริ่มนับจากเวลารับเรื่อง <b>23 เม.ย. 26 · 14:20 น.</b> — ครบกำหนดเริ่มซ่อม <b>24 เม.ย. 26 · 14:20 น.</b> (เหลือ <b>23 ชม. 47 นาที</b>)</div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Photos -->
+  <div class="tab-pane" id="tab-photo">
+    <div style="margin-bottom:12px;font-size:12.5px;color:#6B7280">ถ่ายรูปเครื่อง / อาการที่เห็น / Serial No. · <strong>บังคับอย่างน้อย 2 รูป</strong>ก่อนส่งให้ช่าง</div>
+    <div class="photo-grid">
+      <div class="photo-slot filled"><div class="ico">📷</div>รูปหน้าเครื่อง</div>
+      <div class="photo-slot filled"><div class="ico">📷</div>Serial + QR</div>
+      <div class="photo-slot filled"><div class="ico">📷</div>อาการ (น้ำหยด)</div>
+      <div class="photo-slot"><div class="ico">+</div>เพิ่มรูป</div>
+    </div>
+  </div>
+
+  <!-- Tab 3: Reference -->
+  <div class="tab-pane" id="tab-ref">
+    <table>
+      <thead><tr><th style="width:120px">เอกสาร</th><th>เลขที่ / หมายเหตุ</th><th style="width:160px">วันที่</th><th style="width:100px">สถานะ</th></tr></thead>
+      <tbody>
+        <tr><td><strong>บิลขายต้นทาง</strong></td><td><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:600">SI-2406-0128</a> · ราคา 32,900 ฿</td><td>10 มิ.ย. 24</td><td><span class="chip chip-green">✓ ใช้ได้</span></td></tr>
+        <tr><td><strong>ใบรับประกัน</strong></td><td>WRT-2406-0128 · ประกัน 7 ปี (Compressor)</td><td>10 มิ.ย. 24</td><td><span class="chip chip-green">✓ ใช้ได้</span></td></tr>
+        <tr><td><strong>บัตรลูกค้า</strong></td><td><a href="md2-customer-master-mockup-v3.html" style="color:#2563EB;font-family:monospace;font-weight:600">C-00125</a></td><td>—</td><td><span class="chip chip-blue">VIP Tier 2</span></td></tr>
+        <tr><td><strong>ประวัติซ่อมเดิม</strong></td><td>ไม่มี (เครื่องนี้ยังไม่เคยซ่อมที่เรา)</td><td>—</td><td><span class="chip chip-gray">—</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Tab 4: Timeline -->
+  <div class="tab-pane" id="tab-tl">
+    <div class="timeline-list">
+      <div class="tl-item active">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-title">รับเรื่องซ่อม</div>
+          <div class="tl-meta">23 เม.ย. 26 · 14:20 น. · พนักงานรับเรื่อง: คุณปภาวรินทร์ · สาขา BKK</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-title">มอบหมายช่าง</div>
+          <div class="tl-meta">รอดำเนินการ · จะมอบหมายเมื่อกด "นัดหมายช่าง"</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-title">ช่างเริ่มงาน → Job Card</div>
+          <div class="tl-meta">ยังไม่เริ่ม · ช่างจะ check-in ผ่าน <a href="sv5-job-card-mockup.html" style="color:#2563EB">SV-5 Job Card</a></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-title">ปิดงาน / QA + Invoice</div>
+          <div class="tl-meta">ยังไม่ถึงขั้นตอน · ดำเนินการที่ <a href="sv4-service-close-mockup.html" style="color:#2563EB">SV-4 ปิดงาน</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer action bar -->
+<div class="footer-actions">
+  <div class="hint">🔒 เอกสารจะ Post ไป BC เมื่อ "นัดหมายช่าง" · ก่อนหน้านั้นเก็บเป็น Draft ใน Portal เท่านั้น</div>
+  <div class="spacer"></div>
+  <button class="btn btn-ghost">ยกเลิก</button>
+  <button class="btn btn-secondary">💾 บันทึก Draft</button>
+  <button class="btn btn-success">📅 นัดหมายช่าง → SV-5</button>
+</div>
+
+</div></div></div>
+
+<script>
+function switchTab(e,id){
+  var card=e.target.closest('.section-card');
+  card.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  card.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  e.target.classList.add('active');
+  card.querySelector('#'+id).classList.add('active');
+}
+document.querySelectorAll('.warranty-card').forEach(function(c){
+  c.addEventListener('click',function(){
+    document.querySelectorAll('.warranty-card').forEach(function(x){x.classList.remove('selected');});
+    c.classList.add('selected');
+    c.querySelector('input').checked=true;
+  });
+});
+</script>
+<script src="swt-link.js"></script>
+</body>
+</html>
