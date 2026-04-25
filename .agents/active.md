@@ -1,7 +1,7 @@
 ---
-updated_at: "2026-04-23T15:00:00+07:00"
+updated_at: "2026-04-23T22:00:00+07:00"
 status: "active"
-current_focus: "SV Module Loop Closure ✅ 2026-04-23 → next: PO/WH Path 2 (build 5 gap mockups)"
+current_focus: "Pivot: AP Invoice process (PO-6) focus · Path 2 scope simplified → PO-3 no-KYC, PO-5 full-receive gate, PO-8 bill-first-receive-later, WH-R/NM = reports"
 branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
@@ -12,7 +12,35 @@ project_type: "frontend-mockup (HTML + docs)"
 ออกแบบ Frontend ERP Web Portal (Sangwijit Group) เหนือ Dynamics 365 Business Central — สร้าง HTML mockup ครบทุกหน้า, เตรียม handoff ให้ทีม dev
 
 ## Current State (2026-04-23 — latest)
-- **SV Module Loop Closure ✅ NEW 2026-04-23** — ปิด gap บริการ P1 ครบ
+
+- **PIVOT 2026-04-23 22:00 — Path 2 scope simplified + focus shift → AP Invoice (PO-6)**
+  - **User clarifications ยืนยัน:**
+    - **PO-3 Vendor Onboarding** = สร้าง Vendor ใหม่ (กรอกข้อมูล) · **ไม่ใช้ KYC** · create-only — การแก้ไขต้องใช้สิทธิ์ (ไม่อยู่ใน scope หน้านี้) · ไม่ซีเรียส · สร้างได้เลย
+    - **PO-5 Finance GRN** = รับสินค้า โดย user = คลัง หรือ แคชเชียร์สาขา (ขึ้นกับมอบหมาย/สิทธิ์) · **ทยอยรับได้** (order 10 · รับก่อน 2 ตัว OK) · **เงื่อนไขตั้งหนี้: ต้องรับครบบิลก่อน** ถึงจะตั้งหนี้ได้ (ยกเว้นเข้าเงื่อนไข PO-8 บิลฝาก)
+    - **PO-8 Deposit Bill** = **ข้ามขั้น PO-5** · รับการวางบิล/จ่ายชำระก่อน · สินค้ายังอยู่กับบริษัท (ฝากของ) · ทยอยรับสินค้าผ่าน PO-5 · ต้อง**ไล่ตาม flow เอกสาร**
+    - **WH-R + WH-NM** = กลุ่ม**รายงาน** (ไม่เร่ง) · ดึงจากประวัติรับเข้า + ประวัติสินค้า + คงเหลือ + ประวัติขาย เปรียบเทียบ
+  - **NEW FOCUS:** กระบวนการตั้งหนี้ (AP Invoice · PO-6) — ลำดับสำคัญกว่า Path 2 เดิม
+    - flow: PO-5 (รับครบ) → PO-6 AP Invoice | PO-8 (บิลฝาก) → PO-5 ทยอยรับ → settle
+    - PO-6 mockup มีอยู่แล้ว — ต้อง audit ว่า UX ตรง flow นี้ไหม (gate "รับครบ" · link PO-8 advance · 3-Way Match)
+  - **Pending decision:** `/plan-mockup` skill setup — user ถามแนวทาง 3 option (skill / memory / ทั้งคู่) ยังไม่ตัดสินใจ — คาดเริ่ม conversation หน้า
+  - **Build order ใหม่ (revise):** audit PO-6 flow ก่อน → PO-5 (รับสินค้า + gate) → PO-8 (ฝากของ + advance) → PO-3 (simple form) → WH-R/WH-NM (reports · low priority)
+
+- **SV Module Phase 2 Refinement ✅ NEW 2026-04-23 (evening)** — ปรับโครงตาม user workflow จริง (4 ขั้น + SV-Order)
+  - **User's 4-step workflow:** (1) ใบรับงานซ่อม · (2) ใบมอบหมายงาน · (3) ใบรับจากงานซ่อม (admin pricing) · (4) ส่งงานลูกค้า + ปิดงาน
+  - **NEW builds (3 pages):**
+    - `sv2-service-assignment-mockup.html` — ใบมอบหมายงาน (เดิมรวมอยู่ใน SV-1) · 6 tabs: เลือกช่าง/นัด/เบิก-สั่งอะไหล่ล่วงหน้า/แจ้งลูกค้า+ช่าง/อ้างอิง/timeline · 3 tech cards
+    - `sv-order-parts-request-mockup.html` — สั่งอะไหล่ (ใหม่ทั้งหมด) · state chain 5 ขั้น: สั่ง → จ่ายเงิน → รอรับอะไหล่ → นัดหมาย → รอส่งอะไหล่เก่าคืน · ผูก Job+Customer+Serial · spawn PO-4
+    - `sv7-service-delivery-mockup.html` — ส่งงานลูกค้า + ปิดงาน (แยกจาก SV-4) · customer signature + Rating + QR PromptPay + Invoice preview · ปิดงานระหว่างเรา-ลูกค้า
+  - **Refactor (3 pages):**
+    - `sv1-service-intake-mockup.html` — ตัดส่วน "นัดหมายช่าง" ออก (ย้าย SV-2) · Tab "ความสะดวกลูกค้า" (preferences only) · action → ส่งต่อ SV-2
+    - `sv3-spare-part-issue-mockup.html` — Redesign ตาม `ui_design_pattern_guideline.md` · 7-section ERP form · status hex (`#BFBFBF`/`#C55A11`/`#4472C4`/`#375623`) · bilingual TH/EN labels · 4 tabs
+    - `sv4-service-close-mockup.html` — เปลี่ยนเป็น "ใบรับจากงานซ่อม" (admin pricing+warranty adj) · **Tab Vendor Billing (Q2=A)** · Customer side เป็น preview · action → ส่งต่อ SV-7
+  - **Light touch:** `sv5-job-card-mockup.html` — เพิ่ม state link ไป SV-3/SV-Order + state flow alert · action → SV-4
+  - **SV-Order vs อื่น:** ไม่ซ้ำ · SV-3 = เบิกจาก**สต็อก** · SV-Order = **สั่งใหม่** (spawn PO-4 · รับผ่าน WH-1 GRN)
+  - **Sidebar rollout:** 67 files (Python regex block replacement · idempotent) · 9 SV entries: SV-Q/1/2/5/3/O/4/7/6
+  - **index.html:** Service section 5→8 cards · meta + sidebar updated
+  - **Commit prior:** `ddc4d8b` feat(sv): Phase 1 SV loop closure
+- **SV Module Loop Closure ✅ 2026-04-23 (morning) — superseded by evening refinement above**
   - **Rename + Archive:**
     - `sv1-service-queue-mockup.html` → `sv-q-service-queue-mockup.html` (เนื้อหาจริง = Queue Dashboard)
     - `sv2-service-invoice-mockup.html` → `_archive/` (Service Invoice logic ย้ายเข้า SV-4 ตาม Q3=B)
@@ -32,24 +60,30 @@ project_type: "frontend-mockup (HTML + docs)"
   - Updated: 73 .html files + swt-link.js + 3 .md docs (filename refs + sidebar code labels + titles + breadcrumbs + stale `PO-Rebate` → `PO-7`)
   - _archive/ ไม่แตะ
 - **Gap + KPI Matrix ✅ NEW 2026-04-21** — `.agents/topics/po-wh-gap-kpi-matrix.md` เทียบ spec vs mockup (PO 9 + WH 7), map 27 KPI, Priority P0-P3
-- **Next (Path 2 — build 5 gap mockups):**
-  - PO-3 Vendor Onboarding (ยังไม่มี)
-  - PO-5 Finance GRN (ยังไม่มี — แยกจาก WH-1)
-  - PO-8 Deposit Bill บิลฝาก (ยังไม่มี)
-  - WH-NM Non-Move Report (ยังไม่มี — spec ละเอียด)
-  - WH-R Stock Card (ยังไม่มี — spec สั้น ต้องเสริม Aging bucket)
+- **Next (revised 2026-04-23 22:00 — focus = ตั้งหนี้ flow):**
+  1. Audit PO-6 AP Invoice (มีอยู่แล้ว) ว่า gate "รับครบก่อนตั้งหนี้" + link PO-8 มีหรือยัง
+  2. Build PO-5 Finance GRN (ทยอยรับ + full-receive detector)
+  3. Build PO-8 Deposit Bill (ข้าม PO-5 · bill first · flow เอกสารไล่ตาม Flow Design PDF)
+  4. Build PO-3 Vendor Onboarding (simple form · no KYC · create-only)
+  5. (Low priority) WH-R Stock Card + WH-NM Non-Move Report — รายงาน · ดึงข้อมูลรวม
 
-## SV Module — Final Structure (post 2026-04-23 closure)
-| รหัส | ไฟล์ | สถานะ |
-|---|---|---|
-| SV-Q | `sv-q-service-queue-mockup.html` | ✅ Queue dashboard + 5 KPI + SLA |
-| SV-1 | `sv1-service-intake-mockup.html` | ✅ NEW Intake form · warranty manual |
-| SV-3 | `sv3-spare-part-issue-mockup.html` | ✅ Parts Req (ใน/นอก Comp) |
-| SV-4 | `sv4-service-close-mockup.html` | ✅ NEW Close/QA + dual-billing Invoice (Vendor/ลูกค้า) |
-| SV-5 | `sv5-job-card-mockup.html` | ✅ Desktop Job Card (cover SV-2 spec too — ไม่มี mobile เพิ่ม) |
-| SV-6 | `sv6-delivery-install-mockup.html` + 2 sub (booking modal + print templates) | ✅ Delivery & Install |
-| CL-1 | `cl1-claims-mockup.html` | ⏳ Phase 2 deferred (BC365 audit) |
-| CL-2/3 | — | ⏳ Phase 2 deferred |
+## SV Module — Final Structure (post 2026-04-23 Phase 2 refinement)
+| รหัส | ไฟล์ | บทบาท | State หลัก |
+|---|---|---|---|
+| SV-Q | `sv-q-service-queue-mockup.html` | Queue dashboard (ทุกสถานะ) | filter ตาม state |
+| **SV-1** | `sv1-service-intake-mockup.html` | ใบรับงานซ่อม (รับเรื่อง · ประมาณการ) | `รอมอบหมาย` |
+| **SV-2** 🆕 | `sv2-service-assignment-mockup.html` | ใบมอบหมายงาน (Admin เลือกช่าง+นัด) | `รอมอบหมาย → มอบหมายแล้ว` |
+| SV-5 | `sv5-job-card-mockup.html` | Job Card ช่าง (กรอกอาการ+แก้ไข) | `งานช่าง → ส่งงาน/รออะไหล่/รอสั่งอะไหล่` |
+| SV-3 | `sv3-spare-part-issue-mockup.html` | เบิกอะไหล่จาก**สต็อก** | `PendingApproval → Issued` |
+| **SV-Order** 🆕 | `sv-order-parts-request-mockup.html` | **สั่งอะไหล่** (ไม่มีในสต็อก · spawn PO-4) | `สั่ง → จ่าย → รอรับ → นัด → คืนของเก่า` |
+| **SV-4** (refactored) | `sv4-service-close-mockup.html` | ใบรับสินค้าจากงานซ่อม (admin pricing + Vendor billing) | `รอส่งคืนลูกค้า` |
+| **SV-7** 🆕 | `sv7-service-delivery-mockup.html` | ส่งงานลูกค้า (เซ็น+QR+Invoice+ปิดงาน) | `ปิดงาน (เรา-ลูกค้า)` |
+| SV-6 | `sv6-delivery-install-mockup.html` + 2 sub | Delivery & Install (งานติดตั้งสินค้าใหม่ · แยก loop) | — |
+| CL-1/2/3 | `cl1-claims-mockup.html` (CL-2/3 ยังไม่มี) | ⏳ Phase 2 deferred (BC365 audit) | — |
+
+### Design guide compliance (2026-04-23)
+- ใหม่ทั้ง 3 ไฟล์ + SV-3 redesign: 7-section ERP form pattern · status-badge hex `#BFBFBF/#C55A11/#4472C4/#375623/#C00000/#00B050` · bilingual `label + .en` · sticky `.footer-actions` · SC5 doc-chain · SC7 timeline tab · numeric `.num` class
+- Reference: `ui_design_pattern_guideline.md` (ผู้ใช้สั่ง Q1 · 402 บรรทัด)
 
 ## Previous Focus (2026-04-19)
 - **Payment QR 2 ชั้น ✅ NEW 2026-04-19** — Tier-A 5 ใน `swt-link.js` (~260 บรรทัดเพิ่ม)

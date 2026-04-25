@@ -60,6 +60,35 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827}
 .alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px;display:flex;align-items:flex-start;gap:8px}
 .alert-warn{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
 .alert-info{background:#DBEAFE;color:#1E40AF;border:1px solid #93C5FD}
+.en{font-size:10.5px;color:#9CA3AF;font-weight:400;margin-left:3px;font-style:italic}
+.mono{font-family:'SFMono-Regular',Consolas,monospace;font-size:12.5px;color:#1F2937}
+/* Job Card tab bar */
+.jc-tabs{display:flex;gap:2px;border-bottom:2px solid #E5E7EB;margin-bottom:16px;overflow-x:auto}
+.jc-tab{padding:10px 16px;background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;font-size:13px;font-weight:500;color:#6B7280;font-family:inherit;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.jc-tab:hover{color:#111827;background:#F9FAFB}
+.jc-tab.act{color:#2563EB;border-bottom-color:#2563EB;font-weight:600;background:#EFF6FF}
+.jc-tab-cnt{font-size:10px;background:#E5E7EB;color:#374151;padding:1px 6px;border-radius:10px;font-weight:700}
+.jc-tab.act .jc-tab-cnt{background:#2563EB;color:#fff}
+.jc-pane{display:none}
+.jc-pane.act{display:block}
+/* Photo grid */
+.jc-photo{border:1px solid #E5E7EB;border-radius:6px;overflow:hidden;background:#fff}
+.jc-ph-img{height:110px;background:linear-gradient(135deg,#F3F4F6,#E5E7EB);display:flex;align-items:center;justify-content:center;font-size:36px;color:#9CA3AF}
+.jc-ph-lbl{padding:6px 8px;font-size:11.5px;color:#374151;background:#FAFAFA;border-top:1px solid #F3F4F6}
+/* Timeline */
+.jc-timeline{list-style:none;padding:4px 0 4px 6px;margin:0}
+.jc-timeline li{position:relative;padding:6px 0 6px 26px;font-size:13px;color:#374151;border-left:2px solid #E5E7EB;margin-left:6px}
+.jc-timeline li:last-child{border-left-color:transparent}
+.jc-timeline .tl-dot{position:absolute;left:-7px;top:10px;width:12px;height:12px;border-radius:50%;background:#E5E7EB;border:2px solid #fff;box-shadow:0 0 0 1px #E5E7EB}
+.jc-timeline .tl-dot.ok{background:#10B981;box-shadow:0 0 0 1px #10B981}
+.jc-timeline .tl-dot.live{background:#F59E0B;box-shadow:0 0 0 1px #F59E0B;animation:jcPulse 1.5s infinite}
+.jc-timeline .tl-dot.pending{background:#D1D5DB}
+.jc-timeline .tl-time{font-family:monospace;font-weight:600;color:#6B7280;margin-right:10px;min-width:45px;display:inline-block}
+@keyframes jcPulse{0%,100%{opacity:1}50%{opacity:0.4}}
+/* Sticky Action Bar */
+.jc-actionbar{position:sticky;bottom:0;background:#fff;border-top:1px solid #E5E7EB;padding:12px 24px;margin:0 -24px -24px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 -4px 12px rgba(0,0,0,0.06);z-index:40}
+.jc-ab-left,.jc-ab-right{display:flex;gap:8px}
+.jc-ab-hint{font-size:11.5px;color:#9CA3AF;margin-right:10px;align-self:center}
 </style>
 </head>
 <body>
@@ -168,13 +197,16 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
     <a href="iaq-bc-sync-monitor-mockup.html" class="swt-new"><span class="c">IA-Q</span>BC Sync Monitor</a>
   </div></details>
 
-  <details><summary><span class="swt-sb-ico">🔧</span><span class="swt-sb-lbl">บริการ (SV)</span><span class="swt-sb-cnt">6</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+  <details><summary><span class="swt-sb-ico">🔧</span><span class="swt-sb-lbl">บริการ (SV)</span><span class="swt-sb-cnt">9</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
     <a href="sv-q-service-queue-mockup.html"><span class="c">SV-Q</span>คิวงานซ่อม</a>
-    <a href="sv1-service-intake-mockup.html" class="swt-new"><span class="c">SV-1</span>รับเรื่องซ่อม</a>
-    <a href="sv3-spare-part-issue-mockup.html" class="swt-new"><span class="c">SV-3</span>เบิกอะไหล่</a>
-    <a href="sv4-service-close-mockup.html" class="swt-new"><span class="c">SV-4</span>ปิดงาน / QA</a>
+    <a href="sv1-service-intake-mockup.html"><span class="c">SV-1</span>ใบรับงานซ่อม</a>
+    <a href="sv2-service-assignment-mockup.html" class="swt-new"><span class="c">SV-2</span>ใบมอบหมายงาน</a>
+    <a href="sv3-spare-part-issue-mockup.html"><span class="c">SV-3</span>เบิกอะไหล่ (สต็อก)</a>
+    <a href="sv4-service-close-mockup.html"><span class="c">SV-4</span>ใบรับจากงานซ่อม</a>
     <a href="sv5-job-card-mockup.html"><span class="c">SV-5</span>Job Card ช่าง</a>
     <a href="sv6-delivery-install-mockup.html"><span class="c">SV-6</span>จัดส่ง &amp; ติดตั้ง</a>
+    <a href="sv7-service-delivery-mockup.html" class="swt-new"><span class="c">SV-7</span>ส่งงานลูกค้า</a>
+    <a href="sv-order-parts-request-mockup.html" class="swt-new"><span class="c">SV-O</span>สั่งอะไหล่</a>
   </div></details>
 
   <details><summary><span class="swt-sb-ico">🚚</span><span class="swt-sb-lbl">ส่ง/รายงาน/อนุมัติ</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
@@ -249,152 +281,288 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 <div class="avatar">P</div>
 </div>
 </div><div class="content-wrapper">
-<div class="page-header">
-  <div>
-    <div class="page-title">SV-5 · Job Card ช่าง (Service Job Card)</div>
-    <div class="page-subtitle">JC-2026-0411-0082 · เปิด 11 เม.ย. 2026 · ช่าง: สมหมาย ใจดี · สาขา: BKK-Service</div>
+<!-- Main Header (SL-4 pattern) -->
+<header class="swt-mh">
+  <div class="swt-mh-left">
+    <div class="swt-mh-title">
+      <div class="swt-mh-ico">🔧</div>
+      <div>
+        <h1>Job Card ช่าง</h1>
+        <p>Service Job Card (SV-5)</p>
+      </div>
+    </div>
+    <div class="swt-mh-divider"></div>
+    <div class="swt-mh-meta">
+      <div class="swt-mh-meta-item"><div class="lbl">เลขที่ Job Card</div><div class="val">JC-2604-0082</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">อ้างอิง SV-2</div><div class="val">JA-2604-0089</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">ช่าง</div><div class="val">TECH-007 สมศักดิ์</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">สาขา</div><div class="val">BKK-Service</div></div>
+    </div>
   </div>
-  <div class="header-actions">
-    <button class="btn btn-secondary">📄 พิมพ์</button>
-    <button class="btn btn-secondary">📸 แนบรูป (4)</button>
-    <button class="btn btn-primary">✓ ปิดงาน</button>
+  <div class="swt-mh-right">
+    <span class="swt-mh-badge confirmed">🔧 InProgress</span>
+    <button class="swt-mh-btn swt-mh-btn-ghost">📄 พิมพ์</button>
+    <button class="swt-mh-btn swt-mh-btn-ghost">📸 รูป (4)</button>
+    <button class="swt-mh-btn swt-mh-btn-ghost">⏸️ รออะไหล่</button>
+    <button class="swt-mh-btn swt-mh-btn-primary">→ ส่งให้ Admin</button>
   </div>
-</div>
+</header>
 
 <div class="status-bar">
-  <div class="status-step"><span class="dot"></span>1. รับแจ้ง</div>
+  <div class="status-step"><span class="dot"></span>1. รับงาน (Assigned)</div>
   <span>→</span>
-  <div class="status-step"><span class="dot"></span>2. นัดหมาย</div>
+  <div class="status-step"><span class="dot"></span>2. ช่างกดรับ (Ack)</div>
   <span>→</span>
-  <div class="status-step"><span class="dot"></span>3. ตรวจ</div>
+  <div class="status-step"><span class="dot"></span>3. กรอกอาการ/วินิจฉัย</div>
   <span>→</span>
-  <div class="status-step"><span class="dot"></span>4. เบิกอะไหล่ (SPI-0017)</div>
+  <div class="status-step"><span class="dot"></span>4. เบิก/สั่งอะไหล่ <a href="sv3-spare-part-issue-mockup.html" style="color:#065F46;text-decoration:none;font-weight:700">(SV-3)</a> / <a href="sv-order-parts-request-mockup.html" style="color:#065F46;text-decoration:none;font-weight:700">(SV-O)</a></div>
   <span>→</span>
-  <div class="status-step pending"><span class="dot"></span>5. ซ่อม</div>
+  <div class="status-step pending"><span class="dot"></span>5. ซ่อม + ทดสอบ</div>
   <span>→</span>
-  <div class="status-step pending"><span class="dot"></span>6. ทดสอบ + ส่งมอบ</div>
+  <div class="status-step pending"><span class="dot"></span>6. ส่งให้ Admin (SV-4)</div>
 </div>
 
-<div class="section-card">
-  <div class="section-title">👤 ข้อมูลลูกค้าและเครื่อง</div>
-  <div class="form-grid">
-    <div class="field"><label>ลูกค้า</label><div class="value">คุณสมหญิง เจริญสุข</div></div>
-    <div class="field"><label>เบอร์โทร</label><div class="value">081-xxx-1234</div></div>
-    <div class="field"><label>ที่อยู่บริการ</label><div class="value">123 ซ.สุขุมวิท 71 คลองตัน</div></div>
-    <div class="field"><label>รุ่นเครื่อง</label><div class="value">Daikin FTKM24SV2S</div></div>
-    <div class="field"><label>Serial</label><div class="value">SN 1234567890</div></div>
-    <div class="field"><label>สถานะประกัน</label><div class="value"><span class="chip chip-green">✓ ใน Comp 7 ปี</span></div></div>
+<!-- State chain alert per user workflow -->
+<div style="padding:10px 14px;background:#EFF6FF;border:1px solid #93C5FD;border-radius:8px;margin-bottom:16px;font-size:12.5px;color:#1E40AF;display:flex;align-items:center;gap:10px">
+  💡 <div>
+    <strong>State flow:</strong> งานช่าง → <span style="background:#FEF3C7;color:#92400E;padding:2px 6px;border-radius:3px;font-weight:600">รออะไหล่</span> (ถ้าเบิก SV-3) / <span style="background:#FEF3C7;color:#92400E;padding:2px 6px;border-radius:3px;font-weight:600">รอสั่งอะไหล่</span> (ถ้าสั่ง SV-Order · ใช้สถานะเดียวกับ SV-Order) → งานช่าง → <span style="background:#D1FAE5;color:#065F46;padding:2px 6px;border-radius:3px;font-weight:600">ส่งงาน</span> (ไปที่ SV-4)
   </div>
 </div>
 
+<!-- Customer compact (SL-4 pattern) -->
+<div class="swt-cust-card" style="margin-bottom:16px">
+  <div class="swt-cust-head">
+    <div class="swt-cust-title"><span class="ico">👤</span>ลูกค้า &amp; เครื่อง <span style="font-size:9px;background:#F3F4F6;color:#6B7280;padding:1px 5px;border-radius:3px;font-weight:700;margin-left:4px">Pre-filled จาก SV-2</span></div>
+    <div class="swt-cust-head-spacer"></div>
+    <a href="md2-customer-master-mockup-v3.html" class="swt-cust-btn">👁️ ดูบัตรลูกค้า</a>
+    <a href="md1-item-master-mockup-v3.html" class="swt-cust-btn">📦 ดูสินค้า</a>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px 14px">
+    <div class="swt-cust-field">
+      <div class="swt-cust-label">ลูกค้า</div>
+      <div class="swt-cust-value"><span class="highlight">C-00125</span> · คุณสมหญิง</div>
+    </div>
+    <div class="swt-cust-field">
+      <div class="swt-cust-label">เบอร์</div>
+      <div class="swt-cust-value">081-xxx-1234</div>
+    </div>
+    <div class="swt-cust-field">
+      <div class="swt-cust-label">สินค้า</div>
+      <div class="swt-cust-value">Daikin FTKM24SV2S</div>
+    </div>
+    <div class="swt-cust-field">
+      <div class="swt-cust-label">Serial</div>
+      <div class="swt-cust-value"><span class="mono">SN 1234567890</span></div>
+    </div>
+  </div>
+
+  <div class="swt-credit-line">
+    <div class="cell"><span class="lbl">ประกัน</span><span class="val g">ใน Comp 7 ปี</span></div>
+    <div class="cell"><span class="lbl">เหลือ</span><span class="val">5 ปี 2 ด.</span></div>
+    <div class="cell"><span class="lbl">Vendor</span><span class="val b">Daikin TH</span></div>
+    <div class="cell"><span class="lbl">SLA</span><span class="val g">ภายในกำหนด</span></div>
+  </div>
+
+  <details class="swt-addr">
+    <summary>📍 ที่อยู่บริการ &amp; รายละเอียดเพิ่มเติม</summary>
+    <div class="swt-addr-line"><strong>🏠 ที่บริการ</strong>123 ซ.สุขุมวิท 71 แขวงคลองตัน เขตวัฒนา กรุงเทพฯ 10110</div>
+    <div class="swt-addr-line"><strong>📝 หมายเหตุ</strong>ชั้น 5 ห้อง A · เข้าประตูใหญ่แจ้งยาม · ลิฟต์ตัวกลาง</div>
+    <div class="swt-addr-line"><strong>💚 LINE</strong>@somying · 📧 somying@email.com</div>
+    <div class="swt-addr-line"><strong>📅 วันซื้อเครื่อง</strong>10 มิ.ย. 24 · SI-2406-0128</div>
+    <div class="swt-addr-line"><strong>🎫 Vendor Claim</strong>DKN-CLM-2604-0089 · รับเคลมแล้ว</div>
+  </details>
+</div>
+
+<!-- §1 Technician & Vendor Reference -->
 <div class="section-card">
-  <div class="section-title">👷 ช่างผู้รับงาน & การอ้างอิง Vendor <span class="swt-new-tag">🆕 NEW</span></div>
+  <div class="section-title">
+    <span>§1 ช่างผู้รับงาน &amp; อ้างอิง Vendor<span class="en">Technician &amp; Vendor Reference</span></span>
+    <span class="tag">🏷️ Required</span>
+  </div>
 
   <!-- Technician Type toggle -->
-  <div class="swt-toggle-group cols-2">
+  <div class="swt-toggle-group cols-2" style="margin-bottom:14px">
     <label class="swt-toggle-card primary">
       <div class="swt-tc-head">
         <input type="radio" name="techType" value="internal" checked>
         <span class="swt-tc-ico">🏢</span>
-        ช่างภายใน (Internal)
+        ช่างภายใน<span class="en">Internal</span>
       </div>
-      <div class="swt-tc-desc">ผลตอบแทน: <b>Incentive</b> · อ้างอิง MD-4 Employee</div>
+      <div class="swt-tc-desc">ผลตอบแทน: <b>Incentive</b> · อ้าง MD-4 Employee</div>
     </label>
     <label class="swt-toggle-card">
       <div class="swt-tc-head">
         <input type="radio" name="techType" value="outsource">
         <span class="swt-tc-ico">🚚</span>
-        ช่างภายนอก (Outsource)
+        ช่างภายนอก<span class="en">Outsource</span>
       </div>
-      <div class="swt-tc-desc">ผลตอบแทน: <b>ค่าแรง (AP)</b> · อ้างอิง MD-3 Vendor</div>
+      <div class="swt-tc-desc">ผลตอบแทน: <b>ค่าแรง (AP)</b> · อ้าง MD-3 Vendor</div>
     </label>
   </div>
 
   <!-- Technician info -->
   <div class="form-grid">
-    <div class="field"><label>ช่าง</label><div class="value">สมศักดิ์ ดีเยี่ยม</div></div>
+    <div class="field"><label>ช่าง<span class="en">Technician</span></label><div class="value">สมศักดิ์ ดีเยี่ยม</div></div>
     <div class="field">
-      <label>รหัสอ้างอิง</label>
+      <label>รหัส<span class="en">Code</span></label>
       <div class="value">
         <a href="md4-employee-master-mockup-v3.html" style="color:#2563EB;font-family:monospace;font-weight:600">TECH-007</a>
         <span style="font-size:10.5px;color:#9CA3AF;margin-left:6px">(MD-4)</span>
       </div>
     </div>
-    <div class="field"><label>สาขา</label><div class="value">HQ · สนง.ใหญ่</div></div>
-    <div class="field"><label>อัตราค่าแรง/Incentive</label><div class="value">฿250/ชม. <span style="font-size:10.5px;color:#9CA3AF">(จาก template)</span></div></div>
+    <div class="field"><label>สาขา<span class="en">Branch</span></label><div class="value">BKK-Service · SWE</div></div>
+    <div class="field"><label>อัตราค่าแรง<span class="en">Labor Rate</span></label><div class="value">฿250/ชม. <span style="font-size:10.5px;color:#9CA3AF">(CF-2.5)</span></div></div>
   </div>
 
-  <!-- Vendor Job Reference (in-warranty) -->
-  <div class="swt-ref-block warn">
-    <div class="swt-rb-head">
-      <span class="swt-rb-ico">🔗</span>
-      การอ้างอิงฝั่ง Vendor (สำหรับงานในประกัน)
+  <!-- Progressive disclosure: Vendor Reference (in-warranty only) -->
+  <details class="swt-addr" style="margin-top:12px" open>
+    <summary>🔗 อ้างอิงฝั่ง Vendor<span class="en">Vendor Reference</span> · งานในประกัน</summary>
+    <div class="swt-addr-line"><strong>Vendor</strong><a href="md3-vendor-master-mockup-v3.html">Daikin Thailand</a> (MD-3)</div>
+    <div class="swt-addr-line"><strong>Vendor Job Ref</strong><span class="mono">DKN-CLM-2604-0089</span></div>
+    <div class="swt-addr-line"><strong>วันแจ้งเคลม</strong>20 เม.ย. 26</div>
+    <div class="swt-addr-line"><strong>สถานะ Vendor</strong><span class="swt-chip success">✓ รับเคลมแล้ว</span></div>
+  </details>
+</div>
+
+<!-- §2 Job Details (Tabs) -->
+<div class="section-card">
+  <div class="section-title">
+    <span>§2 รายละเอียดงาน<span class="en">Job Details</span></span>
+  </div>
+
+  <div class="jc-tabs" id="jcTabs">
+    <button type="button" class="jc-tab act" data-tab="diag" onclick="jcSwitchTab(this,'diag')">📝 อาการ/วินิจฉัย<span class="en">Diagnosis</span></button>
+    <button type="button" class="jc-tab" data-tab="parts" onclick="jcSwitchTab(this,'parts')">🔧 อะไหล่<span class="en">Parts</span><span class="jc-tab-cnt">3</span></button>
+    <button type="button" class="jc-tab" data-tab="time" onclick="jcSwitchTab(this,'time')">⏱️ เวลาทำงาน<span class="en">Time Log</span></button>
+    <button type="button" class="jc-tab" data-tab="photo" onclick="jcSwitchTab(this,'photo')">📸 รูป<span class="en">Photos</span><span class="jc-tab-cnt">4</span></button>
+    <button type="button" class="jc-tab" data-tab="tl" onclick="jcSwitchTab(this,'tl')">🕒 Timeline</button>
+  </div>
+
+  <!-- Pane: Diagnosis -->
+  <div class="jc-pane act" data-pane="diag">
+    <div class="form-grid-2">
+      <div class="field"><label>อาการที่แจ้ง<span class="en">Reported Symptom</span></label><div class="value">เปิดแล้วไม่เย็น · มีน้ำหยดจากเครื่อง</div></div>
+      <div class="field"><label>วินิจฉัย<span class="en">Diagnosis</span></label><div class="value">Compressor จับ Stall (น้ำยารั่วผ่าน seal) · ถาดน้ำทิ้งตันเนื่องจากตะไคร่</div></div>
+      <div class="field"><label>การแก้ไข<span class="en">Resolution</span></label><div class="value">เปลี่ยน Compressor + ถาดน้ำทิ้ง + เติมน้ำยา R32 1 กก.</div></div>
+      <div class="field"><label>หมายเหตุถึง Admin<span class="en">Note to Admin</span></label><div class="value" style="min-height:50px">ปัญหาเกิดจากการใช้งานต่อเนื่อง 24 ชม. · แนะนำลูกค้าล้างถาดน้ำทิ้งทุก 6 เดือน</div></div>
     </div>
-    <div class="swt-rb-grid cols-4">
-      <div class="swt-rb-field">
-        <span class="swt-rb-lbl">Vendor</span>
-        <span class="swt-rb-val"><a href="md3-vendor-master-mockup-v3.html">Daikin Thailand</a></span>
-      </div>
-      <div class="swt-rb-field">
-        <span class="swt-rb-lbl">Vendor Job Ref</span>
-        <span class="swt-rb-val mono">DKN-CLM-2604-0089</span>
-      </div>
-      <div class="swt-rb-field">
-        <span class="swt-rb-lbl">วันแจ้งเคลม</span>
-        <span class="swt-rb-val">20 เม.ย. 26</span>
-      </div>
-      <div class="swt-rb-field">
-        <span class="swt-rb-lbl">สถานะ Vendor</span>
-        <span class="swt-rb-val"><span class="swt-chip success">✓ รับเคลมแล้ว</span></span>
-      </div>
+  </div>
+
+  <!-- Pane: Parts -->
+  <div class="jc-pane" data-pane="parts">
+    <div style="display:flex;gap:8px;margin-bottom:10px;font-size:12px;color:#6B7280;align-items:center;flex-wrap:wrap">
+      <span>อ้าง <a href="sv3-spare-part-issue-mockup.html" style="color:#2563EB;font-weight:600">SPI-2604-0017</a></span>
+      <span>·</span>
+      <span>เบิกเพิ่ม → <a href="sv3-spare-part-issue-mockup.html" style="color:#2563EB;font-weight:600">SV-3</a></span>
+      <span>·</span>
+      <span>สั่ง Vendor → <a href="sv-order-parts-request-mockup.html" style="color:#2563EB;font-weight:600">SV-O</a></span>
+    </div>
+    <table>
+      <thead><tr><th>Part No.</th><th>ชื่อ<span class="en">Name</span></th><th>จำนวน<span class="en">Qty</span></th><th>ประเภท<span class="en">Type</span></th><th style="text-align:right">ราคาลูกค้า<span class="en">Cust Price</span></th></tr></thead>
+      <tbody>
+        <tr><td class="mono">DAI-COMP-2HP-01</td><td>Compressor 2 HP</td><td>1</td><td><span class="chip chip-green">ใน Comp</span></td><td style="text-align:right">0.00</td></tr>
+        <tr><td class="mono">DAI-PAN-STD-12</td><td>ถาดน้ำทิ้ง 12k BTU</td><td>1</td><td><span class="chip chip-green">ใน Comp</span></td><td style="text-align:right">0.00</td></tr>
+        <tr><td class="mono">REF-GAS-R32-1KG</td><td>น้ำยา R32 1 กก.</td><td>1</td><td><span class="chip chip-yellow">นอก Comp</span></td><td style="text-align:right">380.00</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pane: Time Log -->
+  <div class="jc-pane" data-pane="time">
+    <div class="form-grid-4">
+      <div class="field"><label>เริ่มงาน<span class="en">Start</span></label><div class="value">23/04/26 · 09:30</div></div>
+      <div class="field"><label>จบงาน<span class="en">End</span></label><div class="value">23/04/26 · 12:30</div></div>
+      <div class="field"><label>รวมเวลา<span class="en">Total</span></label><div class="value" style="font-weight:700">3 ชม. 00 นาที</div></div>
+      <div class="field"><label>ระยะทาง<span class="en">Distance</span></label><div class="value">12 กม.</div></div>
+    </div>
+    <div style="margin-top:10px;padding:10px 12px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:6px;font-size:12.5px;color:#065F46">
+      ✓ <strong>ภายใน SLA</strong> กำหนด 4 ชม. · อัตรา ฿250/ชม. × 3 ชม. = ฿750 <span style="color:#92400E">(ไม่เก็บลูกค้า — ในประกัน · SV-4 คำนวณอีกที)</span>
     </div>
   </div>
-</div>
 
-<div class="section-card">
-  <div class="section-title">📝 อาการ / วินิจฉัย / การแก้ไข</div>
-  <div class="form-grid-2">
-    <div class="field"><label>อาการที่แจ้ง</label><div class="value">เปิดแล้วไม่เย็น · มีน้ำหยดจากเครื่อง</div></div>
-    <div class="field"><label>วินิจฉัยโดยช่าง</label><div class="value">Compressor จับ Stall (น้ำยารั่วผ่าน seal) · ถาดน้ำทิ้งตันเนื่องจากตะไคร่</div></div>
-    <div class="field"><label>การแก้ไข</label><div class="value">เปลี่ยน Compressor + ถาดน้ำทิ้ง + เติมน้ำยา R32 1 กก.</div></div>
-    <div class="field"><label>เวลาทำงาน</label><div class="value">3 ชม. (เริ่ม 09:30 จบ 12:30)</div></div>
+  <!-- Pane: Photos -->
+  <div class="jc-pane" data-pane="photo">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <div class="jc-photo"><div class="jc-ph-img">📷</div><div class="jc-ph-lbl">ก่อน · Compressor ที่เสีย</div></div>
+      <div class="jc-photo"><div class="jc-ph-img">📷</div><div class="jc-ph-lbl">ก่อน · ถาดน้ำทิ้งตัน</div></div>
+      <div class="jc-photo"><div class="jc-ph-img">📷</div><div class="jc-ph-lbl">หลัง · ติดตั้ง Compressor ใหม่</div></div>
+      <div class="jc-photo"><div class="jc-ph-img">📷</div><div class="jc-ph-lbl">หลัง · ทดสอบเย็น OK</div></div>
+    </div>
+    <div style="margin-top:10px"><button type="button" class="btn btn-secondary">+ เพิ่มรูป</button></div>
+  </div>
+
+  <!-- Pane: Timeline -->
+  <div class="jc-pane" data-pane="tl">
+    <ol class="jc-timeline">
+      <li><span class="tl-dot ok"></span><span class="tl-time">09:15</span>มอบหมายงาน (SV-2) · Admin สมหวัง</li>
+      <li><span class="tl-dot ok"></span><span class="tl-time">09:22</span>ช่างกดรับงาน</li>
+      <li><span class="tl-dot ok"></span><span class="tl-time">09:30</span>ถึงหน้างาน · เริ่มวินิจฉัย</li>
+      <li><span class="tl-dot ok"></span><span class="tl-time">10:05</span>เบิกอะไหล่ (SPI-0017) · อนุมัติทันที</li>
+      <li><span class="tl-dot ok"></span><span class="tl-time">10:30</span>เริ่มเปลี่ยน Compressor</li>
+      <li><span class="tl-dot live"></span><span class="tl-time">12:30</span>ทดสอบเย็น OK · กำลังส่งให้ Admin</li>
+      <li><span class="tl-dot pending"></span><span class="tl-time">—</span>Admin รับงาน (SV-4)</li>
+    </ol>
   </div>
 </div>
 
+<!-- §3 Work Summary -->
 <div class="section-card">
-  <div class="section-title">🔧 อะไหล่ที่ใช้ (อ้าง SPI-0017)</div>
-  <table>
-    <thead><tr><th>Part No.</th><th>ชื่อ</th><th>จำนวน</th><th>ประเภท</th><th>ราคาลูกค้า</th></tr></thead>
-    <tbody>
-      <tr><td>DAI-COMP-2HP-01</td><td>Compressor 2 HP</td><td>1</td><td><span class="chip chip-green">ใน Comp</span></td><td>0.00</td></tr>
-      <tr><td>DAI-PAN-STD-12</td><td>ถาดน้ำทิ้ง 12k BTU</td><td>1</td><td><span class="chip chip-green">ใน Comp</span></td><td>0.00</td></tr>
-      <tr><td>REF-GAS-R32-1KG</td><td>น้ำยา R32 1 กก.</td><td>1</td><td><span class="chip chip-yellow">นอก Comp</span></td><td>380.00</td></tr>
-    </tbody>
-  </table>
-</div>
+  <div class="section-title">
+    <span>§3 สรุปงานช่าง<span class="en">Tech Work Summary</span></span>
+    <span class="tag" style="background:#FEF3C7;color:#92400E">📋 ช่างกรอก · ไม่มีราคา</span>
+  </div>
 
-<div class="section-card">
-  <div class="section-title">💵 สรุปค่าบริการ + Incentive</div>
   <div class="form-grid-4">
-    <div class="field"><label>ค่าอะไหล่ลูกค้า</label><div class="value">380.00 ฿</div></div>
-    <div class="field"><label>ค่าแรง (ใน 2 ปี)</label><div class="value">0.00 ฿</div></div>
-    <div class="field"><label>ค่าเดินทาง</label><div class="value">150.00 ฿</div></div>
-    <div class="field"><label>รวมเก็บจากลูกค้า</label><div class="value" style="font-weight:700">530.00 ฿</div></div>
+    <div class="field"><label>ระยะเวลา<span class="en">Duration</span></label><div class="value" style="font-weight:700">3 ชม.</div></div>
+    <div class="field"><label>อะไหล่<span class="en">Parts Used</span></label><div class="value">3 รายการ (SPI-0017)</div></div>
+    <div class="field"><label>SLA</label><div class="value"><span class="swt-chip success">✓ ตรงเวลา</span></div></div>
+    <div class="field"><label>สถานะงาน<span class="en">Status</span></label><div class="value"><span class="swt-chip success">✓ ซ่อมเสร็จ · รอ Admin</span></div></div>
   </div>
-  <div style="margin-top:12px;display:flex;gap:16px;font-size:13px">
-    <div><span style="color:#6B7280">Job Incentive ช่าง:</span> <span style="font-weight:600;color:#10B981">+250 ฿</span></div>
-    <div><span style="color:#6B7280">Quality Score:</span> <span style="font-weight:600">⭐⭐⭐⭐⭐</span></div>
-    <div><span style="color:#6B7280">SLA ตรงเวลา:</span> <span class="chip chip-green">✓</span></div>
+
+  <!-- Pre-handoff checklist -->
+  <div style="margin-top:14px">
+    <div style="font-size:12.5px;font-weight:600;color:#374151;margin-bottom:8px">✅ Checklist ก่อนส่ง Admin<span class="en">Pre-handoff Checklist</span></div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;font-size:12.5px;color:#374151">
+      <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" checked> ทดสอบเย็นแล้ว (เย็นภายใน 10 นาที)</label>
+      <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" checked> ตรวจรอยรั่วน้ำยา</label>
+      <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" checked> ล้างถาดน้ำทิ้ง</label>
+      <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" checked> แนะนำการดูแลให้ลูกค้า</label>
+      <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" checked> ถ่ายรูป ก่อน–หลัง ครบ</label>
+      <label style="display:flex;align-items:center;gap:6px"><input type="checkbox"> ส่งของเก่าคืน (ถ้ามี)</label>
+    </div>
+  </div>
+
+  <!-- Scope clarification -->
+  <div style="margin-top:14px;padding:10px 12px;background:#EFF6FF;border:1px solid #93C5FD;border-radius:6px;font-size:12px;color:#1E40AF;line-height:1.6">
+    💡 <strong>ราคา / Incentive / ลายเซ็นลูกค้า</strong> ไม่อยู่ที่หน้านี้ — ช่างส่งงานให้ <a href="sv4-service-close-mockup.html" style="color:#1E40AF;font-weight:700">Admin (SV-4)</a> ตั้งราคา · จากนั้น <a href="sv7-service-delivery-mockup.html" style="color:#1E40AF;font-weight:700">SV-7</a> ส่งงาน+เก็บลายเซ็นลูกค้า
   </div>
 </div>
 
-<div class="section-card">
-  <div class="section-title">✍️ ลายเซ็นลูกค้าและช่าง</div>
-  <div class="form-grid-2">
-    <div class="field"><label>ลายเซ็นลูกค้า</label><div class="value" style="height:60px;display:flex;align-items:center;font-style:italic;color:#9CA3AF">(ลายเซ็น)</div></div>
-    <div class="field"><label>ลายเซ็นช่าง</label><div class="value" style="height:60px;display:flex;align-items:center;font-style:italic;color:#9CA3AF">(ลายเซ็น)</div></div>
+<!-- Sticky Action Bar -->
+<div class="jc-actionbar">
+  <div class="jc-ab-left">
+    <button type="button" class="btn btn-secondary">← ย้อนกลับ</button>
+  </div>
+  <div class="jc-ab-right">
+    <span class="jc-ab-hint">Job: JC-2604-0082</span>
+    <button type="button" class="btn btn-secondary">⏸ รออะไหล่</button>
+    <button type="button" class="btn btn-secondary">💾 บันทึก draft</button>
+    <button type="button" class="btn btn-primary">→ ส่งให้ Admin (SV-4)</button>
   </div>
 </div>
+
+<script>
+function jcSwitchTab(btn,name){
+  var tabs=document.getElementById('jcTabs');
+  tabs.querySelectorAll('.jc-tab').forEach(function(t){t.classList.remove('act')});
+  btn.classList.add('act');
+  var section=tabs.parentElement;
+  section.querySelectorAll('.jc-pane').forEach(function(p){
+    p.classList.toggle('act',p.getAttribute('data-pane')===name);
+  });
+}
+</script>
 </div></div></div><!-- SWT_ITEM_SEARCH_START -->
 <style>
 /* ---- SC-2 shared item-search modal (prefix swt-is-*) ---- */

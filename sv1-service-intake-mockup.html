@@ -205,13 +205,16 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
     <a href="iaq-bc-sync-monitor-mockup.html" class="swt-new"><span class="c">IA-Q</span>BC Sync Monitor</a>
   </div></details>
 
-  <details open><summary><span class="swt-sb-ico">🔧</span><span class="swt-sb-lbl">บริการ (SV)</span><span class="swt-sb-cnt">6</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+  <details open><summary><span class="swt-sb-ico">🔧</span><span class="swt-sb-lbl">บริการ (SV)</span><span class="swt-sb-cnt">9</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
     <a href="sv-q-service-queue-mockup.html"><span class="c">SV-Q</span>คิวงานซ่อม</a>
-    <a href="sv1-service-intake-mockup.html" class="swt-new"><span class="c">SV-1</span>รับเรื่องซ่อม</a>
-    <a href="sv3-spare-part-issue-mockup.html"><span class="c">SV-3</span>เบิกอะไหล่</a>
-    <a href="sv4-service-close-mockup.html" class="swt-new"><span class="c">SV-4</span>ปิดงาน / QA</a>
+    <a href="sv1-service-intake-mockup.html"><span class="c">SV-1</span>ใบรับงานซ่อม</a>
+    <a href="sv2-service-assignment-mockup.html" class="swt-new"><span class="c">SV-2</span>ใบมอบหมายงาน</a>
+    <a href="sv3-spare-part-issue-mockup.html"><span class="c">SV-3</span>เบิกอะไหล่ (สต็อก)</a>
+    <a href="sv4-service-close-mockup.html"><span class="c">SV-4</span>ใบรับจากงานซ่อม</a>
     <a href="sv5-job-card-mockup.html"><span class="c">SV-5</span>Job Card ช่าง</a>
     <a href="sv6-delivery-install-mockup.html"><span class="c">SV-6</span>จัดส่ง &amp; ติดตั้ง</a>
+    <a href="sv7-service-delivery-mockup.html" class="swt-new"><span class="c">SV-7</span>ส่งงานลูกค้า</a>
+    <a href="sv-order-parts-request-mockup.html" class="swt-new"><span class="c">SV-O</span>สั่งอะไหล่</a>
   </div></details>
 
   <details><summary><span class="swt-sb-ico">🚚</span><span class="swt-sb-lbl">ส่ง/รายงาน/อนุมัติ</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
@@ -287,75 +290,118 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 </div>
 </div><div class="content-wrapper">
 
-<!-- Section 1: Page Header -->
-<div class="page-header">
-  <div>
-    <div class="page-title">SV-1 · รับเรื่องซ่อม (Service Intake)</div>
-    <div class="page-subtitle">สร้าง Service Order · นัดหมายช่าง · พิมพ์ใบรับสินค้าให้ลูกค้า</div>
+<!-- Section 1: Main Header (SL-4 pattern) -->
+<header class="swt-mh">
+  <div class="swt-mh-left">
+    <div class="swt-mh-title">
+      <div class="swt-mh-ico">📝</div>
+      <div>
+        <h1>ใบรับงานซ่อม</h1>
+        <p>Service Intake (SV-1)</p>
+      </div>
+    </div>
+    <div class="swt-mh-divider"></div>
+    <div class="swt-mh-meta">
+      <div class="swt-mh-meta-item"><div class="lbl">เลขที่รับซ่อม</div><div class="val">SV-2604-0146</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">วันที่-เวลา</div><div class="val">23 เม.ย. 26 · 14:20</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">สาขา</div><div class="val">BKK-Service</div></div>
+    </div>
   </div>
-  <div class="header-actions">
-    <button class="btn btn-secondary">📄 พิมพ์ใบรับสินค้า</button>
-    <button class="btn btn-secondary">💾 บันทึก Draft</button>
-    <button class="btn btn-primary">📅 นัดหมายช่าง</button>
+  <div class="swt-mh-right">
+    <span class="swt-mh-badge draft">🕓 รอมอบหมาย</span>
+    <button class="swt-mh-btn swt-mh-btn-ghost">📄 พิมพ์ใบรับ</button>
+    <button class="swt-mh-btn swt-mh-btn-ghost">💾 บันทึก Draft</button>
+    <button class="swt-mh-btn swt-mh-btn-primary">→ ส่งต่อ SV-2</button>
   </div>
-</div>
+</header>
 
 <!-- Status pills -->
 <div class="status-pills">
-  <span class="status-pill active">1. รับเรื่อง</span>
-  <span class="status-pill">2. นัดหมาย</span>
-  <span class="status-pill">3. รอช่าง</span>
-  <span class="status-pill">4. ดำเนินงาน</span>
-  <span class="status-pill">5. ส่งงาน</span>
+  <span class="status-pill active">1. รับเรื่อง (ปัจจุบัน)</span>
+  <span class="status-pill">2. รอมอบหมาย (SV-2)</span>
+  <span class="status-pill">3. งานช่าง (SV-5)</span>
+  <span class="status-pill">4. รับจากช่าง (SV-4)</span>
+  <span class="status-pill">5. ส่งลูกค้า (SV-7)</span>
   <span class="status-pill">6. ปิดงาน</span>
 </div>
 
-<!-- Section 2: Doc Header -->
-<div class="section-card">
-  <div class="section-title">📋 ส่วนที่ 1 · ข้อมูลเอกสาร
-    <span class="tag">BC: serviceOrders 5900</span>
-  </div>
-  <div class="form-grid">
-    <div class="field"><label>เลขที่รับซ่อม</label><input value="SV-2604-0146" readonly></div>
-    <div class="field"><label>วันที่รับ <span class="req">*</span></label><input type="text" value="23 เม.ย. 26"></div>
-    <div class="field"><label>สาขารับงาน</label>
-      <select><option>HQ · สนง.ใหญ่</option><option>รังสิต</option><option>บางนา</option><option>นครปฐม</option><option>ชลบุรี</option><option>ขอนแก่น</option></select>
-    </div>
-    <div class="field"><label>ประเภทงาน <span class="req">*</span></label>
-      <select><option>🔧 ซ่อม</option><option>🏗️ ติดตั้ง</option><option>🧪 ตรวจสภาพ</option><option>♻️ เคลม Vendor</option></select>
-    </div>
-    <div class="field"><label>ช่องทางรับเรื่อง</label>
-      <select><option>ลูกค้านำมาที่สาขา</option><option>โทรศัพท์</option><option>LINE</option><option>Walk-in</option><option>Service Request Online</option></select>
-    </div>
-    <div class="field"><label>Priority</label>
-      <select><option>🟡 ปกติ</option><option>🔴 เร่งด่วน</option><option>🟢 ไม่รีบ</option></select>
-    </div>
-  </div>
-</div>
+<!-- Row 2: Customer (SL-4 compact pattern) + Doc extras -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
 
-<!-- Section 3: Party -->
-<div class="section-card">
-  <div class="section-title">👤 ส่วนที่ 2 · ข้อมูลลูกค้า
-    <span class="tag">SC-1</span>
-  </div>
-  <div class="form-grid">
-    <div class="field"><label>ลูกค้า <span class="req">*</span></label>
-      <div class="swt-search-combo">
-        <input type="text" value="C-00125 · คุณสมหญิง เจริญสุข" data-customer-search>
-        <button class="swt-search-btn" data-customer-search title="ค้นหาลูกค้า (SC-1)">🔍</button>
+  <!-- Customer compact card -->
+  <div class="swt-cust-card">
+    <div class="swt-cust-head">
+      <div class="swt-cust-title"><span class="ico">👤</span>ลูกค้า (Customer) <span class="tag" style="font-size:9px;background:#EFF6FF;color:#1E40AF;padding:1px 5px;border-radius:3px;font-weight:700">SC-1</span></div>
+      <div class="swt-cust-head-spacer"></div>
+      <button class="swt-cust-btn primary" data-customer-search>🔍 เลือก/เปลี่ยน</button>
+    </div>
+
+    <div class="swt-cust-grid">
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">รหัส · ชื่อ</div>
+        <div class="swt-cust-value"><span class="highlight">C-00125</span> · คุณสมหญิง เจริญสุข</div>
+      </div>
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">เบอร์ · LINE</div>
+        <div class="swt-cust-value">081-xxx-1234 · @somying</div>
       </div>
     </div>
-    <div class="field"><label>เบอร์โทร</label><input value="081-xxx-1234"></div>
-    <div class="field"><label>Email / LINE ID</label><input value="somying@email.com"></div>
+
+    <div class="swt-credit-line">
+      <div class="cell"><span class="lbl">ประกัน</span><span class="val g">ในประกัน</span></div>
+      <div class="cell"><span class="lbl">Tier</span><span class="val b">VIP 2</span></div>
+      <div class="cell"><span class="lbl">ประวัติซ่อม</span><span class="val m">— ไม่มี</span></div>
+      <div class="cell"><span class="lbl">AR ค้าง</span><span class="val">0</span></div>
+    </div>
+
+    <details class="swt-addr">
+      <summary>📍 ที่อยู่ &amp; ข้อมูลเพิ่มเติม (4)</summary>
+      <div class="swt-addr-line"><strong>🏠 หลัก</strong>123 ซ.สุขุมวิท 71 แขวงคลองตัน เขตวัฒนา กรุงเทพฯ 10110</div>
+      <div class="swt-addr-line"><strong>📍 ซ่อม</strong>ที่อยู่เดียวกับหลัก · ชั้น 5 ของตึก ห้อง A · เข้าประตูใหญ่แจ้งยาม</div>
+      <div class="swt-addr-line"><strong>📧 Email</strong>somying@email.com</div>
+      <div class="swt-addr-line"><strong>🆔 เลขผู้เสียภาษี</strong>1-1001-23456-78-9</div>
+    </details>
   </div>
-  <div class="form-grid-2" style="margin-top:14px">
-    <div class="field"><label>ที่อยู่รับ-ส่ง / สถานที่ซ่อม</label>
-      <select style="margin-bottom:6px"><option>🏠 ที่อยู่หลัก — 123 ซ.สุขุมวิท 71 คลองตัน</option><option>🏢 ที่อยู่ส่งของ</option><option>📍 ที่อยู่อื่น (ระบุเอง)</option></select>
-      <input value="123 ซ.สุขุมวิท 71 แขวงคลองตัน เขตวัฒนา กรุงเทพฯ 10110" readonly>
+
+  <!-- Doc extras compact card -->
+  <div class="swt-cust-card">
+    <div class="swt-cust-head">
+      <div class="swt-cust-title"><span class="ico">📋</span>ข้อมูลเอกสาร &amp; การรับเรื่อง</div>
+      <div class="swt-cust-head-spacer"></div>
+      <span style="font-size:9px;background:#F3F4F6;color:#6B7280;padding:2px 6px;border-radius:3px;font-weight:700">BC: serviceOrders 5900</span>
     </div>
-    <div class="field"><label>หมายเหตุลูกค้า</label>
-      <textarea>ชั้น 5 ของตึก ห้อง A · เข้าประตูใหญ่แจ้งยาม</textarea>
+
+    <div class="swt-cust-grid">
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">ประเภทงาน <span style="color:#C55A11">*</span></div>
+        <div class="swt-cust-value">
+          <select style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"><option>🔧 ซ่อม</option><option>🏗️ ติดตั้ง</option><option>🧪 ตรวจสภาพ</option><option>♻️ เคลม Vendor</option></select>
+        </div>
+      </div>
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">Priority</div>
+        <div class="swt-cust-value">
+          <select style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"><option>🟡 ปกติ</option><option>🔴 เร่งด่วน</option><option>🟢 ไม่รีบ</option></select>
+        </div>
+      </div>
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">ช่องทางรับเรื่อง</div>
+        <div class="swt-cust-value">
+          <select style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"><option>🏢 ลูกค้านำมาสาขา</option><option>📞 โทรศัพท์</option><option>💚 LINE</option><option>🚶 Walk-in</option><option>🌐 Online</option></select>
+        </div>
+      </div>
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">พนักงานรับเรื่อง</div>
+        <div class="swt-cust-value">คุณปภาวรินทร์ · <span class="mono" style="color:#6B7280">ADM-002</span></div>
+      </div>
     </div>
+
+    <details class="swt-addr">
+      <summary>⚙️ ตั้งค่าขั้นสูง (SLA · BC Sync · Entity)</summary>
+      <div class="swt-addr-line"><strong>SLA Target</strong>มอบหมายช่าง ≤ 24 ชม. · ซ่อมเสร็จ ≤ 3 วันทำการ</div>
+      <div class="swt-addr-line"><strong>Entity Tag</strong>1 · SWT (Dual-Book)</div>
+      <div class="swt-addr-line"><strong>BC Sync</strong>🔄 Live API (sync ทันทีเมื่อกด "ส่งต่อ SV-2")</div>
+    </details>
   </div>
 </div>
 
@@ -441,34 +487,37 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
   <div class="section-title">📎 ส่วนที่ 4 · รายละเอียดเพิ่มเติม</div>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab(event,'tab-appt')">📅 นัดหมายช่าง</button>
+    <button class="tab-btn active" onclick="switchTab(event,'tab-pref')">📅 ความสะดวกลูกค้า</button>
     <button class="tab-btn" onclick="switchTab(event,'tab-photo')">📸 รูปถ่ายก่อนซ่อม</button>
     <button class="tab-btn" onclick="switchTab(event,'tab-ref')">🔗 อ้างอิง</button>
     <button class="tab-btn" onclick="switchTab(event,'tab-tl')">🕑 ประวัติ / Timeline</button>
   </div>
 
-  <!-- Tab 1: Appointment -->
-  <div class="tab-pane active" id="tab-appt">
+  <!-- Tab 1: Customer preferred date (NO tech assignment — ย้ายไป SV-2) -->
+  <div class="tab-pane active" id="tab-pref">
+    <div class="alert alert-info" style="margin-bottom:14px">
+      💡 <div><strong>หมายเหตุ:</strong> ช่อง "ช่างที่มอบหมาย" + "วันเวลานัด" จริง — ทำใน <a href="sv2-service-assignment-mockup.html" style="color:#1E40AF;font-weight:700">SV-2 ใบมอบหมายงาน</a>. หน้านี้บันทึกแค่<strong>ความสะดวกของลูกค้า</strong>เพื่อช่วยแอดมินนัดได้เร็ว</div>
+    </div>
     <div class="form-grid">
-      <div class="field"><label>วันที่นัด <span class="req">*</span></label><input value="25 เม.ย. 26"></div>
-      <div class="field"><label>ช่วงเวลา</label>
-        <select><option>09:00 - 12:00 (ช่วงเช้า)</option><option>13:00 - 17:00 (ช่วงบ่าย)</option><option>ระบุเวลาชัด...</option></select>
+      <div class="field"><label>วันที่ลูกค้าสะดวก (เบื้องต้น)</label><input value="25 - 26 เม.ย. 26"></div>
+      <div class="field"><label>ช่วงเวลาที่สะดวก</label>
+        <select><option>เช้า (09:00 - 12:00)</option><option>บ่าย (13:00 - 17:00)</option><option>ทั้งวัน</option><option>เย็น (17:00+)</option><option>เสาร์-อาทิตย์</option></select>
       </div>
-      <div class="field"><label>สถานที่นัด</label>
-        <select><option>🏠 ที่บ้านลูกค้า</option><option>🏢 สาขา HQ</option><option>📍 ที่อื่น (ระบุ)</option></select>
+      <div class="field"><label>สถานที่ลูกค้าต้องการ</label>
+        <select><option>🏠 ที่บ้านลูกค้า</option><option>🏢 ขอนำมาสาขา</option><option>📍 ที่อื่น (ระบุในหมายเหตุ)</option></select>
       </div>
-      <div class="field"><label>ช่างที่มอบหมาย <span class="req">*</span></label>
-        <select><option>TECH-007 · สมศักดิ์ ดีเยี่ยม (แอร์ · BKK)</option><option>TECH-012 · วิชัย ใจดี (แอร์ · RSN)</option><option>— รอมอบหมาย —</option></select>
+      <div class="field"><label>ทักษะช่างที่ต้องการ</label>
+        <select><option>แอร์ + Inverter</option><option>แอร์ทั่วไป</option><option>ตู้เย็น</option><option>เครื่องซักผ้า</option><option>เฉพาะทาง (ระบุ)</option></select>
       </div>
-      <div class="field"><label>ประเภทช่าง</label>
-        <select><option>🏢 ช่างภายใน (Incentive)</option><option>🚚 ช่างภายนอก (ค่าแรง AP)</option></select>
+      <div class="field"><label>สาขาที่รับผิดชอบ</label>
+        <select><option>BKK-Service (ใกล้ลูกค้า)</option><option>HQ</option><option>รังสิต</option><option>บางนา</option></select>
       </div>
       <div class="field"><label>SLA Target</label>
-        <input value="ต้องเริ่มซ่อม ≤ 24 ชม. · เสร็จ ≤ 3 วันทำการ" readonly>
+        <input value="ต้องมอบหมาย ≤ 24 ชม. · ซ่อมเสร็จ ≤ 3 วันทำการ" readonly>
       </div>
     </div>
     <div class="alert alert-warn" style="margin-top:14px">
-      ⏰ <div><strong>SLA Countdown:</strong> เริ่มนับจากเวลารับเรื่อง <b>23 เม.ย. 26 · 14:20 น.</b> — ครบกำหนดเริ่มซ่อม <b>24 เม.ย. 26 · 14:20 น.</b> (เหลือ <b>23 ชม. 47 นาที</b>)</div>
+      ⏰ <div><strong>SLA Countdown:</strong> รับเรื่องเมื่อ <b>23 เม.ย. 26 · 14:20 น.</b> — ครบกำหนดมอบหมายช่าง <b>24 เม.ย. 26 · 14:20 น.</b> (เหลือ <b>18 ชม. 47 นาที</b>)</div>
     </div>
   </div>
 
@@ -509,8 +558,8 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
       <div class="tl-item">
         <div class="tl-dot"></div>
         <div class="tl-content">
-          <div class="tl-title">มอบหมายช่าง</div>
-          <div class="tl-meta">รอดำเนินการ · จะมอบหมายเมื่อกด "นัดหมายช่าง"</div>
+          <div class="tl-title">ใบมอบหมายงาน (SV-2)</div>
+          <div class="tl-meta">รอ — แอดมินสร้าง <a href="sv2-service-assignment-mockup.html" style="color:#2563EB">SV-2</a> เลือกช่าง + นัดวันเวลา</div>
         </div>
       </div>
       <div class="tl-item">
@@ -533,11 +582,11 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 
 <!-- Footer action bar -->
 <div class="footer-actions">
-  <div class="hint">🔒 เอกสารจะ Post ไป BC เมื่อ "นัดหมายช่าง" · ก่อนหน้านั้นเก็บเป็น Draft ใน Portal เท่านั้น</div>
+  <div class="hint">🔒 กด "ส่งต่อ SV-2" = บันทึกใบรับเข้า BC (Status: <b>Open</b> → <b>Pending Assignment</b>) · สร้าง SV-2 Draft รอแอดมินมอบหมายช่าง</div>
   <div class="spacer"></div>
   <button class="btn btn-ghost">ยกเลิก</button>
   <button class="btn btn-secondary">💾 บันทึก Draft</button>
-  <button class="btn btn-success">📅 นัดหมายช่าง → SV-5</button>
+  <button class="btn btn-success">→ ส่งต่อ SV-2 มอบหมาย</button>
 </div>
 
 </div></div></div>

@@ -230,13 +230,16 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
     <a href="iaq-bc-sync-monitor-mockup.html" class="swt-new"><span class="c">IA-Q</span>BC Sync Monitor</a>
   </div></details>
 
-  <details open><summary><span class="swt-sb-ico">🔧</span><span class="swt-sb-lbl">บริการ (SV)</span><span class="swt-sb-cnt">6</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+  <details open><summary><span class="swt-sb-ico">🔧</span><span class="swt-sb-lbl">บริการ (SV)</span><span class="swt-sb-cnt">9</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
     <a href="sv-q-service-queue-mockup.html"><span class="c">SV-Q</span>คิวงานซ่อม</a>
-    <a href="sv1-service-intake-mockup.html" class="swt-new"><span class="c">SV-1</span>รับเรื่องซ่อม</a>
-    <a href="sv3-spare-part-issue-mockup.html"><span class="c">SV-3</span>เบิกอะไหล่</a>
-    <a href="sv4-service-close-mockup.html" class="swt-new"><span class="c">SV-4</span>ปิดงาน / QA</a>
+    <a href="sv1-service-intake-mockup.html"><span class="c">SV-1</span>ใบรับงานซ่อม</a>
+    <a href="sv2-service-assignment-mockup.html" class="swt-new"><span class="c">SV-2</span>ใบมอบหมายงาน</a>
+    <a href="sv3-spare-part-issue-mockup.html"><span class="c">SV-3</span>เบิกอะไหล่ (สต็อก)</a>
+    <a href="sv4-service-close-mockup.html"><span class="c">SV-4</span>ใบรับจากงานซ่อม</a>
     <a href="sv5-job-card-mockup.html"><span class="c">SV-5</span>Job Card ช่าง</a>
     <a href="sv6-delivery-install-mockup.html"><span class="c">SV-6</span>จัดส่ง &amp; ติดตั้ง</a>
+    <a href="sv7-service-delivery-mockup.html" class="swt-new"><span class="c">SV-7</span>ส่งงานลูกค้า</a>
+    <a href="sv-order-parts-request-mockup.html" class="swt-new"><span class="c">SV-O</span>สั่งอะไหล่</a>
   </div></details>
 
   <details><summary><span class="swt-sb-ico">🚚</span><span class="swt-sb-lbl">ส่ง/รายงาน/อนุมัติ</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
@@ -312,42 +315,108 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 </div>
 </div><div class="content-wrapper">
 
-<div class="page-header">
-  <div>
-    <div class="page-title">SV-4 · ปิดงาน / QA + ออกบิล (Service Close &amp; Invoice)</div>
-    <div class="page-subtitle">QA Checklist · ลูกค้าเซ็นรับ · Rating · ออก Service Invoice ไปยัง Vendor (ในประกัน) หรือ ลูกค้า (นอกประกัน)</div>
+<!-- Main Header (SL-4 pattern) -->
+<header class="swt-mh">
+  <div class="swt-mh-left">
+    <div class="swt-mh-title">
+      <div class="swt-mh-ico">📥</div>
+      <div>
+        <h1>ใบรับสินค้าจากงานซ่อม</h1>
+        <p>Admin Receive from Repair (SV-4)</p>
+      </div>
+    </div>
+    <div class="swt-mh-divider"></div>
+    <div class="swt-mh-meta">
+      <div class="swt-mh-meta-item"><div class="lbl">เลขที่ใบรับ</div><div class="val">SR-2604-0055</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">อ้างอิง Job</div><div class="val">JC-2604-0082</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">รับจากช่าง</div><div class="val">23 เม.ย. 26 · 13:00</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">Admin</div><div class="val">คุณปภาวรินทร์</div></div>
+    </div>
   </div>
-  <div class="header-actions">
-    <button class="btn btn-secondary">📄 พิมพ์ใบงาน</button>
-    <button class="btn btn-secondary">↩ ส่งกลับ Job Card</button>
-    <button class="btn btn-primary">✓ ปิดงาน + ออกบิล</button>
+  <div class="swt-mh-right">
+    <span class="swt-mh-badge pending">🟠 รอส่งคืนลูกค้า</span>
+    <button class="swt-mh-btn swt-mh-btn-ghost">📄 พิมพ์</button>
+    <button class="swt-mh-btn swt-mh-btn-danger">↩ ส่งกลับช่าง</button>
+    <button class="swt-mh-btn swt-mh-btn-primary">→ ส่งต่อ SV-7</button>
   </div>
-</div>
+</header>
 
 <div class="status-pills">
-  <span class="status-pill done">1. รับเรื่อง</span>
-  <span class="status-pill done">2. นัดหมาย</span>
-  <span class="status-pill done">3. ตรวจ/เบิกอะไหล่</span>
-  <span class="status-pill done">4. ซ่อม</span>
-  <span class="status-pill active">5. QA + ออกบิล</span>
-  <span class="status-pill">6. ปิดงาน</span>
+  <span class="status-pill done">1. รับเรื่อง (SV-1)</span>
+  <span class="status-pill done">2. มอบหมาย (SV-2)</span>
+  <span class="status-pill done">3. งานช่าง (SV-5)</span>
+  <span class="status-pill active">4. รับจากช่าง (SV-4 · ปัจจุบัน)</span>
+  <span class="status-pill">5. ส่งลูกค้า (SV-7)</span>
+  <span class="status-pill">6. ปิดงาน + ตั้งหนี้ Vendor</span>
 </div>
 
-<!-- Section 1: Job Reference -->
-<div class="section-card">
-  <div class="section-title">📎 ส่วนที่ 1 · อ้างอิงงาน (จาก SV-5 Job Card)
-    <span class="tag">Pre-filled</span>
+<!-- Row: Customer (SL-4 compact) + Job Reference -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+
+  <div class="swt-cust-card">
+    <div class="swt-cust-head">
+      <div class="swt-cust-title"><span class="ico">👤</span>ลูกค้า <span style="font-size:9px;background:#F3F4F6;color:#6B7280;padding:1px 5px;border-radius:3px;font-weight:700;margin-left:4px">Pre-filled จาก SV-5</span></div>
+      <div class="swt-cust-head-spacer"></div>
+      <a href="md2-customer-master-mockup-v3.html" class="swt-cust-btn">👁️ ดูบัตร</a>
+    </div>
+
+    <div class="swt-cust-grid">
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">รหัส · ชื่อ</div>
+        <div class="swt-cust-value"><span class="highlight">C-00125</span> · คุณสมหญิง</div>
+      </div>
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">เบอร์</div>
+        <div class="swt-cust-value">081-xxx-1234</div>
+      </div>
+    </div>
+
+    <div class="swt-credit-line">
+      <div class="cell"><span class="lbl">ประกัน</span><span class="val g">ในประกัน</span></div>
+      <div class="cell"><span class="lbl">Tier</span><span class="val b">VIP 2</span></div>
+      <div class="cell"><span class="lbl">AR ค้าง</span><span class="val">0</span></div>
+      <div class="cell"><span class="lbl">Rating</span><span class="val g">⭐ 4.8</span></div>
+    </div>
+
+    <details class="swt-addr">
+      <summary>📍 ที่อยู่ &amp; ข้อมูลติดต่อ (3)</summary>
+      <div class="swt-addr-line"><strong>🏠 ที่อยู่</strong>123 ซ.สุขุมวิท 71 แขวงคลองตัน เขตวัฒนา กรุงเทพฯ 10110</div>
+      <div class="swt-addr-line"><strong>💚 LINE</strong>@somying</div>
+      <div class="swt-addr-line"><strong>📧 Email</strong>somying@email.com</div>
+    </details>
   </div>
-  <div class="form-grid">
-    <div class="field"><label>เลขที่ Service Order</label><div class="value"><a href="sv1-service-intake-mockup.html">SV-2604-0146</a></div></div>
-    <div class="field"><label>เลขที่ Job Card</label><div class="value"><a href="sv5-job-card-mockup.html">JC-2604-0082</a></div></div>
-    <div class="field"><label>ลูกค้า</label><div class="value">C-00125 · คุณสมหญิง เจริญสุข</div></div>
-    <div class="field"><label>สินค้า / Serial</label><div class="value">Daikin FTKM24SV2S · SN 1234567890</div></div>
-    <div class="field"><label>ช่าง</label><div class="value">TECH-007 · สมศักดิ์ ดีเยี่ยม</div></div>
-    <div class="field"><label>วันซ่อมเสร็จ</label><div class="value">23 เม.ย. 26 · 12:30 น.</div></div>
-    <div class="field"><label>อาการ → การแก้</label><div class="value">น้ำหยด + ไม่เย็น → เปลี่ยน Compressor + ถาดน้ำทิ้ง + เติมน้ำยา R32</div></div>
-    <div class="field"><label>ประเภทประกัน</label><div class="value"><span class="chip chip-green">🟢 ในประกัน (Comp 7 ปี)</span></div></div>
-    <div class="field"><label>Vendor อ้างอิง</label><div class="value"><a href="md3-vendor-master-mockup-v3.html">Daikin Thailand</a> · DKN-CLM-2604-0089</div></div>
+
+  <div class="swt-cust-card">
+    <div class="swt-cust-head">
+      <div class="swt-cust-title"><span class="ico">📎</span>อ้างอิงงานซ่อม &amp; สินค้า</div>
+      <div class="swt-cust-head-spacer"></div>
+    </div>
+
+    <div class="swt-cust-grid">
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">สินค้า · Serial</div>
+        <div class="swt-cust-value">Daikin FTKM24SV2S · <span class="mono">SN 1234567890</span></div>
+      </div>
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">ช่าง · วันซ่อมเสร็จ</div>
+        <div class="swt-cust-value">TECH-007 สมศักดิ์ · 23 เม.ย. 26 · 12:30</div>
+      </div>
+    </div>
+
+    <div class="swt-credit-line" style="grid-template-columns:repeat(3,1fr)">
+      <div class="cell"><span class="lbl">Service Order</span><span class="val b"><a href="sv1-service-intake-mockup.html" style="color:#2563EB;text-decoration:none">SV-2604-0146</a></span></div>
+      <div class="cell"><span class="lbl">Job Card</span><span class="val b"><a href="sv5-job-card-mockup.html" style="color:#2563EB;text-decoration:none">JC-2604-0082</a></span></div>
+      <div class="cell"><span class="lbl">Vendor Claim</span><span class="val g"><a href="md3-vendor-master-mockup-v3.html" style="color:#10B981;text-decoration:none">DKN-0089</a></span></div>
+    </div>
+
+    <details class="swt-addr">
+      <summary>🔧 อาการ · วินิจฉัย · การแก้ไข</summary>
+      <div class="swt-addr-line"><strong>อาการ</strong>เปิดแล้วไม่เย็น + มีน้ำหยด + เสียงดังตอนคอมทำงาน</div>
+      <div class="swt-addr-line"><strong>วินิจฉัย</strong>Compressor จับ Stall (rotor seize) · น้ำยารั่วผ่าน seal · ถาดน้ำทิ้งตัน</div>
+      <div class="swt-addr-line"><strong>การแก้</strong>เปลี่ยน Compressor 2HP + ถาดน้ำทิ้ง + เติมน้ำยา R32 1 กก.</div>
+      <div class="swt-addr-line"><strong>ประเภทประกัน</strong>🟢 ในประกัน · Comp 7 ปี (Daikin Thailand)</div>
+      <div class="swt-addr-line"><strong>วันซื้อเครื่อง</strong>10 มิ.ย. 24 · SI-2406-0128 · เหลือ 5 ปี 2 เดือน</div>
+    </details>
   </div>
 </div>
 
@@ -424,77 +493,57 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
   </div>
 </div>
 
-<!-- Section 4: Signature + Rating -->
+<!-- Section 4: Admin Warranty Adjustment + Pricing -->
 <div class="section-card">
-  <div class="section-title">✍️ ส่วนที่ 4 · ลายเซ็นลูกค้า + Rating <span class="tag">บังคับก่อน Close</span></div>
+  <div class="section-title">⚖️ ส่วนที่ 4 · แก้ไขประเภทประกัน + ยืนยันราคา <span class="tag">Admin Only</span></div>
+  <div class="alert alert-info" style="margin-top:0;margin-bottom:14px">
+    💡 <div><strong>ภารกิจแอดมิน:</strong> ตรวจทานประเภทประกันที่ช่างใส่มา · <strong>ปรับใน/นอก Comp ได้</strong> · ยืนยันราคาก่อนส่งต่อ SV-7 (ลูกค้า) + ตั้งหนี้ Vendor (ถ้าในประกัน)</div>
+  </div>
   <div class="form-grid-2">
     <div class="field">
-      <label>ลูกค้าเซ็นรับงาน <span class="req">*</span></label>
-      <div class="sig-pad signed">
-        ✍️ คุณสมหญิง เจริญสุข
-        <div class="sig-meta">เซ็นเมื่อ 23 เม.ย. 26 · 12:45 น. · ยืนยันด้วย OTP: 081-xxx-1234</div>
-      </div>
+      <label>ประเภทประกัน (ช่างใส่)</label>
+      <div class="value"><span class="chip chip-green">🟢 ในประกัน · Comp 7 ปี</span></div>
     </div>
     <div class="field">
-      <label>ช่างเซ็นส่งงาน</label>
-      <div class="sig-pad signed">
-        ✍️ สมศักดิ์ ดีเยี่ยม (TECH-007)
-        <div class="sig-meta">เซ็นเมื่อ 23 เม.ย. 26 · 12:42 น. · Device: Mobile App</div>
-      </div>
+      <label>แอดมินยืนยัน/แก้ไข <span class="req">*</span></label>
+      <select>
+        <option selected>✓ ยืนยัน: ในประกัน (Comp 7 ปี)</option>
+        <option>⚠️ แก้ไข: นอกประกัน (เกินเงื่อนไข)</option>
+        <option>⚠️ แก้ไข: เคลม Vendor (ส่งกลับ)</option>
+        <option>⚠️ แก้ไข: Void (ลูกค้าเปิดผิดใช้งาน)</option>
+      </select>
     </div>
   </div>
-  <div class="form-grid-2" style="margin-top:14px">
+  <div class="form-grid" style="margin-top:14px">
     <div class="field">
-      <label>Rating จากลูกค้า (1-5 ⭐)</label>
-      <div class="rating-group">
-        <span class="star active">★</span>
-        <span class="star active">★</span>
-        <span class="star active">★</span>
-        <span class="star active">★</span>
-        <span class="star active">★</span>
+      <label>ถ้าในประกัน · เบิก Vendor อะไรบ้าง <span class="req">*</span></label>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+        <label style="display:flex;align-items:center;gap:8px;font-size:12.5px"><input type="checkbox" checked> ค่าอะไหล่ใน Comp (9,600 ฿)</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:12.5px"><input type="checkbox" checked> ค่าแรง (1,500 ฿ · ภายใน 2 ปีแรก)</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:12.5px"><input type="checkbox"> ค่าเดินทาง (ไม่เคลม Vendor)</label>
       </div>
     </div>
     <div class="field">
-      <label>ข้อเสนอแนะจากลูกค้า (optional)</label>
-      <textarea style="min-height:60px">ช่างสุภาพ ทำงานเร็ว เก็บพื้นสะอาด · แนะนำเพื่อนได้เลย</textarea>
+      <label>รายละเอียดการซ่อม (Admin ตรวจทาน)</label>
+      <textarea style="min-height:80px">เปลี่ยน Compressor 2HP + ถาดน้ำทิ้ง 12k BTU + เติมน้ำยา R32 1 กก. · ทดสอบการทำงาน 15 นาที ปกติ · เก็บอะไหล่เก่าส่งคืน Daikin</textarea>
+    </div>
+    <div class="field">
+      <label>หมายเหตุ Admin (ถ้ามี)</label>
+      <textarea style="min-height:80px">ยืนยันประกัน · ตรวจ Daikin รับเคลม DKN-CLM-2604-0089 · ค่าเดินทาง 150 ฿ ลูกค้ารับผิดชอบ (ไม่ใช่ warranty term)</textarea>
     </div>
   </div>
 </div>
 
-<!-- Section 5: Billing Mode + Invoice -->
+<!-- Section 5: Costs + Vendor Billing (Tab) -->
 <div class="section-card">
-  <div class="section-title">💵 ส่วนที่ 5 · ออก Service Invoice <span class="tag">SC-5 Doc-Chain · BC: serviceOrders → Invoice</span></div>
+  <div class="section-title">💵 ส่วนที่ 5 · ค่าบริการ + ตั้งหนี้ Vendor <span class="tag">Vendor billing ที่นี่ · Customer invoice ที่ SV-7</span></div>
 
-  <div style="margin-bottom:10px;font-size:13px;font-weight:600;color:#374151">เรียกเก็บจาก (เลือกตามประเภทประกัน)</div>
-  <div class="bill-mode">
-    <label class="bill-card selected">
-      <div class="bc-head">
-        <input type="radio" name="billmode" value="vendor" checked style="display:none">
-        <span class="bc-ico">🏢</span>
-        <span class="bc-title">ในประกัน → เรียกเก็บ Vendor</span>
-      </div>
-      <div class="bc-desc">
-        อะไหล่ + ค่าแรงใน Comp เรียกเก็บจาก Daikin Thailand · ลูกค้าจ่ายเฉพาะของนอก Comp (ถ้ามี)<br>
-        เอกสาร: Service Invoice (Vendor) · Entity Tag: <strong>1 · SWT</strong>
-      </div>
-      <div class="bc-target">เลือกแล้ว · Vendor: Daikin Thailand</div>
-    </label>
-    <label class="bill-card">
-      <div class="bc-head">
-        <input type="radio" name="billmode" value="customer" style="display:none">
-        <span class="bc-ico">👤</span>
-        <span class="bc-title">นอกประกัน → เรียกเก็บลูกค้า</span>
-      </div>
-      <div class="bc-desc">
-        ลูกค้าจ่ายเต็มจำนวน · VAT 7% รวมท้าย · รับชำระปลายทางหรือ QR<br>
-        เอกสาร: Service Invoice (Customer) · ไปลงที่ AR
-      </div>
-      <div class="bc-target">เลือกเพื่อเปลี่ยน</div>
-    </label>
+  <div class="alert alert-info" style="margin-top:0;margin-bottom:14px">
+    💡 <div><strong>Q2=A · Vendor Billing Tab:</strong> ตารางรายการค่าบริการด้านล่างใช้ได้ทั้ง 2 ทาง · ส่วน <strong>🏢 Vendor</strong> <u>ตั้งหนี้ที่ SV-4 นี้</u> (เมื่อยืนยันประกัน) · ส่วน <strong>👤 ลูกค้า</strong> <u>ออกบิลจริงที่ SV-7</u> (หลังลูกค้าเซ็น)</div>
   </div>
 
   <!-- Line items -->
-  <div style="margin-top:8px;font-size:13px;font-weight:600;color:#374151;margin-bottom:8px">รายการค่าบริการ</div>
+  <div style="margin-top:0;font-size:13px;font-weight:600;color:#374151;margin-bottom:8px">รายการค่าบริการ (Admin ปรับ<span style="color:#C55A11">ประเภท+ราคา</span>ได้)</div>
   <table>
     <thead>
       <tr>
@@ -554,23 +603,34 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 
   <!-- Split summary -->
   <div class="form-grid-2" style="margin-top:18px">
-    <div class="sum-box" style="background:#EFF6FF;border-color:#93C5FD">
+    <div class="sum-box" style="background:#EFF6FF;border-color:#93C5FD;border-width:2px;position:relative">
+      <div style="position:absolute;top:-10px;left:14px;background:#4472C4;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px">✓ ตั้งหนี้ที่นี่ (SV-4)</div>
       <div style="font-size:13px;font-weight:700;color:#1E40AF;margin-bottom:8px;display:flex;align-items:center;gap:6px">🏢 เรียกเก็บจาก Vendor (Daikin TH)</div>
       <div class="sum-row"><span class="label">อะไหล่ใน Comp</span><span class="val">9,600.00</span></div>
       <div class="sum-row"><span class="label">ค่าแรง (2 ปีแรก)</span><span class="val">1,500.00</span></div>
       <div class="sum-row subtotal"><span class="label">รวมก่อน VAT</span><span class="val">11,100.00</span></div>
       <div class="sum-row"><span class="label">VAT 7% (Vendor รับผิดชอบ)</span><span class="val">777.00</span></div>
-      <div class="sum-row total"><span class="label">เรียกเก็บ Vendor</span><span class="val">฿11,877.00</span></div>
-      <div style="margin-top:10px;font-size:11.5px;color:#6B7280">📄 จะออก <strong>Service Invoice (Vendor)</strong> · Entity Tag <strong>1 · SWT</strong> · ส่ง PDF + รูป After ไปที่ DKN-CLM-2604-0089</div>
+      <div class="sum-row total"><span class="label">ตั้งหนี้ Vendor</span><span class="val" style="color:#1E40AF">฿11,877.00</span></div>
+      <div style="margin-top:10px;padding:10px 12px;background:#fff;border-radius:6px;border:1px solid #93C5FD">
+        <div style="font-size:11.5px;color:#1E40AF;margin-bottom:6px"><strong>📄 Vendor Invoice (AR Receivable):</strong></div>
+        <div class="sum-row" style="padding:2px 0;font-size:11.5px"><span class="label">เลขที่จะได้</span><span class="val mono">SVI-V-2604-0089</span></div>
+        <div class="sum-row" style="padding:2px 0;font-size:11.5px"><span class="label">Entity Tag</span><span class="val">1 · SWT (Dual-Book)</span></div>
+        <div class="sum-row" style="padding:2px 0;font-size:11.5px"><span class="label">Claim Ref</span><span class="val mono">DKN-CLM-2604-0089</span></div>
+        <div class="sum-row" style="padding:2px 0;font-size:11.5px"><span class="label">กำหนดรับเงิน</span><span class="val">30 วัน (Net 30)</span></div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:10px;width:100%">🏢 ตั้งหนี้ Vendor ตอนนี้</button>
     </div>
-    <div class="sum-box" style="background:#F9FAFB">
-      <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:8px;display:flex;align-items:center;gap:6px">👤 เรียกเก็บจากลูกค้า (คุณสมหญิง)</div>
+    <div class="sum-box" style="background:#F9FAFB;opacity:0.85">
+      <div style="position:absolute;position:relative;margin-bottom:4px;font-size:10px;font-weight:700;color:#C55A11;text-transform:uppercase;letter-spacing:0.05em">👁️ Preview · ออกบิลจริงที่ SV-7</div>
+      <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:8px;display:flex;align-items:center;gap:6px">👤 ยอดที่ลูกค้าต้องจ่าย (ยังไม่ออก)</div>
       <div class="sum-row"><span class="label">อะไหล่นอก Comp (น้ำยา R32)</span><span class="val">380.00</span></div>
       <div class="sum-row"><span class="label">ค่าเดินทาง</span><span class="val">150.00</span></div>
       <div class="sum-row subtotal"><span class="label">รวมก่อน VAT</span><span class="val">530.00</span></div>
       <div class="sum-row"><span class="label">VAT 7%</span><span class="val">37.10</span></div>
-      <div class="sum-row total"><span class="label">เรียกเก็บลูกค้า</span><span class="val">฿567.10</span></div>
-      <div style="margin-top:10px;font-size:11.5px;color:#6B7280">💳 เลือกวิธีรับชำระ: <select style="font-size:11.5px;padding:3px 6px;border:1px solid #D1D5DB;border-radius:4px"><option>เงินสด</option><option>QR PromptPay</option><option>โอน</option><option>บัตร</option><option>ค้างไว้ → AR</option></select></div>
+      <div class="sum-row total"><span class="label">ลูกค้าจะจ่าย</span><span class="val" style="color:#C55A11">฿567.10</span></div>
+      <div style="margin-top:10px;padding:10px 12px;background:#FEF3C7;border-radius:6px;font-size:11.5px;color:#92400E">
+        💳 <strong>ส่งต่อ SV-7:</strong> ลูกค้าจะเซ็นรับ · ระบุวิธีชำระ · ออก Customer Invoice · รับชำระ/ลง AR
+      </div>
     </div>
   </div>
 
@@ -579,26 +639,27 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
   </div>
 </div>
 
-<!-- Section 6: Post + Close -->
+<!-- Section 6: Hand-off to SV-7 -->
 <div class="section-card">
-  <div class="section-title">🚀 ส่วนที่ 6 · Post ไป BC + ปิดงาน</div>
+  <div class="section-title">🚀 ส่วนที่ 6 · ส่งต่อลูกค้า (SV-7) <span class="tag">Hand-off</span></div>
   <div class="alert alert-success">
-    ✓ <div><strong>พร้อม Post:</strong> QA ครบ 5/6 · ลูกค้าเซ็นแล้ว · Rating ⭐⭐⭐⭐⭐ · ทั้ง 2 Invoice พร้อมออก</div>
+    ✓ <div><strong>พร้อมส่งต่อ:</strong> QA ครบ 5/6 · ยืนยันประกันใน Comp · ตั้งหนี้ Vendor แล้ว (หรือพร้อมตั้ง) · รายละเอียด+ราคาเสร็จ · รอลูกค้าเซ็นรับที่ SV-7</div>
   </div>
   <div class="form-grid">
-    <div class="field"><label>BC Sync Mode</label><div class="value">🔄 Sync ทันที (Live API)</div></div>
-    <div class="field"><label>เลขที่ Invoice Vendor (จะได้)</label><div class="value">SVI-V-2604-0089 <span style="color:#6B7280;font-size:11px">(Vendor billing)</span></div></div>
-    <div class="field"><label>เลขที่ Invoice ลูกค้า (จะได้)</label><div class="value">SVI-C-2604-0146 <span style="color:#6B7280;font-size:11px">(AR · VAT)</span></div></div>
+    <div class="field"><label>สถานะปัจจุบัน</label><div class="value"><span style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:16px;font-size:12px;font-weight:700;color:#fff;background:#C55A11">🟠 รอส่งคืนลูกค้า</span></div></div>
+    <div class="field"><label>สถานะ Vendor Billing</label><div class="value"><span class="chip chip-blue">📋 ตั้งหนี้แล้ว · SVI-V-2604-0089</span></div></div>
+    <div class="field"><label>เอกสารถัดไป</label><div class="value"><a href="sv7-service-delivery-mockup.html">SV-7 ส่งงานลูกค้า</a> (Draft · รอลูกค้าเซ็น)</div></div>
   </div>
 </div>
 
 <!-- Footer -->
 <div class="footer-actions">
-  <div class="hint">🔒 กด "ปิดงาน + ออกบิล" จะ Post Service Order + Invoice ทั้ง 2 ใบไป BC · action นี้ <strong>ย้อนไม่ได้</strong></div>
+  <div class="hint">🔒 กด "ส่งต่อ SV-7" = สร้างใบส่งงาน Draft · พร้อมนัดลูกค้าเซ็นรับ · Vendor billing คงอยู่ (ถ้ายัง post)</div>
   <div class="spacer"></div>
   <button class="btn btn-ghost">ยกเลิก</button>
-  <button class="btn btn-danger">↩ ส่งกลับช่าง (ยังไม่ผ่าน QA)</button>
-  <button class="btn btn-success">✓ ปิดงาน + ออกบิล</button>
+  <button class="btn btn-danger">↩ ส่งกลับช่าง (QA ไม่ผ่าน)</button>
+  <button class="btn btn-primary">🏢 ตั้งหนี้ Vendor</button>
+  <button class="btn btn-success">→ ส่งต่อ SV-7 ลูกค้าเซ็น</button>
 </div>
 
 </div></div></div>

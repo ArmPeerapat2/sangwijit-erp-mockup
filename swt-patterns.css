@@ -373,3 +373,163 @@
 .swt-type-badge.outsource{ background: #FEF3C7; color: #92400E; }
 .swt-type-badge.service  { background: #F3E8FF; color: #6D28D9; }
 .swt-type-badge.other    { background: #F3F4F6; color: #4B5563; }
+
+/* ─── SL-4 Main Header pattern (doc ID bar) ─────────────────
+   ใช้บน transaction pages ทุกหน้า — gradient banner แสดง
+   เลขที่เอกสาร + วันที่ + สาขา + status + ปุ่ม action
+   ref: sl4-invoice-mockup.html §main-header
+   ─────────────────────────────────────────────────────────── */
+.swt-mh {
+  background: linear-gradient(90deg, #1E3A5F 0%, #2563EB 100%);
+  color: #fff;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 8px;
+  margin: 0 0 16px;
+  font-family: 'Inter','Noto Sans Thai',sans-serif;
+}
+.swt-mh-left { display: flex; align-items: center; gap: 18px; flex: 1; min-width: 0; }
+.swt-mh-title { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.swt-mh-title .swt-mh-ico {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: rgba(255,255,255,0.15); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.swt-mh-title h1 { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; margin: 0; }
+.swt-mh-title p { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 1px; margin-bottom: 0; }
+.swt-mh-divider { width: 1px; height: 32px; background: rgba(255,255,255,0.2); flex-shrink: 0; }
+.swt-mh-meta { display: flex; gap: 20px; flex-wrap: wrap; }
+.swt-mh-meta-item { display: flex; flex-direction: column; gap: 0; }
+.swt-mh-meta-item .lbl { font-size: 10px; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.04em; }
+.swt-mh-meta-item .val { font-size: 12px; font-weight: 600; margin-top: 1px; font-family: 'Inter', monospace; }
+.swt-mh-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.swt-mh-badge {
+  padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
+  background: rgba(251,191,36,0.2); color: #FCD34D; border: 1px solid rgba(251,191,36,0.3);
+}
+.swt-mh-badge.draft { background: rgba(251,191,36,0.2); color: #FCD34D; border-color: rgba(251,191,36,0.3); }
+.swt-mh-badge.pending { background: rgba(251,146,60,0.25); color: #FED7AA; border-color: rgba(251,146,60,0.35); }
+.swt-mh-badge.confirmed { background: rgba(59,130,246,0.25); color: #BFDBFE; border-color: rgba(59,130,246,0.35); }
+.swt-mh-badge.posted { background: rgba(16,185,129,0.25); color: #A7F3D0; border-color: rgba(16,185,129,0.35); }
+.swt-mh-badge.cancelled { background: rgba(239,68,68,0.25); color: #FECACA; border-color: rgba(239,68,68,0.35); }
+.swt-mh-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 13px; border-radius: 6px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s; border: 1px solid transparent;
+  font-family: inherit; text-decoration: none;
+}
+.swt-mh-btn-ghost { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.2); }
+.swt-mh-btn-ghost:hover { background: rgba(255,255,255,0.22); }
+.swt-mh-btn-primary { background: #10B981; color: #fff; }
+.swt-mh-btn-primary:hover { background: #059669; }
+.swt-mh-btn-danger { background: #EF4444; color: #fff; }
+.swt-mh-btn-danger:hover { background: #DC2626; }
+
+/* ─── SL-4 Customer Compact Card (progressive disclosure) ───
+   แสดงข้อมูลลูกค้าแบบสั้น + ที่อยู่/ข้อมูลเพิ่มเติม hide ใน <details>
+   ใช้กับทุก transaction page ที่มี "ข้อมูลลูกค้า"
+   ─────────────────────────────────────────────────────────── */
+.swt-cust-card {
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: 'Inter','Noto Sans Thai',sans-serif;
+}
+.swt-cust-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #F3F4F6;
+  margin-bottom: 6px;
+}
+.swt-cust-title {
+  font-size: 12px; font-weight: 600; color: #374151;
+  display: flex; align-items: center; gap: 6px;
+}
+.swt-cust-title .ico { font-size: 14px; }
+.swt-cust-head-spacer { flex: 1; }
+.swt-cust-btn {
+  padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 600;
+  background: transparent; border: 1px solid #E5E7EB; color: #6B7280;
+  cursor: pointer; font-family: inherit;
+}
+.swt-cust-btn:hover { background: #F9FAFB; color: #2563EB; border-color: #BFDBFE; }
+.swt-cust-btn.primary { background: #EFF6FF; border-color: #BFDBFE; color: #2563EB; }
+.swt-cust-btn.primary:hover { background: #DBEAFE; }
+
+.swt-cust-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 14px;
+}
+.swt-cust-field { display: flex; flex-direction: column; gap: 2px; margin-bottom: 0; }
+.swt-cust-label { font-size: 9px; font-weight: 600; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.03em; }
+.swt-cust-value { font-size: 12px; color: #111827; font-weight: 500; line-height: 1.3; }
+.swt-cust-value.highlight { font-weight: 700; color: #2563EB; font-family: 'Inter', monospace; letter-spacing: -0.01em; }
+.swt-cust-value.warn { color: #EF4444; font-weight: 600; }
+.swt-cust-value.success { color: #10B981; font-weight: 600; }
+.swt-cust-value.muted { color: #6B7280; }
+.swt-cust-value .mono { font-family: 'Inter', monospace; }
+
+/* Credit/Status mini-line (4 cells) */
+.swt-credit-line {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 8px;
+  background: #F8FAFC;
+  border-radius: 5px;
+  border: 1px solid #E2E8F0;
+}
+.swt-credit-line .cell { display: flex; flex-direction: column; gap: 0; }
+.swt-credit-line .lbl { font-size: 8.5px; color: #9CA3AF; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.swt-credit-line .val { font-size: 11px; font-weight: 700; font-family: 'Inter', monospace; line-height: 1.2; }
+.swt-credit-line .val.g { color: #10B981; }
+.swt-credit-line .val.r { color: #EF4444; }
+.swt-credit-line .val.m { color: #6B7280; }
+.swt-credit-line .val.b { color: #2563EB; }
+
+/* Address chip + collapsible details */
+.swt-addr-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 3px 8px;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  border-radius: 4px;
+  color: #2563EB;
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+.swt-addr-chip:hover { background: #DBEAFE; }
+.swt-addr-chip + details { margin-top: 4px; }
+details.swt-addr { margin-top: 8px; }
+details.swt-addr > summary {
+  cursor: pointer; font-size: 11px; font-weight: 700; color: #2563EB;
+  outline: none; padding: 4px 0; list-style: none;
+}
+details.swt-addr > summary::-webkit-details-marker { display: none; }
+details.swt-addr > summary::before {
+  content: "▶"; font-size: 8px; margin-right: 4px;
+  display: inline-block; transition: transform 0.15s;
+}
+details.swt-addr[open] > summary::before { transform: rotate(90deg); }
+.swt-addr-line {
+  padding: 8px 0; font-size: 11.5px; line-height: 1.55; color: #475569;
+  border-top: 1px solid #F3F4F6; margin-top: 4px;
+}
+.swt-addr-line strong {
+  color: #111827; display: inline-block; min-width: 70px;
+  margin-right: 6px; font-size: 11px; font-weight: 700;
+}
