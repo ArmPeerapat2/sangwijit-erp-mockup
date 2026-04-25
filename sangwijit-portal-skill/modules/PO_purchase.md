@@ -327,20 +327,71 @@ Output:  Commitment record ที่ถูกอ้างอิงจาก PR/P
          ⚠️ ไม่มีผลทางภาษี · ใช้คำนวณราคาขาย + Recovery Tracking เท่านั้น
 ```
 
-### ERP Form 6 Sections
+### View Structure (per v2.2)
 
-**Section 1 — Header** — Vendor + Period + Commitment No (VC-xxxx) + Status (Draft/Active/Expired) + Owner + เอกสารยืนยัน PDF + **เซลล์ที่เซ็นรับทราบ**
-**Section 2 — Trade Promotion 4 Types** (per A2 v2.1):
-- **① MOU** — รายหมวดสินค้า · ซื้อถึงเป้า สิ้นปี/ไตรมาส
-- **② Sell-in** — รายหมวด/รายรุ่น · ส่วนลดทันทีตอน PO (Case 4 best)
-- **③ Sell-out** — รายหมวด/รายรุ่น · จ่ายเมื่อขายออกสำเร็จ
-- **④ Co-op** — Event/แคมเปญ · งบ Event + ใบปลิว
-- ⚠️ Sell-thru — **ตัดออก v2.1** (ไม่ใช้งานจริง)
-- Column: ประเภท · Scope · รายละเอียด · มูลค่า/% · เงื่อนไข · VAT Case · Recovery Target
-**Section 3 — Volume Tier · MOU Step** — table T1/T2/T3/T4 (ยอดสะสม → Rebate% + Bonus + Status + Progress bar) — ใช้กับ MOU type
-**Section 4 — Payment / Credit Term** — Vendor Credit + WHT + Currency + Cash Discount + R Flag
-**Section 5 — Settle Schedule** — Quarterly/Year-end · Method (CN ลด AP / โอน) · Last + Next settle date
-**Section 6 — Approval Chain + Linked Documents** — ผู้อนุมัติ + PR/PO/AP ที่อ้างอิง Commitment นี้
+**2 Views:** 📋 Form view (single VC record) | 📊 List view (all VC for vendor · filter by type/period/status)
+
+### Form View — Sections (per type)
+
+**Common (ทุก type):**
+- **Vendor Card | Agreement Meta Card** (sl-1 pattern · 2-col compact)
+- **PO-2.2 Type Selector** — segmented 4 buttons (MOU/Sell-in/Sell-out/Co-op) · เลือกประเภทตอน create
+- **PO-2.4 Recovery Tracking** — ใช้ใน N PO · ยอดสิทธิ์ · เก็บคืนได้ · Recovery Rate vs Target
+- **PO-2.5 Approval + เซลล์เซ็น Vendor** — Approval chain ภายใน + signature ของเซลล์ Vendor (ดู A6 · ไม่มีผลภาษี)
+- **PO-2.6 Linked Documents** — PR/PO/AP ที่ใช้ VC นี้
+
+**PO-2.3 Detail (เปลี่ยนตาม type):**
+
+#### Type ① MOU (รายหมวด)
+- หมวดสินค้า (multi-select · เช่น ซักผ้า + ตู้เย็น)
+- เป้ายอดสะสม per category หรือ combined
+- **Tier table** T1/T2/T3/T4 (ยอด → Rebate% + Bonus)
+- Period: Quarterly / Yearly · From-To
+- VAT Case: 🟡 Case 3 (CN หลังบิล · มาตรฐานคู่ค้า)
+
+#### Type ② Sell-in ⭐ (รายหมวด/รุ่น)
+- Scope: SKU หรือ หมวด (เช่น LG-WT-TT10 · ซักผ้า)
+- จำนวนซื้อขั้นต่ำ (lot trigger) · ราคา/หน่วย
+- Promotion: **Ontop% (Case 4 บนบิล)** + ส่วนลดบาท + Free Goods (เช่น 25 แถม 1)
+- Effective period (จาก-ถึง · short window)
+- VAT Case: 🟢 Case 4 (best practice)
+
+#### Type ③ Sell-out (รายหมวด/รุ่น)
+- Scope: SKU หรือ หมวด
+- ส่วนลด/หน่วย เมื่อขายออกสำเร็จ (เช่น ฿200/ตัว)
+- **Serial match condition** (ผูก SL-4 invoice · ต้อง serial ตรง)
+- Effective period
+- VAT Case: 🟢 Case 4 (CN หลังขายออก)
+
+#### Type ④ Co-op (Event/แคมเปญ)
+- **Sub-type:**
+  - 🔵 **Fixed** — Event name + งบตายตัว + วันที่จัด + use case (เช่น งานเลี้ยงลูกค้า ฿10K)
+  - 🟣 **Triggered** — เป้ายอดซื้อสะสม + งบที่ปลดล็อค + use case (เช่น 100K → 2K marketing)
+- หมวดที่นับ (multi)
+- VAT Case: 🟡 Case 3 (CN หลังเอกสาร event)
+
+### List View — Layout
+
+```
+┌────────────────────────────────────────────────────────┐
+│ Filter: Type · Period · Status · Search SKU/หมวด      │
+├────────────────────────────────────────────────────────┤
+│ VC No.        │Type │Scope         │เงื่อนไข│มูลค่า│Status│
+│ VC-MOU-001    │🟢MOU│ซักผ้า+ตู้เย็น │T2 3%   │~60K  │🔥68% │
+│ VC-MOU-002    │🟢MOU│ตู้เย็น+...    │2.5%   │~37K  │🔥42% │
+│ VC-SI-005 ⭐  │🔵SI │LG TT10 (รุ่น) │4.5% บนบิล│88K  │✓Active│
+│ VC-SO-008     │🟡SO │LG TT10 (รุ่น) │฿200/ตัว│~20K  │รอ data│
+│ VC-CO-012     │🟣Co │LG หมวด       │100K→2K│2K    │✓ผ่าน │
+└────────────────────────────────────────────────────────┘
+```
+
+### VC Numbering
+
+`VC-{TYPE}-{YYMM}-{seq}` เช่น:
+- `VC-MOU-2604-001` (MOU เดือน เม.ย. 26 ใบที่ 1)
+- `VC-SI-2604-005` (Sell-in)
+- `VC-SO-2604-008` (Sell-out)
+- `VC-CO-2604-012` (Co-op)
 
 ### Status Flow
 ```

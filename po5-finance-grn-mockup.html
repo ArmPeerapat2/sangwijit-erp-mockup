@@ -5,7 +5,43 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>PO-5 · GRN ตั้งหนี้ (Finance/Buyer) — Sangwijit ERP</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
 <style>
+/* sl-4 main-header (per po-1/2/6 standard) */
+.main-header{background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 2px 8px rgba(0,0,0,0.08);margin-bottom:14px;border-radius:8px}
+.mh-left{display:flex;align-items:center;gap:18px}
+.mh-title{display:flex;align-items:center;gap:10px}
+.mh-title .ico{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+.mh-title h1{font-size:16px;font-weight:700;letter-spacing:-0.01em;line-height:1.15;margin:0}
+.mh-title p{font-size:11px;color:rgba(255,255,255,0.7);margin:1px 0 0}
+.mh-divider{width:1px;height:32px;background:rgba(255,255,255,0.2)}
+.mh-meta{display:flex;gap:20px}
+.mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em}
+.mh-meta-item .val{font-size:12px;font-weight:600;margin-top:1px;font-family:'Inter',monospace;white-space:nowrap}
+.mh-right{display:flex;align-items:center;gap:8px}
+.mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(251,191,36,0.2);color:#FCD34D;border:1px solid rgba(251,191,36,0.3)}
+.mh-badge.partial{background:rgba(251,146,60,0.25);color:#FED7AA;border-color:rgba(251,146,60,0.35)}
+.mh-badge.full{background:rgba(16,185,129,0.25);color:#A7F3D0;border-color:rgba(16,185,129,0.35)}
+.mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid transparent;font-family:inherit;text-decoration:none}
+.mh-btn-ghost{background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.2)}
+.mh-btn-ghost:hover{background:rgba(255,255,255,0.22)}
+.mh-btn-primary{background:#10B981;color:#fff}
+.mh-btn-primary:hover{background:#059669}
+.mh-btn-primary.btn-disabled{opacity:0.5;cursor:not-allowed;background:#9CA3AF !important}
+
+/* Receive progress bar (per item) */
+.recv-bar{display:inline-flex;align-items:center;gap:6px}
+.recv-bar .track{width:80px;height:6px;background:#E5E7EB;border-radius:3px;overflow:hidden}
+.recv-bar .fill{height:100%;background:#10B981;border-radius:3px}
+.recv-bar .fill.partial{background:#F59E0B}
+.recv-bar .pct{font-size:11px;font-weight:600;color:#6B7280}
+
+/* Full-receive gate banner */
+.gate-banner{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:14px;display:flex;align-items:center;gap:10px;line-height:1.5}
+.gate-banner.full{background:#ECFDF5;color:#065F46;border:1px solid #6EE7B7}
+.gate-banner.partial{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
+
+
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
 .app-container{display:flex;min-height:100vh}
@@ -298,17 +334,37 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
   <span class="step pending">AP Payment</span>
 </div>
 
-<div class="page-header">
-  <div>
-    <div class="page-title">PO-5 · บันทึกรับสินค้า / ตั้งหนี้ (Finance GRN)</div>
-    <div class="page-subtitle">GRN-2026-0421-0042 · อ้างอิง PO-2026-0322-0156 · Vendor: Daikin Thailand · สถานะ: <strong style="color:#F59E0B">Draft (รอ Serial ครบก่อน Post)</strong></div>
+<!-- MAIN HEADER (sl-4 pattern) -->
+<header class="main-header">
+  <div class="mh-left">
+    <div class="mh-title">
+      <div class="ico">📦</div>
+      <div>
+        <h1>บันทึกรับสินค้า GRN</h1>
+        <p>Finance GRN (PO-5) · ทยอยรับ + Full-receive Gate</p>
+      </div>
+    </div>
+    <div class="mh-divider"></div>
+    <div class="mh-meta">
+      <div class="mh-meta-item"><div class="lbl">เลขที่ GRN</div><div class="val">GRN-2604-00042</div></div>
+      <div class="mh-meta-item"><div class="lbl">อ้างอิง PO</div><div class="val">PO-2603-00156</div></div>
+      <div class="mh-meta-item"><div class="lbl">รอบรับครั้งที่</div><div class="val">2 / N (สะสม 18/35)</div></div>
+    </div>
   </div>
-  <div class="header-actions">
-    <button class="btn btn-secondary">💾 บันทึก Draft</button>
-    <button class="btn btn-secondary">🖨 พิมพ์ GRN</button>
-    <button class="btn btn-danger">🗑 ลบ</button>
-    <button class="btn btn-primary" id="postBtn">🚀 Post GRN</button>
+  <div class="mh-right">
+    <span class="mh-badge partial">⏳ Partial Receive · 51%</span>
+    <button class="mh-btn mh-btn-primary" id="postBtn">🚀 Post GRN (Partial)</button>
+    <span style="font-size:10px;color:rgba(255,255,255,0.55);margin-left:6px">⌄ hover เครื่องมือ</span>
   </div>
+</header>
+
+<!-- Full-receive Gate Banner -->
+<div class="gate-banner partial" id="gateBanner">
+  <span style="font-size:18px">⏳</span>
+  <div style="flex:1">
+    <b>Partial Receive Mode</b> — รับครั้งนี้แล้ว 18/35 รวมทุกบรรทัด (51%) · <b>PO-6 (ตั้งหนี้ AP) จะ unlock ก็ต่อเมื่อ <span style="color:#065F46">รับครบ 100%</span></b> หรือใช้ <a href="po8-deposit-bill-mockup.html" style="color:#92400E;text-decoration:underline;font-weight:600">PO-8 บิลฝาก ↗</a> ถ้าครบ Credit Term ก่อน
+  </div>
+  <button onclick="po5ToggleFullMode()" style="padding:6px 12px;background:#fff;border:1px solid #FCD34D;border-radius:6px;font-size:11px;color:#92400E;font-weight:600;cursor:pointer;font-family:inherit">🎛 Demo: สลับ Full Receive</button>
 </div>
 
 <!-- Status Bar -->
@@ -411,10 +467,11 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
         <th>#</th>
         <th>รหัสสินค้า</th>
         <th>ชื่อสินค้า</th>
-        <th style="text-align:right">สั่ง (PO)</th>
-        <th style="text-align:right">รับจริง</th>
-        <th>UOM</th>
-        <th style="text-align:right">ราคา/หน่วย</th>
+        <th style="text-align:right">PO Qty</th>
+        <th style="text-align:right">รับสะสม<br><span style="font-weight:400;font-size:10px;color:#9CA3AF">(GRN ก่อน)</span></th>
+        <th style="text-align:right">รับครั้งนี้</th>
+        <th style="text-align:right">ค้างรับ</th>
+        <th>Progress</th>
         <th>Serial (SC8)</th>
         <th>QC</th>
         <th style="text-align:right">รวม</th>
@@ -425,11 +482,12 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
         <td>1</td>
         <td><a href="md1-item-master-mockup-v3.html" style="color:#2563EB">ITEM-AC-00123</a></td>
         <td><strong>แอร์ Daikin FTKM-18 · 18,000 BTU</strong><br><span style="font-size:11px;color:#6B7280">Inverter R32</span></td>
-        <td style="text-align:right">10</td>
-        <td style="text-align:right"><input type="number" value="10" class="line-input" style="max-width:70px"></td>
-        <td>ชิ้น</td>
-        <td style="text-align:right">15,000.00</td>
-        <td><span class="chip chip-yellow">7/10 ⚠</span></td>
+        <td style="text-align:right;font-weight:600">10</td>
+        <td style="text-align:right;color:#6B7280">3</td>
+        <td style="text-align:right"><input type="number" value="7" class="line-input" style="max-width:60px"></td>
+        <td style="text-align:right;color:#10B981;font-weight:600">0 ✓</td>
+        <td><div class="recv-bar"><div class="track"><div class="fill" style="width:100%"></div></div><span class="pct" style="color:#10B981">100%</span></div></td>
+        <td><span class="chip chip-yellow">7/7 ⚠</span></td>
         <td><select style="padding:4px 6px;font-size:12px;border:1px solid #E5E7EB;border-radius:4px"><option>✓ Pass</option><option>✗ Fail</option><option>- Skip</option></select></td>
         <td style="text-align:right;font-weight:600">150,000.00</td>
       </tr>
@@ -463,37 +521,47 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
         <td>2</td>
         <td><a href="md1-item-master-mockup-v3.html" style="color:#2563EB">ITEM-AC-00124</a></td>
         <td><strong>แอร์ Daikin FTKM-24 · 24,000 BTU</strong><br><span style="font-size:11px;color:#6B7280">Inverter R32</span></td>
-        <td style="text-align:right">5</td>
-        <td style="text-align:right"><input type="number" value="5" class="line-input" style="max-width:70px"></td>
-        <td>ชิ้น</td>
-        <td style="text-align:right">18,500.00</td>
-        <td><span class="chip chip-green">5/5 ✓</span></td>
+        <td style="text-align:right;font-weight:600">5</td>
+        <td style="text-align:right;color:#6B7280">0</td>
+        <td style="text-align:right"><input type="number" value="3" class="line-input" style="max-width:60px"></td>
+        <td style="text-align:right;color:#F59E0B;font-weight:600">2 ⏳</td>
+        <td><div class="recv-bar"><div class="track"><div class="fill partial" style="width:60%"></div></div><span class="pct" style="color:#F59E0B">60%</span></div></td>
+        <td><span class="chip chip-yellow">3/3 ⚠</span></td>
         <td><span class="chip chip-green">✓ Pass</span></td>
-        <td style="text-align:right;font-weight:600">92,500.00</td>
+        <td style="text-align:right;font-weight:600">55,500.00</td>
       </tr>
       <tr>
         <td>3</td>
         <td><a href="md1-item-master-mockup-v3.html" style="color:#2563EB">ITEM-AC-00127</a></td>
         <td><strong>ท่อน้ำยา Daikin 3/8" × 5m</strong><br><span style="font-size:11px;color:#6B7280">Non-serial item</span></td>
-        <td style="text-align:right">20</td>
-        <td style="text-align:right"><input type="number" value="18" class="line-input qty-warn" style="max-width:70px"></td>
-        <td>ชิ้น</td>
-        <td style="text-align:right">850.00</td>
+        <td style="text-align:right;font-weight:600">20</td>
+        <td style="text-align:right;color:#6B7280">12</td>
+        <td style="text-align:right"><input type="number" value="8" class="line-input" style="max-width:60px"></td>
+        <td style="text-align:right;color:#10B981;font-weight:600">0 ✓</td>
+        <td><div class="recv-bar"><div class="track"><div class="fill" style="width:100%"></div></div><span class="pct" style="color:#10B981">100%</span></div></td>
         <td><span class="chip chip-gray">ไม่มี SN</span></td>
         <td><span class="chip chip-green">✓ Pass</span></td>
-        <td style="text-align:right;font-weight:600">15,300.00</td>
+        <td style="text-align:right;font-weight:600">6,800.00</td>
       </tr>
     </tbody>
     <tfoot>
       <tr style="background:#F9FAFB">
-        <td colspan="9" style="text-align:right;font-weight:600;padding:10px">รวมก่อน VAT</td>
-        <td style="text-align:right;font-weight:700">257,800.00</td>
+        <td colspan="3" style="text-align:right;font-weight:600;padding:10px">รวม</td>
+        <td style="text-align:right;font-weight:700">35</td>
+        <td style="text-align:right;font-weight:600">15</td>
+        <td style="text-align:right;font-weight:700;color:#2563EB">18</td>
+        <td style="text-align:right;font-weight:700;color:#F59E0B">2</td>
+        <td colspan="3" style="text-align:right;font-weight:600;padding:10px">รวมก่อน VAT (รับครั้งนี้)</td>
+        <td style="text-align:right;font-weight:700">212,300.00</td>
+      </tr>
+      <tr style="background:#FEF3C7">
+        <td colspan="11" style="padding:10px;color:#92400E"><b>📊 Cumulative Status:</b> รวมรับสะสมหลัง Post GRN นี้ = <b>33/35</b> (94%) · <b>ค้างรับอีก 2 ชิ้น</b> (FTKM-24) → ✗ <b>ยังไม่ Full Receive</b> · PO-6 ตั้งหนี้ AP ยัง <b>locked</b> · ต้องรับเพิ่มอีก 1 รอบ หรือใช้ <a href="po8-deposit-bill-mockup.html" style="color:#92400E;text-decoration:underline;font-weight:600">PO-8 บิลฝาก</a> ถ้าครบ Credit Term</td>
       </tr>
     </tfoot>
   </table>
   <div class="alert alert-info" style="margin-top:12px">
     <span>ℹ️</span>
-    <div style="font-size:12px">บรรทัดที่ 3 — รับน้อยกว่า PO (18/20) → PO-4 จะเป็นสถานะ <strong>Partially Received</strong> หลัง Post · 2 ชิ้นคงเหลือจะ keep open ใน PO</div>
+    <div style="font-size:12px"><b>ทยอยรับ (Partial Receive):</b> ระบบจะ track <b>cumulative</b> ทุก GRN ที่อ้าง PO เดียวกัน · ถ้าทุก line รับสะสม = PO Qty → flag <b>is_full_received</b> = true → unlock PO-6 ตั้งหนี้ AP · ถ้ายัง partial แต่ครบ Credit Term → ใช้ PO-8 บิลฝาก แทน</div>
   </div>
 </div>
 
@@ -602,8 +670,65 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 
 </div></div></div>
 
+<!-- Doc Chain bottom strip (per spec C2 · sticky bottom) -->
+<div id="dcWrap">
+  <div id="dcTrigger" title="hover / กด 📌 ปักหมุด"></div>
+  <div id="dcPanel">
+    <span class="dc-lbl">Doc Chain</span>
+    <div class="dc-chips">
+      <a href="po1-purchase-request-mockup.html" class="dc-item"><span class="dc-type">PR</span><span class="dc-no">PR-2603-0089</span></a>
+      <span class="dc-arrow">›</span>
+      <a href="po4-purchase-order-mockup.html" class="dc-item"><span class="dc-type">PO</span><span class="dc-no">PO-2603-00156</span></a>
+      <span class="dc-arrow">›</span>
+      <span class="dc-item current"><span class="dc-type">GRN</span><span class="dc-no">GRN-2604-00042</span></span>
+      <span class="dc-arrow">›</span>
+      <span class="dc-item pending"><span class="dc-type">VBL</span><span class="dc-no">รอตั้งหนี้ (locked)</span></span>
+      <span class="dc-arrow">›</span>
+      <span class="dc-item pending"><span class="dc-type">PAY</span><span class="dc-no">รอจ่ายชำระ</span></span>
+    </div>
+    <button id="dcPin" onclick="dcTogglePin()" title="ปักหมุด Doc Chain">📌</button>
+  </div>
+</div>
+
 <script src="swt-link.js"></script>
 <script>
+/* Doc Chain pin (per .dc-* in swt-patterns.css) */
+(function(){
+  var KEY='po5_dc_pinned';
+  var saved=false;try{saved=localStorage.getItem(KEY)==='1';}catch(e){}
+  if(saved){var w=document.getElementById('dcWrap'),p=document.getElementById('dcPin');
+    if(w)w.classList.add('pinned');if(p)p.classList.add('pinned');}
+  window.dcTogglePin=function(){
+    var w=document.getElementById('dcWrap'),p=document.getElementById('dcPin');
+    var on=w.classList.toggle('pinned');p.classList.toggle('pinned',on);
+    try{localStorage.setItem(KEY,on?'1':'0');}catch(e){}
+  };
+})();
+
+/* PO-5 Full-receive gate demo toggle */
+(function(){
+  var fullMode=false;
+  window.po5ToggleFullMode=function(){
+    fullMode=!fullMode;
+    var banner=document.getElementById('gateBanner');
+    var badge=document.querySelector('.mh-badge');
+    var postBtn=document.getElementById('postBtn');
+    if(fullMode){
+      banner.className='gate-banner full';
+      banner.innerHTML='<span style="font-size:18px">✅</span><div style="flex:1"><b>Full Receive Achieved</b> — รับครบ 35/35 ทุก line · <b>PO-6 ตั้งหนี้ AP unlocked</b> ✓ · กด Post GRN เพื่อส่งสัญญาณให้ Finance</div><button onclick="po5ToggleFullMode()" style="padding:6px 12px;background:#fff;border:1px solid #6EE7B7;border-radius:6px;font-size:11px;color:#065F46;font-weight:600;cursor:pointer;font-family:inherit">🎛 Demo: กลับ Partial</button>';
+      badge.className='mh-badge full';
+      badge.textContent='✅ Full Receive · 100%';
+      postBtn.textContent='🚀 Post GRN (Full · unlock PO-6)';
+    }else{
+      banner.className='gate-banner partial';
+      banner.innerHTML='<span style="font-size:18px">⏳</span><div style="flex:1"><b>Partial Receive Mode</b> — รับครั้งนี้แล้ว 18/35 รวมทุกบรรทัด (51%) · <b>PO-6 (ตั้งหนี้ AP) จะ unlock ก็ต่อเมื่อ <span style="color:#065F46">รับครบ 100%</span></b> หรือใช้ <a href="po8-deposit-bill-mockup.html" style="color:#92400E;text-decoration:underline;font-weight:600">PO-8 บิลฝาก ↗</a> ถ้าครบ Credit Term ก่อน</div><button onclick="po5ToggleFullMode()" style="padding:6px 12px;background:#fff;border:1px solid #FCD34D;border-radius:6px;font-size:11px;color:#92400E;font-weight:600;cursor:pointer;font-family:inherit">🎛 Demo: สลับ Full Receive</button>';
+      badge.className='mh-badge partial';
+      badge.textContent='⏳ Partial Receive · 51%';
+      postBtn.textContent='🚀 Post GRN (Partial)';
+    }
+  };
+})();
+
 function switchTab(btn,id){
   var card=btn.closest('.section-card');
   card.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});

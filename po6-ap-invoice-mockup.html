@@ -510,32 +510,140 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 
 <div class="section-card">
   <div class="section-title">
-    <span class="num">PO-6.2</span>📊 3-Way Match Detail
-    <span class="en">PO · GRN · Invoice Reconciliation</span>
+    <span class="num">PO-6.2</span>🧾 ข้อมูลบิล &amp; เอกสารอ้างอิง
+    <span class="en">Bill Data &amp; References (no SKU breakdown)</span>
   </div>
+
+  <div class="alert alert-info" style="margin-bottom:14px">💡 <b>ใบวางบิล (PO-6)</b> = <b>ข้อมูลบิล</b> ที่ Vendor ส่งมาเรียกเก็บเงิน · <b>ไม่ใช่ตาราง SKU</b> · 1 บิลอ้างได้ <b>ทั้ง 2 อย่างพร้อมกัน:</b> 📦 ใบรับสินค้า (เพิ่มหนี้) + 🤝 ใบตั้งหนี้ส่งเสริมการขาย (Commitment · <b>ตัดหนี้/CN settlement</b>) · SKU ดูใน GRN ที่อ้าง</div>
+
+  <!-- Reference Section 1: GRN (เพิ่มหนี้ — มูลค่าซื้อใหม่) -->
+  <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:12px 14px;margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <span style="font-size:13px;font-weight:700;color:#065F46">📦 ใบรับสินค้า (GRN) — เพิ่มหนี้</span>
+      <span style="font-size:11px;color:#065F46;background:#fff;padding:2px 8px;border-radius:10px;border:1px solid #6EE7B7">+ มูลค่าซื้อใหม่</span>
+      <span style="margin-left:auto;font-size:11px;color:#6B7280">1 บิลอ้างได้หลายใบ</span>
+    </div>
+    <table>
+      <thead><tr><th>เลขที่ GRN</th><th>วันที่รับ</th><th>คลัง</th><th class="num">มูลค่ารับ</th><th class="num">VAT-able</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        <tr>
+          <td><a href="po5-finance-grn-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">GRN-2604-00019 ↗</a></td>
+          <td>10 เม.ย. 26</td>
+          <td>HQ · คลังใหญ่</td>
+          <td class="num">฿1,420,000</td>
+          <td class="num">✓ Yes</td>
+          <td><span class="swt-chip success">✓ Posted Full</span></td>
+          <td><a href="po5-finance-grn-mockup.html" style="color:#2563EB;font-size:12px">↗</a></td>
+        </tr>
+        <tr>
+          <td><a href="po5-finance-grn-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">GRN-2604-00021 ↗</a></td>
+          <td>11 เม.ย. 26</td>
+          <td>สาขา 1 · รังสิต</td>
+          <td class="num">฿840,000</td>
+          <td class="num">✓ Yes</td>
+          <td><span class="swt-chip success">✓ Posted Full</span></td>
+          <td><a href="po5-finance-grn-mockup.html" style="color:#2563EB;font-size:12px">↗</a></td>
+        </tr>
+        <tr class="swt-add-line"><td colspan="7" style="padding:6px 14px;background:#fff;border-top:1px dashed #6EE7B7;color:#065F46;font-size:12px;text-align:center">🔍 ค้นหา GRN เพื่อเพิ่มอ้างอิง</td></tr>
+      </tbody>
+      <tfoot>
+        <tr style="background:#fff"><td colspan="3" style="text-align:right;font-weight:600;padding:8px 10px">Subtotal · เพิ่มหนี้ (2 GRN)</td><td class="num" style="font-weight:700;color:#065F46;padding:8px 10px">+ ฿2,260,000</td><td colspan="3" style="font-size:11px;color:#6B7280;padding:8px 10px">VAT 7% คำนวณจากยอดนี้</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Reference Section 2: Commitment (ตัดหนี้ — CN/Trade Promotion offset) -->
+  <div style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:8px;padding:12px 14px;margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <span style="font-size:13px;font-weight:700;color:#92400E">🤝 ใบตั้งหนี้ส่งเสริมการขาย (Commitment) — ตัดหนี้ / CN Settlement</span>
+      <span style="font-size:11px;color:#92400E;background:#fff;padding:2px 8px;border-radius:10px;border:1px solid #FCD34D">− offset</span>
+      <span style="margin-left:auto;font-size:11px;color:#6B7280">CN จาก MOU/Sell-in/Sell-out/Co-op</span>
+    </div>
+    <table>
+      <thead><tr><th>VC No.</th><th>Type</th><th>เหตุผล settle</th><th>CN No. (Vendor)</th><th class="num">ยอดตัดหนี้</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        <tr>
+          <td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">VC-MOU-2604-001 ↗</a></td>
+          <td><span class="swt-chip success">🟢 MOU</span></td>
+          <td>Q1 Tier T2 settle (3% × ฿2M)</td>
+          <td>CN-DKT-2604-077</td>
+          <td class="num" style="color:#92400E;font-weight:700">− ฿60,000</td>
+          <td><span class="swt-chip success">✓ ตรวจ CN ผ่าน (A3 7/7)</span></td>
+          <td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-size:12px">↗</a></td>
+        </tr>
+        <tr>
+          <td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">VC-SI-2604-005 ↗</a></td>
+          <td><span class="swt-chip info">🔵 Sell-in</span></td>
+          <td>Lot 100 ตัว · 4.5% บนบิล (Case 4)</td>
+          <td>CN-DKT-2604-082</td>
+          <td class="num" style="color:#92400E;font-weight:700">− ฿44,100</td>
+          <td><span class="swt-chip success">✓ ตรวจ CN ผ่าน</span></td>
+          <td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-size:12px">↗</a></td>
+        </tr>
+        <tr class="swt-add-line"><td colspan="7" style="padding:6px 14px;background:#fff;border-top:1px dashed #FCD34D;color:#92400E;font-size:12px;text-align:center">🔍 ค้นหา VC (Commitment) ที่ได้ CN แล้ว เพื่อ offset ตัดหนี้</td></tr>
+      </tbody>
+      <tfoot>
+        <tr style="background:#fff"><td colspan="4" style="text-align:right;font-weight:600;padding:8px 10px">Subtotal · ตัดหนี้ (2 CN)</td><td class="num" style="font-weight:700;color:#92400E;padding:8px 10px">− ฿104,100</td><td colspan="2" style="font-size:11px;color:#6B7280;padding:8px 10px">หักจากยอดสุทธิที่ต้องจ่าย</td></tr>
+      </tfoot>
+    </table>
+    <div style="font-size:11.5px;color:#92400E;margin-top:6px;padding-left:4px">⚠️ <b>CN Audit (A3):</b> ทุก CN ต้องระบุ Category (1/2/3) + match Agreement + ผ่าน Audit Checklist 7 ข้อ ก่อน offset · ดู CN Audit tab ที่ PO-6.4</div>
+  </div>
+
+  <!-- Bill Info Block -->
+  <div style="font-size:11px;font-weight:700;color:#6B7280;margin:6px 0 8px;text-transform:uppercase;letter-spacing:0.04em">📄 ข้อมูลบิลที่ Vendor ส่งมา</div>
+  <div class="form-grid-4">
+    <div class="field"><label>เลขที่ Tax Invoice (Vendor) <span class="en">Vendor Tax Invoice No.</span></label><div class="value highlight">DKT-6904-000129</div></div>
+    <div class="field"><label>วันที่ออกบิล <span class="en">Bill Date</span></label><div class="value">10 เม.ย. 26</div></div>
+    <div class="field"><label>ยอดบิล (ก่อน offset) <span class="en">Bill Amount</span></label><div class="value">฿2,260,000.00</div></div>
+    <div class="field"><label>ส่วนลดท้ายบิล <span class="en">Bill Discount</span></label><div class="value">— (ส่วนลดอยู่ใน CN ตัดหนี้)</div></div>
+  </div>
+
+  <!-- Header-level Match Result (no SKU) -->
+  <div style="font-size:11px;font-weight:700;color:#6B7280;margin:18px 0 8px;text-transform:uppercase;letter-spacing:0.04em">🔍 Match Result · Header-level (PO ↔ GRN ↔ Bill ± CN)</div>
   <table>
-    <thead><tr><th>SKU</th><th class="num">PO Qty</th><th class="num">GRN Qty</th><th class="num">Invoice Qty</th><th class="num">ราคา PO</th><th class="num">ราคา Invoice</th><th>VAT Case</th><th>ผล</th></tr></thead>
+    <thead><tr><th>เอกสาร</th><th>เลขที่</th><th class="num">ยอด</th><th>VAT Case</th><th>Match</th></tr></thead>
     <tbody>
-      <tr><td>DAI-FTKM24</td><td class="num">80</td><td class="num">80</td><td><input type="number" class="line-input num qty" value="80" min="0"></td><td class="num">14,500</td><td><input type="text" class="line-input num price" value="14,500"></td><td><span class="swt-chip success" title="Case 4 = % บนบิล (ตามมาตรฐาน A1)">🟢 Case 4</span></td><td><span class="swt-chip success">✓ Match</span></td></tr>
-      <tr><td>DAI-FTKM18</td><td class="num">40</td><td class="num">40</td><td><input type="number" class="line-input num qty" value="40" min="0"></td><td class="num">12,800</td><td><input type="text" class="line-input num price" value="12,800"></td><td><span class="swt-chip success" title="Case 4 = % บนบิล">🟢 Case 4</span></td><td><span class="swt-chip success">✓ Match</span></td></tr>
-      <tr><td>DAI-FTKM12</td><td class="num">60</td><td class="num">60</td><td><input type="number" class="line-input num qty" value="60" min="0"></td><td class="num">9,800</td><td><input type="text" class="line-input num price" value="9,800"></td><td><span class="swt-chip success" title="Case 4 = % บนบิล">🟢 Case 4</span></td><td><span class="swt-chip success">✓ Match</span></td></tr>
+      <tr><td>📋 PO ต้นทาง</td><td><a href="po4-purchase-order-mockup.html" style="color:#2563EB">PO-2604-00028</a></td><td class="num">฿2,260,000</td><td><span class="swt-chip success" title="Case 4 = % บนบิล">🟢 Case 4</span></td><td><span class="swt-chip success">— baseline</span></td></tr>
+      <tr><td>📦 GRN รวม (2 ใบ)</td><td>GRN-2604-00019 + 00021</td><td class="num">฿2,260,000</td><td><span class="swt-chip success">🟢 Case 4</span></td><td><span class="swt-chip success">✓ Match PO</span></td></tr>
+      <tr style="background:#EFF6FF"><td><b>🧾 Bill (Vendor)</b></td><td><b>DKT-6904-000129</b></td><td class="num"><b>฿2,260,000</b></td><td><span class="swt-chip success">🟢 Case 4</span></td><td><span class="swt-chip success">✓ Match GRN</span></td></tr>
+      <tr style="background:#FEF3C7"><td>🤝 CN ตัดหนี้ (2 CN)</td><td>VC-MOU-001 + VC-SI-005</td><td class="num" style="color:#92400E;font-weight:700">− ฿104,100</td><td><span class="swt-chip warn">offset</span></td><td><span class="swt-chip success">✓ Audit ผ่าน</span></td></tr>
     </tbody>
+    <tfoot>
+      <tr style="background:#F0FDF4"><td colspan="2" style="text-align:right;font-weight:700;padding:10px;color:#065F46">3-Way Match · ยอดสุทธิหลัง offset</td><td class="num" style="font-weight:700;color:#065F46;padding:10px">฿2,155,900</td><td><span class="swt-chip success">🟢 Case 4</span></td><td><span class="swt-chip success">✓ PASS</span></td></tr>
+    </tfoot>
   </table>
-  <div class="alert alert-info" style="margin-top:12px">💡 <b>VAT Trap A1:</b> ทุก line ใช้ <b>Case 4 (% บนบิล)</b> ตามมาตรฐาน · ฐาน VAT = ราคาหลังหักส่วนลด (ตาม ม.79/3) · ถ้าใช้ Case 1/3 จะ audit reject</div>
+
+  <div class="alert alert-info" style="margin-top:12px">💡 <b>VAT Trap A1:</b> Bill ใช้ <b>Case 4 (% บนบิล)</b> · ฐาน VAT คิดจากยอด <b>หลัง offset</b> ตัดหนี้ (฿2,155,900) ตาม ม.79/3 · SKU ดูใน <a href="po5-finance-grn-mockup.html" style="color:#2563EB;font-weight:600">GRN ↗</a> · CN ดูที่ <a href="po2-rfq-mockup.html" style="color:#2563EB;font-weight:600">VC ↗</a></div>
 </div>
+
+<script>
+function po6SwRef(btn,id){
+  document.querySelectorAll('.po6-reftab').forEach(function(b){b.style.background='transparent';b.style.color='#6B7280';b.style.fontWeight='500';b.style.boxShadow='none';});
+  document.querySelectorAll('.po6-refpane').forEach(function(p){p.style.display='none';});
+  btn.style.background='#fff';btn.style.color='#1E40AF';btn.style.fontWeight='600';btn.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)';
+  document.getElementById(id).style.display='';
+}
+</script>
 
 <div class="section-card">
   <div class="section-title">
     <span class="num">PO-6.3</span>💵 สรุปยอดและ VAT
-    <span class="en">Totals · VAT · WHT</span>
+    <span class="en">Totals · Offset · VAT · WHT · Net Payable</span>
   </div>
-  <div class="form-grid-4">
-    <div class="field"><label>ยอดก่อน VAT <span class="en">Subtotal</span></label><div class="value">2,260,000.00 ฿</div></div>
-    <div class="field"><label>VAT 7% <span class="en">VAT</span></label><div class="value">158,200.00 ฿</div></div>
-    <div class="field"><label>WHT (3% ค่าขนส่ง) <span class="en">WHT</span></label><div class="value">-1,200.00 ฿</div></div>
-    <div class="field"><label>ต้องจ่ายสุทธิ <span class="en">Net Payable</span></label><div class="value" style="color:#2563EB;font-weight:700">2,417,000.00 ฿</div></div>
-  </div>
-  <div class="alert alert-info" style="margin-top:12px">💡 Rebate 3% คาดการณ์ = 67,800 ฿ (Accrual B1) — เคลียร์ตอน Vendor ออก Credit Note รายไตรมาส</div>
+
+  <table>
+    <thead><tr><th>รายการ</th><th class="num">จำนวน</th><th>หมายเหตุ</th></tr></thead>
+    <tbody>
+      <tr><td>📦 ยอด GRN รวม (เพิ่มหนี้)</td><td class="num">฿2,260,000.00</td><td style="font-size:11.5px;color:#6B7280">2 GRN · ก่อน VAT</td></tr>
+      <tr style="background:#FEF3C7"><td>🤝 หัก CN ตัดหนี้ (Commitment)</td><td class="num" style="color:#92400E;font-weight:700">− ฿104,100.00</td><td style="font-size:11.5px;color:#92400E">2 CN · MOU + Sell-in</td></tr>
+      <tr style="background:#F9FAFB;border-top:2px solid #E5E7EB"><td><b>= ยอดสุทธิก่อน VAT</b></td><td class="num" style="font-weight:700">฿2,155,900.00</td><td style="font-size:11.5px;color:#6B7280">ฐาน VAT (ม.79/3)</td></tr>
+      <tr><td>+ VAT 7% (จากยอดสุทธิ)</td><td class="num">฿150,913.00</td><td style="font-size:11.5px;color:#6B7280">Case 4 · บนบิล</td></tr>
+      <tr><td>− WHT 3% ค่าขนส่ง</td><td class="num" style="color:#92400E">− ฿1,200.00</td><td style="font-size:11.5px;color:#6B7280">ภ.ง.ด. 53</td></tr>
+      <tr style="background:#EFF6FF;border-top:2px solid #2563EB"><td><b>= ต้องจ่ายสุทธิ (Net Payable)</b></td><td class="num" style="color:#2563EB;font-weight:700;font-size:16px">฿2,305,613.00</td><td style="font-size:11.5px;color:#6B7280">→ FI-2 AP Payment</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info" style="margin-top:12px">💡 <b>การคำนวณ:</b> ยอด GRN ฿2.26M − CN ตัดหนี้ ฿104K = ฿2.156M (ฐาน VAT) → + VAT 7% = ฿2.307M → − WHT ค่าขนส่ง ฿1,200 = <b>จ่ายสุทธิ ฿2,305,613</b> · Rebate Q-end เพิ่มเติมจะ settle ต่อใน CN ใบถัดไป</div>
 </div>
 
 <!-- ═══ Section PO-6.4 — Tabs (Payment / CN Audit / อ้างอิง / ประวัติ) ═══ -->
