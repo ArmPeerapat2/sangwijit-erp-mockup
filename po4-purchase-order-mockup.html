@@ -100,7 +100,7 @@
 
         .app-container {
             display: flex;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         /* SIDEBAR */
@@ -176,13 +176,12 @@
             font-weight: 600;
         }
 
-        /* MAIN CONTENT */
+        /* MAIN CONTENT (sync กับ po-1 · ตัด display:flex column + height:100vh ออก เพราะ constrain main-header ไม่ให้ full-width) */
         .main-content {
-            margin-left: 240px;
-            display: flex;
-            flex-direction: column;
             flex: 1;
-            height: 100vh;
+            margin-left: 240px;
+            padding: 0;
+            background: #F8FAFC;
         }
 
         /* TOPBAR */
@@ -613,18 +612,12 @@
             box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .main-content {
-            margin-right: 300px;
-        }
-
+        /* removed legacy .main-content { margin-right: 300px } — was for old floating summary panel */
         @media (max-width: 1920px) {
             .summary-section {
                 position: static;
                 width: 100%;
                 margin-top: 24px;
-            }
-            .main-content {
-                margin-right: 0;
             }
         }
     </style>
