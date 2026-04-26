@@ -1151,6 +1151,7 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
                         <button class="tab-button" onclick="switchTab(event, 'media')">🖼 สื่อ & Spec</button>
                         <button class="tab-button" onclick="switchTab(event, 'history')">📜 ประวัติ & Timeline</button>
                         <button class="tab-button" onclick="switchTab(event, 'commitments')">🤝 โปรโมชั่น <span style="font-size:10px;background:#EFF6FF;color:#1E40AF;padding:1px 6px;border-radius:8px;margin-left:2px">5</span></button>
+                        <button class="tab-button" onclick="switchTab(event, 'pricelog')">📜 ประวัติการกำหนดราคา <span style="font-size:10px;background:#EDE9FE;color:#5B21B6;padding:1px 6px;border-radius:8px;margin-left:2px">log</span></button>
                         <button class="tab-button" onclick="switchTab(event, 'benchmark')">🌐 SRP / Benchmark</button>
                     </div>
                 </div>
@@ -2276,6 +2277,74 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 
                             <div style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:10px 14px;font-size:12.5px;color:#92400E;margin-top:12px">
                                 ⚠️ <b>VAT Trap A1:</b> Sell-in ใช้ <b>Case 4 (% บนบิล)</b> = best practice · MOU/Sell-out ใช้ Case 3 (CN หลังบิล) ตามมาตรฐานคู่ค้า · ทุก CN ต้องผ่าน <b>Audit Checklist 7 ข้อ (A3)</b> ก่อน Forward AP
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =========================================================== -->
+                <!-- TAB: 📜 ประวัติการกำหนดราคา (Append-only log per legacy ERP · per spec C2 + Color coding rule) -->
+                <!-- =========================================================== -->
+                <div id="pricelog" class="tab-content">
+                    <div class="tab-card">
+                        <div class="section">
+                            <div class="section-title">📜 ประวัติการกำหนดราคา · Append-only Log
+                                <span class="hint">Buy event log → คำนวณ STNPR ใหม่ทุกครั้ง · ห้ามลบของเก่า · ดู saving 4.7% (Case 1→4)</span>
+                            </div>
+
+                            <div style="background:#F5F3FF;border:1px solid #DDD6FE;border-radius:8px;padding:12px 14px;font-size:12.5px;color:#5B21B6;margin-bottom:14px">
+                                💡 <b>Append-only log</b> · ทุกครั้งที่ซื้อสินค้าตัวนี้ + Vendor มี promo → กรอก row ใหม่ที่นี่ → ระบบคำนวณ <b>STNPR ใหม่</b> (weighted avg) · feed เข้า "ราคาขาย" ทุก tier · <b>ห้ามแก้ row เก่า</b> เพื่อ audit trail
+                            </div>
+
+                            <!-- STNPR Current snapshot -->
+                            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px">
+                                <div style="background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:14px;border-left:4px solid #5B21B6">
+                                    <div style="font-size:11px;color:#6B7280;text-transform:uppercase;font-weight:700;letter-spacing:0.04em">STNPR ปัจจุบัน</div>
+                                    <div style="font-size:24px;font-weight:700;color:#5B21B6;margin-top:2px;font-variant-numeric:tabular-nums">฿7,104.30</div>
+                                    <div style="font-size:11px;color:#10B981;margin-top:2px">▼ 7.7% ดีกว่าครั้งก่อน (จาก ฿7,697)</div>
+                                </div>
+                                <div style="background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:14px;border-left:4px solid #2563EB">
+                                    <div style="font-size:11px;color:#6B7280;text-transform:uppercase;font-weight:700;letter-spacing:0.04em">VAT Trap (A1) · best</div>
+                                    <div style="font-size:24px;font-weight:700;color:#2563EB;margin-top:2px;font-variant-numeric:tabular-nums">Case 4</div>
+                                    <div style="font-size:11px;color:#6B7280;margin-top:2px">% บนบิล · saving 4.7% vs Case 1</div>
+                                </div>
+                                <div style="background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:14px;border-left:4px solid #10B981">
+                                    <div style="font-size:11px;color:#6B7280;text-transform:uppercase;font-weight:700;letter-spacing:0.04em">รอบซื้อสะสม (12 เดือน)</div>
+                                    <div style="font-size:24px;font-weight:700;color:#065F46;margin-top:2px">5 รอบ</div>
+                                    <div style="font-size:11px;color:#6B7280;margin-top:2px">รวม 412 ตัว · ค่าเฉลี่ย STNPR ฿7,420</div>
+                                </div>
+                            </div>
+
+                            <!-- Append log table -->
+                            <table>
+                                <thead style="background:#F9FAFB"><tr>
+                                    <th style="padding:8px 10px;text-align:left;font-size:11px;color:#6B7280;text-transform:uppercase;border-bottom:1px solid #E5E7EB">วันที่</th>
+                                    <th style="padding:8px 10px;text-align:left;font-size:11px;color:#6B7280;text-transform:uppercase;border-bottom:1px solid #E5E7EB">ใบรับ / PO</th>
+                                    <th style="padding:8px 10px;text-align:left;font-size:11px;color:#6B7280;text-transform:uppercase;border-bottom:1px solid #E5E7EB">Vendor Promo</th>
+                                    <th style="padding:8px 10px;text-align:right;font-size:11px;color:#6B7280;text-transform:uppercase;border-bottom:1px solid #E5E7EB">Ontop %</th>
+                                    <th style="padding:8px 10px;text-align:left;font-size:11px;color:#6B7280;text-transform:uppercase;border-bottom:1px solid #E5E7EB">VAT Case</th>
+                                    <th style="padding:8px 10px;text-align:left;font-size:11px;color:#6B7280;text-transform:uppercase;border-bottom:1px solid #E5E7EB">Free Goods</th>
+                                    <th style="padding:8px 10px;text-align:right;font-size:11px;color:#6B7280;text-transform:uppercase;border-bottom:1px solid #E5E7EB">ส่วนลดบาท</th>
+                                    <th style="padding:8px 10px;text-align:right;font-size:11px;color:#6B7280;text-transform:uppercase;border-bottom:1px solid #E5E7EB">STNPR ก่อน</th>
+                                    <th style="padding:8px 10px;text-align:right;font-size:11px;color:#6B7280;text-transform:uppercase;border-bottom:1px solid #E5E7EB">STNPR หลัง</th>
+                                    <th style="padding:8px 10px;text-align:right;font-size:11px;color:#6B7280;text-transform:uppercase;border-bottom:1px solid #E5E7EB">Δ%</th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr style="background:#F0FDF4"><td style="padding:8px 10px;font-weight:600">26 ม.ค. 26 ⭐</td><td style="padding:8px 10px">GRN-2601-0042 / PO-2601-00018</td><td style="padding:8px 10px">7982 · ซื้อพิเศษ + 25 แถม 1</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:#10B981">4.8%</td><td style="padding:8px 10px"><span style="background:#D1FAE5;color:#065F46;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">🟢 Case 4</span></td><td style="padding:8px 10px;font-size:11.5px;color:#6B7280">25 + 1 = 26</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">฿284.70</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#6B7280">฿7,697.00</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:#5B21B6">฿7,104.30</td><td style="padding:8px 10px;text-align:right"><span style="color:#10B981;font-weight:700">▼ 7.7%</span></td></tr>
+                                    <tr><td style="padding:8px 10px;color:#6B7280">30 ม.ค. 26</td><td style="padding:8px 10px;color:#6B7280">GRN-2601-0050 / PO-2601-00021</td><td style="padding:8px 10px;color:#6B7280">7982 · ซื้อเอกสารดาวน์ + 25 แถม 1 Ontop 4.8%</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#6B7280">4.8%</td><td style="padding:8px 10px"><span style="background:#D1FAE5;color:#065F46;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">🟢 Case 4</span></td><td style="padding:8px 10px;font-size:11.5px;color:#6B7280">25 + 1</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#6B7280">฿284.70</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#6B7280">฿7,104.30</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#6B7280">฿7,104.30</td><td style="padding:8px 10px;text-align:right;color:#6B7280">— 0%</td></tr>
+                                    <tr><td style="padding:8px 10px;color:#6B7280">20 พ.ย. 25</td><td style="padding:8px 10px;color:#6B7280">GRN-2511-0089 / PO-2511-00134</td><td style="padding:8px 10px;color:#6B7280">7982 · ซื้อเอกสารดาวน์ Ontop 3%</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#6B7280">3.0%</td><td style="padding:8px 10px"><span style="background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">🟡 Case 3</span></td><td style="padding:8px 10px;font-size:11.5px;color:#9CA3AF">—</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#6B7280">฿284.70</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#6B7280">฿7,950.00</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#6B7280">฿7,697.30</td><td style="padding:8px 10px;text-align:right"><span style="color:#10B981">▼ 3.2%</span></td></tr>
+                                    <tr><td style="padding:8px 10px;color:#6B7280">30 ต.ค. 25</td><td style="padding:8px 10px;color:#6B7280">GRN-2510-0177 / PO-2510-00198</td><td style="padding:8px 10px;color:#6B7280">7982 · ซื้อ + Ontop 3% (CN)</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#6B7280">3.0%</td><td style="padding:8px 10px"><span style="background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">🟡 Case 3</span></td><td style="padding:8px 10px;font-size:11.5px;color:#9CA3AF">—</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#6B7280">฿284.70</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#6B7280">฿7,950.00</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#6B7280">฿7,697.30</td><td style="padding:8px 10px;text-align:right;color:#6B7280">— 0%</td></tr>
+                                    <tr><td style="padding:8px 10px;color:#9CA3AF">10 ต.ค. 25</td><td style="padding:8px 10px;color:#9CA3AF">GRN-2510-0094 / PO-2510-00112</td><td style="padding:8px 10px;color:#9CA3AF">7982 · ซื้อ Ontop 3%</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#9CA3AF">3.0%</td><td style="padding:8px 10px"><span style="background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">🟡 Case 3</span></td><td style="padding:8px 10px;color:#9CA3AF">—</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#9CA3AF">฿284.70</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#9CA3AF">฿8,200.00</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;color:#9CA3AF">฿7,950.00</td><td style="padding:8px 10px;text-align:right;color:#9CA3AF">▼ 3.0%</td></tr>
+                                </tbody>
+                            </table>
+
+                            <div style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:10px 14px;font-size:12.5px;color:#92400E;margin-top:12px">
+                                ⚠️ <b>VAT Trap A1 (เห็นจริงในตาราง):</b> ตั้งแต่ 26 ม.ค. 26 เปลี่ยนจาก Case 3 (CN หลังบิล · 3%) → <b>Case 4 (% บนบิล · 4.8%)</b> · STNPR ลดทันที 7.7% · saving นี้คือ best practice ที่ฝ่ายจัดซื้อต้องบี้ทุกครั้ง (per A1)
+                            </div>
+
+                            <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end;border-top:1px solid #E5E7EB;padding-top:14px">
+                                <button style="padding:6px 14px;border:1px solid #D1D5DB;background:#fff;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit">📥 Export Log</button>
+                                <button style="padding:6px 14px;background:#7C3AED;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">+ บันทึก Buy Event ใหม่ (Append)</button>
                             </div>
                         </div>
                     </div>
