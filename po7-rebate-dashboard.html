@@ -3,13 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PO Rebate Dashboard - Sangwijit ERP Portal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>PO-7 Trade Support Tracking (4 Types) — Sangwijit ERP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="swt-patterns.css">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background: #F9FAFB; min-height: 100vh; display: flex; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter','Noto Sans Thai', sans-serif; }
+    body { background: #F8FAFC; min-height: 100vh; display: flex; min-width:1440px; }
     .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
     .topbar { height: 56px; background: #fff; border-bottom: 1px solid #E5E7EB; display: flex; align-items: center; padding: 0 24px; gap: 12px; position: sticky; top: 0; z-index: 50; }
+
+    /* sl-4 main-header */
+    .main-header{background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 2px 8px rgba(0,0,0,0.08);flex-wrap:wrap;row-gap:10px}
+    .mh-left{display:flex;align-items:center;gap:18px}
+    .mh-title{display:flex;align-items:center;gap:10px}
+    .mh-title .ico{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+    .mh-title h1{font-size:16px;font-weight:700;letter-spacing:-0.01em;line-height:1.15;margin:0;color:#fff}
+    .mh-title p{font-size:11px;color:rgba(255,255,255,0.7);margin:1px 0 0}
+    .mh-divider{width:1px;height:32px;background:rgba(255,255,255,0.2)}
+    .mh-meta{display:flex;gap:20px}
+    .mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em}
+    .mh-meta-item .val{font-size:12px;font-weight:600;margin-top:1px;font-family:'Inter',monospace;white-space:nowrap;color:#fff}
+    .mh-right{display:flex;align-items:center;gap:8px}
+    .mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(16,185,129,0.25);color:#A7F3D0;border:1px solid rgba(16,185,129,0.35)}
+    .mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid transparent;font-family:inherit;text-decoration:none}
+    .mh-btn-ghost{background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.2)}
+    .mh-btn-ghost:hover{background:rgba(255,255,255,0.22)}
+    .mh-btn-primary{background:#10B981;color:#fff}
+    .mh-btn-primary:hover{background:#059669}
+
+    /* View Tabs */
+    .view-tabs{display:flex;gap:0;border-bottom:2px solid #E5E7EB;margin-bottom:16px;align-items:center}
+    .view-tab{padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;font-size:13px;font-weight:500;color:#6B7280;cursor:pointer;font-family:inherit}
+    .view-tab.active{border-bottom-color:#2563EB;color:#2563EB;font-weight:600}
+
+    /* 4-type breakdown card */
+    .type4-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+    .type-card{background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:14px;border-left:4px solid #9CA3AF}
+    .type-card.mou{border-left-color:#10B981}
+    .type-card.si{border-left-color:#2563EB}
+    .type-card.so{border-left-color:#F59E0B}
+    .type-card.co{border-left-color:#7C3AED}
+    .type-card-title{font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px;display:flex;align-items:center;gap:4px}
+    .type-card-amount{font-size:18px;font-weight:700;color:#111827;font-variant-numeric:tabular-nums}
+    .type-card-rate{font-size:11px;font-weight:600;margin-top:2px;display:inline-flex;align-items:center;gap:3px}
+    .type-card-rate.good{color:#10B981}
+    .type-card-rate.warn{color:#F59E0B}
+    .type-card-rate.bad{color:#DC2626}
+    .type-card-target{font-size:10px;color:#9CA3AF;margin-top:4px}
+
+    /* Sanction strip */
+    .sanction-strip{background:#FEF3C7;border:1px solid #FCD34D;border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .sanction-stage-mini{display:flex;align-items:center;gap:6px;padding:4px 10px;background:#fff;border-radius:6px;font-size:11.5px;font-weight:600}
+    .sanction-stage-mini.day0{color:#065F46;border:1px solid #6EE7B7}
+    .sanction-stage-mini.day7{color:#92400E;border:1px solid #FCD34D}
+    .sanction-stage-mini.day15{color:#92400E;border:1px solid #F59E0B}
+    .sanction-stage-mini.day30{color:#991B1B;border:1px solid #DC2626;background:#FEE2E2;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
     .breadcrumb { font-size: 13px; color: #6B7280; }
     .breadcrumb a { color: #2563EB; text-decoration: none; }
     .page-content { padding: 24px; flex: 1; }
@@ -129,10 +178,11 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
     <a href="wh4-stock-count-mockup.html"><span class="c">WH-4</span>นับสต็อก</a>
   </div></details>
 
-  <details><summary><span class="swt-sb-ico">🛒</span><span class="swt-sb-lbl">จัดซื้อ (PO)</span><span class="swt-sb-cnt">8</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+  <details><summary><span class="swt-sb-ico">🛒</span><span class="swt-sb-lbl">จัดซื้อ (PO)</span><span class="swt-sb-cnt">9</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
     <a href="poq-purchase-queue-mockup.html"><span class="c">PO-Q</span>Purchase Queue</a>
     <a href="po1-purchase-request-mockup.html" class="swt-new"><span class="c">PO-1</span>ใบขอซื้อ (PR)</a>
     <a href="po2-rfq-mockup.html"><span class="c">PO-2</span>Trade Agreement / Vendor</a>
+    <a href="po3-vendor-onboarding-mockup.html" class="swt-new"><span class="c">PO-3</span>Vendor Onboarding</a>
     <a href="po4-purchase-order-mockup.html"><span class="c">PO-4</span>ใบสั่งซื้อ (PO)</a>
     <a href="po5-finance-grn-mockup.html"><span class="c">PO-5</span>Finance GRN</a>
     <a href="po6-ap-invoice-mockup.html" class="swt-new"><span class="c">PO-6</span>ใบวางบิล Vendor</a>
@@ -251,40 +301,108 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
     <button class="btn-export" onclick="alert('Export Excel')">📥 Export</button>
   </div>
   
-  <div class="page-content">
-    <div class="page-header">
-      <div class="page-title">
-        💰 PO Rebate Dashboard
-        <span class="bc-badge">⚠️ Phase 2 — ข้อมูลยังเป็น Mock</span>
+  <!-- MAIN HEADER (sl-4) -->
+  <header class="main-header">
+    <div class="mh-left">
+      <div class="mh-title">
+        <div class="ico">💰</div>
+        <div>
+          <h1>Trade Support Tracking</h1>
+          <p>4 Types · MOU · Sell-in · Sell-out · Co-op (PO-7)</p>
+        </div>
       </div>
-      <div class="page-subtitle">สรุป Rebate ที่ควรได้รับจาก Vendor แต่ละราย — คำนวณจากยอดสั่งซื้อสะสมตาม Agreement</div>
+      <div class="mh-divider"></div>
+      <div class="mh-meta">
+        <div class="mh-meta-item"><div class="lbl">งวด</div><div class="val">FY2026 · Q2</div></div>
+        <div class="mh-meta-item"><div class="lbl">Vendor active</div><div class="val">12 / 28</div></div>
+        <div class="mh-meta-item"><div class="lbl">Recovery rate</div><div class="val">32%</div></div>
+      </div>
     </div>
-    
+    <div class="mh-right">
+      <span class="mh-badge">📊 Live</span>
+      <button class="mh-btn mh-btn-ghost">📥 Export Excel</button>
+      <button class="mh-btn mh-btn-primary">+ บันทึกข้อตกลงงบ (VC)</button>
+    </div>
+  </header>
+
+  <div class="page-content">
+
+    <!-- View Tabs (Dashboard | List | Form) -->
+    <div class="view-tabs">
+      <button onclick="po7SwView(this,'p7dash')" class="view-tab active">📊 Dashboard</button>
+      <button onclick="po7SwView(this,'p7list')" class="view-tab">📋 List · Vendor Obligations</button>
+      <button onclick="po7SwView(this,'p7form')" class="view-tab">📝 Form · บันทึก/ตรวจ CN</button>
+      <span style="margin-left:auto;font-size:11px;color:#6B7280">💡 Form view = บันทึก Accrual + แนบ CN · spec PO-7</span>
+    </div>
+
+    <!-- Sanction strip (per A3 · always visible) -->
+    <div class="sanction-strip">
+      <span style="font-size:13px;font-weight:700;color:#92400E">🛡 Sanction (CN Outstanding)</span>
+      <div class="sanction-stage-mini day0">12 · Day-0</div>
+      <span style="color:#9CA3AF;font-size:14px">→</span>
+      <div class="sanction-stage-mini day7">5 · Day-7</div>
+      <span style="color:#9CA3AF;font-size:14px">→</span>
+      <div class="sanction-stage-mini day15">2 · Day-15</div>
+      <span style="color:#9CA3AF;font-size:14px">→</span>
+      <div class="sanction-stage-mini day30">1 · Day-30 ⚠ STOP</div>
+      <span style="margin-left:auto;font-size:11px;color:#92400E">บุญมีพาณิชย์ เกิน 30 วัน · auto-block PR/PO ใหม่ · ดูใน <a href="poq-purchase-queue-mockup.html" style="color:#2563EB;font-weight:600">PO-Q Panel F ↗</a></span>
+    </div>
+
+    <div id="p7dash" class="po7-pane">
+
+    <!-- 4 Trade Promotion Types breakdown (per A2 v2.1) -->
+    <div class="type4-grid">
+      <div class="type-card mou">
+        <div class="type-card-title">🟢 MOU/Rebate</div>
+        <div class="type-card-amount">฿1,580,000</div>
+        <div class="type-card-rate good">▲ 96% recovery</div>
+        <div class="type-card-target">Target ≥95% · ✓ ผ่าน</div>
+      </div>
+      <div class="type-card si">
+        <div class="type-card-title">🔵 Sell-in</div>
+        <div class="type-card-amount">฿1,267,200</div>
+        <div class="type-card-rate good">▲ 100% recovery</div>
+        <div class="type-card-target">Target 100% · ✓ ผ่าน · บนบิล Case 4</div>
+      </div>
+      <div class="type-card so">
+        <div class="type-card-title">🟡 Sell-out</div>
+        <div class="type-card-amount">฿920,000</div>
+        <div class="type-card-rate warn">▼ 78% recovery</div>
+        <div class="type-card-target">Target ≥85% · ⚠ ต่ำกว่า · serial รอ data</div>
+      </div>
+      <div class="type-card co">
+        <div class="type-card-title">🟣 Co-op</div>
+        <div class="type-card-amount">฿80,000</div>
+        <div class="type-card-rate good">▲ 92% recovery</div>
+        <div class="type-card-target">Target ≥90% · ✓ ผ่าน · งบ Event</div>
+      </div>
+    </div>
+
     <div class="notice">
-      <strong>📌 หมายเหตุ:</strong> Rebate คิดรวมทุก SKU ในกลุ่มเดียวกันของแต่ละ Vendor ตาม Trade Agreement — ข้อมูลนี้ยังอยู่ใน Phase 2 ยังไม่ได้เชื่อม BC365 จริง
+      <strong>📌 v2.2 update:</strong> ตัด Sell-thru (B2B) ออกแล้ว · ใช้ <b>4 ประเภท</b> · Recovery แต่ละประเภทคำนวณจาก <b>Vendor Commitment (PO-2)</b> ที่ active · Sell-out ค้าง 78% เพราะรอ serial-match จาก SL-4
     </div>
-    
-    <!-- Summary Cards -->
+
+    <!-- Summary Cards (overall) -->
     <div class="summary-grid">
       <div class="summary-card accent">
-        <div class="summary-label">Rebate ที่ควรได้ (ปีนี้)</div>
+        <div class="summary-label">งบรวมทั้งหมด (4 Types · ปีนี้)</div>
         <div class="summary-value">3,847,200</div>
         <div class="summary-sub">บาท / FY2026</div>
       </div>
       <div class="summary-card green">
-        <div class="summary-label">เบิกแล้ว (Credit Note)</div>
+        <div class="summary-label">Realized (รับเงิน + CN)</div>
         <div class="summary-value">1,220,000</div>
         <div class="summary-sub">32% ของที่ควรได้</div>
       </div>
       <div class="summary-card warn">
-        <div class="summary-label">ค้างรับ (Pending)</div>
+        <div class="summary-label">Accrued · รอ CN/Doc</div>
         <div class="summary-value">2,627,200</div>
-        <div class="summary-sub">68% ยังไม่ได้รับ</div>
+        <div class="summary-sub">68% ยังไม่ได้เอกสาร · ⚠ aging risk</div>
       </div>
       <div class="summary-card">
-        <div class="summary-label">Vendor ที่มี Rebate</div>
-        <div class="summary-value">12</div>
-        <div class="summary-sub">จาก 28 Vendor ทั้งหมด</div>
+        <div class="summary-label">VC Active (ใช้งานอยู่)</div>
+        <div class="summary-value">23</div>
+        <div class="summary-sub">12 Vendor · 4 types</div>
       </div>
     </div>
     
@@ -442,8 +560,81 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
       ⚠️ ข้อมูลนี้ยังเป็น Mockup — Phase 2 จะเชื่อม BC365 OData API จริง
       | <a href="md1-item-master-mockup-v3.html" style="color:#2563EB;">กลับ MD-1</a>
     </div>
+
+    </div><!-- /p7dash -->
+
+    <!-- LIST VIEW -->
+    <div id="p7list" class="po7-pane" style="display:none">
+      <div class="filter-bar">
+        <span class="filter-label">Type:</span>
+        <select class="filter-select"><option>ทุกประเภท</option><option>🟢 MOU</option><option>🔵 Sell-in</option><option>🟡 Sell-out</option><option>🟣 Co-op</option></select>
+        <span class="filter-label">Status:</span>
+        <select class="filter-select"><option>ทุก Status</option><option>Draft</option><option>Accrued</option><option>Doc Received</option><option>Realized</option></select>
+        <span class="filter-label">Vendor:</span>
+        <select class="filter-select"><option>ทุก Vendor</option><option>Daikin</option><option>LG</option><option>Mitsubishi</option><option>Samsung</option></select>
+        <button class="filter-btn">🔍 ค้นหา</button>
+        <span style="margin-left:auto;font-size:11px;color:#6B7280">รวม <b style="color:#111827">23 records</b></span>
+      </div>
+      <div class="table-wrap">
+        <div class="table-header"><div class="table-title">📋 Vendor Obligations · All Records</div></div>
+        <table>
+          <thead><tr><th>VC No.</th><th>Vendor</th><th>Type</th><th>Period</th><th class="amount-col">งบ Accrued</th><th class="amount-col">Realized</th><th>Status</th><th>Aging</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">VC-MOU-2604-001</a></td><td>Daikin (TH)</td><td><span class="badge badge-green">🟢 MOU</span></td><td>Q2 26</td><td class="amount-col">฿60,000</td><td class="amount-col amount-pos">฿0</td><td><span class="badge badge-yellow">Accrued · 68%</span></td><td>15 d</td><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-size:12px">↗</a></td></tr>
+            <tr><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">VC-SI-2604-005</a></td><td>Daikin (TH)</td><td><span class="badge badge-blue">🔵 Sell-in</span></td><td>15-30 เม.ย.</td><td class="amount-col">฿88,200</td><td class="amount-col amount-pos">฿88,200</td><td><span class="badge badge-green">Realized 100%</span></td><td>—</td><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-size:12px">↗</a></td></tr>
+            <tr><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">VC-SO-2604-008</a></td><td>Daikin (TH)</td><td><span class="badge badge-yellow">🟡 Sell-out</span></td><td>เม.ย.-มิ.ย.</td><td class="amount-col">฿20,000</td><td class="amount-col">฿0</td><td><span class="badge badge-yellow">รอ data 0%</span></td><td>10 d</td><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-size:12px">↗</a></td></tr>
+            <tr style="background:#FEE2E2"><td><a href="po2-rfq-mockup.html" style="color:#991B1B;font-weight:700;text-decoration:none">VC-MOU-2603-008 ⚠</a></td><td>บุญมีพาณิชย์</td><td><span class="badge badge-green">🟢 MOU</span></td><td>Q1 26</td><td class="amount-col">฿85,000</td><td class="amount-col">฿0</td><td><span class="badge" style="background:#FEE2E2;color:#991B1B">🚨 STOP NEW PO</span></td><td style="color:#991B1B;font-weight:700">32 d</td><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-size:12px">↗</a></td></tr>
+            <tr><td colspan="9" style="background:#F9FAFB;text-align:center;color:#9CA3AF;font-style:italic;padding:14px">— แสดง 4 / 23 records · กรองดูเพิ่มเติมในตัวกรอง —</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FORM VIEW (NEW · per spec) -->
+    <div id="p7form" class="po7-pane" style="display:none">
+      <div class="notice"><b>💡 Form view (NEW v2.2):</b> บันทึก Accrual entry ใหม่ + แนบ CN จาก Vendor + ตรวจสอบตาม CN Audit Checklist 7 ข้อ (A3) · spec PO-7 Section 1-7</div>
+
+      <div class="table-wrap" style="padding:16px">
+        <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px">📝 New Accrual Entry</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px">
+          <div><label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px">Type</label><select class="filter-select" style="width:100%"><option>🟢 MOU</option><option selected>🔵 Sell-in</option><option>🟡 Sell-out</option><option>🟣 Co-op</option></select></div>
+          <div><label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px">Vendor</label><select class="filter-select" style="width:100%"><option selected>Daikin (TH)</option><option>LG</option></select></div>
+          <div><label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px">อ้างอิง VC</label><input type="text" value="VC-SI-2604-005" style="border:1px solid #D1D5DB;border-radius:6px;padding:6px 10px;font-size:12px;width:100%;font-family:inherit"></div>
+          <div><label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px">งวด</label><input type="text" value="15-30 เม.ย. 26" style="border:1px solid #D1D5DB;border-radius:6px;padding:6px 10px;font-size:12px;width:100%;font-family:inherit"></div>
+          <div><label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px">ยอด Accrual</label><input type="text" value="88,200" style="border:1px solid #D1D5DB;border-radius:6px;padding:6px 10px;font-size:12px;width:100%;text-align:right;font-family:inherit"></div>
+          <div><label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px">เลข CN จาก Vendor</label><input type="text" placeholder="ใส่หลังได้ CN" style="border:1px solid #D1D5DB;border-radius:6px;padding:6px 10px;font-size:12px;width:100%;font-family:inherit"></div>
+        </div>
+
+        <div style="font-size:12px;font-weight:700;color:#374151;margin:14px 0 8px;text-transform:uppercase;letter-spacing:0.04em">CN Audit Checklist (A3 · 7 items)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#374151">
+          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#F0FDF4;border:1px solid #86EFAC;border-radius:5px"><input type="checkbox" checked> ✓ Category ระบุชัด (1/2/3)</label>
+          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#F0FDF4;border:1px solid #86EFAC;border-radius:5px"><input type="checkbox" checked> ✓ Agreement reference number</label>
+          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#F0FDF4;border:1px solid #86EFAC;border-radius:5px"><input type="checkbox" checked> ✓ ยอดเงิน + VAT ตรงสัญญา</label>
+          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#F0FDF4;border:1px solid #86EFAC;border-radius:5px"><input type="checkbox" checked> ✓ Date issue ภายใน lead time</label>
+          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#FEF3C7;border:1px solid #FCD34D;border-radius:5px"><input type="checkbox"> ⏱ Document supporting ครบ</label>
+          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#FEF3C7;border:1px solid #FCD34D;border-radius:5px"><input type="checkbox"> ⏱ Tax invoice format ถูกต้อง</label>
+          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#F3F4F6;border:1px solid #D1D5DB;border-radius:5px"><input type="checkbox"> ⌛ Offset กับ AP แล้ว (auto on Forward)</label>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end;border-top:1px solid #E5E7EB;padding-top:14px">
+          <button class="btn-export">💾 Save Draft</button>
+          <button class="btn-export">📎 แนบ CN PDF</button>
+          <button class="filter-btn" style="background:#10B981">✓ Forward to AP (PO-6 Settle)</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
+
+<script>
+function po7SwView(btn,id){
+  document.querySelectorAll('.view-tab').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.po7-pane').forEach(function(p){p.style.display='none';});
+  btn.classList.add('active');
+  document.getElementById(id).style.display='';
+}
+</script>
 
 <!-- SWT_ITEM_SEARCH_START -->
 <style>
