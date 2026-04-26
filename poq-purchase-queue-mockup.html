@@ -78,13 +78,15 @@
             font-weight: 600;
         }
 
-        /* MAIN CONTENT */
-        .main-container {
+        /* MAIN CONTENT (sync po-1 standard · ตัด double-padding bug) */
+        .app-container { display: flex; min-height: 100vh; }
+        .main-content {
+            flex: 1;
             margin-left: 240px;
-            padding: 24px;
-            background-color: #F8FAFC;
-            min-height: 100vh;
+            padding: 0;
+            background: #F8FAFC;
         }
+        .content-wrapper { padding: 24px; }
 
         .page-header {
             display: flex;
@@ -98,6 +100,51 @@
             font-weight: 700;
             color: #1F2937;
         }
+
+        /* sl-4 main-header */
+        .main-header{background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 2px 8px rgba(0,0,0,0.08);flex-wrap:wrap;row-gap:10px}
+        .mh-left{display:flex;align-items:center;gap:18px}
+        .mh-title{display:flex;align-items:center;gap:10px}
+        .mh-title .ico{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+        .mh-title h1{font-size:16px;font-weight:700;letter-spacing:-0.01em;line-height:1.15;margin:0;color:#fff}
+        .mh-title p{font-size:11px;color:rgba(255,255,255,0.7);margin:1px 0 0}
+        .mh-divider{width:1px;height:32px;background:rgba(255,255,255,0.2)}
+        .mh-meta{display:flex;gap:20px}
+        .mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em}
+        .mh-meta-item .val{font-size:12px;font-weight:600;margin-top:1px;font-family:'Inter',monospace;white-space:nowrap;color:#fff}
+        .mh-right{display:flex;align-items:center;gap:8px}
+        .mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(16,185,129,0.25);color:#A7F3D0;border:1px solid rgba(16,185,129,0.35)}
+        .mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid transparent;font-family:inherit;text-decoration:none}
+        .mh-btn-ghost{background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.2)}
+        .mh-btn-ghost:hover{background:rgba(255,255,255,0.22)}
+        .mh-btn-primary{background:#10B981;color:#fff}
+        .mh-btn-primary:hover{background:#059669}
+
+        /* MOS Critical Panel (NEW · per spec A5 + Panel 0) */
+        .mos-panel{background:#fff;border:1px solid #FCA5A5;border-radius:8px;padding:14px;margin-bottom:16px;border-left:4px solid #DC2626}
+        .mos-panel-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#991B1B;margin-bottom:10px}
+        .mos-panel-title .count{background:#DC2626;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;margin-left:6px}
+        .mos-table{width:100%;border-collapse:collapse;font-size:12.5px}
+        .mos-table th{background:#FEF2F2;color:#991B1B;padding:7px 10px;text-align:left;font-size:11px;font-weight:600;border-bottom:1px solid #FCA5A5;text-transform:uppercase;letter-spacing:0.04em}
+        .mos-table td{padding:8px 10px;border-bottom:1px solid #FEE2E2}
+        .mos-chip{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10.5px;font-weight:700;white-space:nowrap}
+        .mos-chip.crit{background:#FEE2E2;color:#991B1B}
+        .mos-chip.ok{background:#FEF3C7;color:#92400E}
+        .mos-chip.suff{background:#D1FAE5;color:#065F46}
+
+        /* CN Outstanding Panel (NEW · per spec A3 Sanction Day-0/7/15/30) */
+        .cn-panel{background:#fff;border:1px solid #FCD34D;border-radius:8px;padding:14px;margin-bottom:16px;border-left:4px solid #F59E0B}
+        .cn-panel-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#92400E;margin-bottom:10px}
+        .sanction-flow{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+        .sanction-stage{padding:6px 12px;border-radius:6px;font-size:11.5px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:90px}
+        .sanction-stage.day0{background:#ECFDF5;color:#065F46;border:1px solid #6EE7B7}
+        .sanction-stage.day7{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
+        .sanction-stage.day15{background:#FED7AA;color:#92400E;border:1px solid #F59E0B}
+        .sanction-stage.day30{background:#FEE2E2;color:#991B1B;border:1px solid #DC2626;animation:pulse 2s infinite}
+        .sanction-stage .num{font-size:18px;font-weight:700}
+        .sanction-stage .lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.04em}
+        .sanction-arrow{color:#CBD5E1;font-size:14px}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
 
         /* TABS */
         .tabs-container {
@@ -831,10 +878,74 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 </script>
 <!-- SWT_SIDEBAR_END -->
 
-<!-- MAIN CONTENT -->
-    <div class="main-container">
+<!-- MAIN CONTENT (sl-4 standard wrapper) -->
+<div class="app-container"><div class="main-content">
+
+<!-- MAIN HEADER (sl-4 pattern · OUTSIDE content-wrapper) -->
+<header class="main-header">
+  <div class="mh-left">
+    <div class="mh-title">
+      <div class="ico">📊</div>
+      <div>
+        <h1>คิวจัดซื้อ (Purchase Queue)</h1>
+        <p>Dashboard · 6 Panels (PR · Commitment · PO · GRN · AP · CN)</p>
+      </div>
+    </div>
+    <div class="mh-divider"></div>
+    <div class="mh-meta">
+      <div class="mh-meta-item"><div class="lbl">วันนี้</div><div class="val">26 เม.ย. 26</div></div>
+      <div class="mh-meta-item"><div class="lbl">สาขา</div><div class="val">HQ · SWT</div></div>
+      <div class="mh-meta-item"><div class="lbl">Buyer Active</div><div class="val">3 คน</div></div>
+    </div>
+  </div>
+  <div class="mh-right">
+    <span class="mh-badge">📊 Live</span>
+    <button class="mh-btn mh-btn-ghost">⏵ Refresh</button>
+    <button class="mh-btn mh-btn-primary">+ สร้าง PR ใหม่</button>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+
+        <!-- ═══ Panel 0: MOS Critical (NEW · per spec A5) ═══ -->
+        <div class="mos-panel">
+          <div class="mos-panel-title">⚠️ Panel 0 · MOS Critical (≤ 2 เดือน · ต้องสั่งด่วน) <span class="count">3 SKU</span></div>
+          <table class="mos-table">
+            <thead><tr><th>SKU</th><th>ชื่อสินค้า</th><th>หมวด</th><th class="num" style="text-align:right">ขาย 2 ด.</th><th class="num" style="text-align:right">สต็อก</th><th class="num" style="text-align:right">MOS</th><th>Vendor</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><a href="md1-item-master-mockup-v3.html" style="color:#2563EB;font-weight:600;text-decoration:none">DAI-FTKM35</a></td><td>แอร์ Daikin FTKM35SV2S</td><td>แอร์</td><td class="num" style="text-align:right">320 ตัว</td><td class="num" style="text-align:right">45 ตัว</td><td style="text-align:right"><span class="mos-chip crit">🔴 1.4 ด.</span></td><td>Daikin (TH)</td><td><a href="po1-purchase-request-mockup.html" style="color:#DC2626;font-weight:600;text-decoration:none">+ สร้าง PR ↗</a></td></tr>
+              <tr><td><a href="md1-item-master-mockup-v3.html" style="color:#2563EB;font-weight:600;text-decoration:none">SAM-AR13TY</a></td><td>แอร์ Samsung AR13TYHYCWK</td><td>แอร์</td><td class="num" style="text-align:right">210 ตัว</td><td class="num" style="text-align:right">28 ตัว</td><td style="text-align:right"><span class="mos-chip crit">🔴 1.3 ด.</span></td><td>Samsung TH</td><td><a href="po1-purchase-request-mockup.html" style="color:#DC2626;font-weight:600;text-decoration:none">+ สร้าง PR ↗</a></td></tr>
+              <tr><td><a href="md1-item-master-mockup-v3.html" style="color:#2563EB;font-weight:600;text-decoration:none">LG-WT-TT10</a></td><td>เครื่องซักผ้า LG TT10</td><td>ซักผ้า</td><td class="num" style="text-align:right">150 ตัว</td><td class="num" style="text-align:right">25 ตัว</td><td style="text-align:right"><span class="mos-chip crit">🔴 1.7 ด.</span></td><td>LG Electronics</td><td><a href="po1-purchase-request-mockup.html" style="color:#DC2626;font-weight:600;text-decoration:none">+ สร้าง PR ↗</a></td></tr>
+            </tbody>
+            <tfoot><tr><td colspan="8" style="background:#FEF2F2;color:#991B1B;font-size:11.5px;padding:10px;text-align:center"><b>MOS Order Rule (A5):</b> ≤ 2 → 🔴 ต้องสั่ง · ≤ 4 → 🟡 สั่งได้ · &gt; 4 → 🟢 ห้าม · 3 SKU ปัจจุบันเข้าเกณฑ์ Critical</td></tr></tfoot>
+          </table>
+        </div>
+
+        <!-- ═══ Panel F: CN Outstanding · Sanction Flow (NEW · per spec A3) ═══ -->
+        <div class="cn-panel">
+          <div class="cn-panel-title">🛡 Panel F · CN Outstanding · Sanction Flow (Day 0/7/15/30)</div>
+          <div class="sanction-flow">
+            <div class="sanction-stage day0"><div class="num">12</div><div class="lbl">Day 0 · Reminder</div></div>
+            <div class="sanction-arrow">→</div>
+            <div class="sanction-stage day7"><div class="num">5</div><div class="lbl">Day 7 · Outstanding</div></div>
+            <div class="sanction-arrow">→</div>
+            <div class="sanction-stage day15"><div class="num">2</div><div class="lbl">Day 15 · Escalate</div></div>
+            <div class="sanction-arrow">→</div>
+            <div class="sanction-stage day30"><div class="num">1</div><div class="lbl">⚠ Day 30 · STOP NEW PO</div></div>
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+            <thead><tr style="background:#FEF3C7"><th style="padding:7px 10px;text-align:left;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">VC No.</th><th style="padding:7px 10px;text-align:left;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">Vendor</th><th style="padding:7px 10px;text-align:left;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">Type</th><th style="padding:7px 10px;text-align:right;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">ยอดที่รอ CN</th><th style="padding:7px 10px;text-align:right;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">Day count</th><th style="padding:7px 10px;text-align:left;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">Status</th></tr></thead>
+            <tbody>
+              <tr style="background:#FEE2E2"><td style="padding:8px 10px"><a href="po2-rfq-mockup.html" style="color:#991B1B;font-weight:700;text-decoration:none">VC-MOU-2603-008 ⚠</a></td><td style="padding:8px 10px">บุญมีพาณิชย์</td><td style="padding:8px 10px"><span class="chip chip-green">🟢 MOU</span></td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700">฿85,000</td><td style="padding:8px 10px;text-align:right;color:#991B1B;font-weight:700">32 วัน</td><td style="padding:8px 10px"><span class="chip chip-red">🚨 STOP NEW PO</span></td></tr>
+              <tr><td style="padding:8px 10px"><a href="po2-rfq-mockup.html" style="color:#92400E;font-weight:600;text-decoration:none">VC-CO-2603-014 ↗</a></td><td style="padding:8px 10px">บุญมีพาณิชย์</td><td style="padding:8px 10px"><span class="chip chip-violet">🟣 Co-op</span></td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">฿20,000</td><td style="padding:8px 10px;text-align:right">17 วัน</td><td style="padding:8px 10px"><span class="chip chip-yellow">Day-15 Escalate</span></td></tr>
+              <tr><td style="padding:8px 10px"><a href="po2-rfq-mockup.html" style="color:#92400E;font-weight:600;text-decoration:none">VC-SI-2604-002 ↗</a></td><td style="padding:8px 10px">รวมโลหะ</td><td style="padding:8px 10px"><span class="chip chip-blue">🔵 Sell-in</span></td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">฿12,500</td><td style="padding:8px 10px;text-align:right">8 วัน</td><td style="padding:8px 10px"><span class="chip chip-yellow">Day-7 Outstanding</span></td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:11.5px;color:#92400E;margin-top:8px;padding:6px 10px;background:#FEF3C7;border-radius:5px"><b>Sanction Rule (A3):</b> Vendor "บุญมีพาณิชย์" เกิน 30 วันแล้ว 1 รายการ → <b>Auto-block PR/PO ใหม่</b> · ติดต่อ Vendor + ผจก.บัญชี อัตโนมัติ</div>
+        </div>
+
         <div class="page-header">
-            <h1 class="page-title">PO-Q: คิวจัดซื้อและใบขอซื้อ</h1>
+            <h1 class="page-title" style="font-size:20px">📊 KPI &amp; Queue Tabs</h1>
         </div>
 
         <!-- TABS -->
@@ -1348,6 +1459,8 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
             </div>
         </div>
     </div>
+</div></div>
+<!-- /content-wrapper · /main-content · /app-container -->
 
     <!-- QUICK NAV BUTTON -->
     <button class="quick-nav-button" onclick="toggleQuickNav()">☰</button>
