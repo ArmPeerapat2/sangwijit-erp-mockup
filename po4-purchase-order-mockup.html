@@ -620,6 +620,24 @@
                 margin-top: 24px;
             }
         }
+        /* References popup modal (PO-4 ref docs) */
+        .po4-ref-trigger{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;background:linear-gradient(135deg,#F8FAFC,#EFF6FF);border:1px solid #BFDBFE;border-radius:8px;cursor:pointer;transition:all 0.15s}
+        .po4-ref-trigger:hover{border-color:#2563EB;background:linear-gradient(135deg,#EFF6FF,#DBEAFE);box-shadow:0 2px 6px rgba(37,99,235,0.12)}
+        .po4-ref-trigger-left{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+        .po4-ref-trigger-stats{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:#1E40AF}
+        .po4-ref-trigger-stats b{color:#1E3A5F;font-weight:700}
+        .po4-ref-trigger-cta{display:flex;align-items:center;gap:6px;background:#2563EB;color:#fff;padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;flex-shrink:0;font-family:inherit}
+        .po4-ref-trigger-cta:hover{background:#1E40AF}
+        .modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.45);z-index:1000;display:none;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;font-family:'Inter','Noto Sans Thai',sans-serif}
+        .modal-overlay.open{display:flex}
+        .modal{background:#fff;border-radius:8px;max-width:1200px;width:100%;display:flex;flex-direction:column;max-height:calc(100vh - 80px);box-shadow:0 25px 50px -12px rgba(0,0,0,0.25)}
+        .modal-head{padding:14px 20px;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;gap:10px;flex-shrink:0}
+        .modal-head .ico{font-size:20px}
+        .modal-head .ttl{font-size:15px;font-weight:600;color:#111827}
+        .modal-close-x{margin-left:auto;background:transparent;border:none;cursor:pointer;font-size:18px;color:#6B7280;padding:4px 8px;border-radius:4px}
+        .modal-close-x:hover{background:#F3F4F6;color:#111827}
+        .modal-body{padding:20px;overflow-y:auto;flex:1}
+        .modal-foot{padding:12px 20px;border-top:1px solid #E5E7EB;display:flex;justify-content:flex-end;gap:8px;flex-shrink:0}
     </style>
 </head>
 <body>
@@ -967,64 +985,20 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 
                 </div>
 
-                <!-- S2: References (PR + PSI) — per user req 2026-04-26 -->
+                <!-- S2: References (popup-driven) — 2026-04-27 user req: section นี้กดเปิด popup -->
                 <div class="section-card">
-                  <div class="section-title">📎 เอกสารอ้างอิง <span style="font-size:11px;font-weight:500;color:#6B7280;margin-left:auto">PR + PSI · 1 PO อ้างได้หลายเอกสาร</span></div>
+                  <div class="section-title">📎 เอกสารอ้างอิง <span style="font-size:11px;font-weight:500;color:#6B7280;margin-left:auto">PSI + PO-8 Deposit · กดดูรายละเอียด</span></div>
 
-                  <div class="alert alert-info" style="margin-bottom:12px;padding:10px 14px;background:#DBEAFE;color:#1E40AF;border:1px solid #93C5FD;border-radius:6px;font-size:12.5px">💡 References section นี้แสดง <b>เอกสารระดับบิล (header-level) เท่านั้น:</b> <b>📊 PSI</b> (justification · supporting doc) + <b>💰 PO-8 Deposit</b> (มัดจำฝั่งซื้อ · ≈ SL-3 ขาย) · <b>📋 ใบขอซื้อ (PR)</b> และ <b>ใบจอง</b> แสดง <b>per-line</b> ในตารางสินค้าด้านล่าง — ไม่ซ้ำกัน</div>
-
-                  <!-- Ref 1: PSI -->
-                  <div class="ref-box psi">
-                    <div class="ref-box-title">📊 PSI Report (Production / Sales / Inventory) — Justification</div>
-                    <table style="width:100%;border-collapse:collapse;font-size:12.5px">
-                      <thead><tr style="background:rgba(255,255,255,0.6)">
-                        <th style="padding:6px 10px;text-align:left;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">เลขที่ PSI</th>
-                        <th style="padding:6px 10px;text-align:left;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">รอบ</th>
-                        <th style="padding:6px 10px;text-align:left;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">หมวด/SKU</th>
-                        <th style="padding:6px 10px;text-align:right;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">ขาย 2 ด.</th>
-                        <th style="padding:6px 10px;text-align:right;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">สต็อก</th>
-                        <th style="padding:6px 10px;text-align:right;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">MOS</th>
-                        <th style="padding:6px 10px;text-align:left;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">Action</th>
-                      </tr></thead>
-                      <tbody>
-                        <tr><td style="padding:8px 10px"><a href="#" style="color:#5B21B6;font-weight:600;text-decoration:none">PSI-W14-2604 ↗</a></td><td style="padding:8px 10px">รายสัปดาห์ W14</td><td style="padding:8px 10px">DAI-FTKM35SV2S</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">320 ตัว</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">45 ตัว</td><td style="padding:8px 10px;text-align:right"><span class="mos-chip crit">🔴 1.4 ด.</span></td><td style="padding:8px 10px;font-size:11.5px;color:#5B21B6">⚠ Critical · ต้องสั่ง</td></tr>
-                        <tr><td style="padding:8px 10px"><a href="#" style="color:#5B21B6;font-weight:600;text-decoration:none">PSI-W14-2604 ↗</a></td><td style="padding:8px 10px">รายสัปดาห์ W14</td><td style="padding:8px 10px">MIT-MSYGN18VF</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">85 ตัว</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">38 ตัว</td><td style="padding:8px 10px;text-align:right"><span class="mos-chip ok">🟡 4.5 ด.</span></td><td style="padding:8px 10px;font-size:11.5px;color:#5B21B6">OK · สั่งได้</td></tr>
-                        <tr><td style="padding:8px 10px"><a href="#" style="color:#5B21B6;font-weight:600;text-decoration:none">PSI-W14-2604 ↗</a></td><td style="padding:8px 10px">รายสัปดาห์ W14</td><td style="padding:8px 10px">SAM-AR13TYHYCWK</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">210 ตัว</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">28 ตัว</td><td style="padding:8px 10px;text-align:right"><span class="mos-chip crit">🔴 1.3 ด.</span></td><td style="padding:8px 10px;font-size:11.5px;color:#5B21B6">⚠ Critical · ต้องสั่ง</td></tr>
-                        <tr class="swt-add-line"><td colspan="7" style="padding:6px 14px;background:#fff;border-top:1px dashed #DDD6FE;color:#5B21B6;font-size:11.5px;text-align:center">🔍 ค้นหา PSI Report เพิ่ม</td></tr>
-                      </tbody>
-                    </table>
-                    <div style="font-size:11.5px;color:#5B21B6;margin-top:8px;padding-left:4px">⚠️ <b>MOS Order Rule (A5):</b> ≤ 2 → 🔴 ต้องสั่ง · ≤ 4 → 🟡 สั่งได้ · &gt; 4 → 🟢 ห้าม · 2 จาก 3 SKU เป็น Critical (FTKM35 + AR13TY)</div>
-                  </div>
-
-                  <!-- Ref 3: Deposit (PO-8 บิลฝาก · มัดจำฝั่งซื้อ · mirror SL-3 · auto-deduct via SC-3 SharedPaymentPanel) -->
-                  <div class="ref-box dep">
-                    <div class="ref-box-title">💰 มัดจำฝั่งซื้อ (PO-8 Deposit Bill) — Vendor Advance Payment <span style="font-size:10px;background:#EDE9FE;color:#5B21B6;padding:1px 6px;border-radius:8px;font-weight:600;margin-left:6px">SC-3</span></div>
-                    <div style="font-size:11px;color:#5B21B6;margin-bottom:8px;padding:6px 10px;background:#F5F3FF;border-radius:5px;border:1px solid #DDD6FE">💡 <b>SC-3 SharedPaymentPanel</b> · multi-deposit auto-deduct ตอน settle AP (ใช้ component เดียวกับ SL-4) · ไม่ต้องกรอกยอดเอง</div>
-                    <table style="width:100%;border-collapse:collapse;font-size:12.5px">
-                      <thead><tr style="background:rgba(255,255,255,0.6)">
-                        <th style="padding:6px 10px;text-align:left;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">เลขที่ Deposit</th>
-                        <th style="padding:6px 10px;text-align:left;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">วันที่จ่าย</th>
-                        <th style="padding:6px 10px;text-align:left;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">เหตุผล</th>
-                        <th style="padding:6px 10px;text-align:right;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">ยอดมัดจำ</th>
-                        <th style="padding:6px 10px;text-align:right;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">% ของ PO</th>
-                        <th style="padding:6px 10px;text-align:left;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">Status</th>
-                      </tr></thead>
-                      <tbody>
-                        <tr>
-                          <td style="padding:8px 10px"><a href="po8-deposit-bill-mockup.html" style="color:#92400E;font-weight:600;text-decoration:none">DEP-2603-00015 ↗</a></td>
-                          <td style="padding:8px 10px">25 มี.ค. 26</td>
-                          <td style="padding:8px 10px;font-size:11.5px;color:#92400E">Vendor request 30% advance · ก่อนผลิต lot ใหญ่</td>
-                          <td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700">฿870,960</td>
-                          <td style="padding:8px 10px;text-align:right;color:#92400E;font-weight:600">30% / ฿2.9M</td>
-                          <td style="padding:8px 10px"><span class="swt-chip warn">⏳ Prepaid · รอ settle ตอน GRN</span></td>
-                        </tr>
-                        <tr class="swt-add-line"><td colspan="6" style="padding:6px 14px;background:#fff;border-top:1px dashed #FCD34D;color:#92400E;font-size:11.5px;text-align:center">🔍 ค้นหา PO-8 Deposit เพิ่ม (ถ้ามี advance หลายงวด)</td></tr>
-                      </tbody>
-                      <tfoot>
-                        <tr style="background:#fff"><td colspan="3" style="text-align:right;font-weight:600;padding:8px 10px">รวมมัดจำที่จ่ายแล้ว</td><td style="text-align:right;font-weight:700;color:#92400E;font-variant-numeric:tabular-nums;padding:8px 10px">฿870,960</td><td colspan="2" style="font-size:11px;color:#6B7280;padding:8px 10px">หักจากยอด AP เมื่อ settle</td></tr>
-                      </tfoot>
-                    </table>
-                    <div style="font-size:11.5px;color:#92400E;margin-top:8px;padding-left:4px">💡 <b>Symmetric กับ SL-3:</b> ฝั่งขาย ลูกค้าจ่าย Deposit ก่อนรับสินค้า · ฝั่งซื้อ เราจ่าย advance ให้ Vendor ก่อนรับของ · settle ตอน GRN ครบ (ดู PO-8 spec)</div>
+                  <div class="po4-ref-trigger" onclick="openPoRef()" title="กดเปิดเอกสารอ้างอิงทั้งหมด (PSI Report + PO-8 Deposit)">
+                    <div class="po4-ref-trigger-left">
+                      <div class="po4-ref-trigger-stats">
+                        <span>📊 <b>PSI Report</b> 3 รายการ · 2 Critical · 1 OK</span>
+                        <span>💰 <b>PO-8 Deposit</b> ฿870,960 (30%) · ⏳ รอ settle</span>
+                        <span>📄 <b>INV ลูกค้า</b> INV-26-0042 (ดู line items)</span>
+                      </div>
+                      <div style="font-size:11.5px;color:#6B7280">💡 <b>Header-level refs</b> · per-line refs (INV/L1, /L2, /L3) แสดงใน column "เลขที่อ้างอิง" ของตารางสินค้าด้านล่าง</div>
+                    </div>
+                    <button class="po4-ref-trigger-cta" onclick="event.stopPropagation();openPoRef()">🔗 ดูรายละเอียด ↗</button>
                   </div>
                 </div>
 
@@ -1076,7 +1050,7 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
                                     <td style="text-align:right">2%</td>
                                     <td style="text-align:right">1%</td>
                                     <td style="text-align:right">44,550</td>
-                                    <td><a href="po1-purchase-request-mockup.html" style="color:#1D4ED8;font-weight:600;text-decoration:none;font-size:11.5px">📋 PR-2604-0019/L1 ↗</a></td>
+                                    <td><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none;font-size:11.5px">📄 INV-26-0042/L1 ↗</a></td>
                                 </tr>
                                 <tr>
                                     <td>2</td>
@@ -1097,7 +1071,7 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
                                     <td style="text-align:right">1%</td>
                                     <td style="text-align:right">1%</td>
                                     <td style="text-align:right">19,800</td>
-                                    <td><a href="po1-purchase-request-mockup.html" style="color:#1D4ED8;font-weight:600;text-decoration:none;font-size:11.5px">📋 PR-2604-0019/L2 ↗</a></td>
+                                    <td><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none;font-size:11.5px">📄 INV-26-0042/L2 ↗</a></td>
                                 </tr>
                                 <tr>
                                     <td>3</td>
@@ -1118,7 +1092,7 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
                                     <td style="text-align:right">0%</td>
                                     <td style="text-align:right">1%</td>
                                     <td style="text-align:right">13,500</td>
-                                    <td><a href="po1-purchase-request-mockup.html" style="color:#1D4ED8;font-weight:600;text-decoration:none;font-size:11.5px">📋 PR-2604-0023/L1 ↗</a></td>
+                                    <td><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none;font-size:11.5px">📄 INV-26-0042/L3 ↗</a></td>
                                 </tr>
 
             <tr class="swt-add-line"><td colspan="99" style="padding:10px 14px;background:linear-gradient(180deg,#FAFBFC,#F1F5F9);border-top:1px dashed #93C5FD"><div class="swt-search-combo" style="max-width:560px"><input type="text" class="swt-item-input" placeholder="รหัสสินค้า / ชื่อ / บาร์โค้ด... (Alt+I)"><button class="swt-search-btn" data-item-search title="ค้นหาสินค้า (Alt+I)">🔍 ค้นหาสินค้า</button></div></td></tr>
@@ -1674,6 +1648,87 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 })();
 </script>
 <!-- SWT_LINK_END -->
+
+<!-- ═══════════════════════════════════════════════════════════
+     PO-4 Reference Documents Popup (PSI + PO-8 Deposit)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="mPoRef" onclick="closePoRef()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <span class="ico">🔗</span>
+      <div class="ttl">เอกสารอ้างอิง — PO-2604-00089</div>
+      <button class="modal-close-x" onclick="closePoRef()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-info" style="margin-bottom:14px;padding:10px 14px;background:#DBEAFE;color:#1E40AF;border:1px solid #93C5FD;border-radius:6px;font-size:12.5px">💡 <b>Header-level refs:</b> 📊 PSI (justification · supporting doc) + 💰 PO-8 Deposit (มัดจำฝั่งซื้อ · ≈ SL-3 ขาย) · per-line refs (INV ลูกค้า) แสดงใน column "เลขที่อ้างอิง" ของตารางสินค้า</div>
+
+      <!-- Ref 1: PSI -->
+      <div class="ref-box psi">
+        <div class="ref-box-title">📊 PSI Report (Production / Sales / Inventory) — Justification</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+          <thead><tr style="background:rgba(255,255,255,0.6)">
+            <th style="padding:6px 10px;text-align:left;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">เลขที่ PSI</th>
+            <th style="padding:6px 10px;text-align:left;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">รอบ</th>
+            <th style="padding:6px 10px;text-align:left;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">หมวด/SKU</th>
+            <th style="padding:6px 10px;text-align:right;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">ขาย 2 ด.</th>
+            <th style="padding:6px 10px;text-align:right;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">สต็อก</th>
+            <th style="padding:6px 10px;text-align:right;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">MOS</th>
+            <th style="padding:6px 10px;text-align:left;font-size:11px;color:#5B21B6;text-transform:uppercase;border-bottom:1px solid #DDD6FE">Action</th>
+          </tr></thead>
+          <tbody>
+            <tr><td style="padding:8px 10px"><a href="#" style="color:#5B21B6;font-weight:600;text-decoration:none">PSI-W14-2604 ↗</a></td><td style="padding:8px 10px">รายสัปดาห์ W14</td><td style="padding:8px 10px">DAI-FTKM35SV2S</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">320 ตัว</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">45 ตัว</td><td style="padding:8px 10px;text-align:right"><span class="mos-chip crit">🔴 1.4 ด.</span></td><td style="padding:8px 10px;font-size:11.5px;color:#5B21B6">⚠ Critical · ต้องสั่ง</td></tr>
+            <tr><td style="padding:8px 10px"><a href="#" style="color:#5B21B6;font-weight:600;text-decoration:none">PSI-W14-2604 ↗</a></td><td style="padding:8px 10px">รายสัปดาห์ W14</td><td style="padding:8px 10px">MIT-MSYGN18VF</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">85 ตัว</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">38 ตัว</td><td style="padding:8px 10px;text-align:right"><span class="mos-chip ok">🟡 4.5 ด.</span></td><td style="padding:8px 10px;font-size:11.5px;color:#5B21B6">OK · สั่งได้</td></tr>
+            <tr><td style="padding:8px 10px"><a href="#" style="color:#5B21B6;font-weight:600;text-decoration:none">PSI-W14-2604 ↗</a></td><td style="padding:8px 10px">รายสัปดาห์ W14</td><td style="padding:8px 10px">SAM-AR13TYHYCWK</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">210 ตัว</td><td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums">28 ตัว</td><td style="padding:8px 10px;text-align:right"><span class="mos-chip crit">🔴 1.3 ด.</span></td><td style="padding:8px 10px;font-size:11.5px;color:#5B21B6">⚠ Critical · ต้องสั่ง</td></tr>
+            <tr class="swt-add-line"><td colspan="7" style="padding:6px 14px;background:#fff;border-top:1px dashed #DDD6FE;color:#5B21B6;font-size:11.5px;text-align:center">🔍 ค้นหา PSI Report เพิ่ม</td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:11.5px;color:#5B21B6;margin-top:8px;padding-left:4px">⚠️ <b>MOS Order Rule (A5):</b> ≤ 2 → 🔴 ต้องสั่ง · ≤ 4 → 🟡 สั่งได้ · &gt; 4 → 🟢 ห้าม · 2 จาก 3 SKU เป็น Critical (FTKM35 + AR13TY)</div>
+      </div>
+
+      <!-- Ref 2: Deposit -->
+      <div class="ref-box dep">
+        <div class="ref-box-title">💰 มัดจำฝั่งซื้อ (PO-8 Deposit Bill) — Vendor Advance Payment <span style="font-size:10px;background:#EDE9FE;color:#5B21B6;padding:1px 6px;border-radius:8px;font-weight:600;margin-left:6px">SC-3</span></div>
+        <div style="font-size:11px;color:#5B21B6;margin-bottom:8px;padding:6px 10px;background:#F5F3FF;border-radius:5px;border:1px solid #DDD6FE">💡 <b>SC-3 SharedPaymentPanel</b> · multi-deposit auto-deduct ตอน settle AP (ใช้ component เดียวกับ SL-4) · ไม่ต้องกรอกยอดเอง</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+          <thead><tr style="background:rgba(255,255,255,0.6)">
+            <th style="padding:6px 10px;text-align:left;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">เลขที่ Deposit</th>
+            <th style="padding:6px 10px;text-align:left;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">วันที่จ่าย</th>
+            <th style="padding:6px 10px;text-align:left;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">เหตุผล</th>
+            <th style="padding:6px 10px;text-align:right;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">ยอดมัดจำ</th>
+            <th style="padding:6px 10px;text-align:right;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">% ของ PO</th>
+            <th style="padding:6px 10px;text-align:left;font-size:11px;color:#92400E;text-transform:uppercase;border-bottom:1px solid #FCD34D">Status</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td style="padding:8px 10px"><a href="po8-deposit-bill-mockup.html" style="color:#92400E;font-weight:600;text-decoration:none">DEP-2603-00015 ↗</a></td>
+              <td style="padding:8px 10px">25 มี.ค. 26</td>
+              <td style="padding:8px 10px;font-size:11.5px;color:#92400E">Vendor request 30% advance · ก่อนผลิต lot ใหญ่</td>
+              <td style="padding:8px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700">฿870,960</td>
+              <td style="padding:8px 10px;text-align:right;color:#92400E;font-weight:600">30% / ฿2.9M</td>
+              <td style="padding:8px 10px"><span class="swt-chip warn">⏳ Prepaid · รอ settle ตอน GRN</span></td>
+            </tr>
+            <tr class="swt-add-line"><td colspan="6" style="padding:6px 14px;background:#fff;border-top:1px dashed #FCD34D;color:#92400E;font-size:11.5px;text-align:center">🔍 ค้นหา PO-8 Deposit เพิ่ม (ถ้ามี advance หลายงวด)</td></tr>
+          </tbody>
+          <tfoot>
+            <tr style="background:#fff"><td colspan="3" style="text-align:right;font-weight:600;padding:8px 10px">รวมมัดจำที่จ่ายแล้ว</td><td style="text-align:right;font-weight:700;color:#92400E;font-variant-numeric:tabular-nums;padding:8px 10px">฿870,960</td><td colspan="2" style="font-size:11px;color:#6B7280;padding:8px 10px">หักจากยอด AP เมื่อ settle</td></tr>
+          </tfoot>
+        </table>
+        <div style="font-size:11.5px;color:#92400E;margin-top:8px;padding-left:4px">💡 <b>Symmetric กับ SL-3:</b> ฝั่งขาย ลูกค้าจ่าย Deposit ก่อนรับสินค้า · ฝั่งซื้อ เราจ่าย advance ให้ Vendor ก่อนรับของ · settle ตอน GRN ครบ (ดู PO-8 spec)</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closePoRef()">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openPoRef(){document.getElementById('mPoRef').classList.add('open');}
+function closePoRef(){document.getElementById('mPoRef').classList.remove('open');}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){var m=document.getElementById('mPoRef');if(m&&m.classList.contains('open'))closePoRef();}
+});
+</script>
 
 </body>
 </html>
