@@ -744,7 +744,70 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #9CA3AF;
     }
-  </style>
+  
+        /* WH-4 Refactor 2026-04-27: Count Queue mode */
+        .queue-section{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:18px 20px;margin-bottom:14px}
+        .queue-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px}
+        .queue-section-title{font-size:16px;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px}
+        .queue-section-title .ico{font-size:20px}
+        .queue-section-title .count{font-size:11px;font-weight:600;background:#EFF6FF;color:#1E40AF;padding:2px 8px;border-radius:10px;margin-left:6px}
+        .qf-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;padding:10px 12px;background:#F8FAFC;border-radius:6px;border:1px solid #E5E7EB}
+        .qf-chip{padding:5px 10px;border-radius:14px;font-size:11.5px;font-weight:600;border:1px solid #E5E7EB;background:#fff;color:#374151;cursor:pointer;transition:all 0.15s;font-family:inherit;display:inline-flex;align-items:center;gap:5px}
+        .qf-chip:hover{border-color:#93C5FD;color:#1E40AF}
+        .qf-chip.active{background:#2563EB;color:#fff;border-color:#2563EB}
+        .qf-chip .cnt{background:rgba(255,255,255,0.25);color:inherit;padding:0 5px;border-radius:8px;font-size:10px;font-weight:700;margin-left:2px}
+        .qf-chip:not(.active) .cnt{background:#F3F4F6;color:#6B7280}
+        .type-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;font-family:'Inter',monospace}
+        .tb-cycle{background:#DBEAFE;color:#1E40AF}.tb-annual{background:#EDE9FE;color:#5B21B6}
+        .tb-spot{background:#FEF3C7;color:#92400E}.tb-recount{background:#FEE2E2;color:#991B1B}
+        .tb-branch{background:#D1FAE5;color:#065F46}.tb-bin{background:#F3F4F6;color:#374151}
+        .tb-newitem{background:#FCE7F3;color:#9F1239}.tb-preaudit{background:#FFE4E6;color:#9F1239}
+        tr.q-row{cursor:pointer;transition:background 0.1s}
+        tr.q-row:hover{background:#EFF6FF}
+        .q-action-btn{padding:6px 10px;background:#2563EB;color:#fff;border:none;border-radius:5px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit}
+        .q-action-btn:hover{background:#1E40AF}
+        .q-status{display:inline-flex;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600}
+        .q-status-wait{background:#FEF3C7;color:#92400E}
+        .q-status-progress{background:#DBEAFE;color:#1E40AF}
+        .q-status-done{background:#D1FAE5;color:#065F46}
+        .q-status-variance{background:#FEE2E2;color:#991B1B}
+        .q-table{width:100%;border-collapse:collapse;font-size:13px}
+        .q-table th{background:#F9FAFB;padding:10px;text-align:left;font-weight:600;color:#374151;border-bottom:1px solid #E5E7EB;font-size:11.5px;text-transform:uppercase;letter-spacing:0.03em}
+        .q-table td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;font-size:13px}
+        .q-table .mono{font-family:'Inter',monospace;font-size:12px}
+        .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+        .kpi-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:14px 16px;border-left:4px solid #6B7280}
+        .kpi-card.yellow{border-left-color:#F59E0B}
+        .kpi-card.blue{border-left-color:#2563EB}
+        .kpi-card.green{border-left-color:#10B981}
+        .kpi-card.red{border-left-color:#EF4444}
+        .kpi-card .kpi-label{font-size:11px;color:#6B7280;font-weight:600;text-transform:uppercase;margin-bottom:4px}
+        .kpi-card .kpi-value{font-size:22px;font-weight:700;color:#111827;line-height:1.1}
+        .wq-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.45);z-index:1000;display:none;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;font-family:'Inter','Noto Sans Thai',sans-serif}
+        .wq-overlay.open{display:flex}
+        .wq-modal{background:#F8FAFC;border-radius:8px;max-width:1280px;width:100%;display:flex;flex-direction:column;max-height:calc(100vh - 80px);box-shadow:0 25px 50px -12px rgba(0,0,0,0.25)}
+        .wq-modal-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.18);border:none;color:#fff;cursor:pointer;font-size:18px;padding:4px 10px;border-radius:6px;z-index:5}
+        .wq-modal-close:hover{background:rgba(255,255,255,0.32)}
+        .wq-mh{position:relative;background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;padding:16px 24px;border-radius:8px 8px 0 0}
+        .wq-mh-top{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+        .wq-mh-ico{width:40px;height:40px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+        .wq-mh-title h2{font-size:17px;font-weight:700;margin:0;line-height:1.2}
+        .wq-mh-title p{font-size:11.5px;color:rgba(255,255,255,0.75);margin:2px 0 0}
+        .wq-mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(251,146,60,0.25);color:#FED7AA;border:1px solid rgba(251,146,60,0.35);margin-left:auto;margin-right:36px}
+        .wq-mh-meta{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.12)}
+        .wq-mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:2px}
+        .wq-mh-meta-item .val{font-size:12px;font-weight:600;font-family:'Inter',monospace}
+        .wq-body{padding:18px 24px;overflow-y:auto;flex:1}
+        .wq-status-pills{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+        .wq-pill{padding:5px 10px;border-radius:14px;font-size:11.5px;font-weight:600;border:1px solid #E5E7EB;background:#F9FAFB;color:#6B7280}
+        .wq-pill.done{background:#D1FAE5;color:#065F46;border-color:#86EFAC}
+        .wq-pill.active{background:#2563EB;color:#fff;border-color:#2563EB}
+        .wq-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+        .wq-card-title{font-size:13px;font-weight:600;color:#111827;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+        .wq-foot{padding:14px 24px;border-top:1px solid #E5E7EB;background:#fff;border-radius:0 0 8px 8px;display:flex;align-items:center;gap:8px}
+        .wq-foot .spacer{flex:1}
+        .wq-foot .hint{font-size:11.5px;color:#6B7280}
+</style>
 </head>
 <body>
 <!-- SWT_SIDEBAR_START -->
@@ -816,9 +879,9 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
   <details><summary><span class="swt-sb-ico">📦</span><span class="swt-sb-lbl">คลังสินค้า (WH)</span><span class="swt-sb-cnt">7</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
     <a href="wh-queue-mockup.html"><span class="c">WH-Q</span>Dashboard</a>
     <a href="wh1-grn-mockup.html"><span class="c">WH-1</span>คิวรอรับสินค้า</a>
-    <a href="wh2-stock-transfer-mockup.html"><span class="c">WH-2</span>โอนย้ายสต็อก</a>
+    <a href="wh2-stock-transfer-mockup.html"><span class="c">WH-2</span>คิวโอนย้ายสต็อก</a>
     <a href="wh3-sales-issue-mockup.html"><span class="c">WH-3</span>คิวเบิกสินค้า</a>
-    <a href="wh4-stock-count-mockup.html"><span class="c">WH-4</span>นับสต็อก</a>
+    <a href="wh4-stock-count-mockup.html"><span class="c">WH-4</span>คิวนับสต็อก</a>
     <a href="wh-r-stock-card-mockup.html" class="swt-new"><span class="c">WH-R</span>Stock Card</a>
     <a href="wh-nm-non-move-report-mockup.html" class="swt-new"><span class="c">WH-NM</span>สินค้าไม่เคลื่อนไหว</a>
   </div></details>
@@ -936,479 +999,293 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 <!-- SWT_SIDEBAR_END -->
 
 <!-- Sidebar -->
-  <!-- Main Container -->
+  <!-- Main Container (Queue mode) -->
   <div class="main-container">
-    <!-- Page Header -->
     <div class="page-header">
-      <h1 class="page-title">นับสต็อก — Stock Count & Adjustment</h1>
+      <h1 class="page-title">WH-4 · คิวนับสต็อก (Stock Count Queue)</h1>
+      <p style="font-size:13px;color:#6B7280;margin:4px 0 0">Stock Count & Adjustment · 11 รายการ · 8 sub-types · กดแถวเพื่อดู/ดำเนินการ (drill-down modal)</p>
     </div>
 
-    <!-- Tab Navigation -->
-    <div class="tab-nav">
-      <button class="tab-button active" onclick="switchTab(event, 'tab-plans')">แผนการนับ</button>
-      <button class="tab-button" onclick="switchTab(event, 'tab-active')">กำลังนับ</button>
-      <button class="tab-button" onclick="switchTab(event, 'tab-history')">ประวัติ/ปรับยอด</button>
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card yellow"><div class="kpi-label">รอนับ</div><div class="kpi-value">5</div></div>
+      <div class="kpi-card blue"><div class="kpi-label">กำลังนับ</div><div class="kpi-value">3</div></div>
+      <div class="kpi-card green"><div class="kpi-label">นับเสร็จวันนี้</div><div class="kpi-value">2</div></div>
+      <div class="kpi-card red"><div class="kpi-label">Variance / Recount</div><div class="kpi-value">1</div></div>
     </div>
 
-    <!-- TAB 1: แผนการนับ -->
-    <div id="tab-plans" class="tab-content active">
-      <div class="card">
-        <div class="button-row">
-          <button class="btn btn-primary" onclick="openCreatePlanModal()">สร้างแผนนับสต็อก</button>
+    <!-- Queue section -->
+    <div class="queue-section">
+      <div class="queue-section-head">
+        <div class="queue-section-title">
+          <span class="ico">📊</span>
+          <span>WH-4 · รายการนับสต็อก (Count Queue)</span>
+          <span class="count">11 รายการ</span>
         </div>
-
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>รหัสแผน</th>
-                <th>ชื่อแผน</th>
-                <th>สาขา</th>
-                <th>ประเภท</th>
-                <th>หมวดสินค้า</th>
-                <th>วันที่นับ</th>
-                <th>สถานะ</th>
-                <th>ความคืบหน้า</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>SC-2569-04</strong></td>
-                <td>นับสต็อกประจำเดือน เม.ย.</td>
-                <td>HQ Stock</td>
-                <td><span class="badge badge-warning">Full Count</span></td>
-                <td>ทุกหมวด</td>
-                <td>15/04/69</td>
-                <td><span class="status-icon yellow">●</span> รอเริ่ม</td>
-                <td>
-                  <div style="width: 100px;">
-                    <div class="progress-bar"><div class="progress-fill" style="width: 0%;"></div></div>
-                    <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">0%</div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>SC-2569-03</strong></td>
-                <td>Cycle Count แอร์+ตู้เย็น</td>
-                <td>รังสิต</td>
-                <td><span class="badge badge-info">Cycle Count</span></td>
-                <td>แอร์, ตู้เย็น</td>
-                <td>10/04/69</td>
-                <td><span class="status-icon blue">●</span> กำลังนับ</td>
-                <td>
-                  <div style="width: 100px;">
-                    <div class="progress-bar"><div class="progress-fill" style="width: 65%;"></div></div>
-                    <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">65%</div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>SC-2569-02</strong></td>
-                <td>นับสต็อกสิ้นไตรมาส</td>
-                <td>บางนา</td>
-                <td><span class="badge badge-success">Full Count</span></td>
-                <td>ทุกหมวด</td>
-                <td>31/03/69</td>
-                <td><span class="status-icon green">●</span> เสร็จสิ้น</td>
-                <td>
-                  <div style="width: 100px;">
-                    <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
-                    <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">100%</div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>SC-2569-01</strong></td>
-                <td>Cycle Count โทรทัศน์</td>
-                <td>เชียงใหม่</td>
-                <td><span class="badge badge-info">Cycle Count</span></td>
-                <td>โทรทัศน์</td>
-                <td>28/03/69</td>
-                <td><span class="status-icon green">●</span> เสร็จสิ้น</td>
-                <td>
-                  <div style="width: 100px;">
-                    <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
-                    <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">100%</div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>SC-2569-00</strong></td>
-                <td>นับสต็อกประจำเดือน มี.ค.</td>
-                <td>HQ Stock</td>
-                <td><span class="badge badge-success">Full Count</span></td>
-                <td>ทุกหมวด</td>
-                <td>15/03/69</td>
-                <td><span class="status-icon green">●</span> เสร็จสิ้น</td>
-                <td>
-                  <div style="width: 100px;">
-                    <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
-                    <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">100%</div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>SC-2568-50</strong></td>
-                <td>Cycle Count เครื่องเสียง</td>
-                <td>พัทยา</td>
-                <td><span class="badge badge-info">Cycle Count</span></td>
-                <td>เครื่องเสียง</td>
-                <td>01/03/69</td>
-                <td><span class="status-icon green">●</span> เสร็จสิ้น</td>
-                <td>
-                  <div style="width: 100px;">
-                    <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
-                    <div style="font-size: 11px; color: #6B7280; margin-top: 4px;">100%</div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div style="display:flex;gap:8px">
+          <button class="q-action-btn" style="background:#fff;color:#374151;border:1px solid #D1D5DB">📊 Export</button>
+          <button class="q-action-btn" style="background:#10B981">+ สร้างแผนนับใหม่</button>
         </div>
       </div>
+
+      <div class="qf-chips" id="cntChips">
+        <button class="qf-chip active" data-cnt="all">ทั้งหมด <span class="cnt">11</span></button>
+        <button class="qf-chip" data-cnt="cycle">📅 Cycle Count (รายรอบ) <span class="cnt">3</span></button>
+        <button class="qf-chip" data-cnt="annual">📊 Annual (ประจำปี) <span class="cnt">1</span></button>
+        <button class="qf-chip" data-cnt="spot">🔍 Spot Check (สุ่มตรวจ) <span class="cnt">2</span></button>
+        <button class="qf-chip" data-cnt="recount">🚨 Recount (variance) <span class="cnt">1</span></button>
+        <button class="qf-chip" data-cnt="branch">🏢 Branch-level (ทั้งสาขา) <span class="cnt">1</span></button>
+        <button class="qf-chip" data-cnt="bin">📦 Bin-level (เฉพาะ bin) <span class="cnt">2</span></button>
+        <button class="qf-chip" data-cnt="newitem">🆕 New Item (สินค้าใหม่) <span class="cnt">1</span></button>
+        <button class="qf-chip" data-cnt="preaudit">🔧 Pre-Audit (ก่อนตรวจ) <span class="cnt">0</span></button>
+      </div>
+
+      <table class="q-table">
+        <thead>
+          <tr>
+            <th style="width:110px">ประเภท</th>
+            <th style="width:140px">เลขเอกสาร</th>
+            <th style="width:130px">คลัง / Bin</th>
+            <th style="width:130px">ผู้นับ</th>
+            <th>ขอบเขตที่นับ</th>
+            <th style="width:100px">Progress</th>
+            <th style="width:100px">Variance</th>
+            <th style="width:110px">สถานะ</th>
+            <th style="width:100px">วันที่นัด</th>
+            <th style="width:120px">ดำเนินการ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="q-row" data-cntype="cycle" onclick="openWqDetail('CNT-2604-0021','cycle')">
+            <td><span class="type-badge tb-cycle">📅 Cycle</span></td>
+            <td class="mono">CNT-2604-0021</td>
+            <td>HQ คลังกลาง</td>
+            <td>คุณจิรา (คลัง)</td>
+            <td>หมวดแอร์ · 24 SKU · weekly cycle W17</td>
+            <td>0 / 24</td>
+            <td>—</td>
+            <td><span class="q-status q-status-wait">รอนับ</span></td>
+            <td>28/04/26</td>
+            <td><button class="q-action-btn">📊 เริ่มนับ</button></td>
+          </tr>
+          <tr class="q-row" data-cntype="cycle" onclick="openWqDetail('CNT-2604-0022','cycle')">
+            <td><span class="type-badge tb-cycle">📅 Cycle</span></td>
+            <td class="mono">CNT-2604-0022</td>
+            <td>HQ คลังกลาง</td>
+            <td>คุณจิรา (คลัง)</td>
+            <td>หมวดตู้เย็น+ซักผ้า · 18 SKU · weekly W17</td>
+            <td>12 / 18</td>
+            <td><span style="color:#10B981">0</span></td>
+            <td><span class="q-status q-status-progress">กำลังนับ 67%</span></td>
+            <td>27/04/26</td>
+            <td><button class="q-action-btn">📊 ทำต่อ</button></td>
+          </tr>
+          <tr class="q-row" data-cntype="cycle" onclick="openWqDetail('CNT-2604-0023','cycle')">
+            <td><span class="type-badge tb-cycle">📅 Cycle</span></td>
+            <td class="mono">CNT-2604-0023</td>
+            <td>WH-03 ภูมิภาค</td>
+            <td>คุณนิล (สาขา)</td>
+            <td>หมวดอะไหล่ · 38 SKU · monthly M04</td>
+            <td>38 / 38</td>
+            <td><span style="color:#F59E0B">3</span></td>
+            <td><span class="q-status q-status-done">เสร็จ · รออนุมัติ</span></td>
+            <td>26/04/26</td>
+            <td><button class="q-action-btn">✅ อนุมัติ</button></td>
+          </tr>
+          <tr class="q-row" data-cntype="annual" onclick="openWqDetail('CNT-2603-0001','annual')">
+            <td><span class="type-badge tb-annual">📊 Annual</span></td>
+            <td class="mono">CNT-2603-0001</td>
+            <td>HQ + 3 BR</td>
+            <td>ทีม Audit (8 คน)</td>
+            <td>นับสิ้นปีงบประมาณ Q1/26 · ทุก SKU · 4 location</td>
+            <td>1,234 / 1,560</td>
+            <td><span style="color:#F59E0B">22</span></td>
+            <td><span class="q-status q-status-progress">กำลังนับ 79%</span></td>
+            <td>30/04/26</td>
+            <td><button class="q-action-btn">📊 ทำต่อ</button></td>
+          </tr>
+          <tr class="q-row" data-cntype="spot" onclick="openWqDetail('CNT-SPOT-2604-0008','spot')">
+            <td><span class="type-badge tb-spot">🔍 Spot</span></td>
+            <td class="mono">CNT-SPOT-2604-0008</td>
+            <td>HQ · A-01</td>
+            <td>คุณจิรา</td>
+            <td>สุ่มตรวจ Daikin FTKM35 (สินค้าขายดี · ตรวจเสริม)</td>
+            <td>0 / 1</td>
+            <td>—</td>
+            <td><span class="q-status q-status-wait">รอนับ</span></td>
+            <td>27/04/26</td>
+            <td><button class="q-action-btn">🔍 เริ่มตรวจ</button></td>
+          </tr>
+          <tr class="q-row" data-cntype="spot" onclick="openWqDetail('CNT-SPOT-2604-0009','spot')">
+            <td><span class="type-badge tb-spot">🔍 Spot</span></td>
+            <td class="mono">CNT-SPOT-2604-0009</td>
+            <td>HQ · Promo Bin</td>
+            <td>คุณสมศรี</td>
+            <td>สุ่มตรวจของแถม summer · ก่อนแจก</td>
+            <td>1 / 1</td>
+            <td><span style="color:#10B981">0</span></td>
+            <td><span class="q-status q-status-done">เสร็จ</span></td>
+            <td>26/04/26</td>
+            <td><button class="q-action-btn">📋 ดู</button></td>
+          </tr>
+          <tr class="q-row" data-cntype="recount" onclick="openWqDetail('CNT-RC-2604-0003','recount')">
+            <td><span class="type-badge tb-recount">🚨 Recount</span></td>
+            <td class="mono">CNT-RC-2604-0003</td>
+            <td>WH-03 ภูมิภาค</td>
+            <td>คุณนิล + Audit</td>
+            <td>Recount Samsung AR13TY · variance −2 ตัวจาก CNT-2604-0023 · ต้อง verify</td>
+            <td>0 / 1</td>
+            <td><span style="color:#EF4444;font-weight:700">−2 ตัว</span></td>
+            <td><span class="q-status q-status-variance">🔴 Variance</span></td>
+            <td>27/04/26</td>
+            <td><button class="q-action-btn" style="background:#EF4444">🚨 Recount</button></td>
+          </tr>
+          <tr class="q-row" data-cntype="branch" onclick="openWqDetail('CNT-BR-2604-0002','branch')">
+            <td><span class="type-badge tb-branch">🏢 Branch</span></td>
+            <td class="mono">CNT-BR-2604-0002</td>
+            <td>BR-รังสิต (ทั้งสาขา)</td>
+            <td>หัวหน้าสาขา + 4 พนักงาน</td>
+            <td>นับ Inventory ทั้งสาขา · monthly · ทั้ง 4 zones</td>
+            <td>0 / 245</td>
+            <td>—</td>
+            <td><span class="q-status q-status-wait">รอนับ</span></td>
+            <td>29/04/26</td>
+            <td><button class="q-action-btn">📊 เริ่มนับ</button></td>
+          </tr>
+          <tr class="q-row" data-cntype="bin" onclick="openWqDetail('CNT-BIN-2604-0015','bin')">
+            <td><span class="type-badge tb-bin">📦 Bin</span></td>
+            <td class="mono">CNT-BIN-2604-0015</td>
+            <td>HQ · A-03</td>
+            <td>คุณจิรา</td>
+            <td>นับ bin A-03 (zone reorganize) · 18 SKU</td>
+            <td>18 / 18</td>
+            <td><span style="color:#10B981">0</span></td>
+            <td><span class="q-status q-status-done">เสร็จ · pending review</span></td>
+            <td>26/04/26</td>
+            <td><button class="q-action-btn">✅ Review</button></td>
+          </tr>
+          <tr class="q-row" data-cntype="bin" onclick="openWqDetail('CNT-BIN-2604-0016','bin')">
+            <td><span class="type-badge tb-bin">📦 Bin</span></td>
+            <td class="mono">CNT-BIN-2604-0016</td>
+            <td>HQ · Spare-B</td>
+            <td>คุณวิทยา (Service)</td>
+            <td>นับอะไหล่ Service Bin · 32 ชิ้น</td>
+            <td>0 / 32</td>
+            <td>—</td>
+            <td><span class="q-status q-status-wait">รอนับ</span></td>
+            <td>28/04/26</td>
+            <td><button class="q-action-btn">📦 เริ่มนับ</button></td>
+          </tr>
+          <tr class="q-row" data-cntype="newitem" onclick="openWqDetail('CNT-NEW-2604-0006','newitem')">
+            <td><span class="type-badge tb-newitem">🆕 New</span></td>
+            <td class="mono">CNT-NEW-2604-0006</td>
+            <td>HQ · A-05</td>
+            <td>คุณจิรา</td>
+            <td>นับครั้งแรก SKU ใหม่ "Daikin FTKZ55" 18,000 BTU · setup baseline</td>
+            <td>0 / 1</td>
+            <td>—</td>
+            <td><span class="q-status q-status-wait">รอนับ</span></td>
+            <td>28/04/26</td>
+            <td><button class="q-action-btn">🆕 setup</button></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 
-    <!-- TAB 2: กำลังนับ -->
-    <div id="tab-active" class="tab-content">
-      <div class="card">
-        <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #1F2937;">
-          Cycle Count แอร์+ตู้เย็น (รังสิต)
-        </h2>
+  <!-- WH-4 Detail Modal (SL-4 pattern) -->
+  <div class="wq-overlay" id="mWqDetail" onclick="closeWqDetail()">
+    <div class="wq-modal" onclick="event.stopPropagation()">
+      <div class="wq-mh">
+        <button class="wq-modal-close" onclick="closeWqDetail()">✕</button>
+        <div class="wq-mh-top">
+          <div class="wq-mh-ico">📊</div>
+          <div class="wq-mh-title">
+            <h2 id="wqDocNo">CNT-2604-0021</h2>
+            <p id="wqKindLabel">นับสต็อก · CYCLE</p>
+          </div>
+          <span class="wq-mh-badge">🟠 รอนับ</span>
+        </div>
+        <div class="wq-mh-meta">
+          <div class="wq-mh-meta-item"><div class="lbl">วันที่นัดนับ</div><div class="val">28/04/26</div></div>
+          <div class="wq-mh-meta-item"><div class="lbl">ขอบเขต</div><div class="val">หมวดแอร์ · 24 SKU</div></div>
+          <div class="wq-mh-meta-item"><div class="lbl">คลัง</div><div class="val">HQ คลังกลาง</div></div>
+          <div class="wq-mh-meta-item"><div class="lbl">ผู้นับ</div><div class="val">คุณจิรา (คลัง)</div></div>
+          <div class="wq-mh-meta-item"><div class="lbl">รอบ</div><div class="val">Cycle W17</div></div>
+        </div>
+      </div>
 
-        <!-- Count Header -->
-        <div class="count-header">
-          <div class="count-header-item">
-            <div class="count-header-label">แผนการนับ</div>
-            <div class="count-header-value">SC-2569-03</div>
-          </div>
-          <div class="count-header-item">
-            <div class="count-header-label">วันที่เริ่มนับ</div>
-            <div class="count-header-value">10/04/69</div>
-          </div>
-          <div class="count-header-item">
-            <div class="count-header-label">ความคืบหน้า</div>
-            <div class="count-progress-label">65%</div>
-            <div class="large-progress-bar">
-              <div class="large-progress-fill" style="width: 65%;"></div>
-            </div>
-            <div class="count-progress-label" style="margin-top: 8px;">นับแล้ว: 26/40 รายการ</div>
-          </div>
+      <div class="wq-body">
+        <div class="wq-status-pills">
+          <span class="wq-pill done">1. สร้างแผน</span>
+          <span class="wq-pill done">2. อนุมัติแผน</span>
+          <span class="wq-pill active">3. รอนับ (ปัจจุบัน)</span>
+          <span class="wq-pill">4. กำลังนับ</span>
+          <span class="wq-pill">5. ตรวจ Variance</span>
+          <span class="wq-pill">6. Adjust + Posted (BC)</span>
         </div>
 
-        <div style="background: #FEF3C7; border: 1px solid #FCD34D; border-radius: 8px; padding: 12px; margin-bottom: 20px; font-size: 13px; color: #92400E;">
-          <strong>⚠️ หมายเหตุ:</strong> พบผลต่างสินค้า 3 รายการ ที่ต้องตรวจสอบ
-        </div>
-
-        <!-- Input Method Toggle -->
-        <div class="input-toggle">
-          <button class="toggle-btn active" onclick="toggleInputMethod(this, 'text')">พิมพ์รหัส</button>
-          <button class="toggle-btn" onclick="toggleInputMethod(this, 'barcode')">Barcode Scan</button>
-        </div>
-
-        <!-- Count Entry Table -->
-        <div class="table-wrapper">
-          <table>
+        <div class="wq-card">
+          <div class="wq-card-title">📊 รายการสินค้าที่ต้องนับ · 24 SKU <span style="font-size:10px;background:#EFF6FF;color:#1E40AF;padding:1px 6px;border-radius:3px;font-weight:700;margin-left:auto">SC-2</span></div>
+          <table class="q-table">
             <thead>
               <tr>
-                <th>#</th>
-                <th>รหัสสินค้า</th>
+                <th style="width:36px">#</th>
+                <th style="width:110px">SKU</th>
                 <th>ชื่อสินค้า</th>
-                <th>Bin</th>
-                <th>ยอดระบบ</th>
-                <th>ยอดนับจริง</th>
-                <th>ผลต่าง</th>
-                <th>สถานะ</th>
+                <th style="width:80px;text-align:right">Stock (ระบบ)</th>
+                <th style="width:80px;text-align:right">นับจริง</th>
+                <th style="width:80px;text-align:right">Variance</th>
+                <th style="width:140px">เลขที่อ้างอิง</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>1</td>
-                <td><strong>AIR-001</strong></td>
-                <td>Daikin FTKM18 15,000 BTU</td>
-                <td>A-01</td>
-                <td>5</td>
-                <td>5</td>
-                <td style="text-align: center;">0</td>
-                <td><span class="status-match">✅ ตรง</span></td>
-              </tr>
-              <tr class="row-warning">
-                <td>2</td>
-                <td><strong>AIR-002</strong></td>
-                <td>Mitsubishi MSY-GN18VA</td>
-                <td>A-02</td>
-                <td>3</td>
-                <td>2</td>
-                <td style="text-align: center; color: #EF4444;"><strong>-1</strong></td>
-                <td><span class="status-missing">⚠️ ขาด</span></td>
+                <td>1</td><td class="mono">DAI-FTKM35</td><td>แอร์ Daikin FTKM35SV2S 12,000 BTU</td>
+                <td style="text-align:right">62</td>
+                <td style="text-align:right"><input type="number" value="0" min="0" style="width:60px;padding:4px;border:1px solid #E5E7EB;border-radius:4px;text-align:right"></td>
+                <td style="text-align:right;color:#9CA3AF">—</td>
+                <td><a href="wh-r-stock-card-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none;font-size:11.5px">📈 Stock Card ↗</a></td>
               </tr>
               <tr>
-                <td>3</td>
-                <td><strong>AIR-005</strong></td>
-                <td>Panasonic CS-PU12UKZ</td>
-                <td>A-03</td>
-                <td>4</td>
-                <td>4</td>
-                <td style="text-align: center;">0</td>
-                <td><span class="status-match">✅ ตรง</span></td>
-              </tr>
-              <tr class="row-warning">
-                <td>4</td>
-                <td><strong>REF-010</strong></td>
-                <td>Hitachi R-V450PD8K</td>
-                <td>B-01</td>
-                <td>2</td>
-                <td>3</td>
-                <td style="text-align: center; color: #F59E0B;"><strong>+1</strong></td>
-                <td><span class="status-excess">⚠️ เกิน</span></td>
+                <td>2</td><td class="mono">MIT-MSYGN18</td><td>แอร์ Mitsubishi MSY-GN18VF 18,000 BTU</td>
+                <td style="text-align:right">28</td>
+                <td style="text-align:right"><input type="number" value="0" min="0" style="width:60px;padding:4px;border:1px solid #E5E7EB;border-radius:4px;text-align:right"></td>
+                <td style="text-align:right;color:#9CA3AF">—</td>
+                <td><a href="wh-r-stock-card-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none;font-size:11.5px">📈 Stock Card ↗</a></td>
               </tr>
               <tr>
-                <td>5</td>
-                <td><strong>REF-015</strong></td>
-                <td>Samsung RT50K6335SL</td>
-                <td>B-02</td>
-                <td>6</td>
-                <td><input type="number" style="width: 50px;" placeholder="—"></td>
-                <td style="text-align: center;">—</td>
-                <td><span class="status-pending">⏳ รอนับ</span></td>
+                <td>3</td><td class="mono">SAM-AR13TY</td><td>แอร์ Samsung AR13TYHYCWK 12,000 BTU</td>
+                <td style="text-align:right">15</td>
+                <td style="text-align:right"><input type="number" value="0" min="0" style="width:60px;padding:4px;border:1px solid #E5E7EB;border-radius:4px;text-align:right"></td>
+                <td style="text-align:right;color:#9CA3AF">—</td>
+                <td><a href="wh-r-stock-card-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none;font-size:11.5px">📈 Stock Card ↗</a></td>
               </tr>
-              <tr>
-                <td>6</td>
-                <td><strong>REF-020</strong></td>
-                <td>LG GN-B392PLGK</td>
-                <td>B-03</td>
-                <td>3</td>
-                <td>3</td>
-                <td style="text-align: center;">0</td>
-                <td><span class="status-match">✅ ตรง</span></td>
-              </tr>
-              <tr>
-                <td>7</td>
-                <td><strong>AIR-008</strong></td>
-                <td>Fujitsu ASAG12JLTC</td>
-                <td>A-04</td>
-                <td>2</td>
-                <td>2</td>
-                <td style="text-align: center;">0</td>
-                <td><span class="status-match">✅ ตรง</span></td>
-              </tr>
-              <tr>
-                <td>8</td>
-                <td><strong>REF-025</strong></td>
-                <td>Sharp SJ-X650GM</td>
-                <td>B-04</td>
-                <td>4</td>
-                <td><input type="number" style="width: 50px;" placeholder="—"></td>
-                <td style="text-align: center;">—</td>
-                <td><span class="status-pending">⏳ รอนับ</span></td>
-              </tr>
-              <tr>
-                <td>9</td>
-                <td><strong>AIR-010</strong></td>
-                <td>Toshiba RAS-10N3KCV</td>
-                <td>A-05</td>
-                <td>1</td>
-                <td>1</td>
-                <td style="text-align: center;">0</td>
-                <td><span class="status-match">✅ ตรง</span></td>
-              </tr>
-              <tr>
-                <td>10</td>
-                <td><strong>REF-030</strong></td>
-                <td>Panasonic NR-BL378</td>
-                <td>B-05</td>
-                <td>2</td>
-                <td><input type="number" style="width: 50px;" placeholder="—"></td>
-                <td style="text-align: center;">—</td>
-                <td><span class="status-pending">⏳ รอนับ</span></td>
-              </tr>
-              <tr>
-                <td>11</td>
-                <td><strong>AIR-012</strong></td>
-                <td>Carrier 42K3BA13Q</td>
-                <td>A-06</td>
-                <td>3</td>
-                <td>3</td>
-                <td style="text-align: center;">0</td>
-                <td><span class="status-match">✅ ตรง</span></td>
-              </tr>
-              <tr>
-                <td>12</td>
-                <td><strong>REF-035</strong></td>
-                <td>Electrolux ETE3200AA</td>
-                <td>B-06</td>
-                <td>5</td>
-                <td><input type="number" style="width: 50px;" placeholder="—"></td>
-                <td style="text-align: center;">—</td>
-                <td><span class="status-pending">⏳ รอนับ</span></td>
-              </tr>
-              <tr>
-                <td>13</td>
-                <td><strong>AIR-015</strong></td>
-                <td>Daikin FTKC18QVMV</td>
-                <td>A-07</td>
-                <td>4</td>
-                <td>4</td>
-                <td style="text-align: center;">0</td>
-                <td><span class="status-match">✅ ตรง</span></td>
-              </tr>
-              <tr>
-                <td>14</td>
-                <td><strong>REF-040</strong></td>
-                <td>Toshiba GR-AG66DA</td>
-                <td>B-07</td>
-                <td>1</td>
-                <td><input type="number" style="width: 50px;" placeholder="—"></td>
-                <td style="text-align: center;">—</td>
-                <td><span class="status-pending">⏳ รอนับ</span></td>
-              </tr>
+              <tr style="background:#F9FAFB"><td colspan="7" style="text-align:center;color:#6B7280;font-style:italic;padding:8px">... อีก 21 SKU (กำลังโหลด · UI mockup แสดง 3 ตัวอย่าง)</td></tr>
             </tbody>
           </table>
         </div>
 
-        <!-- Summary Cards -->
-        <div class="summary-cards">
-          <div class="summary-card success">
-            <div class="summary-card-value" style="color: #10B981;">23</div>
-            <div class="summary-card-label">ตรง</div>
-          </div>
-          <div class="summary-card warning">
-            <div class="summary-card-value" style="color: #F59E0B;">3</div>
-            <div class="summary-card-label">มีผลต่าง</div>
-          </div>
-          <div class="summary-card gray">
-            <div class="summary-card-value" style="color: #6B7280;">14</div>
-            <div class="summary-card-label">รอนับ</div>
-          </div>
+        <div class="wq-card">
+          <div class="wq-card-title">📋 ขั้นตอนการนับ</div>
+          <ol style="font-size:13px;line-height:1.7;padding-left:24px;color:#374151">
+            <li>กดปุ่ม "📊 เริ่มนับ" → status เปลี่ยนเป็น "กำลังนับ"</li>
+            <li>นับสินค้าจริงในคลัง · กรอกจำนวนใน column "นับจริง"</li>
+            <li>ระบบ auto-calc Variance (นับจริง − Stock ระบบ)</li>
+            <li>หากมี Variance ≠ 0 → ระบบจะสร้าง CNT-RC (recount) อัตโนมัติให้ verify</li>
+            <li>หาก Variance = 0 หรือผ่าน verify → กด "Submit" → ส่งให้ supervisor approve</li>
+            <li>Supervisor approve → BC365 post Stock Adjustment entry · stock update real-time</li>
+          </ol>
         </div>
       </div>
 
-      <!-- Sticky Action Bar -->
-      <div class="sticky-action-bar">
-        <button class="btn btn-secondary">พักการนับ</button>
-        <button class="btn btn-warning">ส่งเพื่อตรวจสอบ</button>
-        <button class="btn btn-success">บันทึกผลการนับ</button>
-      </div>
-    </div>
-
-    <!-- TAB 3: ประวัติ / ปรับยอด -->
-    <div id="tab-history" class="tab-content">
-      <div class="card">
-        <h2 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #1F2937;">
-          คิวอนุมัติการปรับยอดสินค้า
-        </h2>
-
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>เลขที่</th>
-                <th>จากแผน</th>
-                <th>สาขา</th>
-                <th>รายการปรับ</th>
-                <th>มูลค่าผลต่าง</th>
-                <th>สถานะ</th>
-                <th>อนุมัติโดย</th>
-                <th>ดำเนินการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>ADJ-2569-08</strong></td>
-                <td>SC-2569-03</td>
-                <td>รังสิต</td>
-                <td>3 รายการ</td>
-                <td style="color: #EF4444;">-฿12,500</td>
-                <td><span class="badge badge-warning">รออนุมัติ</span></td>
-                <td>—</td>
-                <td><button class="btn btn-primary" onclick="openDetailPanel(this)" style="padding: 4px 12px; font-size: 12px;">รายละเอียด</button></td>
-              </tr>
-              <tr>
-                <td><strong>ADJ-2569-07</strong></td>
-                <td>SC-2569-02</td>
-                <td>บางนา</td>
-                <td>1 รายการ</td>
-                <td style="color: #10B981;">+฿8,000</td>
-                <td><span class="badge badge-success">อนุมัติแล้ว</span></td>
-                <td>คุณสมชาย</td>
-                <td><button class="btn btn-secondary" onclick="openDetailPanel(this)" style="padding: 4px 12px; font-size: 12px;">รายละเอียด</button></td>
-              </tr>
-              <tr>
-                <td><strong>ADJ-2569-06</strong></td>
-                <td>SC-2569-01</td>
-                <td>เชียงใหม่</td>
-                <td>2 รายการ</td>
-                <td style="color: #EF4444;">-฿3,200</td>
-                <td><span class="badge badge-success">อนุมัติแล้ว</span></td>
-                <td>คุณสืบค้น</td>
-                <td><button class="btn btn-secondary" onclick="openDetailPanel(this)" style="padding: 4px 12px; font-size: 12px;">รายละเอียด</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- Detail Panel -->
-    <div class="modal-overlay" id="modalOverlay" onclick="closeDetailPanel()"></div>
-    <div class="modal-panel" id="detailPanel">
-      <div class="modal-title">รายละเอียดการปรับยอด</div>
-
-      <div class="detail-item">
-        <span class="detail-item-label">เลขที่</span>
-        <span class="detail-item-value">ADJ-2569-08</span>
-      </div>
-
-      <div class="detail-item">
-        <span class="detail-item-label">แผน</span>
-        <span class="detail-item-value">SC-2569-03</span>
-      </div>
-
-      <div class="detail-item">
-        <span class="detail-item-label">สาขา</span>
-        <span class="detail-item-value">รังสิต</span>
-      </div>
-
-      <div class="detail-item">
-        <span class="detail-item-label">สถานะ</span>
-        <span class="detail-item-value"><span class="badge badge-warning">รออนุมัติ</span></span>
-      </div>
-
-      <div style="margin-top: 16px;">
-        <div class="detail-item-label" style="margin-bottom: 12px;">รายการปรับยอด</div>
-        <div class="adjustment-items">
-          <div class="adjustment-item">
-            <div class="adjustment-item-code">AIR-002 | Mitsubishi MSY-GN18VA</div>
-            <div class="adjustment-item-variance">ระบบ: 3, นับจริง: 2, ผลต่าง: -1</div>
-            <div class="adjustment-item-variance" style="margin-top: 4px;">มูลค่า: -฿5,500</div>
-          </div>
-
-          <div class="adjustment-item">
-            <div class="adjustment-item-code">REF-010 | Hitachi R-V450PD8K</div>
-            <div class="adjustment-item-variance">ระบบ: 2, นับจริง: 3, ผลต่าง: +1</div>
-            <div class="adjustment-item-variance" style="margin-top: 4px;">มูลค่า: +฿8,000</div>
-          </div>
-
-          <div class="adjustment-item">
-            <div class="adjustment-item-code">AIR-008 | Fujitsu ASAG12JLTC</div>
-            <div class="adjustment-item-variance">ระบบ: 4, นับจริง: 3, ผลต่าง: -1</div>
-            <div class="adjustment-item-variance" style="margin-top: 4px;">มูลค่า: -฿15,000</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="detail-item" style="margin-top: 16px;">
-        <span class="detail-item-label">GL Account</span>
-        <span class="detail-item-value">5110-Inventory Adjustment</span>
-      </div>
-
-      <div class="detail-item">
-        <span class="detail-item-label">รวมมูลค่าผลต่าง</span>
-        <span class="detail-item-value" style="color: #EF4444;"><strong>-฿12,500</strong></span>
-      </div>
-
-      <div style="display: flex; gap: 8px; margin-top: 20px;">
-        <button class="btn btn-success" style="flex: 1;">อนุมัติการปรับยอด</button>
-        <button class="btn btn-danger" style="flex: 1;">ปฏิเสธ</button>
+      <div class="wq-foot">
+        <div class="hint">🔒 กด "📊 เริ่มนับ" = lock stock movement สำหรับ SKU ใน scope ระหว่างนับ · auto-resume เมื่อ submit</div>
+        <div class="spacer"></div>
+        <button class="q-action-btn" style="background:#fff;color:#374151;border:1px solid #D1D5DB" onclick="closeWqDetail()">ปิด</button>
+        <button class="q-action-btn" style="background:#F59E0B">⏸ Hold</button>
+        <button class="q-action-btn">📋 พิมพ์ใบนับ</button>
+        <button class="q-action-btn" style="background:#10B981">📊 เริ่มนับ →</button>
       </div>
     </div>
   </div>
@@ -1416,52 +1293,38 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
   <!-- Quick Navigation Button & Panel -->
   <button id="quickNavBtn" onclick="document.getElementById('quickNavPanel').classList.toggle('qn-open')">☰</button>
   <script>
-    function switchTab(event, tabId) {
-      // Hide all tab contents
-      const contents = document.querySelectorAll('.tab-content');
-      contents.forEach(content => content.classList.remove('active'));
-
-      // Remove active class from all buttons
-      const buttons = document.querySelectorAll('.tab-button');
-      buttons.forEach(button => button.classList.remove('active'));
-
-      // Show selected tab and mark button as active
-      document.getElementById(tabId).classList.add('active');
-      event.target.classList.add('active');
+    /* WH-4 Queue refactor 2026-04-27 */
+    function bindChips(containerId, dataAttr, rowAttr){
+      const wrap = document.getElementById(containerId);
+      if(!wrap) return;
+      wrap.querySelectorAll('.qf-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          wrap.querySelectorAll('.qf-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          const filter = chip.dataset[dataAttr];
+          const tbl = wrap.parentElement.querySelector('table tbody');
+          if(!tbl) return;
+          tbl.querySelectorAll('tr.q-row').forEach(tr => {
+            tr.style.display = (filter === 'all' || tr.dataset[rowAttr] === filter) ? '' : 'none';
+          });
+        });
+      });
     }
+    bindChips('cntChips', 'cnt', 'cntype');
 
-    function toggleInputMethod(button, method) {
-      const toggleButtons = document.querySelectorAll('.toggle-btn');
-      toggleButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
+    function openWqDetail(docNo, type){
+      const m = document.getElementById('mWqDetail');
+      if(!m) return;
+      document.getElementById('wqDocNo').textContent = docNo;
+      document.getElementById('wqKindLabel').textContent = 'นับสต็อก · ' + type.toUpperCase();
+      m.classList.add('open');
     }
-
-    function openCreatePlanModal() {
-      alert('เปิดหน้าต่างสร้างแผนนับสต็อก (Create Plan Modal)');
-    }
-
-    function openDetailPanel(button) {
-      const panel = document.getElementById('detailPanel');
-      const overlay = document.getElementById('modalOverlay');
-      panel.classList.add('active');
-      overlay.classList.add('active');
-    }
-
-    function closeDetailPanel() {
-      const panel = document.getElementById('detailPanel');
-      const overlay = document.getElementById('modalOverlay');
-      panel.classList.remove('active');
-      overlay.classList.remove('active');
-    }
-
-    // Close detail panel when clicking outside
-    window.addEventListener('click', function(event) {
-      const detailPanel = document.getElementById('detailPanel');
-      if (event.target.id === 'modalOverlay') {
-        closeDetailPanel();
-      }
+    function closeWqDetail(){ document.getElementById('mWqDetail').classList.remove('open'); }
+    document.addEventListener('keydown', e => {
+      if(e.key==='Escape'){const m=document.getElementById('mWqDetail');if(m&&m.classList.contains('open'))closeWqDetail();}
     });
   </script>
+
 <!-- SWT_ITEM_SEARCH_START -->
 <style>
 /* ---- SC-2 shared item-search modal (prefix swt-is-*) ---- */

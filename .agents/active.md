@@ -8,6 +8,11 @@ project_type: "frontend-mockup (HTML + docs)"
 
 ## Phase 1 Closeout (2026-04-27 evening)
 
+- **WH-2 + WH-4 Refactor ✅ NEW 2026-04-27 (evening)** — apply queue pattern เหมือน WH-1/3 (consistency · Phase 1 closeout)
+  - **WH-2 (Transfer Queue · คิวโอนย้ายสต็อก):** ลบ tabs เดิม (รายการโอน/สร้างใบโอน/ประวัติ) + form sections + side panel · เป็น queue page เต็มตัว · 12 rows + 8 sub-filter chips (TR-Out · TR-In · Transit · Inter-Branch · Internal-Bin · Service-Stock · Promo-Stock · Return-Flow) · click row → Detail modal (SL-4 pattern · gradient + status pills 6 ขั้น · From→To route card · line items + Stock Card link)
+  - **WH-4 (Count Queue · คิวนับสต็อก):** ลบ tabs เดิม (แผนการนับ/กำลังนับ/ประวัติ) · 11 rows + 8 sub-filter chips (Cycle · Annual · Spot · Recount · Branch · Bin · NewItem · PreAudit) · variance tracking · click row → Detail modal (status pills 6 ขั้น · 24 SKU sample table + count input + Variance auto-calc · ขั้นตอนการนับ 6 steps)
+  - **Sidebar relabel 75 ไฟล์:** WH-2 "โอนย้ายสต็อก" → "คิวโอนย้ายสต็อก" · WH-4 "นับสต็อก" → "คิวนับสต็อก"
+  - **index.html:** sidebar nav 2 entries + WH cards 2 entries (descriptions อัพเดต) · WH module ปิดสมบูรณ์: 7 หน้าทั้งหมดเป็น queue pattern เดียวกัน
 - **Tier-C polish ✅ DONE 2026-04-27 (evening)**:
   - **BC Direct banner** added to 3 cut-to-BC pages: CF-2.1 Tax Setup · CF-2.2 Number Series · CF-2.9 General Parameter — banner สีแดงระบุชัดว่าใช้ BC365 ตรง · mockup เก็บเป็น reference เท่านั้น · ระบุ BC path
   - **Deprecate portal-mockup-index.html** = ไฟล์หายแล้ว (rename/merge เป็น index.html ตั้งแต่ก่อนหน้า) · skip
