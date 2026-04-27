@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>WH-R · Stock Card (สต็อกการ์ด) — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
+.app-container{display:flex;min-height:100vh}
+.main-content{flex:1;margin-left:240px;padding:0;background:#F8FAFC}
+.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.breadcrumb{font-size:13px;color:#6B7280}
+.breadcrumb strong{color:#111827}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.search-box{width:320px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;background:#F9FAFB}
+.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.content-wrapper{padding:24px}
+.page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.page-title{font-size:24px;font-weight:700;color:#111827;margin-bottom:4px}
+.page-subtitle{font-size:13px;color:#6B7280}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:#2563EB;color:#fff}
+.btn-secondary{background:#fff;color:#374151;border:1px solid #D1D5DB}
+.btn-success{background:#10B981;color:#fff}
+.btn-warn{background:#F59E0B;color:#fff}
+.section-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:20px;margin-bottom:16px}
+.section-title{font-size:15px;font-weight:600;color:#111827;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-title .tag{font-size:11px;font-weight:500;color:#6B7280;margin-left:auto}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;color:#6B7280;font-weight:500}
+.field input,.field select{padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;font-family:inherit;background:#fff}
+.filter-row{display:grid;grid-template-columns:repeat(5,1fr) auto;gap:12px;align-items:end}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#F9FAFB;padding:10px;text-align:left;font-weight:600;color:#374151;border-bottom:1px solid #E5E7EB;font-size:11.5px;text-transform:uppercase;letter-spacing:0.03em}
+td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;font-size:13px}
+.num{font-variant-numeric:tabular-nums;text-align:right}
+.mono{font-family:'Inter',monospace;font-size:12px}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.chip-blue{background:#DBEAFE;color:#1E40AF}
+.chip-green{background:#D1FAE5;color:#065F46}
+.chip-red{background:#FEE2E2;color:#991B1B}
+.chip-yellow{background:#FEF3C7;color:#92400E}
+.chip-purple{background:#EDE9FE;color:#5B21B6}
+.chip-gray{background:#F3F4F6;color:#374151}
+/* Item info card (WH-R-2) */
+.item-info{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:18px;align-items:start}
+.item-id-block{display:flex;flex-direction:column;gap:4px}
+.item-id-block .sku{font-family:'Inter',monospace;font-size:13px;color:#2563EB;font-weight:700}
+.item-id-block .name{font-size:18px;font-weight:700;color:#111827;line-height:1.3}
+.item-id-block .meta{font-size:12px;color:#6B7280;margin-top:2px}
+.item-id-block .pills{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.cost-block{background:#F9FAFB;border:1px solid #E5E7EB;border-radius:6px;padding:12px}
+.cost-block h5{font-size:11px;color:#6B7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;font-weight:600}
+.cost-row{display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0;color:#111827}
+.cost-row .lbl{color:#6B7280}
+.cost-row .v{font-weight:600;font-variant-numeric:tabular-nums}
+/* KPI strip (WH-R-3) */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.kpi-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:14px 16px;border-left:4px solid #6B7280}
+.kpi-card.open{border-left-color:#2563EB}
+.kpi-card.in{border-left-color:#10B981}
+.kpi-card.out{border-left-color:#F59E0B}
+.kpi-card.close{border-left-color:#7C3AED}
+.kpi-card.mos{border-left-color:#EF4444}
+.kpi-label{font-size:11px;color:#6B7280;font-weight:600;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:6px}
+.kpi-num{font-size:22px;font-weight:700;color:#111827;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi-sub{font-size:11px;color:#6B7280;margin-top:4px}
+.kpi-sub.up{color:#10B981}
+.kpi-sub.down{color:#EF4444}
+/* Movement ledger types */
+.mv-type{display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border-radius:4px;font-size:11px;font-weight:600;font-family:'Inter',monospace}
+.mv-grn{background:#D1FAE5;color:#065F46}
+.mv-sales{background:#FEF3C7;color:#92400E}
+.mv-trin{background:#DBEAFE;color:#1E40AF}
+.mv-trout{background:#FEE2E2;color:#991B1B}
+.mv-adj{background:#EDE9FE;color:#5B21B6}
+.mv-open{background:#F3F4F6;color:#374151}
+.mv-svc{background:#FCE7F3;color:#9F1239}
+/* Velocity comparison */
+.velo-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.velo-card{background:#F9FAFB;border:1px solid #E5E7EB;border-radius:6px;padding:12px}
+.velo-card h6{font-size:11px;color:#6B7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;font-weight:600}
+.velo-line{display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0}
+.velo-line.total{border-top:1px solid #E5E7EB;margin-top:6px;padding-top:8px;font-weight:700}
+/* Cost layer FIFO */
+.layer-bar{height:18px;border-radius:4px;background:#F3F4F6;overflow:hidden;display:flex;font-size:0}
+.layer-bar .seg{height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700}
+.layer-bar .seg.l1{background:#1E40AF}
+.layer-bar .seg.l2{background:#2563EB}
+.layer-bar .seg.l3{background:#60A5FA}
+.layer-bar .seg.l4{background:#93C5FD}
+/* Alert / info */
+.alert{padding:12px 16px;border-radius:8px;font-size:12.5px;margin-bottom:12px;display:flex;align-items:flex-start;gap:10px}
+.alert-info{background:#DBEAFE;color:#1E40AF;border:1px solid #93C5FD}
+.alert-warn{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
+.alert-success{background:#D1FAE5;color:#065F46;border:1px solid #6EE7B7}
+.totals-bar{display:flex;gap:24px;padding:12px 16px;background:#F9FAFB;border-radius:8px;margin-top:12px;font-size:13px}
+.totals-bar .t{color:#6B7280}
+.totals-bar .v{font-weight:700;color:#111827;margin-left:6px;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<!-- SWT_SIDEBAR_START -->
+<style>
+.swt-sb,.swt-sb *{box-sizing:border-box}
+.swt-sb{position:fixed;left:0;top:0;width:240px;height:100vh;background:#1E3A5F;color:#D1D5DB;overflow-y:auto;padding:14px 10px 32px;z-index:500;font-family:'Inter','Noto Sans Thai',sans-serif;font-size:13px;line-height:1.4}
+.swt-sb::-webkit-scrollbar{width:6px}
+.swt-sb::-webkit-scrollbar-thumb{background:#334E70;border-radius:3px}
+.swt-sb-brand{display:flex;align-items:center;gap:9px;padding:4px 8px 14px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:12px}
+.swt-sb-logo{width:34px;height:34px;border-radius:9px;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0}
+.swt-sb-brand h1{font-size:12px;font-weight:700;color:#fff;letter-spacing:-0.2px;margin:0}
+.swt-sb-brand p{font-size:10px;color:#94A3B8;margin:1px 0 0}
+.swt-sb-search{position:relative;margin:0 4px 12px}
+.swt-sb-search input{width:100%;padding:7px 10px 7px 28px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:#fff;font-size:12px;font-family:inherit;outline:none}
+.swt-sb-search input::placeholder{color:#6B7F99}
+.swt-sb-search input:focus{border-color:#2563EB;background:rgba(37,99,235,0.1)}
+.swt-sb-search::before{content:"🔍";position:absolute;left:9px;top:7px;font-size:10px;opacity:0.55}
+.swt-sb-home{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;text-decoration:none;color:#9CA3AF;font-size:11px;margin:0 4px 10px;background:rgba(255,255,255,0.05);transition:all 0.15s}
+.swt-sb-home:hover{background:rgba(255,255,255,0.12);color:#fff}
+.swt-sb details{margin:1px 0}
+.swt-sb details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:7px 9px;border-radius:6px;font-size:10.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;user-select:none;margin:0 2px}
+.swt-sb details>summary::-webkit-details-marker{display:none}
+.swt-sb details>summary:hover{background:rgba(255,255,255,0.06);color:#fff}
+.swt-sb-ico{font-size:13px;width:17px;text-align:center;flex-shrink:0}
+.swt-sb-lbl{flex:1}
+.swt-sb-cnt{font-size:9px;font-weight:600;background:rgba(255,255,255,0.08);color:#CBD5E1;padding:1px 5px;border-radius:9px;letter-spacing:0}
+.swt-sb-chv{font-size:8px;color:#6B7F99;transition:transform 0.2s}
+.swt-sb details[open]>summary .swt-sb-chv{transform:rotate(180deg)}
+.swt-sb-links{padding:1px 0 4px 6px}
+.swt-sb-links a{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:5px;text-decoration:none;color:#D1D5DB;font-size:11.5px;margin:1px 0;transition:all 0.1s;line-height:1.3}
+.swt-sb-links a:hover{background:rgba(255,255,255,0.08);color:#fff}
+.swt-sb-links a .c{font-family:'Inter',monospace;font-size:9.5px;font-weight:700;color:#94A3B8;min-width:36px;flex-shrink:0}
+.swt-sb-links a:hover .c{color:#60A5FA}
+.swt-sb-links a.swt-active{background:#2563EB;color:#fff;font-weight:600}
+.swt-sb-links a.swt-active .c{color:#BFDBFE}
+.swt-sb-links a.swt-new::after{content:"NEW";font-size:7.5px;font-weight:700;background:#DC2626;color:#fff;padding:1px 4px;border-radius:3px;margin-left:auto}
+.swt-sb a.swt-hide,.swt-sb details.swt-hide{display:none}
+body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
+</style>
+<aside class="swt-sb" id="swtSb">
+  <div class="swt-sb-brand">
+    <div class="swt-sb-logo">ส</div>
+    <div><h1>Sangwijit ERP</h1><p>Web Portal · v3.0</p></div>
+  </div>
+  <div class="swt-sb-search"><input placeholder="ค้นหาเมนู…" oninput="swtSbFilter(this.value)"></div>
+  <a class="swt-sb-home" href="index.html">🏠 Master Index</a>
+
+  <details><summary><span class="swt-sb-ico">🏠</span><span class="swt-sb-lbl">Overview</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="index.html"><span class="c">IDX</span>Master Index</a>
+    <a href="sangwijit-portal-architecture.html"><span class="c">ARCH</span>Architecture</a>
+    <a href="dev-handoff-spec.html"><span class="c">SPEC</span>Dev Handoff</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">💼</span><span class="swt-sb-lbl">งานขาย (SL)</span><span class="swt-sb-cnt">12</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="slq-sales-queue-mockup.html"><span class="c">SL-Q</span>Sales Queue</a>
+    <a href="sl1-quotation-mockup.html"><span class="c">SL-1</span>ใบเสนอราคา</a>
+    <a href="sl2-reservation-mockup.html"><span class="c">SL-2</span>ใบจอง</a>
+    <a href="sl3-deposit-mockup.html"><span class="c">SL-3</span>ใบมัดจำ</a>
+    <a href="sl4-invoice-mockup.html"><span class="c">SL-4</span>บิลขาย/Invoice</a>
+    <a href="sl5-crm-followup-mockup.html"><span class="c">SL-5</span>CRM Follow-up</a>
+    <a href="sl6-promotion-setup-mockup.html"><span class="c">SL-6</span>โปรโมชั่น</a>
+    <a href="sl7-sales-report-mockup.html"><span class="c">SL-7</span>รายงานยอดขาย</a>
+    <a href="slf1-credit-approval-mockup.html" class="swt-new"><span class="c">SL-F1</span>อนุมัติวงเงิน</a>
+    <a href="pm5-vat-simulator-mockup.html" class="swt-new"><span class="c">PM-5</span>VAT Simulator</a>
+    <a href="cm1-commission-mockup.html"><span class="c">CM-1</span>Commission</a>
+    <a href="cl1-claims-mockup.html"><span class="c">CL-1</span>Claims</a>
+  </div></details>
+
+  <details open><summary><span class="swt-sb-ico">📦</span><span class="swt-sb-lbl">คลังสินค้า (WH)</span><span class="swt-sb-cnt">7</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="wh-queue-mockup.html"><span class="c">WH-Q</span>คิวรับสินค้า</a>
+    <a href="wh1-grn-mockup.html"><span class="c">WH-1</span>ใบรับสินค้า (GRN)</a>
+    <a href="wh2-stock-transfer-mockup.html"><span class="c">WH-2</span>โอนย้ายสต็อก</a>
+    <a href="wh3-sales-issue-mockup.html"><span class="c">WH-3</span>เบิกสินค้า</a>
+    <a href="wh4-stock-count-mockup.html"><span class="c">WH-4</span>นับสต็อก</a>
+    <a href="wh-r-stock-card-mockup.html" class="swt-new"><span class="c">WH-R</span>Stock Card</a>
+    <a href="wh-nm-non-move-report-mockup.html" class="swt-new"><span class="c">WH-NM</span>สินค้าไม่เคลื่อนไหว</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🛒</span><span class="swt-sb-lbl">จัดซื้อ (PO)</span><span class="swt-sb-cnt">9</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="poq-purchase-queue-mockup.html"><span class="c">PO-Q</span>Purchase Queue</a>
+    <a href="po1-purchase-request-mockup.html" class="swt-new"><span class="c">PO-1</span>ใบขอซื้อ (PR)</a>
+    <a href="po2-rfq-mockup.html"><span class="c">PO-2</span>Trade Agreement / Vendor</a>
+    <a href="po3-vendor-onboarding-mockup.html" class="swt-new"><span class="c">PO-3</span>Vendor Onboarding</a>
+    <a href="po4-purchase-order-mockup.html"><span class="c">PO-4</span>ใบสั่งซื้อ (PO)</a>
+    <a href="po5-finance-grn-mockup.html"><span class="c">PO-5</span>Finance GRN</a>
+    <a href="po6-ap-invoice-mockup.html" class="swt-new"><span class="c">PO-6</span>ใบวางบิล Vendor</a>
+    <a href="po7-rebate-dashboard.html"><span class="c">PO-7</span>Rebate Dashboard</a>
+    <a href="po8-deposit-bill-mockup.html" class="swt-new"><span class="c">PO-8</span>บิลฝาก (Deposit)</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🧭</span><span class="swt-sb-lbl">SKU & Vendor (SM)</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sm1-sku-slot-planner-mockup.html"><span class="c">SM-1</span>SKU Slot Planner</a>
+    <a href="sm2-sku-health-mockup.html"><span class="c">SM-2</span>SKU Health</a>
+    <a href="sm3-vendor-report-mockup.html"><span class="c">SM-3</span>Vendor Report</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">💵</span><span class="swt-sb-lbl">บัญชี/การเงิน</span><span class="swt-sb-cnt">9</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="fiq-finance-queue-mockup.html" class="swt-new"><span class="c">FI-Q</span>Finance Queue</a>
+    <a href="fi1-ar-receive-mockup.html"><span class="c">FI-1</span>รับชำระ AR</a>
+    <a href="fi1q-apply-queue-mockup.html" class="swt-new"><span class="c">FI-1Q</span>Apply Queue</a>
+    <a href="fi2-ap-payment-mockup.html"><span class="c">FI-2</span>จ่ายชำระ AP</a>
+    <a href="fi3-tax-reconciliation-mockup.html"><span class="c">FI-3</span>กระทบยอดภาษี</a>
+    <a href="fi4-expense-wht-mockup.html"><span class="c">FI-4</span>ค่าใช้จ่าย/WHT</a>
+    <a href="fi5-ar-audit-mockup.html"><span class="c">FI-5</span>ตรวจสอบ AR</a>
+    <a href="fi13-dual-book-mockup.html" class="swt-new"><span class="c">FI-13</span>Dual-Book/Entity Tag</a>
+    <a href="tr1-treasury-mockup.html"><span class="c">TR-1</span>Treasury</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🔗</span><span class="swt-sb-lbl">Integration (IA)</span><span class="swt-sb-cnt">1</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="iaq-bc-sync-monitor-mockup.html" class="swt-new"><span class="c">IA-Q</span>BC Sync Monitor</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🔧</span><span class="swt-sb-lbl">บริการ (SV)</span><span class="swt-sb-cnt">12</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sv-q-service-queue-mockup.html"><span class="c">SV-Q</span>คิวงานซ่อม</a>
+    <a href="sv1-service-intake-mockup.html"><span class="c">SV-1</span>ใบรับงานซ่อม</a>
+    <a href="sir-site-inspection-mockup.html" class="swt-new"><span class="c">SIR</span>ใบประเมินหน้างาน</a>
+    <a href="sqt-service-quotation-mockup.html" class="swt-new"><span class="c">SQT</span>ใบเสนอราคางานบริการ</a>
+    <a href="sv2-service-assignment-mockup.html" class="swt-new"><span class="c">SV-2</span>ใบมอบหมายงาน</a>
+    <a href="sv5-job-card-mockup.html"><span class="c">SV-5</span>Job Card ช่าง</a>
+    <a href="sv3-spare-part-issue-mockup.html"><span class="c">SV-3</span>เบิกอะไหล่ (สต็อก)</a>
+    <a href="sv-order-parts-request-mockup.html" class="swt-new"><span class="c">SV-O</span>สั่งอะไหล่</a>
+    <a href="sv4-service-close-mockup.html"><span class="c">SV-4</span>ใบรับจากงานซ่อม</a>
+    <a href="sv7-service-delivery-mockup.html" class="swt-new"><span class="c">SV-7</span>ส่งงานลูกค้า</a>
+    <a href="clm-vendor-claim-mockup.html" class="swt-new"><span class="c">CLM</span>ใบเคลม Vendor</a>
+    <a href="sv6-delivery-install-mockup.html"><span class="c">SV-6</span>จัดส่ง &amp; ติดตั้ง</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🚚</span><span class="swt-sb-lbl">ส่ง/รายงาน/อนุมัติ</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="ap1-approval-center-mockup.html"><span class="c">AP-1</span>ศูนย์อนุมัติ</a>
+    <a href="ex1-executive-dashboard-mockup.html"><span class="c">EX-1</span>Executive Dashboard</a>
+    <a href="rp1-report-center-mockup.html"><span class="c">RP-1</span>Report Center</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">⚙️</span><span class="swt-sb-lbl">ตั้งค่าระบบ (CF)</span><span class="swt-sb-cnt">8</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="cf1-rbac-permission-mockup.html"><span class="c">CF-1</span>สิทธิ์ RBAC</a>
+    <a href="cf2-config-hub-mockup.html"><span class="c">CF-2</span>Config Hub</a>
+    <a href="cf2-1-tax-setup-mockup.html"><span class="c">CF-2.1</span>ภาษี (Tax)</a>
+    <a href="cf2-2-number-series-mockup.html"><span class="c">CF-2.2</span>Running No.</a>
+    <a href="cf2-5-tech-template-mockup.html"><span class="c">CF-2.5</span>Template ช่าง</a>
+    <a href="cf2-6-approval-matrix-mockup.html"><span class="c">CF-2.6</span>Approval Matrix</a>
+    <a href="cf2-7-doc-template-mockup.html"><span class="c">CF-2.7</span>Doc Template</a>
+    <a href="cf2-9-general-parameter-mockup.html"><span class="c">CF-2.9</span>ค่าตั้งต้น</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">📚</span><span class="swt-sb-lbl">Master Data (MD)</span><span class="swt-sb-cnt">5</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="md1-item-master-mockup-v3.html"><span class="c">MD-1</span>ทะเบียนสินค้า</a>
+    <a href="md2-customer-master-mockup-v3.html"><span class="c">MD-2</span>ทะเบียนลูกค้า</a>
+    <a href="md3-vendor-master-mockup-v3.html"><span class="c">MD-3</span>ทะเบียน Vendor</a>
+    <a href="md4-employee-master-mockup-v3.html"><span class="c">MD-4</span>ทะเบียนพนักงาน</a>
+    <a href="md5-branch-warehouse-mockup-v3.html"><span class="c">MD-5</span>สาขา &amp; คลัง</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🧩</span><span class="swt-sb-lbl">Shared Components</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sc1-customer-search-mockup.html"><span class="c">SC-1</span>ค้นหาลูกค้า</a>
+    <a href="sc2-item-search-mockup.html"><span class="c">SC-2</span>ค้นหาสินค้า</a>
+    <a href="sc7-timeline-mockup.html"><span class="c">SC-7</span>Timeline</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">👤</span><span class="swt-sb-lbl">ระบบ &amp; บัญชีผู้ใช้</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="login-mockup.html" class="swt-new"><span class="c">AUTH</span>Login / SSO</a>
+    <a href="user-profile-mockup.html" class="swt-new"><span class="c">PROF</span>User Profile</a>
+    <a href="notification-center-mockup.html" class="swt-new"><span class="c">NOTI</span>Notification Center</a>
+  </div></details>
+</aside>
+<script>
+(function(){
+  var sb=document.getElementById('swtSb');if(!sb)return;
+  if(!document.querySelector('.main-content, main.main, .app-container, .app'))
+    document.body.classList.add('swt-body-pad');
+  var cur=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  sb.querySelectorAll('a[href]').forEach(function(a){
+    var h=(a.getAttribute('href')||'').split('/').pop().toLowerCase();
+    if(h===cur){a.classList.add('swt-active');var p=a.closest('details');if(p)p.open=true;}
+  });
+  window.swtSbFilter=function(q){
+    q=(q||'').trim().toLowerCase();
+    sb.querySelectorAll('.swt-sb-links a').forEach(function(a){
+      var m=!q||a.textContent.toLowerCase().indexOf(q)>-1;
+      a.classList.toggle('swt-hide',!m);
+    });
+    sb.querySelectorAll('details').forEach(function(d){
+      var any=[].some.call(d.querySelectorAll('.swt-sb-links a'),function(a){return !a.classList.contains('swt-hide');});
+      d.classList.toggle('swt-hide',!!q&&!any);
+      if(q&&any)d.open=true;
+    });
+  };
+})();
+</script>
+<!-- SWT_SIDEBAR_END -->
+
+<div class="app-container"><div class="main-content"><div class="topbar">
+<div class="breadcrumb">หน้าแรก › คลังสินค้า › <strong>WH-R Stock Card</strong></div>
+<div class="topbar-right">
+<input class="search-box" placeholder="ค้นหา... (Ctrl+K)">
+<span>🔔</span>
+<span class="branch-tag">HQ · SWT</span>
+<div class="avatar">P</div>
+</div>
+</div><div class="content-wrapper">
+
+<div class="page-header">
+  <div>
+    <div class="page-title">WH-R · Stock Card (สต็อกการ์ด)</div>
+    <div class="page-subtitle">รายงานเคลื่อนไหวสินค้ารายตัว · ดึงจาก GRN (Goods Receipt Note · ใบรับสินค้า) + Sales (ขาย) + Transfer (โอน) + Adjust (ปรับปรุง) · ช่วง 01/01/26 — 27/04/26 · 4 เดือน</div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-secondary">📊 Export Excel</button>
+    <button class="btn btn-secondary">🖨️ พิมพ์</button>
+    <button class="btn btn-primary">🔄 รีเฟรช</button>
+  </div>
+</div>
+
+<!-- ─── WH-R-1 · Filter ─── -->
+<div class="section-card">
+  <div class="section-title">🔍 WH-R-1 · ตัวกรอง (Filter) <span class="tag">เลือก SKU + ช่วงเวลา + สาขา</span></div>
+  <div class="filter-row">
+    <div class="field">
+      <label>SKU / รหัสสินค้า</label>
+      <input value="DAI-FTKM35SV2S" placeholder="🔍 ค้นหา SKU...">
+    </div>
+    <div class="field">
+      <label>หมวดสินค้า</label>
+      <select><option>แอร์</option><option>ตู้เย็น</option><option>เครื่องซักผ้า</option><option>อะไหล่</option><option>ทั้งหมด</option></select>
+    </div>
+    <div class="field">
+      <label>แบรนด์</label>
+      <select><option>Daikin</option><option>Mitsubishi</option><option>Samsung</option><option>LG</option><option>ทั้งหมด</option></select>
+    </div>
+    <div class="field">
+      <label>สาขา / คลัง</label>
+      <select><option>ทุกสาขา (รวม HQ + ภูมิภาค)</option><option>HQ คลังกลาง</option><option>WH-02 คลังสำรอง</option><option>WH-03 คลังภูมิภาค</option></select>
+    </div>
+    <div class="field">
+      <label>ช่วงเวลา</label>
+      <select><option>4 เดือนล่าสุด (01/01 - 27/04/26)</option><option>เดือนนี้</option><option>3 เดือนล่าสุด</option><option>YTD ปีนี้</option><option>กำหนดเอง</option></select>
+    </div>
+    <button class="btn btn-primary">▶ รัน Stock Card</button>
+  </div>
+</div>
+
+<!-- ─── WH-R-2 · Item Info ─── -->
+<div class="section-card">
+  <div class="section-title">📦 WH-R-2 · ข้อมูลสินค้า (Item Info) <span class="tag">SKU header + cost layers</span></div>
+  <div class="item-info">
+    <!-- Block 1: Item identity -->
+    <div class="item-id-block">
+      <span class="sku">DAI-FTKM35SV2S</span>
+      <span class="name">แอร์ Daikin FTKM35SV2S 12,000 BTU Inverter R32 WIFI</span>
+      <div class="meta">หมวด: <b>แอร์</b> · Brand: <b>Daikin</b> · Model: FTKM35SV2S · BTU: 12,000 · Tier: VIP</div>
+      <div class="pills">
+        <span class="chip chip-blue">📋 <a href="md1-item-master-mockup-v3.html" style="color:inherit;text-decoration:none">MD-1 ดูทะเบียนสินค้า ↗</a></span>
+        <span class="chip chip-purple">SC-2 (Item Search)</span>
+        <span class="chip chip-green">🟢 Active</span>
+        <span class="chip chip-yellow">🎯 Summer Promo</span>
+      </div>
+    </div>
+
+    <!-- Block 2: Cost summary -->
+    <div class="cost-block">
+      <h5>💰 ราคาทุน (Cost)</h5>
+      <div class="cost-row"><span class="lbl">ทุนเฉลี่ย (Avg)</span><span class="v">฿18,250.00</span></div>
+      <div class="cost-row"><span class="lbl">ทุนล่าสุด (Last GRN)</span><span class="v">฿18,500.00</span></div>
+      <div class="cost-row"><span class="lbl">ทุนต่ำสุด</span><span class="v">฿17,800.00</span></div>
+      <div class="cost-row"><span class="lbl">ทุนสูงสุด</span><span class="v">฿19,200.00</span></div>
+      <div style="border-top:1px solid #E5E7EB;margin-top:6px;padding-top:6px;font-size:11px;color:#6B7280">FIFO 4 layers · ดูตาราง WH-R-6</div>
+    </div>
+
+    <!-- Block 3: Sell price + stock -->
+    <div class="cost-block">
+      <h5>💵 ราคาขาย + สต็อกรวม</h5>
+      <div class="cost-row"><span class="lbl">ราคาขายปลีก</span><span class="v">฿29,900.00</span></div>
+      <div class="cost-row"><span class="lbl">ราคาขายส่ง</span><span class="v">฿27,500.00</span></div>
+      <div class="cost-row"><span class="lbl">Margin% (ปลีก)</span><span class="v" style="color:#10B981">38.9%</span></div>
+      <div class="cost-row" style="border-top:1px solid #E5E7EB;margin-top:6px;padding-top:6px"><span class="lbl">สต็อกรวมทุกสาขา</span><span class="v" style="font-size:15px;color:#2563EB">62 ตัว</span></div>
+      <div class="cost-row"><span class="lbl">มูลค่าสต็อก (ทุน)</span><span class="v">฿1,131,500</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── WH-R-3 · KPI Strip ─── -->
+<div class="kpi-row">
+  <div class="kpi-card open">
+    <div class="kpi-label">Opening Bal · ต้นช่วง 01/01</div>
+    <div class="kpi-num">28</div>
+    <div class="kpi-sub">มูลค่า ฿498,400</div>
+  </div>
+  <div class="kpi-card in">
+    <div class="kpi-label">เข้า (In) · GRN + Transfer In</div>
+    <div class="kpi-num">+155</div>
+    <div class="kpi-sub up">↑ 6 GRN + 2 TR-In · ฿2,838,250</div>
+  </div>
+  <div class="kpi-card out">
+    <div class="kpi-label">ออก (Out) · Sales + Transfer Out</div>
+    <div class="kpi-num">−121</div>
+    <div class="kpi-sub down">↓ 84 Sales + 31 TR-Out + 6 SV (Service) · ฿2,205,250</div>
+  </div>
+  <div class="kpi-card close">
+    <div class="kpi-label">Closing Bal · ณ 27/04</div>
+    <div class="kpi-num">62</div>
+    <div class="kpi-sub">มูลค่า ฿1,131,500</div>
+  </div>
+  <div class="kpi-card mos">
+    <div class="kpi-label">MOS (Months of Stock)</div>
+    <div class="kpi-num">2.0 ด.</div>
+    <div class="kpi-sub" style="color:#F59E0B">🟡 ปกติ · ขาย ~30 ตัว/ด.</div>
+  </div>
+</div>
+
+<!-- ─── WH-R-4 · Movement Ledger ─── -->
+<div class="section-card">
+  <div class="section-title">📜 WH-R-4 · บัญชีเคลื่อนไหว (Movement Ledger) <span class="tag">เรียงตามวันที่ · ทุก transaction · 14 รายการ</span></div>
+  <div class="alert alert-info">
+    💡 <div><b>วิธีอ่าน:</b> ทุก transaction (GRN รับ · Sales ขาย · TR-In/Out โอน · ADJ ปรับ · SVC เบิกบริการ) จะ track <b>cumulative balance</b> ในช่อง "คงเหลือ" · มูลค่าใช้ <b>ทุนเฉลี่ย ณ เวลานั้น</b> (Moving Average) · คลิกเลขเอกสารเพื่อดูต้นทาง</div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:90px">วันที่</th>
+        <th style="width:80px">ประเภท</th>
+        <th>เลขเอกสาร</th>
+        <th>สาขา</th>
+        <th>หมายเหตุ</th>
+        <th class="num" style="width:70px">In</th>
+        <th class="num" style="width:70px">Out</th>
+        <th class="num" style="width:80px">คงเหลือ</th>
+        <th class="num" style="width:90px">ทุน/ตัว</th>
+        <th class="num" style="width:100px">มูลค่า</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#F9FAFB">
+        <td>01/01/26</td>
+        <td><span class="mv-type mv-open">OPEN</span></td>
+        <td class="mono" style="color:#6B7280">— ยอดยกมา —</td>
+        <td colspan="2" style="color:#6B7280;font-style:italic">Opening Balance ต้นปี</td>
+        <td class="num">—</td>
+        <td class="num">—</td>
+        <td class="num" style="font-weight:700;color:#2563EB">28</td>
+        <td class="num">฿17,800</td>
+        <td class="num">฿498,400</td>
+      </tr>
+      <tr>
+        <td>15/01/26</td>
+        <td><span class="mv-type mv-grn">GRN</span></td>
+        <td class="mono"><a href="po5-finance-grn-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">GRN-2601-00018 ↗</a></td>
+        <td>HQ คลังกลาง</td>
+        <td>รับจาก Daikin Thailand · PO-2601-00045</td>
+        <td class="num" style="color:#10B981;font-weight:700">+30</td>
+        <td class="num">—</td>
+        <td class="num" style="font-weight:700;color:#2563EB">58</td>
+        <td class="num">฿18,000</td>
+        <td class="num" style="color:#10B981">+฿540,000</td>
+      </tr>
+      <tr>
+        <td>22/01/26</td>
+        <td><span class="mv-type mv-sales">SALES</span></td>
+        <td class="mono"><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">INV-26-0008 ↗</a></td>
+        <td>HQ คลังกลาง</td>
+        <td>ขาย — ลูกค้า บ.รังสิตแอร์ · 5 ตัว @ ฿29,900</td>
+        <td class="num">—</td>
+        <td class="num" style="color:#F59E0B;font-weight:700">−5</td>
+        <td class="num" style="font-weight:700;color:#2563EB">53</td>
+        <td class="num">฿17,925</td>
+        <td class="num" style="color:#F59E0B">−฿89,625</td>
+      </tr>
+      <tr>
+        <td>05/02/26</td>
+        <td><span class="mv-type mv-trout">TR-OUT</span></td>
+        <td class="mono"><a href="wh2-stock-transfer-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">TR-2602-0009 ↗</a></td>
+        <td>HQ → ภูมิภาค</td>
+        <td>โอนไป WH-03 · 12 ตัว · เพิ่ม slot ภาคอีสาน</td>
+        <td class="num">—</td>
+        <td class="num" style="color:#EF4444;font-weight:700">−12</td>
+        <td class="num" style="font-weight:700;color:#2563EB">41</td>
+        <td class="num">฿17,925</td>
+        <td class="num" style="color:#EF4444">−฿215,100</td>
+      </tr>
+      <tr>
+        <td>10/02/26</td>
+        <td><span class="mv-type mv-grn">GRN</span></td>
+        <td class="mono"><a href="po5-finance-grn-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">GRN-2602-00031 ↗</a></td>
+        <td>HQ คลังกลาง</td>
+        <td>รับจาก Daikin · PO-2602-00078 · lot ใหญ่</td>
+        <td class="num" style="color:#10B981;font-weight:700">+50</td>
+        <td class="num">—</td>
+        <td class="num" style="font-weight:700;color:#2563EB">91</td>
+        <td class="num">฿18,200</td>
+        <td class="num" style="color:#10B981">+฿910,000</td>
+      </tr>
+      <tr>
+        <td>18/02/26</td>
+        <td><span class="mv-type mv-sales">SALES</span></td>
+        <td class="mono"><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">INV-26-0019 ↗</a></td>
+        <td>HQ คลังกลาง</td>
+        <td>ขาย — ลูกค้า ห้างฯ Big-C สาขาแจ้งวัฒนะ · 18 ตัว</td>
+        <td class="num">—</td>
+        <td class="num" style="color:#F59E0B;font-weight:700">−18</td>
+        <td class="num" style="font-weight:700;color:#2563EB">73</td>
+        <td class="num">฿18,113</td>
+        <td class="num" style="color:#F59E0B">−฿326,034</td>
+      </tr>
+      <tr>
+        <td>25/02/26</td>
+        <td><span class="mv-type mv-svc">SVC</span></td>
+        <td class="mono"><a href="sv-order-parts-request-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">SVO-2602-0042 ↗</a></td>
+        <td>HQ คลังกลาง</td>
+        <td>เบิกใช้บริการ — งาน Job-2602-0089 · เปลี่ยนแอร์ในประกัน</td>
+        <td class="num">—</td>
+        <td class="num" style="color:#9F1239;font-weight:700">−2</td>
+        <td class="num" style="font-weight:700;color:#2563EB">71</td>
+        <td class="num">฿18,113</td>
+        <td class="num" style="color:#9F1239">−฿36,226</td>
+      </tr>
+      <tr>
+        <td>08/03/26</td>
+        <td><span class="mv-type mv-grn">GRN</span></td>
+        <td class="mono"><a href="po5-finance-grn-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">GRN-2603-00012 ↗</a></td>
+        <td>HQ คลังกลาง</td>
+        <td>รับจาก Daikin · PO-2603-00125 · lot กลาง</td>
+        <td class="num" style="color:#10B981;font-weight:700">+25</td>
+        <td class="num">—</td>
+        <td class="num" style="font-weight:700;color:#2563EB">96</td>
+        <td class="num">฿18,300</td>
+        <td class="num" style="color:#10B981">+฿457,500</td>
+      </tr>
+      <tr>
+        <td>15/03/26</td>
+        <td><span class="mv-type mv-sales">SALES</span></td>
+        <td class="mono"><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">INV-26-0028 ↗</a></td>
+        <td>HQ คลังกลาง</td>
+        <td>ขาย — ลูกค้าโครงการ บ.พฤกษา (รามอินทรา) · 22 ตัว</td>
+        <td class="num">—</td>
+        <td class="num" style="color:#F59E0B;font-weight:700">−22</td>
+        <td class="num" style="font-weight:700;color:#2563EB">74</td>
+        <td class="num">฿18,250</td>
+        <td class="num" style="color:#F59E0B">−฿401,500</td>
+      </tr>
+      <tr>
+        <td>22/03/26</td>
+        <td><span class="mv-type mv-trin">TR-IN</span></td>
+        <td class="mono"><a href="wh2-stock-transfer-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">TR-2603-0021 ↗</a></td>
+        <td>ภูมิภาค → HQ</td>
+        <td>โอนกลับจาก WH-03 · 4 ตัว · ขายไม่ออก</td>
+        <td class="num" style="color:#1E40AF;font-weight:700">+4</td>
+        <td class="num">—</td>
+        <td class="num" style="font-weight:700;color:#2563EB">78</td>
+        <td class="num">฿18,250</td>
+        <td class="num" style="color:#1E40AF">+฿73,000</td>
+      </tr>
+      <tr>
+        <td>28/03/26</td>
+        <td><span class="mv-type mv-adj">ADJ</span></td>
+        <td class="mono"><a href="wh4-stock-count-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">ADJ-2603-0007 ↗</a></td>
+        <td>HQ คลังกลาง</td>
+        <td>นับสต็อกประจำเดือน · ลด 1 ตัว (ของแตก/Damaged)</td>
+        <td class="num">—</td>
+        <td class="num" style="color:#5B21B6;font-weight:700">−1</td>
+        <td class="num" style="font-weight:700;color:#2563EB">77</td>
+        <td class="num">฿18,250</td>
+        <td class="num" style="color:#5B21B6">−฿18,250</td>
+      </tr>
+      <tr>
+        <td>05/04/26</td>
+        <td><span class="mv-type mv-grn">GRN</span></td>
+        <td class="mono"><a href="po5-finance-grn-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">GRN-2604-00018 ↗</a></td>
+        <td>HQ คลังกลาง</td>
+        <td>รับจาก Daikin · PO-2604-00045 · lot summer push</td>
+        <td class="num" style="color:#10B981;font-weight:700">+40</td>
+        <td class="num">—</td>
+        <td class="num" style="font-weight:700;color:#2563EB">117</td>
+        <td class="num">฿18,500</td>
+        <td class="num" style="color:#10B981">+฿740,000</td>
+      </tr>
+      <tr>
+        <td>12/04/26</td>
+        <td><span class="mv-type mv-sales">SALES</span></td>
+        <td class="mono"><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">INV-26-0042 ↗</a></td>
+        <td>HQ คลังกลาง</td>
+        <td>ขาย — ลูกค้า นายวิชัย สุขสมบูรณ์ · 2 ตัว (บิลล่าสุดอ้าง PO-4)</td>
+        <td class="num">—</td>
+        <td class="num" style="color:#F59E0B;font-weight:700">−2</td>
+        <td class="num" style="font-weight:700;color:#2563EB">115</td>
+        <td class="num">฿18,400</td>
+        <td class="num" style="color:#F59E0B">−฿36,800</td>
+      </tr>
+      <tr>
+        <td>20/04/26</td>
+        <td><span class="mv-type mv-sales">SALES</span></td>
+        <td class="mono"><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">INV-26-0055 ↗</a></td>
+        <td>HQ คลังกลาง</td>
+        <td>ขายส่ง — ลูกค้า บ.รังสิตแอร์ · 22 ตัว @ ฿27,500</td>
+        <td class="num">—</td>
+        <td class="num" style="color:#F59E0B;font-weight:700">−22</td>
+        <td class="num" style="font-weight:700;color:#2563EB">93</td>
+        <td class="num">฿18,400</td>
+        <td class="num" style="color:#F59E0B">−฿404,800</td>
+      </tr>
+      <tr>
+        <td>25/04/26</td>
+        <td><span class="mv-type mv-trout">TR-OUT</span></td>
+        <td class="mono"><a href="wh2-stock-transfer-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">TR-2604-0015 ↗</a></td>
+        <td>HQ → ภูมิภาค</td>
+        <td>โอนไป WH-03 · 19 ตัว · เติมสต็อกหน้า summer</td>
+        <td class="num">—</td>
+        <td class="num" style="color:#EF4444;font-weight:700">−19</td>
+        <td class="num" style="font-weight:700;color:#2563EB">74</td>
+        <td class="num">฿18,400</td>
+        <td class="num" style="color:#EF4444">−฿349,600</td>
+      </tr>
+      <tr>
+        <td>27/04/26</td>
+        <td><span class="mv-type mv-sales">SALES</span></td>
+        <td class="mono"><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">INV-26-0061 ↗</a></td>
+        <td>HQ คลังกลาง</td>
+        <td>ขาย — หน้าร้าน · 12 ตัว วันนี้</td>
+        <td class="num">—</td>
+        <td class="num" style="color:#F59E0B;font-weight:700">−12</td>
+        <td class="num" style="font-weight:700;color:#2563EB;background:#EFF6FF">62 ◀ Closing</td>
+        <td class="num">฿18,250</td>
+        <td class="num" style="color:#F59E0B">−฿219,000</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="totals-bar">
+    <span><span class="t">รวม In:</span><span class="v" style="color:#10B981">+155 ตัว · ฿2,720,500</span></span>
+    <span><span class="t">รวม Out:</span><span class="v" style="color:#F59E0B">−121 ตัว · ฿2,096,935</span></span>
+    <span><span class="t">Net:</span><span class="v" style="color:#2563EB">+34 ตัว</span></span>
+    <span><span class="t">Adjustment:</span><span class="v" style="color:#5B21B6">−1 ตัว (ของแตก)</span></span>
+    <span style="margin-left:auto"><span class="t">Closing Bal:</span><span class="v" style="color:#2563EB;font-size:15px">62 ตัว · ฿1,131,500</span></span>
+  </div>
+</div>
+
+<!-- ─── WH-R-5 · Branch Breakdown ─── -->
+<div class="section-card">
+  <div class="section-title">🏢 WH-R-5 · สต็อกแยกสาขา (Branch Breakdown) <span class="tag">ณ 27/04/26 · 62 ตัวรวม</span></div>
+  <table>
+    <thead>
+      <tr>
+        <th>คลัง / สาขา</th>
+        <th>ประเภท</th>
+        <th class="num" style="width:80px">สต็อก</th>
+        <th class="num" style="width:90px">% ของรวม</th>
+        <th class="num" style="width:120px">มูลค่า (ทุน)</th>
+        <th class="num" style="width:120px">ขายได้ 30 วัน</th>
+        <th class="num" style="width:80px">MOS</th>
+        <th>Last Movement</th>
+        <th style="width:90px">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>WH-01 HQ คลังกลาง</b></td>
+        <td>Main Hub</td>
+        <td class="num"><b>34</b></td>
+        <td class="num">54.8%</td>
+        <td class="num">฿620,500</td>
+        <td class="num">22</td>
+        <td class="num"><span class="chip chip-green">1.5 ด.</span></td>
+        <td>27/04 · INV-26-0061 (−12)</td>
+        <td><span class="chip chip-green">🟢 ปกติ</span></td>
+      </tr>
+      <tr>
+        <td><b>WH-02 คลังสำรอง</b></td>
+        <td>Buffer</td>
+        <td class="num"><b>5</b></td>
+        <td class="num">8.1%</td>
+        <td class="num">฿91,250</td>
+        <td class="num">2</td>
+        <td class="num"><span class="chip chip-yellow">2.5 ด.</span></td>
+        <td>15/03 · TR-2603-0021 (−4)</td>
+        <td><span class="chip chip-yellow">🟡 น้อย</span></td>
+      </tr>
+      <tr>
+        <td><b>WH-03 คลังภูมิภาค (อีสาน)</b></td>
+        <td>Regional</td>
+        <td class="num"><b>16</b></td>
+        <td class="num">25.8%</td>
+        <td class="num">฿291,750</td>
+        <td class="num">5</td>
+        <td class="num"><span class="chip chip-yellow">3.2 ด.</span></td>
+        <td>25/04 · TR-2604-0015 (+19)</td>
+        <td><span class="chip chip-yellow">🟡 ช้า</span></td>
+      </tr>
+      <tr>
+        <td><b>WH-04 คลังภูมิภาค (เหนือ)</b></td>
+        <td>Regional</td>
+        <td class="num"><b>7</b></td>
+        <td class="num">11.3%</td>
+        <td class="num">฿128,000</td>
+        <td class="num">1</td>
+        <td class="num"><span class="chip chip-red">7.0 ด.</span></td>
+        <td>10/02 · TR-2602-0011 (+8)</td>
+        <td><span class="chip chip-red">🔴 ค้างนาน</span></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr style="background:#F9FAFB;font-weight:700">
+        <td colspan="2">รวมทุกสาขา</td>
+        <td class="num">62</td>
+        <td class="num">100%</td>
+        <td class="num">฿1,131,500</td>
+        <td class="num">30</td>
+        <td class="num">2.0 ด.</td>
+        <td colspan="2" style="font-size:11.5px;color:#6B7280">⚠ WH-04 ค้าง 7 เดือน → ดู <a href="wh-nm-non-move-report-mockup.html" style="color:#2563EB">WH-NM ↗</a> · เสนอโอนกลับ HQ</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- ─── WH-R-6 · Cost Layers (FIFO) ─── -->
+<div class="section-card">
+  <div class="section-title">📊 WH-R-6 · Cost Layers (FIFO) <span class="tag">62 ตัวที่เหลือ · มาจาก 4 lot รับเข้า</span></div>
+  <div class="alert alert-info">
+    💡 <div><b>FIFO (First-In First-Out):</b> ขายตัวที่รับมาก่อนออกก่อน · layer ที่เหลือคือสินค้าจาก GRN ใหม่ๆ · ใช้คำนวณ <b>ทุนเฉลี่ยถ่วงน้ำหนัก (Weighted Average Cost)</b> สำหรับขาย / โอน / นับสต็อก</div>
+  </div>
+
+  <div style="margin-bottom:14px">
+    <div class="layer-bar">
+      <div class="seg l1" style="width:14.5%">L1: 9 ตัว</div>
+      <div class="seg l2" style="width:14.5%">L2: 9 ตัว</div>
+      <div class="seg l3" style="width:6.5%">L3: 4</div>
+      <div class="seg l4" style="width:64.5%">L4: 40 ตัว (lot ล่าสุด)</div>
+    </div>
+    <div style="font-size:11px;color:#6B7280;margin-top:6px">FIFO Order: L1 (เก่าสุด · ขายก่อน) → L4 (ใหม่สุด · ขายหลังสุด)</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:40px">Layer</th>
+        <th>GRN (เลขที่ + วันที่)</th>
+        <th>Lot ID</th>
+        <th class="num" style="width:80px">รับเข้า</th>
+        <th class="num" style="width:80px">ขาย/โอนออก</th>
+        <th class="num" style="width:80px">เหลือ</th>
+        <th class="num" style="width:90px">ทุน/ตัว</th>
+        <th class="num" style="width:110px">มูลค่าเหลือ</th>
+        <th>หมายเหตุ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="chip" style="background:#1E40AF;color:#fff">L1</span></td>
+        <td class="mono"><a href="po5-finance-grn-mockup.html" style="color:#2563EB">GRN-2601-00018 ↗</a> · 15/01/26</td>
+        <td class="mono">DAI-FT-LOT-2601A</td>
+        <td class="num">30</td>
+        <td class="num">21</td>
+        <td class="num"><b>9</b></td>
+        <td class="num">฿18,000</td>
+        <td class="num">฿162,000</td>
+        <td style="font-size:11.5px">เก่าสุด · ควรขายก่อน · 3.5 เดือนแล้ว</td>
+      </tr>
+      <tr>
+        <td><span class="chip" style="background:#2563EB;color:#fff">L2</span></td>
+        <td class="mono"><a href="po5-finance-grn-mockup.html" style="color:#2563EB">GRN-2602-00031 ↗</a> · 10/02/26</td>
+        <td class="mono">DAI-FT-LOT-2602B</td>
+        <td class="num">50</td>
+        <td class="num">41</td>
+        <td class="num"><b>9</b></td>
+        <td class="num">฿18,200</td>
+        <td class="num">฿163,800</td>
+        <td style="font-size:11.5px">2.5 เดือน · ขายมาเยอะ · ใกล้หมด</td>
+      </tr>
+      <tr>
+        <td><span class="chip" style="background:#60A5FA;color:#fff">L3</span></td>
+        <td class="mono"><a href="po5-finance-grn-mockup.html" style="color:#2563EB">GRN-2603-00012 ↗</a> · 08/03/26</td>
+        <td class="mono">DAI-FT-LOT-2603C</td>
+        <td class="num">25</td>
+        <td class="num">21</td>
+        <td class="num"><b>4</b></td>
+        <td class="num">฿18,300</td>
+        <td class="num">฿73,200</td>
+        <td style="font-size:11.5px">ขายดี · กำลังจะหมด</td>
+      </tr>
+      <tr>
+        <td><span class="chip" style="background:#93C5FD;color:#1E40AF">L4</span></td>
+        <td class="mono"><a href="po5-finance-grn-mockup.html" style="color:#2563EB">GRN-2604-00018 ↗</a> · 05/04/26</td>
+        <td class="mono">DAI-FT-LOT-2604D</td>
+        <td class="num">40</td>
+        <td class="num">0</td>
+        <td class="num"><b>40</b></td>
+        <td class="num">฿18,500</td>
+        <td class="num">฿740,000</td>
+        <td style="font-size:11.5px">ใหม่สุด · 22 วัน · summer push</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr style="background:#F9FAFB;font-weight:700">
+        <td colspan="3">รวม FIFO Layers</td>
+        <td class="num">145</td>
+        <td class="num">83</td>
+        <td class="num">62</td>
+        <td class="num" style="color:#2563EB">Avg ฿18,250</td>
+        <td class="num" style="color:#2563EB">฿1,131,500 ✓</td>
+        <td style="font-size:11px;color:#6B7280">ตรงกับ Closing Bal · cross-check OK</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- ─── WH-R-7 · Sales Velocity Comparison ─── -->
+<div class="section-card">
+  <div class="section-title">🚀 WH-R-7 · เปรียบเทียบความเร็วขาย (Sales Velocity) <span class="tag">30/60/90 วัน · cross-check กับ MOS rule</span></div>
+  <div class="velo-row">
+    <div class="velo-card">
+      <h6>30 วันล่าสุด (28/03 — 27/04)</h6>
+      <div class="velo-line"><span>ขาย (Sales)</span><span class="num">36 ตัว</span></div>
+      <div class="velo-line"><span>โอนออก (TR-Out)</span><span class="num">19 ตัว</span></div>
+      <div class="velo-line"><span>เบิกบริการ (SVC)</span><span class="num">0 ตัว</span></div>
+      <div class="velo-line total"><span>รวมออก</span><span class="num">55 ตัว</span></div>
+      <div style="margin-top:8px;padding:6px 10px;background:#D1FAE5;border-radius:5px;font-size:11.5px;color:#065F46">⚡ <b>เฉลี่ย 1.83 ตัว/วัน</b> · velocity ดี · summer push</div>
+    </div>
+    <div class="velo-card">
+      <h6>60 วันล่าสุด (28/02 — 27/04)</h6>
+      <div class="velo-line"><span>ขาย (Sales)</span><span class="num">58 ตัว</span></div>
+      <div class="velo-line"><span>โอนออก (TR-Out)</span><span class="num">31 ตัว</span></div>
+      <div class="velo-line"><span>เบิกบริการ (SVC)</span><span class="num">2 ตัว</span></div>
+      <div class="velo-line total"><span>รวมออก</span><span class="num">91 ตัว</span></div>
+      <div style="margin-top:8px;padding:6px 10px;background:#FEF3C7;border-radius:5px;font-size:11.5px;color:#92400E">📊 <b>เฉลี่ย 1.52 ตัว/วัน</b> · ปกติ · ก่อน summer ช้ากว่า</div>
+    </div>
+    <div class="velo-card">
+      <h6>90 วันล่าสุด (28/01 — 27/04)</h6>
+      <div class="velo-line"><span>ขาย (Sales)</span><span class="num">81 ตัว</span></div>
+      <div class="velo-line"><span>โอนออก (TR-Out)</span><span class="num">31 ตัว</span></div>
+      <div class="velo-line"><span>เบิกบริการ (SVC)</span><span class="num">2 ตัว</span></div>
+      <div class="velo-line total"><span>รวมออก</span><span class="num">114 ตัว</span></div>
+      <div style="margin-top:8px;padding:6px 10px;background:#DBEAFE;border-radius:5px;font-size:11.5px;color:#1E40AF">📈 <b>เฉลี่ย 1.27 ตัว/วัน</b> · baseline · ใช้คำนวณ MOS</div>
+    </div>
+  </div>
+
+  <div class="alert alert-success" style="margin-top:14px">
+    ✅ <div><b>MOS (Months of Stock) Recommendation:</b> ขายเฉลี่ย <b>30 ตัว/เดือน</b> (90-day base) · สต็อก 62 ตัว → MOS = <b>2.0 เดือน</b> · <b>🟢 ปกติ</b> (ไม่เข้า WH-NM Warning ที่ ≥ 30 วันค้าง) · velocity สูงขึ้นช่วงล่าสุด → <b>ควรสั่งเพิ่ม 1 lot</b> ก่อน summer peak (พ.ค.-มิ.ย.)</div>
+  </div>
+</div>
+
+</div></div></div>
+
+<script src="swt-link.js"></script>
+</body>
+</html>

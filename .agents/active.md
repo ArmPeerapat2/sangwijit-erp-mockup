@@ -27,7 +27,27 @@ project_type: "frontend-mockup (HTML + docs)"
     - Verify SIR/SQT vs `ui_design_pattern_guideline.md` (7-section ERP form, status hex, bilingual)
     - Wire reverse links: SV-4 → CLM (button "🎫 เปิดเคลม Vendor" สำหรับงานในประกัน), SQT → SV-2 (auto-spawn)
     - ทบทวน BC365 mapping ของ SIR/SQT/CLM (Portal-owned 100% ตาม pattern SV)
-- **Pre-existing focus (deferred):** AP Invoice flow (PO-6 audit + PO-5 full-receive gate + PO-8 deposit bill + PO-3 simple form) — commit log แสดงว่า PO-3/PO-7/PO-8 done แล้ว · MD-1 price history tab done · เหลือแค่ PO-6 audit + PO-5 build + WH-R/WH-NM reports (low priority)
+- **AP Invoice chain audit ✅ DONE 2026-04-27** — PO-6/PO-5/PO-8 audit pass · features ครบ
+  - PO-6 (AP Invoice · ใบวางบิล Vendor): gate "รับครบก่อนตั้งหนี้" + 2-mode toggle (Normal 3-Way / Deposit 2-Way) + auto-switch via `#mode=deposit` deep-link
+  - PO-5 (Finance GRN · ใบรับสินค้าตั้งหนี้): partial receive + cumulative tracking + full-receive detector + forward CTA "→ PO-6" (เพิ่งเพิ่ม) · text-link → PO-8 (ครบ Credit Term)
+  - PO-8 (Deposit Bill · บิลฝาก): "⏭ Settle (ของครบ)" deep-link → PO-6#mode=deposit
+  - Per-line ref refactor: PO-4 "ชื่อสินค้า · PR ref · VC" → "ชื่อสินค้า" + column dedicated "เลขที่อ้างอิง" ขวาสุด · ย้าย ref จาก PR (po1) → SL-4 (INV-26-0042 drop-ship pattern)
+  - SL-4 ก็ refactor ตาม pattern เดียวกัน (column "เลขที่อ้างอิง" ขวาสุด · ย้าย ref จาก inline)
+  - PO-4 References section "📎 เอกสารอ้างอิง": inline body section → popup modal pattern (เหมือน SL-4 mDocRef) · trigger card + summary stats + ปุ่ม "🔗 ดูรายละเอียด" → modal มี PSI Report + PO-8 Deposit เนื้อหาเดิมครบ
+- **WH Module Reports ✅ NEW 2026-04-27** — ปิด WH module
+  - WH-NM (Warehouse Non-Movement Report · รายงานสินค้าไม่เคลื่อนไหว): audit pass · features ครบ (threshold settings · category override · filter · ledger · branch breakdown · auto-alert) · ไม่ต้องแก้
+  - WH-R (Warehouse Stock Card · รายงานสต็อกการ์ด): **NEW** — 7 sections ใหม่
+    - WH-R-1 ตัวกรอง (SKU + สาขา + ช่วงเวลา + brand)
+    - WH-R-2 Item Info card (SKU header + cost layers + sell price + stock)
+    - WH-R-3 KPI strip 5 cards (Open · In · Out · Closing · MOS)
+    - WH-R-4 Movement Ledger (16 transactions · GRN/Sales/TR-In/TR-Out/SVC/ADJ + cumulative balance + Moving Average cost)
+    - WH-R-5 Branch Breakdown (4 สาขา + MOS + status)
+    - WH-R-6 FIFO Cost Layers (4 lots · weighted avg cross-check)
+    - WH-R-7 Sales Velocity Comparison (30/60/90 วัน + MOS recommendation)
+  - **Sidebar rollout 73 ไฟล์** (WH count 5 → 7) · 6 edge cases (modal/login/print/sc10/sv7/sv6 — handle แยก)
+  - **index.html:** WH section 5 → 7 cards · sidebar nav 5 → 7 entries · KPI hero 80 → 81 pages
+- **Feedback rule new:** [Expand abbreviations](feedback_abbreviation_expansion.md) — ทุกครั้งที่พิมพ์ตัวย่อในข้อความตอบ user ต้องใส่ชื่อเต็มในวงเล็บประกอบ
+- **Phase 1 mockup status:** 81 pages ทั้งหมด · AP Invoice chain ปิด · WH module ปิด · เหลือ low-priority polish (sidebar edge cases · spec docs)
 
 - **PIVOT 2026-04-23 22:00 — Path 2 scope simplified + focus shift → AP Invoice (PO-6)**
   - **User clarifications ยืนยัน:**
