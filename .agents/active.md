@@ -1,7 +1,7 @@
 ---
-updated_at: "2026-04-23T22:00:00+07:00"
+updated_at: "2026-04-27T01:00:00+07:00"
 status: "active"
-current_focus: "Pivot: AP Invoice process (PO-6) focus · Path 2 scope simplified → PO-3 no-KYC, PO-5 full-receive gate, PO-8 bill-first-receive-later, WH-R/NM = reports"
+current_focus: "SV Phase 3 expansion: SIR (site inspection) + SQT (service quotation) + CLM (vendor claim) — flow refinement สำหรับ on-site survey jobs + post-warranty vendor claim"
 branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
@@ -11,7 +11,23 @@ project_type: "frontend-mockup (HTML + docs)"
 ## Objective
 ออกแบบ Frontend ERP Web Portal (Sangwijit Group) เหนือ Dynamics 365 Business Central — สร้าง HTML mockup ครบทุกหน้า, เตรียม handoff ให้ทีม dev
 
-## Current State (2026-04-23 — latest)
+## Current State (2026-04-27 — latest)
+
+- **SV Phase 3 SIR/SQT/CLM expansion ✅ NEW 2026-04-27** — ขยาย flow ให้รองรับงานที่ต้องประเมินหน้างาน + งานเคลม Vendor
+  - **3 หน้าใหม่:**
+    - `sir-site-inspection-mockup.html` — ใบประเมินหน้างาน (Site Inspection Report) · 5-section: ข้อมูลลูกค้า · งานที่ต้องประเมิน · รายการประเมิน + รูป + ประมาณค่า · ข้อจำกัดหน้างาน · Hand-off → SQT
+    - `sqt-service-quotation-mockup.html` — ใบเสนอราคางานบริการ · ผู้จัดการ markup · ส่งลูกค้า · รอยืนยัน → SV-2
+    - `clm-vendor-claim-mockup.html` — ใบเคลม Vendor (post-warranty) · ส่งเคลมแบรนด์ · ติดตามผล · รับเงิน/ของแทน → ตั้ง APCN ตัด ARI ของ SV-4 · 6-step status pills
+  - **Flow เพิ่ม:** SV-1 → **(ถ้าต้องประเมินหน้างาน) → SIR → SQT → ลูกค้ายืนยัน** → SV-2 → SV-5 → SV-3/SV-O → SV-4 → SV-7 · ส่วน CLM แยก loop จาก SV-4 (post-close) → APCN
+  - **Branch optional ใน SV-1:** เพิ่มปุ่ม `🔍 ขอประเมินหน้างาน (SIR)` (secondary) คู่กับ `→ ส่งต่อ SV-2` (primary) · Timeline แทรก step "ประเมินหน้างาน (ถ้าจำเป็น)"
+  - **Sidebar rollout:** 75 ไฟล์ (Python regex block replace · count 9 → 12) · เพิ่ม SIR/SQT/CLM · reorder ตาม flow (SV-5 ก่อน SV-3) · 5 ไฟล์ตกหล่น (modal/login/print/sc10 — ไม่มี sidebar SV)
+  - **index.html:** Service section 8 → 11 cards · sidebar nav 8 → 11 entries · KPI hero 66 → 80 pages · subtitle อัพเดต
+  - **CLM footer fix:** แก้ copy-paste leftover (ปุ่ม "ส่งต่อ SQT" → "ตั้ง APCN + ปิดเคลม")
+  - **Pending:**
+    - Verify SIR/SQT vs `ui_design_pattern_guideline.md` (7-section ERP form, status hex, bilingual)
+    - Wire reverse links: SV-4 → CLM (button "🎫 เปิดเคลม Vendor" สำหรับงานในประกัน), SQT → SV-2 (auto-spawn)
+    - ทบทวน BC365 mapping ของ SIR/SQT/CLM (Portal-owned 100% ตาม pattern SV)
+- **Pre-existing focus (deferred):** AP Invoice flow (PO-6 audit + PO-5 full-receive gate + PO-8 deposit bill + PO-3 simple form) — commit log แสดงว่า PO-3/PO-7/PO-8 done แล้ว · MD-1 price history tab done · เหลือแค่ PO-6 audit + PO-5 build + WH-R/WH-NM reports (low priority)
 
 - **PIVOT 2026-04-23 22:00 — Path 2 scope simplified + focus shift → AP Invoice (PO-6)**
   - **User clarifications ยืนยัน:**
@@ -158,6 +174,12 @@ project_type: "frontend-mockup (HTML + docs)"
 - 🟡 **18 หน้า Portal เป็น UI layer**: เรียก BC API, ไม่ duplicate logic
 - 🟢 **21 หน้า Portal ทำเอง 100%**: BC ไม่มีฟังก์ชันนี้
 - ⚠️ **เลื่อน Phase 2**: CL-1 Claims, SM-3 Vendor Portal, CF-2.8 Entity Tag
+
+### BC365 Mapping — SV Phase 3 expansion (2026-04-27)
+- 🟢 **SIR ใบประเมินหน้างาน** = Portal-owned 100% — BC ไม่มี Site Inspection Report concept · เป็น process ภายในของศูนย์บริการก่อน quote
+- 🟢 **SQT ใบเสนอราคางานบริการ** = Portal-owned 100% — BC Service Quote มี (Service Module) แต่ Portal ทำเองเพราะ markup logic + customer confirmation flow ของ Sangwijit เป็น custom (มัดจำ 50% + Apply Queue + LINE delivery)
+- 🟡 **CLM ใบเคลม Vendor** = UI layer + BC posting hybrid — Portal track Vendor claim status (async 7 days) + ตั้ง APCN ผ่าน BC API · APCN posting + GL effect = BC owns · CLM ≠ CL-1 (ลูกค้าเคลมเข้ามา · Phase 2 deferred) — CLM = post-warranty service ที่ Sangwijit เคลมต่อแบรนด์
+- **ผลรวม:** Portal-owned 21 → 23 (+ SIR + SQT) · UI layer 18 → 19 (+ CLM)
 
 ## Blockers
 - ❌ ไม่มี blocker ปัจจุบัน

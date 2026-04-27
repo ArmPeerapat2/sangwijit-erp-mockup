@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>SV-1 รับเรื่องซ่อม — Sangwijit ERP</title>
+<title>SIR ใบประเมินหน้างาน — Sangwijit ERP</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="swt-patterns.css">
 <style>
@@ -287,7 +287,7 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 <!-- SWT_SIDEBAR_END -->
 
 <div class="app-container"><div class="main-content"><div class="topbar">
-<div class="breadcrumb">หน้าแรก › ศูนย์บริการ › <strong>SV-1 รับเรื่องซ่อม</strong></div>
+<div class="breadcrumb">หน้าแรก › ศูนย์บริการ › <strong>SIR ใบประเมินหน้างาน</strong></div>
 <div class="topbar-right">
 <input class="search-box" placeholder="ค้นหา... (Ctrl+K)">
 <span>🔔</span>
@@ -300,35 +300,36 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 <header class="swt-mh">
   <div class="swt-mh-left">
     <div class="swt-mh-title">
-      <div class="swt-mh-ico">📝</div>
+      <div class="swt-mh-ico">🔍</div>
       <div>
-        <h1>ใบรับงานซ่อม</h1>
-        <p>Service Intake (SV-1)</p>
+        <h1>ใบประเมินหน้างาน</h1>
+        <p>Site Inspection Report (SIR) · ก่อนเสนอราคา/เปิดงาน</p>
       </div>
     </div>
     <div class="swt-mh-divider"></div>
     <div class="swt-mh-meta">
-      <div class="swt-mh-meta-item"><div class="lbl">เลขที่รับซ่อม</div><div class="val">SV-SV1-2604-0146</div></div>
-      <div class="swt-mh-meta-item"><div class="lbl">วันที่-เวลา</div><div class="val">23 เม.ย. 26 · 14:20</div></div>
-      <div class="swt-mh-meta-item"><div class="lbl">สาขา</div><div class="val">BKK-Service</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">เลขที่ SIR</div><div class="val">SIR-SV1-2604-0023</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">อ้างอิง SV-1</div><div class="val">SV-SV1-2604-0146</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">วันที่ประเมิน</div><div class="val">27 เม.ย. 26 · 10:30</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">ช่างประเมิน</div><div class="val">TECH-007 สมศักดิ์</div></div>
     </div>
   </div>
   <div class="swt-mh-right">
-    <span class="swt-mh-badge draft">🕓 รอมอบหมาย</span>
-    <button class="swt-mh-btn swt-mh-btn-ghost">📄 พิมพ์ใบรับ</button>
-    <button class="swt-mh-btn swt-mh-btn-ghost">💾 บันทึก Draft</button>
-    <button class="swt-mh-btn swt-mh-btn-primary">→ ส่งต่อ SV-2</button>
+    <span class="swt-mh-badge pending">🟠 ประเมินเสร็จ · รอเสนอราคา</span>
+    <button class="swt-mh-btn swt-mh-btn-ghost">📄 พิมพ์</button>
+    <button class="swt-mh-btn swt-mh-btn-ghost">💾 Draft</button>
+    <button class="swt-mh-btn swt-mh-btn-primary" onclick="location.href='sqt-service-quotation-mockup.html'">→ ส่งต่อ SQT เสนอราคา</button>
   </div>
 </header>
 
-<!-- Status pills -->
+<!-- Status pills (Service flow with paid quote) -->
 <div class="status-pills">
-  <span class="status-pill active">1. รับเรื่อง (ปัจจุบัน)</span>
-  <span class="status-pill">2. รอมอบหมาย (SV-2)</span>
-  <span class="status-pill">3. งานช่าง (SV-5)</span>
-  <span class="status-pill">4. รับจากช่าง (SV-4)</span>
-  <span class="status-pill">5. ส่งลูกค้า (SV-7)</span>
-  <span class="status-pill">6. ปิดงาน</span>
+  <span class="status-pill done">1. รับเรื่อง (SV-1)</span>
+  <span class="status-pill active">2. ประเมินหน้างาน (SIR · ปัจจุบัน)</span>
+  <span class="status-pill">3. เสนอราคา (SQT)</span>
+  <span class="status-pill">4. ลูกค้ายืนยัน</span>
+  <span class="status-pill">5. มอบหมายช่าง (SV-2)</span>
+  <span class="status-pill">6. งานช่าง (SV-5) → ปิดงาน (SV-4)</span>
 </div>
 
 <!-- Row 2: Customer (SL-4 compact pattern) + Doc extras -->
@@ -337,9 +338,9 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
   <!-- Customer compact card -->
   <div class="swt-cust-card">
     <div class="swt-cust-head">
-      <div class="swt-cust-title"><span class="ico">👤</span>SV-1.1 · ลูกค้า <span class="tag" style="font-size:9px;background:#EFF6FF;color:#1E40AF;padding:1px 5px;border-radius:3px;font-weight:700">SC-1</span></div>
+      <div class="swt-cust-title"><span class="ico">👤</span>SIR-1.1 · ลูกค้า <span class="tag" style="font-size:9px;background:#F3F4F6;color:#6B7280;padding:1px 5px;border-radius:3px;font-weight:700">Pre-filled จาก SV-1</span></div>
       <div class="swt-cust-head-spacer"></div>
-      <button class="swt-cust-btn primary" data-customer-search>🔍 เลือก/เปลี่ยน</button>
+      <a href="md2-customer-master-mockup-v3.html" class="swt-cust-btn">👁️ ดูบัตร</a>
     </div>
 
     <div class="swt-cust-grid">
@@ -369,184 +370,174 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
     </details>
   </div>
 
-  <!-- Doc extras compact card -->
+  <!-- Job context card -->
   <div class="swt-cust-card">
     <div class="swt-cust-head">
-      <div class="swt-cust-title"><span class="ico">📋</span>SV-1.2 · ข้อมูลเอกสาร &amp; การรับเรื่อง</div>
+      <div class="swt-cust-title"><span class="ico">📋</span>SIR-1.2 · งานที่ต้องประเมิน</div>
       <div class="swt-cust-head-spacer"></div>
-      <span style="font-size:9px;background:#F3F4F6;color:#6B7280;padding:2px 6px;border-radius:3px;font-weight:700">BC: serviceOrders 5900</span>
+      <a href="sv1-service-intake-mockup.html" class="swt-cust-btn">🔗 ดู SV-1</a>
     </div>
 
     <div class="swt-cust-grid">
       <div class="swt-cust-field">
-        <div class="swt-cust-label">ประเภทงาน <span style="color:#C55A11">*</span></div>
-        <div class="swt-cust-value">
-          <select style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"><option>🔧 ซ่อม</option><option>🏗️ ติดตั้ง</option><option>🧪 ตรวจสภาพ</option><option>♻️ เคลม Vendor</option></select>
-        </div>
+        <div class="swt-cust-label">ประเภทงาน</div>
+        <div class="swt-cust-value"><span class="chip chip-blue">🏗️ ติดตั้ง Split AC</span></div>
       </div>
       <div class="swt-cust-field">
-        <div class="swt-cust-label">Priority</div>
-        <div class="swt-cust-value">
-          <select style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"><option>🟡 ปกติ</option><option>🔴 เร่งด่วน</option><option>🟢 ไม่รีบ</option></select>
-        </div>
+        <div class="swt-cust-label">SV-1 ต้นทาง</div>
+        <div class="swt-cust-value"><a href="sv1-service-intake-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:700">SV-SV1-2604-0146</a></div>
       </div>
       <div class="swt-cust-field">
-        <div class="swt-cust-label">ช่องทางรับเรื่อง</div>
-        <div class="swt-cust-value">
-          <select style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"><option>🏢 ลูกค้านำมาสาขา</option><option>📞 โทรศัพท์</option><option>💚 LINE</option><option>🚶 Walk-in</option><option>🌐 Online</option></select>
-        </div>
+        <div class="swt-cust-label">สินค้า · รุ่น</div>
+        <div class="swt-cust-value">Daikin FTKM24SV2S · 24k BTU</div>
       </div>
       <div class="swt-cust-field">
-        <div class="swt-cust-label">พนักงานรับเรื่อง</div>
-        <div class="swt-cust-value">คุณปภาวรินทร์ · <span class="mono" style="color:#6B7280">ADM-002</span></div>
+        <div class="swt-cust-label">บิลขายต้นทาง</div>
+        <div class="swt-cust-value"><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:700">IV-B01-2604-0891</a></div>
       </div>
     </div>
 
     <details class="swt-addr">
-      <summary>⚙️ ตั้งค่าขั้นสูง (SLA · BC Sync · Entity)</summary>
-      <div class="swt-addr-line"><strong>SLA Target</strong>มอบหมายช่าง ≤ 24 ชม. · ซ่อมเสร็จ ≤ 3 วันทำการ</div>
-      <div class="swt-addr-line"><strong>Entity Tag</strong>1 · SWT (Dual-Book)</div>
-      <div class="swt-addr-line"><strong>BC Sync</strong>🔄 Live API (sync ทันทีเมื่อกด "ส่งต่อ SV-2")</div>
+      <summary>📝 บันทึกจาก SV-1 · ความต้องการลูกค้า</summary>
+      <div class="swt-addr-line"><strong>ที่ต้องประเมิน</strong>หน้างานติดตั้ง · ตำแหน่งวางคอยล์ร้อน + เดินท่อน้ำยา + เจาะผนัง</div>
+      <div class="swt-addr-line"><strong>ลูกค้าขอ</strong>ติดตั้งครบในวันเดียว · ขอเสนอราคารวมก่อนตัดสินใจ</div>
+      <div class="swt-addr-line"><strong>นัดประเมิน</strong>27 เม.ย. 26 · 10:30 - 11:30 น. · TECH-007</div>
     </details>
   </div>
 </div>
 
-<!-- Section 4: Product + Serial + Symptom + Warranty -->
+<!-- SIR-2: Site location + Photos -->
 <div class="section-card">
-  <div class="section-title">📦 SV-1.3 · สินค้าที่นำมาซ่อม
-    <span class="tag">SC-2 + SC-8</span>
+  <div class="section-title">📍 SIR-2 · พิกัดหน้างาน + รูป
+    <span class="tag">บังคับ ≥ 4 รูป (ภาพรวม + จุดติดตั้ง 3 ทิศ)</span>
   </div>
 
-  <div class="form-grid">
-    <div class="field"><label>รหัสสินค้า / รุ่น <span class="req">*</span></label>
+  <div class="form-grid-2">
+    <div class="field"><label>ที่อยู่หน้างาน <span class="req">*</span></label>
+      <input value="123 ซ.สุขุมวิท 71 แขวงคลองตัน เขตวัฒนา กรุงเทพฯ 10110 · ชั้น 5 ห้อง A">
+    </div>
+    <div class="field"><label>พิกัด GPS</label>
       <div class="swt-search-combo">
-        <input type="text" value="AC-DAI-FTKM24 · Daikin FTKM24SV2S (Inverter 24k BTU)" data-item-search>
-        <button class="swt-search-btn" data-item-search title="ค้นหาสินค้า (SC-2)">🔍</button>
+        <input value="13.7350° N, 100.5790° E" type="text">
+        <button class="swt-search-btn" title="ปักหมุดแผนที่ (SC-10)">🗺️</button>
       </div>
-    </div>
-    <div class="field"><label>Serial No. <span class="req">*</span></label>
-      <div class="swt-search-combo">
-        <input type="text" value="SN 1234567890" placeholder="สแกน Barcode หรือพิมพ์">
-        <button class="swt-search-btn" title="สแกน Barcode">📷</button>
-      </div>
-    </div>
-    <div class="field"><label>วันที่ซื้อ</label><input value="10 มิ.ย. 24" type="text"></div>
-  </div>
-
-  <div class="alert alert-info" style="margin:14px 0 0">
-    ℹ️ <div><strong>หมายเหตุ:</strong> ระบบ <strong>ไม่ตรวจประกันอัตโนมัติ</strong> — พนักงานเช็คประกัน/เงื่อนไขกับทาง Vendor ด้วยตนเอง แล้วบันทึกผลในช่อง "ประเภทการรับประกัน" ด้านล่าง</div>
-  </div>
-
-  <div style="margin:16px 0 8px;font-size:13px;font-weight:600;color:#374151">ประเภทการรับประกัน <span class="req" style="color:#DC2626">*</span></div>
-  <div class="warranty-group">
-    <label class="warranty-card selected">
-      <input type="radio" name="warranty" value="in" checked>
-      <div>
-        <div class="wc-title">🟢 ในประกัน</div>
-        <div class="wc-desc">Vendor / ร้านรับผิดชอบ · ลูกค้าไม่มีค่าใช้จ่าย (หรือเฉพาะของนอก Comp)</div>
-      </div>
-    </label>
-    <label class="warranty-card">
-      <input type="radio" name="warranty" value="out">
-      <div>
-        <div class="wc-title">🟡 นอกประกัน</div>
-        <div class="wc-desc">ลูกค้าจ่ายเต็ม · ประมาณค่าใช้จ่ายก่อนเริ่มซ่อม</div>
-      </div>
-    </label>
-    <label class="warranty-card">
-      <input type="radio" name="warranty" value="vendor">
-      <div>
-        <div class="wc-title">🔴 เคลม Vendor</div>
-        <div class="wc-desc">ส่งคืน Vendor · trigger CL-1 (Phase 2) · อัปเดตสถานะจาก Vendor</div>
-      </div>
-    </label>
-  </div>
-
-  <div class="form-grid-2" style="margin-top:14px">
-    <div class="field"><label>Vendor อ้างอิง (ถ้าในประกัน)</label>
-      <input value="Daikin Thailand · เคลม Ref: DKN-CLM-2604-0089">
-    </div>
-    <div class="field"><label>หมายเหตุประกัน (พนักงานกรอก)</label>
-      <input value="เช็คกับ Daikin โทร. 02-xxx แล้ว · คอมเพรสเซอร์เข้า Comp 7 ปี (เหลือ 5 ปี 2 ด.)">
     </div>
   </div>
 
-  <div class="form-grid-2" style="margin-top:14px">
-    <div class="field"><label>อาการที่ลูกค้าแจ้ง <span class="req">*</span></label>
-      <textarea>เปิดแล้วไม่เย็น · มีน้ำหยดจากเครื่องตัวเมียข้างใน · ได้ยินเสียงดังตอนคอมทำงาน</textarea>
+  <div class="form-grid" style="margin-top:14px">
+    <div class="field"><label>ประเภทพื้นที่</label>
+      <select><option>🏠 บ้านเดี่ยว</option><option selected>🏢 คอนโด/อพาร์ตเมนต์</option><option>🏪 ร้าน/อาคารพาณิชย์</option><option>🏭 โรงงาน/สำนักงาน</option></select>
     </div>
-    <div class="field"><label>การตรวจสอบเบื้องต้น (พนักงานรับเรื่อง)</label>
-      <textarea>เปิดลองเย็นเล็กน้อยแต่ไม่เย็นพอ · น่าจะเป็น Compressor หรือน้ำยารั่ว · ต้องส่งช่างตรวจที่บ้าน</textarea>
+    <div class="field"><label>ชั้นที่ติดตั้ง</label><input value="ชั้น 5 (มีลิฟต์)"></div>
+    <div class="field"><label>ทางเข้า/จอดรถ</label><input value="ประตูใหญ่ · จอดด้านหลังตึก · แจ้งยาม"></div>
+  </div>
+
+  <div style="margin:16px 0 10px;font-size:13px;font-weight:600;color:#374151">📸 รูปหน้างาน <span style="color:#DC2626">*</span> <span style="font-size:11px;color:#6B7280;font-weight:400;margin-left:6px">ภาพรวม + จุดติดตั้ง + อุปสรรค (อย่างน้อย 4 รูป)</span></div>
+  <div class="photo-grid">
+    <div class="photo-slot filled"><div class="ico">📷</div>ภาพรวมห้อง</div>
+    <div class="photo-slot filled"><div class="ico">📷</div>ผนังที่จะติด</div>
+    <div class="photo-slot filled"><div class="ico">📷</div>จุดวางคอยล์ร้อน (ระเบียง)</div>
+    <div class="photo-slot filled"><div class="ico">📷</div>ปลั๊กไฟ + เบรกเกอร์</div>
+    <div class="photo-slot filled"><div class="ico">📷</div>ทางเดินท่อน้ำทิ้ง</div>
+    <div class="photo-slot"><div class="ico">+</div>เพิ่มรูป</div>
+  </div>
+</div>
+
+<!-- SIR-3: Constraints / Obstacles -->
+<div class="section-card">
+  <div class="section-title">⚠️ SIR-3 · ข้อจำกัด / อุปสรรคหน้างาน
+    <span class="tag">ช่างเช็ค + บันทึก · มีผลต่อราคาใน SQT</span>
+  </div>
+
+  <div class="form-grid-2">
+    <div class="field"><label>ระยะเดินท่อน้ำยา (เมตร)</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input value="6.5" style="width:80px" type="number">
+        <span style="font-size:12px;color:#6B7280">ม. · มาตรฐาน 3 ม. · เกินคิดเพิ่ม 250 ฿/ม.</span>
+      </div>
+    </div>
+    <div class="field"><label>ระดับความสูงคอยล์ร้อน</label>
+      <select><option>พื้นชั้น (ปกติ)</option><option selected>ระเบียงชั้น 2-5 (ปกติ)</option><option>ระเบียงสูง 5+ ชั้น (เพิ่มค่าเสี่ยง)</option><option>ดาดฟ้า/หลังคา (Crane)</option></select>
+    </div>
+    <div class="field"><label>เจาะผนัง</label>
+      <select><option>ผนังก่ออิฐ (ปกติ)</option><option selected>ผนังคอนกรีต (เพิ่ม 200 ฿)</option><option>ผนังกระจก (ห้ามเจาะ → ต้องหาทางอื่น)</option></select>
+    </div>
+    <div class="field"><label>ทางเข้าอุปกรณ์</label>
+      <select><option selected>ลิฟต์ใหญ่พอ (ปกติ)</option><option>บันได/ลิฟต์เล็ก (เพิ่มค่าแบกของ 300 ฿)</option><option>ต้องใช้ Crane (Outsource)</option></select>
+    </div>
+  </div>
+
+  <div class="form-grid" style="margin-top:14px">
+    <div class="field" style="grid-column:span 3"><label>ข้อจำกัด/อุปสรรคพิเศษ (ถ้ามี)</label>
+      <textarea>ระเบียงแคบ · ต้องระวังตกของใส่ชั้นล่าง · มีระเบียบนิติฯ ห้ามเจาะหลัง 18:00 · ต้องนัดทำในเวลาเช้า-บ่าย</textarea>
+    </div>
+  </div>
+</div>
+
+<!-- SIR-4: Tech recommendation -->
+<div class="section-card">
+  <div class="section-title">💡 SIR-4 · ข้อเสนอแนะช่าง
+    <span class="tag">ใช้ตั้ง SQT ใบเสนอราคา</span>
+  </div>
+
+  <div class="form-grid-2">
+    <div class="field"><label>วิธีการที่แนะนำ</label>
+      <textarea>ติดตั้งคอยล์ในห้องนั่งเล่น · สูง 2.4 ม. จากพื้น · เดินท่อน้ำยาแนวรางหลังตู้เสื้อผ้า (ซ่อน) · คอยล์ร้อนวางบนระเบียง ยึดด้วยขาเหล็ก L-bracket · เจาะผนังคอนกรีต Φ65 มม. 1 จุด · ใส่ปลอกพีวีซี + กันน้ำซิลิโคน</textarea>
+    </div>
+    <div class="field"><label>ระยะเวลาประมาณ</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input value="4-5" style="width:80px" type="text">
+        <span style="font-size:12px;color:#6B7280">ชม. · ทำในวันเดียว 1 ช่าง</span>
+      </div>
+    </div>
+    <div class="field"><label>ต้องสั่งของเพิ่ม (จาก Vendor)</label>
+      <input value="L-bracket 2 อัน · ท่อน้ำยา 6 ม. · ปลอกพีวีซี Φ65">
     </div>
   </div>
 
   <div class="form-grid-4" style="margin-top:14px">
-    <div class="field"><label>ประมาณค่าอะไหล่</label><input value="8,500.00 ฿"></div>
-    <div class="field"><label>ประมาณค่าแรง</label><input value="1,500.00 ฿"></div>
-    <div class="field"><label>ประมาณค่าเดินทาง</label><input value="300.00 ฿"></div>
-    <div class="field"><label>รวมประมาณ</label><input value="10,300.00 ฿" readonly style="font-weight:700;color:#111827"></div>
+    <div class="field"><label>ประมาณค่าอะไหล่</label><input value="2,800.00 ฿"></div>
+    <div class="field"><label>ประมาณค่าแรง</label><input value="3,500.00 ฿"></div>
+    <div class="field"><label>ประมาณค่าเดินทาง</label><input value="500.00 ฿"></div>
+    <div class="field"><label>รวมประมาณ (ส่งไป SQT)</label><input value="6,800.00 ฿" readonly style="font-weight:700;color:#111827"></div>
+  </div>
+
+  <div class="alert alert-info" style="margin-top:14px">
+    💡 <div><strong>หมายเหตุ:</strong> ตัวเลขนี้ <strong>เป็นประมาณการช่าง</strong> · ใช้เป็น base ใน <a href="sqt-service-quotation-mockup.html" style="color:#1E40AF;font-weight:700">SQT</a> · admin/manager อาจปรับ markup ก่อนส่งให้ลูกค้า</div>
   </div>
 </div>
 
-<!-- Section 5: Tabs (Appointment / Photos / Refs / Timeline) -->
+<!-- SIR-5: Hand-off → SQT -->
 <div class="section-card">
-  <div class="section-title">📎 SV-1.4 · รายละเอียดเพิ่มเติม</div>
+  <div class="section-title">🚀 SIR-5 · ส่งต่อ SQT (เสนอราคา) <span class="tag">Hand-off</span></div>
+  <div class="alert alert-info" style="margin-top:0">
+    ✓ <div><strong>พร้อมส่งต่อ:</strong> ประเมินครบ · รูป 5 รูป · ข้อจำกัดบันทึกแล้ว · ประมาณ 6,800 ฿ · กดส่ง = ตั้ง SQT Draft รอผู้จัดการ markup + ส่งให้ลูกค้า</div>
+  </div>
+  <div class="form-grid">
+    <div class="field"><label>SQT ที่จะสร้าง</label><div class="value"><span class="chip chip-blue">Draft · SQT-SV1-2604-0019 (รอ Confirm)</span></div></div>
+    <div class="field"><label>Sales Rep (ผู้ส่งใบเสนอราคา)</label><input value="คุณปภาวรินทร์ · ADM-002"></div>
+    <div class="field"><label>Validity ใบเสนอ</label><input value="7 วัน (ถึง 4 พ.ค. 26)"></div>
+  </div>
+</div>
+
+<!-- Section 5 (kept): Tabs (Photos / Refs / Timeline) -->
+<div class="section-card">
+  <div class="section-title">📎 SIR-6 · รายละเอียดเพิ่มเติม</div>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab(event,'tab-pref')">📅 ความสะดวกลูกค้า</button>
-    <button class="tab-btn" onclick="switchTab(event,'tab-photo')">📸 รูปถ่ายก่อนซ่อม</button>
-    <button class="tab-btn" onclick="switchTab(event,'tab-ref')">🔗 อ้างอิง</button>
-    <button class="tab-btn" onclick="switchTab(event,'tab-tl')">🕑 ประวัติ / Timeline</button>
+    <button class="tab-btn active" onclick="switchTab(event,'tab-ref')">🔗 อ้างอิง</button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-tl')">🕑 Timeline</button>
   </div>
 
-  <!-- Tab 1: Customer preferred date (NO tech assignment — ย้ายไป SV-2) -->
-  <div class="tab-pane active" id="tab-pref">
-    <div class="alert alert-info" style="margin-bottom:14px">
-      💡 <div><strong>หมายเหตุ:</strong> ช่อง "ช่างที่มอบหมาย" + "วันเวลานัด" จริง — ทำใน <a href="sv2-service-assignment-mockup.html" style="color:#1E40AF;font-weight:700">SV-2 ใบมอบหมายงาน</a>. หน้านี้บันทึกแค่<strong>ความสะดวกของลูกค้า</strong>เพื่อช่วยแอดมินนัดได้เร็ว</div>
-    </div>
-    <div class="form-grid">
-      <div class="field"><label>วันที่ลูกค้าสะดวก (เบื้องต้น)</label><input value="25 - 26 เม.ย. 26"></div>
-      <div class="field"><label>ช่วงเวลาที่สะดวก</label>
-        <select><option>เช้า (09:00 - 12:00)</option><option>บ่าย (13:00 - 17:00)</option><option>ทั้งวัน</option><option>เย็น (17:00+)</option><option>เสาร์-อาทิตย์</option></select>
-      </div>
-      <div class="field"><label>สถานที่ลูกค้าต้องการ</label>
-        <select><option>🏠 ที่บ้านลูกค้า</option><option>🏢 ขอนำมาสาขา</option><option>📍 ที่อื่น (ระบุในหมายเหตุ)</option></select>
-      </div>
-      <div class="field"><label>ทักษะช่างที่ต้องการ</label>
-        <select><option>แอร์ + Inverter</option><option>แอร์ทั่วไป</option><option>ตู้เย็น</option><option>เครื่องซักผ้า</option><option>เฉพาะทาง (ระบุ)</option></select>
-      </div>
-      <div class="field"><label>สาขาที่รับผิดชอบ</label>
-        <select><option>BKK-Service (ใกล้ลูกค้า)</option><option>HQ</option><option>รังสิต</option><option>บางนา</option></select>
-      </div>
-      <div class="field"><label>SLA Target</label>
-        <input value="ต้องมอบหมาย ≤ 24 ชม. · ซ่อมเสร็จ ≤ 3 วันทำการ" readonly>
-      </div>
-    </div>
-    <div class="alert alert-warn" style="margin-top:14px">
-      ⏰ <div><strong>SLA Countdown:</strong> รับเรื่องเมื่อ <b>23 เม.ย. 26 · 14:20 น.</b> — ครบกำหนดมอบหมายช่าง <b>24 เม.ย. 26 · 14:20 น.</b> (เหลือ <b>18 ชม. 47 นาที</b>)</div>
-    </div>
-  </div>
-
-  <!-- Tab 2: Photos -->
-  <div class="tab-pane" id="tab-photo">
-    <div style="margin-bottom:12px;font-size:12.5px;color:#6B7280">ถ่ายรูปเครื่อง / อาการที่เห็น / Serial No. · <strong>บังคับอย่างน้อย 2 รูป</strong>ก่อนส่งให้ช่าง</div>
-    <div class="photo-grid">
-      <div class="photo-slot filled"><div class="ico">📷</div>รูปหน้าเครื่อง</div>
-      <div class="photo-slot filled"><div class="ico">📷</div>Serial + QR</div>
-      <div class="photo-slot filled"><div class="ico">📷</div>อาการ (น้ำหยด)</div>
-      <div class="photo-slot"><div class="ico">+</div>เพิ่มรูป</div>
-    </div>
-  </div>
-
-  <!-- Tab 3: Reference -->
-  <div class="tab-pane" id="tab-ref">
+  <!-- Tab: Reference -->
+  <div class="tab-pane active" id="tab-ref">
     <table>
-      <thead><tr><th style="width:120px">เอกสาร</th><th>เลขที่ / หมายเหตุ</th><th style="width:160px">วันที่</th><th style="width:100px">สถานะ</th></tr></thead>
+      <thead><tr><th style="width:140px">เอกสาร</th><th>เลขที่ / หมายเหตุ</th><th style="width:140px">วันที่</th><th style="width:120px">สถานะ</th></tr></thead>
       <tbody>
-        <tr><td><strong>บิลขายต้นทาง</strong></td><td><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:600">IV-B01-2406-0128</a> · ราคา 32,900 ฿</td><td>10 มิ.ย. 24</td><td><span class="chip chip-green">✓ ใช้ได้</span></td></tr>
-        <tr><td><strong>ใบรับประกัน</strong></td><td>WRT-2406-0128 · ประกัน 7 ปี (Compressor)</td><td>10 มิ.ย. 24</td><td><span class="chip chip-green">✓ ใช้ได้</span></td></tr>
+        <tr><td><strong>SV-1 ใบรับงาน</strong></td><td><a href="sv1-service-intake-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:600">SV-SV1-2604-0146</a> · ลูกค้าขอประเมินก่อนติดตั้ง</td><td>23 เม.ย. 26</td><td><span class="chip chip-green">✓ Source</span></td></tr>
+        <tr><td><strong>บิลขายเครื่อง</strong></td><td><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:600">IV-B01-2604-0891</a> · Daikin FTKM24SV2S 32,900 ฿</td><td>22 เม.ย. 26</td><td><span class="chip chip-green">✓ Paid</span></td></tr>
+        <tr><td><strong>SQT (จะสร้าง)</strong></td><td><span style="font-family:monospace;color:#6B7280">SQT-SV1-2604-0019</span> · Draft รอ Manager Markup</td><td>27 เม.ย. 26</td><td><span class="chip chip-yellow">⏳ Draft</span></td></tr>
         <tr><td><strong>บัตรลูกค้า</strong></td><td><a href="md2-customer-master-mockup-v3.html" style="color:#2563EB;font-family:monospace;font-weight:600">C-00125</a></td><td>—</td><td><span class="chip chip-blue">VIP Tier 2</span></td></tr>
-        <tr><td><strong>ประวัติซ่อมเดิม</strong></td><td>ไม่มี (เครื่องนี้ยังไม่เคยซ่อมที่เรา)</td><td>—</td><td><span class="chip chip-gray">—</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -554,53 +545,22 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
   <!-- Tab 4: Timeline -->
   <div class="tab-pane" id="tab-tl">
     <div class="timeline-list">
-      <div class="tl-item active">
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-title">รับเรื่องซ่อม</div>
-          <div class="tl-meta">23 เม.ย. 26 · 14:20 น. · พนักงานรับเรื่อง: คุณปภาวรินทร์ · สาขา BKK</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-title">ประเมินหน้างาน (SIR) <span style="font-size:10px;background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:3px;font-weight:700;margin-left:4px">ถ้าจำเป็น</span></div>
-          <div class="tl-meta">งานที่ต้องไปดูหน้างานก่อน → สร้าง <a href="sir-site-inspection-mockup.html" style="color:#2563EB">SIR</a> → <a href="sqt-service-quotation-mockup.html" style="color:#2563EB">SQT</a> เสนอราคา → ลูกค้ายืนยัน → SV-2</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-title">ใบมอบหมายงาน (SV-2)</div>
-          <div class="tl-meta">รอ — แอดมินสร้าง <a href="sv2-service-assignment-mockup.html" style="color:#2563EB">SV-2</a> เลือกช่าง + นัดวันเวลา</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-title">ช่างเริ่มงาน → Job Card</div>
-          <div class="tl-meta">ยังไม่เริ่ม · ช่างจะ check-in ผ่าน <a href="sv5-job-card-mockup.html" style="color:#2563EB">SV-5 Job Card</a></div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-title">ปิดงาน / QA + Invoice</div>
-          <div class="tl-meta">ยังไม่ถึงขั้นตอน · ดำเนินการที่ <a href="sv4-service-close-mockup.html" style="color:#2563EB">SV-4 ปิดงาน</a></div>
-        </div>
-      </div>
+      <div class="tl-item done"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">รับเรื่อง (SV-1)</div><div class="tl-meta">23 เม.ย. 26 · 14:20 · <a href="sv1-service-intake-mockup.html" style="color:#2563EB">SV-SV1-2604-0146</a></div></div></div>
+      <div class="tl-item active"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">ประเมินหน้างาน (SIR · ปัจจุบัน)</div><div class="tl-meta">27 เม.ย. 26 · 10:30 · TECH-007 · ใช้เวลา 1 ชม.</div></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">เสนอราคา (SQT)</div><div class="tl-meta">รอ — สร้าง <a href="sqt-service-quotation-mockup.html" style="color:#2563EB">SQT-SV1-2604-0019</a> Draft → manager markup → ส่งลูกค้า</div></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">ลูกค้ายืนยัน → เปิดงาน (SV-2)</div><div class="tl-meta">หลังยืนยัน → สร้าง <a href="sv2-service-assignment-mockup.html" style="color:#2563EB">SV-2</a> มอบหมายช่าง + นัดวัน</div></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">งานช่าง → ปิดงาน (SV-5 → SV-4)</div><div class="tl-meta">ดำเนินการในวันติดตั้ง</div></div></div>
     </div>
   </div>
 </div>
 
 <!-- Footer action bar -->
 <div class="footer-actions">
-  <div class="hint">🔒 ส่งต่อ SV-2 = บันทึกใบรับเข้า BC + สร้าง SV-2 Draft (รอมอบหมายช่าง) · หากต้องประเมินหน้างานก่อน → กด <b>SIR</b></div>
+  <div class="hint">🔒 กด "ส่งต่อ SQT" = สร้างใบเสนอราคา Draft (SQT-SV1-2604-0019) · รอผู้จัดการตรวจ markup + ส่งให้ลูกค้า</div>
   <div class="spacer"></div>
   <button class="btn btn-ghost">ยกเลิก</button>
   <button class="btn btn-secondary">💾 บันทึก Draft</button>
-  <button class="btn btn-secondary" onclick="location.href='sir-site-inspection-mockup.html'">🔍 ขอประเมินหน้างาน (SIR)</button>
-  <button class="btn btn-success" onclick="location.href='sv2-service-assignment-mockup.html'">→ ส่งต่อ SV-2 มอบหมาย</button>
+  <button class="btn btn-success" onclick="location.href='sqt-service-quotation-mockup.html'">→ ส่งต่อ SQT เสนอราคา</button>
 </div>
 
 </div></div></div>
@@ -613,13 +573,6 @@ function switchTab(e,id){
   e.target.classList.add('active');
   card.querySelector('#'+id).classList.add('active');
 }
-document.querySelectorAll('.warranty-card').forEach(function(c){
-  c.addEventListener('click',function(){
-    document.querySelectorAll('.warranty-card').forEach(function(x){x.classList.remove('selected');});
-    c.classList.add('selected');
-    c.querySelector('input').checked=true;
-  });
-});
 </script>
 <script src="swt-link.js"></script>
 </body>

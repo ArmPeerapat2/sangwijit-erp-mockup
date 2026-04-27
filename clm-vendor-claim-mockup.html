@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>SV-1 รับเรื่องซ่อม — Sangwijit ERP</title>
+<title>CLM ใบเคลม Vendor — Sangwijit ERP</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="swt-patterns.css">
 <style>
@@ -287,7 +287,7 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 <!-- SWT_SIDEBAR_END -->
 
 <div class="app-container"><div class="main-content"><div class="topbar">
-<div class="breadcrumb">หน้าแรก › ศูนย์บริการ › <strong>SV-1 รับเรื่องซ่อม</strong></div>
+<div class="breadcrumb">หน้าแรก › ศูนย์บริการ › <strong>CLM ใบเคลม Vendor</strong></div>
 <div class="topbar-right">
 <input class="search-box" placeholder="ค้นหา... (Ctrl+K)">
 <span>🔔</span>
@@ -300,35 +300,36 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
 <header class="swt-mh">
   <div class="swt-mh-left">
     <div class="swt-mh-title">
-      <div class="swt-mh-ico">📝</div>
+      <div class="swt-mh-ico">🎫</div>
       <div>
-        <h1>ใบรับงานซ่อม</h1>
-        <p>Service Intake (SV-1)</p>
+        <h1>ใบเคลม Vendor</h1>
+        <p>Vendor Claim (CLM) · ส่งเคลมแบรนด์ + ติดตามผล + ตั้ง APCN</p>
       </div>
     </div>
     <div class="swt-mh-divider"></div>
     <div class="swt-mh-meta">
-      <div class="swt-mh-meta-item"><div class="lbl">เลขที่รับซ่อม</div><div class="val">SV-SV1-2604-0146</div></div>
-      <div class="swt-mh-meta-item"><div class="lbl">วันที่-เวลา</div><div class="val">23 เม.ย. 26 · 14:20</div></div>
-      <div class="swt-mh-meta-item"><div class="lbl">สาขา</div><div class="val">BKK-Service</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">เลขที่ CLM</div><div class="val">CLM-SV1-2604-0089</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">Vendor Ref</div><div class="val">DKN-CLM-2604-0089</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">อ้างอิง SV-4</div><div class="val">SCR-SV1-2604-0055</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">Vendor</div><div class="val">Daikin Thailand</div></div>
     </div>
   </div>
   <div class="swt-mh-right">
-    <span class="swt-mh-badge draft">🕓 รอมอบหมาย</span>
-    <button class="swt-mh-btn swt-mh-btn-ghost">📄 พิมพ์ใบรับ</button>
-    <button class="swt-mh-btn swt-mh-btn-ghost">💾 บันทึก Draft</button>
-    <button class="swt-mh-btn swt-mh-btn-primary">→ ส่งต่อ SV-2</button>
+    <span class="swt-mh-badge pending">🟠 รอ Vendor ตอบ</span>
+    <button class="swt-mh-btn swt-mh-btn-ghost">📄 พิมพ์ใบเคลม</button>
+    <button class="swt-mh-btn swt-mh-btn-ghost">📧 ส่ง Vendor</button>
+    <button class="swt-mh-btn swt-mh-btn-primary">→ ตั้ง APCN เมื่อรับเงิน</button>
   </div>
 </header>
 
-<!-- Status pills -->
+<!-- Status pills (Vendor claim flow) -->
 <div class="status-pills">
-  <span class="status-pill active">1. รับเรื่อง (ปัจจุบัน)</span>
-  <span class="status-pill">2. รอมอบหมาย (SV-2)</span>
-  <span class="status-pill">3. งานช่าง (SV-5)</span>
-  <span class="status-pill">4. รับจากช่าง (SV-4)</span>
-  <span class="status-pill">5. ส่งลูกค้า (SV-7)</span>
-  <span class="status-pill">6. ปิดงาน</span>
+  <span class="status-pill done">1. ตั้งเคลม (CLM Draft)</span>
+  <span class="status-pill done">2. ส่งให้ Vendor</span>
+  <span class="status-pill active">3. รอ Vendor ตอบ (ปัจจุบัน)</span>
+  <span class="status-pill">4. Vendor อนุมัติ/ปฏิเสธ</span>
+  <span class="status-pill">5. รับเงิน/ของแทน</span>
+  <span class="status-pill">6. ตั้ง APCN + ปิดเคลม</span>
 </div>
 
 <!-- Row 2: Customer (SL-4 compact pattern) + Doc extras -->
@@ -337,216 +338,217 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
   <!-- Customer compact card -->
   <div class="swt-cust-card">
     <div class="swt-cust-head">
-      <div class="swt-cust-title"><span class="ico">👤</span>SV-1.1 · ลูกค้า <span class="tag" style="font-size:9px;background:#EFF6FF;color:#1E40AF;padding:1px 5px;border-radius:3px;font-weight:700">SC-1</span></div>
+      <div class="swt-cust-title"><span class="ico">🏢</span>CLM-1.1 · Vendor + Claim Ref <span class="tag" style="font-size:9px;background:#F3F4F6;color:#6B7280;padding:1px 5px;border-radius:3px;font-weight:700">MD-3 Vendor Master</span></div>
       <div class="swt-cust-head-spacer"></div>
-      <button class="swt-cust-btn primary" data-customer-search>🔍 เลือก/เปลี่ยน</button>
+      <a href="md2-customer-master-mockup-v3.html" class="swt-cust-btn">👁️ ดูบัตร</a>
     </div>
 
     <div class="swt-cust-grid">
       <div class="swt-cust-field">
-        <div class="swt-cust-label">รหัส · ชื่อ</div>
-        <div class="swt-cust-value"><span class="highlight">C-00125</span> · คุณสมหญิง เจริญสุข</div>
+        <div class="swt-cust-label">รหัส · ชื่อ Vendor</div>
+        <div class="swt-cust-value"><span class="highlight">V-00034</span> · Daikin Thailand Co., Ltd.</div>
       </div>
       <div class="swt-cust-field">
-        <div class="swt-cust-label">เบอร์ · LINE</div>
-        <div class="swt-cust-value">081-xxx-1234 · @somying</div>
+        <div class="swt-cust-label">ผู้ติดต่อเคลม</div>
+        <div class="swt-cust-value">คุณนิรันดร์ (Service Mgr) · 02-xxx-1234</div>
       </div>
     </div>
 
     <div class="swt-credit-line">
-      <div class="cell"><span class="lbl">ประกัน</span><span class="val g">ในประกัน</span></div>
-      <div class="cell"><span class="lbl">Tier</span><span class="val b">VIP 2</span></div>
-      <div class="cell"><span class="lbl">ประวัติซ่อม</span><span class="val m">— ไม่มี</span></div>
-      <div class="cell"><span class="lbl">AR ค้าง</span><span class="val">0</span></div>
+      <div class="cell"><span class="lbl">Vendor Claim Ref</span><span class="val b">DKN-CLM-2604-0089</span></div>
+      <div class="cell"><span class="lbl">ประเภทเคลม</span><span class="val">Compressor (Comp 7 ปี)</span></div>
+      <div class="cell"><span class="lbl">SLA Vendor</span><span class="val m">ตอบใน 7 วันทำการ</span></div>
+      <div class="cell"><span class="lbl">วันส่งเคลม</span><span class="val">25 เม.ย. 26</span></div>
     </div>
 
     <details class="swt-addr">
-      <summary>📍 ที่อยู่ &amp; ข้อมูลเพิ่มเติม (4)</summary>
-      <div class="swt-addr-line"><strong>🏠 หลัก</strong>123 ซ.สุขุมวิท 71 แขวงคลองตัน เขตวัฒนา กรุงเทพฯ 10110</div>
-      <div class="swt-addr-line"><strong>📍 ซ่อม</strong>ที่อยู่เดียวกับหลัก · ชั้น 5 ของตึก ห้อง A · เข้าประตูใหญ่แจ้งยาม</div>
-      <div class="swt-addr-line"><strong>📧 Email</strong>somying@email.com</div>
-      <div class="swt-addr-line"><strong>🆔 เลขผู้เสียภาษี</strong>1-1001-23456-78-9</div>
+      <summary>📞 ช่องทางติดต่อ Vendor</summary>
+      <div class="swt-addr-line"><strong>🏢 ที่อยู่</strong>22 ซ.สุขุมวิท 64 แขวงพระโขนงใต้ เขตพระโขนง กรุงเทพฯ 10260</div>
+      <div class="swt-addr-line"><strong>📧 Service Email</strong>service-claims@daikin.co.th</div>
+      <div class="swt-addr-line"><strong>📱 Hotline</strong>02-715-3000 ต่อ 5</div>
+      <div class="swt-addr-line"><strong>🌐 Portal</strong>partner.daikin.co.th/claims</div>
     </details>
   </div>
 
-  <!-- Doc extras compact card -->
+  <!-- Customer + product card -->
   <div class="swt-cust-card">
     <div class="swt-cust-head">
-      <div class="swt-cust-title"><span class="ico">📋</span>SV-1.2 · ข้อมูลเอกสาร &amp; การรับเรื่อง</div>
+      <div class="swt-cust-title"><span class="ico">📦</span>CLM-1.2 · ลูกค้า + สินค้าที่เคลม</div>
       <div class="swt-cust-head-spacer"></div>
-      <span style="font-size:9px;background:#F3F4F6;color:#6B7280;padding:2px 6px;border-radius:3px;font-weight:700">BC: serviceOrders 5900</span>
+      <a href="sv4-service-close-mockup.html" class="swt-cust-btn">🔗 ดู SV-4</a>
     </div>
 
     <div class="swt-cust-grid">
       <div class="swt-cust-field">
-        <div class="swt-cust-label">ประเภทงาน <span style="color:#C55A11">*</span></div>
-        <div class="swt-cust-value">
-          <select style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"><option>🔧 ซ่อม</option><option>🏗️ ติดตั้ง</option><option>🧪 ตรวจสภาพ</option><option>♻️ เคลม Vendor</option></select>
-        </div>
+        <div class="swt-cust-label">ลูกค้า</div>
+        <div class="swt-cust-value"><a href="md2-customer-master-mockup-v3.html" style="color:#2563EB;font-weight:700">C-00125</a> · คุณสมหญิง</div>
       </div>
       <div class="swt-cust-field">
-        <div class="swt-cust-label">Priority</div>
-        <div class="swt-cust-value">
-          <select style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"><option>🟡 ปกติ</option><option>🔴 เร่งด่วน</option><option>🟢 ไม่รีบ</option></select>
-        </div>
+        <div class="swt-cust-label">สินค้า · รุ่น</div>
+        <div class="swt-cust-value">Daikin FTKM24SV2S · SN 1234567890</div>
       </div>
       <div class="swt-cust-field">
-        <div class="swt-cust-label">ช่องทางรับเรื่อง</div>
-        <div class="swt-cust-value">
-          <select style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"><option>🏢 ลูกค้านำมาสาขา</option><option>📞 โทรศัพท์</option><option>💚 LINE</option><option>🚶 Walk-in</option><option>🌐 Online</option></select>
-        </div>
+        <div class="swt-cust-label">บิลขายต้นทาง</div>
+        <div class="swt-cust-value"><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:700">IV-B01-2406-0128</a></div>
       </div>
       <div class="swt-cust-field">
-        <div class="swt-cust-label">พนักงานรับเรื่อง</div>
-        <div class="swt-cust-value">คุณปภาวรินทร์ · <span class="mono" style="color:#6B7280">ADM-002</span></div>
+        <div class="swt-cust-label">วันซื้อ · เหลือประกัน</div>
+        <div class="swt-cust-value">10 มิ.ย. 24 · เหลือ 5 ปี 2 เดือน (Comp)</div>
       </div>
     </div>
 
     <details class="swt-addr">
-      <summary>⚙️ ตั้งค่าขั้นสูง (SLA · BC Sync · Entity)</summary>
-      <div class="swt-addr-line"><strong>SLA Target</strong>มอบหมายช่าง ≤ 24 ชม. · ซ่อมเสร็จ ≤ 3 วันทำการ</div>
-      <div class="swt-addr-line"><strong>Entity Tag</strong>1 · SWT (Dual-Book)</div>
-      <div class="swt-addr-line"><strong>BC Sync</strong>🔄 Live API (sync ทันทีเมื่อกด "ส่งต่อ SV-2")</div>
+      <summary>🔗 Service Doc Chain</summary>
+      <div class="swt-addr-line"><strong>SV-1 รับเรื่อง</strong><a href="sv1-service-intake-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:700">SV-SV1-2604-0146</a></div>
+      <div class="swt-addr-line"><strong>SV-5 Job Card</strong><a href="sv5-job-card-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:700">JC-SV1-2604-0082</a></div>
+      <div class="swt-addr-line"><strong>SV-4 ปิดงาน</strong><a href="sv4-service-close-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:700">SCR-SV1-2604-0055</a></div>
+      <div class="swt-addr-line"><strong>Vendor billing AR</strong><span class="mono" style="font-weight:700">ARI-SV1-2604-0089</span> · 11,877 ฿</div>
     </details>
   </div>
 </div>
 
-<!-- Section 4: Product + Serial + Symptom + Warranty -->
+<!-- CLM-2: Symptom + Diagnosis + Evidence -->
 <div class="section-card">
-  <div class="section-title">📦 SV-1.3 · สินค้าที่นำมาซ่อม
-    <span class="tag">SC-2 + SC-8</span>
+  <div class="section-title">🔧 CLM-2 · อาการ · วินิจฉัย · หลักฐาน
+    <span class="tag">ส่งให้ Vendor ตรวจสอบ</span>
   </div>
 
-  <div class="form-grid">
-    <div class="field"><label>รหัสสินค้า / รุ่น <span class="req">*</span></label>
-      <div class="swt-search-combo">
-        <input type="text" value="AC-DAI-FTKM24 · Daikin FTKM24SV2S (Inverter 24k BTU)" data-item-search>
-        <button class="swt-search-btn" data-item-search title="ค้นหาสินค้า (SC-2)">🔍</button>
-      </div>
+  <div class="form-grid-2">
+    <div class="field"><label>อาการเสีย <span class="req">*</span></label>
+      <textarea>เปิดแล้วไม่เย็น · มีน้ำหยดจากเครื่อง · เสียงดังตอน Compressor ทำงาน · ใช้งานปกติ · เกิดอาการ ~3 ปี หลังซื้อ</textarea>
     </div>
-    <div class="field"><label>Serial No. <span class="req">*</span></label>
-      <div class="swt-search-combo">
-        <input type="text" value="SN 1234567890" placeholder="สแกน Barcode หรือพิมพ์">
-        <button class="swt-search-btn" title="สแกน Barcode">📷</button>
-      </div>
-    </div>
-    <div class="field"><label>วันที่ซื้อ</label><input value="10 มิ.ย. 24" type="text"></div>
-  </div>
-
-  <div class="alert alert-info" style="margin:14px 0 0">
-    ℹ️ <div><strong>หมายเหตุ:</strong> ระบบ <strong>ไม่ตรวจประกันอัตโนมัติ</strong> — พนักงานเช็คประกัน/เงื่อนไขกับทาง Vendor ด้วยตนเอง แล้วบันทึกผลในช่อง "ประเภทการรับประกัน" ด้านล่าง</div>
-  </div>
-
-  <div style="margin:16px 0 8px;font-size:13px;font-weight:600;color:#374151">ประเภทการรับประกัน <span class="req" style="color:#DC2626">*</span></div>
-  <div class="warranty-group">
-    <label class="warranty-card selected">
-      <input type="radio" name="warranty" value="in" checked>
-      <div>
-        <div class="wc-title">🟢 ในประกัน</div>
-        <div class="wc-desc">Vendor / ร้านรับผิดชอบ · ลูกค้าไม่มีค่าใช้จ่าย (หรือเฉพาะของนอก Comp)</div>
-      </div>
-    </label>
-    <label class="warranty-card">
-      <input type="radio" name="warranty" value="out">
-      <div>
-        <div class="wc-title">🟡 นอกประกัน</div>
-        <div class="wc-desc">ลูกค้าจ่ายเต็ม · ประมาณค่าใช้จ่ายก่อนเริ่มซ่อม</div>
-      </div>
-    </label>
-    <label class="warranty-card">
-      <input type="radio" name="warranty" value="vendor">
-      <div>
-        <div class="wc-title">🔴 เคลม Vendor</div>
-        <div class="wc-desc">ส่งคืน Vendor · trigger CL-1 (Phase 2) · อัปเดตสถานะจาก Vendor</div>
-      </div>
-    </label>
-  </div>
-
-  <div class="form-grid-2" style="margin-top:14px">
-    <div class="field"><label>Vendor อ้างอิง (ถ้าในประกัน)</label>
-      <input value="Daikin Thailand · เคลม Ref: DKN-CLM-2604-0089">
-    </div>
-    <div class="field"><label>หมายเหตุประกัน (พนักงานกรอก)</label>
-      <input value="เช็คกับ Daikin โทร. 02-xxx แล้ว · คอมเพรสเซอร์เข้า Comp 7 ปี (เหลือ 5 ปี 2 ด.)">
+    <div class="field"><label>วินิจฉัยช่าง · ส่วนที่เสีย</label>
+      <textarea>Compressor 2HP จับ Stall (rotor seize) · น้ำยารั่วผ่าน seal · ถาดน้ำทิ้งอุดตัน · เคลมได้ Compressor ใน Comp 7 ปี</textarea>
     </div>
   </div>
 
-  <div class="form-grid-2" style="margin-top:14px">
-    <div class="field"><label>อาการที่ลูกค้าแจ้ง <span class="req">*</span></label>
-      <textarea>เปิดแล้วไม่เย็น · มีน้ำหยดจากเครื่องตัวเมียข้างใน · ได้ยินเสียงดังตอนคอมทำงาน</textarea>
-    </div>
-    <div class="field"><label>การตรวจสอบเบื้องต้น (พนักงานรับเรื่อง)</label>
-      <textarea>เปิดลองเย็นเล็กน้อยแต่ไม่เย็นพอ · น่าจะเป็น Compressor หรือน้ำยารั่ว · ต้องส่งช่างตรวจที่บ้าน</textarea>
-    </div>
+  <div class="form-grid" style="margin-top:14px">
+    <div class="field"><label>Part No. ที่เคลม</label><input value="DAI-COMP-2HP-01"></div>
+    <div class="field"><label>ราคาทุน Vendor</label><input value="8,920.00 ฿"></div>
+    <div class="field"><label>วันที่ซ่อมจริง (SV-4)</label><input value="23 เม.ย. 26"></div>
   </div>
 
-  <div class="form-grid-4" style="margin-top:14px">
-    <div class="field"><label>ประมาณค่าอะไหล่</label><input value="8,500.00 ฿"></div>
-    <div class="field"><label>ประมาณค่าแรง</label><input value="1,500.00 ฿"></div>
-    <div class="field"><label>ประมาณค่าเดินทาง</label><input value="300.00 ฿"></div>
-    <div class="field"><label>รวมประมาณ</label><input value="10,300.00 ฿" readonly style="font-weight:700;color:#111827"></div>
+  <div style="margin:16px 0 10px;font-size:13px;font-weight:600;color:#374151">📸 รูปหลักฐาน <span style="color:#DC2626">*</span> <span style="font-size:11px;color:#6B7280;font-weight:400;margin-left:6px">Compressor เก่า + Serial + อาการ (จาก SV-5 Job Card)</span></div>
+  <div class="photo-grid">
+    <div class="photo-slot filled"><div class="ico">📷</div>Compressor เก่า · ฉลาก SN</div>
+    <div class="photo-slot filled"><div class="ico">📷</div>รอยรั่วน้ำยา</div>
+    <div class="photo-slot filled"><div class="ico">📷</div>เครื่องรวม + ป้ายรุ่น</div>
+    <div class="photo-slot filled"><div class="ico">📷</div>ใบเสร็จ IV-B01-2406-0128</div>
+    <div class="photo-slot"><div class="ico">+</div>เพิ่มรูป</div>
   </div>
 </div>
 
-<!-- Section 5: Tabs (Appointment / Photos / Refs / Timeline) -->
+<!-- CLM-3: Items + Amount Claimed -->
 <div class="section-card">
-  <div class="section-title">📎 SV-1.4 · รายละเอียดเพิ่มเติม</div>
+  <div class="section-title">💵 CLM-3 · รายการที่เคลม + ยอดเคลม Vendor
+    <span class="tag">ใช้ตั้ง ARI เรียกเงิน Vendor (sync จาก SV-4)</span>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:140px">Part No.</th>
+        <th>รายการ</th>
+        <th style="width:70px" class="num">จำนวน</th>
+        <th style="width:100px" class="num">ราคา/หน่วย</th>
+        <th style="width:100px">ใน Comp?</th>
+        <th style="width:110px" class="num">รวม</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="mono">DAI-COMP-2HP-01</td>
+        <td>Compressor 2HP (เปลี่ยนใหม่)</td>
+        <td class="num">1</td><td class="num">8,920.00</td>
+        <td><span class="chip chip-green">✓ Comp 7 ปี</span></td>
+        <td class="num"><strong>8,920.00</strong></td>
+      </tr>
+      <tr>
+        <td class="mono">DAI-PAN-STD-12</td>
+        <td>ถาดน้ำทิ้ง 12k BTU</td>
+        <td class="num">1</td><td class="num">680.00</td>
+        <td><span class="chip chip-green">✓ Comp 1 ปี</span></td>
+        <td class="num"><strong>680.00</strong></td>
+      </tr>
+      <tr>
+        <td class="mono">LABOR-COMP</td>
+        <td>ค่าแรงเปลี่ยน Compressor</td>
+        <td class="num">1</td><td class="num">1,500.00</td>
+        <td><span class="chip chip-green">✓ ใน 2 ปีแรก</span></td>
+        <td class="num"><strong>1,500.00</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="display:flex;justify-content:flex-end;margin-top:14px">
+    <div style="background:#EFF6FF;border:2px solid #3B82F6;border-radius:8px;padding:14px 20px;min-width:280px">
+      <div style="display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0"><span>Subtotal</span><span>11,100.00</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0"><span>VAT 7%</span><span>777.00</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#1E40AF;padding:6px 0;border-top:1px solid #93C5FD;margin-top:4px"><span>เคลม Vendor</span><span>฿11,877.00</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CLM-4: Vendor response tracking + result -->
+<div class="section-card">
+  <div class="section-title">📊 CLM-4 · ติดตาม Vendor + ผลเคลม <span class="tag">Async · Vendor ตอบใน 7 วันทำการ</span></div>
+
+  <div class="form-grid-2" style="margin-bottom:14px">
+    <div class="field"><label>สถานะปัจจุบัน</label>
+      <div class="value"><span class="chip chip-yellow">⏳ ส่งแล้ว 25 เม.ย. 26 · รอ Vendor ตอบ (D+2)</span></div>
+    </div>
+    <div class="field"><label>Vendor SLA</label>
+      <div class="value">7 วันทำการ · ครบกำหนด <strong>4 พ.ค. 26</strong></div>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div class="field"><label>ผลเคลม (เมื่อ Vendor ตอบ)</label>
+      <select>
+        <option selected>⏳ รอตอบ</option>
+        <option>✓ อนุมัติเต็ม · เคลมเงิน</option>
+        <option>✓ อนุมัติเต็ม · ส่งของแทน</option>
+        <option>⚠️ อนุมัติบางส่วน (ระบุ %)</option>
+        <option>❌ ปฏิเสธ (ระบุเหตุผล)</option>
+      </select>
+    </div>
+    <div class="field"><label>วันที่ Vendor ตอบ</label><input type="text" placeholder="—" value=""></div>
+    <div class="field"><label>หมายเหตุ Vendor</label><input type="text" placeholder="ระบุเมื่อมีการตอบ" value=""></div>
+  </div>
+</div>
+
+<!-- CLM-5: Settlement → APCN -->
+<div class="section-card">
+  <div class="section-title">🚀 CLM-5 · ตั้ง APCN เมื่อรับเงิน + ปิดเคลม <span class="tag">Hand-off → ฝ่าย AP</span></div>
+  <div class="alert alert-info" style="margin-top:0">
+    ✓ <div><strong>ขั้นตอน:</strong> Vendor อนุมัติ → รับเงิน/ของแทน → ตั้ง <strong>APCN</strong> (ใบลดหนี้เจ้าหนี้) ตัด ARI ของ SV-4 · ส่งต่อ AP เพื่อ post entry</div>
+  </div>
+  <div class="form-grid">
+    <div class="field"><label>APCN ที่จะตั้ง (เมื่ออนุมัติ)</label><div class="value"><span class="chip chip-gray">⏳ APCN-SV1-2604-{TBD}</span></div></div>
+    <div class="field"><label>ARI ที่ตัด</label><div class="value"><a href="sv4-service-close-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:700">ARI-SV1-2604-0089</a> · 11,877 ฿</div></div>
+    <div class="field"><label>Entity Tag</label><div class="value">1 · SWT (Dual-Book)</div></div>
+  </div>
+</div>
+
+<!-- Section 5 (kept): Tabs (Refs / Timeline) -->
+<div class="section-card">
+  <div class="section-title">📎 CLM-6 · รายละเอียดเพิ่มเติม</div>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab(event,'tab-pref')">📅 ความสะดวกลูกค้า</button>
-    <button class="tab-btn" onclick="switchTab(event,'tab-photo')">📸 รูปถ่ายก่อนซ่อม</button>
-    <button class="tab-btn" onclick="switchTab(event,'tab-ref')">🔗 อ้างอิง</button>
-    <button class="tab-btn" onclick="switchTab(event,'tab-tl')">🕑 ประวัติ / Timeline</button>
+    <button class="tab-btn active" onclick="switchTab(event,'tab-ref')">🔗 อ้างอิง</button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-tl')">🕑 Timeline</button>
   </div>
 
-  <!-- Tab 1: Customer preferred date (NO tech assignment — ย้ายไป SV-2) -->
-  <div class="tab-pane active" id="tab-pref">
-    <div class="alert alert-info" style="margin-bottom:14px">
-      💡 <div><strong>หมายเหตุ:</strong> ช่อง "ช่างที่มอบหมาย" + "วันเวลานัด" จริง — ทำใน <a href="sv2-service-assignment-mockup.html" style="color:#1E40AF;font-weight:700">SV-2 ใบมอบหมายงาน</a>. หน้านี้บันทึกแค่<strong>ความสะดวกของลูกค้า</strong>เพื่อช่วยแอดมินนัดได้เร็ว</div>
-    </div>
-    <div class="form-grid">
-      <div class="field"><label>วันที่ลูกค้าสะดวก (เบื้องต้น)</label><input value="25 - 26 เม.ย. 26"></div>
-      <div class="field"><label>ช่วงเวลาที่สะดวก</label>
-        <select><option>เช้า (09:00 - 12:00)</option><option>บ่าย (13:00 - 17:00)</option><option>ทั้งวัน</option><option>เย็น (17:00+)</option><option>เสาร์-อาทิตย์</option></select>
-      </div>
-      <div class="field"><label>สถานที่ลูกค้าต้องการ</label>
-        <select><option>🏠 ที่บ้านลูกค้า</option><option>🏢 ขอนำมาสาขา</option><option>📍 ที่อื่น (ระบุในหมายเหตุ)</option></select>
-      </div>
-      <div class="field"><label>ทักษะช่างที่ต้องการ</label>
-        <select><option>แอร์ + Inverter</option><option>แอร์ทั่วไป</option><option>ตู้เย็น</option><option>เครื่องซักผ้า</option><option>เฉพาะทาง (ระบุ)</option></select>
-      </div>
-      <div class="field"><label>สาขาที่รับผิดชอบ</label>
-        <select><option>BKK-Service (ใกล้ลูกค้า)</option><option>HQ</option><option>รังสิต</option><option>บางนา</option></select>
-      </div>
-      <div class="field"><label>SLA Target</label>
-        <input value="ต้องมอบหมาย ≤ 24 ชม. · ซ่อมเสร็จ ≤ 3 วันทำการ" readonly>
-      </div>
-    </div>
-    <div class="alert alert-warn" style="margin-top:14px">
-      ⏰ <div><strong>SLA Countdown:</strong> รับเรื่องเมื่อ <b>23 เม.ย. 26 · 14:20 น.</b> — ครบกำหนดมอบหมายช่าง <b>24 เม.ย. 26 · 14:20 น.</b> (เหลือ <b>18 ชม. 47 นาที</b>)</div>
-    </div>
-  </div>
-
-  <!-- Tab 2: Photos -->
-  <div class="tab-pane" id="tab-photo">
-    <div style="margin-bottom:12px;font-size:12.5px;color:#6B7280">ถ่ายรูปเครื่อง / อาการที่เห็น / Serial No. · <strong>บังคับอย่างน้อย 2 รูป</strong>ก่อนส่งให้ช่าง</div>
-    <div class="photo-grid">
-      <div class="photo-slot filled"><div class="ico">📷</div>รูปหน้าเครื่อง</div>
-      <div class="photo-slot filled"><div class="ico">📷</div>Serial + QR</div>
-      <div class="photo-slot filled"><div class="ico">📷</div>อาการ (น้ำหยด)</div>
-      <div class="photo-slot"><div class="ico">+</div>เพิ่มรูป</div>
-    </div>
-  </div>
-
-  <!-- Tab 3: Reference -->
-  <div class="tab-pane" id="tab-ref">
+  <!-- Tab: Reference -->
+  <div class="tab-pane active" id="tab-ref">
     <table>
-      <thead><tr><th style="width:120px">เอกสาร</th><th>เลขที่ / หมายเหตุ</th><th style="width:160px">วันที่</th><th style="width:100px">สถานะ</th></tr></thead>
+      <thead><tr><th style="width:140px">เอกสาร</th><th>เลขที่ / หมายเหตุ</th><th style="width:140px">วันที่</th><th style="width:120px">สถานะ</th></tr></thead>
       <tbody>
-        <tr><td><strong>บิลขายต้นทาง</strong></td><td><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:600">IV-B01-2406-0128</a> · ราคา 32,900 ฿</td><td>10 มิ.ย. 24</td><td><span class="chip chip-green">✓ ใช้ได้</span></td></tr>
-        <tr><td><strong>ใบรับประกัน</strong></td><td>WRT-2406-0128 · ประกัน 7 ปี (Compressor)</td><td>10 มิ.ย. 24</td><td><span class="chip chip-green">✓ ใช้ได้</span></td></tr>
-        <tr><td><strong>บัตรลูกค้า</strong></td><td><a href="md2-customer-master-mockup-v3.html" style="color:#2563EB;font-family:monospace;font-weight:600">C-00125</a></td><td>—</td><td><span class="chip chip-blue">VIP Tier 2</span></td></tr>
-        <tr><td><strong>ประวัติซ่อมเดิม</strong></td><td>ไม่มี (เครื่องนี้ยังไม่เคยซ่อมที่เรา)</td><td>—</td><td><span class="chip chip-gray">—</span></td></tr>
+        <tr><td><strong>SV-4 ปิดงาน</strong></td><td><a href="sv4-service-close-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:600">SCR-SV1-2604-0055</a> · ปิดงาน + ตั้งเคลม</td><td>23 เม.ย. 26</td><td><span class="chip chip-green">✓ Source</span></td></tr>
+        <tr><td><strong>Vendor billing AR</strong></td><td><span style="font-family:monospace;font-weight:600">ARI-SV1-2604-0089</span> · 11,877 ฿ · Net 30</td><td>23 เม.ย. 26</td><td><span class="chip chip-yellow">⏳ ยังไม่รับเงิน</span></td></tr>
+        <tr><td><strong>บิลขายเครื่อง</strong></td><td><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:600">IV-B01-2406-0128</a> · Daikin FTKM24 32,900 ฿</td><td>10 มิ.ย. 24</td><td><span class="chip chip-green">✓ Paid</span></td></tr>
+        <tr><td><strong>Vendor (MD-3)</strong></td><td><a href="md3-vendor-master-mockup-v3.html" style="color:#2563EB;font-family:monospace;font-weight:600">V-00034</a> · Daikin Thailand</td><td>—</td><td><span class="chip chip-blue">Tier A</span></td></tr>
+        <tr><td><strong>APCN (จะตั้งถ้าอนุมัติ)</strong></td><td><span style="font-family:monospace;color:#6B7280">APCN-SV1-2604-{TBD}</span> · ตัด ARI</td><td>—</td><td><span class="chip chip-gray">⏳ รอ</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -554,53 +556,22 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
   <!-- Tab 4: Timeline -->
   <div class="tab-pane" id="tab-tl">
     <div class="timeline-list">
-      <div class="tl-item active">
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-title">รับเรื่องซ่อม</div>
-          <div class="tl-meta">23 เม.ย. 26 · 14:20 น. · พนักงานรับเรื่อง: คุณปภาวรินทร์ · สาขา BKK</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-title">ประเมินหน้างาน (SIR) <span style="font-size:10px;background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:3px;font-weight:700;margin-left:4px">ถ้าจำเป็น</span></div>
-          <div class="tl-meta">งานที่ต้องไปดูหน้างานก่อน → สร้าง <a href="sir-site-inspection-mockup.html" style="color:#2563EB">SIR</a> → <a href="sqt-service-quotation-mockup.html" style="color:#2563EB">SQT</a> เสนอราคา → ลูกค้ายืนยัน → SV-2</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-title">ใบมอบหมายงาน (SV-2)</div>
-          <div class="tl-meta">รอ — แอดมินสร้าง <a href="sv2-service-assignment-mockup.html" style="color:#2563EB">SV-2</a> เลือกช่าง + นัดวันเวลา</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-title">ช่างเริ่มงาน → Job Card</div>
-          <div class="tl-meta">ยังไม่เริ่ม · ช่างจะ check-in ผ่าน <a href="sv5-job-card-mockup.html" style="color:#2563EB">SV-5 Job Card</a></div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-content">
-          <div class="tl-title">ปิดงาน / QA + Invoice</div>
-          <div class="tl-meta">ยังไม่ถึงขั้นตอน · ดำเนินการที่ <a href="sv4-service-close-mockup.html" style="color:#2563EB">SV-4 ปิดงาน</a></div>
-        </div>
-      </div>
+      <div class="tl-item done"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">SV-4 ปิดงาน + ระบุเคลม Vendor</div><div class="tl-meta">23 เม.ย. 26 · ตั้ง <a href="sv4-service-close-mockup.html" style="color:#2563EB">SCR-SV1-2604-0055</a> + ARI 11,877 ฿</div></div></div>
+      <div class="tl-item done"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">สร้าง CLM Draft</div><div class="tl-meta">24 เม.ย. 26 · 16:00 · admin คุณปภาวรินทร์ · CLM-SV1-2604-0089</div></div></div>
+      <div class="tl-item done"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">ส่งให้ Vendor (Daikin TH)</div><div class="tl-meta">25 เม.ย. 26 · 09:30 · ส่ง partner.daikin.co.th/claims · Vendor Ref DKN-CLM-2604-0089</div></div></div>
+      <div class="tl-item active"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">รอ Vendor ตอบ (ปัจจุบัน)</div><div class="tl-meta">SLA 7 วันทำการ · ครบกำหนด 4 พ.ค. 26 · D+2</div></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">รับผลเคลม + ตั้ง APCN</div><div class="tl-meta">รอ — ถ้าอนุมัติ → ตั้ง APCN ตัด ARI · ส่งฝ่าย AP post entry</div></div></div>
     </div>
   </div>
 </div>
 
 <!-- Footer action bar -->
 <div class="footer-actions">
-  <div class="hint">🔒 ส่งต่อ SV-2 = บันทึกใบรับเข้า BC + สร้าง SV-2 Draft (รอมอบหมายช่าง) · หากต้องประเมินหน้างานก่อน → กด <b>SIR</b></div>
+  <div class="hint">🔒 กด "ตั้ง APCN" = สร้างใบลดหนี้เจ้าหนี้ (APCN-SV1-2604-0089) ตัด ARI ของ SV-4 · ส่ง AP post entry · ปิดเคลม</div>
   <div class="spacer"></div>
-  <button class="btn btn-ghost">ยกเลิก</button>
-  <button class="btn btn-secondary">💾 บันทึก Draft</button>
-  <button class="btn btn-secondary" onclick="location.href='sir-site-inspection-mockup.html'">🔍 ขอประเมินหน้างาน (SIR)</button>
-  <button class="btn btn-success" onclick="location.href='sv2-service-assignment-mockup.html'">→ ส่งต่อ SV-2 มอบหมาย</button>
+  <button class="btn btn-ghost">ยกเลิก / ปฏิเสธเคลม</button>
+  <button class="btn btn-secondary">💾 บันทึก / ส่งซ้ำ Vendor</button>
+  <button class="btn btn-success">→ ตั้ง APCN + ปิดเคลม</button>
 </div>
 
 </div></div></div>
@@ -613,13 +584,6 @@ function switchTab(e,id){
   e.target.classList.add('active');
   card.querySelector('#'+id).classList.add('active');
 }
-document.querySelectorAll('.warranty-card').forEach(function(c){
-  c.addEventListener('click',function(){
-    document.querySelectorAll('.warranty-card').forEach(function(x){x.classList.remove('selected');});
-    c.classList.add('selected');
-    c.querySelector('input').checked=true;
-  });
-});
 </script>
 <script src="swt-link.js"></script>
 </body>
