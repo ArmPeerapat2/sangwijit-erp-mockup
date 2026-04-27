@@ -737,6 +737,77 @@
         .btn-warning:hover {
             background-color: #D97706;
         }
+
+        /* ─── WH-1 Refactor 2026-04-27: Queue mode ─── */
+        /* KPI summary */
+        .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+        .kpi-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:10px;border-left:4px solid #2563EB}
+        .kpi-card.warn{border-left-color:#F59E0B}.kpi-card.ok{border-left-color:#10B981}.kpi-card.acc{border-left-color:#7C3AED}
+        .kpi-icon{font-size:22px;width:36px;height:36px;background:#F3F4F6;border-radius:8px;display:flex;align-items:center;justify-content:center}
+        .kpi-content{flex:1}
+        .kpi-label{font-size:11px;color:#6B7280;font-weight:600;letter-spacing:0.02em}
+        .kpi-value{font-size:22px;font-weight:700;color:#111827;line-height:1.1}
+        .kpi-sub{font-size:10.5px;color:#6B7280;margin-top:2px}
+        /* Queue section */
+        .queue-section{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:18px 20px;margin-bottom:14px}
+        .queue-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px}
+        .queue-section-title{font-size:16px;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px}
+        .queue-section-title .ico{font-size:20px}
+        .queue-section-title .count{font-size:11px;font-weight:600;background:#EFF6FF;color:#1E40AF;padding:2px 8px;border-radius:10px;margin-left:6px}
+        .qf-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;padding:10px 12px;background:#F8FAFC;border-radius:6px;border:1px solid #E5E7EB}
+        .qf-chip{padding:5px 10px;border-radius:14px;font-size:11.5px;font-weight:600;border:1px solid #E5E7EB;background:#fff;color:#374151;cursor:pointer;transition:all 0.15s;font-family:inherit;display:inline-flex;align-items:center;gap:5px}
+        .qf-chip:hover{border-color:#93C5FD;color:#1E40AF}
+        .qf-chip.active{background:#2563EB;color:#fff;border-color:#2563EB}
+        .qf-chip .cnt{background:rgba(255,255,255,0.25);color:inherit;padding:0 5px;border-radius:8px;font-size:10px;font-weight:700;margin-left:2px}
+        .qf-chip:not(.active) .cnt{background:#F3F4F6;color:#6B7280}
+        /* Type badges */
+        .type-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;font-family:'Inter',monospace}
+        .tb-po{background:#DBEAFE;color:#1E40AF}.tb-po8{background:#EDE9FE;color:#5B21B6}
+        .tb-trin{background:#D1FAE5;color:#065F46}.tb-rt-good{background:#DCFCE7;color:#15803D}
+        .tb-rt-def{background:#FEE2E2;color:#991B1B}.tb-rt-sv{background:#FCE7F3;color:#9F1239}
+        .tb-rt-v{background:#FEF3C7;color:#92400E}.tb-adj{background:#F3F4F6;color:#374151}
+        /* Clickable rows */
+        .q-table{width:100%;border-collapse:collapse;font-size:13px}
+        .q-table th{background:#F9FAFB;padding:10px;text-align:left;font-weight:600;color:#374151;border-bottom:1px solid #E5E7EB;font-size:11.5px;text-transform:uppercase;letter-spacing:0.03em}
+        .q-table td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;font-size:13px}
+        .q-table .mono{font-family:'Inter',monospace;font-size:12px}
+        tr.q-row{cursor:pointer;transition:background 0.1s}
+        tr.q-row:hover{background:#EFF6FF}
+        .q-action-btn{padding:6px 10px;background:#2563EB;color:#fff;border:none;border-radius:5px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit}
+        .q-action-btn:hover{background:#1E40AF}
+        .q-status{display:inline-flex;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600}
+        .q-status-wait{background:#FEF3C7;color:#92400E}
+        .q-status-partial{background:#DBEAFE;color:#1E40AF}
+        .q-status-done{background:#D1FAE5;color:#065F46}
+        /* Detail modal (SL-4 pattern) */
+        .wq-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.45);z-index:1000;display:none;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;font-family:'Inter','Noto Sans Thai',sans-serif}
+        .wq-overlay.open{display:flex}
+        .wq-modal{background:#F8FAFC;border-radius:8px;max-width:1280px;width:100%;display:flex;flex-direction:column;max-height:calc(100vh - 80px);box-shadow:0 25px 50px -12px rgba(0,0,0,0.25)}
+        .wq-modal-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.18);border:none;color:#fff;cursor:pointer;font-size:18px;padding:4px 10px;border-radius:6px;z-index:5}
+        .wq-modal-close:hover{background:rgba(255,255,255,0.32)}
+        .wq-mh{position:relative;background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;padding:16px 24px;border-radius:8px 8px 0 0}
+        .wq-mh-top{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+        .wq-mh-ico{width:40px;height:40px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+        .wq-mh-title h2{font-size:17px;font-weight:700;margin:0;line-height:1.2}
+        .wq-mh-title p{font-size:11.5px;color:rgba(255,255,255,0.75);margin:2px 0 0}
+        .wq-mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(251,146,60,0.25);color:#FED7AA;border:1px solid rgba(251,146,60,0.35);margin-left:auto;margin-right:36px}
+        .wq-mh-meta{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.12)}
+        .wq-mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:2px}
+        .wq-mh-meta-item .val{font-size:12px;font-weight:600;font-family:'Inter',monospace}
+        .wq-body{padding:18px 24px;overflow-y:auto;flex:1}
+        .wq-status-pills{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+        .wq-pill{padding:5px 10px;border-radius:14px;font-size:11.5px;font-weight:600;border:1px solid #E5E7EB;background:#F9FAFB;color:#6B7280}
+        .wq-pill.done{background:#D1FAE5;color:#065F46;border-color:#86EFAC}
+        .wq-pill.active{background:#2563EB;color:#fff;border-color:#2563EB}
+        .wq-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+        .wq-card-title{font-size:13px;font-weight:600;color:#111827;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+        .wq-party-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .wq-party-row{display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0}
+        .wq-party-row .lbl{color:#6B7280}
+        .wq-party-row .v{font-weight:600;color:#111827}
+        .wq-foot{padding:14px 24px;border-top:1px solid #E5E7EB;background:#fff;border-radius:0 0 8px 8px;display:flex;align-items:center;gap:8px}
+        .wq-foot .spacer{flex:1}
+        .wq-foot .hint{font-size:11.5px;color:#6B7280}
     </style>
 </head>
 <body>
@@ -807,10 +878,10 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
   </div></details>
 
   <details><summary><span class="swt-sb-ico">📦</span><span class="swt-sb-lbl">คลังสินค้า (WH)</span><span class="swt-sb-cnt">7</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
-    <a href="wh-queue-mockup.html"><span class="c">WH-Q</span>คิวรับสินค้า</a>
-    <a href="wh1-grn-mockup.html"><span class="c">WH-1</span>ใบรับสินค้า (GRN)</a>
+    <a href="wh-queue-mockup.html"><span class="c">WH-Q</span>Dashboard</a>
+    <a href="wh1-grn-mockup.html"><span class="c">WH-1</span>คิวรอรับสินค้า</a>
     <a href="wh2-stock-transfer-mockup.html"><span class="c">WH-2</span>โอนย้ายสต็อก</a>
-    <a href="wh3-sales-issue-mockup.html"><span class="c">WH-3</span>เบิกสินค้า</a>
+    <a href="wh3-sales-issue-mockup.html"><span class="c">WH-3</span>คิวเบิกสินค้า</a>
     <a href="wh4-stock-count-mockup.html"><span class="c">WH-4</span>นับสต็อก</a>
     <a href="wh-r-stock-card-mockup.html" class="swt-new"><span class="c">WH-R</span>Stock Card</a>
     <a href="wh-nm-non-move-report-mockup.html" class="swt-new"><span class="c">WH-NM</span>สินค้าไม่เคลื่อนไหว</a>
@@ -935,381 +1006,337 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
             <div class="topbar">
                 <div class="topbar-left">
                     <div class="page-title-group">
-                        <div class="page-title">รับสินค้าเข้าคลัง (Goods Receipt Note)</div>
-                        <div class="page-meta">Doc: GRN-2567-0041</div>
+                        <div class="page-title">WH-1 · คิวรอรับสินค้า (Receive Queue)</div>
+                        <div class="page-meta">8 รายการรอรับ · PO · PO-8 · TR-In · Customer/Service Return · กดแถวเพื่อดู/ดำเนินการ</div>
                     </div>
                 </div>
                 <div class="topbar-right">
-                    <span class="status-badge status-pending">
-                        <span>●</span> รอรับ
-                    </span>
                     <div class="action-buttons">
-                        <button class="btn btn-secondary btn-sm">รับสินค้าบางส่วน</button>
-                        <button class="btn btn-primary btn-sm">รับสินค้าครบ</button>
-                        <button class="btn btn-danger btn-sm">ยกเลิก</button>
-                        <button class="btn btn-secondary btn-sm">🖨️ พิมพ์</button>
+                        <button class="btn btn-secondary btn-sm">📊 Export</button>
+                        <button class="btn btn-primary btn-sm">+ สร้าง GRN ใหม่</button>
                     </div>
                 </div>
             </div>
 
-            <!-- CONTENT -->
-            <div class="content">
-                <!-- S2: DOC HEADER -->
-                <div class="section">
-                    <div class="doc-header">
-                        <div class="doc-field">
-                            <div class="doc-label">เลขที่ GRN</div>
-                            <div class="doc-value">GRN-2567-0041</div>
-                        </div>
-                        <div class="doc-field">
-                            <div class="doc-label">อ้างอิง PO</div>
-                            <div class="doc-value link">PO-2567-0089</div>
-                        </div>
-                        <div class="doc-field">
-                            <div class="doc-label">วันที่</div>
-                            <div class="doc-value">12/04/2567</div>
-                        </div>
-                        <div class="doc-field">
-                            <div class="doc-label">คลังปลายทาง</div>
-                            <div class="doc-value">HQ คลังกลาง</div>
-                        </div>
-                        <div class="doc-field">
-                            <div class="doc-label">ผู้รับสินค้า</div>
-                            <div class="doc-value">สมหมาย คลัง</div>
-                        </div>
-                        <div class="doc-field">
-                            <div class="doc-label">สถานะ</div>
-                            <div class="doc-value">รอรับ</div>
-                        </div>
-                    </div>
+            <!-- CONTENT (Queue mode) -->
+            <div class="content" style="background:#F8FAFC;padding:20px">
+
+              <!-- KPI summary -->
+              <div class="kpi-row">
+                <div class="kpi-card">
+                  <div class="kpi-icon">📥</div>
+                  <div class="kpi-content">
+                    <div class="kpi-label">รอรับสินค้า</div>
+                    <div class="kpi-value">8</div>
+                    <div class="kpi-sub">PO 3 · PO-8 1 · TR-In 1 · RT 3</div>
+                  </div>
+                </div>
+                <div class="kpi-card warn">
+                  <div class="kpi-icon">⚠️</div>
+                  <div class="kpi-content">
+                    <div class="kpi-label">ด่วน / Overdue</div>
+                    <div class="kpi-value">2</div>
+                    <div class="kpi-sub" style="color:#EF4444">เกินกำหนดส่ง</div>
+                  </div>
+                </div>
+                <div class="kpi-card ok">
+                  <div class="kpi-icon">✅</div>
+                  <div class="kpi-content">
+                    <div class="kpi-label">รับเข้าวันนี้</div>
+                    <div class="kpi-value">5</div>
+                    <div class="kpi-sub" style="color:#10B981">Posted to BC365</div>
+                  </div>
+                </div>
+                <div class="kpi-card acc">
+                  <div class="kpi-icon">💰</div>
+                  <div class="kpi-content">
+                    <div class="kpi-label">มูลค่ารวม (ทุน)</div>
+                    <div class="kpi-value">฿4.2M</div>
+                    <div class="kpi-sub">รอรับ + กำลังรับ</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Queue section -->
+              <div class="queue-section">
+                <div class="queue-section-head">
+                  <div class="queue-section-title">
+                    <span class="ico">📥</span>
+                    <span>WH-1 · รายการรอรับ (Receive Queue)</span>
+                    <span class="count" id="recvCount">8 รายการ</span>
+                  </div>
                 </div>
 
-                <!-- S3: VENDOR INFO -->
-                <div class="section">
-                    <div class="vendor-info">
-                        <div class="vendor-card">
-                            <div class="vendor-label">Vendor</div>
-                            <div class="swt-search-combo">
-                                <input type="text" value="VEN-001 บจก.ไดกิ้น (ประเทศไทย) จำกัด" placeholder="ค้นหา Vendor...">
-                                <button class="swt-search-btn" data-vendor-search title="ค้นหา Vendor">🔍</button>
-                            </div>
-                        </div>
-                        <div class="vendor-card">
-                            <div class="vendor-label">ผู้ส่ง</div>
-                            <div class="vendor-value">คุณพิชัย</div>
-                            <div class="vendor-value secondary">081-xxx-xxxx</div>
-                        </div>
-                        <div class="vendor-card">
-                            <div class="vendor-label">Delivery Note</div>
-                            <div class="vendor-value">DN-12345</div>
-                        </div>
-                    </div>
+                <!-- Sub-filter chips -->
+                <div class="qf-chips" id="recvChips">
+                  <button class="qf-chip active" data-recv="all">ทั้งหมด <span class="cnt">8</span></button>
+                  <button class="qf-chip" data-recv="po">📦 PO (สั่งซื้อปกติ) <span class="cnt">3</span></button>
+                  <button class="qf-chip" data-recv="po8">💰 PO-8 (บิลฝาก) <span class="cnt">1</span></button>
+                  <button class="qf-chip" data-recv="trin">🔄 TR-In (รับโอน) <span class="cnt">1</span></button>
+                  <button class="qf-chip" data-recv="rt-good">↩️ RT-Good (คืนสินค้าดี) <span class="cnt">1</span></button>
+                  <button class="qf-chip" data-recv="rt-def">🔧 RT-Defective (คืนสินค้าเสีย) <span class="cnt">1</span></button>
+                  <button class="qf-chip" data-recv="rt-sv">🛠️ RT-SV (อะไหล่เก่าจากซ่อม) <span class="cnt">1</span></button>
+                  <button class="qf-chip" data-recv="rt-v">🏭 RT-V (Vendor Return) <span class="cnt">0</span></button>
+                  <button class="qf-chip" data-recv="adj-in">📊 ADJ-In (จากนับสต็อก) <span class="cnt">0</span></button>
                 </div>
 
-                <!-- S4: LINE ITEMS -->
-                <div class="section">
-                    <div class="section-title">รายการสินค้า</div>
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th style="width: 3%">#</th>
-                                    <th style="width: 10%">รหัสสินค้า</th>
-                                    <th style="width: 20%">ชื่อสินค้า</th>
-                                    <th style="width: 8%">สั่ง</th>
-                                    <th style="width: 8%">รับแล้ว</th>
-                                    <th style="width: 10%">รับครั้งนี้</th>
-                                    <th style="width: 8%">หน่วย</th>
-                                    <th style="width: 12%">Serial</th>
-                                    <th style="width: 10%">คลัง/Bin</th>
-                                    <th style="width: 8%">หมายเหตุ</th>
-                                    <th style="width: 7%">สถานะ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="qty-cell">1</td>
-                                    <td><span class="row-item-code">DAI-FTKM35</span></td>
-                                    <td>
-                                        <div class="row-item-name">แอร์ Daikin FTKM35SV2S 12000BTU</div>
-                                    </td>
-                                    <td class="qty-cell">10</td>
-                                    <td class="qty-cell">0</td>
-                                    <td class="qty-cell"><input type="number" class="line-input num qty" value="10"></td>
-                                    <td><select class="line-select"><option>เครื่อง</option><option>ชุด</option><option>กล่อง</option></select></td>
-                                    <td><span class="serial-badge" onclick="toggleSerialPanel(0)">🔖 SN Required</span></td>
-                                    <td><select class="line-select"><option selected>WH-01 HQ คลังกลาง</option><option>WH-02 คลังสำรอง</option><option>WH-03 คลังภูมิภาค</option></select></td>
-                                    <td>—</td>
-                                    <td><span class="status-icon status-pending-icon">⏳</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="qty-cell">2</td>
-                                    <td><span class="row-item-code">DAI-FTKM25</span></td>
-                                    <td>
-                                        <div class="row-item-name">แอร์ Daikin FTKM25SV2S 9000BTU</div>
-                                    </td>
-                                    <td class="qty-cell">5</td>
-                                    <td class="qty-cell">0</td>
-                                    <td class="qty-cell"><input type="number" class="line-input num qty" value="5"></td>
-                                    <td><select class="line-select"><option>เครื่อง</option><option>ชุด</option><option>กล่อง</option></select></td>
-                                    <td><span class="serial-badge" onclick="toggleSerialPanel(1)">🔖 SN Required</span></td>
-                                    <td><select class="line-select"><option selected>WH-01 HQ คลังกลาง</option><option>WH-02 คลังสำรอง</option><option>WH-03 คลังภูมิภาค</option></select></td>
-                                    <td>—</td>
-                                    <td><span class="status-icon status-pending-icon">⏳</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="qty-cell">3</td>
-                                    <td><span class="row-item-code">MIT-MSYGN18</span></td>
-                                    <td>
-                                        <div class="row-item-name">แอร์ Mitsubishi MSY-GN18VF 18000BTU</div>
-                                    </td>
-                                    <td class="qty-cell">3</td>
-                                    <td class="qty-cell">0</td>
-                                    <td class="qty-cell"><input type="number" class="line-input num qty" value="3"></td>
-                                    <td><select class="line-select"><option>เครื่อง</option><option>ชุด</option><option>กล่อง</option></select></td>
-                                    <td><span class="serial-badge" onclick="toggleSerialPanel(2)">🔖 SN Required</span></td>
-                                    <td><select class="line-select"><option selected>WH-01 HQ คลังกลาง</option><option>WH-02 คลังสำรอง</option><option>WH-03 คลังภูมิภาค</option></select></td>
-                                    <td>—</td>
-                                    <td><span class="status-icon status-pending-icon">⏳</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="qty-cell">4</td>
-                                    <td><span class="row-item-code">CU-PIPE-3M</span></td>
-                                    <td>
-                                        <div class="row-item-name">ท่อทองแดง 3m</div>
-                                    </td>
-                                    <td class="qty-cell">20</td>
-                                    <td class="qty-cell">0</td>
-                                    <td class="qty-cell"><input type="number" class="line-input num qty" value="20"></td>
-                                    <td><select class="line-select"><option>เครื่อง</option><option selected>เส้น</option><option>กล่อง</option></select></td>
-                                    <td>—</td>
-                                    <td><select class="line-select"><option>WH-01 HQ คลังกลาง</option><option selected>WH-02 คลังสำรอง</option><option>WH-03 คลังภูมิภาค</option></select></td>
-                                    <td>—</td>
-                                    <td><span class="status-icon status-pending-icon">⏳</span></td>
-                                </tr>
+                <table class="q-table">
+                  <thead>
+                    <tr>
+                      <th style="width:90px">ประเภท</th>
+                      <th style="width:160px">เลขเอกสาร</th>
+                      <th style="width:140px">Source / Ref</th>
+                      <th>จาก / Vendor</th>
+                      <th style="width:100px">คลัง</th>
+                      <th style="width:90px">จำนวน</th>
+                      <th style="width:100px">สถานะ</th>
+                      <th style="width:100px">กำหนดส่ง</th>
+                      <th style="width:120px">ดำเนินการ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="q-row" data-rtype="po" onclick="openWqDetail('GRN-2604-0041','recv','po')">
+                      <td><span class="type-badge tb-po">📦 PO</span></td>
+                      <td class="mono">GRN-2604-0041</td>
+                      <td class="mono"><a href="po4-purchase-order-mockup.html" style="color:#2563EB">PO-2604-00089 ↗</a></td>
+                      <td>Daikin Thailand</td>
+                      <td>HQ คลังกลาง</td>
+                      <td>3 SKU · 35 ตัว</td>
+                      <td><span class="q-status q-status-wait">รอรับ</span></td>
+                      <td>12/04/26</td>
+                      <td><button class="q-action-btn">📥 รับสินค้า</button></td>
+                    </tr>
+                    <tr class="q-row" data-rtype="po" onclick="openWqDetail('GRN-2604-0042','recv','po')">
+                      <td><span class="type-badge tb-po">📦 PO</span></td>
+                      <td class="mono">GRN-2604-0042</td>
+                      <td class="mono"><a href="po4-purchase-order-mockup.html" style="color:#2563EB">PO-2604-00091 ↗</a></td>
+                      <td>Mitsubishi Electric</td>
+                      <td>HQ</td>
+                      <td>2 SKU · 18 ตัว</td>
+                      <td><span class="q-status q-status-partial">รับ 8/18</span></td>
+                      <td>12/04/26</td>
+                      <td><button class="q-action-btn">📥 รับเพิ่ม</button></td>
+                    </tr>
+                    <tr class="q-row" data-rtype="po" onclick="openWqDetail('GRN-2604-0043','recv','po')">
+                      <td><span class="type-badge tb-po">📦 PO</span></td>
+                      <td class="mono">GRN-2604-0043</td>
+                      <td class="mono"><a href="po4-purchase-order-mockup.html" style="color:#2563EB">PO-2604-00092 ↗</a></td>
+                      <td>LG Electronics</td>
+                      <td>HQ</td>
+                      <td>4 SKU · 28 ตัว</td>
+                      <td><span class="q-status q-status-wait">รอรับ</span></td>
+                      <td>15/04/26</td>
+                      <td><button class="q-action-btn">📥 รับสินค้า</button></td>
+                    </tr>
+                    <tr class="q-row" data-rtype="po8" onclick="openWqDetail('GRN-2604-0044','recv','po8')">
+                      <td><span class="type-badge tb-po8">💰 PO-8</span></td>
+                      <td class="mono">GRN-2604-0044</td>
+                      <td class="mono"><a href="po8-deposit-bill-mockup.html" style="color:#7C3AED">DEP-2603-00015 ↗</a></td>
+                      <td>Daikin Thailand <span style="font-size:10px;color:#5B21B6;background:#EDE9FE;padding:1px 5px;border-radius:3px;margin-left:4px">บิลฝาก 30%</span></td>
+                      <td>HQ</td>
+                      <td>1 SKU · 60/180 ตัว</td>
+                      <td><span class="q-status q-status-partial">ทยอยรับ</span></td>
+                      <td>16/04/26</td>
+                      <td><button class="q-action-btn">📥 รับเพิ่ม</button></td>
+                    </tr>
+                    <tr class="q-row" data-rtype="trin" onclick="openWqDetail('TR-IN-2604-0009','recv','trin')">
+                      <td><span class="type-badge tb-trin">🔄 TR-In</span></td>
+                      <td class="mono">TR-IN-2604-0009</td>
+                      <td class="mono"><a href="wh2-stock-transfer-mockup.html" style="color:#10B981">TR-2604-0021 ↗</a></td>
+                      <td>WH-03 ภูมิภาค (อีสาน)</td>
+                      <td>HQ</td>
+                      <td>2 SKU · 14 ตัว</td>
+                      <td><span class="q-status q-status-wait">รอรับ</span></td>
+                      <td>13/04/26</td>
+                      <td><button class="q-action-btn">📥 รับโอน</button></td>
+                    </tr>
+                    <tr class="q-row" data-rtype="rt-good" onclick="openWqDetail('RT-2604-0011','recv','rt-good')">
+                      <td><span class="type-badge tb-rt-good">↩️ RT-Good</span></td>
+                      <td class="mono">RT-2604-0011</td>
+                      <td class="mono"><a href="sl4-invoice-mockup.html" style="color:#15803D">INV-26-0019 ↗</a></td>
+                      <td>ลูกค้า บ.รังสิตแอร์ <span style="font-size:10px;color:#15803D">(ไม่ติดตั้ง · คืนของดี)</span></td>
+                      <td>HQ</td>
+                      <td>1 SKU · 2 ตัว</td>
+                      <td><span class="q-status q-status-wait">รอรับคืน</span></td>
+                      <td>12/04/26</td>
+                      <td><button class="q-action-btn">📥 รับคืน</button></td>
+                    </tr>
+                    <tr class="q-row" data-rtype="rt-def" onclick="openWqDetail('RT-2604-0012','recv','rt-def')">
+                      <td><span class="type-badge tb-rt-def">🔧 RT-Defective</span></td>
+                      <td class="mono">RT-2604-0012</td>
+                      <td class="mono"><a href="sl4-invoice-mockup.html" style="color:#991B1B">INV-26-0008 ↗</a></td>
+                      <td>ลูกค้า ห้างฯ Big-C <span style="font-size:10px;color:#991B1B">(เสียในประกัน · ส่งเข้าซ่อม)</span></td>
+                      <td>HQ</td>
+                      <td>1 SKU · 1 ตัว</td>
+                      <td><span class="q-status q-status-wait">รอรับเสีย</span></td>
+                      <td>13/04/26</td>
+                      <td><button class="q-action-btn">📥 รับ + ส่งซ่อม</button></td>
+                    </tr>
+                    <tr class="q-row" data-rtype="rt-sv" onclick="openWqDetail('RT-SV-2604-0008','recv','rt-sv')">
+                      <td><span class="type-badge tb-rt-sv">🛠️ RT-SV</span></td>
+                      <td class="mono">RT-SV-2604-0008</td>
+                      <td class="mono"><a href="sv-order-parts-request-mockup.html" style="color:#9F1239">SVO-2602-0042 ↗</a></td>
+                      <td>ช่างคืนของเก่า <span style="font-size:10px;color:#9F1239">(จากเปลี่ยนคอมเพรสเซอร์)</span></td>
+                      <td>HQ Spare Parts</td>
+                      <td>1 ชิ้น</td>
+                      <td><span class="q-status q-status-wait">รอรับเก่า</span></td>
+                      <td>12/04/26</td>
+                      <td><button class="q-action-btn">📥 รับเข้า scrap</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-            <tr class="swt-add-line"><td colspan="99" style="padding:10px 14px;background:linear-gradient(180deg,#FAFBFC,#F1F5F9);border-top:1px dashed #93C5FD"><div class="swt-search-combo" style="max-width:560px"><input type="text" class="swt-item-input" placeholder="รหัสสินค้า / ชื่อ / บาร์โค้ด... (Alt+I)"><button class="swt-search-btn" data-item-search title="ค้นหาสินค้า (Alt+I)">🔍 ค้นหาสินค้า</button></div></td></tr>
-          </tbody>
-                        </table>
-                    </div>
+            </div><!-- end content -->
+        </div><!-- end main -->
+    </div><!-- end app-container -->
 
-                    <!-- SERIAL PANEL -->
-                    <div id="serialPanel0" class="serial-panel expanded">
-                        <div class="serial-panel-header">🔖 กรอก Serial Number — DAI-FTKM35 (ต้องกรอก 10 รายการ)</div>
-                        <div class="serial-input-group">
-                            <input type="text" class="serial-input" placeholder="กรอกหรือสแกน Serial...">
-                            <button class="btn btn-secondary btn-sm">📷 Scan</button>
-                            <button class="btn btn-primary btn-sm" onclick="addSerial()">เพิ่ม</button>
-                        </div>
-                        <div class="serial-list">
-                            <div class="serial-item">SN-DAI-240401 <span style="color: #10B981; margin-left: 8px;">✓ valid</span></div>
-                            <div class="serial-item">SN-DAI-240402 <span style="color: #10B981; margin-left: 8px;">✓ valid</span></div>
-                            <div class="serial-item">SN-DAI-240403 <span style="color: #10B981; margin-left: 8px;">✓ valid</span></div>
-                        </div>
-                        <div class="serial-progress">
-                            <span>กรอกแล้ว 3/10</span>
-                            <div class="progress-bar">
-                                <div class="progress-bar-fill"></div>
-                            </div>
-                        </div>
-                        <button class="btn btn-secondary btn-sm">📥 Import CSV</button>
-                    </div>
-
-                    <div id="serialPanel1" class="serial-panel">
-                        <div class="serial-panel-header">🔖 กรอก Serial Number — DAI-FTKM25 (ต้องกรอก 5 รายการ)</div>
-                        <div class="serial-input-group">
-                            <input type="text" class="serial-input" placeholder="กรอกหรือสแกน Serial...">
-                            <button class="btn btn-secondary btn-sm">📷 Scan</button>
-                            <button class="btn btn-primary btn-sm" onclick="addSerial()">เพิ่ม</button>
-                        </div>
-                        <div class="serial-list"></div>
-                        <div class="serial-progress">
-                            <span>กรอกแล้ว 0/5</span>
-                            <div class="progress-bar">
-                                <div class="progress-bar-fill" style="width: 0%;"></div>
-                            </div>
-                        </div>
-                        <button class="btn btn-secondary btn-sm">📥 Import CSV</button>
-                    </div>
-
-                    <div id="serialPanel2" class="serial-panel">
-                        <div class="serial-panel-header">🔖 กรอก Serial Number — MIT-MSYGN18 (ต้องกรอก 3 รายการ)</div>
-                        <div class="serial-input-group">
-                            <input type="text" class="serial-input" placeholder="กรอกหรือสแกน Serial...">
-                            <button class="btn btn-secondary btn-sm">📷 Scan</button>
-                            <button class="btn btn-primary btn-sm" onclick="addSerial()">เพิ่ม</button>
-                        </div>
-                        <div class="serial-list"></div>
-                        <div class="serial-progress">
-                            <span>กรอกแล้ว 0/3</span>
-                            <div class="progress-bar">
-                                <div class="progress-bar-fill" style="width: 0%;"></div>
-                            </div>
-                        </div>
-                        <button class="btn btn-secondary btn-sm">📥 Import CSV</button>
-                    </div>
-                </div>
-
-                <!-- S5: TABS -->
-                <div class="section">
-                    <div class="tabs">
-                        <div class="tab active" onclick="switchTab(event, 'qc')">คุณภาพ/QC</div>
-                        <div class="tab" onclick="switchTab(event, 'bin')">Bin Location</div>
-                        <div class="tab" onclick="switchTab(event, 'docs')">เอกสารแนบ</div>
-                        <div class="tab" onclick="switchTab(event, 'timeline')">Timeline</div>
-                    </div>
-
-                    <!-- QC TAB -->
-                    <div id="qc" class="tab-content active">
-                        <div class="qc-checklist">
-                            <div class="qc-item">
-                                <div class="qc-check">✓</div>
-                                <div class="qc-text">สินค้าอยู่ในสภาพดี</div>
-                            </div>
-                            <div class="qc-item">
-                                <div class="qc-check">✓</div>
-                                <div class="qc-text">บรรจุภัณฑ์ไม่เสียหาย</div>
-                            </div>
-                            <div class="qc-item">
-                                <div class="qc-check">✓</div>
-                                <div class="qc-text">จำนวนตรง PO</div>
-                            </div>
-                            <div class="qc-item">
-                                <div class="qc-check">✓</div>
-                                <div class="qc-text">ป้ายรุ่นตรง</div>
-                            </div>
-                        </div>
-                        <div class="qc-status">✓ ผ่าน</div>
-                        <div style="margin-top: 24px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #6B7280; font-size: 12px;">QC Note</label>
-                            <textarea class="textarea" placeholder="กรอกหมายเหตุการตรวจสอบ..."></textarea>
-                        </div>
-                        <button class="btn btn-secondary" style="margin-top: 16px;">📷 ถ่ายรูปสินค้า</button>
-                    </div>
-
-                    <!-- BIN LOCATION TAB -->
-                    <div id="bin" class="tab-content">
-                        <table style="width: 100%; margin-bottom: 20px;">
-                            <thead>
-                                <tr>
-                                    <th style="text-align: left; padding: 12px; font-size: 12px;">รหัสสินค้า</th>
-                                    <th style="text-align: left; padding: 12px; font-size: 12px;">ชื่อ</th>
-                                    <th style="text-align: left; padding: 12px; font-size: 12px;">Bin ปัจจุบัน</th>
-                                    <th style="text-align: left; padding: 12px; font-size: 12px;">Bin แนะนำ</th>
-                                    <th style="text-align: left; padding: 12px; font-size: 12px;">เปลี่ยน</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="border-bottom: 1px solid #E5E7EB;">
-                                    <td style="padding: 12px;">DAI-FTKM35</td>
-                                    <td style="padding: 12px;">แอร์ Daikin FTKM35SV2S</td>
-                                    <td style="padding: 12px;">HQ-A01</td>
-                                    <td style="padding: 12px;">HQ-A01</td>
-                                    <td style="padding: 12px;"><select style="padding: 6px; border: 1px solid #D1D5DB; border-radius: 4px; font-size: 12px;"><option>HQ-A01</option><option>HQ-A02</option></select></td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #E5E7EB;">
-                                    <td style="padding: 12px;">DAI-FTKM25</td>
-                                    <td style="padding: 12px;">แอร์ Daikin FTKM25SV2S</td>
-                                    <td style="padding: 12px;">HQ-A01</td>
-                                    <td style="padding: 12px;">HQ-A01</td>
-                                    <td style="padding: 12px;"><select style="padding: 6px; border: 1px solid #D1D5DB; border-radius: 4px; font-size: 12px;"><option>HQ-A01</option><option>HQ-A02</option></select></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="warehouse-map">Warehouse Layout Map — Phase 2</div>
-                    </div>
-
-                    <!-- DOCS TAB -->
-                    <div id="docs" class="tab-content">
-                        <div class="photo-upload">
-                            <div style="font-size: 32px; margin-bottom: 8px;">📎</div>
-                            <div>คลิกเพื่อแนบเอกสาร หรือลากไฟล์มาวางที่นี่</div>
-                            <div style="font-size: 12px; color: #9CA3AF; margin-top: 8px;">PDF, DOC, JPG (Max 10MB)</div>
-                        </div>
-                    </div>
-
-                    <!-- TIMELINE TAB -->
-                    <div id="timeline" class="tab-content">
-                        <div style="font-size: 13px; color: #6B7280;">
-                            <div style="padding: 12px; border-left: 2px solid #2563EB; margin-bottom: 16px; padding-left: 16px;">
-                                <div style="font-weight: 600; color: #111827;">สร้างสินค้า</div>
-                                <div style="font-size: 12px;">12/04/2567 10:30 โดย สมหมาย</div>
-                            </div>
-                            <div style="padding: 12px; border-left: 2px solid #D1D5DB; padding-left: 16px;">
-                                <div style="font-weight: 600; color: #111827;">รับสินค้า</div>
-                                <div style="font-size: 12px;">รอปฏิบัติการ</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- S6: SUMMARY -->
-                <div class="section">
-                    <div class="summary-section">
-                        <div class="summary-card">
-                            <div class="summary-title">📊 QC Status</div>
-                            <div class="summary-value" style="color: #10B981;">✓ ผ่าน</div>
-                            <div class="summary-item">
-                                <span class="summary-label">จำนวนสินค้าทั้งหมด</span>
-                                <span class="summary-number">38 ชิ้น</span>
-                            </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Serial ต้องกรอก</span>
-                                <span class="summary-number">18/18</span>
-                            </div>
-                            <div class="summary-item">
-                                <span class="summary-label">สินค้า QC ผ่าน</span>
-                                <span class="summary-number">4/4</span>
-                            </div>
-                        </div>
-                        <div class="summary-card">
-                            <div class="summary-title">💰 สรุปการรับสินค้า</div>
-                            <div class="summary-value" style="color: #6B7280;">—</div>
-                            <div class="summary-note">ℹ️ GRN ไม่เกี่ยวกับราคา ราคาตั้งหนี้อยู่ใน AP Invoice (PO-6)</div>
-                        </div>
-                    </div>
-                </div>
+    <!-- ═══════════════════════════════════════════════════════════
+         WH-1 Detail Modal (SL-4 pattern · gradient main-header)
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="wq-overlay" id="mWqDetail" onclick="closeWqDetail()">
+      <div class="wq-modal" onclick="event.stopPropagation()">
+        <div class="wq-mh">
+          <button class="wq-modal-close" onclick="closeWqDetail()">✕</button>
+          <div class="wq-mh-top">
+            <div class="wq-mh-ico">📥</div>
+            <div class="wq-mh-title">
+              <h2 id="wqDocNo">GRN-2604-0041</h2>
+              <p id="wqKindLabel">รับสินค้า · PO</p>
             </div>
-
-            <!-- S7: STICKY ACTION BAR -->
-            <div class="sticky-action-bar">
-                <div class="action-bar-left">
-                    <div class="action-bar-title">GRN-2567-0041</div>
-                    <div class="action-bar-info">PO-2567-0089 | รอรับ 38 ชิ้น | Serial กรอกแล้ว 3/18</div>
-                </div>
-                <div class="action-buttons">
-                    <button class="btn btn-secondary">ยกเลิก</button>
-                    <button class="btn btn-secondary">💾 บันทึกร่าง</button>
-                    <button class="btn btn-warning">รับบางส่วน</button>
-                    <button class="btn btn-success">✅ รับสินค้าครบ</button>
-                </div>
-            </div>
+            <span class="wq-mh-badge">🟠 รอรับ</span>
+          </div>
+          <div class="wq-mh-meta">
+            <div class="wq-mh-meta-item"><div class="lbl">วันที่สร้าง</div><div class="val">10/04/26</div></div>
+            <div class="wq-mh-meta-item"><div class="lbl">กำหนดส่ง</div><div class="val">12/04/26</div></div>
+            <div class="wq-mh-meta-item"><div class="lbl">คลังปลายทาง</div><div class="val">HQ คลังกลาง</div></div>
+            <div class="wq-mh-meta-item"><div class="lbl">ผู้รับ</div><div class="val">สมหมาย (คลัง)</div></div>
+            <div class="wq-mh-meta-item"><div class="lbl">Source Doc</div><div class="val">PO-2604-00089</div></div>
+          </div>
         </div>
+
+        <div class="wq-body">
+          <div class="wq-status-pills">
+            <span class="wq-pill done">1. PO อนุมัติ</span>
+            <span class="wq-pill done">2. Vendor ส่ง</span>
+            <span class="wq-pill active">3. รอรับ (ปัจจุบัน)</span>
+            <span class="wq-pill">4. ตรวจรับ</span>
+            <span class="wq-pill">5. Post GRN</span>
+            <span class="wq-pill">6. → PO-6 ตั้งหนี้</span>
+          </div>
+
+          <div class="wq-card">
+            <div class="wq-card-title">🏭 Vendor / ผู้รับ <span style="font-size:10px;background:#EFF6FF;color:#1E40AF;padding:1px 6px;border-radius:3px;font-weight:700;margin-left:auto">SC-1</span></div>
+            <div class="wq-party-grid">
+              <div>
+                <div class="wq-party-row"><span class="lbl">Vendor</span><span class="v">Daikin Thailand</span></div>
+                <div class="wq-party-row"><span class="lbl">รหัส</span><span class="v mono"><a href="md3-vendor-master-mockup-v3.html" style="color:#2563EB">V-00012 ↗</a></span></div>
+                <div class="wq-party-row"><span class="lbl">Trade Type</span><span class="v">TT3 · Net 30</span></div>
+                <div class="wq-party-row"><span class="lbl">Delivery Note</span><span class="v mono">DN-12345</span></div>
+              </div>
+              <div>
+                <div class="wq-party-row"><span class="lbl">ผู้รับ</span><span class="v">สมหมาย (คลัง)</span></div>
+                <div class="wq-party-row"><span class="lbl">รหัสพนักงาน</span><span class="v mono">EMP-0156</span></div>
+                <div class="wq-party-row"><span class="lbl">คลังปลายทาง</span><span class="v">HQ คลังกลาง · A-01</span></div>
+                <div class="wq-party-row"><span class="lbl">รับครั้งที่</span><span class="v">1 / N (สะสม 0/35)</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wq-card">
+            <div class="wq-card-title">📦 รายการสินค้า · 3 SKU · 35 ตัว <span style="font-size:10px;background:#EFF6FF;color:#1E40AF;padding:1px 6px;border-radius:3px;font-weight:700;margin-left:auto">SC-2</span></div>
+            <table class="q-table">
+              <thead>
+                <tr>
+                  <th style="width:36px">#</th>
+                  <th style="width:110px">SKU</th>
+                  <th>ชื่อสินค้า</th>
+                  <th style="width:60px;text-align:right">สั่ง</th>
+                  <th style="width:70px;text-align:right">ส่งมา</th>
+                  <th style="width:80px;text-align:right">รับเข้า</th>
+                  <th style="width:90px;text-align:right">ทุน/ตัว</th>
+                  <th style="width:100px;text-align:right">มูลค่า</th>
+                  <th style="width:140px">เลขที่อ้างอิง</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td><td class="mono">DAI-FTKM35</td><td>แอร์ Daikin FTKM35SV2S 12,000 BTU</td>
+                  <td style="text-align:right">15</td><td style="text-align:right">15</td>
+                  <td style="text-align:right"><input type="number" value="0" min="0" max="15" style="width:60px;padding:4px;border:1px solid #E5E7EB;border-radius:4px;text-align:right"></td>
+                  <td style="text-align:right">18,500</td><td style="text-align:right;font-weight:600">277,500</td>
+                  <td><a href="po4-purchase-order-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none;font-size:11.5px">📋 PO-2604-00089/L1 ↗</a></td>
+                </tr>
+                <tr>
+                  <td>2</td><td class="mono">MIT-MSYGN18</td><td>แอร์ Mitsubishi MSY-GN18VF 18,000 BTU</td>
+                  <td style="text-align:right">12</td><td style="text-align:right">12</td>
+                  <td style="text-align:right"><input type="number" value="0" min="0" max="12" style="width:60px;padding:4px;border:1px solid #E5E7EB;border-radius:4px;text-align:right"></td>
+                  <td style="text-align:right">19,800</td><td style="text-align:right;font-weight:600">237,600</td>
+                  <td><a href="po4-purchase-order-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none;font-size:11.5px">📋 PO-2604-00089/L2 ↗</a></td>
+                </tr>
+                <tr>
+                  <td>3</td><td class="mono">SAM-AR13TY</td><td>แอร์ Samsung AR13TYHYCWK 12,000 BTU</td>
+                  <td style="text-align:right">8</td><td style="text-align:right">8</td>
+                  <td style="text-align:right"><input type="number" value="0" min="0" max="8" style="width:60px;padding:4px;border:1px solid #E5E7EB;border-radius:4px;text-align:right"></td>
+                  <td style="text-align:right">13,500</td><td style="text-align:right;font-weight:600">108,000</td>
+                  <td><a href="po4-purchase-order-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none;font-size:11.5px">📋 PO-2604-00089/L3 ↗</a></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr style="background:#F9FAFB;font-weight:700">
+                  <td colspan="3" style="text-align:right;padding:10px">รวม</td>
+                  <td style="text-align:right">35</td><td style="text-align:right">35</td>
+                  <td style="text-align:right;color:#F59E0B">0 / 35</td>
+                  <td style="text-align:right">—</td>
+                  <td style="text-align:right;color:#2563EB">฿623,100</td>
+                  <td style="font-size:11px;color:#6B7280">ทุนรวม</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div class="wq-foot">
+          <div class="hint">🔒 กด "📥 บันทึกรับเข้า" = สร้าง GRN entry · update stock · ถ้ารับครบ → unlock <a href="po6-ap-invoice-mockup.html" style="color:#2563EB">PO-6</a> ตั้งหนี้</div>
+          <div class="spacer"></div>
+          <button class="q-action-btn" style="background:#fff;color:#374151;border:1px solid #D1D5DB" onclick="closeWqDetail()">ปิด</button>
+          <button class="q-action-btn" style="background:#F59E0B">⏸ รับบางส่วน</button>
+          <button class="q-action-btn">📥 บันทึกรับเข้า (Full)</button>
+        </div>
+      </div>
     </div>
 
     <script>
-        function toggleSerialPanel(index) {
-            const panel = document.getElementById(`serialPanel${index}`);
-            panel.classList.toggle('expanded');
+        /* Sub-filter chip toggle */
+        function bindChips(containerId, dataAttr, rowAttr){
+          const wrap = document.getElementById(containerId);
+          if(!wrap) return;
+          wrap.querySelectorAll('.qf-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+              wrap.querySelectorAll('.qf-chip').forEach(c => c.classList.remove('active'));
+              chip.classList.add('active');
+              const filter = chip.dataset[dataAttr];
+              const tbl = wrap.parentElement.querySelector('table tbody');
+              if(!tbl) return;
+              tbl.querySelectorAll('tr.q-row').forEach(tr => {
+                tr.style.display = (filter === 'all' || tr.dataset[rowAttr] === filter) ? '' : 'none';
+              });
+            });
+          });
         }
+        bindChips('recvChips', 'recv', 'rtype');
 
-        function addSerial() {
-            alert('Serial number added successfully');
+        function openWqDetail(docNo, kind, type){
+          const m = document.getElementById('mWqDetail');
+          if(!m) return;
+          document.getElementById('wqDocNo').textContent = docNo;
+          document.getElementById('wqKindLabel').textContent = (kind==='recv'?'รับสินค้า · ':'เบิกสินค้า · ') + type.toUpperCase();
+          m.classList.add('open');
         }
-
-        function switchTab(event, tabName) {
-            // Hide all tabs
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.classList.remove('active'));
-
-            // Remove active from all tab buttons
-            const tabButtons = document.querySelectorAll('.tab');
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-
-            // Show selected tab
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
+        function closeWqDetail(){ document.getElementById('mWqDetail').classList.remove('open'); }
+        document.addEventListener('keydown', e => {
+          if(e.key==='Escape'){const m=document.getElementById('mWqDetail');if(m&&m.classList.contains('open'))closeWqDetail();}
+        });
     </script>
 
     <!-- SWT_ITEM_SEARCH_START -->

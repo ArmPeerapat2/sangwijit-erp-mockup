@@ -34,7 +34,13 @@ project_type: "frontend-mockup (HTML + docs)"
   - Per-line ref refactor: PO-4 "ชื่อสินค้า · PR ref · VC" → "ชื่อสินค้า" + column dedicated "เลขที่อ้างอิง" ขวาสุด · ย้าย ref จาก PR (po1) → SL-4 (INV-26-0042 drop-ship pattern)
   - SL-4 ก็ refactor ตาม pattern เดียวกัน (column "เลขที่อ้างอิง" ขวาสุด · ย้าย ref จาก inline)
   - PO-4 References section "📎 เอกสารอ้างอิง": inline body section → popup modal pattern (เหมือน SL-4 mDocRef) · trigger card + summary stats + ปุ่ม "🔗 ดูรายละเอียด" → modal มี PSI Report + PO-8 Deposit เนื้อหาเดิมครบ
-- **WH Module Reports ✅ NEW 2026-04-27** — ปิด WH module
+- **WH-Q/WH-1/WH-3 Refactor ✅ NEW 2026-04-27 (later)** — split queue role per page · Q1=a (ลบจาก WH-Q) + Q2=b (ลบ form WH-1)
+  - **WH-1 (Warehouse Receive Queue · คิวรอรับสินค้า):** ลบ form (S2-S7: doc-header + vendor-info + line items + tabs + summary + sticky-action) ออก · เป็น list page เต็มตัว · KPI 4 cards + 8 sub-filter chips (PO · PO-8 · TR-In · RT-Good · RT-Defective · RT-SV · RT-V · ADJ-In) + queue table 8 rows · click row → Detail modal (SL-4 pattern · gradient main-header + status pills + party card + line items + footer)
+  - **WH-3 (Warehouse Issue Queue · คิวเบิกสินค้า):** ลบ queue table เก่า (6 rows) · ใส่ใหม่ 9 rows + 8 sub-filter chips (SL-4 · SV-6 · TR-Out · SV-3 · SV-O · Promo · ADJ-Out · RT-V Out) · เก็บ Tab 2 (Pick & Pack) + Tab 3 (History) ไว้ · click row → Detail modal เดียวกับ WH-1
+  - **WH-Q (Warehouse Dashboard):** ลบ 2 sections (Receive + Issue queues) ออก · เก็บ KPI summary + filter bar · เพิ่ม CTA cards 2 ใบ (gradient blue → WH-1 รับ · gradient pink → WH-3 เบิก) + Quick links bar (WH-2/WH-4/WH-R/WH-NM) · ลบ JS chip + modal (ไม่ใช้แล้ว)
+  - **Sidebar relabel 75 ไฟล์:** WH-Q "คิวรับสินค้า" → "Dashboard" · WH-1 "ใบรับสินค้า (GRN)" → "คิวรอรับสินค้า" · WH-3 "เบิกสินค้า" → "คิวเบิกสินค้า"
+  - **index.html:** sidebar nav labels + WH cards (3 cards updated content) + 1 card descriptions
+- **WH Module Reports ✅ NEW 2026-04-27 (earlier)** — ปิด WH module
   - WH-NM (Warehouse Non-Movement Report · รายงานสินค้าไม่เคลื่อนไหว): audit pass · features ครบ (threshold settings · category override · filter · ledger · branch breakdown · auto-alert) · ไม่ต้องแก้
   - WH-R (Warehouse Stock Card · รายงานสต็อกการ์ด): **NEW** — 7 sections ใหม่
     - WH-R-1 ตัวกรอง (SKU + สาขา + ช่วงเวลา + brand)
