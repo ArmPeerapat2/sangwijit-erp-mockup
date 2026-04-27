@@ -8,6 +8,15 @@ project_type: "frontend-mockup (HTML + docs)"
 
 ## Phase 1 Closeout (2026-04-27 evening)
 
+- **PO-Q Refactor ✅ NEW 2026-04-27 (late evening)** — apply queue pattern เหมือน WH (Phase 1 PO module wrap-up)
+  - **Keep advanced features:** Panel 0 (MOS Critical · 3 SKU · ต้องสั่งด่วน rule A5) + Panel F (CN Outstanding · Sanction Flow Day 0/7/15/30 + Stop New PO rule A3)
+  - **Replace:** 3 tabs (Queue/Create-PR/Summary) + tab JS · ลบทั้ง Tab 2 Create-PR และ Tab 3 Summary (ใช้ + ปุ่มสร้าง PR ที่ link → po1 แทน · summary report ย้ายไป RP-1)
+  - **New queue:** 13 rows + 8 sub-filter chips:
+    - 📋 PR Pending (รอสร้าง PO · 7) · ✉️ RFQ Open (รอราคา · 3) · 📦 PO Pending (รอส่ง Vendor · 4)
+    - 🚚 Awaiting Receive (รอ GRN · 5) · ⚠️ Overdue (เกินกำหนด · 3) · 💰 Deposit Pending (PO-8 · 2)
+    - 📄 AP Pending (พร้อมตั้งหนี้ · 1) · 🎯 Rebate Tracking (PO-7 · 1)
+  - **Click row → Detail modal** (SL-4 pattern · gradient + 6-step status pills · line items + MOS chip + Vendor info + Trade Type + CN status · footer → สร้าง PO ที่ PO-4)
+  - **Cross-links:** PO-4 (สร้าง PO) · PO-8 (Deposit) · PO-6 (AP Invoice) · PO-7 (Rebate) · WH-1 (GRN) · WH-R (Stock Card)
 - **WH-2 + WH-4 Refactor ✅ NEW 2026-04-27 (evening)** — apply queue pattern เหมือน WH-1/3 (consistency · Phase 1 closeout)
   - **WH-2 (Transfer Queue · คิวโอนย้ายสต็อก):** ลบ tabs เดิม (รายการโอน/สร้างใบโอน/ประวัติ) + form sections + side panel · เป็น queue page เต็มตัว · 12 rows + 8 sub-filter chips (TR-Out · TR-In · Transit · Inter-Branch · Internal-Bin · Service-Stock · Promo-Stock · Return-Flow) · click row → Detail modal (SL-4 pattern · gradient + status pills 6 ขั้น · From→To route card · line items + Stock Card link)
   - **WH-4 (Count Queue · คิวนับสต็อก):** ลบ tabs เดิม (แผนการนับ/กำลังนับ/ประวัติ) · 11 rows + 8 sub-filter chips (Cycle · Annual · Spot · Recount · Branch · Bin · NewItem · PreAudit) · variance tracking · click row → Detail modal (status pills 6 ขั้น · 24 SKU sample table + count input + Variance auto-calc · ขั้นตอนการนับ 6 steps)
