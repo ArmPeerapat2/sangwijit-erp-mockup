@@ -825,6 +825,11 @@ function po6SwTab(btn,id){
     p.classList.toggle('pinned',on);
     try{ localStorage.setItem('po6_saab_pinned',on?'1':'0'); }catch(e){}
   };
+
+  /* Auto-switch mode if URL hash = #mode=deposit (deep-link จาก PO-8 Settle) */
+  if(location.hash && location.hash.indexOf('mode=deposit')!==-1){
+    setInvoiceMode('deposit');
+  }
 })();
 </script>
 
