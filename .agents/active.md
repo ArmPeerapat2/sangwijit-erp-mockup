@@ -1,10 +1,29 @@
 ---
-updated_at: "2026-04-27T01:00:00+07:00"
+updated_at: "2026-04-27T22:00:00+07:00"
 status: "active"
-current_focus: "SV Phase 3 expansion: SIR (site inspection) + SQT (service quotation) + CLM (vendor claim) — flow refinement สำหรับ on-site survey jobs + post-warranty vendor claim"
+current_focus: "Phase 1 closeout (Tier-C polish) → Phase 2: Brand CI rollout (SWE only · #184898 + #F37721 + Sukhumvit · ใช้กับงานใหม่ตั้งแต่ตอนนี้)"
 branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
+
+## Phase 1 Closeout (2026-04-27 evening)
+
+- **Tier-C polish ✅ DONE 2026-04-27 (evening)**:
+  - **BC Direct banner** added to 3 cut-to-BC pages: CF-2.1 Tax Setup · CF-2.2 Number Series · CF-2.9 General Parameter — banner สีแดงระบุชัดว่าใช้ BC365 ตรง · mockup เก็บเป็น reference เท่านั้น · ระบุ BC path
+  - **Deprecate portal-mockup-index.html** = ไฟล์หายแล้ว (rename/merge เป็น index.html ตั้งแต่ก่อนหน้า) · skip
+  - Sidebar edge cases (modal/login/print/sc10/sv7/sv6 — 5-6 ไฟล์ที่ rollout ไม่ครบ): ปกติเป็นหน้าที่ no/cut-down sidebar · pre-existing pattern · ไม่ใช่ scope แก้
+
+## Phase 2 Plan: Brand CI Rollout (SWE-only)
+
+- **Decision 2026-04-27:** ใช้ Sangwijit Design CI (skill at `~/OneDrive/claude/ArmWiki/sangwijit-design/`) กับ **งานใหม่หลังจากนี้ทุกชิ้น**
+- **Scope correction:** CI ครอบคลุม **SWE (แสงวิจิตรการไฟฟ้า · ค้าปลีก) เท่านั้น** · SWT/VMN/WPS ยังไม่มี logo · ต้องถามก่อนใช้
+- **Locked specs (SWE):**
+  - 🔵 Brand Blue: `#184898` (RGB 24/72/152)
+  - 🟠 Brand Orange: `#F37721`
+  - Font: **Sukhumvit** (TH+EN single font · fallback `Sukhumvit Set, IBM Plex Sans Thai, Sarabun`)
+  - Tagline: "เพื่อนแท้ ไว้ใจได้"
+- **Existing 80+ mockups:** leave as-is (Tailwind `#2563EB` + Inter+Noto Sans Thai · sidebar `#1E3A5F`) — ห้าม batch refactor unless requested
+- **Multi-entity caveat:** ERP mockups ส่วนใหญ่เป็น multi-entity (Dual-Book Tag 1/2/3/novat) ไม่ใช่ SWE-only · การ apply CI SWE กับ ERP ทั้งระบบจะไม่เหมาะ · รอ master brand CI
 
 # Active Context
 
