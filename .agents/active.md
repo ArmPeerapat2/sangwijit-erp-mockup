@@ -8,6 +8,15 @@ project_type: "frontend-mockup (HTML + docs)"
 
 ## Phase 1 Closeout (2026-04-27 / 28)
 
+- **SV-Q Refactor ✅ NEW 2026-04-28** — apply queue pattern · SV module wrap-up
+  - **Keep:** KPI 5 cards (งานวันนี้/รอมอบหมาย/กำลังดำเนินการ/เสร็จวันนี้/เกิน SLA) · **Technician Board** (4 tech cards · valuable visualization · งานวันนี้ + skill + status)
+  - **Replace:** filter dropdown + jobs table (12 rows) + slide-in panel pattern → 14 rows + 8 sub-filter chips:
+    - 🆕 New Intake (รับเรื่องใหม่ SV-1 · 2) · 🔍 Site Inspection (SIR · 1) · 💵 Quote Pending (SQT · 1)
+    - 👷 Pending Assignment (รอมอบหมาย SV-2 · 3) · 🛠️ In Progress (SV-5 · 3) · 🔧 Awaiting Parts (SV-3/SV-O · 2)
+    - ✅ Ready Delivery (SV-7 · 1) · 🎫 Vendor Claim (CLM · 1)
+  - **Click row → centered modal** (replace slide panel · SL-4 pattern · 6-step status pills · customer + product card · อาการ + การประเมิน + SIR escalation hint · footer drill → SV-1)
+  - **Q-page rule applied:** row buttons → openWqDetail() · header + modal footer = navigate OK
+  - **index.html:** SV-Q card description updated (8 sub-types listed)
 - **SL-Q Refactor ✅ NEW 2026-04-28** — apply queue pattern · SL module wrap-up
   - **Keep:** Header quick actions (4 buttons + ใบเสนอ/จอง/มัดจำ/บิล) · KPI 6 cards · Sales Pipeline Summary (5 bars · valuable visualization)
   - **Replace:** Recent Documents filter dropdown + table → 15 rows + 8 sub-filter chips:
