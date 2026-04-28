@@ -6,8 +6,18 @@ branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
 
-## Phase 1 Closeout (2026-04-27 evening)
+## Phase 1 Closeout (2026-04-27 / 28)
 
+- **SL-Q Refactor ✅ NEW 2026-04-28** — apply queue pattern · SL module wrap-up
+  - **Keep:** Header quick actions (4 buttons + ใบเสนอ/จอง/มัดจำ/บิล) · KPI 6 cards · Sales Pipeline Summary (5 bars · valuable visualization)
+  - **Replace:** Recent Documents filter dropdown + table → 15 rows + 8 sub-filter chips:
+    - 📋 New Quote (รอติดตาม · 3) · 📌 Pending Reservation (จอง · 2) · 💰 Awaiting Deposit (รอลูกค้าจ่าย · 2)
+    - 🧾 Pending Invoice (พร้อมออกบิล · 3) · ⚠️ Credit Hold (รออนุมัติวงเงิน · 2) · ↩️ Return Request (ลูกค้าขอคืน · 1)
+    - 🎁 Promo Validation (ตรวจ promo · 1) · 📞 Follow-up Required (CRM · 1)
+  - **Click row → Detail modal** (SL-4 pattern · 6-step status pills · customer card 2-col with credit info + ratings · line items 4 SKU sample · footer drill → SL-1)
+  - **Q-page rule applied:** row "ดำเนินการ" buttons → openWqDetail() · header + modal footer = OK navigate
+  - **Sidebar relabel 74 ไฟล์:** "Sales Queue" → "คิวงานขาย"
+  - **index.html:** sidebar nav + WH cards descriptions อัพเดต
 - **PO-Q Refactor ✅ NEW 2026-04-27 (late evening)** — apply queue pattern เหมือน WH (Phase 1 PO module wrap-up)
   - **Keep advanced features:** Panel 0 (MOS Critical · 3 SKU · ต้องสั่งด่วน rule A5) + Panel F (CN Outstanding · Sanction Flow Day 0/7/15/30 + Stop New PO rule A3)
   - **Replace:** 3 tabs (Queue/Create-PR/Summary) + tab JS · ลบทั้ง Tab 2 Create-PR และ Tab 3 Summary (ใช้ + ปุ่มสร้าง PR ที่ link → po1 แทน · summary report ย้ายไป RP-1)
