@@ -147,6 +147,34 @@ tr:hover td{background:#F8FAFC}
 .cal-day.over{background:#FEE2E2;color:#991B1B}
 .cal-info{flex:1;font-size:11.5px;color:#6B7280;line-height:1.5}
 .cal-info b{color:#0F172A;font-size:13px;display:block;margin-bottom:2px}
+
+/* FI-Q Refactor 2026-04-28: drill modal + Q-rule */
+tr.q-row{cursor:pointer;transition:background 0.1s}
+tr.q-row:hover{background:#EFF6FF !important}
+.wq-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.45);z-index:1000;display:none;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;font-family:'Inter','Noto Sans Thai',sans-serif}
+.wq-overlay.open{display:flex}
+.wq-modal{background:#F8FAFC;border-radius:8px;max-width:1280px;width:100%;display:flex;flex-direction:column;max-height:calc(100vh - 80px);box-shadow:0 25px 50px -12px rgba(0,0,0,0.25)}
+.wq-modal-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.18);border:none;color:#fff;cursor:pointer;font-size:18px;padding:4px 10px;border-radius:6px;z-index:5}
+.wq-modal-close:hover{background:rgba(255,255,255,0.32)}
+.wq-mh{position:relative;background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;padding:16px 24px;border-radius:8px 8px 0 0}
+.wq-mh-top{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.wq-mh-ico{width:40px;height:40px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.wq-mh-title h2{font-size:17px;font-weight:700;margin:0;line-height:1.2}
+.wq-mh-title p{font-size:11.5px;color:rgba(255,255,255,0.75);margin:2px 0 0}
+.wq-mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(251,146,60,0.25);color:#FED7AA;border:1px solid rgba(251,146,60,0.35);margin-left:auto;margin-right:36px}
+.wq-mh-meta{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.12)}
+.wq-mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:2px}
+.wq-mh-meta-item .val{font-size:12px;font-weight:600;font-family:'Inter',monospace}
+.wq-body{padding:18px 24px;overflow-y:auto;flex:1}
+.wq-status-pills{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.wq-pill{padding:5px 10px;border-radius:14px;font-size:11.5px;font-weight:600;border:1px solid #E5E7EB;background:#F9FAFB;color:#6B7280}
+.wq-pill.done{background:#D1FAE5;color:#065F46;border-color:#86EFAC}
+.wq-pill.active{background:#2563EB;color:#fff;border-color:#2563EB}
+.wq-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.wq-card-title{font-size:13px;font-weight:600;color:#111827;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.wq-foot{padding:14px 24px;border-top:1px solid #E5E7EB;background:#fff;border-radius:0 0 8px 8px;display:flex;align-items:center;gap:8px}
+.wq-foot .spacer{flex:1}
+.wq-foot .hint{font-size:11.5px;color:#6B7280}
 </style>
 </head>
 <body>
@@ -245,7 +273,7 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
   </div></details>
 
   <details><summary><span class="swt-sb-ico">💵</span><span class="swt-sb-lbl">บัญชี/การเงิน</span><span class="swt-sb-cnt">9</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
-    <a href="fiq-finance-queue-mockup.html" class="swt-new"><span class="c">FI-Q</span>Finance Queue</a>
+    <a href="fiq-finance-queue-mockup.html" class="swt-new"><span class="c">FI-Q</span>คิวงานการเงิน</a>
     <a href="fi1-ar-receive-mockup.html"><span class="c">FI-1</span>รับชำระ AR</a>
     <a href="fi1q-apply-queue-mockup.html" class="swt-new"><span class="c">FI-1Q</span>Apply Queue</a>
     <a href="fi2-ap-payment-mockup.html"><span class="c">FI-2</span>จ่ายชำระ AP</a>
@@ -637,7 +665,7 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
           </tr></thead>
           <tbody>
 
-            <tr style="background:#FEF2F2">
+            <tr style="background:#FEF2F2" class="q-row" onclick="openWqDetail(\'INV-2603-0821\',\'ar-overdue\')">
               <td><input type="checkbox"></td>
               <td><span class="doc-no">INV-2603-0821</span></td>
               <td class="mono">18/03/26</td>
@@ -647,10 +675,10 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
               <td><span class="aging ag-r">⚠️ 30 วัน</span></td>
               <td class="mono" style="color:#B91C1C">02/04/26</td>
               <td><span class="status st-over">🔴 Overdue</span></td>
-              <td><button class="btn btn-danger btn-sm">📞 ติดตาม</button><button class="btn btn-ghost btn-sm">ดู</button></td>
+              <td><button class="btn btn-danger btn-sm" onclick="event.stopPropagation()">📞 ติดตาม</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
             </tr>
 
-            <tr style="background:#FEF2F2">
+            <tr style="background:#FEF2F2" class="q-row" onclick="openWqDetail(\'INV-2603-0815\',\'ar-overdue\')">
               <td><input type="checkbox"></td>
               <td><span class="doc-no">INV-2603-0815</span></td>
               <td class="mono">15/03/26</td>
@@ -660,10 +688,10 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
               <td><span class="aging ag-r">⚠️ 33 วัน</span></td>
               <td class="mono" style="color:#B91C1C">14/04/26</td>
               <td><span class="status st-over">🔴 Overdue</span></td>
-              <td><button class="btn btn-danger btn-sm">📞 ติดตาม</button><button class="btn btn-ghost btn-sm">ดู</button></td>
+              <td><button class="btn btn-danger btn-sm" onclick="event.stopPropagation()">📞 ติดตาม</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
             </tr>
 
-            <tr style="background:#FEF2F2">
+            <tr style="background:#FEF2F2" class="q-row" onclick="openWqDetail(\'INV-2604-0012\',\'ar-overdue\')">
               <td><input type="checkbox"></td>
               <td><span class="doc-no">INV-2604-0012</span></td>
               <td class="mono">01/04/26</td>
@@ -673,10 +701,10 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
               <td><span class="aging ag-r">⚠️ 16 วัน</span></td>
               <td class="mono" style="color:#B91C1C">16/04/26</td>
               <td><span class="status st-over">🔴 Overdue</span></td>
-              <td><button class="btn btn-danger btn-sm">📞 ติดตาม</button><button class="btn btn-ghost btn-sm">ดู</button></td>
+              <td><button class="btn btn-danger btn-sm" onclick="event.stopPropagation()">📞 ติดตาม</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
             </tr>
 
-            <tr style="background:#FFFBEB">
+            <tr style="background:#FFFBEB" class="q-row" onclick="openWqDetail(\'INV-2604-0045\',\'ar-amber\')">
               <td><input type="checkbox"></td>
               <td><span class="doc-no">INV-2604-0045</span></td>
               <td class="mono">05/04/26</td>
@@ -686,10 +714,10 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
               <td><span class="aging ag-a">12 วัน</span></td>
               <td class="mono" style="color:#B45309">05/05/26</td>
               <td><span class="status st-due">🟡 ใกล้ครบ</span></td>
-              <td><button class="btn btn-warn btn-sm">📧 Reminder</button><button class="btn btn-ghost btn-sm">ดู</button></td>
+              <td><button class="btn btn-warn btn-sm" onclick="event.stopPropagation()">📧 Reminder</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
             </tr>
 
-            <tr style="background:#FFFBEB">
+            <tr style="background:#FFFBEB" class="q-row" onclick="openWqDetail(\'INV-2604-0062\',\'ar-amber\')">
               <td><input type="checkbox"></td>
               <td><span class="doc-no">INV-2604-0062</span></td>
               <td class="mono">08/04/26</td>
@@ -699,10 +727,10 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
               <td><span class="aging ag-a">9 วัน</span></td>
               <td class="mono" style="color:#B45309">23/04/26</td>
               <td><span class="status st-due">🟡 ใกล้ครบ</span></td>
-              <td><button class="btn btn-warn btn-sm">📧 Reminder</button><button class="btn btn-ghost btn-sm">ดู</button></td>
+              <td><button class="btn btn-warn btn-sm" onclick="event.stopPropagation()">📧 Reminder</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
             </tr>
 
-            <tr>
+            <tr class="q-row" onclick="openWqDetail(\'INV-2604-0098\',\'ar-ontime\')">
               <td><input type="checkbox"></td>
               <td><span class="doc-no">INV-2604-0098</span></td>
               <td class="mono">12/04/26</td>
@@ -712,10 +740,10 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
               <td><span class="aging ag-g">5 วัน</span></td>
               <td class="mono">12/05/26</td>
               <td><span class="status st-ok">✓ On-time</span></td>
-              <td><button class="btn btn-success btn-sm">💳 รับชำระ</button><button class="btn btn-ghost btn-sm">ดู</button></td>
+              <td><button class="btn btn-success btn-sm" onclick="event.stopPropagation()">💳 รับชำระ</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
             </tr>
 
-            <tr>
+            <tr class="q-row" onclick="openWqDetail(\'INV-2604-0105\',\'ar-ontime\')">
               <td><input type="checkbox"></td>
               <td><span class="doc-no">INV-2604-0105</span></td>
               <td class="mono">14/04/26</td>
@@ -725,10 +753,10 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
               <td><span class="aging ag-g">3 วัน</span></td>
               <td class="mono">13/06/26</td>
               <td><span class="status st-ok">✓ On-time</span></td>
-              <td><button class="btn btn-success btn-sm">💳 รับชำระ</button><button class="btn btn-ghost btn-sm">ดู</button></td>
+              <td><button class="btn btn-success btn-sm" onclick="event.stopPropagation()">💳 รับชำระ</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
             </tr>
 
-            <tr>
+            <tr class="q-row" onclick="openWqDetail(\'INV-2604-0128\',\'ar-ontime\')">
               <td><input type="checkbox"></td>
               <td><span class="doc-no">INV-2604-0128</span></td>
               <td class="mono">16/04/26</td>
@@ -738,7 +766,7 @@ body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
               <td><span class="aging ag-g">1 วัน</span></td>
               <td class="mono">16/05/26</td>
               <td><span class="status st-ok">✓ On-time</span></td>
-              <td><button class="btn btn-success btn-sm">💳 รับชำระ</button><button class="btn btn-ghost btn-sm">ดู</button></td>
+              <td><button class="btn btn-success btn-sm" onclick="event.stopPropagation()">💳 รับชำระ</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
             </tr>
 
           </tbody>
@@ -755,6 +783,102 @@ document.querySelectorAll('.q-card').forEach(c=>{
     document.querySelectorAll('.q-card').forEach(x=>x.classList.remove('active'));
     c.classList.add('active');
   });
+});
+</script>
+
+<!-- FI-Q Detail Modal (SL-4 pattern) -->
+<div class="wq-overlay" id="mWqDetail" onclick="closeWqDetail()">
+  <div class="wq-modal" onclick="event.stopPropagation()">
+    <div class="wq-mh">
+      <button class="wq-modal-close" onclick="closeWqDetail()">✕</button>
+      <div class="wq-mh-top">
+        <div class="wq-mh-ico">💰</div>
+        <div class="wq-mh-title">
+          <h2 id="wqDocNo">INV-2604-0042</h2>
+          <p id="wqKindLabel">งานการเงิน · AR</p>
+        </div>
+        <span class="wq-mh-badge">🟠 รอรับชำระ</span>
+      </div>
+      <div class="wq-mh-meta">
+        <div class="wq-mh-meta-item"><div class="lbl">วันที่ใบ</div><div class="val">12/04/26</div></div>
+        <div class="wq-mh-meta-item"><div class="lbl">กำหนดชำระ</div><div class="val">12/05/26 (Net 30)</div></div>
+        <div class="wq-mh-meta-item"><div class="lbl">ลูกค้า</div><div class="val">เฮ้งไพ โลหะการ</div></div>
+        <div class="wq-mh-meta-item"><div class="lbl">Entity Tag</div><div class="val">Tag 1 · SWT</div></div>
+        <div class="wq-mh-meta-item"><div class="lbl">ยอดค้าง</div><div class="val">฿245,500</div></div>
+      </div>
+    </div>
+
+    <div class="wq-body">
+      <div class="wq-status-pills">
+        <span class="wq-pill done">1. ออกบิล (SL-4)</span>
+        <span class="wq-pill done">2. ส่งให้ลูกค้า</span>
+        <span class="wq-pill active">3. รอรับชำระ (ปัจจุบัน)</span>
+        <span class="wq-pill">4. รับชำระ (FI-1)</span>
+        <span class="wq-pill">5. Apply Queue (FI-1Q)</span>
+        <span class="wq-pill">6. Posted (BC)</span>
+      </div>
+
+      <div class="wq-card">
+        <div class="wq-card-title">👤 ลูกค้า + เครดิต</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12.5px">
+          <div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">ชื่อ</span><span style="font-weight:600">เฮ้งไพ โลหะการ</span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">รหัส</span><span style="font-family:monospace"><a href="md2-customer-master-mockup-v3.html" style="color:#2563EB">C-00089 ↗</a></span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">Tier</span><span style="font-weight:600">VIP</span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">เครดิต</span><span style="font-weight:600">Net 30 · ปกติ</span></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">วงเงินคงเหลือ</span><span style="font-weight:600">฿1,754,500</span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">Aging</span><span style="font-weight:600;color:#10B981">5 วัน · On-time</span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">ประวัติชำระ</span><span style="font-weight:600">⭐⭐⭐⭐⭐ (24 ใบ)</span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">ติดต่อ</span><span style="font-weight:600">089-456-7890</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wq-card">
+        <div class="wq-card-title">💵 รายละเอียดบิล + ช่องทางจ่าย</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12.5px">
+          <div>
+            <div style="font-weight:700;color:#111827;margin-bottom:6px">บิลขาย</div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">เลขที่บิล</span><span style="font-family:monospace"><a href="sl4-invoice-mockup.html" style="color:#2563EB">INV-2604-0098 ↗</a></span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">ยอดสุทธิ</span><span style="font-weight:700">฿245,500.00</span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">VAT 7%</span><span>฿17,185.00</span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">รวม</span><span style="font-weight:700;color:#2563EB">฿262,685.00</span></div>
+          </div>
+          <div>
+            <div style="font-weight:700;color:#111827;margin-bottom:6px">ช่องทางรับชำระ</div>
+            <div style="padding:3px 0">📱 <b>QR PromptPay</b> (Biller 099-4-12345-6 · Ref1: INV-2604-0098)</div>
+            <div style="padding:3px 0">🏦 <b>โอน TMB</b> (123-4-56789-0 · ส่งสลิปให้แอดมิน)</div>
+            <div style="padding:3px 0">💳 <b>เครดิตการ์ด</b> (ผ่าน SCB EDC · 1.95% fee)</div>
+            <div style="padding:3px 0">💵 <b>เงินสด/เช็ค</b> (ที่หน้าร้าน · ออก RV)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wq-foot">
+      <div class="hint">🔒 กด "→ FI-1 รับชำระ" = เปิด <a href="fi1-ar-receive-mockup.html" style="color:#2563EB">FI-1</a> · เลือกบิลและช่องทาง · post RV ปิด AR</div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost btn-sm" onclick="closeWqDetail()">ปิด</button>
+      <button class="btn btn-warn btn-sm">📧 Reminder</button>
+      <button class="btn btn-ghost btn-sm">📋 พิมพ์ใบแจ้งหนี้</button>
+      <button class="btn btn-success btn-sm" onclick="location.href='fi1-ar-receive-mockup.html'">→ FI-1 รับชำระ</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openWqDetail(docNo, type){
+  const m = document.getElementById('mWqDetail');
+  if(!m) return;
+  document.getElementById('wqDocNo').textContent = docNo;
+  document.getElementById('wqKindLabel').textContent = 'งานการเงิน · ' + type.toUpperCase();
+  m.classList.add('open');
+}
+function closeWqDetail(){ document.getElementById('mWqDetail').classList.remove('open'); }
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape'){const m=document.getElementById('mWqDetail');if(m&&m.classList.contains('open'))closeWqDetail();}
 });
 </script>
 

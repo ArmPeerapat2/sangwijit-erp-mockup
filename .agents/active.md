@@ -8,6 +8,13 @@ project_type: "frontend-mockup (HTML + docs)"
 
 ## Phase 1 Closeout (2026-04-27 / 28)
 
+- **FI-Q Refactor ✅ NEW 2026-04-28** — apply Q-rule (drill modal) · FI module wrap-up · 5/5 main modules ปิด queue pattern
+  - **Keep:** Sum bar (5 KPI: total/AR/AP/Tax/Close) · Action summary hero · 6 queue cards (AR/AP/Tax/WHT/JV/Close · ทำหน้าที่เหมือน sub-type chips อยู่แล้ว) · Mini calendar of deadlines (4 events) · Detail panel filter
+  - **Add:** drill modal (SL-4 pattern · 6-step status pills · customer + credit info · invoice details + 4 payment channels: QR/Bank/Card/Cash · footer drill → FI-1)
+  - **Convert:** 8 detail panel rows → q-row class + onclick="openWqDetail()" · all action buttons in tbody → event.stopPropagation() · so click row = open modal · click button = button action without bubbling
+  - **Q-page rule applied:** row buttons → modal · header + modal footer + card-level "💳 รับชำระ" link = navigate OK
+  - **Sidebar relabel 74 ไฟล์:** "Finance Queue" → "คิวงานการเงิน"
+  - **index.html:** sidebar nav + FI-Q card description updated
 - **SV-Q Refactor ✅ NEW 2026-04-28** — apply queue pattern · SV module wrap-up
   - **Keep:** KPI 5 cards (งานวันนี้/รอมอบหมาย/กำลังดำเนินการ/เสร็จวันนี้/เกิน SLA) · **Technician Board** (4 tech cards · valuable visualization · งานวันนี้ + skill + status)
   - **Replace:** filter dropdown + jobs table (12 rows) + slide-in panel pattern → 14 rows + 8 sub-filter chips:
