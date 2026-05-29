@@ -1,0 +1,2656 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sangwijit Expense Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #E31E24;
+      --primary-strong: #B8171C;
+      --secondary: #1A1A2E;
+      --accent: #F5A623;
+      --bg: #F6F7FB;
+      --surface: #FFFFFF;
+      --surface-2: #F1F5F9;
+      --text: #1A1A2E;
+      --muted: #64748B;
+      --border: #E2E8F0;
+      --success: #16A34A;
+      --warning: #D97706;
+      --danger: #DC2626;
+      --info: #2563EB;
+      --shadow: 0 12px 30px rgba(15, 23, 42, .08);
+      --radius: 8px;
+      color-scheme: light;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0F172A;
+      --surface: #151F33;
+      --surface-2: #1E293B;
+      --text: #F8FAFC;
+      --muted: #CBD5E1;
+      --border: #334155;
+      --shadow: 0 18px 40px rgba(0, 0, 0, .25);
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Sarabun", Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+      letter-spacing: 0;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface) 94%, transparent);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 16px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--primary);
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-text strong {
+      display: block;
+      font-size: 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-text span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--secondary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .user-meta {
+      display: none;
+      min-width: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .user-meta strong {
+      display: block;
+      color: var(--text);
+      font-size: 13px;
+      max-width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 0 16px 12px;
+      max-width: 1480px;
+      margin: 0 auto;
+      scrollbar-width: thin;
+    }
+
+    .nav-tab {
+      position: relative;
+      min-height: 38px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      padding: 7px 12px;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-tab.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .badge {
+      min-width: 22px;
+      height: 22px;
+      padding: 0 7px;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      background: var(--danger);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .icon-btn,
+    .btn {
+      min-height: 38px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      padding: 8px 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .icon-btn {
+      width: 38px;
+      padding: 0;
+      flex: 0 0 auto;
+    }
+
+    .btn.primary {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn.secondary {
+      border-color: var(--secondary);
+      background: var(--secondary);
+      color: #fff;
+    }
+
+    .btn.danger {
+      border-color: var(--danger);
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .btn.ghost {
+      background: transparent;
+    }
+
+    .btn:disabled,
+    .icon-btn:disabled {
+      cursor: not-allowed;
+      opacity: .55;
+    }
+
+    main {
+      width: 100%;
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 16px;
+      flex: 1;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .page-head {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .page-title h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .page-title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+    }
+
+    .actions-row,
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .field {
+      display: grid;
+      gap: 5px;
+      min-width: 130px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      padding: 8px 10px;
+      min-height: 38px;
+    }
+
+    textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    .surface {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .surface.pad {
+      padding: 14px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .metric {
+      min-height: 92px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 12px;
+      display: grid;
+      align-content: space-between;
+      gap: 6px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .metric strong {
+      font-size: 22px;
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+    }
+
+    .alert-banner {
+      border: 1px solid color-mix(in srgb, var(--danger) 35%, var(--border));
+      background: color-mix(in srgb, var(--danger) 10%, var(--surface));
+      border-radius: var(--radius);
+      padding: 12px;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .alert-banner strong {
+      color: var(--danger);
+    }
+
+    .alert-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .calendar-layout {
+      display: grid;
+      gap: 16px;
+    }
+
+    .calendar-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .month-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .month-control h2 {
+      margin: 0;
+      font-size: 19px;
+      min-width: 190px;
+      text-align: center;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .weekday {
+      min-height: 34px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+
+    .calendar-day {
+      position: relative;
+      min-height: 118px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      padding: 8px;
+      overflow: hidden;
+    }
+
+    .calendar-day:nth-child(7n) {
+      border-right: 0;
+    }
+
+    .calendar-day.muted {
+      background: color-mix(in srgb, var(--surface-2) 65%, var(--surface));
+      color: var(--muted);
+    }
+
+    .calendar-day.today {
+      outline: 2px solid var(--primary);
+      outline-offset: -2px;
+    }
+
+    .day-number {
+      display: inline-grid;
+      place-items: center;
+      min-width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: inherit;
+      font-weight: 700;
+      padding: 0;
+    }
+
+    .today .day-number {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .pill-list {
+      display: grid;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .pill {
+      min-height: 24px;
+      border-radius: 999px;
+      padding: 3px 8px;
+      color: #fff;
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border: 1px solid rgba(255, 255, 255, .25);
+    }
+
+    .more-pill {
+      color: var(--muted);
+      font-size: 12px;
+      padding-left: 4px;
+    }
+
+    .calendar-side {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .expiry-item,
+    .compact-row {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px;
+      display: grid;
+      gap: 4px;
+      background: var(--surface);
+    }
+
+    .expiry-item strong,
+    .compact-row strong {
+      font-size: 14px;
+    }
+
+    .expiry-item span,
+    .compact-row span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .chart-grid {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .chart-box {
+      min-height: 320px;
+      padding: 14px;
+    }
+
+    .chart-box canvas {
+      width: 100% !important;
+      height: 260px !important;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+      white-space: nowrap;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--surface-2);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    td.amount {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    tr.unknown-row td {
+      background: color-mix(in srgb, var(--danger) 10%, var(--surface));
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 24px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .status.green {
+      color: #fff;
+      background: var(--success);
+    }
+
+    .status.amber {
+      color: #111827;
+      background: var(--accent);
+    }
+
+    .status.red {
+      color: #fff;
+      background: var(--danger);
+    }
+
+    .status.gray {
+      color: #fff;
+      background: #6B7280;
+    }
+
+    .split-grid {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .two-col {
+      display: grid;
+      gap: 16px;
+    }
+
+    .empty {
+      padding: 20px;
+      color: var(--muted);
+      text-align: center;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .skeleton {
+      position: relative;
+      overflow: hidden;
+      min-height: 120px;
+      border-radius: var(--radius);
+      background: var(--surface-2);
+    }
+
+    .skeleton::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent);
+      animation: shimmer 1.2s infinite;
+    }
+
+    @keyframes shimmer {
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    .drawer-backdrop,
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .38);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s ease;
+      z-index: 80;
+    }
+
+    .drawer-backdrop.open,
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .day-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(420px, 100vw);
+      height: 100vh;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      box-shadow: -18px 0 40px rgba(15, 23, 42, .18);
+      transform: translateX(100%);
+      transition: transform .2s ease;
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .day-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-head,
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .drawer-head h2,
+    .modal-head h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .drawer-body,
+    .modal-body {
+      padding: 16px;
+      overflow: auto;
+    }
+
+    .modal {
+      position: fixed;
+      inset: auto 12px 12px;
+      max-width: 680px;
+      max-height: calc(100vh - 24px);
+      margin: auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(18px);
+      transition: opacity .18s ease, transform .18s ease;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 14px 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .toast {
+      position: fixed;
+      left: 16px;
+      bottom: 16px;
+      z-index: 120;
+      max-width: min(420px, calc(100vw - 32px));
+      border-radius: var(--radius);
+      background: var(--secondary);
+      color: #fff;
+      padding: 12px 14px;
+      box-shadow: var(--shadow);
+      transform: translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .footer {
+      max-width: 1480px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 8px 16px 18px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .gantt {
+      position: relative;
+      width: 180px;
+      height: 18px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .gantt span {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: var(--progress);
+      background: var(--primary);
+    }
+
+    .nowrap {
+      white-space: nowrap;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .danger-text {
+      color: var(--danger);
+    }
+
+    .hide {
+      display: none !important;
+    }
+
+    @media (min-width: 720px) {
+      .topbar {
+        grid-template-columns: 1fr auto;
+      }
+
+      .user-meta {
+        display: block;
+      }
+
+      .page-head {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+      }
+
+      .metric-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .chart-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .two-col {
+        grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+      }
+
+      .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .field.full {
+        grid-column: 1 / -1;
+      }
+
+      .modal {
+        inset: 7vh 16px auto;
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .calendar-layout {
+        grid-template-columns: minmax(0, 1fr) 310px;
+        align-items: start;
+      }
+
+      .split-grid {
+        grid-template-columns: 1.3fr .7fr;
+      }
+
+      .chart-grid.three {
+        grid-template-columns: 1.2fr 1fr .8fr;
+      }
+    }
+
+    @media (max-width: 540px) {
+      main {
+        padding: 12px;
+      }
+
+      .topbar {
+        padding: 10px 12px;
+      }
+
+      .nav-tabs {
+        padding: 0 12px 10px;
+      }
+
+      .brand-text strong {
+        font-size: 14px;
+      }
+
+      .header-actions .btn.logout {
+        display: none;
+      }
+
+      .calendar-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .month-control {
+        justify-content: space-between;
+      }
+
+      .month-control h2 {
+        min-width: 0;
+      }
+
+      .calendar-day {
+        min-height: 96px;
+        padding: 5px;
+      }
+
+      .pill {
+        padding-inline: 6px;
+        font-size: 11px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+      }
+
+      .app-header,
+      .filters,
+      .actions-row,
+      .calendar-side,
+      .alert-banner,
+      .footer,
+      .drawer-backdrop,
+      .day-drawer,
+      .modal,
+      .modal-backdrop,
+      .toast,
+      .no-print {
+        display: none !important;
+      }
+
+      main {
+        max-width: none;
+        padding: 0;
+      }
+
+      .tab-panel {
+        display: none !important;
+      }
+
+      #calendarTab {
+        display: block !important;
+      }
+
+      .calendar-layout {
+        display: block;
+      }
+
+      .surface,
+      .metric {
+        box-shadow: none;
+      }
+
+      .calendar-grid,
+      .calendar-day,
+      .weekday {
+        border-color: #bbb;
+      }
+
+      .calendar-day {
+        min-height: 96px;
+      }
+
+      .pill {
+        color: #000;
+        border: 1px solid #555;
+        background: #fff !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="topbar">
+        <div class="brand">
+          <div class="brand-mark">SW</div>
+          <div class="brand-text">
+            <strong>Sangwijit Expense Management</strong>
+            <span>กลุ่มแสงวิจิตร | ค่าใช้จ่ายประจำและวิเคราะห์ค่าใช้จ่าย</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" id="themeToggle" title="สลับโหมดมืด" aria-label="สลับโหมดมืด">◐</button>
+          <div class="avatar" id="userAvatar">SW</div>
+          <div class="user-meta">
+            <strong id="userName">กำลังโหลด</strong>
+            <span id="userRole">-</span>
+          </div>
+          <a class="btn logout" href="https://accounts.google.com/Logout" target="_top">ออกจากระบบ</a>
+        </div>
+      </div>
+      <nav class="nav-tabs" aria-label="โมดูล">
+        <button class="nav-tab active" data-tab="calendarTab">ปฏิทิน</button>
+        <button class="nav-tab" data-tab="analysisTab">วิเคราะห์ <span class="badge hide" id="unknownNavBadge">0</span></button>
+        <button class="nav-tab" data-tab="budgetTab">เป้า vs จริง</button>
+        <button class="nav-tab" data-tab="vendorTab">ทะเบียนเจ้าหนี้</button>
+        <button class="nav-tab" data-tab="historyTab">ประวัติ</button>
+      </nav>
+    </header>
+
+    <main>
+      <section id="calendarTab" class="tab-panel active">
+        <div class="page-head">
+          <div class="page-title">
+            <h1>ปฏิทินค่าใช้จ่ายประจำ</h1>
+            <p>ยอดเงินแสดงจาก Amount ก่อน VAT ตามสมมติฐานปัจจุบัน</p>
+          </div>
+          <div class="actions-row no-print">
+            <button class="btn primary" id="quickAddBtn">+ เพิ่มรายการประจำ</button>
+            <button class="btn" id="printCalendarBtn">พิมพ์ PDF</button>
+            <button class="btn" id="notifyLineBtn">แจ้งเตือน LINE</button>
+          </div>
+        </div>
+
+        <div class="filters no-print">
+          <div class="field">
+            <label for="calendarEntityFilter">Entity</label>
+            <select id="calendarEntityFilter"></select>
+          </div>
+        </div>
+
+        <div id="calendarAlert"></div>
+        <div class="metric-grid" id="calendarSummary">
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+        </div>
+
+        <div class="calendar-layout">
+          <div class="surface">
+            <div class="calendar-toolbar">
+              <div class="month-control">
+                <button class="icon-btn" id="prevMonthBtn" title="เดือนก่อนหน้า" aria-label="เดือนก่อนหน้า">‹</button>
+                <h2 id="calendarMonthTitle">-</h2>
+                <button class="icon-btn" id="nextMonthBtn" title="เดือนถัดไป" aria-label="เดือนถัดไป">›</button>
+              </div>
+              <div class="muted">กด ← → เพื่อเปลี่ยนเดือน</div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+
+          <aside class="calendar-side">
+            <div class="surface pad">
+              <div class="section-title">
+                <h2>ใกล้หมดสัญญา</h2>
+                <span id="expiryCount">0 รายการ</span>
+              </div>
+              <div id="expiryList" class="compact-list"></div>
+            </div>
+            <div class="surface pad">
+              <div class="section-title">
+                <h2>สีหมวดค่าใช้จ่าย</h2>
+              </div>
+              <div id="legendList" class="compact-list"></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="analysisTab" class="tab-panel">
+        <div class="page-head">
+          <div class="page-title">
+            <h1>วิเคราะห์ค่าใช้จ่าย</h1>
+            <p>ไม่รวมบานาน่าและสาขาปิดใน metric ปัจจุบัน, unknown แสดงเพื่อจัดกลุ่ม</p>
+          </div>
+          <div class="actions-row">
+            <button class="btn" id="refreshAnalysisBtn">รีเฟรช</button>
+            <button class="btn" id="exportTransactionCsvBtn">CSV ตาราง</button>
+          </div>
+        </div>
+
+        <div class="filters">
+          <div class="field">
+            <label for="yearFilter">ปี</label>
+            <select id="yearFilter"></select>
+          </div>
+          <div class="field">
+            <label for="monthFilter">เดือน</label>
+            <select id="monthFilter"></select>
+          </div>
+          <div class="field">
+            <label for="entityFilter">Entity</label>
+            <select id="entityFilter"></select>
+          </div>
+          <div class="field">
+            <label for="branchFilter">สาขา</label>
+            <select id="branchFilter"></select>
+          </div>
+          <div class="field">
+            <label for="transactionSearch">ค้นหา</label>
+            <input id="transactionSearch" type="search" placeholder="กด / เพื่อค้นหา">
+          </div>
+          <button class="btn primary" id="applyFiltersBtn">แสดงข้อมูล</button>
+        </div>
+
+        <div class="metric-grid" id="analysisSummary"></div>
+        <div id="entityTopCategories" class="surface pad" style="margin-bottom:16px;"></div>
+
+        <div class="chart-grid three">
+          <div class="surface chart-box">
+            <div class="section-title"><h2>แนวโน้มรายเดือน</h2><span>Jan-Dec</span></div>
+            <canvas id="monthlyTrendChart"></canvas>
+          </div>
+          <div class="surface chart-box">
+            <div class="section-title"><h2>Top 10 หมวด</h2><span>ตามจำนวนเงิน</span></div>
+            <canvas id="categoryChart"></canvas>
+          </div>
+          <div class="surface chart-box">
+            <div class="section-title"><h2>สัดส่วน Entity</h2><span>เดือนที่เลือก</span></div>
+            <canvas id="entityDonutChart"></canvas>
+          </div>
+        </div>
+
+        <div class="surface chart-box" style="margin-bottom:16px;">
+          <div class="section-title"><h2>ค่าน้ำมันรายคัน month over month</h2><span>ดึงทะเบียนจาก Name</span></div>
+          <canvas id="fuelTrendChart"></canvas>
+        </div>
+
+        <div class="split-grid">
+          <div class="surface pad">
+            <div class="section-title">
+              <h2>รายการยังไม่จัดกลุ่ม</h2>
+              <span id="unknownCountText">0 รายการ</span>
+            </div>
+            <div id="unknownList"></div>
+          </div>
+          <div class="surface pad">
+            <div class="section-title">
+              <h2>ค่าน้ำมันรายคัน</h2>
+              <button class="btn" id="exportFuelCsvBtn">CSV</button>
+            </div>
+            <div id="fuelVehicleList"></div>
+          </div>
+        </div>
+
+        <div class="surface pad" style="margin-bottom:16px;">
+          <div class="section-title">
+            <h2>รายการภาษี</h2>
+            <button class="btn" id="exportTaxCsvBtn">CSV</button>
+          </div>
+          <div id="taxTable"></div>
+        </div>
+
+        <div class="surface pad">
+          <div class="section-title">
+            <h2>Drill-down รายการธุรกรรม</h2>
+            <span id="transactionCountText">0 รายการ</span>
+          </div>
+          <div id="transactionTable"></div>
+        </div>
+      </section>
+
+      <section id="budgetTab" class="tab-panel">
+        <div class="page-head">
+          <div class="page-title">
+            <h1>เป้า vs จริง</h1>
+            <p>ตั้งงบรายเดือนต่อหมวด และดูสถานะเขียว เหลือง แดง</p>
+          </div>
+          <div class="actions-row">
+            <button class="btn" id="exportBudgetCsvBtn">CSV</button>
+            <button class="btn" id="sendBudgetAlertBtn">ส่งอีเมล MD</button>
+            <button class="btn primary" id="saveBudgetBtn">บันทึกงบ</button>
+          </div>
+        </div>
+        <div class="metric-grid" id="budgetSummary"></div>
+        <div class="surface pad">
+          <div class="section-title">
+            <h2>ตารางงบประมาณ</h2>
+            <span>เขียว ≤90%, เหลือง 90-110%, แดง &gt;110%</span>
+          </div>
+          <div id="budgetTable"></div>
+        </div>
+      </section>
+
+      <section id="vendorTab" class="tab-panel">
+        <div class="page-head">
+          <div class="page-title">
+            <h1>ทะเบียนเจ้าหนี้ Recurring</h1>
+            <p>เพิ่ม แก้ไข ปิดสถานะ และดูสัญญาคงเหลือ</p>
+          </div>
+          <div class="actions-row">
+            <button class="btn primary" id="addVendorBtn">+ เพิ่มเจ้าหนี้</button>
+            <button class="btn danger" id="bulkDeactivateBtn">Bulk เลิก</button>
+            <button class="btn" id="exportVendorCsvBtn">CSV</button>
+          </div>
+        </div>
+        <div class="filters">
+          <div class="field">
+            <label for="vendorSearch">ค้นหา</label>
+            <input id="vendorSearch" type="search" placeholder="เจ้าหนี้, หมวด, แผนก">
+          </div>
+          <div class="field">
+            <label for="vendorStatusFilter">สถานะ</label>
+            <select id="vendorStatusFilter">
+              <option value="active">ใช้งาน</option>
+              <option value="all">ทั้งหมด</option>
+              <option value="historical">เลิกแล้ว</option>
+              <option value="expiring">ใกล้หมดสัญญา</option>
+            </select>
+          </div>
+        </div>
+        <div class="surface pad">
+          <div class="section-title">
+            <h2>รายการเจ้าหนี้</h2>
+            <span id="vendorCountText">0 รายการ</span>
+          </div>
+          <div id="vendorTable"></div>
+        </div>
+      </section>
+
+      <section id="historyTab" class="tab-panel">
+        <div class="page-head">
+          <div class="page-title">
+            <h1>ประวัติสาขาปิด</h1>
+            <p>สาขาสว่าง, สาขาสมเด็จ, สาขาบึงกาฬ แสดงเพื่ออ้างอิงเท่านั้น</p>
+          </div>
+          <div class="actions-row">
+            <button class="btn" id="exportHistoryCsvBtn">CSV</button>
+          </div>
+        </div>
+        <div class="surface pad">
+          <div class="section-title">
+            <h2>รายการประวัติ</h2>
+            <span id="historyCountText">0 รายการ</span>
+          </div>
+          <div id="historyTable"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      อัปเดตล่าสุด: <span id="lastUpdatedText">-</span> | Amount assumed EXCL. VAT จนกว่าจะยืนยัน
+    </footer>
+  </div>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="day-drawer" id="dayDrawer" aria-hidden="true">
+    <div class="drawer-head">
+      <h2 id="drawerTitle">รายการครบกำหนด</h2>
+      <button class="icon-btn" id="closeDrawerBtn" aria-label="ปิด">×</button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-head">
+      <h2 id="modalTitle">แก้ไขข้อมูล</h2>
+      <button class="icon-btn" id="closeModalBtn" aria-label="ปิด">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="form-actions" id="modalActions"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const APPS_SCRIPT_URL = 'APPS_SCRIPT_URL';
+    const TEMPLATE_WEB_APP_URL = '<?= webAppUrl ?>';
+    const INJECTED_WEB_APP_URL = TEMPLATE_WEB_APP_URL && !TEMPLATE_WEB_APP_URL.includes('<?') ? TEMPLATE_WEB_APP_URL : '';
+    const API_URL = INJECTED_WEB_APP_URL || (APPS_SCRIPT_URL !== 'APPS_SCRIPT_URL' ? APPS_SCRIPT_URL : '');
+    const CACHE_TTL_MS = 15 * 60 * 1000;
+    const VAT_TOOLTIP = 'ยอดเงินจาก Sheet: Amount assumed EXCL. VAT (ยังไม่ confirm)';
+    const MONTHS_TH = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+    const MONTHS_SHORT = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+    const WEEKDAYS_TH = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
+    const ENTITY_COLORS = ['#E31E24', '#1A1A2E', '#F5A623', '#2563EB', '#16A34A', '#7C3AED', '#DB2777'];
+
+    const state = {
+      activeTab: 'calendarTab',
+      config: null,
+      recurring: null,
+      transactions: null,
+      budget: null,
+      calendarDate: new Date(),
+      calendarDayMap: new Map(),
+      filters: {
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1,
+        entity: 'ทั้งหมด',
+        branch: 'ทั้งหมด',
+        page: 1,
+        pageSize: 500
+      },
+      search: '',
+      vendorSearch: '',
+      vendorStatus: 'active',
+      charts: {}
+    };
+
+    document.addEventListener('DOMContentLoaded', init);
+
+    async function init() {
+      applySavedTheme();
+      bindEvents();
+      renderSkeletons();
+      try {
+        state.config = await apiGet('getConfig', {}, { cache: true });
+        setupFilters();
+        updateUserUi();
+        await Promise.all([
+          loadRecurring(false),
+          loadTransactions(false),
+          loadBudget(false)
+        ]);
+        renderActiveTab();
+        showToast('โหลดข้อมูลเรียบร้อย');
+      } catch (error) {
+        showFatalError(error);
+      }
+    }
+
+    function bindEvents() {
+      document.querySelectorAll('.nav-tab').forEach(button => {
+        button.addEventListener('click', () => switchTab(button.dataset.tab));
+      });
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+      document.getElementById('prevMonthBtn').addEventListener('click', () => changeCalendarMonth(-1));
+      document.getElementById('nextMonthBtn').addEventListener('click', () => changeCalendarMonth(1));
+      document.getElementById('printCalendarBtn').addEventListener('click', () => window.print());
+      document.getElementById('quickAddBtn').addEventListener('click', () => openRecurringModal());
+      document.getElementById('addVendorBtn').addEventListener('click', () => openRecurringModal());
+      document.getElementById('calendarEntityFilter').addEventListener('change', event => {
+        state.filters.entity = event.target.value;
+        renderCalendar();
+      });
+      document.getElementById('applyFiltersBtn').addEventListener('click', applyTransactionFilters);
+      document.getElementById('refreshAnalysisBtn').addEventListener('click', () => loadTransactions(true));
+      document.getElementById('transactionSearch').addEventListener('input', event => {
+        state.search = event.target.value;
+        renderTransactionTables();
+      });
+      document.getElementById('vendorSearch').addEventListener('input', event => {
+        state.vendorSearch = event.target.value;
+        renderVendorMaster();
+      });
+      document.getElementById('vendorStatusFilter').addEventListener('change', event => {
+        state.vendorStatus = event.target.value;
+        renderVendorMaster();
+      });
+      document.getElementById('saveBudgetBtn').addEventListener('click', saveBudgetTargets);
+      document.getElementById('sendBudgetAlertBtn').addEventListener('click', sendBudgetAlerts);
+      document.getElementById('notifyLineBtn').addEventListener('click', sendLineNotifications);
+      document.getElementById('bulkDeactivateBtn').addEventListener('click', bulkDeactivateRecurring);
+      document.getElementById('exportTransactionCsvBtn').addEventListener('click', () => exportCsv('transactions', getVisibleTransactions()));
+      document.getElementById('exportFuelCsvBtn').addEventListener('click', () => exportCsv('fuel-by-vehicle', getFuelRows()));
+      document.getElementById('exportTaxCsvBtn').addEventListener('click', () => exportCsv('tax-rows', state.transactions?.taxRows || []));
+      document.getElementById('exportBudgetCsvBtn').addEventListener('click', () => exportCsv('budget-vs-actual', state.budget?.rows || []));
+      document.getElementById('exportVendorCsvBtn').addEventListener('click', () => exportCsv('recurring-vendors', getFilteredVendors()));
+      document.getElementById('exportHistoryCsvBtn').addEventListener('click', () => exportCsv('closed-branch-history', state.transactions?.historyRows || []));
+      document.getElementById('closeDrawerBtn').addEventListener('click', closeDrawer);
+      document.getElementById('drawerBackdrop').addEventListener('click', closeDrawer);
+      document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+      document.getElementById('modalBackdrop').addEventListener('click', closeModal);
+
+      document.addEventListener('keydown', event => {
+        if (event.key === '/' && !isTypingTarget(event.target)) {
+          event.preventDefault();
+          const search = state.activeTab === 'vendorTab'
+            ? document.getElementById('vendorSearch')
+            : document.getElementById('transactionSearch');
+          search?.focus();
+        }
+        if (state.activeTab === 'calendarTab' && !isTypingTarget(event.target)) {
+          if (event.key === 'ArrowLeft') {
+            changeCalendarMonth(-1);
+          }
+          if (event.key === 'ArrowRight') {
+            changeCalendarMonth(1);
+          }
+        }
+      });
+
+      document.getElementById('transactionTable').addEventListener('click', event => {
+        const button = event.target.closest('[data-edit-dep]');
+        if (button) {
+          const rowNumber = Number(button.dataset.editDep);
+          const row = (state.transactions?.rows || []).find(item => item.rowNumber === rowNumber)
+            || (state.transactions?.unknownRows || []).find(item => item.rowNumber === rowNumber);
+          openDepModal(row);
+        }
+      });
+
+      document.getElementById('unknownList').addEventListener('click', event => {
+        const button = event.target.closest('[data-edit-dep]');
+        if (button) {
+          const row = (state.transactions?.unknownRows || []).find(item => item.rowNumber === Number(button.dataset.editDep));
+          openDepModal(row);
+        }
+      });
+
+      document.getElementById('vendorTable').addEventListener('click', event => {
+        const edit = event.target.closest('[data-edit-recurring]');
+        const deactivate = event.target.closest('[data-deactivate-recurring]');
+        if (edit) {
+          const item = findRecurringItem(edit.dataset.editRecurring);
+          openRecurringModal(item);
+        }
+        if (deactivate) {
+          deactivateRecurring(deactivate.dataset.deactivateRecurring);
+        }
+      });
+    }
+
+    function renderSkeletons() {
+      document.getElementById('analysisSummary').innerHTML = '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
+      document.getElementById('transactionTable').innerHTML = '<div class="skeleton"></div>';
+      document.getElementById('budgetTable').innerHTML = '<div class="skeleton"></div>';
+      document.getElementById('vendorTable').innerHTML = '<div class="skeleton"></div>';
+      document.getElementById('historyTable').innerHTML = '<div class="skeleton"></div>';
+    }
+
+    async function loadRecurring(force) {
+      state.recurring = await apiGet('getRecurringData', {}, { cache: !force });
+      updateLastUpdated(state.recurring.lastUpdated);
+      renderCalendar();
+      renderVendorMaster();
+    }
+
+    async function loadTransactions(force) {
+      state.transactions = await apiGet('getTransactionData', state.filters, { cache: !force });
+      updateLastUpdated(state.transactions.lastUpdated);
+      updateUnknownBadge();
+      renderAnalysis();
+      renderHistory();
+    }
+
+    async function loadBudget(force) {
+      const params = {
+        year: state.filters.year,
+        month: state.filters.month,
+        entity: state.filters.entity,
+        branch: state.filters.branch
+      };
+      state.budget = await apiGet('getBudgetData', params, { cache: !force });
+      updateLastUpdated(state.budget.lastUpdated);
+      renderBudget();
+    }
+
+    async function applyTransactionFilters() {
+      state.filters.year = Number(document.getElementById('yearFilter').value);
+      state.filters.month = Number(document.getElementById('monthFilter').value);
+      state.filters.entity = document.getElementById('entityFilter').value;
+      state.filters.branch = document.getElementById('branchFilter').value;
+      state.filters.page = 1;
+      await Promise.all([loadTransactions(false), loadBudget(false)]);
+    }
+
+    function switchTab(tabId) {
+      state.activeTab = tabId;
+      document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.tab === tabId));
+      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.toggle('active', panel.id === tabId));
+      renderActiveTab();
+    }
+
+    function renderActiveTab() {
+      if (state.activeTab === 'calendarTab') renderCalendar();
+      if (state.activeTab === 'analysisTab') renderAnalysis();
+      if (state.activeTab === 'budgetTab') renderBudget();
+      if (state.activeTab === 'vendorTab') renderVendorMaster();
+      if (state.activeTab === 'historyTab') renderHistory();
+    }
+
+    function setupFilters() {
+      const config = state.config || {};
+      const entityOptions = config.entityOptions || ['ทั้งหมด', 'SWT', 'SWE', 'WMN', 'WPS'];
+      const branchOptions = config.branchOptions || ['ทั้งหมด'];
+      setOptions(document.getElementById('calendarEntityFilter'), entityOptions, state.filters.entity);
+      setOptions(document.getElementById('entityFilter'), entityOptions, state.filters.entity);
+      setOptions(document.getElementById('branchFilter'), branchOptions, state.filters.branch);
+      setOptions(document.getElementById('yearFilter'), [2022, 2023, 2024, 2025, 2026], state.filters.year);
+      setOptions(document.getElementById('monthFilter'), [
+        { value: 0, label: 'ทั้งปี' },
+        ...MONTHS_TH.map((name, index) => ({ value: index + 1, label: name }))
+      ], state.filters.month);
+
+      if (config.user?.role === 'branch' && config.user.branch) {
+        const branchFilter = document.getElementById('branchFilter');
+        branchFilter.value = config.user.branch;
+        branchFilter.disabled = true;
+        state.filters.branch = config.user.branch;
+      }
+    }
+
+    function updateUserUi() {
+      const user = state.config?.user || {};
+      const name = user.name || user.email || 'Sangwijit';
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userRole').textContent = user.role === 'branch' && user.branch ? `สาขา ${user.branch}` : (user.role || 'md');
+      document.getElementById('userAvatar').textContent = getInitials(name || user.email || 'SW');
+    }
+
+    function renderCalendar() {
+      if (!state.recurring) return;
+      const date = state.calendarDate;
+      const year = date.getFullYear();
+      const monthIndex = date.getMonth();
+      const entity = document.getElementById('calendarEntityFilter').value || state.filters.entity || 'ทั้งหมด';
+      const items = state.recurring.items.filter(item => {
+        return !item.isHistorical && item.isActive && (entity === 'ทั้งหมด' || item.entity === entity);
+      });
+      const occurrences = buildMonthOccurrences(items, year, monthIndex);
+      state.calendarDayMap = groupByDay(occurrences);
+
+      document.getElementById('calendarMonthTitle').textContent = `${MONTHS_TH[monthIndex]} ${year + 543}`;
+      renderCalendarSummary(occurrences);
+      renderDueAlerts(items);
+      renderCalendarGrid(year, monthIndex);
+      renderExpiryList(items);
+      renderLegend();
+    }
+
+    function renderCalendarSummary(occurrences) {
+      const total = sum(occurrences, item => item.amount);
+      const rent = sum(occurrences.filter(item => item.category.includes('ค่าเช่าพื้นที่')), item => item.amount);
+      const utility = sum(occurrences.filter(item => item.category.includes('ค่าไฟฟ้า') || item.category.includes('ค่าน้ำ')), item => item.amount);
+      const carRent = sum(occurrences.filter(item => item.category.includes('ค่าเช่ารถ')), item => item.amount);
+      document.getElementById('calendarSummary').innerHTML = [
+        metricHtml('รวมเดือนนี้', formatCurrency(total), 'ทั้งหมดตาม Entity ที่เลือก'),
+        metricHtml('ค่าเช่า', formatCurrency(rent), 'ค่าเช่าพื้นที่'),
+        metricHtml('สาธารณูปโภค', formatCurrency(utility), 'ค่าไฟฟ้า + ค่าน้ำ'),
+        metricHtml('ค่าเช่ารถ', formatCurrency(carRent), 'รถเช่าประจำ')
+      ].join('');
+    }
+
+    function renderDueAlerts(items) {
+      const today = startOfDay(new Date());
+      const dueSoon = buildOccurrencesBetween(items, today, addDays(today, 7));
+      const container = document.getElementById('calendarAlert');
+      if (!dueSoon.length) {
+        container.innerHTML = '';
+        return;
+      }
+      container.innerHTML = `
+        <div class="alert-banner">
+          <strong>แจ้งเตือน:</strong> มี ${dueSoon.length} รายการครบกำหนดภายใน 7 วัน
+          <div class="alert-list">
+            ${dueSoon.slice(0, 12).map(item => `
+              <span class="status red" title="${VAT_TOOLTIP}">${escapeHtml(formatDateBE(item.dueDate))} ${escapeHtml(item.vendorName || item.category)} ${formatCurrency(item.amount)}</span>
+            `).join('')}
+            ${dueSoon.length > 12 ? `<span class="status gray">+${dueSoon.length - 12}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCalendarGrid(year, monthIndex) {
+      const grid = document.getElementById('calendarGrid');
+      const firstDay = new Date(year, monthIndex, 1);
+      const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+      const startOffset = firstDay.getDay();
+      const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+      const today = new Date();
+      let html = WEEKDAYS_TH.map(day => `<div class="weekday">${day}</div>`).join('');
+
+      for (let cell = 0; cell < totalCells; cell++) {
+        const day = cell - startOffset + 1;
+        if (day < 1 || day > daysInMonth) {
+          html += '<div class="calendar-day muted"></div>';
+          continue;
+        }
+        const isToday = today.getFullYear() === year && today.getMonth() === monthIndex && today.getDate() === day;
+        const items = state.calendarDayMap.get(day) || [];
+        html += `
+          <div class="calendar-day ${isToday ? 'today' : ''}" data-calendar-day="${day}">
+            <button class="day-number" type="button">${day}</button>
+            <div class="pill-list">
+              ${items.slice(0, 3).map(item => `
+                <div class="pill" title="${escapeHtml(item.vendorName)} | ${formatCurrency(item.amount)} | ${VAT_TOOLTIP}" style="background:${categoryColor(item.category)}">
+                  ${escapeHtml(item.category)} ${formatCurrencyCompact(item.amount)}
+                </div>
+              `).join('')}
+              ${items.length > 3 ? `<div class="more-pill">+${items.length - 3} รายการ</div>` : ''}
+            </div>
+          </div>
+        `;
+      }
+      grid.innerHTML = html;
+      grid.querySelectorAll('[data-calendar-day]').forEach(dayCell => {
+        dayCell.addEventListener('click', () => {
+          const day = Number(dayCell.dataset.calendarDay);
+          openDayDrawer(day, state.calendarDayMap.get(day) || []);
+        });
+      });
+    }
+
+    function renderExpiryList(items) {
+      const expiring = items.filter(item => item.expirySoon);
+      document.getElementById('expiryCount').textContent = `${expiring.length} รายการ`;
+      document.getElementById('expiryList').innerHTML = expiring.length
+        ? expiring.map(item => `
+          <div class="expiry-item">
+            <strong>⚠️ ${escapeHtml(item.vendorName || item.category)}</strong>
+            <span>${escapeHtml(item.category)} | เหลือ ${item.remainingPeriods ?? '-'} งวด | ${formatCurrency(item.amount)}</span>
+            <span>${escapeHtml(item.alertText || item.note || '')}</span>
+          </div>
+        `).join('')
+        : '<div class="empty">ไม่มีรายการใกล้หมดสัญญา</div>';
+    }
+
+    function renderLegend() {
+      const map = state.config?.categoryColors || {};
+      document.getElementById('legendList').innerHTML = Object.keys(map).map(category => `
+        <div class="compact-row">
+          <strong><span class="status" style="background:${map[category]};color:#fff;">สี</span> ${escapeHtml(category)}</strong>
+        </div>
+      `).join('');
+    }
+
+    function renderAnalysis() {
+      if (!state.transactions) return;
+      renderAnalysisSummary();
+      renderEntityTopCategories();
+      renderCharts();
+      renderTransactionTables();
+    }
+
+    function renderAnalysisSummary() {
+      const metrics = state.transactions.metrics || {};
+      document.getElementById('analysisSummary').innerHTML = [
+        metricHtml('รวมทั้งหมด', formatCurrency(metrics.totalAmount || 0), `${metrics.totalTransactions || 0} รายการ`),
+        metricHtml('ยังไม่จัดกลุ่ม', String(metrics.unknownCount || 0), 'DepName = unknown'),
+        metricHtml('ภาษี', formatCurrency(metrics.taxAmount || 0), 'DepName = คชจ.บิลเพิ่ม'),
+        metricHtml('ประวัติสาขาปิด', String(metrics.historyCount || 0), 'ไม่รวมใน metric ปัจจุบัน')
+      ].join('');
+    }
+
+    function renderEntityTopCategories() {
+      const data = state.transactions.metrics?.entityTopCategories || {};
+      const entities = Object.keys(data);
+      document.getElementById('entityTopCategories').innerHTML = `
+        <div class="section-title"><h2>Top 3 หมวดตาม Entity</h2><span>เดือนที่เลือก</span></div>
+        ${entities.length ? `<div class="two-col">${entities.map(entity => `
+          <div>
+            <strong>${escapeHtml(entity)}</strong>
+            <div class="compact-list">
+              ${data[entity].map(row => `<div class="compact-row"><strong>${escapeHtml(row.label)}</strong><span>${formatCurrency(row.amount)}</span></div>`).join('')}
+            </div>
+          </div>
+        `).join('')}</div>` : '<div class="empty">ไม่มีข้อมูลตามตัวกรอง</div>'}
+      `;
+    }
+
+    function renderCharts() {
+      const charts = state.transactions.charts || {};
+      const trend = charts.monthlyTrend || [];
+      createChart('monthlyTrendChart', 'bar', {
+        labels: MONTHS_SHORT,
+        datasets: [{
+          label: 'ค่าใช้จ่าย',
+          data: trend.map(row => row.amount || 0),
+          backgroundColor: '#E31E24'
+        }]
+      }, { plugins: { legend: { display: false } } });
+
+      const categories = charts.categoryTotals || [];
+      createChart('categoryChart', 'bar', {
+        labels: categories.map(row => row.label),
+        datasets: [{
+          label: 'จำนวนเงิน',
+          data: categories.map(row => row.amount),
+          backgroundColor: '#F5A623'
+        }]
+      }, {
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: { y: { ticks: { autoSkip: false } } }
+      });
+
+      const entitySplit = charts.entitySplit || [];
+      createChart('entityDonutChart', 'doughnut', {
+        labels: entitySplit.map(row => row.label),
+        datasets: [{
+          data: entitySplit.map(row => row.amount),
+          backgroundColor: ENTITY_COLORS
+        }]
+      }, { plugins: { legend: { position: 'bottom' } } });
+
+      renderFuelTrendChart();
+    }
+
+    function renderFuelTrendChart() {
+      const trend = state.transactions.fuel?.trend || {};
+      const totals = Object.keys(trend).map(plate => ({
+        plate,
+        amount: trend[plate].reduce((a, b) => a + b, 0)
+      })).sort((a, b) => b.amount - a.amount).slice(0, 6);
+      createChart('fuelTrendChart', 'line', {
+        labels: MONTHS_SHORT,
+        datasets: totals.map((row, index) => ({
+          label: row.plate,
+          data: trend[row.plate],
+          borderColor: ENTITY_COLORS[index % ENTITY_COLORS.length],
+          backgroundColor: ENTITY_COLORS[index % ENTITY_COLORS.length],
+          tension: .25
+        }))
+      }, { plugins: { legend: { position: 'bottom' } } });
+    }
+
+    function renderTransactionTables() {
+      renderUnknownList();
+      renderFuelVehicleList();
+      renderTaxTable();
+      renderTransactionTable();
+      updateUnknownBadge();
+    }
+
+    function renderUnknownList() {
+      const rows = state.transactions?.unknownRows || [];
+      document.getElementById('unknownCountText').textContent = `${rows.length} รายการ`;
+      document.getElementById('unknownList').innerHTML = rows.length
+        ? rows.slice(0, 8).map(row => `
+          <div class="compact-row">
+            <strong>${escapeHtml(row.docNo || '-')} | ${formatCurrency(row.amount)}</strong>
+            <span>${formatDateBE(row.docDate)} | ${escapeHtml(row.name || row.vendorName || '-')}</span>
+            <button class="btn primary" data-edit-dep="${row.rowNumber}">จัดกลุ่ม</button>
+          </div>
+        `).join('')
+        : '<div class="empty">ไม่มีรายการ unknown ในตัวกรองนี้</div>';
+    }
+
+    function renderFuelVehicleList() {
+      const rows = state.transactions?.fuel?.totals || [];
+      document.getElementById('fuelVehicleList').innerHTML = rows.length
+        ? rows.map(row => `<div class="compact-row"><strong>${escapeHtml(row.label)}</strong><span>${formatCurrency(row.amount)}</span></div>`).join('')
+        : '<div class="empty">ไม่พบรายการค่าน้ำมัน</div>';
+    }
+
+    function renderTaxTable() {
+      const rows = state.transactions?.taxRows || [];
+      document.getElementById('taxTable').innerHTML = buildTransactionTable(rows, { compact: true, showEdit: false });
+    }
+
+    function renderTransactionTable() {
+      const rows = getVisibleTransactions();
+      document.getElementById('transactionCountText').textContent = `${rows.length} / ${state.transactions?.pagination?.totalRows || 0} รายการ`;
+      document.getElementById('transactionTable').innerHTML = buildTransactionTable(rows, { compact: false, showEdit: true });
+    }
+
+    function buildTransactionTable(rows, options) {
+      if (!rows.length) {
+        return '<div class="empty">ไม่มีข้อมูลตามตัวกรอง</div>';
+      }
+      return `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>วันที่</th>
+                <th>DocNo</th>
+                <th>Entity</th>
+                <th>สาขา</th>
+                <th>แผนก</th>
+                <th>หมวด</th>
+                <th>ชื่อรายการ</th>
+                <th>จำนวนเงิน</th>
+                ${options.showEdit ? '<th>จัดการ</th>' : ''}
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map(row => `
+                <tr class="${row.isUnknownDep ? 'unknown-row' : ''}">
+                  <td>${formatDateBE(row.docDate)}</td>
+                  <td>${escapeHtml(row.docNo || '-')}</td>
+                  <td>${escapeHtml(row.entity || '-')}</td>
+                  <td>${escapeHtml(row.branchName || '-')}</td>
+                  <td>${escapeHtml(row.depDisplay || row.depName || '-')}</td>
+                  <td>${escapeHtml(row.expenseCode || '-')}</td>
+                  <td>${escapeHtml(row.name || row.vendorName || '-')}</td>
+                  <td class="amount" title="${VAT_TOOLTIP}">${formatCurrency(row.amount)}</td>
+                  ${options.showEdit ? `<td>${row.isUnknownDep ? `<button class="btn primary" data-edit-dep="${row.rowNumber}">จัดกลุ่ม</button>` : ''}</td>` : ''}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderBudget() {
+      if (!state.budget) return;
+      const summary = state.budget.summary || {};
+      document.getElementById('budgetSummary').innerHTML = [
+        metricHtml('Actual', formatCurrency(summary.actual || 0), 'ตามตัวกรองปัจจุบัน'),
+        metricHtml('Budget', formatCurrency(summary.budget || 0), 'เป้าหมายที่ตั้งไว้'),
+        metricHtml('Variance', formatCurrency(summary.variance || 0), 'Actual - Budget'),
+        metricHtml('เกินงบ', String(summary.overBudgetCount || 0), 'สถานะแดง')
+      ].join('');
+
+      const rows = state.budget.rows || [];
+      document.getElementById('budgetTable').innerHTML = rows.length
+        ? `
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>หมวด</th>
+                  <th>Actual</th>
+                  <th>Budget</th>
+                  <th>Variance</th>
+                  <th>สถานะ</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map(row => `
+                  <tr>
+                    <td>${escapeHtml(row.category)}</td>
+                    <td class="amount" title="${VAT_TOOLTIP}">${formatCurrency(row.actual)}</td>
+                    <td><input class="budget-input" data-category="${escapeAttr(row.category)}" type="number" min="0" step="0.01" value="${Number(row.budget || 0)}"></td>
+                    <td class="amount ${row.variance > 0 ? 'danger-text' : ''}">${formatCurrency(row.variance)}</td>
+                    <td><span class="status ${row.status}">${budgetStatusText(row.status)}</span></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `
+        : '<div class="empty">ยังไม่มีข้อมูล Actual หรือ Budget สำหรับตัวกรองนี้</div>';
+    }
+
+    function renderVendorMaster() {
+      if (!state.recurring) return;
+      const rows = getFilteredVendors();
+      document.getElementById('vendorCountText').textContent = `${rows.length} รายการ`;
+      document.getElementById('vendorTable').innerHTML = rows.length
+        ? `
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="selectAllVendors" aria-label="เลือกทั้งหมด"></th>
+                  <th>เจ้าหนี้</th>
+                  <th>Entity</th>
+                  <th>หมวด</th>
+                  <th>จำนวนเงิน</th>
+                  <th>เริ่มต้น</th>
+                  <th>คงเหลือ</th>
+                  <th>Timeline</th>
+                  <th>สถานะ</th>
+                  <th>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map(item => `
+                  <tr>
+                    <td><input type="checkbox" class="vendor-check" value="${escapeAttr(item.id)}"></td>
+                    <td><strong>${escapeHtml(item.vendorName || '-')}</strong><br><span class="muted">${escapeHtml(item.vendorCode || item.systemCode || '')}</span></td>
+                    <td>${escapeHtml(item.entity)}</td>
+                    <td>${escapeHtml(item.category)}</td>
+                    <td class="amount" title="${VAT_TOOLTIP}">${formatCurrency(item.amount)}</td>
+                    <td>${formatDateBE(item.startDate)}</td>
+                    <td>${item.remainingPeriods ?? '-'} งวด</td>
+                    <td>${ganttHtml(item)}</td>
+                    <td>${vendorStatusHtml(item)}</td>
+                    <td>
+                      <button class="btn" data-edit-recurring="${escapeAttr(item.id)}">แก้ไข</button>
+                      <button class="btn danger" data-deactivate-recurring="${escapeAttr(item.id)}">เลิก</button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `
+        : '<div class="empty">ไม่มีรายการเจ้าหนี้ตามตัวกรอง</div>';
+
+      const selectAll = document.getElementById('selectAllVendors');
+      if (selectAll) {
+        selectAll.addEventListener('change', () => {
+          document.querySelectorAll('.vendor-check').forEach(check => {
+            check.checked = selectAll.checked;
+          });
+        });
+      }
+    }
+
+    function renderHistory() {
+      if (!state.transactions) return;
+      const rows = state.transactions.historyRows || [];
+      document.getElementById('historyCountText').textContent = `${rows.length} รายการ`;
+      document.getElementById('historyTable').innerHTML = buildTransactionTable(rows, { compact: false, showEdit: false });
+    }
+
+    function changeCalendarMonth(offset) {
+      state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() + offset, 1);
+      renderCalendar();
+    }
+
+    function openDayDrawer(day, items) {
+      const date = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth(), day);
+      document.getElementById('drawerTitle').textContent = `ครบกำหนด ${formatDateBE(date)}`;
+      document.getElementById('drawerBody').innerHTML = items.length
+        ? items.map(item => `
+          <div class="compact-row">
+            <strong>${escapeHtml(item.vendorName || item.category)}</strong>
+            <span>${escapeHtml(item.entity)} | ${escapeHtml(item.category)} | ${escapeHtml(item.depName || '-')}</span>
+            <span title="${VAT_TOOLTIP}">${formatCurrency(item.amount)}</span>
+            ${item.expirySoon ? '<span class="status amber">⚠️ ใกล้หมดสัญญา</span>' : ''}
+          </div>
+        `).join('')
+        : '<div class="empty">ไม่มีรายการในวันนี้</div>';
+      document.getElementById('drawerBackdrop').classList.add('open');
+      document.getElementById('dayDrawer').classList.add('open');
+      document.getElementById('dayDrawer').setAttribute('aria-hidden', 'false');
+    }
+
+    function closeDrawer() {
+      document.getElementById('drawerBackdrop').classList.remove('open');
+      document.getElementById('dayDrawer').classList.remove('open');
+      document.getElementById('dayDrawer').setAttribute('aria-hidden', 'true');
+    }
+
+    function openRecurringModal(item) {
+      const isEdit = Boolean(item);
+      const data = item || {
+        dueDay: state.calendarDate.getDate(),
+        frequency: 1,
+        startDate: toIsoDate(new Date()),
+        entity: state.filters.entity === 'ทั้งหมด' ? 'SWE' : state.filters.entity
+      };
+      const categories = state.config?.categories || Object.keys(state.config?.categoryColors || {});
+      openModal(isEdit ? 'แก้ไขรายการประจำ' : 'เพิ่มรายการประจำ', `
+        <form id="recurringForm" class="form-grid">
+          <div class="field">
+            <label>รหัสเจ้าหนี้</label>
+            <input name="vendorCode" value="${escapeAttr(data.vendorCode || '')}">
+          </div>
+          <div class="field">
+            <label>เจ้าหนี้</label>
+            <input name="vendorName" required value="${escapeAttr(data.vendorName || '')}">
+          </div>
+          <div class="field">
+            <label>รหัสในระบบ</label>
+            <input name="systemCode" value="${escapeAttr(data.systemCode || '')}">
+          </div>
+          <div class="field">
+            <label>รหัสค่าใช้จ่าย</label>
+            <input name="category" list="categoryList" required value="${escapeAttr(data.category || '')}">
+            <datalist id="categoryList">${categories.map(category => `<option value="${escapeAttr(category)}"></option>`).join('')}</datalist>
+          </div>
+          <div class="field">
+            <label>กลุ่มเอกสาร</label>
+            <input name="docGroup" value="${escapeAttr(data.docGroup || '')}">
+          </div>
+          <div class="field">
+            <label>จำนวนเงิน</label>
+            <input name="amount" type="number" step="0.01" min="0" required value="${Number(data.amount || 0)}">
+          </div>
+          <div class="field">
+            <label>แผนก</label>
+            <input name="depName" value="${escapeAttr(data.depName || '')}">
+          </div>
+          <div class="field">
+            <label>วันที่เริ่มต้น</label>
+            <input name="startDate" type="date" value="${escapeAttr(data.startDate || toIsoDate(new Date()))}">
+          </div>
+          <div class="field">
+            <label>จำนวนงวด</label>
+            <input name="totalPeriods" type="number" min="0" value="${data.totalPeriods || ''}">
+          </div>
+          <div class="field">
+            <label>ชำระทุกวันที่</label>
+            <input name="dueDay" type="number" min="1" max="31" required value="${data.dueDay || 1}">
+          </div>
+          <div class="field">
+            <label>ความถี่ทุกกี่เดือน</label>
+            <input name="frequency" type="number" min="1" required value="${data.frequency || 1}">
+          </div>
+          <div class="field">
+            <label>เตือนกี่งวดสุดท้าย</label>
+            <input name="alertPeriods" type="number" min="0" value="${data.alertPeriods || 0}">
+          </div>
+          <div class="field full">
+            <label>หมายเหตุ</label>
+            <textarea name="note">${escapeHtml(data.note || '')}</textarea>
+          </div>
+          <div class="field full">
+            <label>ข้อความเตือน</label>
+            <textarea name="alertText">${escapeHtml(data.alertText || '')}</textarea>
+          </div>
+        </form>
+      `, `
+        <button class="btn" type="button" data-close-modal>ยกเลิก</button>
+        <button class="btn primary" type="button" id="saveRecurringBtn">${isEdit ? 'บันทึก' : 'เพิ่มรายการ'}</button>
+      `);
+      document.querySelector('[data-close-modal]').addEventListener('click', closeModal);
+      document.getElementById('saveRecurringBtn').addEventListener('click', async () => {
+        const form = document.getElementById('recurringForm');
+        if (!form.reportValidity()) return;
+        const payload = Object.fromEntries(new FormData(form).entries());
+        payload.amount = Number(payload.amount || 0);
+        payload.totalPeriods = payload.totalPeriods ? Number(payload.totalPeriods) : '';
+        payload.dueDay = Number(payload.dueDay || 1);
+        payload.frequency = Number(payload.frequency || 1);
+        payload.alertPeriods = Number(payload.alertPeriods || 0);
+        try {
+          if (isEdit) {
+            await apiPost('updateRecurringItem', { id: item.id, data: payload });
+          } else {
+            await apiPost('addRecurringItem', { data: payload });
+          }
+          closeModal();
+          invalidateCache();
+          await loadRecurring(true);
+          showToast('บันทึกรายการประจำแล้ว');
+        } catch (error) {
+          showToast(`บันทึกไม่สำเร็จ: ${error.message}`);
+        }
+      });
+    }
+
+    function openDepModal(row) {
+      if (!row) return;
+      const departments = state.config?.departments || [];
+      openModal('จัดกลุ่มรายการ', `
+        <div class="compact-row" style="margin-bottom:12px;">
+          <strong>${escapeHtml(row.docNo || '-')} | ${formatCurrency(row.amount)}</strong>
+          <span>${escapeHtml(row.name || row.vendorName || '-')}</span>
+        </div>
+        <form id="depForm" class="form-grid">
+          <div class="field full">
+            <label>DepName ใหม่</label>
+            <input name="depName" list="departmentList" required>
+            <datalist id="departmentList">${departments.map(dep => `<option value="${escapeAttr(dep)}"></option>`).join('')}</datalist>
+          </div>
+        </form>
+      `, `
+        <button class="btn" type="button" data-close-modal>ยกเลิก</button>
+        <button class="btn primary" type="button" id="saveDepBtn">บันทึก</button>
+      `);
+      document.querySelector('[data-close-modal]').addEventListener('click', closeModal);
+      document.getElementById('saveDepBtn').addEventListener('click', async () => {
+        const form = document.getElementById('depForm');
+        if (!form.reportValidity()) return;
+        const depName = new FormData(form).get('depName');
+        try {
+          await apiPost('updateTransactionDepName', { rowNumber: row.rowNumber, depName });
+          closeModal();
+          invalidateCache();
+          await loadTransactions(true);
+          showToast('จัดกลุ่มเรียบร้อย');
+        } catch (error) {
+          showToast(`จัดกลุ่มไม่สำเร็จ: ${error.message}`);
+        }
+      });
+    }
+
+    function openModal(title, bodyHtml, actionsHtml) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalBody').innerHTML = bodyHtml;
+      document.getElementById('modalActions').innerHTML = actionsHtml;
+      document.getElementById('modalBackdrop').classList.add('open');
+      document.getElementById('modal').classList.add('open');
+      document.getElementById('modal').setAttribute('aria-hidden', 'false');
+    }
+
+    function closeModal() {
+      document.getElementById('modalBackdrop').classList.remove('open');
+      document.getElementById('modal').classList.remove('open');
+      document.getElementById('modal').setAttribute('aria-hidden', 'true');
+    }
+
+    async function saveBudgetTargets() {
+      const targets = Array.from(document.querySelectorAll('.budget-input')).map(input => ({
+        year: state.filters.year,
+        month: state.filters.month,
+        entity: state.filters.entity,
+        category: input.dataset.category,
+        budget: Number(input.value || 0)
+      }));
+      try {
+        await apiPost('saveBudgetTargets', { targets });
+        invalidateCache();
+        await loadBudget(true);
+        showToast('บันทึกงบประมาณแล้ว');
+      } catch (error) {
+        showToast(`บันทึกงบไม่สำเร็จ: ${error.message}`);
+      }
+    }
+
+    async function sendBudgetAlerts() {
+      try {
+        const result = await apiPost('sendBudgetAlerts', {
+          year: state.filters.year,
+          month: state.filters.month,
+          entity: state.filters.entity
+        });
+        showToast(result.sent ? `ส่งอีเมลแล้ว ${result.count} หมวด` : result.message);
+      } catch (error) {
+        showToast(`ส่งอีเมลไม่สำเร็จ: ${error.message}`);
+      }
+    }
+
+    async function sendLineNotifications() {
+      try {
+        const result = await apiPost('sendLineDueNotifications', { days: 3 });
+        showToast(result.sent ? `ส่ง LINE แล้ว ${result.count} รายการ` : (result.message || result.result?.warning || 'ไม่ได้ส่ง LINE'));
+      } catch (error) {
+        showToast(`ส่ง LINE ไม่สำเร็จ: ${error.message}`);
+      }
+    }
+
+    async function deactivateRecurring(id) {
+      if (!confirm('ยืนยันการ mark รายการนี้เป็นเลิก?')) return;
+      try {
+        await apiPost('deactivateRecurringItem', { id });
+        invalidateCache();
+        await loadRecurring(true);
+        showToast('เปลี่ยนสถานะเป็นเลิกแล้ว');
+      } catch (error) {
+        showToast(`อัปเดตไม่สำเร็จ: ${error.message}`);
+      }
+    }
+
+    async function bulkDeactivateRecurring() {
+      const ids = Array.from(document.querySelectorAll('.vendor-check:checked')).map(check => check.value);
+      if (!ids.length) {
+        showToast('กรุณาเลือกรายการก่อน');
+        return;
+      }
+      if (!confirm(`ยืนยัน mark เป็นเลิก ${ids.length} รายการ?`)) return;
+      try {
+        await apiPost('bulkDeactivateRecurringItems', { ids });
+        invalidateCache();
+        await loadRecurring(true);
+        showToast('Bulk update สำเร็จ');
+      } catch (error) {
+        showToast(`Bulk update ไม่สำเร็จ: ${error.message}`);
+      }
+    }
+
+    function buildMonthOccurrences(items, year, monthIndex) {
+      const start = new Date(year, monthIndex, 1);
+      const end = new Date(year, monthIndex + 1, 0);
+      return buildOccurrencesBetween(items, start, end);
+    }
+
+    function buildOccurrencesBetween(items, start, end) {
+      const output = [];
+      items.forEach(item => {
+        const dates = recurringDatesBetween(item, start, end);
+        dates.forEach(dateInfo => {
+          output.push({ ...item, dueDate: dateInfo.date, period: dateInfo.period });
+        });
+      });
+      return output.sort((a, b) => a.dueDate - b.dueDate || a.category.localeCompare(b.category, 'th'));
+    }
+
+    function recurringDatesBetween(item, rangeStart, rangeEnd) {
+      const startDate = parseIsoDate(item.startDate);
+      if (!startDate || !item.dueDay || !item.frequency) return [];
+      const firstDue = getFirstDueDate(startDate, Number(item.dueDay), Number(item.frequency));
+      const dates = [];
+      let count = 0;
+      let current = firstDue;
+      const start = startOfDay(rangeStart);
+      const end = startOfDay(rangeEnd);
+      while (current <= end) {
+        if (current >= start) {
+          dates.push({ date: new Date(current), period: count + 1 });
+        }
+        count += 1;
+        if (item.totalPeriods && count >= Number(item.totalPeriods)) break;
+        if (count > 600) break;
+        current = addMonthsClamped(firstDue, count * Number(item.frequency), Number(item.dueDay));
+      }
+      return dates;
+    }
+
+    function getFirstDueDate(startDate, dueDay, frequency) {
+      let first = makeDateWithDay(startDate.getFullYear(), startDate.getMonth(), dueDay);
+      if (first < startOfDay(startDate)) {
+        first = addMonthsClamped(first, frequency, dueDay);
+      }
+      return first;
+    }
+
+    function addMonthsClamped(baseDate, months, dueDay) {
+      return makeDateWithDay(baseDate.getFullYear(), baseDate.getMonth() + months, dueDay);
+    }
+
+    function makeDateWithDay(year, monthIndex, dueDay) {
+      const lastDay = new Date(year, monthIndex + 1, 0).getDate();
+      return new Date(year, monthIndex, Math.min(Math.max(1, dueDay), lastDay));
+    }
+
+    function groupByDay(occurrences) {
+      const map = new Map();
+      occurrences.forEach(item => {
+        const day = item.dueDate.getDate();
+        if (!map.has(day)) map.set(day, []);
+        map.get(day).push(item);
+      });
+      return map;
+    }
+
+    function getVisibleTransactions() {
+      const query = normalizeSearch(state.search);
+      const rows = state.transactions?.rows || [];
+      if (!query) return rows;
+      return rows.filter(row => normalizeSearch([
+        row.docNo,
+        row.entity,
+        row.branchName,
+        row.depName,
+        row.expenseCode,
+        row.name,
+        row.vendorName,
+        row.amount
+      ].join(' ')).includes(query));
+    }
+
+    function getFilteredVendors() {
+      const query = normalizeSearch(state.vendorSearch);
+      const status = state.vendorStatus;
+      return (state.recurring?.items || []).filter(item => {
+        if (status === 'active' && (item.isHistorical || !item.isActive)) return false;
+        if (status === 'historical' && !item.isHistorical) return false;
+        if (status === 'expiring' && !item.expirySoon) return false;
+        if (!query) return true;
+        return normalizeSearch([
+          item.vendorName,
+          item.vendorCode,
+          item.systemCode,
+          item.category,
+          item.depName,
+          item.entity,
+          item.note
+        ].join(' ')).includes(query);
+      });
+    }
+
+    function getFuelRows() {
+      return (state.transactions?.fuel?.totals || []).map(row => ({
+        licensePlate: row.label,
+        amount: row.amount
+      }));
+    }
+
+    function findRecurringItem(id) {
+      return (state.recurring?.items || []).find(item => String(item.id) === String(id));
+    }
+
+    function categoryColor(category) {
+      const map = state.config?.categoryColors || {};
+      if (map[category]) return map[category];
+      const foundKey = Object.keys(map).find(key => category.includes(key) || key.includes(category));
+      return foundKey ? map[foundKey] : '#6B7280';
+    }
+
+    function vendorStatusHtml(item) {
+      if (item.isHistorical) return '<span class="status gray">เลิกแล้ว</span>';
+      if (!item.isActive) return '<span class="status gray">หมดสัญญา</span>';
+      if (item.expirySoon) return '<span class="status amber">⚠️ ใกล้หมด</span>';
+      return '<span class="status green">ใช้งาน</span>';
+    }
+
+    function ganttHtml(item) {
+      const total = Number(item.totalPeriods || 0);
+      const remaining = Number(item.remainingPeriods || 0);
+      const used = total ? Math.max(0, total - remaining) : Number(item.usedPeriods || 0);
+      const progress = total ? Math.min(100, Math.round((used / total) * 100)) : 20;
+      return `<div class="gantt" title="ใช้ไป ${used} / ${total || 'ไม่จำกัด'} งวด"><span style="--progress:${progress}%"></span></div>`;
+    }
+
+    function metricHtml(label, value, detail) {
+      return `
+        <div class="metric">
+          <span>${escapeHtml(label)}</span>
+          <strong title="${VAT_TOOLTIP}">${escapeHtml(value)}</strong>
+          <span>${escapeHtml(detail || '')}</span>
+        </div>
+      `;
+    }
+
+    function createChart(id, type, data, options) {
+      const canvas = document.getElementById(id);
+      if (!canvas || typeof Chart === 'undefined') return;
+      if (state.charts[id]) {
+        state.charts[id].destroy();
+      }
+      state.charts[id] = new Chart(canvas, {
+        type,
+        data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          scales: type === 'doughnut' ? {} : {
+            x: { ticks: { color: cssVar('--muted') }, grid: { color: cssVar('--border') } },
+            y: { ticks: { color: cssVar('--muted') }, grid: { color: cssVar('--border') } }
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: context => `${context.dataset.label || context.label}: ${formatCurrency(context.parsed.y ?? context.parsed.x ?? context.parsed)}`
+              }
+            },
+            legend: { labels: { color: cssVar('--text'), font: { family: 'Sarabun' } } }
+          },
+          ...options
+        }
+      });
+    }
+
+    async function apiGet(action, params = {}, options = {}) {
+      const useCache = options.cache !== false;
+      const cacheKey = cacheKeyFor(action, params);
+      if (useCache) {
+        const cached = getCache(cacheKey);
+        if (cached) return cached;
+      }
+      const data = await callApi(action, params, 'GET');
+      if (useCache) setCache(cacheKey, data);
+      return data;
+    }
+
+    async function apiPost(action, payload = {}) {
+      const data = await callApi(action, { action, ...payload }, 'POST');
+      invalidateCache();
+      return data;
+    }
+
+    async function callApi(action, payload, method) {
+      if (!API_URL && hasGoogleScriptRun()) {
+        return method === 'GET' ? callGasGet(action, payload) : callGasPost(action, payload);
+      }
+      if (!API_URL) {
+        throw new Error('ยังไม่ได้ตั้งค่า APPS_SCRIPT_URL หรือเปิดผ่าน Apps Script Web App');
+      }
+
+      if (method === 'GET') {
+        const url = `${API_URL}?${new URLSearchParams({ action, ...payload }).toString()}`;
+        const response = await fetch(url, { credentials: 'include' });
+        return unwrapApiResponse(await response.json());
+      }
+
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      return unwrapApiResponse(await response.json());
+    }
+
+    function unwrapApiResponse(json) {
+      if (!json.ok) {
+        throw new Error(json.error || 'เกิดข้อผิดพลาดในการโหลดข้อมูล');
+      }
+      return json.data;
+    }
+
+    function hasGoogleScriptRun() {
+      return Boolean(window.google && google.script && google.script.run);
+    }
+
+    function callGasGet(action, params) {
+      if (action === 'getRecurringData') return gasRun('getRecurringData');
+      if (action === 'getTransactionData') return gasRun('getTransactionData', params.year, params.month, params.entity, params.branch, params.page, params.pageSize);
+      if (action === 'getBudgetData') return gasRun('getBudgetData', params.year, params.month, params.entity, params.branch);
+      if (action === 'getConfig') return gasRun('getConfig');
+      if (action === 'getCurrentUser') return gasRun('getCurrentUser');
+      return Promise.reject(new Error(`Unknown action: ${action}`));
+    }
+
+    function callGasPost(action, payload) {
+      if (action === 'updateRecurringItem') return gasRun('updateRecurringItem', payload.id, payload.data);
+      if (action === 'addRecurringItem') return gasRun('addRecurringItem', payload.data);
+      if (action === 'deactivateRecurringItem') return gasRun('deactivateRecurringItem', payload.id);
+      if (action === 'bulkDeactivateRecurringItems') return gasRun('bulkDeactivateRecurringItems', payload.ids);
+      if (action === 'updateTransactionDepName') return gasRun('updateTransactionDepName', payload.rowNumber, payload.depName);
+      if (action === 'saveBudgetTargets') return gasRun('saveBudgetTargets', payload.targets);
+      if (action === 'sendLineDueNotifications') return gasRun('sendLineDueNotifications', payload.days);
+      if (action === 'sendBudgetAlerts') return gasRun('sendBudgetAlerts', payload.year, payload.month, payload.entity, payload.recipient);
+      return Promise.reject(new Error(`Unknown action: ${action}`));
+    }
+
+    function gasRun(functionName, ...args) {
+      return new Promise((resolve, reject) => {
+        google.script.run
+          .withSuccessHandler(resolve)
+          .withFailureHandler(error => reject(new Error(error.message || error)))
+          [functionName](...args);
+      });
+    }
+
+    function cacheKeyFor(action, params) {
+      return `sw-expense-cache:${action}:${JSON.stringify(params || {})}`;
+    }
+
+    function getCache(key) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const cached = JSON.parse(raw);
+        if (Date.now() - cached.timestamp > CACHE_TTL_MS) {
+          localStorage.removeItem(key);
+          return null;
+        }
+        return cached.data;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function setCache(key, data) {
+      try {
+        localStorage.setItem(key, JSON.stringify({ timestamp: Date.now(), data }));
+      } catch (error) {
+        clearOldCaches();
+      }
+    }
+
+    function invalidateCache() {
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('sw-expense-cache:')) localStorage.removeItem(key);
+      });
+    }
+
+    function clearOldCaches() {
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('sw-expense-cache:')) localStorage.removeItem(key);
+      });
+    }
+
+    function exportCsv(filename, rows) {
+      if (!rows || !rows.length) {
+        showToast('ไม่มีข้อมูลสำหรับ export');
+        return;
+      }
+      const columns = Object.keys(flattenRow(rows[0])).filter(key => key !== 'raw');
+      const csv = [
+        columns.join(','),
+        ...rows.map(row => {
+          const flat = flattenRow(row);
+          return columns.map(column => csvCell(flat[column])).join(',');
+        })
+      ].join('\n');
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${filename}-${toIsoDate(new Date())}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function flattenRow(row) {
+      const output = {};
+      Object.keys(row).forEach(key => {
+        if (typeof row[key] !== 'object' || row[key] === null || row[key] instanceof Date) {
+          output[key] = row[key];
+        }
+      });
+      return output;
+    }
+
+    function csvCell(value) {
+      const text = value === null || value === undefined ? '' : String(value);
+      return `"${text.replace(/"/g, '""')}"`;
+    }
+
+    function setOptions(select, options, selected) {
+      select.innerHTML = options.map(option => {
+        const value = typeof option === 'object' ? option.value : option;
+        const label = typeof option === 'object' ? option.label : option;
+        return `<option value="${escapeAttr(value)}">${escapeHtml(label)}</option>`;
+      }).join('');
+      select.value = selected;
+    }
+
+    function updateUnknownBadge() {
+      const count = state.transactions?.metrics?.unknownCount || 0;
+      const badge = document.getElementById('unknownNavBadge');
+      badge.textContent = count;
+      badge.classList.toggle('hide', count === 0);
+    }
+
+    function updateLastUpdated(value) {
+      if (!value) return;
+      document.getElementById('lastUpdatedText').textContent = formatDateTimeBE(value);
+    }
+
+    function showFatalError(error) {
+      const message = escapeHtml(error.message || error);
+      document.querySelector('main').innerHTML = `
+        <div class="surface pad">
+          <div class="section-title"><h2>โหลดข้อมูลไม่สำเร็จ</h2></div>
+          <p class="danger-text">${message}</p>
+          <p class="muted">กรุณาตรวจสอบสิทธิ์บัญชี Google, Apps Script URL, และชื่อชีตใน Spreadsheet</p>
+        </div>
+      `;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove('show'), 3600);
+    }
+
+    function toggleTheme() {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem('sw-expense-theme', next);
+      Object.values(state.charts).forEach(chart => chart.update());
+    }
+
+    function applySavedTheme() {
+      const saved = localStorage.getItem('sw-expense-theme');
+      if (saved === 'dark') {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    }
+
+    function cssVar(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    function formatCurrency(value) {
+      return `฿${Number(value || 0).toLocaleString('th-TH', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })}`;
+    }
+
+    function formatCurrencyCompact(value) {
+      const number = Number(value || 0);
+      if (Math.abs(number) >= 1000000) return `฿${(number / 1000000).toLocaleString('th-TH', { maximumFractionDigits: 1 })}M`;
+      if (Math.abs(number) >= 1000) return `฿${(number / 1000).toLocaleString('th-TH', { maximumFractionDigits: 0 })}K`;
+      return `฿${number.toLocaleString('th-TH', { maximumFractionDigits: 0 })}`;
+    }
+
+    function formatDateBE(value) {
+      const date = value instanceof Date ? value : parseIsoDate(value);
+      if (!date) return '-';
+      return `${date.getDate().toLocaleString('th-TH')}/${(date.getMonth() + 1).toLocaleString('th-TH')}/${date.getFullYear() + 543}`;
+    }
+
+    function formatDateTimeBE(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '-';
+      return `${formatDateBE(date)} ${date.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}`;
+    }
+
+    function budgetStatusText(status) {
+      if (status === 'green') return 'เขียว';
+      if (status === 'amber') return 'เหลือง';
+      if (status === 'red') return 'แดง';
+      return 'ยังไม่ตั้งงบ';
+    }
+
+    function parseIsoDate(value) {
+      if (!value) return null;
+      if (value instanceof Date) return startOfDay(value);
+      const match = String(value).match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+      if (match) {
+        return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+      }
+      const parsed = new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : startOfDay(parsed);
+    }
+
+    function toIsoDate(date) {
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function startOfDay(date) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    function addDays(date, days) {
+      const output = new Date(date);
+      output.setDate(output.getDate() + days);
+      return startOfDay(output);
+    }
+
+    function sum(rows, getter) {
+      return rows.reduce((total, row) => total + Number(getter(row) || 0), 0);
+    }
+
+    function normalizeSearch(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value);
+    }
+
+    function getInitials(value) {
+      const text = String(value || 'SW').trim();
+      if (!text) return 'SW';
+      const parts = text.split(/\s+/);
+      if (parts.length > 1) return `${parts[0][0] || ''}${parts[1][0] || ''}`.toUpperCase();
+      return text.slice(0, 2).toUpperCase();
+    }
+
+    function isTypingTarget(target) {
+      return ['INPUT', 'TEXTAREA', 'SELECT'].includes(target?.tagName);
+    }
+  </script>
+</body>
+</html>
