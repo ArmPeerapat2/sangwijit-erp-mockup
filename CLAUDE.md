@@ -28,7 +28,7 @@ Trust priority when sources conflict: latest user instruction → codebase state
 
 **Preview:** open the HTML directly in a browser (e.g. `start portal-mockup-index.html` on Windows). `portal-mockup-index.html` links every mockup page.
 
-**Editing rules (from `knowledge-base/CLAUDE.md` §3 — these take precedence):**
+**Editing rules (from `knowledge-base/CLAUDE.md` 3 — these take precedence):**
 - Edit the existing file in place. Do not create a new file for the same page.
 - Only bump to `-v2`, `-v3` suffix if the user explicitly asks for a new version.
 - Creating a brand-new mockup page → ask first; scope may have shifted.
@@ -37,7 +37,7 @@ Trust priority when sources conflict: latest user instruction → codebase state
 **Locked design standards** (do not change without asking):
 - Min width 1440px, Inter font, sidebar `#1E3A5F` (240px fixed), accent `#2563EB`, background `#F8FAFC`
 - Thai-primary UI labels with English code prefix (e.g. "SL-1 ใบเสนอราคา")
-- Dates in **ค.ศ.** (YY = 26) — the earlier พ.ศ. convention in `knowledge-base/CLAUDE.md` §3.3 was superseded by the 2026-04-16 decision in `.agents/active.md`. When in doubt, check `active.md`.
+- Dates in **ค.ศ.** (YY = 26) — the earlier พ.ศ. convention in `knowledge-base/CLAUDE.md` 3.3 was superseded by the 2026-04-16 decision in `.agents/active.md`. When in doubt, check `active.md`.
 - Amount: comma-separated thousands, 2 decimals
 - Collapse pattern: `<details class="collapse">` with `▼` rotation; sub-tabs via a `switchSubTab()` helper scoped per section
 - Status badge colors: green = confirmed, amber = under consideration, gray = unsure

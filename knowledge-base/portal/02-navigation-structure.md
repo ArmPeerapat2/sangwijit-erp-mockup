@@ -179,19 +179,19 @@
 
 ### 5.1 เพิ่ม 1 link ใหม่
 
-1. ใน **sidebar** — copy anchor inactive จาก template §2.3, แก้ `href` + ข้อความ
-2. ใน **Quick Nav** — copy anchor จาก template §4.4, แก้ `href` + ข้อความ
+1. ใน **sidebar** — copy anchor inactive จาก template 2.3, แก้ `href` + ข้อความ
+2. ใน **Quick Nav** — copy anchor จาก template 4.4, แก้ `href` + ข้อความ
 3. ทำทั้ง 58 mockup files ต้องเหมือนกัน
 
 ### 5.2 เพิ่ม section ใหม่ (module group ใหม่)
 
-1. เลือกตำแหน่ง — ตามลำดับใน §3
-2. Copy section header template §2.2 + links ภายใน
+1. เลือกตำแหน่ง — ตามลำดับใน 3
+2. Copy section header template 2.2 + links ภายใน
 3. ใน Quick Nav ก็ต้องมี section เดียวกันในตำแหน่งเดียวกัน
 
 ### 5.3 แก้ active state เมื่อย้ายหน้า
 
-- **หน้าใหม่** → ใน sidebar ของหน้าใหม่ **ต้อง** ทำให้ link ตัวเองเป็น active (ใช้ template §2.4)
+- **หน้าใหม่** → ใน sidebar ของหน้าใหม่ **ต้อง** ทำให้ link ตัวเองเป็น active (ใช้ template 2.4)
 - **ทุก link อื่น** → ต้องเป็น inactive
 
 ### 5.4 Bulk update (แก้ทั้ง 58 ไฟล์พร้อมกัน)

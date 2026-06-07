@@ -199,5 +199,5 @@
 |-------------|-------|
 | รายละเอียด module หลัก | `01-module-list.md` |
 | SOP ของ module นี้ | `skills/sangwijit-<dept>/` |
-| Flow cross-module | `00-overview.md` §7 |
-| ฟิลด์ BC ที่ผูก | `04-bc365-integration.md` §2 |
+| Flow cross-module | `00-overview.md` 7 |
+| ฟิลด์ BC ที่ผูก | `04-bc365-integration.md` 2 |

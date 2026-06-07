@@ -237,7 +237,7 @@ Bank Rec
 
 ## 13. Security / RBAC
 
-ใช้ Permission Set + User Group ของ BC365 ต้อง map กับ 9 roles ใน Portal (`/portal/04-bc365-integration.md` § RBAC)
+ใช้ Permission Set + User Group ของ BC365 ต้อง map กับ 9 roles ใน Portal (`/portal/04-bc365-integration.md`  RBAC)
 
 ข้อควรระวัง:
 
@@ -266,9 +266,9 @@ Bank Rec
 
 ## 15. สิ่งที่ต้องเตรียมก่อน Go-Live (สรุปเดิม)
 
-- Data Migration: COA, Open AR/AP, Fixed Assets, Master Data ✅ (ขยายแล้วใน § 9)
-- Training: Key User `[TBD]` ชม. / End User `[TBD]` ชม. ✅ (§ 11)
-- Parallel Run: `[TBD]` สัปดาห์ก่อน Cut-over ✅ (§ 10)
+- Data Migration: COA, Open AR/AP, Fixed Assets, Master Data ✅ (ขยายแล้วใน  9)
+- Training: Key User `[TBD]` ชม. / End User `[TBD]` ชม. ✅ ( 11)
+- Parallel Run: `[TBD]` สัปดาห์ก่อน Cut-over ✅ ( 10)
 
 ---
 

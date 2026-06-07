@@ -53,9 +53,9 @@ sangwijit-bc-mockup/
 ## 🛠️ Maintenance
 
 - **เพิ่ม shared component ใหม่** → สร้างใน `assets/` + อัปเดต SKILL.md section "Shared Components"
-- **เปลี่ยน design token** → แก้ SKILL.md + `templates/base.html` + root `CLAUDE.md` (§37-43)
+- **เปลี่ยน design token** → แก้ SKILL.md + `templates/base.html` + root `CLAUDE.md` (37-43)
 - **เพิ่ม UX pattern** → section "UX Patterns" ใน SKILL.md
-- **เพิ่ม module code** → section "Module Codes" ใน SKILL.md + `CLAUDE.md §65`
+- **เพิ่ม module code** → section "Module Codes" ใน SKILL.md + `CLAUDE.md 65`
 
 ## 📚 Reference
 

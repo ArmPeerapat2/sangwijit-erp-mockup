@@ -35,7 +35,7 @@ Format: `{module-code}{n}-{slug}-mockup[-v<N>].html`
 - `md1-item-master-mockup-v3.html`
 - `cf2-5-tech-template-mockup.html`
 
-**Rule (จาก CLAUDE.md §Editing rules):**
+**Rule (จาก CLAUDE.md Editing rules):**
 - แก้ไฟล์เดิมก่อนเสมอ — อย่าสร้างใหม่
 - `-v2`, `-v3` suffix เฉพาะเมื่อ user ขอ
 - หน้าใหม่ทั้งหมด → ถาม user ก่อน
@@ -63,7 +63,7 @@ cp sangwijit-bc-mockup/templates/base.html → <filename>.html
 
 ---
 
-## 🎨 Design Tokens (Locked Standards — จาก CLAUDE.md §37-43)
+## 🎨 Design Tokens (Locked Standards — จาก CLAUDE.md 37-43)
 
 ### Colors
 
@@ -84,7 +84,7 @@ cp sangwijit-bc-mockup/templates/base.html → <filename>.html
 | Unsure | `#6B7280` (gray) | Status unsure |
 | Pin active | `#FCD34D` | Pin button active |
 
-**Status Badge Colors (CLAUDE.md §43):**
+**Status Badge Colors (CLAUDE.md 43):**
 - **Green** = confirmed
 - **Amber** = under consideration
 - **Gray** = unsure
@@ -117,7 +117,7 @@ Thai-primary UI labels กับ English code prefix เช่น `SL-1 ใบ�
 - Min width: **1440px** (locked)
 - Sidebar: **240px fixed** (locked)
 
-### Dates (Locked — CLAUDE.md §40)
+### Dates (Locked — CLAUDE.md 40)
 ใช้ **ค.ศ. 2 หลัก** เสมอ
 - ✅ `12 เม.ย. 26` (ค.ศ. 2026)
 - ✅ `INV-26-0042`
@@ -126,7 +126,7 @@ Thai-primary UI labels กับ English code prefix เช่น `SL-1 ใบ�
 
 **การเปลี่ยนแปลง**: ใน 2026-04-16 โปรเจกต์เปลี่ยนจาก พ.ศ. → ค.ศ. ทั้งหมด (ดู `.agents/active.md`)
 
-### Amounts (Locked — CLAUDE.md §41)
+### Amounts (Locked — CLAUDE.md 41)
 Comma-separated thousands + 2 decimals เสมอ
 - ✅ `103,439.00`
 - ❌ `103439` · `103,439`
@@ -138,7 +138,7 @@ Comma-separated thousands + 2 decimals เสมอ
 - Content padding: 16px 24px
 - Font sizes: 9px (tiny) · 10-11px (small) · 12-13px (body) · 16-20px (title)
 
-### Collapse Pattern (CLAUDE.md §42)
+### Collapse Pattern (CLAUDE.md 42)
 ```html
 <details class="collapse">
   <summary>... ▼</summary>
@@ -242,7 +242,7 @@ Sidebar 240px น้ำเงินเข้ม · 12 กลุ่ม collapsibl
 
 ---
 
-## 📋 Business Rules (จาก CLAUDE.md §45-52)
+## 📋 Business Rules (จาก CLAUDE.md 45-52)
 
 **ต้องจำ** — ทำ mockup ผิดกฎพวกนี้ = ผิด:
 
@@ -255,7 +255,7 @@ Sidebar 240px น้ำเงินเข้ม · 12 กลุ่ม collapsibl
 
 ---
 
-## 🏛️ BC365 Scope (CLAUDE.md §54-60 · audit 2026-04-16)
+## 🏛️ BC365 Scope (CLAUDE.md 54-60 · audit 2026-04-16)
 
 **Cut (ใช้ BC365 ตรงๆ):** CF-2.1, CF-2.2, CF-2.3, CF-2.4, CF-2.9
 **Portal UI layer (thin):** 18 pages
@@ -264,11 +264,11 @@ Sidebar 240px น้ำเงินเข้ม · 12 กลุ่ม collapsibl
 
 ---
 
-## 📋 Module Codes (CLAUDE.md §65)
+## 📋 Module Codes (CLAUDE.md 65)
 
 `sl` Sales · `po` Purchase · `wh` Warehouse · `fi` Finance · `sv` Service · `pm` Promotion · `md` Master · `cf` Config · `ia` Integration · `cl` Claims · `cm` Commission · `ex` Executive · `rp` Report · `sc` Shared Component · `tr` Treasury
 
-(91 modules · 8 groups · 1 entity SWT · Phase 1 ~34 screens — จาก CLAUDE.md §9)
+(91 modules · 8 groups · 1 entity SWT · Phase 1 ~34 screens — จาก CLAUDE.md 9)
 
 ---
 

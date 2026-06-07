@@ -65,15 +65,15 @@ knowledge-base/
 | ต้องการรู้... | ไปอ่าน |
 |---------------|--------|
 | Module ไหนใน phase ไหน | `portal/01-module-list.md` |
-| Prefix code หมายถึงอะไร (SL/WH/PO/FI/SV/CF/MD) | `portal/01-module-list.md` §1 |
+| Prefix code หมายถึงอะไร (SL/WH/PO/FI/SV/CF/MD) | `portal/01-module-list.md` 1 |
 | Sidebar ควรมี link อะไรบ้าง | `portal/02-navigation-structure.md` |
-| Copy sidebar ไปหน้าใหม่ยังไง | `portal/02-navigation-structure.md` §3 |
-| สีไหนใช้ทำอะไร | `portal/03-ui-ux-convention.md` §1 |
-| ฟอนต์ / ขนาด / spacing | `portal/03-ui-ux-convention.md` §2 |
-| Component สำเร็จรูป (card/table/form) | `portal/03-ui-ux-convention.md` §3 |
-| Module นี้ไปตรงกับ BC entity ไหน | `portal/04-bc365-integration.md` §2 |
-| Phase ไหนเชื่อมอะไร | `portal/04-bc365-integration.md` §3 |
-| Dual-Book ทำงานยังไง | `portal/04-bc365-integration.md` §5 |
+| Copy sidebar ไปหน้าใหม่ยังไง | `portal/02-navigation-structure.md` 3 |
+| สีไหนใช้ทำอะไร | `portal/03-ui-ux-convention.md` 1 |
+| ฟอนต์ / ขนาด / spacing | `portal/03-ui-ux-convention.md` 2 |
+| Component สำเร็จรูป (card/table/form) | `portal/03-ui-ux-convention.md` 3 |
+| Module นี้ไปตรงกับ BC entity ไหน | `portal/04-bc365-integration.md` 2 |
+| Phase ไหนเชื่อมอะไร | `portal/04-bc365-integration.md` 3 |
+| Dual-Book ทำงานยังไง | `portal/04-bc365-integration.md` 5 |
 | หน้านี้มีฟิลด์อะไร, จุดขายคืออะไร | `portal/05-page-catalog.md` |
 | SOP บัญชี | `skills/sangwijit-accounting/SKILL.md` |
 | SOP คลัง | `skills/sangwijit-warehouse/SKILL.md` |

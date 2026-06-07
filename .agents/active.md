@@ -1,10 +1,77 @@
 ---
-updated_at: "2026-04-27T22:00:00+07:00"
+updated_at: "2026-06-03T00:00:00+07:00"
 status: "active"
-current_focus: "Phase 1 closeout (Tier-C polish) → Phase 2: Brand CI rollout (SWE only · #184898 + #F37721 + Sukhumvit · ใช้กับงานใหม่ตั้งแต่ตอนนี้)"
+current_focus: "🏁 SL กลุ่มงานขายปิดครบ 6 หน้า: SL-Q(คิว·จัดกลุ่ม QT/SO/INV/DP/CN) · SL-1 · SL-2 · SL-3 · SL-4 · SL-CN(ใบลดหนี้ 3 โหมด) — build บนเทมเพลตเดียวกัน · doc-chain เชื่อม · sc1/sc2 shared · routing ชัด (sl-post-save-routing.md) · SL-Q เน้นเอกสารขาย / ปลายทาง(เบิก/ส่ง/สั่งซื้อ)=แยกเมนู cross-link · ถัดไป: WH(รอเบิก)/PO(รอสั่งซื้อ) ตาม Form Build Pattern · [เดิม SL-1→4]" (ใบเสนอราคา/ใบจอง/ใบมัดจำ/บิลขาย · doc-chain เชื่อมกัน · status+chain รวมแถวบน · เลขที่อ้างอิงต่อไลน์ · per-doc reservation routing · หักมัดจำ) · **Component หลัก: sc1-customer-search + sc2-item-search = canonical** (Customer Search 9 คอลัมน์+ประวัติ 4 แท็บ · Product Search) เรียกผ่าน swt-doc-finder dfOpenCust/dfOpenProd (iframe modal) · + Reference Picker dfOpenRef (multi-select ตามลูกหนี้) · guideline: .agents/topics/form-template-guideline.md + queue-dashboard-matrix.md · ถัดไป: SL-CN ใบลดหนี้ (flow 07) หรือ propagate sc1/sc2 ไปหน้าเก่า"
 branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
+
+## Working Rules (locked 2026-05-29)
+
+- **Flow-first, always.** ทุกงานปรับดีไซน์หลังจากนี้: (1) ทำ/แสดง flow ให้เห็นก่อนว่าเข้าใจตรงกัน → (2) confirm → (3) ค่อยเริ่มปรับ mockup. ห้ามกระโดดไปแก้ดีไซน์ก่อน confirm flow. (ต่อยอดจาก memory feedback_edit_workflow: explain → confirm → edit, ห้าม batch หลายหน้า)
+- **Canonical source = Flow Design + module spec** (ADR-0001 `docs/adr/0001-flow-and-spec-are-canonical.md`). รหัส/ขอบเขตหน้าใดเพี้ยนจาก flow/spec = แก้ที่ mockup. หน้าไม่มี flow = excess (ต้องเพิ่ม flow ก่อน หรือตัด). flow ไม่มีหน้า = gap จริง.
+- **Glossary** อยู่ที่ `CONTEXT.md` (root) — เป็น glossary ล้วน ไม่ใส่ implementation.
+
+### Working Rules เพิ่ม (locked 2026-05-30)
+- **Docs-first:** ยึดเอกสารอ้างอิงเป็นหลัก (DD docx `_reference/docs/` + Flow PDF + spec md) · **ไม่ยึด HTML เป็นตัวตั้ง** (HTML = reference). component framework canonical = `_reference/docs/1 component_fw_clean.docx` (6 layers · 9 shared · doc-mode create/edit/view/approve/post).
+- **ทำทีละ flow ให้เสร็จ** ตาม flow อ้างอิงที่ลิสต์ไว้ · **ยังไม่เน้นหน้า dashboard**.
+- **ทุกข้อเสนอเปลี่ยน/ปรับ = ตารางเทียบ "ของเก่า ↔ ข้อเสนอใหม่"** ให้ user ตัดสิน (ในแชท หรือ canvas ตามที่ดูง่าย) ก่อนลงมือเสมอ.
+- **เวลาคุยแต่ละเมนู** ดึงเอกสารอ้างอิง (DD + Flow + spec) มาประกอบทุกครั้ง + แนบลิงก์เปิดหน้าเดิม.
+- **Obsidian save standard:** ทุก flow/decision ที่ปิด → save เป็นโน้ตเข้า vault `C:\Users\arm99\OneDrive\claude\ArmWiki\ArmWiki\Projects\Sangwijit-ERP-Portal\` (knowledge/searchable copy · คู่กับ `.agents/topics/` working copy). ใช้ `/claude-obsidian:save`. ทีหลังทำ `.base` รวม flow เป็นตาราง.
+- **🔑 Scope = SWT single-entity** (ระบบกลาง · ตัดสิน 2026-05-31): ทำเพื่อ SWT บริษัทเดียว · ตัด multi-entity · **FI-13 Dual-Book / CF-2.8 Entity Tag = defer (นอก scope)** · FI-7 VAT selector → SWT only.
+
+### Working Rules เพิ่ม (locked 2026-06-06)
+- **🔑 Form Build Pattern (ใช้ทุกครั้ง ทุก module):** memory `feedback_form_build_pattern` — (1) ดึง Flow+Document+spec → Blueprint → confirm · (2) build บน `_form-template.html` (fit จอ 100vh · status+doc-chain รวมแถวบน · ตาราง 15 บรรทัด+grid · เลขที่อ้างอิงเป็นคอลัมน์ · sidebar+✦marker) · (3) shared: ลูกค้า=sc1 · สินค้า=sc2 (dfOpenCust/dfOpenProd) · อ้างอิง=dfOpenRef (multi-select) · ปุ่มค้นหาลูกค้าต้องมีเสมอ · (4) **ระบุ action หลัง Save/Post = สถานะ+routing ปลายทางทุกฟอร์ม** (ref: `.agents/topics/sl-post-save-routing.md`) · (5) archive+เทียบ full path+mirror Obsidian
+- **Form Blueprint ก่อนสร้างทุกฟอร์ม:** ก่อนสร้าง/refactor mockup ฟอร์มใดๆ ต้องวาง Blueprint 5 ส่วนให้ confirm ก่อนเขียนโค้ดเสมอ — (1) โครงสร้าง section จาก Flow PDF + Document DD + spec · (2) shared component ต่อ section · (3) field list + อธิบายรายฟิลด์ · (4) **ข้อเสนอ (แนะนำ + เหตุผล) ต่อ section** · (5) จุดต่างเฉพาะฟอร์ม. ห้าม batch หลายฟอร์ม. (memory: `feedback_form_blueprint_standard`)
+
+## Session Summary 2026-06-01 (ERP BC2 Part 2)
+
+### ✅ งานที่เสร็จ
+- **PromoPrice v1/v2/v3** — ยืนยัน v2 (`sc-promoprice-proposal.html`) เป็น current · side panel 1:1 per item
+- **SL Sales Module** — map ครบ 10 หน้า + วัตถุประสงค์ + shared components + flow · บันทึก Obsidian `SL Sales Module.md` ✅
+- **SL-1 Flow** — วิเคราะห์จาก DD + Flow PDF + spec · ได้ field list + status flow ครบ
+- **Credit Memo 3 กรณี** — Sales Return / ยกเลิกบิล / ลดหนี้ → แต่ละกรณีใช้เอกสารต่างกัน
+- **CF Setup ทั้งหมด** — review ทุกหน้า · สรุปสถานะ Portal-owned / cut-to-BC
+- **ADR-0004 + CF-2.2** — Format `[BranchCode][DocCode]-[YYMM]-[###]` · CF-2.2 เปลี่ยนจาก cut-to-BC → **Portal-managed** · บันทึก Obsidian ✅
+- **CF-1 RBAC prototype** — `_proposal/cf1-position-rbac-proposal.html` · 5 tabs · approve แล้ว
+  - Tab 4 กลุ่มเอกสาร: **แก้แล้ว** → กรองตาม Tab 2 สิทธิ์เมนูที่ติ๊กไว้ (DOC_MENU_MAP)
+- **CF-2.2 prototype** — `_proposal/cf2-2-number-series-proposal.html` · 3 panels: Matrix / Format Editor / Audit
+- **Obsidian** — `CF Setup Module.md` สร้างใหม่ · `Foundation & Decisions.md` อัปเดต · ADR-0004.md ✅
+
+### ⏳ Next Actions (ลำดับ)
+1. ~~**CF-2.6 Approval Matrix**~~ ✅ 2026-06-03 — `_proposal/cf26-approval-matrix-proposal.html` (Position-based · SWT · +SL-RQ/RT/CN/DN · Simulator)
+2. ~~**CF-2.7 Doc Template**~~ ✅ 2026-06-05 — ทับ deployed ด้วย proposal design (`cf2-7-doc-template-mockup.html` 1061→567 บรรทัด) · ตัด Running/Format (ย้าย CF-2.2) · 5 tabs→3 panels · SWT single-entity · 13 doc types sync CF-2.2 · archive เก่า `_archive/cf2-7-doc-template-mockup-2026-06-04.html`
+3. ~~**CF-2 Config Hub**~~ ✅ 2026-06-06 — ทับ deployed ด้วย proposal design (`cf2-config-hub-mockup.html` 932→353 บรรทัด) · 9→8 card (ซ่อน CF-2.8/CF-9 Entity Tag) · CF-2.2 🔴→🟢 Portal-managed · href→deployed mockup ทุกอัน · card render จาก JS array · สรุป Portal 4/BC 4 · archive `_archive/cf2-config-hub-mockup-2026-06-06.html` · **CF module ปิดสมบูรณ์**
+4. **SL-1 ใบเสนอราคา** — ลงรายละเอียด mockup ตาม flow + DD
+5. **fi4→FI-5 / fi5→FI-6 recode** (Finance ค้าง)
+
+### 💡 วิธีเปิด session ใหม่
+```
+"อ่าน .agents/active.md แล้วต่องาน CF-2.6"
+```
+
+---
+
+## Reconciliation Audit (2026-05-29) — mockup vs Flow Design
+
+8-module cross-ref. อันดับความรก: Service+Claims (14 หน้า/6 flow, P2) > Finance (เลข fi3/4/5 เพี้ยน → Bank Recon + JV หาย, P1) > Sales (sl5=CRM แย่งช่อง Credit Memo; sl6 promo วางผิด, P1) > Master (sm1/2/3 วางผิด; ขาด Price List masters) > Promotion (กระจาย pm/sl/po/cm) > Purchase (ดี · แค่ rename po2/po7) > Warehouse (สะอาด · แค่ retitle wh1) > Utility (สะอาด).
+- **Excess (ไม่มี flow):** sl5-crm, fi5-ar-audit, sir, sqt, sm1, sm2, cm1
+- **Misplaced (ผิด module):** sl6-promotion-setup → PM · sm3-vendor-report → (P2 Vendor Portal)
+- **Duplicate:** sv7↔sv4 (ปิดงาน) · cl1↔clm (เคลม) · po5-grn vs wh1-grn (boundary ต้องชัด)
+- **Merge fragment:** sv6-1-booking-modal + sv6-print-templates → เข้า sv6
+- **P1 Gaps:** Sales Credit Memo (flow 07) · Bank Reconciliation · General Journal/JV · Purchase/Sales Price List masters
+- หลักฐานเต็ม: workflow reconcile-mockups-vs-flows (2026-05-29).
+
+## Finance — flow confirmed (2026-05-29) → เริ่มจัดระเบียบ
+
+flow-understanding: `.agents/topics/finance-flow-understanding.md` (user confirm แล้ว). Decisions ที่เคาะ:
+- **FI-4 JV (General Journal) = cut-to-BC** (ไม่ทำหน้า Portal · เหมือน CF-2.3 Posting & GL · ต่อยอด BC365 audit)
+- **FI-7 VAT report = P1** (ยึด flow · spec เขียน P3 ผิด → ต้องแก้ spec) · ยื่น ภ.พ.30 ทุกวันที่ 15
+- **แยก VAT/WHT:** FI-7 = รายงาน VAT (ภ.พ.30) · FI-12 = WHT List (ภ.ง.ด.3/53) · เลิกรวมหน้าเดียว
+- **Account flows ไม่ใช่ FI:** AR→SL-4, AP→PO-6+ap1, ARCN→SL-CN (ใหม่), APCN→PO-CN (ใหม่)
+- ลำดับลงมือ Finance: (1) สร้าง FI-3 Bank Recon [กำลังทำ] → (2) re-code fi3→FI-7 + fi4→FI-5 → (3) รวม FI-12 WHT → (4) FI-2 โชว์ Approval → (5) fi5-ar-audit re-scope → (6) FI-13 transfer engine. ทำทีละหน้า (no batch).
+
+> **อัปเดต 2026-05-30 (ADR-0002):** ✅ FI-3 Bank Recon ยืนยันเสร็จ (ไม่ใช่ gap) · ✅ recode fi3-tax→**FI-7** (สร้าง `fi7-vat-report-mockup.html` = VAT register ตาม flow Account/06, ไม่ใช่หน้ากระทบยอด) · ✅ แยก WHT → **FI-12** (`fi12-wht-mockup.html`) · ✅ archive `fi3-tax` · ✅ sidebar rollout 73 ไฟล์ + index · ✅ ปิดงวด=cut-to-BC · แก้ spec FI_finance.md + CONTEXT.md + ADR-0002. **ค้าง:** fi4→FI-5, fi5→FI-6 recode · FI-2 Approval gate · ตรวจ FI-7.N section label/render. ดู `.agents/topics/reconcile-mockup-vs-flow-matrix.md`.
 
 ## Phase 1 Closeout (2026-04-27 / 28)
 
