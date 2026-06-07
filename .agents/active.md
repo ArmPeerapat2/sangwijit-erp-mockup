@@ -6,6 +6,28 @@ branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
 
+## 🌙 HANDOFF — ต่อพรุ่งนี้ (บันทึก 2026-06-08)
+
+**วันนี้ทำเสร็จ (committed · ahead origin):** procure-to-pay + AP Reduction chain เกือบครบ
+- **Shared sidebar `swt-sidebar.js`** (refactor 73 ไฟล์ · แก้เมนู/ติดดาว ✦ ที่ DONE[] ที่เดียว · เลิก inline sidebar · กัน drift)
+- **Forms rebuild บน `_form-template`:** PO-1 ใบขอสั่งซื้อ · PO-4 ใบสั่งซื้อ · WH-1 ใบรับสินค้า (โหมดรับ segmented) · PO-6 ใบตั้งหนี้ (ย้ายเข้าเมนู FI · maker≠checker · 3-Way drill · ดึงส่งเสริม/ลดหนี้) · PO-7 ส่งเสริมการขาย (สรุปได้จริง→ตั้งหนี้)
+- **หน้าใหม่:** SC-3 ค้นหาเจ้าหนี้ · PO-CN ใบลดหนี้เจ้าหนี้ (Purchase Credit Note · ปิด gap APCN)
+- **เชื่อม:** CLM → ออกใบลดหนี้ PO-CN → "รอหักหนี้" → PO-6 ดึงไปตัด
+- **picker fixes:** sc2/sc7 ถอด sidebar · sc2 parent-doc + popup โปร่งใส · กรอบ iframe ไร้ขอบ (swt-doc-finder df-frame-x)
+- **lock ไว้ 2 section ล่าง:** PO↔WH Receiving Boundary + AP Reduction Concept
+
+**chain ที่ build แล้ว:** PO-1 → PO-4 → WH-1 → PO-6 → (FI-2) · + PO-7/PO-CN/CLM (AP reduction)
+**✦ DONE:** SL-Q/1~4/CN · PO-1 · PO-4 · PO-6 · PO-7 · PO-CN · WH-1 · SC-3
+
+**⏭️ ต่อพรุ่งนี้ (ลำดับ):**
+1. **"รอหักหนี้" queue ใน PO-6** — ให้ดึงรายการรอหัก (PO-CN/CLM) ทั้งหมดมาเลือกตั้งหนี้
+2. **✂️ ตัด PO-5 (Finance GRN)** — ซ้ำ WH-1+PO-6 · archive + เอาออก swt-sidebar.js
+3. **PO-8 บิลฝาก (Deposit Pool)** — กองฝากเรียกออกหลายปลายทาง (เคสคุยละเอียด · 100→เรียก40→เหลือ60)
+4. **FI-2 จ่ายชำระ AP** — ปิด chain procure-to-pay
+
+**🔖 Backlog:** SC-2 tab ประวัติการซื้อ · PO-2 redo (Vendor Commitment · Sell-in/Rebate/Co-op) · dfOpenRef localize สายซื้อ (PR/RFQ/Reorder) · SL-4 เติมบริหารเครดิต+วงเงินลูกค้า+drop-ship
+**⚠️ เคลม (CLM) = ย้ายไปอยู่ศูนย์บริการ SV** (งานเคลมเป็น domain SV) → defer · เชื่อม CLM→PO-CN ไว้แล้ว
+
 ## Working Rules (locked 2026-05-29)
 
 - **Flow-first, always.** ทุกงานปรับดีไซน์หลังจากนี้: (1) ทำ/แสดง flow ให้เห็นก่อนว่าเข้าใจตรงกัน → (2) confirm → (3) ค่อยเริ่มปรับ mockup. ห้ามกระโดดไปแก้ดีไซน์ก่อน confirm flow. (ต่อยอดจาก memory feedback_edit_workflow: explain → confirm → edit, ห้าม batch หลายหน้า)
