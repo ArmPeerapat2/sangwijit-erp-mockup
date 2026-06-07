@@ -4,8 +4,9 @@
    self-contained: inject ทั้ง CSS + markup เอง · ไม่พึ่ง CSS ของหน้า
    API:
      dfOpen() / dfClose()            เปิด-ปิด modal ค้นหาเอกสารเก่า (3 แท็บ + result side-list)
-     dfOpenCust() / dfOpenProd()     เปิด picker ลูกค้า/สินค้า (จากช่อง 🔍 ในเงื่อนไข)
-     dfVendorMode()                  สลับ ลูกค้า→เจ้าหนี้ (เรียกตอนสร้างฟอร์ม PO/AP)
+     dfOpenCust() / dfOpenProd()     เปิด picker ลูกค้า/สินค้า (iframe sc1/sc2)
+     dfOpenVend()                    เปิด picker เจ้าหนี้/Vendor (iframe sc3) — ใช้ในฟอร์ม PO/AP
+     dfVendorMode()                  relabel เงื่อนไขค้นเอกสารเก่าเป็นฝั่งเจ้าหนี้ (เรียกตอนสร้างฟอร์ม PO/AP)
    อ้างอิง layout จากระบบเดิม 3.5 บันทึกขายสินค้าและบริการ
    ════════════════════════════════════════════════════════════════ */
 (function(){
@@ -82,11 +83,10 @@
   .df-pwrap tbody td{padding:6px 9px;border-bottom:1px solid #F3F4F6}
   .df-pwrap tbody tr{cursor:pointer}.df-pwrap tbody tr:hover{background:#EFF6FF}
   .df-warn{color:#EF4444;font-weight:600}
-  .df-frame-wrap{width:1220px;max-width:97vw;height:88vh;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.32);display:flex;flex-direction:column}
-  .df-frame-bar{background:#1E3A5F;color:#fff;padding:6px 12px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;flex:none}
-  .df-frame-bar .x{margin-left:auto;cursor:pointer;padding:2px 9px;border-radius:4px}
-  .df-frame-bar .x:hover{background:#DC2626}
-  .df-frame-wrap iframe{flex:1;border:none;width:100%}
+  .df-frame-wrap{position:relative;width:100vw;height:100vh;max-width:none;background:transparent;border-radius:0;overflow:hidden;box-shadow:none;display:flex}
+  .df-frame-x{position:absolute;top:14px;right:18px;z-index:20;background:rgba(15,23,42,0.6);color:#fff;padding:6px 13px;border-radius:16px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+  .df-frame-x:hover{background:#DC2626}
+  .df-frame-wrap iframe{flex:1;border:none;width:100%;height:100%}
   `;
 
   function legendHTML(){
@@ -243,7 +243,7 @@
 
   <!-- iframe modal — โหลด sc1/sc2 (Customer/Product Search ตัวหลัก) -->
   <div class="df-bg" id="dfFrame"><div class="df-frame-wrap">
-    <div class="df-frame-bar"><span id="dfFrameTitle">ค้นหา</span><span class="x" onclick="dfCloseFrame()">✕ ปิด</span></div>
+    <span class="df-frame-x" onclick="dfCloseFrame()">✕ ปิด</span>
     <iframe id="dfFrameSrc" src="about:blank"></iframe>
   </div></div>
   `;
@@ -267,14 +267,15 @@
   /* ลูกค้า/สินค้า = เปิด sc1/sc2 (ตัวหลัก) เป็น iframe modal · #dfCust/#dfProd inline = สำรอง (ไม่ใช้แล้ว) */
   function dfFrameOpen(src,title){
     var f=document.getElementById('dfFrameSrc'); f.src=src;
-    document.getElementById('dfFrameTitle').textContent=title;
     document.getElementById('dfFrame').classList.add('on');
   }
   window.dfCloseFrame=function(){var m=document.getElementById('dfFrame');m.classList.remove('on');document.getElementById('dfFrameSrc').src='about:blank';};
   window.dfOpenCust=function(){dfFrameOpen('sc1-customer-search-mockup.html','🔎 ค้นหาลูกหนี้ (SC-1)');};
   window.dfOpenProd=function(){dfFrameOpen('sc2-item-search-mockup.html','🔎 ค้นหาสินค้า (SC-2)');};
+  window.dfOpenVend=function(){dfFrameOpen('sc3-vendor-search-mockup.html','🔎 ค้นหาเจ้าหนี้/Vendor (SC-3)');};
   window.dfCloseCust=function(){dfCloseFrame();};
   window.dfCloseProd=function(){dfCloseFrame();};
+  window.dfCloseVend=function(){dfCloseFrame();};
   window.dfVendorMode=function(){
     var t=document.getElementById('dfPartyTab'); if(t) t.textContent='เงื่อนไขเจ้าหนี้';
     var k=document.getElementById('dfCustKind'); if(k) k.textContent='(เจ้าหนี้/Vendor)';

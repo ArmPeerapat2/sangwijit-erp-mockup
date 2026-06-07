@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>SC-3 Vendor Search — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══ SC-3 Vendor Search (ค้นหาเจ้าหนี้/ผู้ขาย) — โครงเดียวกับ sc1-customer-search ═══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:rgba(15,23,42,0.35);color:#1F2937;font-size:12.5px;line-height:1.45;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:40px 24px}
+
+/* ===== VENDOR SEARCH DIALOG (vsd) ===== */
+.vsd{background:#fff;border-radius:10px;box-shadow:0 20px 60px rgba(15,23,42,0.3);width:1180px;max-width:100%;overflow:hidden;border:1px solid #E2E8F0}
+.vsd-title{background:linear-gradient(180deg,#1E3A5F 0%,#172A47 100%);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.vsd-title .ico{font-size:15px}
+.vsd-title h1{font-size:13px;font-weight:600;flex:1}
+.vsd-title .win-btn{width:24px;height:22px;display:flex;align-items:center;justify-content:center;font-size:13px;opacity:0.75;cursor:pointer;border-radius:3px}
+.vsd-title .win-btn:hover{background:rgba(255,255,255,0.12);opacity:1}
+.vsd-title .win-btn.close:hover{background:#DC2626}
+.vsd-toolbar{background:linear-gradient(180deg,#F8FAFC 0%,#E2E8F0 100%);border-bottom:1px solid #CBD5E1;padding:7px 10px;display:flex;align-items:center;gap:3px;flex-wrap:wrap}
+.tb-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:transparent;border:1px solid transparent;border-radius:4px;font-size:11.5px;color:#334155;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap}
+.tb-btn:hover{background:#fff;border-color:#CBD5E1}
+.tb-btn.close-btn{background:#FEE2E2;border-color:#FCA5A5;color:#B91C1C;margin-left:auto}
+.tb-btn.close-btn:hover{background:#DC2626;color:#fff;border-color:#DC2626}
+.tb-btn.help{color:#2563EB;padding:5px 8px}
+.tb-sep{width:1px;height:22px;background:#CBD5E1;margin:0 4px}
+.vsd-search{background:#F8FAFC;border-bottom:1px solid #CBD5E1;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.vsd-search label{font-size:12px;color:#475569;font-weight:600}
+.search-box{display:flex;align-items:center;gap:0;flex:0 0 340px}
+.search-box input{flex:1;padding:7px 10px;border:1.5px solid #CBD5E1;border-right:none;border-radius:5px 0 0 5px;font-size:13px;font-family:inherit;outline:none;background:#fff}
+.search-box input:focus{border-color:#2563EB}
+.search-box button{padding:7px 12px;background:#2563EB;color:#fff;border:1.5px solid #2563EB;border-radius:0 5px 5px 0;font-size:13px;cursor:pointer}
+.search-hint{font-size:11.5px;color:#94A3B8;font-style:italic}
+.search-hint b{color:#64748B;font-style:normal;font-weight:500}
+.group-sel{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:11.5px;color:#475569}
+.group-sel select{padding:5px 8px;border:1px solid #CBD5E1;border-radius:4px;font-size:11.5px;font-family:inherit;background:#fff}
+.result-wrap{background:#fff;max-height:230px;overflow:auto}
+.result-tbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.result-tbl thead th{background:linear-gradient(180deg,#EFF6FF 0%,#DBEAFE 100%);color:#1E3A5F;font-weight:700;padding:7px 10px;text-align:left;border-bottom:2px solid #93C5FD;border-right:1px solid #BFDBFE;position:sticky;top:0;white-space:nowrap;cursor:pointer;user-select:none}
+.result-tbl thead th .arrow{font-size:9px;color:#60A5FA;margin-left:2px}
+.result-tbl thead th:last-child{border-right:none}
+.result-tbl tbody td{padding:6px 10px;border-bottom:1px solid #F1F5F9;border-right:1px solid #F8FAFC;font-feature-settings:"tnum";color:#1F2937;height:28px;white-space:nowrap}
+.result-tbl tbody tr:nth-child(even){background:#FAFBFC}
+.result-tbl tbody tr:hover{background:#EFF6FF;cursor:pointer}
+.result-tbl tbody tr.selected,.result-tbl tbody tr.selected:nth-child(even){background:#FEF3C7 !important}
+.result-tbl tbody tr.selected td{border-right-color:#FCD34D;font-weight:500}
+.col-code{font-family:monospace;color:#1D4ED8;font-weight:700}
+.col-name{font-weight:500;color:#0F172A}
+.col-num{text-align:right;font-weight:600;font-feature-settings:"tnum"}
+.col-num.debt{color:#B45309}
+.col-num.zero{color:#94A3B8}
+.warn{color:#B91C1C;font-weight:700}
+.row-warn .col-name{color:#B91C1C}
+.bg-ap{background:#FEF3C7}
+.bg-stop{background:#FECACA}
+.bg-due{background:#FED7AA}
+.result-count{padding:6px 14px;background:#F8FAFC;border-top:1px solid #CBD5E1;border-bottom:1px solid #CBD5E1;font-size:11px;color:#64748B;display:flex;align-items:center;gap:12px}
+.result-count b{color:#1E3A5F}
+.vsd-footer{background:linear-gradient(180deg,#F8FAFC 0%,#E2E8F0 100%);border-top:1px solid #CBD5E1;padding:7px 14px;display:flex;align-items:center;gap:10px;font-size:11px;color:#64748B}
+.vsd-footer .st-dot{width:8px;height:8px;border-radius:50%;background:#10B981;display:inline-block}
+.vsd-footer b{color:#1E3A5F;font-weight:700}
+.vsd-footer .spacer{flex:1}
+.vsd-footer .key-hint{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#fff;border:1px solid #CBD5E1;border-radius:4px;color:#475569}
+.vsd-footer .ok-btn{padding:6px 16px;background:#10B981;color:#fff;border:none;border-radius:5px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+/* ===== DETAIL (ประวัติเจ้าหนี้เบื้องต้น · คลิกแถวแล้วโชว์) ===== */
+.detail-banner{background:linear-gradient(180deg,#1E3A5F 0%,#1D4ED8 100%);color:#fff;padding:9px 14px;display:flex;align-items:center;gap:10px}
+.detail-banner .ico{font-size:14px}
+.detail-banner h2{font-size:13px;font-weight:700}
+.detail-banner .dcode{font-family:monospace;font-size:11px;background:rgba(255,255,255,0.18);padding:2px 8px;border-radius:4px}
+.detail-banner .meta{margin-left:auto;display:flex;gap:8px;font-size:10.5px}
+.detail-banner .meta .pill{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:10px}
+.detail-banner .meta .pill.warn{background:#DC2626}
+.detail-tabs{background:#F1F5F9;border-bottom:1px solid #CBD5E1;display:flex;overflow-x:auto}
+.dt{padding:8px 14px;font-size:11.5px;font-weight:600;color:#64748B;cursor:pointer;border-right:1px solid #CBD5E1;white-space:nowrap;background:transparent;border-top:2px solid transparent;font-family:inherit}
+.dt:hover{background:#E2E8F0;color:#1E3A5F}
+.dt.active{background:#fff;color:#1D4ED8;border-top-color:#2563EB}
+.detail-body{background:#fff;min-height:150px;max-height:200px;overflow:auto}
+.pane{display:none;padding:12px 16px}
+.pane.active{display:block}
+.info-grid{display:grid;grid-template-columns:130px 1fr 130px 1fr;gap:6px 14px;font-size:12px}
+.info-grid label{color:#64748B;font-weight:600;font-size:11px}
+.info-grid span{color:#0F172A;font-weight:500}
+.sub-tbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.sub-tbl th{background:#EFF6FF;color:#1E3A5F;font-weight:700;padding:5px 10px;text-align:left;border-bottom:1px solid #93C5FD}
+.sub-tbl td{padding:5px 10px;border-bottom:1px solid #F1F5F9;color:#334155}
+.sub-tbl td.r{text-align:right;font-feature-settings:"tnum"}
+.aging-row td.over{color:#B91C1C;font-weight:700}
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat-cards .sc{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:10px 12px}
+.stat-cards .sc .l{font-size:10px;color:#64748B;font-weight:700;text-transform:uppercase}
+.stat-cards .sc .v{font-size:17px;font-weight:800;color:#1E3A5F;margin-top:3px;font-feature-settings:"tnum"}
+.stat-cards .sc .s{font-size:10px;color:#94A3B8}
+.chip{display:inline-block;padding:1px 7px;border-radius:9px;font-size:10px;font-weight:700}
+.chip.ok{background:#DCFCE7;color:#166534}.chip.warn{background:#FEE2E2;color:#B91C1C}.chip.info{background:#DBEAFE;color:#1D4ED8}
+</style>
+</head>
+<body>
+<div class="vsd">
+  <div class="vsd-title">
+    <span class="ico">🏭</span>
+    <h1>Vendor Search — ค้นหาเจ้าหนี้ / ผู้ขาย</h1>
+    <span class="win-btn">—</span><span class="win-btn">▢</span><span class="win-btn close" onclick="window.close()">✕</span>
+  </div>
+  <div class="vsd-toolbar">
+    <button class="tb-btn" title="หน้าแรก">⏮ หน้าแรก</button>
+    <button class="tb-btn" title="หน้าก่อนนี้">◀ หน้าก่อนนี้</button>
+    <button class="tb-btn" title="หน้าต่อไป">หน้าต่อไป ▶</button>
+    <span class="tb-sep"></span>
+    <button class="tb-btn">ℹ️ ประวัติ</button>
+    <button class="tb-btn">➕ เพิ่มเจ้าหนี้ใหม่ (PO-3)</button>
+    <button class="tb-btn help">❓</button>
+    <button class="tb-btn close-btn" onclick="window.close()">✕ ปิดหน้าจอ</button>
+  </div>
+  <div class="vsd-search">
+    <label>ค้นหา:</label>
+    <div class="search-box"><input id="vFind" value="Daikin" placeholder="รหัส / ชื่อ / เลขภาษี…" autofocus><button>🔍</button></div>
+    <span class="search-hint">ตัวอย่างเช่น: <b>แอร์ Daikin</b></span>
+    <div class="group-sel">กลุ่มเจ้าหนี้:
+      <select><option>ทั้งหมด</option><option>ผู้ผลิต / โรงงาน</option><option>ตัวแทนจำหน่าย</option><option>ผู้ให้บริการ</option></select>
+    </div>
+  </div>
+  <div class="result-wrap">
+    <table class="result-tbl">
+      <thead><tr>
+        <th>รหัส <span class="arrow">▲</span></th><th>ชื่อผู้ขาย</th><th>เลขผู้เสียภาษี</th><th>โทรศัพท์</th>
+        <th style="text-align:right">AP คงค้าง</th><th style="text-align:right">PO Active</th><th style="text-align:right">Lead time</th>
+        <th>สถานะ CN / เตือน</th><th>Buyer ผู้ดูแล</th>
+      </tr></thead>
+      <tbody id="vRows">
+        <tr class="selected"><td class="col-code">V-00045</td><td class="col-name">Daikin Industries (TH) Ltd.</td><td>0-1055-12345-67-8</td><td>02-715-9888</td><td class="col-num debt bg-ap">1,250,000.00</td><td class="col-num">4 ใบ</td><td class="col-num">7 วัน</td><td><span class="chip ok">CN ตรงเวลา</span></td><td>สมศรี</td></tr>
+        <tr><td class="col-code">V-00012</td><td class="col-name">LG Electronics (Thailand)</td><td>0-1055-22221-00-3</td><td>02-878-5000</td><td class="col-num debt bg-ap">2,480,000.00</td><td class="col-num">6 ใบ</td><td class="col-num">10 วัน</td><td><span class="chip info">CN รอ 1 ใบ</span></td><td>สมศรี</td></tr>
+        <tr class="row-warn"><td class="col-code">V-00098</td><td class="col-name">หจก. เอเชีย พาร์ท ซัพพลาย</td><td>0-1035-44440-12-1</td><td>02-455-1200</td><td class="col-num debt bg-ap">385,000.00</td><td class="col-num">2 ใบ</td><td class="col-num">14 วัน</td><td><span class="chip warn">⚠ CN ค้าง 22 วัน</span></td><td>วีรพล</td></tr>
+        <tr class="row-warn"><td class="col-code">V-00120</td><td class="col-name">บจก. ไทยเทค อีควิปเมนท์</td><td>0-1055-67890-33-5</td><td>02-901-4567</td><td class="col-num debt bg-stop">920,000.00</td><td class="col-num">0 ใบ</td><td class="col-num">21 วัน</td><td><span class="chip warn">🛑 STOP PO (CN 33 วัน)</span></td><td>วีรพล</td></tr>
+        <tr><td class="col-code">V-00033</td><td class="col-name">Mitsubishi Electric (TH)</td><td>0-1055-11122-44-9</td><td>02-663-4900</td><td class="col-num zero">0.00</td><td class="col-num">3 ใบ</td><td class="col-num">9 วัน</td><td><span class="chip ok">CN ตรงเวลา</span></td><td>สมศรี</td></tr>
+        <tr><td class="col-code">V-00077</td><td class="col-name">Panasonic (Thailand) Co.</td><td>0-1055-33344-55-2</td><td>02-731-8888</td><td class="col-num debt bg-ap">156,200.00</td><td class="col-num">1 ใบ</td><td class="col-num">12 วัน</td><td><span class="chip ok">CN ตรงเวลา</span></td><td>วีรพล</td></tr>
+        <tr><td class="col-code">V-00104</td><td class="col-name">หจก. นครพนม เครื่องเย็น</td><td>0-1048-55566-77-0</td><td>042-511-300</td><td class="col-num zero">0.00</td><td class="col-num">0 ใบ</td><td class="col-num">5 วัน</td><td><span class="chip ok">—</span></td><td>วีรพล</td></tr>
+        <tr><td class="col-code">V-00056</td><td class="col-name">Hitachi Sales (Thailand)</td><td>0-1055-88899-11-6</td><td>02-797-1000</td><td class="col-num debt bg-ap">540,000.00</td><td class="col-num">2 ใบ</td><td class="col-num">8 วัน</td><td><span class="chip info">CN รอ 1 ใบ</span></td><td>สมศรี</td></tr>
+        <tr><td class="col-code">V-00141</td><td class="col-name">บจก. สยาม คอมเพรสเซอร์</td><td>0-1055-99900-22-4</td><td>02-324-7700</td><td class="col-num zero">0.00</td><td class="col-num">1 ใบ</td><td class="col-num">15 วัน</td><td><span class="chip ok">—</span></td><td>วีรพล</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="result-count">พบ <b>9</b> รายการ · <span class="warn">สีแดง = CN ค้าง/ใกล้ STOP PO</span> · 🛑 = ระงับสั่งซื้อใหม่ (Sanction Day 30) · 👇 คลิกแถวเพื่อดูประวัติเบื้องต้น</div>
+
+  <!-- ===== DETAIL: ประวัติเจ้าหนี้เบื้องต้น ===== -->
+  <div class="detail-banner">
+    <span class="ico">🏭</span>
+    <h2 id="dName">Daikin Industries (TH) Ltd.</h2>
+    <span class="dcode" id="dCode">V-00045</span>
+    <div class="meta">
+      <span class="pill">เครดิต 60 วัน</span>
+      <span class="pill">AP คงค้าง 1,250,000</span>
+      <span class="pill">Tier T2 · Rebate 3%</span>
+      <span class="pill">CN ตรงเวลา</span>
+    </div>
+  </div>
+  <div class="detail-tabs">
+    <button class="dt active" onclick="vsTab(event,'p-info')">📋 ข้อมูลเจ้าหนี้</button>
+    <button class="dt" onclick="vsTab(event,'p-ap')">💰 AP / ยอดค้างจ่าย</button>
+    <button class="dt" onclick="vsTab(event,'p-buy')">🧾 ประวัติการซื้อ</button>
+    <button class="dt" onclick="vsTab(event,'p-cn')">📊 Trade Support / CN</button>
+  </div>
+  <div class="detail-body">
+    <div class="pane active" id="p-info">
+      <div class="info-grid">
+        <label>รหัสเจ้าหนี้</label><span id="iCode">V-00045</span><label>ประเภท</label><span>ผู้ผลิต / โรงงาน</span>
+        <label>ชื่อ</label><span id="iName">Daikin Industries (TH) Ltd.</span><label>เลขผู้เสียภาษี</label><span>0-1055-12345-67-8</span>
+        <label>ที่อยู่ (Billing)</label><span>123 ถ.พหลโยธิน เขตจตุจักร กทม. 10900</span><label>โทรศัพท์</label><span>02-715-9888</span>
+        <label>ที่อยู่รับของ (Pickup)</label><span>โรงงาน Bang Bo · ถ.บางนา-ตราด km 27 ฉะเชิงเทรา</span><label>ผู้ติดต่อ</label><span>คุณ ณัฐพล · 089-123-4567</span>
+        <label>เงื่อนไขชำระ</label><span>เครดิต 60 วัน · หลัง Invoice</span><label>Buyer ผู้ดูแล</label><span>สมศรี วงศ์ทอง</span>
+        <label>Lead time</label><span>7 วัน</span><label>วันที่เปิดบัญชี</label><span>05 มี.ค. 23</span>
+      </div>
+    </div>
+    <div class="pane" id="p-ap">
+      <table class="sub-tbl">
+        <thead><tr><th>ช่วงอายุหนี้ (เราค้างจ่าย)</th><th class="r">ยอด (บาท)</th><th>หมายเหตุ</th></tr></thead>
+        <tbody>
+          <tr><td>ยังไม่ถึงกำหนด</td><td class="r">830,000.00</td><td>ครบกำหนด 25 มิ.ย. 26</td></tr>
+          <tr><td>1–30 วัน</td><td class="r">420,000.00</td><td></td></tr>
+          <tr><td>31–60 วัน</td><td class="r">0.00</td><td></td></tr>
+          <tr><td>60+ วัน</td><td class="r">0.00</td><td></td></tr>
+          <tr><td><b>รวม AP คงค้าง</b></td><td class="r"><b>1,250,000.00</b></td><td>วงเงินซื้อ 5,000,000 · ใช้ไป 25%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pane" id="p-buy">
+      <table class="sub-tbl">
+        <thead><tr><th>เลขที่</th><th>ประเภท</th><th>วันที่</th><th class="r">มูลค่า</th><th>สถานะ</th></tr></thead>
+        <tbody>
+          <tr><td>PO-2605-0188</td><td>ใบสั่งซื้อ (PO)</td><td>20 พ.ค. 26</td><td class="r">1,160,000.00</td><td>รับครบ · ตั้งหนี้แล้ว</td></tr>
+          <tr><td>GR-2605-0192</td><td>ใบรับของ (GRN)</td><td>22 พ.ค. 26</td><td class="r">1,160,000.00</td><td>เข้าสต็อก</td></tr>
+          <tr><td>PO-2604-0140</td><td>ใบสั่งซื้อ (PO)</td><td>18 เม.ย. 26</td><td class="r">512,000.00</td><td>ปิดรายการ</td></tr>
+          <tr><td>PO-2603-0095</td><td>ใบสั่งซื้อ (PO)</td><td>09 มี.ค. 26</td><td class="r">588,000.00</td><td>ปิดรายการ</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pane" id="p-cn">
+      <div class="stat-cards" style="margin-bottom:10px">
+        <div class="sc"><div class="l">ยอดซื้อ 12 เดือน</div><div class="v">8,420,000</div><div class="s">บาท</div></div>
+        <div class="sc"><div class="l">Rebate สะสม (MOU)</div><div class="v">252,600</div><div class="s">Recovery 96%</div></div>
+        <div class="sc"><div class="l">CN ค้างรับ</div><div class="v">0</div><div class="s">ใบ · ตรงเวลา</div></div>
+        <div class="sc"><div class="l">On-time Delivery</div><div class="v">98%</div><div class="s">เป้า ≥95%</div></div>
+      </div>
+      <table class="sub-tbl">
+        <thead><tr><th>ประเภทงบ (Vendor Commitment)</th><th>เลขที่</th><th class="r">สิทธิ์/เป้า</th><th>สถานะ</th></tr></thead>
+        <tbody>
+          <tr><td>MOU (Rebate รายหมวด)</td><td>VC-MOU-2601-001</td><td class="r">3% · เป้า 8M</td><td><span class="chip ok">96% · on track</span></td></tr>
+          <tr><td>Sell-in (ส่วนลดเปิด PO)</td><td>VC-SI-2604-007</td><td class="r">2% บนบิล</td><td><span class="chip info">active</span></td></tr>
+          <tr><td>Co-op (งบ event)</td><td>VC-COOP-2605-003</td><td class="r">20,000</td><td><span class="chip info">รอเคลม</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="vsd-footer">
+    <span class="st-dot"></span> ONLINE · ดับเบิลคลิกแถว = เลือกเจ้าหนี้
+    <span class="spacer"></span>
+    <span class="key-hint">Enter = ตกลง</span>
+    <span class="key-hint">Esc = ปิด</span>
+    <button class="ok-btn" onclick="window.close()">เลือกเจ้าหนี้นี้</button>
+  </div>
+</div>
+<script>
+/* คลิกแถว = เลือก + อัปเดต detail (ประวัติเบื้องต้น) */
+document.querySelectorAll('#vRows tr').forEach(function(tr){
+  tr.onclick=function(){
+    document.querySelectorAll('#vRows tr').forEach(x=>x.classList.remove('selected'));
+    tr.classList.add('selected');
+    var code=tr.cells[0].textContent.trim(), name=tr.cells[1].textContent.trim();
+    document.getElementById('dName').textContent=name;
+    document.getElementById('dCode').textContent=code;
+    document.getElementById('iName').textContent=name;
+    document.getElementById('iCode').textContent=code;
+  };
+  tr.ondblclick=function(){window.close();};
+});
+/* สลับแท็บ detail */
+function vsTab(e,id){
+  var nav=e.currentTarget.parentElement;
+  nav.querySelectorAll('.dt').forEach(b=>b.classList.remove('active'));
+  e.currentTarget.classList.add('active');
+  document.querySelectorAll('.detail-body .pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+</script>
+</body></html>
