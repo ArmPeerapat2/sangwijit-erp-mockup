@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="th"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SL-3 ใบมัดจำ (Deposit) — Sangwijit ERP</title>
+<title>SL-CN ใบลดหนี้ (Credit Memo) — Sangwijit ERP</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ═══ SL-3 ใบมัดจำ — build บน _form-template.html (canonical) · เน้นเงิน ═══ */
+/* ═══ SL-CN ใบลดหนี้ — build บน _form-template.html · 3 โหมด ═══ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#111827;min-width:1440px;font-size:13px;line-height:1.45;height:100vh;overflow:hidden}
 .layout{display:flex;height:100vh;overflow:hidden}
@@ -18,7 +18,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 .topbar-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#F3F4F6;cursor:pointer;font-size:16px}
 .topbar-avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
 .branch-sel{background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;font-size:11px;font-weight:600;padding:4px 8px;border-radius:20px;font-family:inherit;cursor:pointer}
-.main-header{background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;z-index:30;box-shadow:0 2px 8px rgba(0,0,0,0.08);flex:none}
+.main-header{background:linear-gradient(90deg,#7C2D12 0%,#DC2626 100%);color:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;z-index:30;box-shadow:0 2px 8px rgba(0,0,0,0.08);flex:none}
 .mh-left{display:flex;align-items:center;gap:18px}
 .mh-title{display:flex;align-items:center;gap:10px}
 .mh-title .ico{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px}
@@ -29,11 +29,11 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 .mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em}
 .mh-meta-item .val{font-size:12px;font-weight:600;margin-top:1px;font-family:'Inter',monospace}
 .mh-right{display:flex;align-items:center;gap:8px}
-.mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(251,191,36,0.2);color:#FCD34D;border:1px solid rgba(251,191,36,0.3)}
+.mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(251,191,36,0.25);color:#FEF3C7;border:1px solid rgba(251,191,36,0.4)}
 .mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
 .mh-btn-ghost{background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.2)}
 .mh-btn-primary{background:#10B981;color:#fff}
-.mh-btn-accent{background:#8B5CF6;color:#fff}
+.mh-btn-accent{background:#fff;color:#B91C1C}
 .saab{display:flex;align-items:center;gap:8px;background:#fff;border-bottom:1px solid #E5E7EB;padding:7px 24px;flex-wrap:wrap;flex:none}
 .saab-status{margin-left:auto;font-size:11px;color:#6B7280;display:flex;align-items:center;gap:6px}
 .saab-status .dot{width:8px;height:8px;border-radius:50%;background:#F59E0B;display:inline-block}
@@ -53,18 +53,25 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 .field-value{font-size:12.5px;color:#111827;font-weight:500}
 .field-value.highlight{font-weight:700;color:#2563EB;font-family:'Inter',monospace}
 .field-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
-.credit-line{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;padding:6px 8px;background:#F8FAFC;border-radius:5px;border:1px solid #E2E8F0}
+.cn-sel{padding:4px 8px;border:1px solid #FCA5A5;border-radius:5px;font-size:12px;font-family:inherit;font-weight:600;color:#B91C1C;background:#FEF2F2}
+.credit-line{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;padding:6px 8px;background:#F8FAFC;border-radius:5px;border:1px solid #E2E8F0}
 .credit-line .cell{display:flex;flex-direction:column}
 .credit-line .lbl{font-size:8.5px;color:#9CA3AF;font-weight:700;text-transform:uppercase}
 .credit-line .val{font-size:11px;font-weight:700;font-family:'Inter',monospace}
 .credit-line .val.g{color:#10B981}.credit-line .val.r{color:#EF4444}.credit-line .val.m{color:#6B7280}
-.status-strip{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:4px 12px}
-.ss-label{font-size:9px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap}
+.status-strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:4px 12px}
 .sc11-pills{display:flex;gap:5px;flex-wrap:wrap}
 .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:10.5px;font-weight:600}
 .pill-success{background:#ECFDF5;color:#065F46}.pill-warning{background:#FEF3C7;color:#92400E}
 .pill-info{background:#EFF6FF;color:#0C4A6E}.pill-neutral{background:#F3F4F6;color:#374151}
+.pill-danger{background:#FEF2F2;color:#991B1B}
 .pill-route{background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE}
+.dc-lbl{font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px}
+.dc-node{padding:3px 10px;border-radius:5px;background:#F3F4F6;color:#6B7280;font-weight:600;text-decoration:none}
+.dc-node.done{background:#ECFDF5;color:#065F46}
+.dc-node.current{background:#FEF2F2;color:#B91C1C;border:1px solid #FCA5A5}
+.dc-arrow{color:#CBD5E1}
+a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .items-card{padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
 .items-card .card-header{padding:12px 14px;margin:0;border-bottom:1px solid #E5E7EB}
 .items-wrap{overflow-y:auto;flex:1;min-height:60px}
@@ -78,14 +85,15 @@ table.items th,table.items td{border-right:1px solid #EDEFF2}
 table.items th:last-child,table.items td:last-child{border-right:none}
 .item-code{font-size:10.5px;color:#6B7280;font-family:'Inter',monospace;font-weight:600}
 .item-name{font-weight:500}
-.item-model{font-size:10.5px;color:#9CA3AF}
-.item-total{text-align:right;font-weight:700;font-family:'Inter',monospace}
-.ref-chip{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:3px;font-size:10px;font-weight:600;background:#EFF6FF;color:#1D4ED8;margin-top:3px}
-.line-num{width:108px;padding:3px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;text-align:right;font-family:'Inter',monospace}
-.line-wh{padding:3px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:11px;font-family:inherit}
+.item-old{text-align:right;font-family:'Inter',monospace;color:#9CA3AF;text-decoration:line-through}
+.item-cut{text-align:right;font-weight:700;font-family:'Inter',monospace;color:#B91C1C}
+.qty-input{width:48px;padding:3px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;text-align:center;font-family:inherit}
+.line-num{width:88px;padding:3px 6px;border:1px solid #FCA5A5;border-radius:4px;font-size:12px;text-align:right;font-family:'Inter',monospace;background:#FFF7F7}
+.chip{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:3px;font-size:10px;font-weight:600;margin-top:3px}
+.chip.sn{background:#F1F5F9;color:#475569}.chip.ret{background:#FEF3C7;color:#92400E}
+.type-chip{display:inline-block;padding:1px 6px;border-radius:3px;font-size:9.5px;font-weight:700}
+.type-chip.good{background:#EFF6FF;color:#1D4ED8}.type-chip.svc{background:#F3E8FF;color:#7C3AED}
 .add-row-bar{padding:10px 14px;border-top:1px dashed #E5E7EB;display:flex;align-items:center;gap:6px;color:#2563EB;font-size:12px;font-weight:500;cursor:pointer;background:#FAFBFC}
-.ctx-bar{display:flex;gap:18px;padding:8px 14px;background:#F8FAFC;border-bottom:1px solid #E5E7EB;font-size:11.5px}
-.ctx-bar .k{color:#9CA3AF;font-weight:600}.ctx-bar .v{font-weight:700;font-family:'Inter',monospace;margin-left:5px}
 .tabset{background:#fff;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden}
 .tabset-nav{display:flex;border-bottom:1px solid #E5E7EB;background:#F8FAFC}
 .tabset-nav button{padding:10px 16px;font-size:12px;font-weight:600;color:#6B7280;background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit}
@@ -94,11 +102,6 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .tabset-pane.on{display:block}
 .tab-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:12px;align-items:center}
 .tab-grid .k{color:#9CA3AF}.tab-grid .v{font-weight:500}
-.pay-methods{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px}
-.pay-methods .m{padding:5px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:11.5px;font-weight:600;cursor:pointer;background:#fff}
-.pay-methods .m.on{background:#2563EB;color:#fff;border-color:#2563EB}
-.qr-box{display:flex;align-items:center;gap:12px;padding:10px;background:#F8FAFC;border:1px dashed #CBD5E1;border-radius:8px}
-.qr-img{width:74px;height:74px;background:repeating-conic-gradient(#111827 0% 25%,#fff 0% 50%) 50%/12px 12px;border-radius:6px;flex:none}
 .tl{display:flex;flex-direction:column;gap:6px;font-size:11.5px}
 .tl-item{display:flex;gap:8px;align-items:center}
 .tl-dot{width:8px;height:8px;border-radius:50%;background:#10B981;flex:none}
@@ -106,25 +109,16 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .summary-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px}
 .summary-row .lbl{color:#6B7280}
 .summary-row .val{color:#111827;font-weight:600;font-family:'Inter',monospace}
-.summary-total{margin-top:8px;padding:12px;background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);border-radius:6px;color:#fff;display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:700}
+.summary-total{margin-top:8px;padding:12px;background:linear-gradient(90deg,#7C2D12 0%,#DC2626 100%);border-radius:6px;color:#fff;display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:700}
 .summary-total .val{color:#fff;font-family:'Inter',monospace}
 .dep-box{margin-top:6px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .dep-box .b{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:5px;padding:5px 8px}
 .dep-box .l{font-size:9px;color:#9CA3AF;font-weight:700;text-transform:uppercase}
 .dep-box .v{font-size:13px;font-weight:700;font-family:'Inter',monospace}
-.dep-box .v.g{color:#10B981}.dep-box .v.r{color:#EF4444}
-.dc-strip{position:relative;flex:none;background:#fff;border-top:1px solid #E5E7EB;padding:7px 24px;display:flex;align-items:center;gap:8px;font-size:11px;z-index:20;box-shadow:0 -2px 8px rgba(0,0,0,0.04)}
-.dc-strip .dc-lbl{font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px}
-.dc-node{padding:3px 10px;border-radius:5px;background:#F3F4F6;color:#6B7280;font-weight:600}
-.dc-node.done{background:#ECFDF5;color:#065F46}
-.dc-node.current{background:#EFF6FF;color:#1D4ED8;border:1px solid #93C5FD}
-.dc-arrow{color:#CBD5E1}
-a.dc-node{text-decoration:none;cursor:pointer}
-a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
+.dep-box .v.g{color:#10B981}
 .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
-.btn-primary{background:#2563EB;color:#fff}.btn-success{background:#10B981;color:#fff}
-.btn-outline{background:#fff;color:#374151;border-color:#E5E7EB}
-.btn-ghost{background:transparent;color:#6B7280}
+.btn-success{background:#10B981;color:#fff}.btn-outline{background:#fff;color:#374151;border-color:#E5E7EB}
+.btn-ghost{background:transparent;color:#6B7280}.btn-primary{background:#2563EB;color:#fff}
 .row-2col .card.compact{padding:7px 10px}
 .row-2col .card-header{padding-bottom:5px;margin-bottom:5px}
 .row-2col .field{margin-bottom:3px}
@@ -132,7 +126,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .row-2col .credit-line{margin-top:5px;padding:4px 8px}
 .content>.items-card{flex:1 1 0;min-height:120px}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
-.row-bottom{font-size:12px;height:178px}
+.row-bottom{font-size:12px;height:172px}
 .row-bottom .tabset,.row-bottom>.card{overflow:auto}
 .row-bottom .tabset-pane{padding:10px;min-height:40px}
 .row-bottom .tabset-nav button{padding:6px 12px;font-size:11px}
@@ -183,13 +177,13 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
   <div class="swt-sb-brand"><div class="swt-sb-logo">ส</div><div><h1>Sangwijit ERP</h1><p>Web Portal · v3.0</p></div></div>
   <div class="swt-sb-search"><input placeholder="ค้นหาเมนู…" oninput="swtSbFilter(this.value)"></div>
   <a class="swt-sb-home" href="index.html">🏠 Master Index</a>
-  <details open><summary><span class="swt-sb-ico">💼</span><span class="swt-sb-lbl">งานขาย (SL)</span><span class="swt-sb-cnt">12</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+  <details open><summary><span class="swt-sb-ico">💼</span><span class="swt-sb-lbl">งานขาย (SL)</span><span class="swt-sb-cnt">13</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
     <a href="slq-sales-queue-mockup.html"><span class="c">SL-Q</span>คิวงานขาย</a>
     <a href="sl1-quotation-mockup.html" class="done"><span class="c">SL-1</span>ใบเสนอราคา</a>
     <a href="sl2-reservation-mockup.html" class="done"><span class="c">SL-2</span>ใบจอง</a>
-    <a href="sl3-deposit-mockup.html" class="swt-active done"><span class="c">SL-3</span>ใบมัดจำ</a>
+    <a href="sl3-deposit-mockup.html" class="done"><span class="c">SL-3</span>ใบมัดจำ</a>
     <a href="sl4-invoice-mockup.html" class="done"><span class="c">SL-4</span>บิลขาย/Invoice</a>
-    <a href="slcn-credit-memo-mockup.html" class="done"><span class="c">SL-CN</span>ใบลดหนี้</a>
+    <a href="slcn-credit-memo-mockup.html" class="swt-active done"><span class="c">SL-CN</span>ใบลดหนี้</a>
     <a href="sl5-crm-followup-mockup.html"><span class="c">SL-5</span>CRM Follow-up</a>
     <a href="sl6-promotion-setup-mockup.html"><span class="c">SL-6</span>โปรโมชั่น</a>
     <a href="sl7-sales-report-mockup.html"><span class="c">SL-7</span>รายงานยอดขาย</a>
@@ -201,40 +195,15 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
   <details><summary><span class="swt-sb-ico">📦</span><span class="swt-sb-lbl">คลังสินค้า (WH)</span><span class="swt-sb-cnt">7</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
     <a href="wh-queue-mockup.html"><span class="c">WH-Q</span>Dashboard</a>
     <a href="wh1-grn-mockup.html"><span class="c">WH-1</span>คิวรอรับสินค้า</a>
-    <a href="wh2-stock-transfer-mockup.html"><span class="c">WH-2</span>คิวโอนย้ายสต็อก</a>
     <a href="wh3-sales-issue-mockup.html"><span class="c">WH-3</span>คิวเบิกสินค้า</a>
-    <a href="wh4-stock-count-mockup.html"><span class="c">WH-4</span>คิวนับสต็อก</a>
-    <a href="wh-r-stock-card-mockup.html"><span class="c">WH-R</span>Stock Card</a>
-    <a href="wh-nm-non-move-report-mockup.html"><span class="c">WH-NM</span>สินค้าไม่เคลื่อนไหว</a>
-  </div></details>
-  <details><summary><span class="swt-sb-ico">🛒</span><span class="swt-sb-lbl">จัดซื้อ (PO)</span><span class="swt-sb-cnt">9</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
-    <a href="poq-purchase-queue-mockup.html"><span class="c">PO-Q</span>Purchase Queue</a>
-    <a href="po1-purchase-request-mockup.html"><span class="c">PO-1</span>ใบขอซื้อ (PR)</a>
-    <a href="po4-purchase-order-mockup.html"><span class="c">PO-4</span>ใบสั่งซื้อ (PO)</a>
-    <a href="po5-finance-grn-mockup.html"><span class="c">PO-5</span>Finance GRN</a>
-    <a href="po6-ap-invoice-mockup.html"><span class="c">PO-6</span>ใบวางบิล Vendor</a>
-    <a href="po8-deposit-bill-mockup.html"><span class="c">PO-8</span>บิลฝาก (Deposit)</a>
   </div></details>
   <details><summary><span class="swt-sb-ico">💵</span><span class="swt-sb-lbl">บัญชี/การเงิน</span><span class="swt-sb-cnt">11</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
     <a href="fiq-finance-queue-mockup.html"><span class="c">FI-Q</span>คิวงานการเงิน</a>
     <a href="fi1-ar-receive-mockup.html"><span class="c">FI-1</span>รับชำระ AR</a>
-    <a href="fi1q-apply-queue-mockup.html"><span class="c">FI-1Q</span>Apply Queue</a>
-    <a href="fi2-ap-payment-mockup.html"><span class="c">FI-2</span>จ่ายชำระ AP</a>
-  </div></details>
-  <details><summary><span class="swt-sb-ico">🔧</span><span class="swt-sb-lbl">บริการ (SV)</span><span class="swt-sb-cnt">12</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
-    <a href="sv-q-service-queue-mockup.html"><span class="c">SV-Q</span>คิวงานซ่อม</a>
-    <a href="sv1-service-intake-mockup.html"><span class="c">SV-1</span>ใบรับงานซ่อม</a>
-    <a href="sv4-service-close-mockup.html"><span class="c">SV-4</span>ใบรับจากงานซ่อม</a>
-  </div></details>
-  <details><summary><span class="swt-sb-ico">⚙️</span><span class="swt-sb-lbl">ตั้งค่าระบบ (CF)</span><span class="swt-sb-cnt">8</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
-    <a href="cf1-rbac-permission-mockup.html"><span class="c">CF-1</span>สิทธิ์ RBAC</a>
-    <a href="cf2-config-hub-mockup.html"><span class="c">CF-2</span>Config Hub</a>
-    <a href="cf2-7-doc-template-mockup.html"><span class="c">CF-2.7</span>Doc Template</a>
   </div></details>
   <details><summary><span class="swt-sb-ico">📚</span><span class="swt-sb-lbl">Master Data (MD)</span><span class="swt-sb-cnt">5</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
     <a href="md1-item-master-mockup-v3.html"><span class="c">MD-1</span>ทะเบียนสินค้า</a>
     <a href="md2-customer-master-mockup-v3.html"><span class="c">MD-2</span>ทะเบียนลูกค้า</a>
-    <a href="md3-vendor-master-mockup-v3.html"><span class="c">MD-3</span>ทะเบียน Vendor</a>
   </div></details>
 </aside>
 
@@ -243,7 +212,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 
   <!-- ① TOPBAR -->
   <div class="topbar">
-    <div class="topbar-breadcrumb">งานขาย <span class="sep">›</span> ใบมัดจำ <span class="sep">›</span> <span class="current">08DP-2606-0009</span></div>
+    <div class="topbar-breadcrumb">งานขาย <span class="sep">›</span> ใบลดหนี้ <span class="sep">›</span> <span class="current">08CN-2606-0007</span></div>
     <div class="topbar-spacer"></div>
     <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
     <div class="topbar-icon">🔔</div>
@@ -256,21 +225,21 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
   <header class="main-header">
     <div class="mh-left">
       <div class="mh-title">
-        <div class="ico">💵</div>
-        <div><h1>ใบมัดจำ</h1><p>Deposit Receipt (SL-3)</p></div>
+        <div class="ico">↩️</div>
+        <div><h1>ใบลดหนี้</h1><p>Sales Credit Memo (SL-CN)</p></div>
       </div>
       <div class="mh-divider"></div>
       <div class="mh-meta">
-        <div class="mh-meta-item"><div class="lbl">เลขที่มัดจำ</div><div class="val">08DP-2606-0009</div></div>
-        <div class="mh-meta-item"><div class="lbl">วันที่รับ</div><div class="val">06 มิ.ย. 26</div></div>
-        <div class="mh-meta-item"><div class="lbl">ยอดมัดจำ</div><div class="val">6,290.00</div></div>
+        <div class="mh-meta-item"><div class="lbl">เลขที่ลดหนี้</div><div class="val">08CN-2606-0007</div></div>
+        <div class="mh-meta-item"><div class="lbl">วันที่</div><div class="val">15 มิ.ย. 26</div></div>
+        <div class="mh-meta-item"><div class="lbl">ยอดลดหนี้</div><div class="val">1,070.00</div></div>
       </div>
     </div>
     <div class="mh-right">
       <span class="mh-badge">🕓 ร่าง · รอ Post</span>
       <button class="mh-btn mh-btn-ghost">📋 คิวงาน</button>
       <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
-      <button class="mh-btn mh-btn-accent">📥 Post (ลงบัญชี)</button>
+      <button class="mh-btn mh-btn-accent">📥 Post (ลด AR)</button>
     </div>
   </header>
 
@@ -279,28 +248,26 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     <button class="btn btn-outline" onclick="dfOpen()">📂 เปิดเอกสารเก่า</button>
     <button class="btn btn-outline">💾 Save</button>
     <button class="btn btn-outline" onclick="tplCopyDoc()">📋 Copy</button>
-    <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบมัดจำ</button>
-    <button class="btn btn-success">📥 Post (ลงบัญชี → Customer Ledger)</button>
-    <button class="btn btn-outline" title="ดูรายการบัญชีหลัง Post">📊 View GL</button>
+    <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบลดหนี้</button>
+    <button class="btn btn-success">📥 Post (→ ลด AR / Customer Ledger)</button>
     <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
     <span class="saab-status"><span class="dot"></span>สถานะ: <strong>ร่าง</strong> · รอ Post</span>
   </div>
 
   <div class="content">
 
-    <!-- ④a STATUS + DOC-CHAIN รวมแถวเดียว -->
-    <div class="status-strip" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <!-- ④a STATUS + DOC-CHAIN -->
+    <div class="status-strip">
       <div class="sc11-pills">
-        <span class="pill pill-neutral">📄 ร่าง (รอ Post)</span>
-        <span class="pill pill-info">฿ มัดจำรวม VAT</span>
-        <span class="pill pill-warning">💡 หักจากบิลขายอัตโนมัติ (SC6)</span>
+        <span class="pill pill-neutral">📄 ร่าง</span>
+        <span class="pill pill-danger" id="modePill">✏️ โหมด: ปรับราคา (ลดบางส่วน)</span>
+        <span class="pill pill-info">เหตุผล: ราคาผิด</span>
+        <span class="pill pill-warning">นอกประกัน (ใบลดหนี้)</span>
       </div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
-        <span class="dc-lbl" style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
-        <a class="dc-node done" href="sl1-quotation-mockup.html" target="_blank">QT 0047 ✓</a><span class="dc-arrow">→</span>
-        <a class="dc-node done" href="sl2-reservation-mockup.html" target="_blank">SO 0021 ✓</a><span class="dc-arrow">→</span>
-        <span class="dc-node current">DP 0009</span><span class="dc-arrow">→</span>
-        <a class="dc-node" href="sl4-invoice-mockup.html" target="_blank">บิลขาย INV</a>
+        <span class="dc-lbl">Doc Chain</span>
+        <a class="dc-node done" href="sl4-invoice-mockup.html" target="_blank">บิลขาย INV 0221 ✓</a><span class="dc-arrow">→</span>
+        <span class="dc-node current">CN 0007 (ลดหนี้)</span>
       </div>
     </div>
 
@@ -314,114 +281,132 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
         </div>
         <div class="field-grid-2">
           <div class="field"><div class="field-label">รหัส · ชื่อ</div><div class="field-value"><span class="highlight">690603NA-0016</span> · คุณ อดิเทพ ไชยเศรษฐ์</div></div>
-          <div class="field"><div class="field-label">เบอร์ · เลขภาษี</div><div class="field-value">081-234-5678 · 1234567891234</div></div>
+          <div class="field"><div class="field-label">เลขผู้เสียภาษี</div><div class="field-value">1234567891234</div></div>
         </div>
         <div class="credit-line">
-          <div class="cell"><span class="lbl">ยอดบิลตามจอง</span><span class="val">17,430.30</span></div>
-          <div class="cell"><span class="lbl">มัดจำงวดนี้</span><span class="val g">6,290.00</span></div>
-          <div class="cell"><span class="lbl">คงเหลือหลังหัก</span><span class="val r">11,140.30</span></div>
+          <div class="cell"><span class="lbl">ยอดบิลต้นทาง</span><span class="val">17,430.30</span></div>
+          <div class="cell"><span class="lbl">ลดหนี้ครั้งนี้</span><span class="val r">1,070.00</span></div>
+          <div class="cell"><span class="lbl">คงเหลือบิล</span><span class="val">16,360.30</span></div>
+          <div class="cell"><span class="lbl">AR หลังลด</span><span class="val g">↓ ลด</span></div>
         </div>
       </div>
       <div class="card compact">
         <div class="card-header"><div class="card-title"><span class="ico">📋</span>ข้อมูลเอกสาร</div>
           <div class="card-spacer"></div>
-          <button class="card-btn" onclick="dfOpenRef()" title="อ้างอิงเอกสารตามลูกหนี้ · เลือกได้หลายใบ">🔗 อ้างอิงเอกสาร</button>
+          <button class="card-btn" onclick="dfOpenRef()" title="อ้างอิงตามลูกหนี้ · เลือกได้หลายใบ">🔗 อ้างอิงเอกสาร</button>
         </div>
         <div class="field-grid-2">
-          <div class="field"><div class="field-label">อ้างอิงใบจอง <span style="color:#9CA3AF">(ถ้ามี · ไม่บังคับ)</span></div>
-            <div class="field-value"><a href="sl2-reservation-mockup.html" style="color:#2563EB;text-decoration:none">SO 08SO-2606-0021 ↗</a>
-              <button class="card-btn" style="padding:0 5px;font-size:10px;margin-left:6px" onclick="dfOpenRef()">เปลี่ยน</button></div></div>
-          <div class="field"><div class="field-label">วันที่รับเงิน</div><div class="field-value">06 มิ.ย. 26</div></div>
-          <div class="field"><div class="field-label">ผู้รับเงิน</div><div class="field-value">สัญญาลักษณ์ วังคะฮาต</div></div>
-          <div class="field"><div class="field-label">G/L Account (มัดจำ)</div><div class="field-value">2310 · เงินมัดจำรับล่วงหน้า</div></div>
+          <div class="field"><div class="field-label">ประเภทการลดหนี้</div>
+            <select class="cn-sel" id="cnMode" onchange="cnSetMode()">
+              <option value="price">✏️ ปรับราคา (ลดบางส่วน)</option>
+              <option value="partial">📦 คืนบางรายการ</option>
+              <option value="full">↩️ คืนทั้งบิล</option>
+            </select></div>
+          <div class="field"><div class="field-label">เหตุผล</div>
+            <select class="cn-sel"><option>ราคาผิด</option><option>คืนสินค้า</option><option>ส่วนลดพิเศษ</option><option>สินค้าชำรุด</option></select></div>
+          <div class="field"><div class="field-label">อ้างอิงบิลขาย <span style="color:#EF4444">*</span></div><div class="field-value"><a href="sl4-invoice-mockup.html" style="color:#2563EB;text-decoration:none">INV 08INV-2606-0221 ↗</a></div></div>
+          <div class="field"><div class="field-label">ประเภทใบ</div>
+            <select class="cn-sel"><option>นอกประกัน (ใบลดหนี้)</option><option>ในประกัน (ใบลดหนี้+ใบกำกับภาษี)</option></select></div>
+          <div class="field"><div class="field-label">ผู้ทำรายการ</div><div class="field-value">สัญญาลักษณ์ วังคะฮาต</div></div>
+          <div class="field"><div class="field-label">เครดิตที่ได้ → </div><div class="field-value">หักบิลถัดไป / คืนเงินสด</div></div>
         </div>
       </div>
     </div>
 
-    <!-- ④c รายการมัดจำ (deposit lines · รับได้หลายงวด) -->
+    <!-- ④c LINE ITEMS (copy จากบิล → แก้ราคา/จำนวนที่ลด) -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="ico">💰</span>รายการมัดจำ (รับได้หลายงวด)</div>
+        <div class="card-title"><span class="ico">↩️</span>รายการลดหนี้ <span class="tpl-zone">copy จาก INV-0221</span></div>
         <div class="card-spacer"></div>
-        <span class="ph" style="font-size:10px">มัดจำ 1 ใบจอง → รับทีละงวดได้</span>
-      </div>
-      <div class="ctx-bar">
-        <span><span class="k">บิลตามใบจอง:</span><span class="v">17,430.30</span></span>
-        <span><span class="k">รับมัดจำสะสม:</span><span class="v" style="color:#10B981">6,290.00</span></span>
-        <span><span class="k">คงเหลือหลังหักมัดจำ:</span><span class="v" style="color:#EF4444">11,140.30</span></span>
+        <span class="ph" id="modeHint" style="font-size:10.5px">โหมดปรับราคา: แก้ "ราคาที่ถูกต้อง" → ระบบคิดยอดลด = ส่วนต่าง</span>
       </div>
       <div class="items-wrap">
         <table class="items">
-          <thead><tr><th>งวด</th><th>รายการ</th><th>วันที่รับ</th><th>วิธีชำระ</th><th>อ้างอิงการโอน</th><th style="text-align:right">จำนวนเงิน (รวม VAT)</th><th></th></tr></thead>
+          <thead><tr><th>#</th><th>รหัส</th><th>รายการ</th><th>จำนวนเดิม</th><th>จำนวนคืน</th><th style="text-align:right">ราคาเดิม</th><th style="text-align:right">ส่วนลด</th><th style="text-align:right">ยอดที่ลด</th><th>เลขที่อ้างอิง</th><th></th></tr></thead>
           <tbody>
             <tr>
-              <td>1</td>
-              <td><div class="item-name">มัดจำสินค้าตามใบจอง 08SO-2606-0021</div>
-                  <div><span class="ref-chip">↩ SO-0021 · แอร์ MITSUBISHI + ติดตั้ง</span></div></td>
-              <td>06 มิ.ย. 26</td>
-              <td>โอน (SCB)</td>
-              <td><div class="item-code">SCB*6239 · 10:45</div></td>
-              <td style="text-align:right"><input class="line-num" value="6,290.00"></td>
+              <td>1</td><td><div class="item-code">824x82xx824</div></td>
+              <td><div class="item-name">เครื่องปรับอากาศ MITSUBISHI MSY/U-KA13V <span class="type-chip good">สินค้า</span></div>
+                  <div><span class="chip sn">S/N: TH2406-00891</span></div></td>
+              <td style="text-align:center">1</td>
+              <td style="text-align:center"><input class="qty-input" value="0"></td>
+              <td class="item-old">13,990.00</td>
+              <td style="text-align:right"><input class="line-num" value="1,000.00"></td>
+              <td class="item-cut">1,000.00</td>
+              <td><a href="sl4-invoice-mockup.html" style="color:#2563EB;text-decoration:none;font-size:11px">INV-0221</a></td>
               <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
             </tr>
-            <tr class="empty-row"><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+              <td>2</td><td><div class="item-code">INC-4110093</div></td>
+              <td><div class="item-name">ค่าบริการติดตั้งแอร์ 9,000–15,000 BTU <span class="type-chip svc">ค่าแรง</span></div></td>
+              <td style="text-align:center">1</td>
+              <td style="text-align:center"><input class="qty-input" value="0"></td>
+              <td class="item-old">3,000.00</td>
+              <td style="text-align:right"><input class="line-num" value="0.00"></td>
+              <td class="item-cut">0.00</td>
+              <td><a href="sl4-invoice-mockup.html" style="color:#2563EB;text-decoration:none;font-size:11px">INV-0221</a></td>
+              <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
+            </tr>
+            <tr class="empty-row"><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>11</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>12</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
           </tbody>
         </table>
       </div>
-      <div class="add-row-bar">➕ + เพิ่มงวดมัดจำ</div>
+      <div class="add-row-bar" onclick="dfOpen()">🔗 ดึงรายการจากบิลขาย (เลือกบิลต้นทาง)</div>
     </div>
 
     <!-- ④d ROW-BOTTOM -->
     <div class="row-bottom">
       <div class="tabset">
         <div class="tabset-nav">
-          <button class="on" onclick="swTab(event,'t-pay')">การชำระ <span class="tpl-zone">SC-3</span></button>
-          <button onclick="swTab(event,'t-ref')">อ้างอิง <span class="tpl-zone">SC-5</span></button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ <span class="tpl-zone">SC-7</span></button>
+          <button class="on" onclick="swTab(event,'t-reason')">เหตุผล/รายละเอียด</button>
+          <button onclick="swTab(event,'t-return')">คืนสินค้า (WH)</button>
+          <button onclick="swTab(event,'t-ref')">อ้างอิง</button>
+          <button onclick="swTab(event,'t-hist')">ประวัติ</button>
         </div>
-        <div class="tabset-pane on" id="t-pay">
-          <div class="pay-methods">
-            <span class="m">เงินสด</span><span class="m on">โอน</span><span class="m">เช็ค</span><span class="m">บัตร</span><span class="m">QR PromptPay</span>
+        <div class="tabset-pane on" id="t-reason">
+          <div class="tab-grid">
+            <span class="k">เหตุผลการลดหนี้</span><span class="v">ขายผิดราคา — แอร์ควรขาย 12,990 (ลง 13,990)</span>
+            <span class="k">รายละเอียด</span><span class="v">ปรับราคาเฉพาะรายการแอร์ · ลด 1,000 + VAT 70</span>
+            <span class="k">อนุมัติ</span><span class="v">ยอดลด &lt; threshold → ไม่ต้องขออนุมัติ</span>
           </div>
-          <div class="qr-box">
-            <div class="qr-img"></div>
-            <div style="font-size:11.5px">
-              <div style="font-weight:700">QR PromptPay (มัดจำ)</div>
-              <div class="ph">Biller 099-4-12345-6 · Ref1=DP-0009 · ยอด 6,290.00 (fix)</div>
-              <div style="margin-top:4px"><button class="btn btn-outline" style="padding:3px 8px;font-size:11px">📥 PNG</button> <button class="btn btn-outline" style="padding:3px 8px;font-size:11px">📤 ส่ง LINE</button></div>
-            </div>
+        </div>
+        <div class="tabset-pane" id="t-return">
+          <div class="tab-grid">
+            <span class="k">คืนสินค้าเข้าคลัง</span><span class="v ph">โหมดปรับราคา = ไม่คืนสินค้า · (โหมดคืนบางรายการ/ทั้งบิล → trigger WH Return Receipt)</span>
+            <span class="k">คลังรับคืน</span><span class="v ph">— (เมื่อมีการคืนของ)</span>
           </div>
         </div>
         <div class="tabset-pane" id="t-ref">
           <div class="tab-grid">
-            <span class="k">ใบจองต้นทาง</span><span class="v"><a href="sl2-reservation-mockup.html" style="color:#2563EB;text-decoration:none">SO 08SO-2606-0021 ↗</a></span>
-            <span class="k">ใบเสนอราคา</span><span class="v"><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 08QT-2606-0047 ↗</a></span>
+            <span class="k">บิลขายต้นทาง</span><span class="v"><a href="sl4-invoice-mockup.html" style="color:#2563EB;text-decoration:none">INV 08INV-2606-0221 ↗</a></span>
+            <span class="k">สายเอกสาร</span><span class="v">QT 0047 → SO 0021 → DP 0009 → INV 0221 → <b>CN 0007</b></span>
           </div>
         </div>
         <div class="tabset-pane" id="t-hist">
           <div class="tl">
-            <div class="tl-item"><span class="tl-dot"></span> สร้างจากใบจอง · 06 มิ.ย. 26 · สัญญาลักษณ์</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> Post → บันทึก Customer Ledger (เงินมัดจำ)</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> หักออกจากบิลขายอัตโนมัติ (ตอนออก SL-4)</div>
+            <div class="tl-item"><span class="tl-dot"></span> สร้างจากบิลขาย INV-0221 · 15 มิ.ย. 26 · สัญญาลักษณ์</div>
+            <div class="tl-item"><span class="tl-dot pending"></span> Post → ลด AR (Customer Ledger) + ปรับ VAT Output</div>
+            <div class="tl-item"><span class="tl-dot pending"></span> เครดิตคงเหลือ → หักบิลถัดไป/คืนเงิน</div>
           </div>
         </div>
       </div>
       <div class="card">
-        <div class="card-header"><div class="card-title"><span class="ico">💰</span>สรุปมัดจำ <span class="tpl-zone">SC3 · SC6</span></div></div>
-        <div class="summary-row"><span class="lbl">ยอดบิลตามใบจอง</span><span class="val">17,430.30</span></div>
-        <div class="summary-row"><span class="lbl">รับมัดจำสะสม</span><span class="val" style="color:#10B981">6,290.00</span></div>
-        <div class="summary-total"><span>รับมัดจำงวดนี้</span><span class="val">6,290.00</span></div>
+        <div class="card-header"><div class="card-title"><span class="ico">↩️</span>สรุปลดหนี้ <span class="tpl-zone">SC3</span></div></div>
+        <div class="summary-row"><span class="lbl">ยอดลดหนี้ (ก่อน VAT)</span><span class="val">1,000.00</span></div>
+        <div class="summary-row"><span class="lbl">VAT ที่ลด 7%</span><span class="val">70.00</span></div>
+        <div class="summary-total"><span>รวมลดหนี้</span><span class="val">1,070.00</span></div>
         <div class="dep-box">
-          <div class="b"><div class="l">วิธีชำระ</div><div class="v" style="font-size:11px">โอน SCB*6239</div></div>
-          <div class="b"><div class="l">คงเหลือหลังหัก</div><div class="v r">11,140.30</div></div>
+          <div class="b"><div class="l">บิลต้นทาง</div><div class="v">17,430.30</div></div>
+          <div class="b"><div class="l">เครดิตคงเหลือ</div><div class="v g">1,070.00</div></div>
         </div>
       </div>
     </div>
@@ -429,7 +414,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     <!-- ④e NOTES -->
     <div class="card" style="padding:8px 12px;display:flex;align-items:center;gap:8px">
       <span style="font-size:12px;font-weight:600;color:#374151">🗒️ หมายเหตุ</span>
-      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="มัดจำ 6,290.- (รวม VAT) · หักจากบิลขายตอนส่งของ · คงเหลือเก็บปลายทาง 11,140.30">
+      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="ปรับราคาแอร์ผิด 13,990 → 12,990 · ลดหนี้ 1,070 (รวม VAT) · เครดิตหักบิลถัดไป">
     </div>
 
   </div><!-- /content -->
@@ -441,9 +426,9 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 <div class="tpl-modal-bg" id="printModal">
   <div class="tpl-modal">
     <h3>🖨️ เลือกแบบฟอร์มก่อนพิมพ์</h3>
-    <label><input type="radio" name="prnForm" checked> ใบรับเงินมัดจำ (ลูกค้า)</label>
-    <label><input type="radio" name="prnForm"> สำเนา (บริษัท)</label>
-    <label><input type="checkbox"> แนบ QR ชำระเงิน</label>
+    <label><input type="radio" name="prnForm" checked> ใบลดหนี้ (ต้นฉบับ)</label>
+    <label><input type="radio" name="prnForm"> ใบลดหนี้ + ใบกำกับภาษี (ในประกัน)</label>
+    <label><input type="radio" name="prnForm"> สำเนา</label>
     <div class="m-actions">
       <button class="btn btn-outline" onclick="tplClosePrint()">ยกเลิก</button>
       <button class="btn btn-primary" onclick="window.print();tplClosePrint()">พิมพ์</button>
@@ -460,10 +445,23 @@ function swTab(e,id){
   set.querySelectorAll('.tabset-pane').forEach(p=>p.classList.remove('on'));
   set.querySelector('#'+id).classList.add('on');
 }
-function tplCopyDoc(){ alert('ทำสำเนาใบมัดจำ (mock) · เลขใหม่ · สถานะ ร่าง'); }
+function tplCopyDoc(){ alert('ทำสำเนาใบลดหนี้ (mock) · เลขใหม่ · สถานะ ร่าง'); }
 function tplOpenPrint(){ document.getElementById('printModal').classList.add('on'); }
 function tplClosePrint(){ document.getElementById('printModal').classList.remove('on'); }
-document.querySelectorAll('.pay-methods .m').forEach(function(m){m.onclick=function(){document.querySelectorAll('.pay-methods .m').forEach(x=>x.classList.remove('on'));m.classList.add('on');};});
+/* โหมดการลดหนี้ → เปลี่ยน hint + pill */
+function cnSetMode(){
+  var m=document.getElementById('cnMode').value;
+  var pill=document.getElementById('modePill'), hint=document.getElementById('modeHint');
+  var isReturn=(m!=='price'); /* คืนสินค้า = คืนบางรายการ/คืนทั้งบิล */
+  if(m==='partial'){ pill.textContent='📦 โหมด: คืนบางรายการ'; hint.textContent='โหมดคืนบางรายการ: ระบุ "จำนวนคืน" → ยอดลด = ราคาเดิม × จำนวนคืน · ช่องส่วนลดแก้ไม่ได้ · คืนสต็อก → WH Return'; }
+  else if(m==='full'){ pill.textContent='↩️ โหมด: คืนทั้งบิล'; hint.textContent='โหมดคืนทั้งบิล: คืนเต็มทุกรายการ · ช่องส่วนลดแก้ไม่ได้ · คืนสต็อกทั้งหมด → WH Return · ลด AR เต็มยอด'; }
+  else { pill.textContent='✏️ โหมด: ปรับราคา (ลดบางส่วน)'; hint.textContent='โหมดปรับราคา: กรอก "ส่วนลด" ต่อรายการ → ยอดลด = ส่วนลด · ไม่คืนสินค้า (จำนวนคืนแก้ไม่ได้)'; }
+  /* คืนสินค้า → ช่องส่วนลด/ราคา แก้ไม่ได้ · ปรับราคา → จำนวนคืน แก้ไม่ได้ */
+  document.querySelectorAll('.items .line-num').forEach(function(i){ i.disabled=isReturn; i.style.background=isReturn?'#F1F5F9':'#FFF7F7'; i.style.opacity=isReturn?'.55':''; i.style.borderColor=isReturn?'#E5E7EB':'#FCA5A5'; });
+  document.querySelectorAll('.items .qty-input').forEach(function(i){ i.disabled=!isReturn; i.style.opacity=!isReturn?'.55':''; });
+}
+/* ตั้งค่าเริ่มต้น (โหมดปรับราคา → จำนวนคืน disabled) */
+cnSetMode();
 function swtSbFilter(v){
   v=(v||'').toLowerCase();
   document.querySelectorAll('#swtSb .swt-sb-links a').forEach(function(a){
