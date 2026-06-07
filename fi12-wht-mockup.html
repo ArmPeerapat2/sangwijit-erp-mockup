@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FI-12 ภาษีหัก ณ ที่จ่าย WHT (ภ.ง.ด.3/53) | Sangwijit ERP Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Noto Sans Thai', sans-serif;
+            min-width: 1440px;
+            background: #F8FAFC;
+            color: #1F2937;
+        }
+
+        .main-content {
+            margin-left: 240px;
+            padding: 32px;
+            padding-bottom: 120px;
+            min-height: 100vh;
+        }
+
+        .main-header {
+            background: linear-gradient(135deg, #1E3A5F 0%, #2563EB 100%);
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 14px rgba(30, 58, 95, 0.25);
+        }
+        .main-header .mh-left { display: flex; flex-direction: column; gap: 6px; }
+        .main-header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+        .main-header .mh-sub { font-size: 12.5px; color: #BFDBFE; }
+        .main-header .mh-right { display: flex; align-items: center; gap: 16px; }
+        .mh-docno {
+            font-family: 'Inter', monospace; font-size: 15px; font-weight: 700;
+            background: rgba(255,255,255,0.14); padding: 8px 14px; border-radius: 8px;
+            letter-spacing: 0.5px;
+        }
+        .mh-status {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 700;
+        }
+        .mh-status.matched { background: #FEF3C7; color: #92400E; }
+        .mh-status-track { display: flex; gap: 6px; margin-top: 4px; }
+        .mh-step {
+            font-size: 10.5px; font-weight: 600; padding: 2px 9px; border-radius: 10px;
+            background: rgba(255,255,255,0.12); color: #BFDBFE;
+        }
+        .mh-step.done { background: rgba(255,255,255,0.28); color: #fff; }
+        .mh-step.current { background: #FCD34D; color: #78350F; }
+
+        .filter-bar {
+            display: flex; gap: 16px; margin-bottom: 8px; align-items: flex-end; flex-wrap: wrap;
+        }
+        .filter-group { display: flex; flex-direction: column; gap: 5px; }
+        .filter-label { font-size: 12px; font-weight: 600; color: #374151; }
+        select, input {
+            padding: 8px 12px; border: 1px solid #D1D5DB; border-radius: 6px;
+            font-family: 'Inter', 'Noto Sans Thai', sans-serif; font-size: 13px;
+            background: white; color: #1F2937;
+        }
+        select { min-width: 200px; }
+        select:focus, input:focus {
+            outline: none; border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+        .filter-note {
+            font-size: 11.5px; color: #92400E; background: #FEF3C7;
+            padding: 6px 12px; border-radius: 6px; margin: 10px 0 24px;
+            display: inline-flex; align-items: center; gap: 6px; font-weight: 600;
+        }
+
+        .card {
+            background: white; border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 24px; margin-bottom: 24px;
+        }
+        .card-title {
+            font-size: 15px; font-weight: 700; color: #1F2937; margin-bottom: 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .card-title .hint { font-size: 11.5px; font-weight: 500; color: #6B7280; }
+
+        .summary-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+        }
+        .sum-card {
+            background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 10px; padding: 18px;
+        }
+        .sum-card.diff-bad { background: #FEF2F2; border-color: #FECACA; }
+        .sum-label {
+            font-size: 11.5px; font-weight: 600; color: #6B7280;
+            text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px;
+        }
+        .sum-value {
+            font-size: 22px; font-weight: 700; color: #1F2937;
+            font-variant-numeric: tabular-nums;
+        }
+        .sum-value.blue { color: #2563EB; }
+        .sum-sub { font-size: 11.5px; color: #6B7280; margin-top: 4px; }
+
+        .legend-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #EEF2FF; color: #3730A3; border: 1px solid #C7D2FE;
+            padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        thead { background: #F3F4F6; }
+        th {
+            padding: 11px 12px; text-align: left; font-weight: 600;
+            color: #374151; border-bottom: 2px solid #E5E7EB; font-size: 12px;
+            white-space: nowrap;
+        }
+        td { padding: 12px; border-bottom: 1px solid #E5E7EB; color: #1F2937; vertical-align: middle; }
+        tbody tr:hover { background: #F9FAFB; }
+        tr.total-row { background: #F3F4F6; font-weight: 700; }
+        tr.total-row:hover { background: #F3F4F6; }
+        .amount { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+        .doc-code { font-family: 'Inter', monospace; font-weight: 700; color: #2563EB; }
+        .muted { color: #9CA3AF; }
+
+        .pnd-pill {
+            display: inline-block; padding: 2px 8px; border-radius: 10px;
+            font-size: 11px; font-weight: 700;
+        }
+        .pnd-pill.p53 { background: #EEF2FF; color: #3730A3; }
+        .pnd-pill.p3 { background: #FCE7F3; color: #9D174D; }
+        .status-rel { color: #10B981; font-weight: 600; }
+        .status-pend { color: #F59E0B; font-weight: 600; }
+
+        .chk { width: 17px; height: 17px; cursor: pointer; vertical-align: middle; }
+        .mini-btn {
+            padding: 4px 10px; border-radius: 5px; font-size: 11.5px; font-weight: 600;
+            border: 1px solid #93C5FD; background: #EFF6FF; color: #1D4ED8; cursor: pointer;
+        }
+        .mini-btn:hover { background: #DBEAFE; }
+
+        button.act { padding: 10px 20px; border: none; border-radius: 6px;
+            font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .btn-primary { background: #2563EB; color: white; }
+        .btn-primary:hover { background: #1D4ED8; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+        .btn-secondary { background: #E5E7EB; color: #1F2937; }
+        .btn-secondary:hover { background: #D1D5DB; }
+
+        .sticky-action-bar {
+            position: fixed; bottom: 0; left: 240px; right: 0; height: 84px;
+            background: #fff; border-top: 1px solid #E5E7EB;
+            padding: 14px 32px; display: flex; align-items: center;
+            justify-content: space-between; box-shadow: 0 -2px 8px rgba(0,0,0,0.08); z-index: 90;
+        }
+        .sab-left { display: flex; flex-direction: column; gap: 3px; }
+        .sab-title { font-size: 14px; font-weight: 700; color: #1F2937; }
+        .sab-info { font-size: 12px; color: #6B7280; }
+        .sab-info .blue { color: #2563EB; font-weight: 700; }
+        .sab-buttons { display: flex; align-items: center; gap: 12px; }
+        .sab-note {
+            font-size: 11px; color: #92400E; background: #FEF3C7;
+            padding: 4px 10px; border-radius: 6px; max-width: 240px; line-height: 1.4;
+        }
+
+        .bc-note {
+            font-size: 11.5px; color: #6B7280; background: #F3F4F6;
+            border-left: 3px solid #9CA3AF; padding: 10px 14px; border-radius: 6px;
+            margin-top: 16px; line-height: 1.5;
+        }
+        .bc-note b { color: #374151; }
+    </style>
+  <link rel="stylesheet" href="swt-patterns.css">
+</head>
+<body>
+<!-- SWT_SIDEBAR_START -->
+<style>
+.swt-sb,.swt-sb *{box-sizing:border-box}
+.swt-sb{position:fixed;left:0;top:0;width:240px;height:100vh;background:#1E3A5F;color:#D1D5DB;overflow-y:auto;padding:14px 10px 32px;z-index:500;font-family:'Inter','Noto Sans Thai',sans-serif;font-size:13px;line-height:1.4}
+.swt-sb::-webkit-scrollbar{width:6px}
+.swt-sb::-webkit-scrollbar-thumb{background:#334E70;border-radius:3px}
+.swt-sb-brand{display:flex;align-items:center;gap:9px;padding:4px 8px 14px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:12px}
+.swt-sb-logo{width:34px;height:34px;border-radius:9px;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0}
+.swt-sb-brand h1{font-size:12px;font-weight:700;color:#fff;letter-spacing:-0.2px;margin:0}
+.swt-sb-brand p{font-size:10px;color:#94A3B8;margin:1px 0 0}
+.swt-sb-search{position:relative;margin:0 4px 12px}
+.swt-sb-search input{width:100%;padding:7px 10px 7px 28px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:#fff;font-size:12px;font-family:inherit;outline:none}
+.swt-sb-search input::placeholder{color:#6B7F99}
+.swt-sb-search input:focus{border-color:#2563EB;background:rgba(37,99,235,0.1)}
+.swt-sb-search::before{content:"🔍";position:absolute;left:9px;top:7px;font-size:10px;opacity:0.55}
+.swt-sb-home{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;text-decoration:none;color:#9CA3AF;font-size:11px;margin:0 4px 10px;background:rgba(255,255,255,0.05);transition:all 0.15s}
+.swt-sb-home:hover{background:rgba(255,255,255,0.12);color:#fff}
+.swt-sb details{margin:1px 0}
+.swt-sb details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:7px 9px;border-radius:6px;font-size:10.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;user-select:none;margin:0 2px}
+.swt-sb details>summary::-webkit-details-marker{display:none}
+.swt-sb details>summary:hover{background:rgba(255,255,255,0.06);color:#fff}
+.swt-sb-ico{font-size:13px;width:17px;text-align:center;flex-shrink:0}
+.swt-sb-lbl{flex:1}
+.swt-sb-cnt{font-size:9px;font-weight:600;background:rgba(255,255,255,0.08);color:#CBD5E1;padding:1px 5px;border-radius:9px;letter-spacing:0}
+.swt-sb-chv{font-size:8px;color:#6B7F99;transition:transform 0.2s}
+.swt-sb details[open]>summary .swt-sb-chv{transform:rotate(180deg)}
+.swt-sb-links{padding:1px 0 4px 6px}
+.swt-sb-links a{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:5px;text-decoration:none;color:#D1D5DB;font-size:11.5px;margin:1px 0;transition:all 0.1s;line-height:1.3}
+.swt-sb-links a:hover{background:rgba(255,255,255,0.08);color:#fff}
+.swt-sb-links a .c{font-family:'Inter',monospace;font-size:9.5px;font-weight:700;color:#94A3B8;min-width:36px;flex-shrink:0}
+.swt-sb-links a:hover .c{color:#60A5FA}
+.swt-sb-links a.swt-active{background:#2563EB;color:#fff;font-weight:600}
+.swt-sb-links a.swt-active .c{color:#BFDBFE}
+.swt-sb-links a.swt-new::after{content:"NEW";font-size:7.5px;font-weight:700;background:#DC2626;color:#fff;padding:1px 4px;border-radius:3px;margin-left:auto}
+.swt-sb a.swt-hide,.swt-sb details.swt-hide{display:none}
+body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
+</style>
+<aside class="swt-sb" id="swtSb">
+  <div class="swt-sb-brand">
+    <div class="swt-sb-logo">ส</div>
+    <div><h1>Sangwijit ERP</h1><p>Web Portal · v3.0</p></div>
+  </div>
+  <div class="swt-sb-search"><input placeholder="ค้นหาเมนู…" oninput="swtSbFilter(this.value)"></div>
+  <a class="swt-sb-home" href="index.html">🏠 Master Index</a>
+
+  <details><summary><span class="swt-sb-ico">🏠</span><span class="swt-sb-lbl">Overview</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="index.html"><span class="c">IDX</span>Master Index</a>
+    <a href="sangwijit-portal-architecture.html"><span class="c">ARCH</span>Architecture</a>
+    <a href="dev-handoff-spec.html"><span class="c">SPEC</span>Dev Handoff</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">💼</span><span class="swt-sb-lbl">งานขาย (SL)</span><span class="swt-sb-cnt">12</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="slq-sales-queue-mockup.html"><span class="c">SL-Q</span>คิวงานขาย</a>
+    <a href="sl1-quotation-mockup.html"><span class="c">SL-1</span>ใบเสนอราคา</a>
+    <a href="sl2-reservation-mockup.html"><span class="c">SL-2</span>ใบจอง</a>
+    <a href="sl3-deposit-mockup.html"><span class="c">SL-3</span>ใบมัดจำ</a>
+    <a href="sl4-invoice-mockup.html"><span class="c">SL-4</span>บิลขาย/Invoice</a>
+    <a href="sl5-crm-followup-mockup.html"><span class="c">SL-5</span>CRM Follow-up</a>
+    <a href="sl6-promotion-setup-mockup.html"><span class="c">SL-6</span>โปรโมชั่น</a>
+    <a href="sl7-sales-report-mockup.html"><span class="c">SL-7</span>รายงานยอดขาย</a>
+    <a href="slf1-credit-approval-mockup.html" class="swt-new"><span class="c">SL-F1</span>อนุมัติวงเงิน</a>
+    <a href="pm5-vat-simulator-mockup.html" class="swt-new"><span class="c">PM-5</span>VAT Simulator</a>
+    <a href="cm1-commission-mockup.html"><span class="c">CM-1</span>Commission</a>
+    <a href="cl1-claims-mockup.html"><span class="c">CL-1</span>Claims</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">📦</span><span class="swt-sb-lbl">คลังสินค้า (WH)</span><span class="swt-sb-cnt">7</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="wh-queue-mockup.html"><span class="c">WH-Q</span>Dashboard</a>
+    <a href="wh1-grn-mockup.html"><span class="c">WH-1</span>คิวรอรับสินค้า</a>
+    <a href="wh2-stock-transfer-mockup.html"><span class="c">WH-2</span>คิวโอนย้ายสต็อก</a>
+    <a href="wh3-sales-issue-mockup.html"><span class="c">WH-3</span>คิวเบิกสินค้า</a>
+    <a href="wh4-stock-count-mockup.html"><span class="c">WH-4</span>คิวนับสต็อก</a>
+    <a href="wh-r-stock-card-mockup.html" class="swt-new"><span class="c">WH-R</span>Stock Card</a>
+    <a href="wh-nm-non-move-report-mockup.html" class="swt-new"><span class="c">WH-NM</span>สินค้าไม่เคลื่อนไหว</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🛒</span><span class="swt-sb-lbl">จัดซื้อ (PO)</span><span class="swt-sb-cnt">9</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="poq-purchase-queue-mockup.html"><span class="c">PO-Q</span>Purchase Queue</a>
+    <a href="po1-purchase-request-mockup.html" class="swt-new"><span class="c">PO-1</span>ใบขอซื้อ (PR)</a>
+    <a href="po2-rfq-mockup.html"><span class="c">PO-2</span>Trade Agreement / Vendor</a>
+    <a href="po3-vendor-onboarding-mockup.html" class="swt-new"><span class="c">PO-3</span>Vendor Onboarding</a>
+    <a href="po4-purchase-order-mockup.html"><span class="c">PO-4</span>ใบสั่งซื้อ (PO)</a>
+    <a href="po5-finance-grn-mockup.html"><span class="c">PO-5</span>Finance GRN</a>
+    <a href="po6-ap-invoice-mockup.html" class="swt-new"><span class="c">PO-6</span>ใบวางบิล Vendor</a>
+    <a href="po7-rebate-dashboard.html"><span class="c">PO-7</span>Rebate Dashboard</a>
+    <a href="po8-deposit-bill-mockup.html" class="swt-new"><span class="c">PO-8</span>บิลฝาก (Deposit)</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🧭</span><span class="swt-sb-lbl">SKU & Vendor (SM)</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">💵</span><span class="swt-sb-lbl">บัญชี/การเงิน</span><span class="swt-sb-cnt">11</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="fiq-finance-queue-mockup.html" class="swt-new"><span class="c">FI-Q</span>คิวงานการเงิน</a>
+    <a href="fi1-ar-receive-mockup.html"><span class="c">FI-1</span>รับชำระ AR</a>
+    <a href="fi1q-apply-queue-mockup.html" class="swt-new"><span class="c">FI-1Q</span>Apply Queue</a>
+    <a href="fi2-ap-payment-mockup.html"><span class="c">FI-2</span>จ่ายชำระ AP</a>
+    <a href="fi3-bank-reconciliation-mockup.html" class="swt-new"><span class="c">FI-3</span>กระทบยอดธนาคาร</a>
+    <a href="fi7-vat-report-mockup.html" class="swt-new"><span class="c">FI-7</span>รายงานภาษีขาย/ซื้อ</a>
+    <a href="fi12-wht-mockup.html" class="swt-new"><span class="c">FI-12</span>WHT (ภ.ง.ด.3/53)</a>
+    <a href="fi4-expense-wht-mockup.html"><span class="c">FI-4</span>ค่าใช้จ่าย/WHT</a>
+    <a href="fi5-ar-audit-mockup.html"><span class="c">FI-5</span>ตรวจสอบ AR</a>
+    <a href="fi13-dual-book-mockup.html" class="swt-new"><span class="c">FI-13</span>Dual-Book/Entity Tag</a>
+    <a href="tr1-treasury-mockup.html"><span class="c">TR-1</span>Treasury</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🔗</span><span class="swt-sb-lbl">Integration (IA)</span><span class="swt-sb-cnt">1</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="iaq-bc-sync-monitor-mockup.html" class="swt-new"><span class="c">IA-Q</span>BC Sync Monitor</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🔧</span><span class="swt-sb-lbl">บริการ (SV)</span><span class="swt-sb-cnt">12</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sv-q-service-queue-mockup.html"><span class="c">SV-Q</span>คิวงานซ่อม</a>
+    <a href="sv1-service-intake-mockup.html"><span class="c">SV-1</span>ใบรับงานซ่อม</a>
+    <a href="sir-site-inspection-mockup.html" class="swt-new"><span class="c">SIR</span>ใบประเมินหน้างาน</a>
+    <a href="sqt-service-quotation-mockup.html" class="swt-new"><span class="c">SQT</span>ใบเสนอราคางานบริการ</a>
+    <a href="sv2-service-assignment-mockup.html" class="swt-new"><span class="c">SV-2</span>ใบมอบหมายงาน</a>
+    <a href="sv5-job-card-mockup.html"><span class="c">SV-5</span>Job Card ช่าง</a>
+    <a href="sv3-spare-part-issue-mockup.html"><span class="c">SV-3</span>เบิกอะไหล่ (สต็อก)</a>
+    <a href="sv-order-parts-request-mockup.html" class="swt-new"><span class="c">SV-O</span>สั่งอะไหล่</a>
+    <a href="sv4-service-close-mockup.html"><span class="c">SV-4</span>ใบรับจากงานซ่อม</a>
+    <a href="sv7-service-delivery-mockup.html" class="swt-new"><span class="c">SV-7</span>ส่งงานลูกค้า</a>
+    <a href="clm-vendor-claim-mockup.html" class="swt-new"><span class="c">CLM</span>ใบเคลม Vendor</a>
+    <a href="sv6-delivery-install-mockup.html"><span class="c">SV-6</span>จัดส่ง &amp; ติดตั้ง</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🚚</span><span class="swt-sb-lbl">ส่ง/รายงาน/อนุมัติ</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="ap1-approval-center-mockup.html"><span class="c">AP-1</span>ศูนย์อนุมัติ</a>
+    <a href="ex1-executive-dashboard-mockup.html"><span class="c">EX-1</span>Executive Dashboard</a>
+    <a href="rp1-report-center-mockup.html"><span class="c">RP-1</span>Report Center</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">⚙️</span><span class="swt-sb-lbl">ตั้งค่าระบบ (CF)</span><span class="swt-sb-cnt">8</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="cf1-rbac-permission-mockup.html"><span class="c">CF-1</span>สิทธิ์ RBAC</a>
+    <a href="cf2-config-hub-mockup.html"><span class="c">CF-2</span>Config Hub</a>
+    <a href="cf2-1-tax-setup-mockup.html"><span class="c">CF-2.1</span>ภาษี (Tax)</a>
+    <a href="cf2-2-number-series-mockup.html"><span class="c">CF-2.2</span>Running No.</a>
+    <a href="cf2-5-tech-template-mockup.html"><span class="c">CF-2.5</span>Template ช่าง</a>
+    <a href="cf2-6-approval-matrix-mockup.html"><span class="c">CF-2.6</span>Approval Matrix</a>
+    <a href="cf2-7-doc-template-mockup.html"><span class="c">CF-2.7</span>Doc Template</a>
+    <a href="cf2-9-general-parameter-mockup.html"><span class="c">CF-2.9</span>ค่าตั้งต้น</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">📚</span><span class="swt-sb-lbl">Master Data (MD)</span><span class="swt-sb-cnt">5</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="md1-item-master-mockup-v3.html"><span class="c">MD-1</span>ทะเบียนสินค้า</a>
+    <a href="md2-customer-master-mockup-v3.html"><span class="c">MD-2</span>ทะเบียนลูกค้า</a>
+    <a href="md3-vendor-master-mockup-v3.html"><span class="c">MD-3</span>ทะเบียน Vendor</a>
+    <a href="md4-employee-master-mockup-v3.html"><span class="c">MD-4</span>ทะเบียนพนักงาน</a>
+    <a href="md5-branch-warehouse-mockup-v3.html"><span class="c">MD-5</span>สาขา &amp; คลัง</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🧩</span><span class="swt-sb-lbl">Shared Components</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sc1-customer-search-mockup.html"><span class="c">SC-1</span>ค้นหาลูกค้า</a>
+    <a href="sc2-item-search-mockup.html"><span class="c">SC-2</span>ค้นหาสินค้า</a>
+    <a href="sc7-timeline-mockup.html"><span class="c">SC-7</span>Timeline</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">👤</span><span class="swt-sb-lbl">ระบบ &amp; บัญชีผู้ใช้</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="login-mockup.html" class="swt-new"><span class="c">AUTH</span>Login / SSO</a>
+    <a href="user-profile-mockup.html" class="swt-new"><span class="c">PROF</span>User Profile</a>
+    <a href="notification-center-mockup.html" class="swt-new"><span class="c">NOTI</span>Notification Center</a>
+  </div></details>
+</aside>
+<script>
+(function(){
+  var sb=document.getElementById('swtSb');if(!sb)return;
+  if(!document.querySelector('.main-content, main.main, .app-container, .app'))
+    document.body.classList.add('swt-body-pad');
+  var cur=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  sb.querySelectorAll('a[href]').forEach(function(a){
+    var h=(a.getAttribute('href')||'').split('/').pop().toLowerCase();
+    if(h===cur){a.classList.add('swt-active');var p=a.closest('details');if(p)p.open=true;}
+  });
+  window.swtSbFilter=function(q){
+    q=(q||'').trim().toLowerCase();
+    sb.querySelectorAll('.swt-sb-links a').forEach(function(a){
+      var m=!q||a.textContent.toLowerCase().indexOf(q)>-1;
+      a.classList.toggle('swt-hide',!m);
+    });
+    sb.querySelectorAll('details').forEach(function(d){
+      var any=[].some.call(d.querySelectorAll('.swt-sb-links a'),function(a){return !a.classList.contains('swt-hide');});
+      d.classList.toggle('swt-hide',!!q&&!any);
+      if(q&&any)d.open=true;
+    });
+  };
+})();
+</script>
+<!-- SWT_SIDEBAR_END -->
+
+<div class="main-content">
+
+    <!-- ===== FI-12.1 · MAIN-HEADER ===== -->
+    <div class="main-header">
+        <div class="mh-left">
+            <h1>FI-12 ภาษีหัก ณ ที่จ่าย · WHT List (ภ.ง.ด.3 / 53)</h1>
+            <div class="mh-sub">WHT คำนวณอัตโนมัติจากการจ่าย (FI-2) · Release → พิมพ์หนังสือรับรอง + ภ.ง.ด.3/53 · ยื่นภายในวันที่ 7</div>
+            <div class="mh-status-track">
+                <span class="mh-step done">ดึงจาก Payment</span>
+                <span class="mh-step done">ตรวจรายการ</span>
+                <span class="mh-step current">Release</span>
+                <span class="mh-step">พิมพ์หนังสือรับรอง</span>
+                <span class="mh-step">ยื่น ภ.ง.ด.</span>
+            </div>
+        </div>
+        <div class="mh-right">
+            <span class="mh-docno">WHT-2605-SWT</span>
+            <span class="mh-status matched">● รอ Release</span>
+        </div>
+    </div>
+
+    <!-- ===== FI-12.2 · ตัวกรอง ===== -->
+    <div class="card">
+        <h3 class="card-title">🗓️ ส่วนหัวรายการ (นิติบุคคล + งวด + ประเภท)</h3>
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label class="filter-label">นิติบุคคล *</label>
+                <select>
+                    <option>SWT — แสงวิจิตรเทรดดิ้ง</option>
+                    <option>SWE — แสงวิจิตรอีเล็คทริค</option>
+                    <option>VMN — วีมันนี่ พาร์ทเนอร์ชิพ</option>
+                    <option>WPS — วีพาวเวอร์ซัพพลาย</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">งวด (เดือน)</label>
+                <input type="text" value="พฤษภาคม 2026" style="min-width:160px">
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">ประเภท</label>
+                <select style="min-width:170px">
+                    <option>ทั้งหมด</option>
+                    <option>ภ.ง.ด.53 (นิติบุคคล)</option>
+                    <option>ภ.ง.ด.3 (บุคคลธรรมดา)</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">&nbsp;</label>
+                <button class="act btn-primary">🔄 ดึง WHT จาก Payment Journal</button>
+            </div>
+        </div>
+        <div class="filter-note">ℹ WHT สร้างอัตโนมัติจาก FI-2 AP Payment ตาม WHT Category ของ Vendor · บุคคลธรรมดา → ภ.ง.ด.3 · นิติบุคคล → ภ.ง.ด.53</div>
+    </div>
+
+    <!-- ===== FI-12.3 · WHT List (Core) ===== -->
+    <div class="card">
+        <h3 class="card-title">
+            📋 รายการภาษีหัก ณ ที่จ่าย (WHT List)
+            <span class="hint">เลือกรายการแล้วกด Release ที่แถบล่าง</span>
+        </h3>
+        <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+            <span class="legend-chip">รวม 4 รายการ · WHT ฿4,244.86</span>
+            <span class="legend-chip" style="background:#FFFBEB;color:#92400E;border-color:#FDE68A">⚠ รอ Release 3</span>
+            <span class="legend-chip" style="background:#F0FDF4;color:#065F46;border-color:#A7F3D0">✓ Released 1</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:34px"></th>
+                    <th>เลขที่ WHT</th>
+                    <th>วันที่จ่าย</th>
+                    <th>ผู้รับเงิน</th>
+                    <th>ประเภทเงินได้</th>
+                    <th class="amount">ฐานจ่าย</th>
+                    <th class="amount">อัตรา</th>
+                    <th class="amount">WHT หัก</th>
+                    <th>ภ.ง.ด.</th>
+                    <th>สถานะ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" class="chk" checked></td>
+                    <td><span class="doc-code">WHT-2605-0021</span></td>
+                    <td>12 พ.ค. 2026</td>
+                    <td>บ. ออฟโฟร์ จำกัด</td>
+                    <td>ค่าบริการ</td>
+                    <td class="amount">50,000.00</td>
+                    <td class="amount">3%</td>
+                    <td class="amount">1,500.00</td>
+                    <td><span class="pnd-pill p53">ภ.ง.ด.53</span></td>
+                    <td><span class="status-pend">⚠ รอ Release</span></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="chk"></td>
+                    <td><span class="doc-code">WHT-2605-0022</span></td>
+                    <td>23 พ.ค. 2026</td>
+                    <td>บ. เคอรี่ เอ็กซ์เพรส จำกัด</td>
+                    <td>ค่าขนส่ง</td>
+                    <td class="amount">84,486.00</td>
+                    <td class="amount">1%</td>
+                    <td class="amount">844.86</td>
+                    <td><span class="pnd-pill p53">ภ.ง.ด.53</span></td>
+                    <td><span class="status-rel">✓ Released</span></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="chk" checked></td>
+                    <td><span class="doc-code">WHT-2605-0023</span></td>
+                    <td>20 พ.ค. 2026</td>
+                    <td>นายสมพงษ์ ช่างรับเหมา</td>
+                    <td>ค่าจ้างทำของ</td>
+                    <td class="amount">30,000.00</td>
+                    <td class="amount">3%</td>
+                    <td class="amount">900.00</td>
+                    <td><span class="pnd-pill p3">ภ.ง.ด.3</span></td>
+                    <td><span class="status-pend">⚠ รอ Release</span></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="chk" checked></td>
+                    <td><span class="doc-code">WHT-2605-0024</span></td>
+                    <td>25 พ.ค. 2026</td>
+                    <td>นางสาวมาลี (ค่าเช่าอาคาร)</td>
+                    <td>ค่าเช่า</td>
+                    <td class="amount">20,000.00</td>
+                    <td class="amount">5%</td>
+                    <td class="amount">1,000.00</td>
+                    <td><span class="pnd-pill p3">ภ.ง.ด.3</span></td>
+                    <td><span class="status-pend">⚠ รอ Release</span></td>
+                </tr>
+                <tr class="total-row">
+                    <td colspan="7">รวม WHT หัก ณ ที่จ่าย · 4 รายการ</td>
+                    <td class="amount">4,244.86</td>
+                    <td colspan="2"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ===== FI-12.4 · สรุป + กำหนดยื่น ===== -->
+    <div class="card">
+        <h3 class="card-title">🧾 สรุปยอด WHT (แยกตามแบบยื่น)</h3>
+        <div class="summary-grid">
+            <div class="sum-card">
+                <div class="sum-label">ภ.ง.ด.53 (นิติบุคคล)</div>
+                <div class="sum-value">฿2,344.86</div>
+                <div class="sum-sub">2 รายการ</div>
+            </div>
+            <div class="sum-card">
+                <div class="sum-label">ภ.ง.ด.3 (บุคคลธรรมดา)</div>
+                <div class="sum-value">฿1,900.00</div>
+                <div class="sum-sub">2 รายการ</div>
+            </div>
+            <div class="sum-card diff-bad">
+                <div class="sum-label">WHT รวมทั้งสิ้น</div>
+                <div class="sum-value blue">฿4,244.86</div>
+                <div class="sum-sub">4 รายการ · งวด พ.ค. 2026</div>
+            </div>
+            <div class="sum-card">
+                <div class="sum-label">กำหนดยื่น ภ.ง.ด.</div>
+                <div class="sum-value" style="font-size:18px">7 มิ.ย. 2026</div>
+                <div class="sum-sub">ภายในวันที่ 7 ของเดือนถัดไป</div>
+            </div>
+        </div>
+        <div class="bc-note" style="margin-top:18px">
+            📄 <b>หนังสือรับรองหัก ณ ที่จ่าย:</b> พิมพ์ตามแบบสรรพากร (ผู้จ่าย/ผู้รับ + เลขผู้เสียภาษี + ประเภทเงินได้ + อัตรา + ยอดหัก) ·
+            อัตรา: 1% ค่าขนส่ง · 2% ค่าโฆษณา · 3% ค่าบริการ/ค่าเช่า(นิติ) · 5% ค่าเช่า(บุคคล)/ค่าจ้างทำของ
+        </div>
+    </div>
+
+    <!-- ===== FI-12.5 · BC Note ===== -->
+    <div class="bc-note" style="margin-top:0">
+        ℹ️ <b>Portal เป็น UI layer เท่านั้น</b> — WHT คำนวณ/สร้างอัตโนมัติจาก <b>FI-2 AP Payment</b> ·
+        การ <b>Release</b> (ล็อกห้ามแก้), การออกเลขเอกสาร และ WHT Entry เป็นของ <b>BC365</b> ·
+        ที่ Release แล้วแก้ไม่ได้ (ต้อง Reverse + สร้างใหม่) · หน้านี้ List → Release → Print เท่านั้น
+    </div>
+
+</div>
+
+<!-- ===== STICKY ACTION BAR ===== -->
+<div class="sticky-action-bar">
+    <div class="sab-left">
+        <div class="sab-title">WHT-2605-SWT · งวด พ.ค. 2026</div>
+        <div class="sab-info">เลือก 3 รายการ · WHT รวม <span class="blue">฿3,400.00</span> · รอ Release</div>
+    </div>
+    <div class="sab-buttons">
+        <span class="sab-note">⚠ Release / เลขเอกสาร ทำโดย BC365</span>
+        <button class="act btn-secondary">🖨️ พิมพ์หนังสือรับรอง</button>
+        <button class="act btn-secondary">📤 Export ภ.ง.ด.3</button>
+        <button class="act btn-secondary">📤 Export ภ.ง.ด.53</button>
+        <button class="act btn-primary">🔒 Release รายการที่เลือก</button>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.sab-buttons .act').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            alert('Demo · ' + btn.textContent.trim() + ' — Release/เลขเอกสาร ดำเนินการบน BC365');
+        });
+    });
+</script>
+
+<!-- SWT_LINK_START -->
+<script src="swt-link.js" defer></script>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+  if (typeof swtRenderBreadcrumb === 'function') {
+    swtRenderBreadcrumb([
+      { type: 'PV',  no: 'PV-2605-xx',   label: 'จ่ายเจ้าหนี้ (FI-2)' },
+      { type: 'WHT', no: 'WHT-2605-SWT', label: 'รายการ WHT', current: true },
+      { type: 'CERT', no: 'หนังสือรับรอง', label: 'พิมพ์ Cert' },
+      { type: 'ภงด', no: 'ภ.ง.ด.3/53',  label: 'ยื่นภาษี' }
+    ]);
+  }
+  if (typeof swtAppendTimeline !== 'function') return;
+  swtAppendTimeline('Doc Chain — WHT-2605-SWT (ภาษีหัก ณ ที่จ่าย · งวด พ.ค. 2026)', [
+    { action: 'FI-2 จ่ายเจ้าหนี้ → คำนวณ WHT อัตโนมัติตาม Vendor Category', time: '2026-05-25 16:00',
+      sub: 'สร้างรายการ WHT เข้า List', color: 'blue' },
+    { action: 'ดึง WHT จาก Payment Journal → 4 รายการ', time: '2026-06-01 09:10',
+      sub: 'ภ.ง.ด.53: 2 · ภ.ง.ด.3: 2 · WHT รวม ฿4,244.86', color: 'gray' },
+    { action: 'ตรวจรายการ → รอ Release 3 · Released 1', time: '2026-06-01 09:15',
+      sub: 'ที่ Release แล้วแก้ไม่ได้ (ต้อง Reverse)', color: 'amber' },
+    { action: 'Release + พิมพ์หนังสือรับรอง → ยื่น ภ.ง.ด.3/53', time: 'รอดำเนินการ',
+      sub: 'Release / เลขเอกสาร โดย BC365 · ยื่นภายใน 7 มิ.ย. 2026', color: 'gray' }
+  ], { meta: 'Payment(FI-2) → ดึง WHT → Release → Print Cert → ภ.ง.ด. (BC365)' });
+});
+</script>
+<!-- SWT_LINK_END -->
+
+</body>
+</html>

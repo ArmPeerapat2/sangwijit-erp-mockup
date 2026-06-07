@@ -19,7 +19,7 @@
 | FI-4 | บันทึกรายการทั่วไป JV (Journal Voucher) | P1 | genJournalLines (81) | Form |
 | FI-5 | ค่าใช้จ่าย & ใบสำคัญจ่าย (Expense Voucher) | **P2** | paymentJournals | List + Form |
 | FI-6 | บริหารวงเงินลูกหนี้ (Credit Control) | **P2** | customerLedgerEntries | Dashboard |
-| FI-7 | รายงาน VAT + ปิดงวด (Period Close) | P3 | vatEntries + genJournalLines | Report + Workflow |
+| FI-7 | รายงานภาษีขาย/ภาษีซื้อ (ภ.พ.30) | P1 | vatEntries (254) | List + Release + Print |
 | FI-8 | Accrual Monitor (Cross-View จาก PO-7) | P1 | vendorObligations (Read-Only) | Dashboard |
 | FI-9 | สินทรัพย์ถาวร — สร้าง & ค่าเสื่อม (Fixed Asset) | **P2** | fixedAssets (5600) | List + Card |
 | FI-10 | สินทรัพย์ถาวร — ขาย (FA Disposal) | **P2** | salesOrders + fixedAssets | Form |
@@ -295,7 +295,7 @@ Output:  ยืนยันยอดธนาคารถูกต้อง + Po
 ### Business Rules
 - Auto-match: Match ตาม Amount + วันที่ ± 3 วัน
 - Unmatched → สร้าง JV ปรับปรุง (FI-4) ก่อน Post Recon
-- ต้องทำทุกบัญชี ทุกเดือน ก่อนปิดงวด (FI-7)
+- ต้องทำทุกบัญชี ทุกเดือน ก่อนปิดงวด (Lock Period · BC365)
 
 ### BC API
 ```
@@ -430,22 +430,27 @@ PATCH /customers/{id}                            → Update Blocked/Credit
 
 ---
 
-## FI-7 — รายงาน VAT + ปิดงวด (Period Close) — Phase 3
+## FI-7 — รายงานภาษีขาย/ภาษีซื้อ (ภ.พ.30) — Phase 1
 
-### หน้าจอ Workflow
+> ดู ADR-0002. FI-7 = **รายงาน VAT เท่านั้น**. "ปิดงวด / Lock Period" = **cut-to-BC** (BC365 owns; flows Account/08 Close Period, /09 Close Year) — ไม่ใช่หน้า Portal.
+
+### Flow (Account/Flow/06 — อยู่ใน BC365 lane, Portal เป็น thin UI)
 ```
-Step 1: ตรวจ AR/AP ที่ยังเปิดอยู่ → ปิดทั้งหมดก่อน
-Step 2: กระทบยอดธนาคารทุกบัญชี (FI-3 ครบ)
-Step 3: สร้างรายงาน VAT Input/Output ส่ง RD
-Step 4: Post Accrual JV (FI-4)
-Step 5: Lock Period → ห้าม Post ย้อนหลัง
+1. Login → ดึง Posted Sales/Purchase Invoice (ที่มี VAT) ผ่าน API (Get VAT Data)
+2. รายงานภาษีขาย (Output VAT register) | รายงานภาษีซื้อ (Input VAT register)
+   — เลือกนิติบุคคล + งวดภาษี
+3. กด Release → ล็อกรายงานแต่ละฝั่ง
+4. Print รายงานภาษีขาย / ภาษีซื้อ
+5. สรุป ภ.พ.30 = ภาษีขาย − ภาษีซื้อ → ยื่นภายในวันที่ 15 ของเดือนถัดไป
 ```
+(กระทบยอด BC vs ยอดยื่นจริง = นอก flow · ไม่ใช่ scope หน้านี้)
 
 ### BC API
 ```
-GET  /vatEntries?period=                          → VAT รายงาน
-POST /accountingPeriods/{id}/close                → Lock Period
-GET  /generalLedgerEntries?period=                → Trial Balance
+GET  /vatEntries?$filter=companyTag eq '{tag}'&period= → VAT รายงาน (ขาย/ซื้อ)
+POST /vatReports/{id}/release                          → Release (ล็อก)
+GET  /vatReports/{id}/print                            → พิมพ์รายงาน
+GET  /vatSummary?companyTag=&period=                   → สรุป ภ.พ.30
 ```
 
 ---
@@ -473,7 +478,7 @@ GET  /generalLedgerEntries?period=                → Trial Balance
 ```
 
 ### การใช้งานโดย Finance
-- **ปิดงวด (FI-7)**: ต้อง reconcile Accrual ทุกรายการก่อนปิด
+- **ปิดงวด (Lock Period · BC365)**: ต้อง reconcile Accrual ทุกรายการก่อนปิด
 - **GL Impact**: ดู Dr/Cr ที่ book ไว้ per Accrual
 - **Aging Alert**: เกิน 90 วันไม่ได้เอกสาร → Finance ต้อง follow up กับจัดซื้อ
 
@@ -805,7 +810,7 @@ GET  /whtEntries?$filter=type eq 'PND53'&period=       → ภ.ง.ด.53
 4. **Credit Alert**: SC1 ดึง Credit Status ทุกครั้งก่อนเปิดบิล
 5. **Maker ≠ Checker**: ผู้สร้าง JV ≠ ผู้ Approve เสมอ
 6. **Period Lock**: หลังปิดงวด → ห้าม Post ย้อนหลัง (ต้อง Reopen Period ผ่าน Admin)
-7. **Fixed Asset Depreciation**: รันค่าเสื่อมรายเดือน → Post GL ก่อนปิดงวด (FI-7)
+7. **Fixed Asset Depreciation**: รันค่าเสื่อมรายเดือน → Post GL ก่อนปิดงวด (Lock Period · BC365)
 8. **FA Disposal**: ขาย (FI-10) หรือ ทำลาย (FI-11) → ต้องมีอนุมัติ Finance Mgr
 9. **WHT Auto-Calculate**: FI-2 จ่าย Vendor → Auto WHT ตาม Category → เข้า WHT List (FI-12)
 10. **WHT Deadline**: Release + ยื่น ภ.ง.ด. ภายในวันที่ 7 ของเดือนถัดไป

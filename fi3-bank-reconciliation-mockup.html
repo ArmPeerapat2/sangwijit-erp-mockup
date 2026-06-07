@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FI-3 กระทบยอดธนาคาร (Bank Reconciliation) | Sangwijit ERP Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Noto Sans Thai', sans-serif;
+            min-width: 1440px;
+            background: #F8FAFC;
+            color: #1F2937;
+        }
+
+        /* MAIN CONTENT (sidebar is the shared swt-sb, fixed 240px) */
+        .main-content {
+            margin-left: 240px;
+            padding: 32px;
+            padding-bottom: 120px;
+            min-height: 100vh;
+        }
+
+        /* MAIN-HEADER gradient banner */
+        .main-header {
+            background: linear-gradient(135deg, #1E3A5F 0%, #2563EB 100%);
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 14px rgba(30, 58, 95, 0.25);
+        }
+        .main-header .mh-left { display: flex; flex-direction: column; gap: 6px; }
+        .main-header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+        .main-header .mh-sub { font-size: 12.5px; color: #BFDBFE; }
+        .main-header .mh-right { display: flex; align-items: center; gap: 16px; }
+        .mh-docno {
+            font-family: 'Inter', monospace; font-size: 15px; font-weight: 700;
+            background: rgba(255,255,255,0.14); padding: 8px 14px; border-radius: 8px;
+            letter-spacing: 0.5px;
+        }
+        .mh-status {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 700;
+        }
+        .mh-status.matched { background: #FEF3C7; color: #92400E; }
+        .mh-status-track { display: flex; gap: 6px; margin-top: 4px; }
+        .mh-step {
+            font-size: 10.5px; font-weight: 600; padding: 2px 9px; border-radius: 10px;
+            background: rgba(255,255,255,0.12); color: #BFDBFE;
+        }
+        .mh-step.done { background: rgba(255,255,255,0.28); color: #fff; }
+        .mh-step.current { background: #FCD34D; color: #78350F; }
+
+        /* FILTER BAR */
+        .filter-bar {
+            display: flex; gap: 16px; margin-bottom: 8px; align-items: flex-end; flex-wrap: wrap;
+        }
+        .filter-group { display: flex; flex-direction: column; gap: 5px; }
+        .filter-label { font-size: 12px; font-weight: 600; color: #374151; }
+        select, input {
+            padding: 8px 12px; border: 1px solid #D1D5DB; border-radius: 6px;
+            font-family: 'Inter', 'Noto Sans Thai', sans-serif; font-size: 13px;
+            background: white; color: #1F2937;
+        }
+        select { min-width: 240px; }
+        select:focus, input:focus {
+            outline: none; border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+        .filter-note {
+            font-size: 11.5px; color: #92400E; background: #FEF3C7;
+            padding: 6px 12px; border-radius: 6px; margin: 10px 0 24px;
+            display: inline-flex; align-items: center; gap: 6px; font-weight: 600;
+        }
+
+        /* CARD */
+        .card {
+            background: white; border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 24px; margin-bottom: 24px;
+        }
+        .card-title {
+            font-size: 15px; font-weight: 700; color: #1F2937; margin-bottom: 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .card-title .hint { font-size: 11.5px; font-weight: 500; color: #6B7280; }
+
+        /* IMPORT PANEL */
+        .dropzone {
+            border: 2px dashed #93C5FD; border-radius: 10px; background: #EFF6FF;
+            padding: 28px; text-align: center; color: #2563EB; cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .dropzone:hover { background: #DBEAFE; border-color: #2563EB; }
+        .dropzone .dz-ico { font-size: 34px; margin-bottom: 10px; }
+        .dropzone .dz-main { font-size: 14px; font-weight: 600; }
+        .dropzone .dz-sub { font-size: 11.5px; color: #6B7280; margin-top: 4px; }
+        .imported-file {
+            display: flex; align-items: center; gap: 12px; margin-top: 16px;
+            padding: 12px 16px; background: #F0FDF4; border: 1px solid #A7F3D0;
+            border-radius: 8px; font-size: 13px;
+        }
+        .imported-file .if-name { font-weight: 600; color: #065F46; }
+        .imported-file .if-meta { color: #047857; font-size: 12px; }
+        .imported-file .if-badge {
+            margin-left: auto; background: #10B981; color: #fff;
+            padding: 3px 10px; border-radius: 12px; font-size: 11.5px; font-weight: 700;
+        }
+
+        /* SUMMARY CARDS */
+        .summary-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+        }
+        .sum-card {
+            background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 10px; padding: 18px;
+        }
+        .sum-card.diff-ok { background: #F0FDF4; border-color: #A7F3D0; }
+        .sum-card.diff-bad { background: #FEF2F2; border-color: #FECACA; }
+        .sum-label {
+            font-size: 11.5px; font-weight: 600; color: #6B7280;
+            text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px;
+        }
+        .sum-value {
+            font-size: 22px; font-weight: 700; color: #1F2937;
+            font-variant-numeric: tabular-nums;
+        }
+        .sum-value.green { color: #10B981; }
+        .sum-value.red { color: #EF4444; }
+        .sum-sub { font-size: 11.5px; color: #6B7280; margin-top: 4px; }
+
+        /* LEGEND CHIP */
+        .legend-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #EEF2FF; color: #3730A3; border: 1px solid #C7D2FE;
+            padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+        }
+
+        /* TABLE */
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        thead { background: #F3F4F6; }
+        th {
+            padding: 11px 12px; text-align: left; font-weight: 600;
+            color: #374151; border-bottom: 2px solid #E5E7EB; font-size: 12px;
+            white-space: nowrap;
+        }
+        td { padding: 12px; border-bottom: 1px solid #E5E7EB; color: #1F2937; vertical-align: middle; }
+        tbody tr:hover { background: #F9FAFB; }
+        .amount { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+        .doc-code { font-family: 'Inter', monospace; font-weight: 700; color: #2563EB; }
+        .col-mid { text-align: center; color: #9CA3AF; font-size: 16px; }
+        .side-stmt { background: #FAFBFC; }
+        .side-ledger { background: #FFFFFF; }
+        .muted { color: #9CA3AF; }
+
+        .status-green { color: #10B981; font-weight: 600; }
+        .status-yellow { color: #F59E0B; font-weight: 600; }
+        .status-red { color: #EF4444; font-weight: 600; }
+
+        .row-unmatched { background: #FFFBEB; }
+        .row-unmatched:hover { background: #FEF3C7; }
+
+        .chk { width: 17px; height: 17px; cursor: pointer; vertical-align: middle; }
+
+        .mini-btn {
+            padding: 4px 10px; border-radius: 5px; font-size: 11.5px; font-weight: 600;
+            border: 1px solid #D1D5DB; background: #fff; color: #374151; cursor: pointer;
+        }
+        .mini-btn:hover { background: #F3F4F6; }
+        .mini-btn.link { border-color: #FCD34D; background: #FEF9E7; color: #92400E; }
+        .mini-btn.unlink { border-color: #FECACA; background: #FEF2F2; color: #B91C1C; }
+
+        /* ADJUST PANEL */
+        .adjust-row {
+            display: grid; grid-template-columns: 1fr 200px 220px 120px 140px;
+            gap: 14px; align-items: end; padding: 16px; border-radius: 10px;
+            background: #FFFBEB; border: 1px solid #FDE68A; margin-bottom: 14px;
+        }
+        .adjust-row:last-child { margin-bottom: 0; }
+        .adj-stmt { display: flex; flex-direction: column; gap: 4px; }
+        .adj-stmt .adj-desc { font-weight: 600; color: #1F2937; }
+        .adj-stmt .adj-meta { font-size: 11.5px; color: #92400E; }
+        .adj-field { display: flex; flex-direction: column; gap: 5px; }
+        .adj-field label { font-size: 11px; font-weight: 600; color: #374151; }
+        .adj-field select, .adj-field input { min-width: 0; width: 100%; }
+        .btn-adjust {
+            padding: 9px 14px; border: none; border-radius: 6px; font-weight: 700;
+            font-size: 12.5px; cursor: pointer; background: #F59E0B; color: #fff;
+            font-family: inherit; white-space: nowrap;
+        }
+        .btn-adjust:hover { background: #D97706; }
+        .gl-hint { font-size: 10.5px; color: #6B7280; margin-top: 2px; }
+
+        /* BUTTONS */
+        button.act { padding: 10px 20px; border: none; border-radius: 6px;
+            font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .btn-primary { background: #2563EB; color: white; }
+        .btn-primary:hover { background: #1D4ED8; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+        .btn-secondary { background: #E5E7EB; color: #1F2937; }
+        .btn-secondary:hover { background: #D1D5DB; }
+        .btn-danger { background: #FEE2E2; color: #DC2626; }
+        .btn-danger:hover { background: #FECACA; }
+        .btn-disabled {
+            background: #E5E7EB !important; color: #9CA3AF !important;
+            cursor: not-allowed !important; box-shadow: none !important;
+        }
+
+        /* STICKY ACTION BAR */
+        .sticky-action-bar {
+            position: fixed; bottom: 0; left: 240px; right: 0; height: 84px;
+            background: #fff; border-top: 1px solid #E5E7EB;
+            padding: 14px 32px; display: flex; align-items: center;
+            justify-content: space-between; box-shadow: 0 -2px 8px rgba(0,0,0,0.08); z-index: 90;
+        }
+        .sab-left { display: flex; flex-direction: column; gap: 3px; }
+        .sab-title { font-size: 14px; font-weight: 700; color: #1F2937; }
+        .sab-info { font-size: 12px; color: #6B7280; }
+        .sab-info .red { color: #EF4444; font-weight: 600; }
+        .sab-buttons { display: flex; align-items: center; gap: 12px; }
+        .sab-note {
+            font-size: 11px; color: #92400E; background: #FEF3C7;
+            padding: 4px 10px; border-radius: 6px; max-width: 240px; line-height: 1.4;
+        }
+
+        .bc-note {
+            font-size: 11.5px; color: #6B7280; background: #F3F4F6;
+            border-left: 3px solid #9CA3AF; padding: 10px 14px; border-radius: 6px;
+            margin-top: 16px; line-height: 1.5;
+        }
+        .bc-note b { color: #374151; }
+    </style>
+  <link rel="stylesheet" href="swt-patterns.css">
+</head>
+<body>
+<!-- SWT_SIDEBAR_START -->
+<style>
+.swt-sb,.swt-sb *{box-sizing:border-box}
+.swt-sb{position:fixed;left:0;top:0;width:240px;height:100vh;background:#1E3A5F;color:#D1D5DB;overflow-y:auto;padding:14px 10px 32px;z-index:500;font-family:'Inter','Noto Sans Thai',sans-serif;font-size:13px;line-height:1.4}
+.swt-sb::-webkit-scrollbar{width:6px}
+.swt-sb::-webkit-scrollbar-thumb{background:#334E70;border-radius:3px}
+.swt-sb-brand{display:flex;align-items:center;gap:9px;padding:4px 8px 14px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:12px}
+.swt-sb-logo{width:34px;height:34px;border-radius:9px;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0}
+.swt-sb-brand h1{font-size:12px;font-weight:700;color:#fff;letter-spacing:-0.2px;margin:0}
+.swt-sb-brand p{font-size:10px;color:#94A3B8;margin:1px 0 0}
+.swt-sb-search{position:relative;margin:0 4px 12px}
+.swt-sb-search input{width:100%;padding:7px 10px 7px 28px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:#fff;font-size:12px;font-family:inherit;outline:none}
+.swt-sb-search input::placeholder{color:#6B7F99}
+.swt-sb-search input:focus{border-color:#2563EB;background:rgba(37,99,235,0.1)}
+.swt-sb-search::before{content:"🔍";position:absolute;left:9px;top:7px;font-size:10px;opacity:0.55}
+.swt-sb-home{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;text-decoration:none;color:#9CA3AF;font-size:11px;margin:0 4px 10px;background:rgba(255,255,255,0.05);transition:all 0.15s}
+.swt-sb-home:hover{background:rgba(255,255,255,0.12);color:#fff}
+.swt-sb details{margin:1px 0}
+.swt-sb details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:7px 9px;border-radius:6px;font-size:10.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;user-select:none;margin:0 2px}
+.swt-sb details>summary::-webkit-details-marker{display:none}
+.swt-sb details>summary:hover{background:rgba(255,255,255,0.06);color:#fff}
+.swt-sb-ico{font-size:13px;width:17px;text-align:center;flex-shrink:0}
+.swt-sb-lbl{flex:1}
+.swt-sb-cnt{font-size:9px;font-weight:600;background:rgba(255,255,255,0.08);color:#CBD5E1;padding:1px 5px;border-radius:9px;letter-spacing:0}
+.swt-sb-chv{font-size:8px;color:#6B7F99;transition:transform 0.2s}
+.swt-sb details[open]>summary .swt-sb-chv{transform:rotate(180deg)}
+.swt-sb-links{padding:1px 0 4px 6px}
+.swt-sb-links a{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:5px;text-decoration:none;color:#D1D5DB;font-size:11.5px;margin:1px 0;transition:all 0.1s;line-height:1.3}
+.swt-sb-links a:hover{background:rgba(255,255,255,0.08);color:#fff}
+.swt-sb-links a .c{font-family:'Inter',monospace;font-size:9.5px;font-weight:700;color:#94A3B8;min-width:36px;flex-shrink:0}
+.swt-sb-links a:hover .c{color:#60A5FA}
+.swt-sb-links a.swt-active{background:#2563EB;color:#fff;font-weight:600}
+.swt-sb-links a.swt-active .c{color:#BFDBFE}
+.swt-sb-links a.swt-new::after{content:"NEW";font-size:7.5px;font-weight:700;background:#DC2626;color:#fff;padding:1px 4px;border-radius:3px;margin-left:auto}
+.swt-sb a.swt-hide,.swt-sb details.swt-hide{display:none}
+body.swt-body-pad{padding-left:240px!important;box-sizing:border-box}
+</style>
+<aside class="swt-sb" id="swtSb">
+  <div class="swt-sb-brand">
+    <div class="swt-sb-logo">ส</div>
+    <div><h1>Sangwijit ERP</h1><p>Web Portal · v3.0</p></div>
+  </div>
+  <div class="swt-sb-search"><input placeholder="ค้นหาเมนู…" oninput="swtSbFilter(this.value)"></div>
+  <a class="swt-sb-home" href="index.html">🏠 Master Index</a>
+
+  <details><summary><span class="swt-sb-ico">🏠</span><span class="swt-sb-lbl">Overview</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="index.html"><span class="c">IDX</span>Master Index</a>
+    <a href="sangwijit-portal-architecture.html"><span class="c">ARCH</span>Architecture</a>
+    <a href="dev-handoff-spec.html"><span class="c">SPEC</span>Dev Handoff</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">💼</span><span class="swt-sb-lbl">งานขาย (SL)</span><span class="swt-sb-cnt">12</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="slq-sales-queue-mockup.html"><span class="c">SL-Q</span>คิวงานขาย</a>
+    <a href="sl1-quotation-mockup.html"><span class="c">SL-1</span>ใบเสนอราคา</a>
+    <a href="sl2-reservation-mockup.html"><span class="c">SL-2</span>ใบจอง</a>
+    <a href="sl3-deposit-mockup.html"><span class="c">SL-3</span>ใบมัดจำ</a>
+    <a href="sl4-invoice-mockup.html"><span class="c">SL-4</span>บิลขาย/Invoice</a>
+    <a href="sl5-crm-followup-mockup.html"><span class="c">SL-5</span>CRM Follow-up</a>
+    <a href="sl6-promotion-setup-mockup.html"><span class="c">SL-6</span>โปรโมชั่น</a>
+    <a href="sl7-sales-report-mockup.html"><span class="c">SL-7</span>รายงานยอดขาย</a>
+    <a href="slf1-credit-approval-mockup.html" class="swt-new"><span class="c">SL-F1</span>อนุมัติวงเงิน</a>
+    <a href="pm5-vat-simulator-mockup.html" class="swt-new"><span class="c">PM-5</span>VAT Simulator</a>
+    <a href="cm1-commission-mockup.html"><span class="c">CM-1</span>Commission</a>
+    <a href="cl1-claims-mockup.html"><span class="c">CL-1</span>Claims</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">📦</span><span class="swt-sb-lbl">คลังสินค้า (WH)</span><span class="swt-sb-cnt">7</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="wh-queue-mockup.html"><span class="c">WH-Q</span>Dashboard</a>
+    <a href="wh1-grn-mockup.html"><span class="c">WH-1</span>คิวรอรับสินค้า</a>
+    <a href="wh2-stock-transfer-mockup.html"><span class="c">WH-2</span>คิวโอนย้ายสต็อก</a>
+    <a href="wh3-sales-issue-mockup.html"><span class="c">WH-3</span>คิวเบิกสินค้า</a>
+    <a href="wh4-stock-count-mockup.html"><span class="c">WH-4</span>คิวนับสต็อก</a>
+    <a href="wh-r-stock-card-mockup.html" class="swt-new"><span class="c">WH-R</span>Stock Card</a>
+    <a href="wh-nm-non-move-report-mockup.html" class="swt-new"><span class="c">WH-NM</span>สินค้าไม่เคลื่อนไหว</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🛒</span><span class="swt-sb-lbl">จัดซื้อ (PO)</span><span class="swt-sb-cnt">9</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="poq-purchase-queue-mockup.html"><span class="c">PO-Q</span>Purchase Queue</a>
+    <a href="po1-purchase-request-mockup.html" class="swt-new"><span class="c">PO-1</span>ใบขอซื้อ (PR)</a>
+    <a href="po2-rfq-mockup.html"><span class="c">PO-2</span>Trade Agreement / Vendor</a>
+    <a href="po3-vendor-onboarding-mockup.html" class="swt-new"><span class="c">PO-3</span>Vendor Onboarding</a>
+    <a href="po4-purchase-order-mockup.html"><span class="c">PO-4</span>ใบสั่งซื้อ (PO)</a>
+    <a href="po5-finance-grn-mockup.html"><span class="c">PO-5</span>Finance GRN</a>
+    <a href="po6-ap-invoice-mockup.html" class="swt-new"><span class="c">PO-6</span>ใบวางบิล Vendor</a>
+    <a href="po7-rebate-dashboard.html"><span class="c">PO-7</span>Rebate Dashboard</a>
+    <a href="po8-deposit-bill-mockup.html" class="swt-new"><span class="c">PO-8</span>บิลฝาก (Deposit)</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🧭</span><span class="swt-sb-lbl">SKU & Vendor (SM)</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">💵</span><span class="swt-sb-lbl">บัญชี/การเงิน</span><span class="swt-sb-cnt">11</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="fiq-finance-queue-mockup.html" class="swt-new"><span class="c">FI-Q</span>คิวงานการเงิน</a>
+    <a href="fi1-ar-receive-mockup.html"><span class="c">FI-1</span>รับชำระ AR</a>
+    <a href="fi1q-apply-queue-mockup.html" class="swt-new"><span class="c">FI-1Q</span>Apply Queue</a>
+    <a href="fi2-ap-payment-mockup.html"><span class="c">FI-2</span>จ่ายชำระ AP</a>
+    <a href="fi3-bank-reconciliation-mockup.html" class="swt-new"><span class="c">FI-3</span>กระทบยอดธนาคาร</a>
+    <a href="fi7-vat-report-mockup.html" class="swt-new"><span class="c">FI-7</span>รายงานภาษีขาย/ซื้อ</a>
+    <a href="fi12-wht-mockup.html" class="swt-new"><span class="c">FI-12</span>WHT (ภ.ง.ด.3/53)</a>
+    <a href="fi4-expense-wht-mockup.html"><span class="c">FI-4</span>ค่าใช้จ่าย/WHT</a>
+    <a href="fi5-ar-audit-mockup.html"><span class="c">FI-5</span>ตรวจสอบ AR</a>
+    <a href="fi13-dual-book-mockup.html" class="swt-new"><span class="c">FI-13</span>Dual-Book/Entity Tag</a>
+    <a href="tr1-treasury-mockup.html"><span class="c">TR-1</span>Treasury</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🔗</span><span class="swt-sb-lbl">Integration (IA)</span><span class="swt-sb-cnt">1</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="iaq-bc-sync-monitor-mockup.html" class="swt-new"><span class="c">IA-Q</span>BC Sync Monitor</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🔧</span><span class="swt-sb-lbl">บริการ (SV)</span><span class="swt-sb-cnt">12</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sv-q-service-queue-mockup.html"><span class="c">SV-Q</span>คิวงานซ่อม</a>
+    <a href="sv1-service-intake-mockup.html"><span class="c">SV-1</span>ใบรับงานซ่อม</a>
+    <a href="sir-site-inspection-mockup.html" class="swt-new"><span class="c">SIR</span>ใบประเมินหน้างาน</a>
+    <a href="sqt-service-quotation-mockup.html" class="swt-new"><span class="c">SQT</span>ใบเสนอราคางานบริการ</a>
+    <a href="sv2-service-assignment-mockup.html" class="swt-new"><span class="c">SV-2</span>ใบมอบหมายงาน</a>
+    <a href="sv5-job-card-mockup.html"><span class="c">SV-5</span>Job Card ช่าง</a>
+    <a href="sv3-spare-part-issue-mockup.html"><span class="c">SV-3</span>เบิกอะไหล่ (สต็อก)</a>
+    <a href="sv-order-parts-request-mockup.html" class="swt-new"><span class="c">SV-O</span>สั่งอะไหล่</a>
+    <a href="sv4-service-close-mockup.html"><span class="c">SV-4</span>ใบรับจากงานซ่อม</a>
+    <a href="sv7-service-delivery-mockup.html" class="swt-new"><span class="c">SV-7</span>ส่งงานลูกค้า</a>
+    <a href="clm-vendor-claim-mockup.html" class="swt-new"><span class="c">CLM</span>ใบเคลม Vendor</a>
+    <a href="sv6-delivery-install-mockup.html"><span class="c">SV-6</span>จัดส่ง &amp; ติดตั้ง</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🚚</span><span class="swt-sb-lbl">ส่ง/รายงาน/อนุมัติ</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="ap1-approval-center-mockup.html"><span class="c">AP-1</span>ศูนย์อนุมัติ</a>
+    <a href="ex1-executive-dashboard-mockup.html"><span class="c">EX-1</span>Executive Dashboard</a>
+    <a href="rp1-report-center-mockup.html"><span class="c">RP-1</span>Report Center</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">⚙️</span><span class="swt-sb-lbl">ตั้งค่าระบบ (CF)</span><span class="swt-sb-cnt">8</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="cf1-rbac-permission-mockup.html"><span class="c">CF-1</span>สิทธิ์ RBAC</a>
+    <a href="cf2-config-hub-mockup.html"><span class="c">CF-2</span>Config Hub</a>
+    <a href="cf2-1-tax-setup-mockup.html"><span class="c">CF-2.1</span>ภาษี (Tax)</a>
+    <a href="cf2-2-number-series-mockup.html"><span class="c">CF-2.2</span>Running No.</a>
+    <a href="cf2-5-tech-template-mockup.html"><span class="c">CF-2.5</span>Template ช่าง</a>
+    <a href="cf2-6-approval-matrix-mockup.html"><span class="c">CF-2.6</span>Approval Matrix</a>
+    <a href="cf2-7-doc-template-mockup.html"><span class="c">CF-2.7</span>Doc Template</a>
+    <a href="cf2-9-general-parameter-mockup.html"><span class="c">CF-2.9</span>ค่าตั้งต้น</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">📚</span><span class="swt-sb-lbl">Master Data (MD)</span><span class="swt-sb-cnt">5</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="md1-item-master-mockup-v3.html"><span class="c">MD-1</span>ทะเบียนสินค้า</a>
+    <a href="md2-customer-master-mockup-v3.html"><span class="c">MD-2</span>ทะเบียนลูกค้า</a>
+    <a href="md3-vendor-master-mockup-v3.html"><span class="c">MD-3</span>ทะเบียน Vendor</a>
+    <a href="md4-employee-master-mockup-v3.html"><span class="c">MD-4</span>ทะเบียนพนักงาน</a>
+    <a href="md5-branch-warehouse-mockup-v3.html"><span class="c">MD-5</span>สาขา &amp; คลัง</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">🧩</span><span class="swt-sb-lbl">Shared Components</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="sc1-customer-search-mockup.html"><span class="c">SC-1</span>ค้นหาลูกค้า</a>
+    <a href="sc2-item-search-mockup.html"><span class="c">SC-2</span>ค้นหาสินค้า</a>
+    <a href="sc7-timeline-mockup.html"><span class="c">SC-7</span>Timeline</a>
+  </div></details>
+
+  <details><summary><span class="swt-sb-ico">👤</span><span class="swt-sb-lbl">ระบบ &amp; บัญชีผู้ใช้</span><span class="swt-sb-cnt">3</span><span class="swt-sb-chv">▼</span></summary><div class="swt-sb-links">
+    <a href="login-mockup.html" class="swt-new"><span class="c">AUTH</span>Login / SSO</a>
+    <a href="user-profile-mockup.html" class="swt-new"><span class="c">PROF</span>User Profile</a>
+    <a href="notification-center-mockup.html" class="swt-new"><span class="c">NOTI</span>Notification Center</a>
+  </div></details>
+</aside>
+<script>
+(function(){
+  var sb=document.getElementById('swtSb');if(!sb)return;
+  if(!document.querySelector('.main-content, main.main, .app-container, .app'))
+    document.body.classList.add('swt-body-pad');
+  var cur=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  sb.querySelectorAll('a[href]').forEach(function(a){
+    var h=(a.getAttribute('href')||'').split('/').pop().toLowerCase();
+    if(h===cur){a.classList.add('swt-active');var p=a.closest('details');if(p)p.open=true;}
+  });
+  window.swtSbFilter=function(q){
+    q=(q||'').trim().toLowerCase();
+    sb.querySelectorAll('.swt-sb-links a').forEach(function(a){
+      var m=!q||a.textContent.toLowerCase().indexOf(q)>-1;
+      a.classList.toggle('swt-hide',!m);
+    });
+    sb.querySelectorAll('details').forEach(function(d){
+      var any=[].some.call(d.querySelectorAll('.swt-sb-links a'),function(a){return !a.classList.contains('swt-hide');});
+      d.classList.toggle('swt-hide',!!q&&!any);
+      if(q&&any)d.open=true;
+    });
+  };
+})();
+</script>
+<!-- SWT_SIDEBAR_END -->
+
+<div class="main-content">
+
+    <!-- ===== FI-3.1 · MAIN-HEADER (gradient banner) ===== -->
+    <div class="main-header">
+        <div class="mh-left">
+            <h1>FI-3 กระทบยอดธนาคาร · Bank Reconciliation</h1>
+            <div class="mh-sub">กระทบยอดบัญชีธนาคารกับ Bank Ledger ใน BC365 · ทำได้ทีละ 1 บัญชี</div>
+            <div class="mh-status-track">
+                <span class="mh-step done">เลือก Bank Code</span>
+                <span class="mh-step done">นำเข้า Statement</span>
+                <span class="mh-step current">Matching</span>
+                <span class="mh-step">Adjust Bank</span>
+                <span class="mh-step">Post → Bank Ledger</span>
+            </div>
+        </div>
+        <div class="mh-right">
+            <span class="mh-docno">BR-2605-0007</span>
+            <span class="mh-status matched">● จับคู่แล้ว (Matched)</span>
+        </div>
+    </div>
+
+    <!-- ===== FI-3.2 · ส่วนหัวเอกสาร / ตัวกรอง ===== -->
+    <div class="card">
+        <h3 class="card-title">🏦 ส่วนหัวเอกสาร (Doc Header)</h3>
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label class="filter-label">เลือก Bank Code (ทีละ 1 บัญชี) *</label>
+                <select>
+                    <option>SCB 123-4-56789-0 (กระแสรายวัน)</option>
+                    <option>KBank 045-1-23456-7 (ออมทรัพย์)</option>
+                    <option>BBL 098-7-65432-1 (กระแสรายวัน)</option>
+                    <option>KTB 678-0-11223-4 (ออมทรัพย์)</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">นิติบุคคล *</label>
+                <select style="min-width:160px">
+                    <option>SWT — แสงวิจิตรเทรดดิ้ง</option>
+                    <option>SWE — แสงวิจิตรอีเล็คทริค</option>
+                    <option>VMN — วีมันนี่ พาร์ทเนอร์ชิพ</option>
+                    <option>WPS — วีพาวเวอร์ซัพพลาย</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">ช่วงวันที่ Statement</label>
+                <input type="text" value="01 พ.ค. 2026 – 31 พ.ค. 2026" style="min-width:210px">
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">ยอดยกมา (Opening Balance)</label>
+                <input type="text" value="2,184,650.00" style="min-width:160px;text-align:right">
+            </div>
+        </div>
+        <div class="filter-note">⚠ ทำได้ทีละ 1 บัญชี — เลือก Bank Code เดียวต่อการกระทบยอด 1 ครั้ง</div>
+    </div>
+
+    <!-- ===== FI-3.3 · นำเข้า Statement (Import File) ===== -->
+    <div class="card">
+        <h3 class="card-title">📥 นำเข้า Statement <span class="hint">รองรับ .csv / .xlsx / .ofx จากธนาคาร</span></h3>
+        <div class="dropzone">
+            <div class="dz-ico">📄</div>
+            <div class="dz-main">ลากไฟล์ statement มาวาง หรือ เลือกไฟล์</div>
+            <div class="dz-sub">ระบบจะอ่านรายการเดินบัญชีและเตรียมเข้าสู่ขั้นตอน Matching</div>
+        </div>
+        <div class="imported-file">
+            <span style="font-size:18px">📑</span>
+            <span class="if-name">SCB_Statement_202605.csv</span>
+            <span class="if-meta">นำเข้าเมื่อ 29 พ.ค. 2026 14:05 · 24 รายการ</span>
+            <span class="if-badge">นำเข้า 24 รายการ ✓</span>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:12px">
+            <button class="act btn-primary">📥 นำเข้า Statement</button>
+            <button class="act btn-secondary">🔄 นำเข้าใหม่</button>
+        </div>
+    </div>
+
+    <!-- ===== FI-3.4 · สรุปยอด (Summary Cards) ===== -->
+    <div class="card">
+        <h3 class="card-title">📊 สรุปยอดกระทบ (Reconciliation Summary)</h3>
+        <div class="summary-grid">
+            <div class="sum-card">
+                <div class="sum-label">ยอดตาม Statement</div>
+                <div class="sum-value">฿3,512,480.00</div>
+                <div class="sum-sub">ยอดปิด ณ 31 พ.ค. 2026</div>
+            </div>
+            <div class="sum-card">
+                <div class="sum-label">ยอดตาม Bank Ledger</div>
+                <div class="sum-value">฿3,514,230.00</div>
+                <div class="sum-sub">Bank Ledger Entry (BC365)</div>
+            </div>
+            <div class="sum-card diff-bad">
+                <div class="sum-label">ผลต่าง (Difference)</div>
+                <div class="sum-value red">฿1,750.00</div>
+                <div class="sum-sub">⚠ ต้อง Adjust ให้เป็น ฿0.00</div>
+            </div>
+            <div class="sum-card">
+                <div class="sum-label">สถานะจับคู่</div>
+                <div class="sum-value">จับคู่แล้ว 22 <span style="font-size:14px;color:#9CA3AF;font-weight:600">/ ค้าง 2</span></div>
+                <div class="sum-sub">จาก 24 รายการที่นำเข้า</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FI-3.5 · ตาราง Matching (Core) ===== -->
+    <div class="card">
+        <h3 class="card-title">
+            🔗 ตารางจับคู่รายการ (Matching: Bank Statement ↔ Bank Ledger)
+        </h3>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+            <span class="legend-chip">🤖 จับคู่อัตโนมัติ: จำนวนเงิน + วันที่ ±3 วัน</span>
+            <span class="legend-chip" style="background:#F0FDF4;color:#065F46;border-color:#A7F3D0">✓ จับคู่แล้ว 22</span>
+            <span class="legend-chip" style="background:#FFFBEB;color:#92400E;border-color:#FDE68A">⚠ ยังไม่จับคู่ 2</span>
+            <button class="act btn-secondary" style="margin-left:auto;padding:7px 14px;font-size:12.5px">🤖 Auto-match อีกครั้ง</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:34px"></th>
+                    <th colspan="3" class="side-stmt" style="border-right:2px solid #E5E7EB">📄 Bank Statement (ฝั่งธนาคาร)</th>
+                    <th style="width:30px"></th>
+                    <th colspan="3" class="side-ledger">📒 Bank Ledger Entry (ฝั่ง BC365)</th>
+                    <th style="width:120px">สถานะจับคู่</th>
+                    <th style="width:90px"></th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th class="side-stmt">วันที่</th>
+                    <th class="side-stmt">รายละเอียด</th>
+                    <th class="side-stmt amount" style="border-right:2px solid #E5E7EB">จำนวนเงิน</th>
+                    <th class="col-mid">↔</th>
+                    <th class="side-ledger">เลขที่เอกสาร</th>
+                    <th class="side-ledger">วันที่</th>
+                    <th class="side-ledger amount">จำนวนเงิน</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" class="chk" checked></td>
+                    <td>03 พ.ค. 2026</td>
+                    <td>รับโอน — หจก.สกลนครศรีเจริญ</td>
+                    <td class="amount">485,000.00</td>
+                    <td class="col-mid">↔</td>
+                    <td><span class="doc-code">RV-2605-0021</span></td>
+                    <td>03 พ.ค. 2026</td>
+                    <td class="amount">485,000.00</td>
+                    <td><span class="status-green">✓ จับคู่แล้ว</span></td>
+                    <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="chk" checked></td>
+                    <td>06 พ.ค. 2026</td>
+                    <td>จ่ายเช็ค — บ.แอลจี อีเลคทรอนิคส์</td>
+                    <td class="amount">-1,240,000.00</td>
+                    <td class="col-mid">↔</td>
+                    <td><span class="doc-code">PV-2605-0044</span></td>
+                    <td>05 พ.ค. 2026</td>
+                    <td class="amount">-1,240,000.00</td>
+                    <td><span class="status-green">✓ จับคู่แล้ว</span></td>
+                    <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="chk" checked></td>
+                    <td>09 พ.ค. 2026</td>
+                    <td>รับโอน — ร้าน ก.เจริญการไฟฟ้า</td>
+                    <td class="amount">312,500.00</td>
+                    <td class="col-mid">↔</td>
+                    <td><span class="doc-code">RV-2605-0028</span></td>
+                    <td>11 พ.ค. 2026</td>
+                    <td class="amount">312,500.00</td>
+                    <td><span class="status-green">✓ จับคู่แล้ว</span></td>
+                    <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="chk" checked></td>
+                    <td>13 พ.ค. 2026</td>
+                    <td>จ่ายโอน — บ.ฮิตาชิ เซลส์ (ประเทศไทย)</td>
+                    <td class="amount">-678,900.00</td>
+                    <td class="col-mid">↔</td>
+                    <td><span class="doc-code">PV-2605-0051</span></td>
+                    <td>13 พ.ค. 2026</td>
+                    <td class="amount">-678,900.00</td>
+                    <td><span class="status-green">✓ จับคู่แล้ว</span></td>
+                    <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="chk" checked></td>
+                    <td>16 พ.ค. 2026</td>
+                    <td>รับโอน — บ.ทวีศักดิ์ธาดา จำกัด</td>
+                    <td class="amount">156,800.00</td>
+                    <td class="col-mid">↔</td>
+                    <td><span class="doc-code">RV-2605-0033</span></td>
+                    <td>15 พ.ค. 2026</td>
+                    <td class="amount">156,800.00</td>
+                    <td><span class="status-green">✓ จับคู่แล้ว</span></td>
+                    <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="chk" checked></td>
+                    <td>20 พ.ค. 2026</td>
+                    <td>รับโอน — บ.อุดมทรัพย์ อิเล็คทริค</td>
+                    <td class="amount">94,200.00</td>
+                    <td class="col-mid">↔</td>
+                    <td><span class="doc-code">RV-2605-0039</span></td>
+                    <td>22 พ.ค. 2026</td>
+                    <td class="amount">94,200.00</td>
+                    <td><span class="status-green">✓ จับคู่แล้ว</span></td>
+                    <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="chk" checked></td>
+                    <td>23 พ.ค. 2026</td>
+                    <td>จ่ายค่าขนส่ง — บ.เคอรี่ เอ็กซ์เพรส</td>
+                    <td class="amount">-42,150.00</td>
+                    <td class="col-mid">↔</td>
+                    <td><span class="doc-code">PV-2605-0058</span></td>
+                    <td>23 พ.ค. 2026</td>
+                    <td class="amount">-42,150.00</td>
+                    <td><span class="status-green">✓ จับคู่แล้ว</span></td>
+                    <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="chk" checked></td>
+                    <td>27 พ.ค. 2026</td>
+                    <td>รับโอน — ร้าน เซกาการไฟฟ้า</td>
+                    <td class="amount">208,000.00</td>
+                    <td class="col-mid">↔</td>
+                    <td><span class="doc-code">RV-2605-0045</span></td>
+                    <td>27 พ.ค. 2026</td>
+                    <td class="amount">208,000.00</td>
+                    <td><span class="status-green">✓ จับคู่แล้ว</span></td>
+                    <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
+                </tr>
+                <!-- UNMATCHED 1: ค่าธรรมเนียมธนาคาร -->
+                <tr class="row-unmatched">
+                    <td><input type="checkbox" class="chk"></td>
+                    <td>31 พ.ค. 2026</td>
+                    <td>ค่าธรรมเนียมธนาคาร (Bank Charge)</td>
+                    <td class="amount status-red">-1,250.00</td>
+                    <td class="col-mid">⚠</td>
+                    <td class="muted">— ไม่มีคู่ —</td>
+                    <td class="muted">—</td>
+                    <td class="amount muted">—</td>
+                    <td><span class="status-yellow">⚠ ยังไม่จับคู่</span></td>
+                    <td><button class="mini-btn link">จับคู่เอง</button></td>
+                </tr>
+                <!-- UNMATCHED 2: ดอกเบี้ยรับ -->
+                <tr class="row-unmatched">
+                    <td><input type="checkbox" class="chk"></td>
+                    <td>31 พ.ค. 2026</td>
+                    <td>ดอกเบี้ยรับ (Interest Income)</td>
+                    <td class="amount status-green">+3,000.00</td>
+                    <td class="col-mid">⚠</td>
+                    <td class="muted">— ไม่มีคู่ —</td>
+                    <td class="muted">—</td>
+                    <td class="amount muted">—</td>
+                    <td><span class="status-yellow">⚠ ยังไม่จับคู่</span></td>
+                    <td><button class="mini-btn link">จับคู่เอง</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ===== FI-3.6 · Adjust Bank (รายการที่ไม่จับคู่) ===== -->
+    <div class="card">
+        <h3 class="card-title">🛠️ ปรับปรุงรายการ (Adjust Bank) <span class="hint">สร้าง adjusting entry แล้ววนกลับไป Matching</span></h3>
+        <div class="adjust-row">
+            <div class="adj-stmt">
+                <span class="adj-desc">ค่าธรรมเนียมธนาคาร (Bank Charge)</span>
+                <span class="adj-meta">31 พ.ค. 2026 · ฝั่ง Statement -1,250.00 · ยังไม่มีใน Bank Ledger</span>
+            </div>
+            <div class="adj-field">
+                <label>ประเภทการปรับปรุง</label>
+                <select>
+                    <option>ค่าธรรมเนียม (Bank Charge)</option>
+                    <option>ดอกเบี้ย (Interest)</option>
+                    <option>ปรับปรุงอื่นๆ (Other)</option>
+                </select>
+            </div>
+            <div class="adj-field">
+                <label>บัญชี GL</label>
+                <input type="text" value="540300 — ค่าธรรมเนียมธนาคาร">
+                <span class="gl-hint">GL Account ปลายทางของรายการปรับปรุง</span>
+            </div>
+            <div class="adj-field">
+                <label>จำนวนเงิน</label>
+                <input type="text" value="-1,250.00" style="text-align:right">
+            </div>
+            <div style="display:flex;align-items:flex-end;height:100%">
+                <button class="btn-adjust">🛠️ Adjust Bank</button>
+            </div>
+        </div>
+        <div class="adjust-row">
+            <div class="adj-stmt">
+                <span class="adj-desc">ดอกเบี้ยรับ (Interest Income)</span>
+                <span class="adj-meta">31 พ.ค. 2026 · ฝั่ง Statement +3,000.00 · ยังไม่มีใน Bank Ledger</span>
+            </div>
+            <div class="adj-field">
+                <label>ประเภทการปรับปรุง</label>
+                <select>
+                    <option>ดอกเบี้ย (Interest)</option>
+                    <option>ค่าธรรมเนียม (Bank Charge)</option>
+                    <option>ปรับปรุงอื่นๆ (Other)</option>
+                </select>
+            </div>
+            <div class="adj-field">
+                <label>บัญชี GL</label>
+                <input type="text" value="430200 — ดอกเบี้ยรับ">
+                <span class="gl-hint">GL Account ปลายทางของรายการปรับปรุง</span>
+            </div>
+            <div class="adj-field">
+                <label>จำนวนเงิน</label>
+                <input type="text" value="+3,000.00" style="text-align:right">
+            </div>
+            <div style="display:flex;align-items:flex-end;height:100%">
+                <button class="btn-adjust">🛠️ Adjust Bank</button>
+            </div>
+        </div>
+        <div class="bc-note">
+            หลังกด <b>Adjust Bank</b> ระบบจะสร้างรายการปรับปรุงในฝั่ง Bank Ledger แล้ววนกลับไป Matching อีกครั้ง
+            เมื่อจับคู่ครบ → ผลต่างเป็น ฿0.00 → ปุ่ม Post จะเปิดให้ใช้งาน
+            (ปรับปรุงครบทั้ง 2 รายการ: -1,250.00 + 3,000.00 = +1,750.00 → หักผลต่าง ฿1,750.00 ให้เหลือ ฿0.00)
+        </div>
+    </div>
+
+    <!-- ===== FI-3.7 · BC Note (อ้างอิงท้ายหน้า) ===== -->
+    <div class="bc-note" style="margin-top:0">
+        ℹ️ <b>Portal เป็น UI layer เท่านั้น</b> — การ <b>Post Bank Reconciliation</b>, การสร้าง <b>Bank Ledger Entry</b>
+        และการออกเลขเอกสาร (Numbering) ดำเนินการโดย <b>Microsoft Dynamics 365 Business Central (BC365)</b>
+        หน้านี้แสดงสถานะและส่งคำสั่งเท่านั้น ไม่มีการ Post หรือเก็บข้อมูลในเครื่อง
+    </div>
+
+</div>
+
+<!-- ===== STICKY ACTION BAR ===== -->
+<div class="sticky-action-bar">
+    <div class="sab-left">
+        <div class="sab-title">BR-2605-0007 · SCB 123-4-56789-0</div>
+        <div class="sab-info">จับคู่ 22/24 · ผลต่าง <span class="red">฿1,750.00</span> · ต้อง Adjust 2 รายการก่อน Post</div>
+    </div>
+    <div class="sab-buttons">
+        <span class="sab-note">⚠ ปุ่ม Post เปิดเมื่อผลต่าง = 0 (Post / Bank Ledger Entry / เลขที่เอกสาร ทำโดย BC365)</span>
+        <button class="act btn-danger">🗑️ Delete</button>
+        <button class="act btn-secondary">💾 บันทึกร่าง</button>
+        <button class="act btn-primary btn-disabled" disabled title="เปิดเมื่อผลต่าง = 0">✅ Post Bank Reconciliation</button>
+    </div>
+</div>
+
+<script>
+    // จับคู่เอง / ยกเลิกคู่ (mock affordance)
+    document.querySelectorAll('.mini-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            alert('Demo · ' + btn.textContent.trim() + ' — การจับคู่จริงและ Post ดำเนินการบน BC365');
+        });
+    });
+    // Adjust Bank (mock)
+    document.querySelectorAll('.btn-adjust').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            alert('Demo · สร้างรายการปรับปรุง (Adjust Bank) แล้ววนกลับไป Matching — Bank Ledger Entry สร้างโดย BC365');
+        });
+    });
+</script>
+
+<!-- SWT_LINK_START -->
+<script src="swt-link.js" defer></script>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+  if (typeof swtRenderBreadcrumb === 'function') {
+    swtRenderBreadcrumb([
+      { type: 'BANK', no: 'SCB 123-4-56789-0', label: 'บัญชีธนาคาร' },
+      { type: 'STMT', no: 'STMT-2605',         label: 'Statement' },
+      { type: 'BR',   no: 'BR-2605-0007',      label: 'กระทบยอดธนาคาร', current: true },
+      { type: 'ADJ',  no: 'ADJ-2605-0012',     label: 'Adjust Bank' },
+      { type: 'BLE',  no: 'BLE-2605-3320',     label: 'Bank Ledger (BC)' }
+    ]);
+  }
+  if (typeof swtAppendTimeline !== 'function') return;
+  swtAppendTimeline('Doc Chain — BR-2605-0007 (กระทบยอดธนาคาร · SCB 123-4-56789-0)', [
+    { action: 'เลือก Bank Code · SCB 123-4-56789-0 (กระแสรายวัน)', time: '2026-05-29 14:00',
+      sub: 'นิติบุคคล SWT · ยอดยกมา 2,184,650.00 · ทำได้ทีละ 1 บัญชี', color: 'gray' },
+    { action: 'นำเข้า Statement · SCB_Statement_202605.csv', time: '2026-05-29 14:05',
+      sub: 'นำเข้า 24 รายการ · ช่วง 01–31 พ.ค. 2026', color: 'blue' },
+    { action: 'Auto-match (จำนวนเงิน + วันที่ ±3 วัน) → จับคู่ 22 / ค้าง 2', time: '2026-05-29 14:06',
+      sub: 'ค้าง: ค่าธรรมเนียมธนาคาร -1,250.00 · ดอกเบี้ยรับ +3,000.00', color: 'amber' },
+    { action: 'ผลต่างปัจจุบัน ฿1,750.00 → ต้อง Adjust Bank ก่อน Post', time: '2026-05-29 14:07',
+      sub: 'Adjust: 540300 ค่าธรรมเนียม · 430200 ดอกเบี้ยรับ → re-Match', color: 'amber' },
+    { action: 'Post Bank Reconciliation → Bank Ledger Entry (รอผลต่าง = 0)', time: 'รอดำเนินการ',
+      sub: 'Post / Bank Ledger Entry / เลขที่เอกสาร ทำโดย BC365 · ดู IA-Q', color: 'gray' }
+  ], { meta: 'Bank Code → Import → Match → Adjust → Post (BC365)' });
+});
+</script>
+<!-- SWT_LINK_END -->
+
+</body>
+</html>
