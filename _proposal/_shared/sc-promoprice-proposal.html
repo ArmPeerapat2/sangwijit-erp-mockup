@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<title>SharedPromoPrice v3 — 1:1 per product | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#E5EAF0;color:#1F2937;padding:20px;min-width:960px}
+.head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.head h1{font-size:18px;font-weight:700}
+.sc{background:#7C3AED;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px}
+.sub{font-size:12.5px;color:#475569;margin-bottom:8px}
+.tip{font-size:12px;background:#FEF9C3;border:1px solid #FDE68A;color:#854D0E;padding:7px 12px;border-radius:8px;margin-bottom:14px;display:inline-block}
+.flow{display:flex;gap:6px;align-items:center;margin-bottom:14px;font-size:12px;font-weight:600;color:#475569}
+.flow .step{background:#fff;border:1px solid #CBD5E1;border-radius:8px;padding:5px 12px}
+.flow .step.active{background:#7C3AED;color:#fff;border-color:#7C3AED}
+.flow .arrow{color:#94A3B8}
+.wrap{display:flex;gap:16px;align-items:flex-start}
+/* ITEM SEARCH (left) */
+.search-win{background:#fff;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.12);width:380px;flex-shrink:0;overflow:hidden}
+.swb{background:#1E3A5F;color:#fff;padding:10px 14px;font-size:13px;font-weight:700}
+.slist{max-height:380px;overflow:auto}
+.srow{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #F1F5F9;cursor:pointer}
+.srow:hover{background:#EFF6FF}
+.srow.picked{background:#EEF2FF;border-left:3px solid #7C3AED}
+.si{width:34px;height:34px;border-radius:8px;background:#F1F5F9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.sn{font-size:13px;font-weight:600;line-height:1.3}
+.sm{font-size:11px;color:#64748B}
+.sprice{font-size:13px;font-weight:700;color:#1E3A5F;margin-left:auto;white-space:nowrap}
+.promo-dot{width:7px;height:7px;border-radius:50%;background:#7C3AED;margin-left:6px;flex-shrink:0}
+/* PROMO PANEL (right) */
+.promo-win{flex:1;min-width:0}
+.empty-state{background:#fff;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.08);padding:40px 24px;text-align:center;color:#94A3B8}
+.empty-state .big{font-size:36px;margin-bottom:10px}
+.pwb{background:linear-gradient(135deg,#7C3AED,#2563EB);color:#fff;padding:12px 16px;border-radius:10px 10px 0 0}
+.pwb .pn{font-size:15px;font-weight:700}.pwb .pm{font-size:11.5px;color:#C4B5FD;margin-top:2px}
+.pbody{background:#fff;border-radius:0 0 10px 10px;box-shadow:0 4px 18px rgba(0,0,0,.12);overflow:hidden}
+/* qty row */
+.qrow{display:flex;align-items:center;gap:10px;padding:12px 16px;background:#F8FAFC;border-bottom:1px solid #E5E7EB}
+.qrow label{font-size:12px;font-weight:600;color:#374151}
+.qin{width:80px;padding:7px 10px;border:1px solid #CBD5E1;border-radius:7px;font-family:inherit;font-size:14px;text-align:right;font-weight:700}
+.qrow .base{font-size:12.5px;color:#475569;margin-left:6px}
+.qrow .total{font-size:16px;font-weight:800;color:#1E3A5F;margin-left:auto}
+/* promo options */
+.popts{padding:12px 16px}
+.plbl{font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.popt{border:1px solid #E5E7EB;border-radius:10px;margin-bottom:8px;overflow:hidden;cursor:pointer;transition:all .15s}
+.popt:hover{border-color:#7C3AED}
+.popt.selected{border-color:#7C3AED;box-shadow:0 0 0 2px rgba(124,58,237,.15)}
+.popt.disabled{opacity:.45;cursor:not-allowed}
+.popt-h{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.type-badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:8px;flex-shrink:0}
+.tb-ลด{background:#FEF3C7;color:#92400E}
+.tb-แลก{background:#EEF2FF;color:#3730A3}
+.tb-แจก{background:#ECFDF5;color:#065F46}
+.popt-name{font-size:13px;font-weight:700;flex:1}
+.popt-cond{font-size:10.5px;color:#94A3B8}
+.popt-body{padding:8px 14px 12px;background:#FAFAFA;border-top:1px solid #F1F5F9;font-size:12.5px}
+.popt-saving{font-size:13px;font-weight:700;color:#16A34A;margin-top:4px}
+.popt-saving.disc{color:#DC2626}
+.no-promo{padding:20px;text-align:center;color:#94A3B8;font-size:12.5px}
+/* none option */
+.none-opt{padding:9px 14px;background:#F9FAFB;border-top:1px solid #E5E7EB;cursor:pointer;font-size:12.5px;color:#64748B;display:flex;align-items:center;gap:8px}
+.none-opt.selected{background:#EFF6FF;color:#2563EB;font-weight:600}
+/* footer */
+.pfooter{padding:12px 16px;border-top:1px solid #E5E7EB;display:flex;justify-content:flex-end;gap:9px;background:#F8FAFC;border-radius:0 0 10px 10px}
+.btn{padding:9px 18px;border:none;border-radius:7px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.b1{background:#7C3AED;color:#fff}.b2{background:#E5E7EB;color:#374151}
+/* bill items below */
+.bill{background:#fff;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.08);margin-top:16px;overflow:hidden}
+.bwb{background:#374151;color:#fff;padding:10px 16px;font-size:13px;font-weight:700;display:flex;justify-content:space-between}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#F1F5F9;text-align:left;font-size:11px;color:#475569;padding:8px 12px}
+td{padding:8px 12px;border-bottom:1px solid #F9FAFB}.amt{text-align:right;font-variant-numeric:tabular-nums}
+.promo-chip{font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px;margin-left:6px}
+.c-ลด{background:#FEF3C7;color:#92400E}.c-แลก{background:#EEF2FF;color:#3730A3}.c-แจก{background:#ECFDF5;color:#065F46}
+.del{color:#DC2626;cursor:pointer;font-weight:700}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:99}.toast.on{opacity:1}
+</style></head><body>
+
+<div class="head"><h1>SharedPromoPrice</h1><span class="sc">v3</span><span style="font-size:12px;color:#16A34A;font-weight:700">— 1:1 per product · แสดงหลังเลือกสินค้า</span></div>
+<div class="sub">เลือกสินค้า → PromoPrice panel เปิดทันที (1:1) → เห็น ลด/แลก/แจก ที่มีสำหรับสินค้านั้น → เลือก 1 โปร → เพิ่มลงบิล</div>
+<span class="tip">👆 คลิกสินค้าฝั่งซ้าย → โปรแสดงฝั่งขวา · ปรับจำนวน → โปรอัปเดต (เงื่อนไขเปลี่ยน) · เลือกโปร → กด "เพิ่มลงบิล"</span>
+
+<div class="flow">
+  <span class="step" id="fl1">① เลือกสินค้า</span><span class="arrow">→</span>
+  <span class="step" id="fl2">② ดูโปร (ลด/แลก/แจก)</span><span class="arrow">→</span>
+  <span class="step" id="fl3">③ เพิ่มลงบิล</span>
+</div>
+
+<div class="wrap">
+  <!-- LEFT: item search list -->
+  <div class="search-win">
+    <div class="swb">🔍 รายการสินค้า (ผ่าน SharedItemSearch)</div>
+    <div class="slist" id="slist"></div>
+  </div>
+  <!-- RIGHT: promo panel -->
+  <div class="promo-win" id="ppanel">
+    <div class="empty-state"><div class="big">🎯</div><div>คลิกสินค้าฝั่งซ้ายเพื่อดูโปรที่มี</div></div>
+  </div>
+</div>
+
+<!-- BILL -->
+<div class="bill" id="billblock" style="display:none">
+  <div class="bwb"><span>🧾 รายการในบิล</span><span id="billcnt" style="font-weight:500;font-size:12px;color:#D1D5DB"></span></div>
+  <table><thead><tr><th>สินค้า</th><th class="amt">จำนวน</th><th class="amt">ราคา/หน่วย</th><th class="amt">ส่วนลด</th><th class="amt">ยอดสุทธิ</th><th></th></tr></thead>
+  <tbody id="billtb"></tbody></table>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+const fmt=n=>(+n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const ITEMS=[
+  {code:'7XX71XX',name:'เครื่องซักผ้า 2 ถัง LG TT10NARG',ico:'🫧',price:5450,unit:'เครื่อง',hasPromo:true},
+  {code:'LED-9W',name:'หลอด LED 9W ฟิลิปส์ เดย์ไลท์',ico:'💡',price:42,unit:'หลอด',hasPromo:true},
+  {code:'WIRE-25',name:'สายไฟ THW 2.5 sq.mm (100m)',ico:'🔌',price:1280,unit:'ม้วน',hasPromo:true},
+  {code:'AIR-12K',name:'แอร์ผนัง 12000 BTU มิตซูบิชิ',ico:'❄️',price:13500,unit:'เครื่อง',hasPromo:false}
+];
+const PROMOS={
+  '7XX71XX':[
+    {type:'ลด',name:'LG ซื้อ 5+ เครื่อง ลด 5%',minQty:5,discPct:5,desc:'ลดราคาทันที 5% เมื่อซื้อ ≥ 5 เครื่อง'},
+    {type:'แลก',name:'แลกซื้อผงซักฟอก ราคาพิเศษ',minQty:1,swapItem:'ผงซักฟอก 900g (ราคาปกติ ฿65)',swapPrice:39,desc:'แลกซื้อผงซักฟอก 900g ในราคา ฿39/ถุง (จำกัด 2 ถุง/บิล)'},
+    {type:'แจก',name:'ซื้อ 3+ แถมสายยืดถัง',minQty:3,freeItem:'สายยืดถัง (ชุด)',freeQty:1,desc:'ซื้อตั้งแต่ 3 เครื่องขึ้นไป แถมสายยืดถัง 1 ชุด/บิล'}
+  ],
+  'LED-9W':[
+    {type:'ลด',name:'LED ซื้อ 100+ หลอด ลด 8%',minQty:100,discPct:8,desc:'ลด 8% เมื่อซื้อ ≥ 100 หลอด'},
+    {type:'แจก',name:'ซื้อ 100 แถม 10 หลอด',minQty:100,freeItem:'หลอด LED 9W',freeQty:10,desc:'ซื้อ 100 หลอด แถมฟรี 10 หลอด (ไม่คิดราคา)'}
+  ],
+  'WIRE-25':[
+    {type:'ลด',name:'สายไฟ ซื้อ 10+ ม้วน ลด 3%',minQty:10,discPct:3,desc:'ลด 3% เมื่อซื้อ ≥ 10 ม้วน'},
+    {type:'แลก',name:'แลกเทปพันสาย ราคาพิเศษ',minQty:1,swapItem:'เทปพันสาย (โหล)',swapPrice:45,desc:'แลกซื้อเทปพันสาย 1 โหล ราคา ฿45 (ปกติ ฿80)'}
+  ]
+};
+let curItem=null,curQty=1,selPromo=-1; // -1=none
+let billItems=[];
+// render item list
+function renderList(){
+  document.getElementById('slist').innerHTML=ITEMS.map((it,i)=>`
+    <div class="srow ${curItem&&curItem.code===it.code?'picked':''}" onclick="pickItem(${i})">
+      <div class="si">${it.ico}</div>
+      <div style="flex:1;min-width:0"><div class="sn">${it.name}</div><div class="sm">${it.code} · ${it.unit}</div></div>
+      <div class="sprice">฿${it.price.toLocaleString('en-US')}</div>
+      ${it.hasPromo?'<div class="promo-dot" title="มีโปร"></div>':''}
+    </div>`).join('');
+}
+function pickItem(i){
+  curItem=ITEMS[i];curQty=1;selPromo=-1;
+  document.getElementById('fl1').classList.add('active');
+  document.getElementById('fl2').classList.add('active');
+  document.getElementById('fl3').classList.remove('active');
+  renderList();renderPromoPanel();
+}
+function renderPromoPanel(){
+  if(!curItem){document.getElementById('ppanel').innerHTML='<div class="empty-state"><div class="big">🎯</div><div>คลิกสินค้าฝั่งซ้ายเพื่อดูโปรที่มี</div></div>';return;}
+  const promos=PROMOS[curItem.code]||[];
+  const priceLine=curItem.price*curQty;
+  const promo=selPromo>=0?promos[selPromo]:null;
+  let disc=0,freeNote='',swapNote='';
+  if(promo&&promo.minQty<=curQty){
+    if(promo.discPct)disc=priceLine*(promo.discPct/100);
+    if(promo.freeItem)freeNote=`🎁 ได้รับ: ${promo.freeItem} × ${promo.freeQty}`;
+    if(promo.swapItem)swapNote=`🔄 แลกได้: ${promo.swapItem} @ ฿${promo.swapPrice}`;
+  }
+  const net=priceLine-disc;
+  const optsHtml=promos.length?promos.map((p,pi)=>{
+    const eligible=p.minQty<=curQty;
+    const isSel=selPromo===pi;
+    return`<div class="popt ${isSel?'selected':''} ${!eligible?'disabled':''}" onclick="${eligible?`selP(${pi})`:''}" >
+      <div class="popt-h">
+        <span class="type-badge tb-${p.type}">${p.type==='ลด'?'🏷️ ลด':p.type==='แลก'?'🔄 แลก':'🎁 แจก'}</span>
+        <span class="popt-name">${p.name}</span>
+        <span class="popt-cond">${eligible?'✓ เข้าเงื่อนไข':`ต้องซื้อ ≥ ${p.minQty} ${curItem.unit}`}</span>
+      </div>
+      ${isSel?`<div class="popt-body">${p.desc}
+        ${p.discPct&&eligible?`<div class="popt-saving disc">ลดทันที ฿${fmt(disc)} (${p.discPct}%)</div>`:''}
+        ${p.freeItem&&eligible?`<div class="popt-saving">ได้รับ ${p.freeItem} × ${p.freeQty} ฟรี</div>`:''}
+        ${p.swapItem&&eligible?`<div class="popt-saving">แลกได้: ${p.swapItem} @ ฿${p.swapPrice}</div>`:''}
+      </div>`:''}
+    </div>`;
+  }).join(''):`<div class="no-promo">ไม่มีโปรสำหรับสินค้านี้ในช่วงนี้</div>`;
+  document.getElementById('ppanel').innerHTML=`
+    <div style="border-radius:10px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.15)">
+      <div class="pwb">
+        <div class="pn">${curItem.ico} ${curItem.name}</div>
+        <div class="pm">${curItem.code} · ราคา ฿${curItem.price.toLocaleString('en-US')}/${curItem.unit}</div>
+      </div>
+      <div class="pbody">
+        <div class="qrow">
+          <label>จำนวน</label>
+          <input class="qin" type="number" value="${curQty}" min="1" id="qinput" oninput="setQ(this.value)">
+          <span class="base">${curItem.unit} × ฿${curItem.price.toLocaleString('en-US')}</span>
+          <div class="total">฿${fmt(net)}${disc>0?` <span style="font-size:12px;color:#DC2626">(ลด ฿${fmt(disc)})</span>`:''}</div>
+        </div>
+        <div class="popts">
+          <div class="plbl">โปรโมชั่นที่มี${promos.length?` (${promos.length} รายการ)':''} — เลือกได้ 1</div>
+          ${optsHtml}
+          ${promos.length?`<div class="none-opt ${selPromo===-1?'selected':''}" onclick="selP(-1)"><span>⊘</span> ไม่ใช้โปร (ราคาปกติ)</div>`:''}
+          ${freeNote?`<div style="padding:8px 14px;background:#ECFDF5;font-size:12.5px;font-weight:600;color:#065F46">${freeNote}</div>`:''}
+          ${swapNote?`<div style="padding:8px 14px;background:#EEF2FF;font-size:12.5px;font-weight:600;color:#3730A3">${swapNote}</div>`:''}
+        </div>
+        <div class="pfooter">
+          <button class="btn b2" onclick="cancelPick()">ยกเลิก</button>
+          <button class="btn b1" onclick="addToBill()">✓ เพิ่มลงบิล → item:added</button>
+        </div>
+      </div>
+    </div>`;
+}
+function selP(pi){selPromo=pi;renderPromoPanel();}
+function setQ(v){curQty=Math.max(1,+v||1);renderPromoPanel();}
+function cancelPick(){curItem=null;selPromo=-1;document.getElementById('fl1').classList.remove('active');document.getElementById('fl2').classList.remove('active');renderList();document.getElementById('ppanel').innerHTML='<div class="empty-state"><div class="big">🎯</div><div>คลิกสินค้าฝั่งซ้ายเพื่อดูโปรที่มี</div></div>';}
+function addToBill(){
+  const promos=PROMOS[curItem.code]||[];
+  const promo=selPromo>=0?promos[selPromo]:null;
+  let disc=0,promoLabel='',freeItem=null;
+  if(promo&&promo.minQty<=curQty){
+    if(promo.discPct)disc=curItem.price*curQty*(promo.discPct/100);
+    if(promo.freeItem)freeItem={name:promo.freeItem,qty:promo.freeQty};
+    promoLabel=promo.type+': '+promo.name;
+  }
+  billItems.push({...curItem,qty:curQty,disc,promoLabel,freeItem});
+  document.getElementById('fl3').classList.add('active');
+  toast('✓ เพิ่ม '+curItem.name+' × '+curQty+(promoLabel?' ('+promoLabel+')':' (ไม่มีโปร)')+' → emit item:added');
+  cancelPick();renderBill();
+}
+function renderBill(){
+  const b=document.getElementById('billblock');
+  b.style.display=billItems.length?'block':'none';
+  document.getElementById('billcnt').textContent=billItems.length+' รายการ';
+  document.getElementById('billtb').innerHTML=billItems.map((it,i)=>{
+    const net=it.price*it.qty-it.disc;
+    return`<tr><td>${it.ico} ${it.name}${it.promoLabel?`<span class="promo-chip c-${it.promoLabel.charAt(0)}">${it.promoLabel.split(':')[0]}</span>`:''}${it.freeItem?`<br><span style="font-size:11px;color:#065F46">🎁 แถม ${it.freeItem.name} × ${it.freeItem.qty}</span>`:''}</td><td class="amt">${it.qty}</td><td class="amt">฿${fmt(it.price)}</td><td class="amt" style="color:#DC2626">${it.disc>0?'-฿'+fmt(it.disc):'-'}</td><td class="amt" style="font-weight:700">฿${fmt(net)}</td><td><span class="del" onclick="rmBill(${i})">✕</span></td></tr>`;
+  }).join('');
+}
+function rmBill(i){billItems.splice(i,1);renderBill();}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);}
+renderList();
+</script></body></html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<title>Redesign Tracker — เก่า ↔ ใหม่ | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1F2937;padding:0 0 60px}
+.hero{background:linear-gradient(135deg,#1E3A5F,#2563EB);color:#fff;padding:26px 36px}
+.hero h1{font-size:22px;font-weight:700}
+.hero p{font-size:13px;color:#BFDBFE;margin-top:4px}
+.hero .meta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.hero .chip{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:12px}
+.wrap{padding:24px 36px;max-width:1280px}
+
+.rule{background:#FFFBEB;border:1px solid #FDE68A;border-left:4px solid #F59E0B;border-radius:8px;padding:12px 16px;font-size:12.5px;color:#92400E;margin-bottom:22px;line-height:1.7}
+.rule b{color:#78350F}
+.rule code{font-family:monospace;background:#FEF3C7;padding:1px 6px;border-radius:4px}
+
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:#475569;margin-bottom:14px;align-items:center}
+.legend .lg{display:flex;align-items:center;gap:6px}
+.st{display:inline-block;padding:2px 9px;border-radius:11px;font-size:11px;font-weight:700;white-space:nowrap}
+.st-draft{background:#FEF3C7;color:#92400E}
+.st-appr{background:#DBEAFE;color:#1E40AF}
+.st-merged{background:#DCFCE7;color:#166534}
+.st-todo{background:#F1F5F9;color:#64748B}
+.st-keep{background:#EDE9FE;color:#6D28D9}
+
+h2.sec{font-size:14px;font-weight:700;color:#0F172A;margin:26px 0 10px;display:flex;align-items:center;gap:8px}
+h2.sec .cnt{font-size:11px;font-weight:600;color:#94A3B8}
+
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+thead th{padding:10px 14px;background:#F1F5F9;font-size:11px;font-weight:700;color:#475569;text-align:left;text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid #E2E8F0}
+tbody td{padding:11px 14px;border-bottom:1px solid #F1F5F9;font-size:12.5px;vertical-align:middle}
+tbody tr:hover td{background:#F8FAFC}
+tbody tr:last-child td{border-bottom:none}
+.code{font-family:monospace;font-weight:700;color:#1D4ED8;font-size:12px}
+.mname{font-weight:600;color:#0F172A}
+.msub{font-size:11px;color:#94A3B8}
+.fn{font-family:monospace;font-size:11px;color:#64748B}
+.open{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:7px;font-size:11.5px;font-weight:700;text-decoration:none;white-space:nowrap}
+.open-old{background:#fff;border:1px solid #CBD5E1;color:#475569}
+.open-old:hover{background:#F1F5F9;border-color:#94A3B8}
+.open-new{background:#2563EB;color:#fff}
+.open-new:hover{background:#1D4ED8}
+.open-na{color:#CBD5E1;font-size:11.5px;font-style:italic}
+.cmp{display:flex;gap:7px;align-items:center}
+.note{font-size:11px;color:#94A3B8;margin-top:1px}
+</style></head><body>
+
+<div class="hero">
+  <h1>🗂️ Redesign Tracker — เก่า ↔ ใหม่</h1>
+  <p>เทียบไฟล์เดิม (root · 2-3 สัปดาห์ก่อน) กับงานวางใหม่ (<code style="color:#BFDBFE;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px">_proposal/</code> · สัปดาห์นี้) — เปิดดูเทียบกันได้ทุกใบ</p>
+  <div class="meta">
+    <span class="chip">📁 root = ของเก่า (live · อย่าย้าย)</span>
+    <span class="chip">📁 _proposal/ = ของใหม่</span>
+    <span class="chip" id="chip-count">— โมดูล</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="rule">
+    <b>กฎกันลิงก์พัง:</b> ของเก่าที่ root โยงลิงก์กัน ~75 ไฟล์ → <b>ห้ามย้าย</b> · งานใหม่อยู่ <code>_proposal/</code> เท่านั้น<br>
+    <b>ตอน approved:</b> เขียนเนื้อหา proposal <b>ทับลงไฟล์ root ชื่อเดิม</b> (ไม่ย้าย ไม่เปลี่ยนชื่อ) → ลิงก์ทั้งหมดยังโดน 100%
+  </div>
+
+  <div class="legend">
+    <span class="lg"><span class="st st-draft">🟡 draft</span> กำลังทำ/รอ review</span>
+    <span class="lg"><span class="st st-appr">🔵 approved</span> เคาะแล้ว รอ merge</span>
+    <span class="lg"><span class="st st-merged">🟢 merged</span> ทับเข้า root แล้ว</span>
+    <span class="lg"><span class="st st-todo">⬜ todo</span> ยังไม่เริ่ม</span>
+    <span class="lg"><span class="st st-keep">⚪ คงเดิม</span> ไม่ redesign (root ล้วน)</span>
+  </div>
+
+  <h2 class="sec">⚙️ CF — ตั้งค่าระบบ <span class="cnt" id="cnt-cf"></span></h2>
+  <table><thead><tr>
+    <th style="width:70px">รหัส</th><th>โมดูล</th>
+    <th style="width:230px">ไฟล์เก่า (root)</th><th style="width:240px">ไฟล์ใหม่ (_proposal)</th>
+    <th style="width:130px">สถานะ</th><th style="width:220px">เทียบ</th>
+  </tr></thead><tbody id="tb-cf"></tbody></table>
+
+  <h2 class="sec">🧩 Shared Components <span class="cnt" id="cnt-sc"></span></h2>
+  <table><thead><tr>
+    <th style="width:70px">รหัส</th><th>component</th>
+    <th style="width:230px">ไฟล์เก่า (root)</th><th style="width:240px">ไฟล์ใหม่ (_proposal/_shared)</th>
+    <th style="width:130px">สถานะ</th><th style="width:220px">เทียบ</th>
+  </tr></thead><tbody id="tb-sc"></tbody></table>
+
+</div>
+
+<script>
+/* old = path จาก root (เปิดด้วย ../) · new = path ใน _proposal/ · status: draft|appr|merged|todo|keep */
+const CF=[
+  {code:'CF-1',  name:'สิทธิ์ตำแหน่ง (RBAC)',   sub:'Position-based RBAC',     old:'cf1-rbac-permission-mockup.html',   neu:'cf1-position-rbac-proposal.html',   status:'appr'},
+  {code:'CF-2.2',name:'รหัสเอกสาร',             sub:'Number Series · ADR-0004', old:'cf2-2-number-series-mockup.html',   neu:'cf2-2-number-series-proposal.html', status:'appr'},
+  {code:'CF-2.6',name:'Approval Matrix',        sub:'Position + Threshold',    old:'cf2-6-approval-matrix-mockup.html', neu:'cf26-approval-matrix-proposal.html',status:'appr'},
+  {code:'CF-2.7',name:'แม่แบบเอกสาร',           sub:'Doc Template · ตัด Running',old:'cf2-7-doc-template-mockup.html',    neu:'cf27-doc-template-proposal.html',   status:'draft'},
+  {code:'CF-2',  name:'Config Hub',             sub:'landing · flip CF-2.2 · ซ่อน Entity Tag',old:'cf2-config-hub-mockup.html',neu:'cf2-config-hub-proposal.html',     status:'draft'},
+  {code:'CF-2.1',name:'ภาษี (Tax)',             sub:'cut-to-BC',               old:'cf2-1-tax-setup-mockup.html',       neu:'',                                  status:'keep'},
+  {code:'CF-2.5',name:'Template ช่าง',          sub:'Tech Job Template',       old:'cf2-5-tech-template-mockup.html',   neu:'',                                  status:'keep'},
+  {code:'CF-2.9',name:'ค่าตั้งต้นระบบ',         sub:'General Param · cut-to-BC',old:'cf2-9-general-parameter-mockup.html',neu:'',                                 status:'keep'},
+];
+const SC=[
+  {code:'SC-1', name:'ค้นหาลูกค้า',  sub:'Customer Search', old:'sc1-customer-search-mockup.html', neu:'_shared/sc1-customer-search-proposal.html', status:'draft'},
+  {code:'SC-2', name:'ค้นหาสินค้า',  sub:'Item Search',     old:'sc2-item-search-mockup.html',     neu:'_shared/sc2-item-search-proposal.html',     status:'draft'},
+  {code:'SC',   name:'อ้างอิงเอกสาร',sub:'Doc Reference',   old:'',                                neu:'_shared/sc-docreference-proposal.html',     status:'draft'},
+  {code:'SC',   name:'รับชำระ',      sub:'Payment',         old:'',                                neu:'_shared/sc-payment-proposal.html',          status:'draft'},
+  {code:'SC',   name:'จัดส่ง',       sub:'Delivery',        old:'',                                neu:'_shared/sc-delivery-proposal.html',         status:'draft'},
+  {code:'SC',   name:'Serial',       sub:'Serial No.',      old:'',                                neu:'_shared/sc-serial-proposal.html',           status:'draft'},
+  {code:'SC',   name:'มัดจำ',        sub:'Deposit',         old:'',                                neu:'_shared/sc-deposit-proposal.html',          status:'draft'},
+  {code:'SC',   name:'PromoPrice',   sub:'side panel v2',   old:'',                                neu:'_shared/sc-promoprice-proposal.html',       status:'appr'},
+  {code:'SC',   name:'สินค้า+ราคา',  sub:'Item with Price', old:'',                                neu:'_shared/sc-item-with-price-proposal.html',  status:'draft'},
+];
+
+const ST={
+  draft :{cls:'st-draft', t:'🟡 draft'},
+  appr  :{cls:'st-appr',  t:'🔵 approved'},
+  merged:{cls:'st-merged',t:'🟢 merged'},
+  todo  :{cls:'st-todo',  t:'⬜ todo'},
+  keep  :{cls:'st-keep',  t:'⚪ คงเดิม'},
+};
+
+function fileCell(path,fromShared){
+  if(!path)return '<span class="msub">—</span>';
+  return `<span class="fn">${path.split('/').pop()}</span>`;
+}
+function cmpCell(r){
+  const oldLink = r.old ? `<a class="open open-old" href="../${r.old}" target="_blank">📄 เปิดเก่า</a>` : `<span class="open-na">ไม่มีเก่า</span>`;
+  const newLink = r.neu ? `<a class="open open-new" href="${r.neu}" target="_blank">✨ เปิดใหม่</a>` : `<span class="open-na">ยังไม่ทำ</span>`;
+  return `<div class="cmp">${oldLink}${newLink}</div>`;
+}
+function row(r){
+  const s=ST[r.status];
+  return `<tr>
+    <td><span class="code">${r.code}</span></td>
+    <td><div class="mname">${r.name}</div><div class="msub">${r.sub}</div></td>
+    <td>${fileCell(r.old)}</td>
+    <td>${fileCell(r.neu)}</td>
+    <td><span class="st ${s.cls}">${s.t}</span></td>
+    <td>${cmpCell(r)}</td>
+  </tr>`;
+}
+document.getElementById('tb-cf').innerHTML=CF.map(row).join('');
+document.getElementById('tb-sc').innerHTML=SC.map(row).join('');
+document.getElementById('cnt-cf').textContent=`${CF.length} รายการ`;
+document.getElementById('cnt-sc').textContent=`${SC.length} รายการ`;
+document.getElementById('chip-count').textContent=`${CF.length+SC.length} รายการรวม`;
+</script>
+</body></html>

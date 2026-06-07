@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<title>CF-2 Config Hub — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1F2937;display:flex;min-height:100vh}
+.sb{width:240px;background:#1E3A5F;color:#D1D5DB;padding:14px 10px;flex-shrink:0}
+.sb-brand{font-size:13px;font-weight:700;color:#fff;padding:8px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:12px}
+.sb-lbl{font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;padding:4px 8px;margin-top:8px}
+.sb a{display:block;padding:7px 10px;font-size:12.5px;color:#D1D5DB;text-decoration:none;border-radius:5px;margin:1px 0}
+.sb a:hover{background:rgba(255,255,255,.08)}
+.sb a.active{background:#2563EB;color:#fff;font-weight:600}
+.sb a .c{font-size:9.5px;font-weight:700;color:#94A3B8;min-width:42px;display:inline-block}
+.sb a.dim{color:#7C8BA0}
+.main{flex:1;overflow:auto}
+.mwb{background:linear-gradient(135deg,#1E3A5F,#2563EB);color:#fff;padding:18px 28px}
+.mwb h1{font-size:20px;font-weight:700}
+.mwb .sub{font-size:12px;color:#BFDBFE;margin-top:2px}
+.mwb .adr{display:inline-block;margin-top:8px;background:rgba(255,255,255,.15);padding:3px 10px;border-radius:20px;font-size:11.5px;margin-right:6px}
+.content{padding:24px 28px}
+
+.bc{font-size:12px;color:#64748B;margin-bottom:16px}
+.bc a{color:#2563EB;text-decoration:none}
+
+.info{display:flex;gap:10px;align-items:flex-start;padding:13px 17px;background:#EFF6FF;border-left:4px solid #2563EB;border-radius:8px;font-size:12.5px;color:#1E40AF;margin-bottom:16px;line-height:1.6}
+
+/* legend */
+.legend{display:flex;gap:18px;align-items:center;padding:10px 14px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;font-size:12px;margin-bottom:22px;flex-wrap:wrap}
+.legend .lg{display:flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot-green{background:#10B981}.dot-red{background:#EF4444}
+.legend .sum{margin-left:auto;color:#64748B}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:9px;position:relative;text-decoration:none;color:inherit;transition:.15s}
+.card.live{cursor:pointer}
+.card.live:hover{border-color:#2563EB;box-shadow:0 4px 12px rgba(37,99,235,.1);transform:translateY(-1px)}
+.card.dimmed{opacity:.62;background:#FCFCFD}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between}
+.card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#EFF6FF}
+.card-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.st-portal{background:#D1FAE5;color:#065F46}
+.st-bc{background:#FEE2E2;color:#991B1B}
+.card-code{font-size:10px;font-weight:700;color:#6B7280;letter-spacing:.08em}
+.card-title{font-size:14px;font-weight:700;color:#111827;line-height:1.3}
+.card-title.cut{text-decoration:line-through;color:#9CA3AF}
+.card-desc{font-size:11px;color:#6B7280;line-height:1.5}
+.card-note{font-size:10px;padding:6px 8px;border-radius:6px;line-height:1.5}
+.note-green{color:#065F46;background:#F0FDF4;border-left:2px solid #10B981}
+.note-red{color:#991B1B;background:#FEF2F2;border-left:2px solid #EF4444}
+.card-meta{display:flex;gap:10px;font-size:10px;color:#6B7280;padding-top:8px;border-top:1px solid #F3F4F6;margin-top:auto}
+.badge-new{position:absolute;top:-7px;right:-7px;background:#DC2626;color:#fff;font-size:8.5px;font-weight:700;padding:2px 7px;border-radius:10px;box-shadow:0 2px 6px rgba(220,38,38,.35)}
+
+/* summary table */
+.dbox{margin-top:30px;padding:20px;background:#fff;border:1px solid #E5E7EB;border-radius:10px}
+.dbox h3{font-size:14px;font-weight:700;color:#111827;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.drow{display:grid;grid-template-columns:34px 80px 1fr 200px;gap:12px;padding:9px 10px;border-bottom:1px solid #F3F4F6;font-size:12px;align-items:center}
+.drow:last-child{border-bottom:none}
+.drow.h{background:#F9FAFB;font-weight:700;color:#6B7280;font-size:11px;text-transform:uppercase;border-radius:6px}
+.drow .rea{font-size:11px;color:#6B7280}
+.note-foot{font-size:11px;color:#065F46;margin-top:12px;padding:10px 12px;background:#F0FDF4;border-radius:6px;line-height:1.7}
+</style></head><body>
+
+<div class="sb">
+  <div class="sb-brand">Sangwijit ERP · v3.0</div>
+  <div class="sb-lbl">ตั้งค่าระบบ (CF)</div>
+  <a href="cf1-position-rbac-proposal.html"><span class="c">CF-1</span>ตำแหน่ง &amp; สิทธิ์</a>
+  <a href="#" class="active"><span class="c">CF-2</span>Config Hub</a>
+  <a href="../cf2-1-tax-setup-mockup.html" class="dim"><span class="c">CF-2.1</span>ภาษี · BC</a>
+  <a href="cf2-2-number-series-proposal.html"><span class="c">CF-2.2</span>รหัสเอกสาร</a>
+  <a href="../cf2-5-tech-template-mockup.html"><span class="c">CF-2.5</span>Template ช่าง</a>
+  <a href="cf26-approval-matrix-proposal.html"><span class="c">CF-2.6</span>Approval Matrix</a>
+  <a href="cf27-doc-template-proposal.html"><span class="c">CF-2.7</span>แม่แบบเอกสาร</a>
+  <a href="../cf2-9-general-parameter-mockup.html" class="dim"><span class="c">CF-2.9</span>ค่าตั้งต้น · BC</a>
+</div>
+
+<div class="main">
+  <div class="mwb">
+    <h1>⚙️ CF-2 System Config Hub</h1>
+    <div class="sub">ศูนย์รวมการตั้งค่าระบบ (Admin only · ตั้งครั้งเดียวใช้ยาว)</div>
+    <span class="adr">SWT single-entity</span>
+    <span class="adr">links → proposal ล่าสุด</span>
+  </div>
+
+  <div class="content">
+    <div class="bc"><a href="../index.html">Portal</a> / System Config / <b>CF-2 Hub</b></div>
+
+    <div class="info">
+      <span>💡</span>
+      <div><b>หน้านี้คือ Hub</b> — คลิกการ์ดเข้าหน้าตั้งค่าแต่ละหัวข้อ · การ์ดที่ทำใหม่ชี้ไป <b>proposal ล่าสุด</b> (NEW) · การ์ด <b>🔴 ใช้ BC</b> = ตั้งที่ BC365 ตรง เก็บเป็น reference<br>
+      <span style="font-size:11px;color:#3B82F6">อัปเดต: CF-2.2 เปลี่ยนเป็น 🟢 Portal-managed (ADR-0004) · Entity Tag (CF-9) ซ่อน — single-entity นอก scope</span></div>
+    </div>
+
+    <div class="legend">
+      <div class="lg"><span class="dot dot-green"></span> <b>Portal ทำ</b> — ยืนยันแล้ว</div>
+      <div class="lg"><span class="dot dot-red"></span> <b>ใช้ BC ตรง</b> — ตัดออกจาก Portal</div>
+      <div class="sum" id="sum">—</div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <!-- Decision summary -->
+    <div class="dbox">
+      <h3>✅ BC365 Audit Summary — ปรับล่าสุด</h3>
+      <div class="drow h"><div>ผล</div><div>Code</div><div>Decision</div><div>เหตุผล</div></div>
+      <div id="drows"></div>
+      <div class="note-foot">
+        ✅ <b>สรุป</b>: Portal ทำ <b>4</b> หน้า (CF-2.2, 2.5, 2.6, 2.7) · ใช้ BC ตรง <b>4</b> หน้า (CF-2.1, 2.3, 2.4, 2.9)<br>
+        🔢 เลขรัน/Format = <b>CF-2.2</b> ดูแล (Portal-managed) · CF-2.7 แม่แบบเอกสาร <b>ตัด Running ออก</b> ไม่ซ้ำซ้อน<br>
+        🏢 Entity Tag (CF-9 / CF-2.8) <b>ซ่อน</b> — scope = SWT บริษัทเดียว ยังไม่มี dual-book<br>
+        💡 mockup BC ที่ทำไว้ (CF-2.1, 2.9) เก็บเป็น reference ว่า "ข้อมูลนี้ตั้งที่ BC หน้าไหน"
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* href: proposal = ชื่อไฟล์เปล่า (same folder) · root เก่า = ../ นำหน้า · '' = ไม่มีหน้า · isNew=ป้าย NEW */
+const CARDS=[
+  {code:'CF-2.1',icon:'🧾',ic:'#FEE2E2',title:'Tax Setup',cut:true, status:'bc',href:'../cf2-1-tax-setup-mockup.html',
+    desc:'BC365: VAT + WHT Posting Setup (Thai localization) มีครบ', note:'red',noteT:'🔴 ตั้งที่ BC → VAT/WHT Posting Setup', meta:'🔗 BC365 built-in'},
+  {code:'CF-2.2',icon:'🔢',ic:'#D1FAE5',title:'รหัสเอกสาร (Number Series)',cut:false,status:'portal',href:'cf2-2-number-series-proposal.html',isNew:true,
+    desc:'Branch × DocType matrix · Format [Branch][Doc]-[YYMM]-[###] · reset รายเดือน', note:'green',noteT:'🟢 Portal-managed (ADR-0004) — เปลี่ยนจาก cut-to-BC', meta:'📝 3 panels · ✅ approved'},
+  {code:'CF-2.3',icon:'📚',ic:'#FEE2E2',title:'Posting Groups & GL',cut:true,status:'bc',href:'',
+    desc:'BC365: Gen. Posting Setup — BC post จริง Portal ไม่ post', note:'red',noteT:'🔴 ห้ามแยก — ตั้ง+แก้ที่ BC เท่านั้น', meta:'🔗 BC365 core'},
+  {code:'CF-2.4',icon:'📦',ic:'#FEE2E2',title:'WH Bin Policy',cut:true,status:'bc',href:'',
+    desc:'BC365: Bin Setup + Zone/Bin Content มีครบ', note:'red',noteT:'🔴 ตั้งที่ BC → Warehouse Setup / Bin Content', meta:'🔗 BC365 built-in'},
+  {code:'CF-2.5',icon:'🔧',ic:'#D1FAE5',title:'Tech Job Template',cut:false,status:'portal',href:'../cf2-5-tech-template-mockup.html',
+    desc:'ประเภทงาน · Checklist · อุปกรณ์ · เวลา&ทักษะ · Safety — BC ไม่มี', note:'green',noteT:'🟢 Portal ทำเอง 100% — ใช้กับ SV Service', meta:'📝 5 tabs · ✅ เสร็จ'},
+  {code:'CF-2.6',icon:'✅',ic:'#D1FAE5',title:'Approval Matrix',cut:false,status:'portal',href:'cf26-approval-matrix-proposal.html',isNew:true,
+    desc:'Position-based + Threshold + Delegation + Simulator — SWT', note:'green',noteT:'🟢 Portal UI layer — ใช้ BC workflow เป็น backend', meta:'📝 ✅ approved'},
+  {code:'CF-2.7',icon:'📄',ic:'#D1FAE5',title:'แม่แบบเอกสาร (Doc Template)',cut:false,status:'portal',href:'cf27-doc-template-proposal.html',isNew:true,
+    desc:'ประเภทเอกสาร (Tax เป็น field) · กลุ่มเอกสาร · หัวกระดาษ SWT — ตัด Running', note:'green',noteT:'🟢 Portal 100% · เลขรันชี้ไป CF-2.2', meta:'📝 3 tabs · 🟡 draft'},
+  {code:'CF-2.9',icon:'🌐',ic:'#FEE2E2',title:'General System Parameter',cut:true,status:'bc',href:'../cf2-9-general-parameter-mockup.html',
+    desc:'BC365: GL Setup + Company Info + Inventory Setup', note:'red',noteT:'🔴 Currency · Decimal · Fiscal Year ตั้งที่ BC', meta:'🔗 BC365 built-in'},
+];
+
+const DECISIONS=[
+  {r:'🔴',c:'CF-2.1',d:'<b>Tax Setup</b> → <b>ใช้ BC ตรง</b>',rea:'VAT/WHT Posting Setup มีครบ'},
+  {r:'🟢',c:'CF-2.2',d:'<b>Number Series</b> → <b>Portal-managed</b> <span style="color:#DC2626;font-size:10px;font-weight:700">เปลี่ยน</span>',rea:'ADR-0004 · คุม branch sub-series + reset เอง'},
+  {r:'🔴',c:'CF-2.3',d:'<b>Posting & GL</b> → <b>ใช้ BC ตรง</b>',rea:'BC post จริง Portal ไม่ post'},
+  {r:'🔴',c:'CF-2.4',d:'<b>Bin Policy</b> → <b>ใช้ BC ตรง</b>',rea:'BC Warehouse มี Bin Setup ครบ'},
+  {r:'🟢',c:'CF-2.5',d:'<b>Tech Template</b> → <b>Portal 100%</b>',rea:'BC ไม่มี — service checklist custom'},
+  {r:'🟢',c:'CF-2.6',d:'<b>Approval Matrix</b> → <b>Portal เสริม BC</b>',rea:'Position-based + threshold ยืดหยุ่นกว่า'},
+  {r:'🟢',c:'CF-2.7',d:'<b>Doc Template</b> → <b>Portal 100%</b>',rea:'หัวกระดาษ + ประเภทเอกสาร · ตัด Running → CF-2.2'},
+  {r:'🔴',c:'CF-2.9',d:'<b>General Parameter</b> → <b>ใช้ BC ตรง</b>',rea:'GL Setup + Company Info ครบ'},
+  {r:'🙈',c:'CF-9',d:'<b>Entity Tag</b> → <b>ซ่อน (นอก scope)</b>',rea:'single-entity SWT · ยังไม่มี dual-book'},
+];
+
+const STT={portal:{cls:'st-portal',t:'🟢 Portal'},bc:{cls:'st-bc',t:'🔴 ใช้ BC'}};
+
+function card(c){
+  const s=STT[c.status];
+  const live=c.href?'live':'';
+  const dim=c.status==='bc'?'dimmed':'';
+  const inner=`
+    ${c.isNew?'<span class="badge-new">NEW</span>':''}
+    <div class="card-head">
+      <div class="card-icon" style="background:${c.ic}">${c.icon}</div>
+      <span class="card-status ${s.cls}">${s.t}</span>
+    </div>
+    <div>
+      <div class="card-code">${c.code}</div>
+      <div class="card-title ${c.cut?'cut':''}">${c.title}</div>
+      <div class="card-desc">${c.desc}</div>
+    </div>
+    <div class="card-note note-${c.note}">${c.noteT}</div>
+    <div class="card-meta"><span>${c.meta}</span></div>`;
+  if(c.href) return `<a class="card ${live} ${dim}" href="${c.href}" ${c.status!=='bc'?'target="_blank"':''}>${inner}</a>`;
+  return `<div class="card ${dim}">${inner}</div>`;
+}
+document.getElementById('grid').innerHTML=CARDS.map(card).join('');
+document.getElementById('drows').innerHTML=DECISIONS.map(d=>`
+  <div class="drow"><div>${d.r}</div><div>${d.c}</div><div>${d.d}</div><div class="rea">${d.rea}</div></div>`).join('');
+const np=CARDS.filter(c=>c.status==='portal').length, nb=CARDS.filter(c=>c.status==='bc').length;
+document.getElementById('sum').innerHTML=`รวม ${CARDS.length} หัวข้อ · Portal ทำ <b>${np}</b> · ใช้ BC <b>${nb}</b> · Entity Tag ซ่อน`;
+</script>
+</body></html>

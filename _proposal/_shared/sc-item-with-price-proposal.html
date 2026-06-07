@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<title>SharedItemSearch + PromoPrice (Sales) — integrated | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#E5EAF0;color:#1F2937;padding:20px;min-width:980px}
+.head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.head h1{font-size:18px;font-weight:700}
+.sc{background:#2563EB;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px}
+.sc2{background:#7C3AED;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px}
+.sub{font-size:12px;color:#475569;margin-bottom:6px}
+.tip{font-size:12px;background:#FEF9C3;border:1px solid #FDE68A;color:#854D0E;padding:6px 12px;border-radius:8px;margin-bottom:12px;display:inline-block}
+
+.wrap{display:flex;gap:0;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.15);overflow:hidden;width:960px}
+
+/* ===== LEFT: Item List ===== */
+.left{width:400px;flex-shrink:0;border-right:1px solid #E5E7EB;display:flex;flex-direction:column}
+.lwb{background:#1E3A5F;color:#fff;padding:10px 14px;font-size:13px;font-weight:700}
+.lsearch{padding:10px 12px;border-bottom:1px solid #E5E7EB;background:#F8FAFC}
+.lsearch input{width:100%;padding:8px 11px;border:1px solid #CBD5E1;border-radius:7px;font-family:inherit;font-size:13px}
+.ltb{font-display:flex;gap:6px;padding:6px 12px;border-bottom:1px solid #F1F5F9;flex-wrap:wrap;font-size:11.5px}
+.ltb span{padding:3px 9px;border:1px solid #D1D5DB;border-radius:12px;cursor:pointer;background:#fff}
+.ltb span.on{background:#1E3A5F;color:#fff;border-color:#1E3A5F}
+.llist{flex:1;overflow:auto;max-height:440px}
+.lrow{display:flex;align-items:center;gap:9px;padding:9px 12px;border-bottom:1px solid #F1F5F9;cursor:pointer}
+.lrow:hover{background:#F1F5F9}.lrow.sel{background:#EFF6FF;border-left:3px solid #2563EB}
+.lico{width:30px;height:30px;border-radius:7px;background:#F1F5F9;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ln{font-size:12.5px;font-weight:600;line-height:1.3;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lm{font-size:10.5px;color:#94A3B8}.lp{font-size:12.5px;font-weight:700;color:#1E3A5F;white-space:nowrap;margin-left:auto}
+.lstock{font-size:10px;padding:1px 6px;border-radius:6px;margin-left:4px}
+.ls-ok{background:#ECFDF5;color:#047857}.ls-low{background:#FEF3C7;color:#92400E}.ls-out{background:#FEF2F2;color:#DC2626}
+.promo-dot{width:6px;height:6px;border-radius:50%;background:#7C3AED;flex-shrink:0}
+
+/* ===== RIGHT: Detail + Price/Promo (Sales only) ===== */
+.right{flex:1;display:flex;flex-direction:column}
+.rwb{background:#1E3A5F;color:#fff;padding:10px 14px;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.rwb .badge{font-size:10px;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:8px;font-weight:600}
+.rbody{flex:1;overflow:auto;padding:0}
+.empty{padding:40px;text-align:center;color:#94A3B8;font-size:13px}
+.empty .big{font-size:32px;margin-bottom:8px}
+
+/* item info bar */
+.ibar{background:#F8FAFC;border-bottom:1px solid #E5E7EB;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.ibar .ico{font-size:24px}.ibar .name{font-size:14px;font-weight:700;flex:1}.ibar .code{font-size:11px;color:#94A3B8}
+.ibar .stock-info{font-size:12px;color:#475569;text-align:right}
+
+/* qty + price row — THE CORE */
+.qprow{padding:12px 14px;background:#fff;border-bottom:1px solid #E5E7EB}
+.qp-grid{display:grid;grid-template-columns:120px 1fr 1fr;gap:10px;align-items:end}
+.qp-lbl{font-size:10.5px;font-weight:700;color:#64748B;margin-bottom:4px}
+.qin{width:100%;padding:10px;border:2px solid #2563EB;border-radius:8px;font-family:inherit;font-size:18px;font-weight:800;text-align:center}
+.price-box{background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px;padding:8px 12px}
+.price-box .base{font-size:11px;color:#94A3B8;text-decoration:line-through}
+.price-box .cur{font-size:18px;font-weight:800;color:#1E3A5F}
+.price-box .src{font-size:10px;color:#64748B;margin-top:2px}
+.price-box.manual{border-color:#F59E0B;background:#FFFBEB}
+.price-override{display:flex;gap:6px;align-items:center;margin-top:6px}
+.price-override input{flex:1;padding:7px;border:1px solid #F59E0B;border-radius:6px;font-family:inherit;font-size:14px;font-weight:700;text-align:right}
+.total-box{background:#1E3A5F;color:#fff;border-radius:8px;padding:10px 14px;text-align:right}
+.total-box .tl{font-size:11px;color:#BFDBFE}
+.total-box .tv{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.total-box .td{font-size:11px;color:#86EFAC;margin-top:2px}
+
+/* promo section */
+.promo-section{border-bottom:1px solid #E5E7EB}
+.promo-hdr{padding:8px 14px;background:#F3F0FF;border-bottom:1px solid #E9D5FF;display:flex;align-items:center;gap:8px}
+.promo-hdr .ph{font-size:11px;font-weight:700;color:#7C3AED;text-transform:uppercase}
+.promo-hdr .pi{font-size:11px;color:#7C3AED;margin-left:auto}
+.plist{padding:8px 14px}
+.popt{border:1px solid #E5E7EB;border-radius:9px;margin-bottom:7px;overflow:hidden;cursor:pointer}
+.popt:hover:not(.dis){border-color:#7C3AED}.popt.sel{border-color:#7C3AED;box-shadow:0 0 0 2px rgba(124,58,237,.12)}
+.popt.dis{opacity:.4;cursor:not-allowed}
+.ph2{display:flex;align-items:center;gap:8px;padding:9px 12px}
+.tb{font-size:11px;font-weight:700;padding:2px 8px;border-radius:8px;flex-shrink:0}
+.tb-ลด{background:#FEF3C7;color:#92400E}.tb-แลก{background:#EEF2FF;color:#3730A3}.tb-แจก{background:#ECFDF5;color:#065F46}
+.pname{font-size:12.5px;font-weight:700;flex:1}
+.pcond{font-size:10.5px;color:#94A3B8}
+.pdetail{padding:6px 12px 10px;background:#FAFAFA;border-top:1px solid #F1F5F9;font-size:12px;color:#475569}
+.psaving{font-size:12.5px;font-weight:700;margin-top:3px}
+.ps-disc{color:#DC2626}.ps-free{color:#065F46}.ps-swap{color:#3730A3}
+.none-row{padding:8px 12px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12.5px;color:#64748B;border-top:1px solid #F1F5F9}
+.none-row.sel{color:#2563EB;font-weight:600;background:#EFF6FF}
+
+/* footer */
+.rfooter{padding:10px 14px;border-top:1px solid #E5E7EB;display:flex;justify-content:flex-end;gap:8px;background:#F8FAFC}
+.btn{padding:9px 18px;border:none;border-radius:7px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.b1{background:#2563EB;color:#fff}.b2{background:#E5E7EB;color:#374151}
+
+/* bill */
+.bill{background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1);margin-top:14px;overflow:hidden;width:960px}
+.bwb{background:#374151;color:#fff;padding:10px 14px;font-size:13px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#F1F5F9;text-align:left;font-size:11px;color:#475569;padding:7px 12px}
+td{padding:7px 12px;border-bottom:1px solid #F9FAFB}.amt{text-align:right;font-variant-numeric:tabular-nums}
+.pc{font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px;margin-left:5px}
+.c-ลด{background:#FEF3C7;color:#92400E}.c-แลก{background:#EEF2FF;color:#3730A3}.c-แจก{background:#ECFDF5;color:#065F46}
+.del{color:#DC2626;cursor:pointer;font-weight:700}
+
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:99}.toast.on{opacity:1}
+</style></head><body>
+
+<div class="head"><h1>SharedItemSearch</h1><span class="sc">SC-2</span><span style="font-size:11px;color:#7C3AED;font-weight:700">+ PromoPrice</span><span class="sc2">Sales only</span></div>
+<div class="sub">เลือกสินค้า → ระบุจำนวน → ราคา/โปรโมชั่นเด้งทันที (inline) → เพิ่มลงบิล · ราคาส่วนนี้เฉพาะ Sales เท่านั้น</div>
+<span class="tip">👆 คลิกสินค้า → ใส่จำนวน → เห็นราคาจาก Price List + โปร · แก้ราคาเองได้ (ต้องอนุมัติถ้าต่ำกว่า Floor Price)</span>
+
+<div class="wrap">
+  <!-- LEFT -->
+  <div class="left">
+    <div class="lwb">🔍 ค้นหาสินค้า</div>
+    <div class="lsearch"><input id="q" placeholder="ค้น: รหัส / ชื่อ" oninput="renderList()"></div>
+    <div class="ltb"><span class="on">สินค้า</span><span>บริการ</span><span>ชุด</span></div>
+    <div class="llist" id="llist"></div>
+  </div>
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="rwb"><span>รายละเอียด + ราคา/โปร</span><span class="badge">mode: create · Sales Invoice</span></div>
+    <div class="rbody" id="rbody"><div class="empty"><div class="big">←</div>เลือกสินค้าจากด้านซ้าย</div></div>
+    <div class="rfooter" id="rfooter" style="display:none">
+      <button class="btn b2" onclick="cancel()">ยกเลิก</button>
+      <button class="btn b1" onclick="addBill()">✓ เพิ่มลงบิล → item:added</button>
+    </div>
+  </div>
+</div>
+
+<!-- BILL -->
+<div class="bill" id="billwin" style="display:none">
+  <div class="bwb">🧾 รายการในบิล (<span id="bcnt">0</span> รายการ)</div>
+  <table><thead><tr><th>สินค้า</th><th class="amt">จำนวน</th><th class="amt">ราคา/หน่วย</th><th class="amt">ส่วนลด</th><th class="amt">ยอดสุทธิ</th><th></th></tr></thead>
+  <tbody id="btb"></tbody></table>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const fmt=n=>(+n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const ITEMS=[
+  {code:'7XX71XX',name:'เครื่องซักผ้า 2 ถัง LG TT10NARG (10kg)',ico:'🫧',price:5450,floor:5000,unit:'เครื่อง',stock:143,stockStatus:'ok'},
+  {code:'LED-9W',name:'หลอด LED 9W ฟิลิปส์ เดย์ไลท์',ico:'💡',price:42,floor:36,unit:'หลอด',stock:1160,stockStatus:'ok'},
+  {code:'WIRE-25',name:'สายไฟ THW 2.5 sq.mm (100m)',ico:'🔌',price:1280,floor:1100,unit:'ม้วน',stock:33,stockStatus:'low'},
+  {code:'AIR-12K',name:'แอร์ผนัง 12000 BTU มิตซูบิชิ',ico:'❄️',price:13500,floor:12000,unit:'เครื่อง',stock:2,stockStatus:'low'},
+  {code:'PUMP-1',name:'ปั๊มน้ำ 1 HP ฮิตาชิ',ico:'⚙️',price:3200,floor:2900,unit:'เครื่อง',stock:0,stockStatus:'out'}
+];
+const PROMOS={
+  '7XX71XX':[
+    {type:'ลด',name:'LG ซื้อ 5+ เครื่อง ลด 5%',minQty:5,discPct:5,detail:'ลดราคาทันที 5%'},
+    {type:'แลก',name:'แลกซื้อผงซักฟอก ราคาพิเศษ',minQty:1,swapItem:'ผงซักฟอก 900g',swapPrice:39,detail:'แลกได้: ผงซักฟอก ฿39/ถุง (ปกติ ฿65)'},
+    {type:'แจก',name:'ซื้อ 3+ แถมสายยืดถัง',minQty:3,freeItem:'สายยืดถัง',freeQty:1,detail:'แถมฟรี สายยืดถัง 1 ชุด/บิล'}
+  ],
+  'LED-9W':[
+    {type:'ลด',name:'ซื้อ 100+ หลอด ลด 8%',minQty:100,discPct:8,detail:'ลด 8% ≥ 100 หลอด'},
+    {type:'แจก',name:'ซื้อ 100 แถม 10 หลอด',minQty:100,freeItem:'หลอด LED 9W',freeQty:10,detail:'แถม 10 หลอด เมื่อซื้อ ≥ 100'}
+  ],
+  'WIRE-25':[
+    {type:'ลด',name:'ซื้อ 10+ ม้วน ลด 3%',minQty:10,discPct:3,detail:'ลด 3% ≥ 10 ม้วน'},
+    {type:'แลก',name:'แลกเทปพันสาย ราคาพิเศษ',minQty:1,swapItem:'เทปพันสาย (โหล)',swapPrice:45,detail:'แลกได้: เทปพันสาย ฿45/โหล'}
+  ]
+};
+const SSTAT={ok:'ok',low:'low',out:'out'};
+const SLBL={ok:'พร้อมส่ง',low:'สต็อกต่ำ',out:'หมด'};
+let cur=null,qty=1,selP=-1,manPrice=null;
+let bill=[];
+
+function renderList(){
+  const q=(document.getElementById('q').value||'').toLowerCase();
+  const f=ITEMS.filter(it=>!q||it.name.toLowerCase().includes(q)||it.code.toLowerCase().includes(q));
+  document.getElementById('llist').innerHTML=f.map((it,i)=>`
+    <div class="lrow ${cur&&cur.code===it.code?'sel':''}" onclick="pick(${ITEMS.indexOf(it)})">
+      <div class="lico">${it.ico}</div>
+      <div style="flex:1;min-width:0"><div class="ln">${it.name}</div><div class="lm">${it.code}</div></div>
+      <div style="text-align:right;flex-shrink:0">
+        <div class="lp">฿${it.price.toLocaleString('en-US')}</div>
+        <span class="lstock ls-${it.stockStatus}">${SLBL[it.stockStatus]} ${it.stock>0?it.stock:''}</span>
+      </div>
+      ${PROMOS[it.code]?'<div class="promo-dot" title="มีโปร"></div>':''}
+    </div>`).join('');
+}
+
+function pick(i){cur=ITEMS[i];qty=1;selP=-1;manPrice=null;renderList();renderRight();}
+
+function renderRight(){
+  if(!cur){document.getElementById('rbody').innerHTML='<div class="empty"><div class="big">←</div>เลือกสินค้าจากด้านซ้าย</div>';document.getElementById('rfooter').style.display='none';return;}
+  document.getElementById('rfooter').style.display='flex';
+  const promos=PROMOS[cur.code]||[];
+  const basePrice=cur.price;
+  const usedPrice=manPrice!==null?manPrice:basePrice;
+  const promo=selP>=0?promos[selP]:null;
+  let disc=0,freeNote='',swapNote='';
+  if(promo&&promo.minQty<=qty){
+    if(promo.discPct)disc=usedPrice*qty*(promo.discPct/100);
+    if(promo.freeItem)freeNote=promo.freeItem+' × '+promo.freeQty;
+    if(promo.swapItem)swapNote=promo.swapItem+' @ ฿'+promo.swapPrice;
+  }
+  const net=usedPrice*qty-disc;
+  const isManual=manPrice!==null;
+  const isBelowFloor=manPrice!==null&&manPrice<cur.floor;
+
+  // promo opts
+  const poHtml=promos.length?promos.map((p,pi)=>{
+    const ok=p.minQty<=qty;const isSel=selP===pi;
+    return`<div class="popt ${isSel?'sel':''} ${!ok?'dis':''}" onclick="${ok?'setP('+pi+')':''}">
+      <div class="ph2"><span class="tb tb-${p.type}">${p.type==='ลด'?'🏷️ ลด':p.type==='แลก'?'🔄 แลก':'🎁 แจก'}</span>
+        <span class="pname">${p.name}</span><span class="pcond">${ok?'✓ เข้าเงื่อนไข':'ต้องซื้อ ≥ '+p.minQty}</span></div>
+      ${isSel?`<div class="pdetail">${p.detail}
+        ${p.discPct&&ok?`<div class="psaving ps-disc">ลดทันที ฿${fmt(disc)}</div>`:''}
+        ${p.freeItem&&ok?`<div class="psaving ps-free">🎁 แถม ${p.freeItem} × ${p.freeQty}</div>`:''}
+        ${p.swapItem&&ok?`<div class="psaving ps-swap">🔄 แลก ${p.swapItem} @ ฿${p.swapPrice}</div>`:''}
+      </div>`:''}
+    </div>`;
+  }).join('')+`<div class="none-row ${selP===-1?'sel':''}" onclick="setP(-1)">⊘ ไม่ใช้โปร</div>`
+  :`<div style="padding:8px 12px;font-size:12px;color:#94A3B8">ไม่มีโปรสำหรับสินค้านี้</div>`;
+
+  document.getElementById('rbody').innerHTML=`
+    <!-- item info -->
+    <div class="ibar"><div class="ico">${cur.ico}</div><div style="flex:1"><div class="name">${cur.name}</div><div class="code">${cur.code} · ${cur.unit} · สต็อก ${cur.stock}</div></div></div>
+    <!-- qty + price row -->
+    <div class="qprow">
+      <div class="qp-grid">
+        <div><div class="qp-lbl">จำนวน (${cur.unit})</div>
+          <input class="qin" id="qin" type="number" value="${qty}" min="1" oninput="setQ(this.value)"></div>
+        <div><div class="qp-lbl">ราคา/หน่วย ${isManual?'<span style="color:#F59E0B">(แก้เอง)</span>':''}</div>
+          <div class="price-box ${isManual?'manual':''}">
+            ${isManual?`<div class="base">ราคา List ฿${fmt(basePrice)}</div>`:``}
+            <div class="cur">฿${fmt(usedPrice)}</div>
+            <div class="src">${isManual?'กรอกเอง'+(isBelowFloor?' ⚠ ต่ำกว่า Floor ฿'+fmt(cur.floor):''):'จาก Price List'}</div>
+            <div class="price-override"><span style="font-size:11px;color:#64748B">แก้ราคา:</span>
+              <input type="number" value="${usedPrice}" onchange="setPrice(this.value)" style="flex:1;padding:5px;border:1px solid ${isBelowFloor?'#DC2626':'#CBD5E1'};border-radius:5px;font-family:inherit;text-align:right">
+              ${isManual?`<span onclick="resetPrice()" style="font-size:11px;color:#2563EB;cursor:pointer;white-space:nowrap">คืนค่า</span>`:''}
+            </div>
+          </div>
+        </div>
+        <div><div class="qp-lbl">ยอดบรรทัด</div>
+          <div class="total-box"><div class="tl">ยอดสุทธิ</div><div class="tv">฿${fmt(net)}</div>
+            ${disc>0?`<div class="td">ลด ฿${fmt(disc)}</div>`:''}
+            ${freeNote?`<div class="td">🎁 ${freeNote}</div>`:''}
+            ${swapNote?`<div class="td" style="color:#C4B5FD">🔄 ${swapNote}</div>`:''}
+          </div></div>
+      </div>
+      ${isBelowFloor?`<div style="margin-top:8px;background:#FEF2F2;border:1px solid #FECACA;border-radius:7px;padding:8px 12px;font-size:12px;color:#DC2626;font-weight:600">⚠ ราคาต่ำกว่า Floor Price (฿${fmt(cur.floor)}) → จะต้องผ่านอนุมัติก่อน Post · emit price:locked</div>`:''}
+    </div>
+    <!-- promo section (Sales only) -->
+    ${promos.length||true?`<div class="promo-section">
+      <div class="promo-hdr"><span>🎯</span><span class="ph">โปรโมชั่น (Sales เท่านั้น)</span><span class="pi">${promos.length} รายการ · เลือกได้ 1</span></div>
+      <div class="plist">${poHtml}</div>
+    </div>`:''}`;
+}
+
+function setQ(v){qty=Math.max(1,+v||1);renderRight();}
+function setP(pi){selP=pi;renderRight();}
+function setPrice(v){const p=+v||0;manPrice=(p===cur.price)?null:p;renderRight();}
+function resetPrice(){manPrice=null;renderRight();}
+function cancel(){cur=null;renderList();renderRight();}
+function addBill(){
+  const promos=PROMOS[cur.code]||[];const promo=selP>=0?promos[selP]:null;
+  const usedPrice=manPrice!==null?manPrice:cur.price;
+  let disc=0,pLabel='',free=null,swap=null;
+  if(promo&&promo.minQty<=qty){
+    if(promo.discPct)disc=usedPrice*qty*(promo.discPct/100);
+    if(promo.freeItem)free=promo.freeItem+' × '+promo.freeQty;
+    if(promo.swapItem)swap=promo.swapItem+' @ ฿'+promo.swapPrice;
+    pLabel=promo.type+': '+promo.name;
+  }
+  const isBelowFloor=manPrice!==null&&manPrice<cur.floor;
+  bill.push({...cur,qty,usedPrice,disc,pLabel,free,swap,needApproval:isBelowFloor});
+  toast('✓ '+cur.name+' × '+qty+(pLabel?' · '+pLabel:' · ไม่มีโปร')+(isBelowFloor?' ⚠ รออนุมัติราคา':''));
+  cancel();renderBill();
+}
+function renderBill(){
+  document.getElementById('billwin').style.display=bill.length?'block':'none';
+  document.getElementById('bcnt').textContent=bill.length;
+  document.getElementById('btb').innerHTML=bill.map((it,i)=>{const net=it.usedPrice*it.qty-it.disc;return`<tr>
+    <td>${it.ico} ${it.name}${it.pLabel?`<span class="pc c-${it.pLabel.charAt(0)}">${it.pLabel.split(':')[0]}</span>`:''}${it.needApproval?`<span class="pc" style="background:#FEF2F2;color:#DC2626">รออนุมัติราคา</span>`:''}
+    ${it.free?`<br><span style="font-size:11px;color:#065F46">🎁 ${it.free}</span>`:''}${it.swap?`<br><span style="font-size:11px;color:#3730A3">🔄 ${it.swap}</span>`:''}</td>
+    <td class="amt">${it.qty}</td><td class="amt">฿${fmt(it.usedPrice)}</td>
+    <td class="amt" style="color:#DC2626">${it.disc>0?'-฿'+fmt(it.disc):'-'}</td>
+    <td class="amt" style="font-weight:700">฿${fmt(net)}</td>
+    <td><span class="del" onclick="delBill(${i})">✕</span></td></tr>`;}).join('');
+}
+function delBill(i){bill.splice(i,1);renderBill();}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);}
+renderList();
+</script></body></html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SharedPayment v2 — interactive | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#E5EAF0;color:#1F2937;padding:22px;min-width:880px}
+.head{display:flex;align-items:center;gap:10px}.head h1{font-size:19px;font-weight:700}.head .sc{background:#2563EB;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px}
+.sub{font-size:12.5px;color:#475569;margin:6px 0 8px}.tip{font-size:12px;background:#FEF9C3;border:1px solid #FDE68A;color:#854D0E;padding:7px 12px;border-radius:8px;margin-bottom:14px;display:inline-block}
+.win{background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.25);width:820px;overflow:hidden}
+.wb{background:#1E3A5F;color:#fff;padding:10px 16px;font-size:13px;font-weight:700}
+.top{display:flex;gap:16px;padding:16px}
+.tot{flex:1;border-radius:10px;overflow:hidden;border:1px solid #E5E7EB}
+.tot .r{padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+.tot .r.t{background:#374151;color:#fff}.tot .r.rem{background:#D1FAE5}.tot .r.rem.zero{background:#A7F3D0}
+.tot .l{font-size:13px;font-weight:600}.tot .v{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}.rem .v{color:#DC2626}.rem.zero .v{color:#065F46}
+.credit{width:220px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:10px;padding:12px}.credit .l{font-size:11px;color:#64748B}.credit .v{font-size:13px;font-weight:700}.credit .v.red{color:#DC2626}
+.enter{margin:0 16px 6px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:14px}
+.enter .l{font-size:12px;font-weight:700;color:#1D4ED8;margin-bottom:7px}
+.amtin{display:flex;gap:10px;align-items:center}
+.amtin input{flex:1;padding:11px 14px;border:2px solid #2563EB;border-radius:8px;font-family:inherit;font-size:20px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.amtin .full{font-size:11.5px;color:#2563EB;cursor:pointer;white-space:nowrap;font-weight:600}
+.mh{font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;margin:12px 16px 6px}
+.mbtns{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px}
+.mb{padding:10px 14px;border:1px solid #CBD5E1;border-radius:8px;background:#fff;cursor:pointer;font-size:12.5px;font-family:inherit;font-weight:600}
+.mb:hover{border-color:#16A34A;background:#F0FDF4;color:#166534}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}th{background:#F1F5F9;text-align:left;font-size:11px;color:#475569;padding:7px 10px}td{padding:7px 10px;border-bottom:1px solid #F1F5F9}.amt{text-align:right;font-variant-numeric:tabular-nums}.del{color:#DC2626;cursor:pointer;font-weight:700}
+.tw{padding:0 16px}
+.warn{margin:8px 16px 0;background:#FEF3C7;border:1px solid #FDE68A;color:#92400E;padding:9px 12px;border-radius:8px;font-size:12px;font-weight:600;display:none}.warn.on{display:block}
+.pf{border-top:1px solid #E5E7EB;padding:12px 16px;margin-top:12px;display:flex;justify-content:flex-end;gap:9px;background:#F8FAFC}
+.btn{padding:9px 18px;border:none;border-radius:7px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}.btn-2{background:#E5E7EB;color:#374151}.btn-1{background:#16A34A;color:#fff}.btn-1:disabled{background:#E5E7EB;color:#9CA3AF;cursor:not-allowed}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#166534;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:99}.toast.on{opacity:1}
+</style></head><body>
+<div class="head"><h1>SharedPayment</h1><span class="sc">SC</span><span style="font-size:12px;color:#16A34A;font-weight:700">— v2 (กรอกยอดก่อน → เลือกวิธี)</span></div>
+<div class="sub">ปรับตาม feedback: <b>กรอกจำนวนเงินที่รับก่อน</b> → กดเลือกวิธีชำระ (วิธีนั้นจะรับยอดที่กรอก) · split ได้</div>
+<span class="tip">👆 ใส่จำนวนในช่องใหญ่ (default=Remain) → กดวิธีชำระ → ลงรายการ · ใส่ยอดที่เหลือ → เลือกวิธีถัดไป (split)</span>
+
+<div class="win">
+  <div class="wb">💳 รับชำระเงิน — INV-2605-0042 · ลูกค้า ก.เจริญการไฟฟ้า</div>
+  <div class="top">
+    <div class="tot"><div class="r t"><span class="l">Total</span><span class="v" id="total">485,000</span></div><div class="r rem" id="remrow"><span class="l">Remain</span><span class="v" id="remain">485,000</span></div></div>
+    <div class="credit"><div class="l">วงเงินเครดิตคงเหลือ</div><div class="v red" id="credrem">20,000</div><div class="l" style="margin-top:6px;font-size:10px">⚠ ลงเครดิตเกินคงเหลือ = ต้องอนุมัติ</div></div>
+  </div>
+  <div class="enter">
+    <div class="l">① จำนวนเงินที่รับ</div>
+    <div class="amtin"><input id="amt" type="text" value="485,000" oninput="fmtIn()"><span class="full" onclick="setRemain()">= Remain ทั้งหมด</span></div>
+  </div>
+  <div class="mh">② เลือกวิธีชำระ (รับยอดที่กรอกด้านบน)</div>
+  <div class="mbtns">
+    <span class="mb" onclick="pay('เงินสด','')">💵 เงินสด</span>
+    <span class="mb" onclick="pay('โอนธนาคาร','SCB 547-2-55623-9')">🏦 โอน</span>
+    <span class="mb" onclick="pay('เช็ค','00259994 · KBANK')">📝 เช็ค</span>
+    <span class="mb" onclick="pay('บัตร/Lazada','Lazada charge 0%')">💳 บัตร/Lazada-Shopee</span>
+    <span class="mb" onclick="pay('เครดิต (ค้างชำระ)','Net30')">🧾 ลงเครดิต</span>
+    <span class="mb" onclick="pay('QR PromptPay','')">📱 QR</span>
+  </div>
+  <div class="tw"><table id="ptbl"><thead><tr><th>วิธี</th><th>อ้างอิง</th><th class="amt">จำนวน</th><th></th></tr></thead><tbody id="prows"><tr><td colspan="4" style="color:#94A3B8;text-align:center;padding:12px">ยังไม่มีรายการชำระ</td></tr></tbody></table></div>
+  <div class="warn" id="warn">⚠ ลงเครดิตเกินวงเงินคงเหลือ → emit <b>approval:required</b></div>
+  <div class="pf"><div style="margin-right:auto;font-size:12.5px;color:#475569;align-self:center">จ่ายแล้ว: <b id="paid">0</b></div>
+    <button class="btn btn-2" onclick="reset_()">ล้าง</button><button class="btn btn-1" id="ok" disabled onclick="complete_()">✓ ชำระครบ → payment:complete</button></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const TOTAL=485000,CREDREM=20000;let pays=[];const fmt=n=>n.toLocaleString('en-US');
+function val(){return +(''+document.getElementById('amt').value).replace(/,/g,'')||0;}
+function fmtIn(){const v=val();document.getElementById('amt').value=v?fmt(v):'';}
+function remain(){return TOTAL-pays.reduce((s,p)=>s+p.amt,0);}
+function setRemain(){document.getElementById('amt').value=fmt(remain());}
+function pay(method,ref){let a=val();const rem=remain();if(a<=0){toast('กรอกจำนวนเงินก่อน');return;}if(a>rem){a=rem;}
+  pays.push({method,ref,amt:a});render();document.getElementById('amt').value=fmt(remain());}
+function render(){const paid=pays.reduce((s,p)=>s+p.amt,0),rem=TOTAL-paid;
+  document.getElementById('prows').innerHTML=pays.length?pays.map((p,i)=>`<tr><td>${p.method}</td><td style="color:#64748B">${p.ref||'-'}</td><td class="amt">${fmt(p.amt)}</td><td><span class="del" onclick="rm(${i})">✕</span></td></tr>`).join(''):'<tr><td colspan="4" style="color:#94A3B8;text-align:center;padding:12px">ยังไม่มีรายการชำระ</td></tr>';
+  document.getElementById('paid').textContent=fmt(paid);document.getElementById('remain').textContent=fmt(rem<0?0:rem);
+  document.getElementById('remrow').classList.toggle('zero',rem<=0);
+  const credit=pays.filter(p=>p.method.indexOf('เครดิต')>-1).reduce((s,p)=>s+p.amt,0);
+  document.getElementById('warn').classList.toggle('on',credit>CREDREM);document.getElementById('ok').disabled=rem>0;}
+function rm(i){pays.splice(i,1);render();document.getElementById('amt').value=fmt(remain());}
+function reset_(){pays=[];render();document.getElementById('amt').value=fmt(TOTAL);}
+function complete_(){const credit=pays.filter(p=>p.method.indexOf('เครดิต')>-1).reduce((s,p)=>s+p.amt,0);if(credit>CREDREM){toast('⚠ เครดิตเกิน → approval:required');return;}toast('✓ ชำระครบ ('+pays.length+' วิธี) → payment:complete');}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);}
+render();
+</script></body></html>

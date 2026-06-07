@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<title>CF-2.6 Approval Matrix — interactive | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1F2937;display:flex;min-height:100vh}
+.sb{width:240px;background:#1E3A5F;color:#D1D5DB;padding:14px 10px;flex-shrink:0}
+.sb-brand{font-size:13px;font-weight:700;color:#fff;padding:8px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:12px}
+.sb-lbl{font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;padding:4px 8px;margin-top:8px}
+.sb a{display:block;padding:7px 10px;font-size:12.5px;color:#D1D5DB;text-decoration:none;border-radius:5px;margin:1px 0}
+.sb a:hover{background:rgba(255,255,255,.08)}.sb a.active{background:#2563EB;color:#fff;font-weight:600}
+.sb a .c{font-size:9.5px;font-weight:700;color:#94A3B8;min-width:42px;display:inline-block}
+.main{flex:1;padding:0;overflow:auto}
+.mwb{background:linear-gradient(135deg,#1E3A5F,#2563EB);color:#fff;padding:18px 28px}
+.mwb h1{font-size:20px;font-weight:700}.mwb .sub{font-size:12px;color:#BFDBFE;margin-top:3px;line-height:1.6}
+.pill{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:600;margin-right:6px}
+.content{padding:22px 28px}
+/* tabs */
+.tabs{display:flex;gap:0;border-bottom:2px solid #E5E7EB;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:10px 16px;font-size:13px;font-weight:600;color:#64748B;border-bottom:3px solid transparent;cursor:pointer;margin-bottom:-2px;white-space:nowrap}
+.tab.on{color:#2563EB;border-bottom-color:#2563EB}
+/* card */
+.card{background:#fff;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.1);overflow:hidden;margin-bottom:20px}
+.ch{padding:12px 16px;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ch .t{font-size:13px;font-weight:700}
+.ch .d{font-size:11px;color:#64748B;font-weight:400;margin-top:2px}
+.add-btn{background:#2563EB;color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:12px;font-weight:700;padding:7px 13px;cursor:pointer}
+.add-btn:hover{background:#1D4ED8}
+.gbtn{background:#fff;color:#374151;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit;font-size:12px;font-weight:600;padding:7px 12px;cursor:pointer}
+.gbtn:hover{background:#F8FAFC}
+/* table */
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#EFF3F8;text-align:left;font-size:11px;color:#475569;padding:9px 12px;white-space:nowrap}
+th.center{text-align:center}
+td{padding:9px 12px;border-bottom:1px solid #F1F5F9;vertical-align:middle}
+tr:hover td{background:#FAFCFE}
+.dgrp{font-size:9.5px;font-weight:700;letter-spacing:.4px;padding:2px 7px;border-radius:10px;text-transform:uppercase}
+.g-sale{background:#DBEAFE;color:#1D4ED8}.g-buy{background:#FEF3C7;color:#92400E}.g-wh{background:#E0E7FF;color:#4338CA}
+.g-fin{background:#DCFCE7;color:#15803D}.g-mas{background:#F3E8FF;color:#7C3AED}.g-svc{background:#FFE4E6;color:#BE123C}
+.mono{font-family:monospace;font-weight:700;color:#2563EB}
+.chain-mini{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.cm-node{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;font-size:11px;color:#1E40AF;font-weight:600}
+.cm-node.par{background:#FEF3C7;border-color:#FCD34D;color:#92400E}
+.cm-arr{color:#94A3B8;font-size:11px}
+.bdg{display:inline-block;padding:2px 9px;font-size:11px;border-radius:11px;font-weight:600}
+.bdg-on{background:#DCFCE7;color:#15803D}.bdg-off{background:#F1F5F9;color:#64748B}
+.lnk{color:#2563EB;font-weight:600;cursor:pointer}.lnk:hover{text-decoration:underline}
+/* builder */
+.bld-head{display:flex;align-items:center;gap:12px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:10px;padding:12px 16px;margin-bottom:16px}
+.bld-head select{font-family:inherit;font-size:13px;font-weight:600;padding:7px 10px;border:1px solid #CBD5E1;border-radius:6px;background:#fff;color:#1E3A5F}
+.note{background:#F0F9FF;border:1px solid #BAE6FD;border-radius:8px;padding:10px 14px;font-size:12px;color:#0369A1;margin-bottom:16px;line-height:1.6}
+.note b{color:#075985}
+.flow{display:flex;align-items:stretch;gap:10px;overflow-x:auto;padding:6px 2px 12px}
+.fnode{min-width:188px;border:2px solid #CBD5E1;border-radius:10px;background:#fff;overflow:hidden;flex-shrink:0}
+.fnode.maker{border-color:#94A3B8}
+.fnode.seq{border-color:#2563EB}
+.fnode.par{border-color:#F59E0B}
+.fnode.end{border-color:#16A34A}
+.fn-top{padding:6px 10px;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.fnode.maker .fn-top{background:#64748B}.fnode.seq .fn-top{background:#2563EB}
+.fnode.par .fn-top{background:#F59E0B}.fnode.end .fn-top{background:#16A34A}
+.fn-body{padding:10px}
+.fn-body select,.fn-body input{width:100%;font-family:inherit;font-size:12px;padding:5px 7px;border:1px solid #CBD5E1;border-radius:5px;margin-bottom:6px;background:#fff}
+.fn-lbl{font-size:9.5px;color:#94A3B8;font-weight:600;text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px}
+.fn-name{font-size:14px;font-weight:700;color:#0F172A}
+.fn-cond{font-size:11px;color:#64748B;margin-top:3px}
+.fn-amt{font-family:monospace;font-weight:700;color:#1E3A5F}
+.fn-rm{cursor:pointer;opacity:.8}.fn-rm:hover{opacity:1}
+.farr{align-self:center;color:#94A3B8;font-size:22px;font-weight:300;flex-shrink:0}
+.addstep{min-width:60px;border:2px dashed #CBD5E1;border-radius:10px;background:#FAFCFE;display:flex;align-items:center;justify-content:center;font-size:26px;color:#2563EB;cursor:pointer;flex-shrink:0}
+.addstep:hover{background:#EFF6FF;border-color:#2563EB}
+/* simulator */
+.sim{background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:16px;margin-top:4px}
+.sim h4{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.sim-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.sim-row input{font-family:monospace;font-size:15px;font-weight:700;padding:7px 12px;border:1.5px solid #2563EB;border-radius:7px;width:160px;text-align:right;color:#1E3A5F}
+.sim-out{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:34px}
+.so-node{padding:5px 11px;border-radius:7px;font-size:12px;font-weight:600;display:flex;flex-direction:column;line-height:1.3}
+.so-req{background:#DCFCE7;border:1.5px solid #16A34A;color:#15803D}
+.so-skip{background:#F1F5F9;border:1.5px solid #E2E8F0;color:#94A3B8}
+.so-final{background:#2563EB;border:1.5px solid #2563EB;color:#fff}
+.so-sub{font-size:9.5px;font-weight:500;opacity:.85}
+.so-arr{color:#94A3B8}
+/* pool */
+.kpi{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F1F5F9;font-size:12.5px}
+.kpi .k{color:#64748B}.kpi .v{font-weight:700}
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center}
+.overlay.on{display:flex}
+.modal{background:#fff;border-radius:12px;width:560px;max-width:92vw;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.25);max-height:88vh;display:flex;flex-direction:column}
+.mh{background:#1E3A5F;color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.mh .t{font-size:14px;font-weight:700}.mh .x{cursor:pointer;color:#93C5FD;font-size:18px}
+.mbody{padding:16px;overflow:auto}
+.kv{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F1F5F9;font-size:12.5px}
+.kv .k{color:#64748B}.kv .v{font-weight:600}
+.mf{padding:12px 16px;border-top:1px solid #E5E7EB;display:flex;justify-content:flex-end;gap:8px;background:#F8FAFC}
+.btn{padding:8px 15px;border:none;border-radius:6px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+.b1{background:#2563EB;color:#fff}.b2{background:#E5E7EB;color:#374151}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:300;pointer-events:none}.toast.on{opacity:1}
+.fp{font-family:monospace;font-weight:700}
+.diff-old{color:#9CA3AF;text-decoration:line-through;font-size:11px}
+.diff-new{color:#15803D;font-weight:700}
+</style></head><body>
+
+<div class="sb">
+  <div class="sb-brand">Sangwijit ERP · v3.0</div>
+  <div class="sb-lbl">ตั้งค่าระบบ (CF)</div>
+  <a href="#"><span class="c">CF-2</span>Config Hub</a>
+  <a href="cf1-position-rbac-proposal.html"><span class="c">CF-1</span>ตำแหน่ง & สิทธิ์</a>
+  <a href="cf22-running-number-proposal.html"><span class="c">CF-2.2</span>รหัสเอกสาร</a>
+  <a href="#"><span class="c">CF-2.5</span>Template ช่าง</a>
+  <a href="#" class="active"><span class="c">CF-2.6</span>Approval Matrix</a>
+  <a href="#"><span class="c">CF-2.7</span>Doc Template</a>
+  <div class="sb-lbl">อ้างอิง</div>
+  <a href="../cf2-6-approval-matrix-mockup.html"><span class="c">v0.1</span>mockup เดิม (ref)</a>
+</div>
+
+<div class="main">
+  <div class="mwb">
+    <h1>CF-2.6 Approval Matrix — ใครอนุมัติเอกสารอะไร</h1>
+    <div class="sub">
+      <span class="pill">Position-based · ADR-0003</span>
+      <span class="pill">SWT single-entity</span>
+      <span class="pill">Maker ≠ Checker</span><br>
+      ผูก <b>ประเภทเอกสาร → ตำแหน่ง (Position) + วงเงินต่อขั้น</b> · กำหนดได้อิสระต่องาน (ไม่ตายตัว) · ตำแหน่งดึงจาก CF-1 · วงเงินตั้งต้นจาก Authority Limit
+    </div>
+  </div>
+  <div class="content">
+    <div class="tabs">
+      <span class="tab on" data-t="list" onclick="tab_(this)">1. Workflow ต่อเอกสาร</span>
+      <span class="tab" data-t="build" onclick="tab_(this)">2. ตัวสร้าง Rule + ทดสอบ</span>
+      <span class="tab" data-t="pool" onclick="tab_(this)">3. Approver Pool (ตำแหน่ง)</span>
+      <span class="tab" data-t="deleg" onclick="tab_(this)">4. มอบอำนาจ + Escalation</span>
+      <span class="tab" data-t="noti" onclick="tab_(this)">5. แจ้งเตือน</span>
+      <span class="tab" data-t="diff" onclick="tab_(this)">📋 เทียบเก่า↔ใหม่</span>
+    </div>
+    <div id="tabcontent"></div>
+  </div>
+</div>
+
+<!-- modal -->
+<div class="overlay" id="ov">
+  <div class="modal">
+    <div class="mh"><span class="t" id="mtitle">รายละเอียด</span><span class="x" onclick="closeModal()">✕</span></div>
+    <div class="mbody" id="mbody"></div>
+    <div class="mf" id="mfoot"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- DATA ---------- */
+// Position pool (จาก CF-1) — limit = Authority Limit ตั้งต้น (null = ไม่จำกัด)
+const POS=[
+  {code:'SUP-SL', name:'หัวหน้าแผนกขาย',  limit:50000,   ppl:'อนงค์, สมหญิง'},
+  {code:'MGR-SL', name:'ผจก.ฝ่ายขาย',     limit:500000,  ppl:'วิชัย'},
+  {code:'SUP-PU', name:'หัวหน้าจัดซื้อ',   limit:100000,  ppl:'ประยุทธ'},
+  {code:'MGR-PU', name:'ผจก.จัดซื้อ',      limit:500000,  ppl:'นภา'},
+  {code:'MGR-FI', name:'ผจก.การเงิน',      limit:1000000, ppl:'สุดา'},
+  {code:'MGR-WH', name:'ผจก.คลัง',         limit:200000,  ppl:'ธีระ'},
+  {code:'MGR-SV', name:'ผจก.บริการ',       limit:200000,  ppl:'กิตติ'},
+  {code:'MGR-BR', name:'ผู้จัดการสาขา',    limit:200000,  ppl:'8 สาขา'},
+  {code:'GM',     name:'ผู้จัดการทั่วไป (GM)', limit:2000000, ppl:'สมชาย'},
+  {code:'DIR',    name:'กรรมการ',          limit:null,    ppl:'คุณแสงวิจิตร'}
+];
+const posName=c=>{const p=POS.find(x=>x.code===c);return p?p.name:c;};
+const posLimit=c=>{const p=POS.find(x=>x.code===c);return p?p.limit:null;};
+
+// doc workflows — chain = ลำดับขั้น {pos, max(เพดานขั้นนี้,null=ไม่จำกัด), seq:'seq'|'par', sla}
+// NEW = doc type เพิ่มใหม่ session นี้
+const DOCS=[
+  {code:'QT',    name:'ใบเสนอราคา',        grp:'sale', glb:'ขาย', basis:'ส่วนลด/ยอด', chain:[
+    {pos:'SUP-SL',max:50000,seq:'seq',sla:24},{pos:'MGR-SL',max:500000,seq:'seq',sla:24},{pos:'DIR',max:null,seq:'seq',sla:48}]},
+  {code:'SO',    name:'ใบสั่งขาย/จอง',     grp:'sale', glb:'ขาย', basis:'ยอดบิล', chain:[
+    {pos:'SUP-SL',max:50000,seq:'seq',sla:24},{pos:'MGR-SL',max:500000,seq:'seq',sla:24},{pos:'DIR',max:null,seq:'seq',sla:48}]},
+  {code:'SL-F1', name:'อนุมัติวงเงินเครดิต', grp:'sale', glb:'ขาย', basis:'ยอดเกินวงเงิน', chain:[
+    {pos:'MGR-BR',max:50000,seq:'seq',sla:4},{pos:'MGR-FI',max:200000,seq:'seq',sla:8},{pos:'GM',max:null,seq:'seq',sla:24}]},
+  {code:'INV',   name:'บิลขาย / Invoice',  grp:'sale', glb:'ขาย', basis:'ยอดบิล', chain:[
+    {pos:'SUP-SL',max:100000,seq:'seq',sla:24},{pos:'MGR-SL',max:null,seq:'seq',sla:24}]},
+  {code:'SL-RQ', name:'ขอคืนสินค้า (Return Request)', grp:'sale', glb:'ขาย', basis:'มูลค่าคืน', neu:1, chain:[
+    {pos:'SUP-SL',max:30000,seq:'seq',sla:24},{pos:'MGR-SL',max:null,seq:'seq',sla:24}]},
+  {code:'SL-RT', name:'รับคืนสินค้า (Goods Return)', grp:'sale', glb:'ขาย', basis:'มูลค่าคืน', neu:1, chain:[
+    {pos:'MGR-WH',max:50000,seq:'seq',sla:24},{pos:'MGR-FI',max:null,seq:'seq',sla:24}]},
+  {code:'SL-CN', name:'ใบลดหนี้ (Credit Note)', grp:'sale', glb:'ขาย', basis:'ยอดลดหนี้', neu:1, chain:[
+    {pos:'MGR-SL',max:100000,seq:'seq',sla:24},{pos:'MGR-FI',max:500000,seq:'seq',sla:24},{pos:'GM',max:null,seq:'seq',sla:48}]},
+  {code:'SL-DN', name:'ใบเพิ่มหนี้ (Debit Note)', grp:'sale', glb:'ขาย', basis:'ยอดเพิ่มหนี้', neu:1, chain:[
+    {pos:'MGR-SL',max:100000,seq:'seq',sla:24},{pos:'MGR-FI',max:null,seq:'seq',sla:24}]},
+  {code:'PR',    name:'ใบขอซื้อ (PR)',     grp:'buy', glb:'ซื้อ', basis:'ยอดขอซื้อ', chain:[
+    {pos:'SUP-PU',max:100000,seq:'seq',sla:24},{pos:'MGR-PU',max:500000,seq:'seq',sla:24},{pos:'GM',max:null,seq:'seq',sla:48}]},
+  {code:'PO',    name:'ใบสั่งซื้อ (PO)',    grp:'buy', glb:'ซื้อ', basis:'ยอดสั่งซื้อ', chain:[
+    {pos:'MGR-PU',max:100000,seq:'seq',sla:24},{pos:'MGR-FI',max:1000000,seq:'seq',sla:24},{pos:'GM',max:2000000,seq:'seq',sla:48},{pos:'DIR',max:null,seq:'seq',sla:72}]},
+  {code:'AP',    name:'ตั้งหนี้ AP / วางบิล', grp:'buy', glb:'ซื้อ', basis:'ยอดหนี้', chain:[
+    {pos:'MGR-FI',max:1000000,seq:'seq',sla:24},{pos:'GM',max:null,seq:'seq',sla:48}]},
+  {code:'PV',    name:'จ่ายชำระ AP (Payment)', grp:'fin', glb:'การเงิน', basis:'ยอดจ่าย', chain:[
+    {pos:'MGR-FI',max:1000000,seq:'seq',sla:24},{pos:'GM',max:2000000,seq:'seq',sla:24},{pos:'DIR',max:null,seq:'seq',sla:48}]},
+  {code:'TR',    name:'โอนสินค้าระหว่างสาขา', grp:'wh', glb:'คลัง', basis:'มูลค่าโอน', chain:[
+    {pos:'MGR-WH',max:200000,seq:'seq',sla:24},{pos:'GM',max:null,seq:'seq',sla:48}]},
+  {code:'ADJ',   name:'ปรับสต็อก (Stock Adjust)', grp:'wh', glb:'คลัง', basis:'มูลค่าปรับ', chain:[
+    {pos:'MGR-WH',max:50000,seq:'seq',sla:24},{pos:'MGR-FI',max:null,seq:'par',sla:24}]},
+  {code:'MD-1',  name:'เปิดรหัสสินค้าใหม่', grp:'mas', glb:'Master', basis:'—', chain:[
+    {pos:'MGR-PU',max:null,seq:'seq',sla:48}]},
+  {code:'MD-3',  name:'เปิดผู้ขายใหม่ (Vendor)', grp:'mas', glb:'Master', basis:'—', chain:[
+    {pos:'MGR-PU',max:null,seq:'par',sla:48},{pos:'MGR-FI',max:null,seq:'par',sla:48}]}
+];
+const grpClass={sale:'g-sale',buy:'g-buy',wh:'g-wh',fin:'g-fin',mas:'g-mas',svc:'g-svc'};
+
+const BRANCHES='01 อากาศ · 02 สว่างฯ · 03 บ้านม่วง · 04 ท่าแร่ · 07 ปลีกโกดัง · 08 สนง.ใหญ่ · 09 คลังมือถือ · TPR คลังติดตั้ง';
+const fmtB=n=>n==null?'ไม่จำกัด':Number(n).toLocaleString('en-US');
+
+/* ---------- TABS ---------- */
+function tab_(el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');render(el.dataset.t);}
+function render(t){
+  if(t==='list')renderList();
+  else if(t==='build')renderBuild();
+  else if(t==='pool')renderPool();
+  else if(t==='deleg')renderDeleg();
+  else if(t==='noti')renderNoti();
+  else if(t==='diff')renderDiff();
+}
+
+/* ---- TAB 1: Workflow list ---- */
+function renderList(){
+  let rows=DOCS.map((d,i)=>{
+    const chain=d.chain.map((s,j)=>{
+      const cls=s.seq==='par'?'cm-node par':'cm-node';
+      const cap=s.max==null?'∞':fmtB(s.max);
+      return `<span class="${cls}" title="≤ ${cap} ฿ · SLA ${s.sla}h">${posName(s.pos)}</span>`+
+             (j<d.chain.length-1?`<span class="cm-arr">${d.chain[j+1].seq==='par'?'＋':'→'}</span>`:'');
+    }).join('');
+    const neu=d.neu?` <span class="dgrp" style="background:#DC2626;color:#fff">NEW</span>`:'';
+    return `<tr>
+      <td class="mono">${d.code}</td>
+      <td>${d.name}${neu}</td>
+      <td><span class="dgrp ${grpClass[d.grp]}">${d.glb}</span></td>
+      <td style="color:#64748B">${d.basis}</td>
+      <td><div class="chain-mini">${chain}</div></td>
+      <td class="center">${d.chain.length} ขั้น</td>
+      <td class="center"><span class="bdg bdg-on">เปิด</span></td>
+      <td class="center"><span class="lnk" onclick="gotoBuild('${d.code}')">แก้ workflow</span></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('tabcontent').innerHTML=`
+  <div class="note">หลักการ — ผูก <b>ประเภทเอกสาร → ตำแหน่ง + วงเงินต่อขั้น</b> (Position-based, ADR-0003) · กำหนดอิสระต่องาน เช่น <b>ใบเสนอราคา → หัวหน้า (≤50K) → ผจก.ขาย (≤500K) → กรรมการ (>500K)</b> · ตำแหน่ง ≠ คน → คนลาออกไม่กระทบ workflow · ทุกสาขา SWT ใช้ matrix เดียว (${BRANCHES})</div>
+  <div class="card">
+    <div class="ch"><div><span class="t">Approval Workflow (${DOCS.length} ประเภทเอกสาร)</span><div class="d">＋ = อนุมัติพร้อมกัน (Parallel) · → = อนุมัติตามลำดับ (Sequential)</div></div>
+      <button class="add-btn" onclick="toast('mock: สร้าง workflow ใหม่')">+ เพิ่มประเภทเอกสาร</button></div>
+    <table>
+      <thead><tr><th>รหัส</th><th>ชื่อเอกสาร</th><th>กลุ่ม</th><th>เกณฑ์วงเงิน</th><th>สายอนุมัติ (Position chain)</th><th class="center">ขั้น</th><th class="center">สถานะ</th><th></th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
+}
+function gotoBuild(code){curDoc=code;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.querySelector('.tab[data-t="build"]').classList.add('on');renderBuild();}
+
+/* ---- TAB 2: Rule builder + simulator ---- */
+let curDoc='QT';
+function curDocObj(){return DOCS.find(d=>d.code===curDoc);}
+function renderBuild(){
+  const opts=DOCS.map(d=>`<option value="${d.code}" ${d.code===curDoc?'selected':''}>${d.code} · ${d.name}</option>`).join('');
+  document.getElementById('tabcontent').innerHTML=`
+  <div class="bld-head">
+    <span style="font-size:12px;font-weight:600;color:#475569">เลือกเอกสาร:</span>
+    <select id="docPick" onchange="curDoc=this.value;renderBuild()">${opts}</select>
+    <span id="docBasis" style="font-size:12px;color:#64748B"></span>
+    <button class="gbtn" style="margin-left:auto" onclick="pullLimits()">⤓ ดึงวงเงินจาก CF-1</button>
+    <button class="add-btn" onclick="toast('mock: บันทึก workflow '+curDoc)">💾 บันทึก</button>
+  </div>
+  <div class="note">📐 <b>ไม่ตายตัว</b> — แต่ละขั้นเลือก Position ได้อิสระ + ตั้งวงเงินเพดานของขั้นนั้น · ระบบจะ route เอกสารตามยอด: ขั้นที่เพดาน ≥ ยอด = ผู้อนุมัติสุดท้าย · ขั้นก่อนหน้าต้องผ่านตามลำดับ (→) หรือพร้อมกัน (＋)</div>
+  <div class="card"><div class="ch"><div><span class="t">สายอนุมัติ — ${curDocObj().name}</span><div class="d">คลิก ✕ ลบขั้น · กล่อง ＋ เพิ่มขั้น · แก้ Position / วงเงิน / SLA ได้ทันที</div></div></div>
+    <div style="padding:16px"><div class="flow" id="flow"></div></div></div>
+  <div class="sim">
+    <h4>🧪 ทดสอบ (Simulator) — ใส่ยอดเอกสาร แล้วดูว่าต้องผ่านใครบ้าง</h4>
+    <div class="sim-row">
+      <span style="font-size:12px;color:#475569">ยอด${curDocObj().basis!=='—'?' ('+curDocObj().basis+')':''}:</span>
+      <input id="simAmt" type="text" value="150,000" oninput="runSim()"> <span style="font-size:13px;color:#64748B">฿</span>
+      <span style="font-size:11px;color:#94A3B8">ลองพิมพ์ 30000 / 150000 / 800000</span>
+    </div>
+    <div class="sim-out" id="simOut"></div>
+  </div>`;
+  document.getElementById('docBasis').textContent='เกณฑ์: '+curDocObj().basis;
+  renderFlow();runSim();
+}
+function renderFlow(){
+  const d=curDocObj();
+  let h=`<div class="fnode maker"><div class="fn-top">MAKER</div><div class="fn-body"><div class="fn-name" style="font-size:13px">ผู้สร้างเอกสาร</div><div class="fn-cond">สร้าง ${d.code}</div></div></div><div class="farr">→</div>`;
+  d.chain.forEach((s,i)=>{
+    const cls=s.seq==='par'?'par':'seq';
+    const posOpts=POS.map(p=>`<option value="${p.code}" ${p.code===s.pos?'selected':''}>${p.name}</option>`).join('');
+    h+=`<div class="fnode ${cls}">
+      <div class="fn-top"><span>ขั้น ${i+1} · ${s.seq==='par'?'พร้อมกัน':'ตามลำดับ'}</span><span class="fn-rm" onclick="rmStep(${i})">✕</span></div>
+      <div class="fn-body">
+        <div class="fn-lbl">ตำแหน่งผู้อนุมัติ</div>
+        <select onchange="setStep(${i},'pos',this.value)">${posOpts}</select>
+        <div class="fn-lbl">เพดานวงเงินขั้นนี้ (฿)</div>
+        <input value="${s.max==null?'':fmtB(s.max)}" placeholder="ไม่จำกัด" onchange="setStep(${i},'max',this.value)">
+        <div style="display:flex;gap:6px">
+          <div style="flex:1"><div class="fn-lbl">ลำดับ</div>
+            <select onchange="setStep(${i},'seq',this.value)"><option value="seq" ${s.seq==='seq'?'selected':''}>ตามลำดับ →</option><option value="par" ${s.seq==='par'?'selected':''}>พร้อมกัน ＋</option></select></div>
+          <div style="width:70px"><div class="fn-lbl">SLA(h)</div>
+            <input value="${s.sla}" onchange="setStep(${i},'sla',this.value)"></div>
+        </div>
+      </div></div>`;
+    if(i<d.chain.length-1)h+=`<div class="farr">${d.chain[i+1].seq==='par'?'＋':'→'}</div>`;
+  });
+  h+=`<div class="addstep" onclick="addStep()" title="เพิ่มขั้นอนุมัติ">＋</div>`;
+  h+=`<div class="farr">→</div><div class="fnode end"><div class="fn-top">✓ APPROVED</div><div class="fn-body"><div class="fn-name" style="font-size:13px">อนุมัติครบ</div><div class="fn-cond">Post เอกสารได้</div></div></div>`;
+  document.getElementById('flow').innerHTML=h;
+}
+function setStep(i,k,v){
+  const d=curDocObj();
+  if(k==='max'){const n=v.replace(/[^0-9]/g,'');d.chain[i].max=n===''?null:parseInt(n);}
+  else if(k==='sla'){d.chain[i].sla=parseInt(v.replace(/[^0-9]/g,''))||24;}
+  else d.chain[i][k]=v;
+  renderFlow();runSim();
+}
+function rmStep(i){const d=curDocObj();if(d.chain.length<=1){toast('ต้องมีอย่างน้อย 1 ขั้น');return;}d.chain.splice(i,1);renderFlow();runSim();}
+function addStep(){const d=curDocObj();d.chain.push({pos:'GM',max:null,seq:'seq',sla:48});renderFlow();runSim();}
+function pullLimits(){const d=curDocObj();d.chain.forEach(s=>{s.max=posLimit(s.pos);});renderFlow();runSim();toast('ดึง Authority Limit จาก CF-1 มาเป็นเพดานแต่ละขั้นแล้ว');}
+function runSim(){
+  const d=curDocObj();
+  const amt=parseInt((document.getElementById('simAmt').value||'').replace(/[^0-9]/g,''))||0;
+  // required = ทุกขั้นที่เพดาน < amt (ต้องส่งต่อ) + ขั้นแรกที่เพดาน >= amt (ผู้อนุมัติสุดท้าย)
+  let finalIdx=d.chain.findIndex(s=>s.max==null||s.max>=amt);
+  if(finalIdx===-1)finalIdx=d.chain.length-1; // เกินทุกเพดาน → ขั้นบนสุด
+  let h='';
+  h+=`<div class="so-node so-skip">ผู้สร้าง<span class="so-sub">${fmtB(amt)} ฿</span></div><span class="so-arr">→</span>`;
+  d.chain.forEach((s,i)=>{
+    const need=i<=finalIdx;
+    const isFinal=i===finalIdx;
+    const cls=isFinal?'so-final':(need?'so-req':'so-skip');
+    const cap=s.max==null?'∞':fmtB(s.max);
+    const tag=isFinal?'✓ อนุมัติสุดท้าย':(need?'ต้องผ่าน':'ข้าม');
+    h+=`<div class="so-node ${cls}">${posName(s.pos)}<span class="so-sub">≤${cap} · ${tag}</span></div>`;
+    if(i<d.chain.length-1)h+=`<span class="so-arr">${d.chain[i+1].seq==='par'?'＋':'→'}</span>`;
+  });
+  const stepsNeeded=finalIdx+1;
+  h+=`<span class="so-arr">→</span><div class="so-node so-req" style="background:#1E3A5F;border-color:#1E3A5F;color:#fff">✓ ผ่าน ${stepsNeeded} ขั้น</div>`;
+  document.getElementById('simOut').innerHTML=h;
+}
+
+/* ---- TAB 3: Approver pool ---- */
+function renderPool(){
+  let rows=POS.map(p=>{
+    const used=DOCS.filter(d=>d.chain.some(s=>s.pos===p.code)).length;
+    return `<tr><td class="mono">${p.code}</td><td>${p.name}</td><td class="fp">${fmtB(p.limit)} ฿</td><td style="color:#64748B">${p.ppl}</td><td class="center">${used} workflow</td><td class="center"><span class="lnk" onclick="openPool('${p.code}')">ดู</span></td></tr>`;
+  }).join('');
+  document.getElementById('tabcontent').innerHTML=`
+  <div class="note">ตำแหน่ง (Position) ดึงจาก <b>CF-1</b> · คนจริงดึงจาก <b>MD-4 พนักงาน</b> (1 คน : 1 Position) · <b>วงเงิน = Authority Limit</b> ที่ตั้งใน CF-1 → ใช้เป็นค่าตั้งต้นของเพดานแต่ละขั้นใน Tab 2 · <b>SWT บริษัทเดียว</b> ทุกสาขาใช้ pool เดียว (ตัด mapping 4 บริษัทเดิมออก)</div>
+  <div class="card"><div class="ch"><div><span class="t">Approver Pool — ${POS.length} ตำแหน่ง</span><div class="d">ตำแหน่ง ≠ คน · เปลี่ยนคนในตำแหน่งไม่ต้องแก้ workflow</div></div>
+    <button class="gbtn" onclick="toast('→ เปิด CF-1 จัดการตำแหน่ง')">CF-1 จัดการตำแหน่ง</button></div>
+    <table><thead><tr><th>รหัส</th><th>ตำแหน่ง</th><th>Authority Limit</th><th>คนในตำแหน่ง (MD-4)</th><th class="center">ใช้ใน</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function openPool(code){
+  const p=POS.find(x=>x.code===code);
+  const used=DOCS.filter(d=>d.chain.some(s=>s.pos===code));
+  document.getElementById('mtitle').textContent=p.name+' ('+p.code+')';
+  document.getElementById('mbody').innerHTML=`
+    <div class="kv"><span class="k">Authority Limit (จาก CF-1)</span><span class="v fp">${fmtB(p.limit)} ฿</span></div>
+    <div class="kv"><span class="k">คนในตำแหน่ง (MD-4)</span><span class="v">${p.ppl}</span></div>
+    <div class="kv"><span class="k">ขอบเขต (Scope)</span><span class="v">ทุกสาขา SWT</span></div>
+    <div style="margin-top:12px;font-size:12px;font-weight:700;color:#475569">ใช้ในสายอนุมัติของ:</div>
+    <div style="margin-top:6px">${used.map(d=>`<span class="cm-node" style="margin:2px;display:inline-block">${d.code} ${d.name}</span>`).join('')||'<span style="color:#94A3B8;font-size:12px">— ยังไม่ถูกใช้ —</span>'}</div>
+    <div class="note" style="margin-top:12px">💡 เมื่อคนลาออก → Admin เปลี่ยน "คนในตำแหน่ง" ที่ MD-4 อย่างเดียว · ${used.length} workflow นี้ไม่ต้องแก้</div>`;
+  document.getElementById('mfoot').innerHTML=`<button class="btn b2" onclick="closeModal()">ปิด</button><button class="btn b1" onclick="toast('→ CF-1 แก้ Authority Limit')">แก้วงเงินที่ CF-1</button>`;
+  document.getElementById('ov').classList.add('on');
+}
+
+/* ---- TAB 4: Delegation + escalation ---- */
+function renderDeleg(){
+  document.getElementById('tabcontent').innerHTML=`
+  <div class="card"><div class="ch"><div><span class="t">มอบอำนาจชั่วคราว (Delegation)</span><div class="d">approver ลา/หยุด → มอบให้คนอื่นอนุมัติแทนตามช่วงเวลา</div></div>
+    <button class="add-btn" onclick="toast('mock: เพิ่ม delegation')">+ มอบอำนาจ</button></div>
+    <table><thead><tr><th>ตำแหน่งผู้มอบ</th><th>ผู้รับมอบ</th><th>เอกสาร</th><th>เริ่ม</th><th>สิ้นสุด</th><th class="center">สถานะ</th><th></th></tr></thead>
+    <tbody>
+      <tr><td>ผจก.ฝ่ายขาย (วิชัย)</td><td>หัวหน้าแผนกขาย (อนงค์)</td><td>ทุก WF ที่ใช้ ผจก.ขาย</td><td>14 มิ.ย. 26</td><td>20 มิ.ย. 26</td><td class="center"><span class="bdg bdg-on">Active</span></td><td class="center"><span class="lnk" onclick="toast('ยกเลิก')">ยกเลิก</span></td></tr>
+      <tr><td>กรรมการ (คุณแสงวิจิตร)</td><td>GM (สมชาย)</td><td>PO &gt; 1M</td><td>1 ก.ค. 26</td><td>10 ก.ค. 26</td><td class="center"><span class="bdg bdg-off">รอเริ่ม</span></td><td class="center"><span class="lnk" onclick="toast('แก้')">แก้</span></td></tr>
+    </tbody></table></div>
+  <div class="card"><div class="ch"><span class="t">Escalation — เมื่อ approver ไม่ตอบใน SLA</span></div>
+    <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:14px 20px">
+      <div><div class="fn-lbl">เมื่อเกิน SLA</div><select style="width:100%;padding:7px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit"><option>ส่งต่อขั้นถัดไป (escalate)</option><option>แจ้งเตือนซ้ำทุก 12 ชม.</option><option>มอบให้ผู้รับมอบ (delegate)</option></select></div>
+      <div><div class="fn-lbl">เตือนล่วงหน้าก่อน SLA</div><select style="width:100%;padding:7px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit"><option>4 ชั่วโมง</option><option>12 ชั่วโมง</option></select></div>
+      <div><div class="fn-lbl">Auto-escalate หลังถูกปฏิเสธ (ครั้ง)</div><select style="width:100%;padding:7px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit"><option>2 ครั้ง</option><option>1 ครั้ง</option><option>3 ครั้ง</option></select></div>
+      <div><div class="fn-lbl">วันหยุด/เสาร์อาทิตย์</div><select style="width:100%;padding:7px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit"><option>ข้าม (ไม่นับเวลา SLA)</option><option>นับปกติ</option></select></div>
+    </div></div>`;
+}
+
+/* ---- TAB 5: Notification ---- */
+function renderNoti(){
+  const rows=[
+    ['ต้องอนุมัติใหม่','Approver','✓','✓','✓','—'],
+    ['อนุมัติแล้ว','Maker','✓','✓','—','—'],
+    ['ถูกปฏิเสธ','Maker','✓','✓','✓','—'],
+    ['ใกล้ครบ SLA','Approver','✓','✓','✓','—'],
+    ['Escalate ขึ้นขั้นถัดไป','Approver + ขั้นถัดไป','✓','✓','✓','✓'],
+    ['Delegation เริ่มทำงาน','ผู้รับมอบ','✓','✓','—','—']
+  ].map(r=>`<tr><td>${r[0]}</td><td style="color:#64748B">${r[1]}</td><td class="center">${r[2]}</td><td class="center">${r[3]}</td><td class="center">${r[4]}</td><td class="center">${r[5]}</td></tr>`).join('');
+  document.getElementById('tabcontent').innerHTML=`
+  <div class="card"><div class="ch"><span class="t">ช่องทางแจ้งเตือน (Notification)</span></div>
+    <table><thead><tr><th>เหตุการณ์</th><th>ผู้รับ</th><th class="center">In-App</th><th class="center">Email</th><th class="center">LINE</th><th class="center">SMS</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="note" style="margin:14px">💡 ตั้งค่า LINE Token / SMTP ได้ที่ CF-2.9 General Parameter → Integration</div></div>`;
+}
+
+/* ---- TAB 6: Diff old vs new ---- */
+function renderDiff(){
+  const rows=[
+    ['Approver','ผูก Role ตายตัว (DEPT_HEAD/GM/DIR)','ผูก <b>Position</b> สร้างเองได้ จาก CF-1','ADR-0003'],
+    ['วงเงิน tier','ตั้งลอยใน Threshold tab','<b>เพดานต่อขั้น</b> ตั้งอิสระต่อ doc type · default จาก Authority Limit (CF-1)','ADR-0003'],
+    ['บริษัท','column "ทั้ง 4" · SWT/SWE/VMN/WPS','<b>ตัดทิ้ง</b> — SWT บริษัทเดียว ทุกสาขาใช้ matrix เดียว','master-flows'],
+    ['Doc types','9 ประเภท (ไม่มีงานคืน/ลดหนี้)','+ <b>SL-RQ ขอคืน · SL-RT รับคืน · SL-CN ลดหนี้ · SL-DN เพิ่มหนี้</b>','session-handoff'],
+    ['Approver Pool','mapping คนจริง 4 บริษัท','คนจริงจาก <b>MD-4</b> · 1 คน:1 Position · SWT เดียว','ADR-0003'],
+    ['Flexibility','tier ค่อนข้างตายตัว','<b>"ไม่ตายตัว"</b> — เพิ่ม/ลบขั้น · เลือก Position + วงเงินได้อิสระต่องาน','user 2026-06-03']
+  ].map(r=>`<tr><td style="font-weight:600">${r[0]}</td><td class="diff-old">${r[1]}</td><td class="diff-new">${r[2]}</td><td class="mono" style="font-size:10.5px">${r[3]}</td></tr>`).join('');
+  document.getElementById('tabcontent').innerHTML=`
+  <div class="note">สรุปสิ่งที่เปลี่ยนจาก mockup เดิม <span class="lnk" onclick="window.open('../cf2-6-approval-matrix-mockup.html')">(เปิด v0.1 เทียบ)</span> — proposal นี้ยึด ADR-0003 (Position RBAC) + SWT single-entity</div>
+  <div class="card"><div class="ch"><span class="t">ตารางเทียบ เก่า ↔ ใหม่</span></div>
+    <table><thead><tr><th style="width:120px">ประเด็น</th><th style="width:34%">เดิม (v0.1)</th><th>ข้อเสนอใหม่</th><th>อ้างอิง</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+/* ---- utils ---- */
+function closeModal(){document.getElementById('ov').classList.remove('on');}
+let tT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('on'),1900);}
+document.getElementById('ov').addEventListener('click',e=>{if(e.target.id==='ov')closeModal();});
+render('list');
+</script>
+</body></html>

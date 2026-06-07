@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SharedDocReference — interactive v2 (multi-ref ข้ามโมดูล) | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#E5EAF0;color:#1F2937;padding:22px;min-width:1000px}
+  .head{display:flex;align-items:center;gap:10px}.head h1{font-size:19px;font-weight:700}
+  .head .sc{background:#2563EB;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px}
+  .sub{font-size:12.5px;color:#475569;margin:6px 0 8px}
+  .tip{font-size:12px;background:#FEF9C3;border:1px solid #FDE68A;color:#854D0E;padding:7px 12px;border-radius:8px;margin-bottom:14px;display:inline-block}
+  .ctxbar{background:#fff;border:1px solid #CBD5E1;border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-size:12.5px}
+  .ctxbar b{color:#1E3A5F}
+  .seg{display:flex;gap:6px}
+  .seg span{padding:5px 12px;border:1px solid #D1D5DB;border-radius:7px;cursor:pointer;background:#fff;color:#475569;font-size:12px}
+  .seg span.on{background:#1E3A5F;border-color:#1E3A5F;color:#fff;font-weight:600}
+  .popwin{background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.25);width:940px;overflow:hidden}
+  .winbar{background:#1E3A5F;color:#fff;padding:10px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .winbar .x{margin-left:auto;cursor:pointer;color:#BFDBFE}
+  .chips{display:flex;gap:8px;padding:11px 16px;border-bottom:1px solid #E5E7EB;flex-wrap:wrap}
+  .chip{padding:6px 13px;border:1px solid #D1D5DB;border-radius:16px;font-size:12px;cursor:pointer;background:#fff;color:#475569}
+  .chip.on{background:#2563EB;border-color:#2563EB;color:#fff;font-weight:600}
+  .chip .lv{font-size:9px;opacity:.7;margin-left:4px}
+  .cols{display:flex;min-height:280px}
+  .left{width:360px;border-right:1px solid #E5E7EB}.right{flex:1}
+  .lh{font-size:11px;font-weight:700;color:#64748B;text-transform:uppercase;padding:10px 14px 6px}
+  .doc{padding:9px 14px;border-bottom:1px solid #F1F5F9;cursor:pointer}.doc:hover{background:#EFF6FF}.doc.sel{background:#DBEAFE}
+  .doc .dn{font-size:13px;font-weight:700;color:#1D4ED8}.doc .dm{font-size:11.5px;color:#64748B;margin-top:2px}
+  .doc .closed{font-size:10px;background:#F3F4F6;color:#6B7280;padding:1px 7px;border-radius:8px;font-weight:700}
+  .used{font-size:10px;background:#DCFCE7;color:#166534;padding:1px 7px;border-radius:8px;font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{background:#F1F5F9;text-align:left;font-weight:600;color:#475569;font-size:11px;padding:7px 10px}
+  td{padding:7px 10px;border-bottom:1px solid #F1F5F9}.amt{text-align:right;font-variant-numeric:tabular-nums}
+  .rh{padding:11px 14px;font-size:13px;font-weight:700;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between}
+  .rh small{font-weight:500;color:#64748B}
+  .ph{display:flex;justify-content:flex-end;gap:9px;padding:12px 14px;border-top:1px solid #E5E7EB;background:#F8FAFC}
+  .btn{padding:8px 15px;border:none;border-radius:6px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+  .btn-2{background:#E5E7EB;color:#374151}.btn-1{background:#2563EB;color:#fff}
+  .empty{padding:36px;text-align:center;color:#94A3B8;font-size:13px}
+  .refs{border-top:2px solid #2563EB;background:#EFF6FF;padding:10px 16px}
+  .refs-h{font-size:12.5px;font-weight:700;color:#1D4ED8;margin-bottom:6px}
+  .ref{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #BFDBFE;border-radius:14px;padding:3px 11px;font-size:11.5px;margin:0 6px 6px 0}
+  .ref .del{color:#DC2626;cursor:pointer;font-weight:700}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:99}.toast.on{opacity:1}
+</style>
+</head>
+<body>
+  <div class="head"><h1>SharedDocReference</h1><span class="sc">SC</span><span style="font-size:12px;color:#16A34A;font-weight:700">— interactive v2 (อ้างได้หลายต้นทาง · ข้ามโมดูล)</span></div>
+  <div class="sub">1 เอกสารปลายทางอ้างอิงต้นทางได้หลายรายการ · Cascading เปลี่ยนตามเอกสารปลายทาง</div>
+  <div class="tip">👆 สลับ "เอกสารปลายทาง" (บิลขาย/รับของ/บัญชี) → ดู source type เปลี่ยน → คลิกเอกสาร → ดึง → สะสมหลายรายการด้านล่าง</div>
+
+  <div class="ctxbar"><b>เอกสารปลายทาง:</b>
+    <div class="seg">
+      <span class="on" data-d="INVOICE" onclick="setDoc(this)">บิลขาย (Sales)</span>
+      <span data-d="GR" onclick="setDoc(this)">รับของ (คลัง)</span>
+      <span data-d="AR" onclick="setDoc(this)">ตั้งลูกหนี้/รับชำระ (บัญชี)</span>
+    </div>
+    <span style="margin-left:auto;color:#64748B;font-size:11.5px" id="cascnote"></span>
+  </div>
+
+  <div class="popwin">
+    <div class="winbar">🔗 ดึงเอกสารต้นทาง <span style="font-weight:500;color:#BFDBFE;font-size:12px" id="ctx"></span><span class="x" onclick="alert('ปิด')">✕</span></div>
+    <div class="chips" id="chips"></div>
+    <div class="cols">
+      <div class="left"><div class="lh">เอกสารต้นทาง</div><div id="doclist"></div></div>
+      <div class="right" id="right"><div class="empty">← เลือกเอกสาร</div></div>
+    </div>
+    <div class="refs">
+      <div class="refs-h">🔗 อ้างอิงแล้ว (<span id="rc">0</span>) — 1 เอกสารอ้างได้หลายต้นทาง</div>
+      <div id="reflist"><span style="color:#64748B;font-size:11.5px">ยังไม่ได้ดึงเอกสารต้นทาง</span></div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+<script>
+// Cascading: docType -> source types (label, level)
+const CASCADE={
+ INVOICE:[['QUOTE','ใบเสนอราคา','per-line'],['RSV','ใบจอง','per-line'],['DEP','ใบมัดจำ','per-bill']],
+ GR:[['PO','ใบสั่งซื้อ (PO)','per-line']],
+ AR:[['INV','บิลขาย','per-bill'],['DEPB','บิลมัดจำ','per-bill']]
+};
+const DOCS={
+ QUOTE:[{no:'QT-2605-0007',date:'18 พ.ค.69',amt:312500,st:'open',n:3},{no:'QT-2605-0012',date:'22 พ.ค.69',amt:89000,st:'open',n:2},{no:'QT-2604-0188',date:'30 เม.ย.69',amt:45000,st:'closed',n:0}],
+ RSV:[{no:'RSV-2605-0003',date:'20 พ.ค.69',amt:156800,st:'open',n:2}],
+ DEP:[{no:'DEP-2605-0002',date:'15 พ.ค.69',amt:30000,st:'open',n:1}],
+ PO:[{no:'PO-2605-0044',date:'12 พ.ค.69',amt:680000,st:'open',n:4},{no:'PO-2605-0051',date:'19 พ.ค.69',amt:240000,st:'open',n:2}],
+ INV:[{no:'INV-2605-0042',date:'20 พ.ค.69',amt:485000,st:'open',n:0},{no:'INV-2605-0051',date:'27 พ.ค.69',amt:312500,st:'open',n:0}],
+ DEPB:[{no:'DEP-2605-0002',date:'15 พ.ค.69',amt:30000,st:'open',n:0}]
+};
+let docType='INVOICE',srcType=null,curDoc=null;
+const refs=[];const fmt=n=>n.toLocaleString('en-US');
+const CTXLBL={INVOICE:'(บิลขาย INV ใหม่ · ลูกค้า ก.เจริญ)',GR:'(ใบรับของ GR ใหม่ · จาก vendor)',AR:'(ตั้งลูกหนี้/รับชำระ · ลูกค้า ก.เจริญ)'};
+function setDoc(el){document.querySelectorAll('.seg span').forEach(s=>s.classList.remove('on'));el.classList.add('on');docType=el.dataset.d;srcType=null;curDoc=null;
+  document.getElementById('ctx').textContent=CTXLBL[docType];
+  document.getElementById('cascnote').textContent='Cascading: '+docType+' ← '+CASCADE[docType].map(c=>c[1]).join(' · ');
+  renderChips();document.getElementById('right').innerHTML='<div class="empty">← เลือกเอกสาร</div>';}
+function renderChips(){const C=CASCADE[docType];srcType=srcType||C[0][0];
+  document.getElementById('chips').innerHTML=C.map(c=>`<span class="chip ${c[0]===srcType?'on':''}" onclick="pickSrc('${c[0]}')">${c[1]}<span class="lv">${c[2]}</span></span>`).join('');
+  renderList();}
+function pickSrc(s){srcType=s;curDoc=null;renderChips();document.getElementById('right').innerHTML='<div class="empty">← เลือกเอกสาร</div>';}
+function renderList(){const L=DOCS[srcType]||[];
+  document.getElementById('doclist').innerHTML=L.map((d,i)=>{const u=refs.find(r=>r.no===d.no);return `<div class="doc ${curDoc===i?'sel':''}" onclick="openDoc(${i})"><div class="dn">${d.no} ${d.st==='closed'?'<span class="closed">ปิดแล้ว</span>':''} ${u?'<span class="used">ดึงแล้ว</span>':''}</div><div class="dm">${d.date} · ยอด ${fmt(d.amt)}${d.n?' · '+d.n+' บรรทัด':''}</div></div>`;}).join('')||'<div class="empty" style="padding:20px">ไม่มีเอกสาร</div>';}
+function openDoc(i){const d=DOCS[srcType][i];
+  if(d.st==='closed'){toast('⚠ '+d.no+' ปิดแล้ว → source:closed (ห้ามดึงซ้ำ)');return;}
+  curDoc=i;renderList();const lv=CASCADE[docType].find(c=>c[0]===srcType)[2];
+  const lines=Array.from({length:d.n||1},(_,j)=>`<tr><td><input type="checkbox" class="ln" checked></td><td>รายการ ${j+1} (${srcType})</td><td class="amt">${j+1}</td></tr>`).join('');
+  document.getElementById('right').innerHTML=`<div class="rh"><span>${d.no} <small>· ${lv}${d.n?' · '+d.n+' บรรทัด (ติ๊กเลือก = Partial)':''}</small></span></div>
+    <div style="max-height:180px;overflow:auto"><table><thead><tr><th style="width:30px"></th><th>รายการ</th><th class="amt">จำนวน</th></tr></thead><tbody>${lines}</tbody></table></div>
+    <div class="ph"><button class="btn btn-2" onclick="pull(false)">ดึงที่เลือก</button><button class="btn btn-1" onclick="pull(true)">ดึงทั้งหมด</button></div>`;}
+function pull(all){const d=DOCS[srcType][curDoc];if(refs.find(r=>r.no===d.no)){toast('อ้างอิง '+d.no+' ไปแล้ว (ห้ามซ้ำ)');return;}
+  const lv=CASCADE[docType].find(c=>c[0]===srcType);refs.push({no:d.no,type:lv[1]});renderRefs();renderList();
+  toast('✓ ดึง '+d.no+' ('+(all?'ทั้งหมด':'Partial')+') → '+(all?'doc:pulled':'doc:partial')+' · อ้างอิงแล้ว '+refs.length+' รายการ');}
+function renderRefs(){document.getElementById('rc').textContent=refs.length;
+  document.getElementById('reflist').innerHTML=refs.length?refs.map((r,i)=>`<span class="ref">${r.type}: <b>${r.no}</b> <span class="del" onclick="rmRef(${i})">✕</span></span>`).join(''):'<span style="color:#64748B;font-size:11.5px">ยังไม่ได้ดึง</span>';}
+function rmRef(i){refs.splice(i,1);renderRefs();renderList();}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2800);}
+setDoc(document.querySelector('.seg span.on'));
+</script>
+</body>
+</html>

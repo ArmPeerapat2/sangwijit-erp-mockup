@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SharedItemSearch — interactive v3 (Multi-add) | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#E5EAF0;color:#1F2937;padding:22px;min-width:1080px}
+  .head{display:flex;align-items:center;gap:10px}.head h1{font-size:19px;font-weight:700}
+  .head .sc{background:#2563EB;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px}
+  .sub{font-size:12.5px;color:#475569;margin:6px 0 10px}
+  .tip{font-size:12px;background:#FEF9C3;border:1px solid #FDE68A;color:#854D0E;padding:7px 12px;border-radius:8px;margin-bottom:14px;display:inline-block}
+  .popwin{background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.25);width:1040px;overflow:hidden}
+  .winbar{background:#F1F5F9;border-bottom:1px solid #CBD5E1;padding:8px 14px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#334155}
+  .winbar .x{margin-left:auto;color:#94A3B8;cursor:pointer}
+  .multi{background:#DCFCE7;color:#166534;font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px}
+  .toolbar{display:flex;gap:6px;padding:8px 14px;border-bottom:1px solid #E5E7EB;font-size:11.5px;align-items:center;flex-wrap:wrap}
+  .tb{padding:4px 10px;border:1px solid #D1D5DB;border-radius:6px;background:#fff;color:#475569;cursor:pointer}.tb.on{background:#2563EB;border-color:#2563EB;color:#fff;font-weight:600}
+  .findbar{padding:11px 14px;display:flex;gap:10px;align-items:center}
+  .findbar input{flex:1;padding:9px 12px;border:1px solid #94A3B8;border-radius:6px;font-family:inherit;font-size:13px}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{background:#EFF3F8;text-align:left;font-weight:600;color:#475569;font-size:11px;padding:6px 8px;border-bottom:1px solid #CBD5E1;white-space:nowrap}
+  td{padding:5px 8px;border-bottom:1px solid #F1F5F9;white-space:nowrap}
+  tr.r:hover{background:#EFF6FF}
+  .nmlink{color:#1D4ED8;cursor:pointer;text-decoration:underline}
+  .amt{text-align:right;font-variant-numeric:tabular-nums}
+  .net{font-weight:700;color:#1E3A5F}.low{color:#DC2626;font-weight:700}
+  .qi{width:54px;padding:4px 6px;border:1px solid #CBD5E1;border-radius:5px;font-family:inherit;text-align:right}
+  .addb{background:#16A34A;color:#fff;border:none;border-radius:5px;font-family:inherit;font-size:11px;font-weight:700;padding:5px 9px;cursor:pointer}
+  .empty{padding:18px;text-align:center;color:#94A3B8;font-size:13px}
+  /* CART strip */
+  .cart{border-top:2px solid #16A34A;background:#F0FDF4;padding:10px 14px}
+  .cart-h{display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:700;color:#166534;margin-bottom:6px}
+  .cart-items{display:flex;flex-wrap:wrap;gap:6px;max-height:70px;overflow:auto}
+  .ci{background:#fff;border:1px solid #A7F3D0;border-radius:14px;padding:3px 10px;font-size:11.5px;display:flex;align-items:center;gap:6px}
+  .ci b{color:#166534}.ci .del{color:#DC2626;cursor:pointer;font-weight:700}
+  .done{margin-left:auto;background:#2563EB;color:#fff;border:none;border-radius:7px;font-family:inherit;font-size:12.5px;font-weight:700;padding:8px 16px;cursor:pointer}
+  /* MODAL */
+  .overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;z-index:50}
+  .overlay.on{display:flex}
+  .info{background:#fff;border-radius:10px;box-shadow:0 16px 50px rgba(0,0,0,.4);width:900px;overflow:hidden}
+  .ih{padding:12px 18px;display:flex;justify-content:space-between;align-items:flex-start;background:#1E3A5F;color:#fff}
+  .ih .n{font-size:16px;font-weight:700}.ih .m{font-size:12px;color:#BFDBFE;margin-top:2px}.ih .x{cursor:pointer;color:#BFDBFE;font-size:18px}
+  .tabs{display:flex;border-bottom:1px solid #E5E7EB;padding:0 8px;flex-wrap:wrap;background:#F8FAFC}
+  .tab{padding:9px 12px;font-size:11.5px;font-weight:600;color:#64748B;border-bottom:2px solid transparent;cursor:pointer}
+  .tab.on{color:#2563EB;border-bottom-color:#2563EB;background:#fff}
+  .tabbody{padding:14px 18px;height:280px;overflow:auto;font-size:12px}
+  .pf{border-top:1px solid #E5E7EB;padding:11px 18px;display:flex;justify-content:space-between;align-items:center;gap:9px;background:#F8FAFC}
+  .qtybox{display:flex;align-items:center;gap:8px;font-size:12.5px}.qtybox input{width:80px;padding:7px 9px;border:1px solid #94A3B8;border-radius:6px;font-family:inherit;text-align:right}
+  .btn{padding:8px 16px;border:none;border-radius:6px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+  .btn-2{background:#E5E7EB;color:#374151}.btn-1{background:#16A34A;color:#fff}
+  .daterow{display:flex;gap:14px;align-items:center;font-size:12px;margin-bottom:10px;color:#475569}.daterow input{padding:5px 8px;border:1px solid #CBD5E1;border-radius:5px;font-family:inherit}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#166534;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:99}.toast.on{opacity:1}
+</style>
+</head>
+<body>
+  <div class="head"><h1>SharedItemSearch</h1><span class="sc">SC-2</span><span style="font-size:12px;color:#16A34A;font-weight:700">— v3 Multi-add (เพิ่มหลายรายการ · search ค้างไว้)</span></div>
+  <div class="sub">เพิ่มได้หลายรายการ: กด "+ เพิ่ม" ที่แถว (ใส่จำนวนก่อน) หรือคลิกชื่อดู detail แล้วเพิ่ม → Product Search ไม่ปิด → กด "เสร็จ" เมื่อครบ</div>
+  <div class="tip">👆 ใส่จำนวน + กด "+ เพิ่ม" หลายแถวติดกัน · ดูตะกร้าด้านล่างสะสม · คลิกชื่อ = ดู detail 8 tabs · "เสร็จ" = ส่งลงบิล</div>
+
+  <div class="popwin">
+    <div class="winbar">🔍 Product Search <span class="multi">Multi ✓ ค้างไว้</span><span class="x" onclick="alert('ปิด (ยังไม่ส่งลงบิล)')">✕</span></div>
+    <div class="toolbar"><span class="tb on">สินค้า</span><span class="tb">บริการ</span><span class="tb">สินค้าชุด</span><span class="tb">ค้นตามกลุ่ม</span><span style="margin-left:auto;color:#475569"><input type="checkbox"> Only Cust Product</span></div>
+    <div class="findbar"><input id="q" placeholder='ค้นหา: รหัส / ชื่อ' oninput="render()"></div>
+    <div style="overflow:auto;max-height:260px"><table>
+      <thead><tr><th>รหัส</th><th>ชื่อสินค้า</th><th>หน่วย</th><th class="amt">สต็อก</th><th class="amt">สั่งขาย</th><th class="amt">สุทธิ</th><th class="amt">สั่งซื้อ</th><th class="amt">ขอจ่าย</th><th class="amt">จำนวน</th><th></th></tr></thead>
+      <tbody id="rows"></tbody></table>
+      <div id="empty" class="empty" style="display:none">ไม่พบสินค้า</div>
+    </div>
+    <!-- CART -->
+    <div class="cart">
+      <div class="cart-h">🛒 เพิ่มลงบิลแล้ว: <span id="cn">0</span> รายการ
+        <button class="done" onclick="done_()">✓ เสร็จ — ส่งลงบิล</button></div>
+      <div class="cart-items" id="cart"><span style="color:#94A3B8;font-size:11.5px">ยังไม่มีรายการ — ใส่จำนวนแล้วกด "+ เพิ่ม"</span></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="ov" onclick="if(event.target.id==='ov')close_()">
+    <div class="info">
+      <div class="ih"><div><div class="n" id="i_name"></div><div class="m" id="i_meta"></div></div><span class="x" onclick="close_()">✕</span></div>
+      <div class="tabs" id="tabs"></div>
+      <div class="tabbody" id="i_body"></div>
+      <div class="pf"><div class="qtybox">จำนวน <input type="number" id="qty" value="1" min="1"> <span id="i_unit" style="color:#64748B"></span></div>
+        <div><button class="btn btn-2" onclick="close_()">ปิด (ไม่เพิ่ม)</button> <button class="btn btn-1" onclick="addFromDetail()">+ เพิ่มลงบิล (ค้างไว้เพิ่มต่อ)</button></div></div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+<script>
+const TABS=[['stock','สต็อกแต่ละคลัง'],['price','ราคาขาย'],['po','รายการสั่งซื้อ'],['ship','ค้างส่ง'],['img','รูปสินค้า'],['salesP','ยอดขายตามช่วงวันที่'],['salesW','ยอดขายแต่ละคลัง'],['rebate','Rebate']];
+const LG={code:'7XX71XX',name:'เครื่องซักผ้า 2 ถัง LG TT10NARG (10 kg.)',unit:'เครื่อง',stock:145,sale:2,net:143,po:19,charge:103,tr:15,
+ price:[['เครื่อง','5,990.00','-','5,450.00','-','5,636.76','-','5,268.00']],
+ wh:[['AK','อากาศ','-',5,0,5,0,0,0,1],['HO','สนง.ใหญ่','-',119,2,117,19,0,1,2],['S08','เซกา','-',5,0,5,0,0,11,1],['SD','สว่างฯ','-',0,0,0,0,0,8,4],['SHO','ปลีกโกดัง','-',1,0,1,0,0,0,0]],
+ poList:[['24/03/69','TVPO6903','ใบสั่งซื้อเทรด','HO','สนง.ใหญ่','เครื่อง',42,19,'24/03/69']],
+ ship:[['24/06/63','TSRT6306','ใบขอโอนสิน','AK','อากาศ','เครื่อง',1,1,''],['31/12/63','SWEPO631','ใบขายส่ง','SL','ขายส่ง','เครื่อง',2,2,'ร้านอุดมทรัพย์'],['16/06/65','SWEPO650','ใบขายส่ง','HO','สนง.ใหญ่','เครื่อง',30,30,'ร้าน ก.เจริญ']],
+ salesW:[['S08','เครื่อง','',5,0,0,5,0,0,0],['SL','เครื่อง','',0,0,0,213,26,2,0],['ONL','เครื่อง','',0,0,0,1,0,0,0]]};
+const DATA=[LG,
+ {code:'LED-9W',name:'หลอด LED 9W ฟิลิปส์ เดย์ไลท์',unit:'หลอด',stock:1240,sale:80,net:1160,po:0,charge:0,tr:0,price:[['หลอด','55.00','-','42.00','-','28.00','-','38.00']],wh:[['HO','สนง.ใหญ่','D-06',700,40,660,0,0,0,100]],poList:[],ship:[],salesW:[]},
+ {code:'WIRE-25',name:'สายไฟ THW 2.5 (100m)',unit:'ม้วน',stock:38,sale:5,net:33,po:50,charge:0,tr:2,price:[['ม้วน','1,450.00','-','1,280.00','-','980.00','-','1,180.00']],wh:[['HO','สนง.ใหญ่','F-02',30,5,25,50,0,0,2]],poList:[],ship:[],salesW:[]},
+ {code:'AIR-12K',name:'แอร์ผนัง 12000 BTU มิตซู',unit:'เครื่อง',stock:6,sale:4,net:2,po:10,charge:0,tr:0,price:[['เครื่อง','14,900.00','-','13,500.00','-','11,200.00','-','12,900.00']],wh:[['HO','สนง.ใหญ่','G-01',6,4,2,10,0,0,2]],poList:[],ship:[],salesW:[]}];
+let cur=null;const cart=[];
+function render(){
+  const q=(document.getElementById('q').value||'').trim().toLowerCase();
+  const f=DATA.filter(d=>!q||d.code.toLowerCase().includes(q)||d.name.toLowerCase().includes(q));
+  document.getElementById('rows').innerHTML=f.map(d=>`<tr class="r"><td>${d.code}</td><td><span class="nmlink" onclick="open_('${d.code}')">${d.name}</span></td><td>${d.unit}</td><td class="amt">${d.stock}</td><td class="amt">${d.sale}</td><td class="amt net ${d.net<=2?'low':''}">${d.net}</td><td class="amt">${d.po}</td><td class="amt">${d.charge}</td><td class="amt"><input class="qi" id="q_${d.code}" type="number" value="1" min="1"></td><td><button class="addb" onclick="quickAdd('${d.code}')">+ เพิ่ม</button></td></tr>`).join('');
+  document.getElementById('empty').style.display=f.length?'none':'block';
+}
+function quickAdd(code){const d=DATA.find(x=>x.code===code);const q=+document.getElementById('q_'+code).value||1;addCart(d,q);}
+function addCart(d,q){const ex=cart.find(c=>c.code===d.code);if(ex)ex.qty+=q;else cart.push({code:d.code,name:d.name,unit:d.unit,qty:q});renderCart();toast('+ '+d.name+' × '+q+' (รวม '+cart.length+' รายการ · search ค้างไว้)');}
+function renderCart(){
+  document.getElementById('cn').textContent=cart.length;
+  document.getElementById('cart').innerHTML=cart.length?cart.map((c,i)=>`<span class="ci"><b>${c.name}</b> × ${c.qty} ${c.unit} <span class="del" onclick="rm(${i})">✕</span></span>`).join(''):'<span style="color:#94A3B8;font-size:11.5px">ยังไม่มีรายการ</span>';
+}
+function rm(i){cart.splice(i,1);renderCart();}
+function open_(code){cur=DATA.find(d=>d.code===code);
+  document.getElementById('i_name').textContent=cur.code+' · '+cur.name;
+  document.getElementById('i_meta').textContent='สต็อก '+cur.stock+' · สุทธิ '+cur.net+' · สั่งซื้อ '+cur.po+' · ขอจ่าย '+cur.charge;
+  document.getElementById('i_unit').textContent=cur.unit;document.getElementById('qty').value=1;
+  document.getElementById('tabs').innerHTML=TABS.map((t,i)=>`<span class="tab ${i===0?'on':''}" data-t="${t[0]}" onclick="tab(this)">${t[1]}</span>`).join('');
+  show('stock');document.getElementById('ov').classList.add('on');}
+function tbl(head,rows,empty){if(!rows||!rows.length)return `<div class="empty">${empty}</div>`;return `<table><thead><tr>${head.map(h=>`<th class="${h[1]||''}">${h[0]}</th>`).join('')}</tr></thead><tbody>`+rows.map(r=>`<tr>${r.map((c,i)=>`<td class="${head[i]&&head[i][1]||''}">${c}</td>`).join('')}</tr>`).join('')+`</tbody></table>`;}
+function show(t){const c=cur;let h='';
+  if(t==='stock')h=tbl([['รหัสคลัง'],['คลัง'],['ที่เก็บ'],['สต็อก','amt'],['สั่งขาย','amt'],['สุทธิ','amt'],['สั่งซื้อ','amt'],['ขอจ่าย','amt'],['ขอโอน','amt'],['จุดต่ำสุด','amt']],c.wh,'—');
+  else if(t==='price')h=tbl([['หน่วย'],['ปลีก','amt'],['Disc1','amt'],['ส่ง','amt'],['Disc2','amt'],['ต้นทุน INV','amt'],['Disc3','amt'],['ต้นทุน ผปย','amt']],c.price,'—')+'<div style="font-size:11px;color:#94A3B8;margin-top:8px">read-only · MD-6 Price List · มี Price5-7 ต่อท้าย</div>';
+  else if(t==='po')h=tbl([['วันที่'],['ใบสั่งซื้อ'],['กลุ่มเอกสาร'],['คลัง'],['ที่เก็บ'],['หน่วย'],['Qty','amt'],['Remain','amt'],['กำหนดรับ']],c.poList,'ไม่มี PO ค้าง');
+  else if(t==='ship')h=tbl([['วันที่'],['ใบสั่งขาย'],['กลุ่มเอกสาร'],['คลัง'],['ที่เก็บ'],['หน่วย'],['Qty','amt'],['Remain','amt'],['หมายเหตุ']],c.ship,'ไม่มีค้างส่ง/จอง');
+  else if(t==='img')h='<div class="empty">[ รูปสินค้า · MD-1 ]</div>';
+  else if(t==='salesP')h='<div class="daterow">จาก <input value="01/01/2569"> ถึง <input value="16/04/2569"></div>'+tbl([['DocDate'],['DocNo'],['DocName'],['Qty','amt'],['UnitPrice','amt'],['Customer']],[],'เลือกช่วง + Refresh');
+  else if(t==='salesW')h=tbl([['คลัง'],['หน่วย'],['จุดต่ำสุด','amt'],['สต็อก','amt'],['สั่งขาย','amt'],['สั่งซื้อ','amt'],['YTD','amt'],['WTD','amt'],['Today','amt'],['เฉลี่ย60','amt']],c.salesW,'—');
+  else h='<div class="empty">Rebate — ผูก Trade Agreement</div>';
+  document.getElementById('i_body').innerHTML=h;}
+function tab(el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');show(el.dataset.t);}
+function addFromDetail(){const q=+document.getElementById('qty').value||1;addCart(cur,q);close_();/* search ยังเปิด */}
+function close_(){document.getElementById('ov').classList.remove('on');}
+function done_(){if(!cart.length){toast('ยังไม่มีรายการ');return;}toast('✓ ส่ง '+cart.length+' รายการลงบิล → emit item:added × '+cart.length+' · ปิด Product Search');}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2600);}
+render();renderCart();
+</script>
+</body>
+</html>

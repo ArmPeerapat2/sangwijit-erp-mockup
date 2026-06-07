@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<title>PromoPrice v1 — table inline per row</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#E5EAF0;padding:20px;color:#1F2937}
+.head{font-size:18px;font-weight:700;margin-bottom:4px}.sub{font-size:12px;color:#475569;margin-bottom:8px}
+.label{display:inline-block;background:#7C3AED;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:8px}
+.tip{font-size:12px;background:#FEF9C3;border:1px solid #FDE68A;color:#854D0E;padding:6px 12px;border-radius:8px;margin-bottom:12px;display:inline-block}
+.win{background:#fff;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.12);overflow:hidden;width:920px}
+.wb{background:#1E3A5F;color:#fff;padding:10px 14px;font-size:13px;font-weight:700}
+.ctx{display:flex;gap:12px;padding:10px 14px;background:#F8FAFC;border-bottom:1px solid #E5E7EB;font-size:12px}
+.ctx label{font-size:10.5px;font-weight:700;color:#64748B;display:block;margin-bottom:3px}
+.ctx select{padding:5px 8px;border:1px solid #CBD5E1;border-radius:6px;font-family:inherit}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#EFF3F8;text-align:left;font-size:11px;color:#475569;padding:8px 10px}
+td{padding:8px 10px;border-bottom:1px solid #F1F5F9;vertical-align:top}.amt{text-align:right;font-variant-numeric:tabular-nums}
+.qi{width:60px;padding:4px 6px;border:1px solid #CBD5E1;border-radius:5px;font-family:inherit;text-align:right}
+.pbadge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;display:inline-block;margin:2px 0;cursor:pointer;width:100%}
+.pb-ลด{background:#FEF3C7;color:#92400E}.pb-แลก{background:#EEF2FF;color:#3730A3}.pb-แจก{background:#ECFDF5;color:#065F46}
+.pb-sel{outline:2px solid #7C3AED}.pb-dis{opacity:.4;cursor:not-allowed}
+.old{color:#9CA3AF;text-decoration:line-through;font-size:11px}
+.pf{padding:10px 14px;border-top:1px solid #E5E7EB;display:flex;justify-content:flex-end;background:#F8FAFC}
+.btn{padding:8px 16px;border:none;border-radius:7px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;background:#7C3AED;color:#fff}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.25s}.toast.on{opacity:1}
+</style></head><body>
+<div class="head">SharedPromoPrice <span class="label">v1 — table (โปรแสดงเป็นคอลัมน์ในตาราง)</span></div>
+<div class="sub">concept แรก: โปรแสดงเป็นคอลัมน์ข้าง item ทุกแถว · apply ได้ inline</div>
+<span class="tip">ข้อจำกัด: โปรเห็นทุกแถวพร้อมกัน (รก) · กรอกจำนวนก่อนแล้วโปรอัปเดต · Apply 1 โปร/แถว</span>
+<div class="win">
+  <div class="wb">📋 รายการสินค้า (โปรอยู่ในตาราง)</div>
+  <div class="ctx"><div><label>Channel</label><select id="ch" onchange="r()"><option value="retail">ปลีก</option><option value="wholesale">ส่ง</option></select></div></div>
+  <table><thead><tr><th>สินค้า</th><th class="amt">จำนวน</th><th class="amt">ราคา/หน่วย</th><th class="amt">ยอด</th><th>โปรที่มี (เลือก 1)</th></tr></thead>
+  <tbody id="rows"></tbody></table>
+  <div class="pf"><button class="btn" onclick="confirm_()">✓ ยืนยัน → price:calculated</button></div>
+</div>
+<div class="toast" id="t"></div>
+<script>
+const PL={retail:[5450,42,1280],wholesale:[5100,38,1150]};
+const ITEMS=[{name:'เครื่องซักผ้า LG TT10NARG',idx:0,unit:'เครื่อง'},{name:'หลอด LED 9W ฟิลิปส์',idx:1,unit:'หลอด'},{name:'สายไฟ THW 2.5 (100m)',idx:2,unit:'ม้วน'}];
+const PROMOS=[[{t:'ลด',n:'LG 5+ ลด 5%',m:5,d:5},{t:'แลก',n:'แลกผงซักฟอก ฿39',m:1},{t:'แจก',n:'3+ แถมสายยืด',m:3}],[{t:'ลด',n:'100+ หลอด ลด 8%',m:100,d:8},{t:'แจก',n:'100 แถม 10',m:100}],[{t:'ลด',n:'10+ ม้วน ลด 3%',m:10,d:3}]];
+let qtys=[5,120,10],sels=[-1,-1,-1];const fmt=n=>(+n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+function r(){const ch=document.getElementById('ch').value;document.getElementById('rows').innerHTML=ITEMS.map((it,i)=>{const p=PL[ch][it.idx];const disc=sels[i]>=0&&PROMOS[i][sels[i]].d&&PROMOS[i][sels[i]].m<=qtys[i]?p*qtys[i]*(PROMOS[i][sels[i]].d/100):0;const net=p*qtys[i]-disc;const po=PROMOS[i].map((pr,pi)=>`<div class="pbadge pb-${pr.t} ${sels[i]===pi?'pb-sel':''} ${pr.m>qtys[i]?'pb-dis':''}" onclick="${pr.m<=qtys[i]?'sp('+i+','+pi+')':''}">${pr.t==='ลด'?'🏷️':'pr.t==='แลก'?'🔄':'🎁'} ${pr.n}</div>`).join('');return`<tr><td>${it.name}</td><td class="amt"><input class="qi" value="${qtys[i]}" onchange="sq(${i},this.value)"></td><td class="amt">${disc>0?`<div class="old">฿${fmt(p)}</div>`:''}<div style="font-weight:700">฿${fmt(p)}</div></td><td class="amt" style="font-weight:700">฿${fmt(net)}</td><td style="min-width:200px">${po}<div style="font-size:11px;color:#9CA3AF;cursor:pointer;margin-top:3px" onclick="sp(${i},-1)">ไม่ใช้โปร</div></td></tr>`;}).join('');}
+function sp(i,pi){sels[i]=pi;r();}function sq(i,v){qtys[i]=+v||0;r();}
+function confirm_(){toast('✓ price:calculated (per item)');}
+function toast(m){const t=document.getElementById('t');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2500);}
+r();
+</script></body></html>

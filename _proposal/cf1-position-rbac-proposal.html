@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<title>CF-1 ตำแหน่ง & สิทธิ์ (Position/RBAC) — interactive | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1F2937;display:flex;min-height:100vh}
+/* sidebar */
+.sb{width:240px;background:#1E3A5F;color:#D1D5DB;padding:14px 10px;flex-shrink:0}
+.sb-brand{font-size:13px;font-weight:700;color:#fff;padding:8px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:12px}
+.sb-lbl{font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;padding:4px 8px;margin-top:8px}
+.sb a{display:block;padding:7px 10px;font-size:12.5px;color:#D1D5DB;text-decoration:none;border-radius:5px;margin:1px 0}
+.sb a:hover{background:rgba(255,255,255,.08)}
+.sb a.active{background:#2563EB;color:#fff;font-weight:600}
+.sb a .c{font-size:9.5px;font-weight:700;color:#94A3B8;min-width:36px;display:inline-block}
+/* main */
+.main{flex:1;padding:0;overflow:auto}
+.mwb{background:linear-gradient(135deg,#1E3A5F,#2563EB);color:#fff;padding:18px 28px;display:flex;align-items:center;justify-content:space-between}
+.mwb h1{font-size:20px;font-weight:700}
+.mwb .sub{font-size:12px;color:#BFDBFE;margin-top:2px}
+.content{padding:24px 28px}
+/* split layout */
+.split{display:flex;gap:20px;align-items:flex-start}
+/* left: position list */
+.plist{width:300px;flex-shrink:0;background:#fff;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.1);overflow:hidden}
+.plh{padding:12px 14px;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between}
+.plh .t{font-size:13px;font-weight:700}
+.add-btn{background:#2563EB;color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:12px;font-weight:700;padding:6px 12px;cursor:pointer}
+.prow{padding:10px 14px;border-bottom:1px solid #F1F5F9;cursor:pointer;display:flex;align-items:center;gap:10px}
+.prow:hover{background:#F8FAFC}.prow.sel{background:#EFF6FF;border-left:3px solid #2563EB}
+.pav{width:32px;height:32px;border-radius:8px;background:#1E3A5F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.pn{font-size:13px;font-weight:600}.pm{font-size:11px;color:#94A3B8}
+.pu{margin-left:auto;font-size:10.5px;background:#EEF2FF;color:#3730A3;padding:2px 7px;border-radius:8px;font-weight:600}
+/* right: editor */
+.editor{flex:1;background:#fff;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.1);overflow:hidden;min-height:540px}
+.empty-ed{padding:60px;text-align:center;color:#94A3B8;font-size:13px}
+.ewb{background:#F8FAFC;border-bottom:1px solid #E5E7EB;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.ewb .en{font-size:14px;font-weight:700}
+.tabs{display:flex;border-bottom:1px solid #E5E7EB;padding:0 10px}
+.tab{padding:10px 14px;font-size:12.5px;font-weight:600;color:#64748B;border-bottom:2px solid transparent;cursor:pointer}
+.tab.on{color:#2563EB;border-bottom-color:#2563EB}
+.tbody{padding:16px;max-height:460px;overflow:auto}
+/* form */
+.fg{margin-bottom:14px}.fl{font-size:11.5px;font-weight:600;color:#374151;margin-bottom:5px}
+input[type=text],select{width:100%;padding:8px 11px;border:1px solid #D1D5DB;border-radius:7px;font-family:inherit;font-size:13px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* menu tree */
+.mgrp{margin-bottom:6px;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden}
+.mgh{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#F8FAFC;cursor:pointer;font-size:12.5px;font-weight:700}
+.mgh input{width:15px;height:15px}
+.mgi{padding:5px 12px 5px 32px;border-top:1px solid #F1F5F9;display:flex;align-items:center;gap:10px;font-size:12.5px}
+.mgi:hover{background:#F8FAFC}
+.mgi .mn{flex:1}
+.crud{display:flex;gap:8px}
+.crud label{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#374151;cursor:pointer}
+.crud input{width:13px;height:13px}
+/* warehouse grid */
+.wgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.wcard{border:1px solid #E5E7EB;border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.wcard.checked{border-color:#2563EB;background:#EFF6FF}
+.wcard input{width:15px;height:15px}
+.wcode{font-size:11px;font-weight:700;color:#64748B}
+.wname{font-size:12.5px;font-weight:600}
+/* doc groups */
+.dgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.dc{border:1px solid #E5E7EB;border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12.5px}
+.dc.checked{border-color:#7C3AED;background:#F5F3FF}
+/* user assign */
+.urow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #F1F5F9}
+.uav{width:30px;height:30px;border-radius:50%;background:#E5E7EB;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#475569}
+.un{flex:1;font-size:12.5px;font-weight:600}.ud{font-size:11px;color:#94A3B8}
+.rm{color:#DC2626;cursor:pointer;font-size:11px;font-weight:600}
+.pf{border-top:1px solid #E5E7EB;padding:12px 16px;display:flex;justify-content:flex-end;gap:8px;background:#F8FAFC}
+.btn{padding:8px 16px;border:none;border-radius:7px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+.b1{background:#2563EB;color:#fff}.b2{background:#E5E7EB;color:#374151}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:99}.toast.on{opacity:1}
+</style></head><body>
+
+<div class="sb">
+  <div class="sb-brand">Sangwijit ERP · v3.0</div>
+  <div class="sb-lbl">ตั้งค่าระบบ (CF)</div>
+  <a href="#"><span class="c">CF</span>Config Hub</a>
+  <a href="#" class="active"><span class="c">CF-1</span>ตำแหน่ง & สิทธิ์</a>
+  <a href="#"><span class="c">CF-2.2</span>รหัสเอกสาร</a>
+  <a href="#"><span class="c">CF-2.5</span>Template ช่าง</a>
+  <a href="#"><span class="c">CF-2.6</span>Approval Matrix</a>
+  <a href="#"><span class="c">CF-2.7</span>Doc Template</a>
+</div>
+
+<div class="main">
+  <div class="mwb">
+    <div><h1>CF-1 ตำแหน่ง & สิทธิ์ (Position/RBAC)</h1>
+    <div class="sub">สร้างตำแหน่ง → กำหนดสิทธิ์ → ผูกพนักงาน (1:1) · ADR-0003</div></div>
+  </div>
+  <div class="content">
+    <div class="split">
+      <!-- LEFT: Position list -->
+      <div class="plist">
+        <div class="plh"><span class="t">ตำแหน่งทั้งหมด</span><button class="add-btn" onclick="newPos()">+ สร้าง</button></div>
+        <div id="plist"></div>
+      </div>
+      <!-- RIGHT: Editor -->
+      <div class="editor" id="editor"><div class="empty-ed">← เลือกตำแหน่งเพื่อแก้ไข<br>หรือกด "+ สร้าง"</div></div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const POSITIONS=[
+  {id:1,name:'ผู้จัดการสาขา',branch:'ทุกสาขา',dept:'บริหาร',limit:500000,users:['พีรพัฒน์ ก.'],wh:['HO','NA','S08'],docs:['ใบขอเบิก','ใบสั่งขาย'],menus:{sl:['ดู','เพิ่ม','แก้'],po:['ดู'],fi:['ดู'],wh:['ดู','เพิ่ม','แก้','ลบ'],md:['ดู','แก้'],cf:[]}},
+  {id:2,name:'พนักงานขาย (ปลีก)',branch:'สาขาท่าแร่',dept:'ขาย',limit:50000,users:['วิชัย ม.','สมชาย ป.'],wh:['S08'],docs:['ใบขอเบิก ท่าแร่'],menus:{sl:['ดู','เพิ่ม','แก้'],po:[],fi:[],wh:['ดู'],md:['ดู'],cf:[]}},
+  {id:3,name:'เจ้าหน้าที่คลัง',branch:'สนง.ใหญ่',dept:'คลัง',limit:0,users:['สมพงษ์ ช.'],wh:['HO','AK'],docs:['ใบขอเบิก HO','ใบรับของ'],menus:{sl:['ดู'],po:['ดู','เพิ่ม'],fi:[],wh:['ดู','เพิ่ม','แก้','ลบ'],md:['ดู'],cf:[]}},
+  {id:4,name:'Admin',branch:'ทุกสาขา',dept:'IT',limit:9999999,users:['armadmin'],wh:['HO','NA','S08','AK','SD','SHO','S09'],docs:['ทุกประเภท'],menus:{sl:['ดู','เพิ่ม','แก้','ลบ'],po:['ดู','เพิ่ม','แก้','ลบ'],fi:['ดู','เพิ่ม','แก้','ลบ'],wh:['ดู','เพิ่ม','แก้','ลบ'],md:['ดู','เพิ่ม','แก้','ลบ'],cf:['ดู','เพิ่ม','แก้','ลบ']}}
+];
+const MENUS=[
+  {key:'sl',label:'งานขาย (SL)',pages:['SL-Q คิวงานขาย','SL-1 ใบเสนอราคา','SL-2 ใบสั่งขาย','SL-3 ใบมัดจำ','SL-4 บิลขาย','SL-F1 อนุมัติวงเงิน','SL-RQ/RT/CN/DN']},
+  {key:'po',label:'งานซื้อ (PO)',pages:['PO-Q Purchase Queue','PO-1 ใบขอซื้อ','PO-4 ใบสั่งซื้อ','PO-5 Finance GRN','PO-6 ตั้งหนี้ AP']},
+  {key:'wh',label:'คลัง (WH)',pages:['WH-1 รับสินค้า','WH-2 โอนสินค้า','WH-3 เบิกสินค้า','WH-4 นับสต็อก','WH-R Stock Card']},
+  {key:'fi',label:'การเงิน (FI)',pages:['FI-1 รับชำระ AR','FI-2 จ่าย AP','FI-3 Bank Recon','FI-7 รายงาน VAT','FI-12 WHT']},
+  {key:'md',label:'Master Data (MD)',pages:['MD-1 สินค้า','MD-2 ลูกค้า','MD-3 Vendor','MD-4 พนักงาน','MD-5 สาขา/คลัง']},
+  {key:'cf',label:'ตั้งค่าระบบ (CF)',pages:['CF-1 RBAC','CF-2.2 รหัสเอกสาร','CF-2.6 Approval','CF-2.7 Doc Template']}
+];
+const WHS=['HO:สนง.ใหญ่','NA:สาขานา','S08:สาขาเซกา','AK:สาขาอากาศ','SD:สาขาสว่างฯ','SHO:ปลีกโกดัง','S09:คลังมือถือ','INS:คลังติดตั้ง'];
+const DOCS=['ใบขอเบิก Shop Haier','ใบขอเบิกสาขาอากาศ','ใบขอเบิกสาขาสว่างฯ','ใบขอเบิกสาขาบ้านม่วง','ใบขอเบิกสาขาท่าแร่','ใบขอเบิกสาขาเซกา','ใบขอเบิกสินค้าสินเชื่อ','ใบขอเบิกสนง.ใหญ่','ใบสั่งขายปลีก','ใบสั่งขายส่ง','ใบสั่งขายโครงการ'];
+const DOC_MENU_MAP={
+  sl:['ใบสั่งขายปลีก','ใบสั่งขายส่ง','ใบสั่งขายโครงการ'],
+  wh:['ใบขอเบิก Shop Haier','ใบขอเบิกสาขาอากาศ','ใบขอเบิกสาขาสว่างฯ','ใบขอเบิกสาขาบ้านม่วง','ใบขอเบิกสาขาท่าแร่','ใบขอเบิกสาขาเซกา','ใบขอเบิกสินค้าสินเชื่อ','ใบขอเบิกสนง.ใหญ่'],
+  po:[],fi:[],md:[],cf:[]
+};
+const CRUDS=['ดู','เพิ่ม','แก้','ลบ'];
+let cur=null;
+const fmt=n=>n.toLocaleString('en-US');
+
+function renderList(){
+  document.getElementById('plist').innerHTML=POSITIONS.map(p=>`
+    <div class="prow ${cur&&cur.id===p.id?'sel':''}" onclick="openPos(${p.id})">
+      <div class="pav">${p.name.substring(0,2)}</div>
+      <div><div class="pn">${p.name}</div><div class="pm">${p.branch} · ${p.dept}</div></div>
+      <span class="pu">${p.users.length} คน</span>
+    </div>`).join('');
+}
+
+function openPos(id){cur=POSITIONS.find(p=>p.id===id);renderList();renderEditor();}
+
+function newPos(){
+  const n={id:Date.now(),name:'ตำแหน่งใหม่',branch:'',dept:'',limit:0,users:[],wh:[],docs:[],menus:{sl:[],po:[],wh:[],fi:[],md:[],cf:[]}};
+  POSITIONS.push(n);cur=n;renderList();renderEditor();
+}
+
+function renderEditor(){
+  if(!cur){document.getElementById('editor').innerHTML='<div class="empty-ed">← เลือกตำแหน่ง</div>';return;}
+  document.getElementById('editor').innerHTML=`
+    <div class="ewb"><span class="en">${cur.name}</span></div>
+    <div class="tabs">
+      <span class="tab on" data-t="info" onclick="etab(this)">1. ข้อมูลทั่วไป</span>
+      <span class="tab" data-t="menu" onclick="etab(this)">2. สิทธิ์เมนู</span>
+      <span class="tab" data-t="wh" onclick="etab(this)">3. สิทธิ์คลัง</span>
+      <span class="tab" data-t="doc" onclick="etab(this)">4. กลุ่มเอกสาร</span>
+      <span class="tab" data-t="usr" onclick="etab(this)">5. ผู้ใช้งาน</span>
+    </div>
+    <div class="tbody" id="etb"></div>
+    <div class="pf"><button class="btn b2" onclick="document.getElementById('editor').innerHTML='<div class=empty-ed>← เลือกตำแหน่ง</div>';cur=null;renderList()">ปิด</button>
+    <button class="btn b1" onclick="save_()">💾 บันทึก</button></div>`;
+  showTab('info');
+}
+
+function etab(el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');showTab(el.dataset.t);}
+
+function showTab(t){
+  const p=cur;let h='';
+  if(t==='info'){h=`
+    <div class="fg"><div class="fl">ชื่อตำแหน่ง</div><input type="text" value="${p.name}" onchange="cur.name=this.value;document.querySelector('.ewb .en').textContent=this.value;renderList()"></div>
+    <div class="row2">
+      <div class="fg"><div class="fl">Scope: สาขา</div><select><option>ทุกสาขา</option><option>สนง.ใหญ่</option><option>สาขาท่าแร่</option><option>สาขาเซกา</option><option>สาขาอากาศ</option></select></div>
+      <div class="fg"><div class="fl">Scope: แผนก</div><select><option>ทุกแผนก</option><option>ขาย</option><option>จัดซื้อ</option><option>คลัง</option><option>บัญชี/การเงิน</option><option>บริการ</option><option>บริหาร</option><option>IT</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">วงเงินอนุมัติ (Authority Limit · ฿) → ผูก CF-2.6</div><input type="text" value="${fmt(p.limit)}" placeholder="0 = ไม่มีวงเงิน"></div>
+    <div style="margin-top:10px;background:#FEF9C3;border:1px solid #FDE68A;border-radius:8px;padding:10px 12px;font-size:12px;color:#854D0E">⚠ วงเงินนี้จะถูกใช้ใน CF-2.6 Approval Matrix เพื่อกำหนด tier การอนุมัติ</div>`;}
+  else if(t==='menu'){h=MENUS.map(m=>{
+    const hasMenu=p.menus[m.key].length>0;
+    const relDocs=(DOC_MENU_MAP[m.key]||[]);
+    const docBtnHtml=hasMenu&&relDocs.length?`<button onclick="event.stopPropagation();openDocModal('${m.key}')" style="margin-left:auto;font-size:10.5px;font-weight:700;padding:3px 10px;border:1px solid #7C3AED;background:#F5F3FF;color:#7C3AED;border-radius:6px;cursor:pointer;font-family:inherit">📋 กลุ่มเอกสาร (${relDocs.filter(d=>p.docs.includes(d)).length}/${relDocs.length})</button>`:'';
+    return`<div class="mgrp">
+      <div class="mgh"><input type="checkbox" ${hasMenu?'checked':''} onchange="toggleGroup('${m.key}',this.checked)"> <span>${m.label}</span>${docBtnHtml}</div>
+      ${hasMenu?m.pages.map(pg=>`<div class="mgi"><span class="mn">${pg}</span><div class="crud">
+        ${CRUDS.map(c=>`<label><input type="checkbox" ${p.menus[m.key].includes(c)?'checked':''} onchange="toggleCrud('${m.key}','${c}',this.checked)"> ${c}</label>`).join('')}
+      </div></div>`).join(''):''}
+    </div>`;}).join('');
+    // modal overlay for doc group
+    h+=`<div id="docmodal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center">
+      <div style="background:#fff;border-radius:12px;width:480px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.25)">
+        <div style="background:#7C3AED;color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:14px;font-weight:700" id="docmodal-title">กลุ่มเอกสาร</span>
+          <span onclick="document.getElementById('docmodal').style.display='none'" style="cursor:pointer;font-size:18px;color:#E9D5FF">✕</span>
+        </div>
+        <div style="padding:14px 16px;max-height:320px;overflow:auto" id="docmodal-body"></div>
+        <div style="padding:11px 16px;border-top:1px solid #E5E7EB;text-align:right;background:#F8FAFC">
+          <button onclick="document.getElementById('docmodal').style.display='none'" style="padding:8px 16px;border:none;border-radius:7px;background:#7C3AED;color:#fff;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer">ตกลง</button>
+        </div>
+      </div>
+    </div>`;}
+  else if(t==='wh'){h=`<div class="wgrid">${WHS.map(w=>{const[code,name]=w.split(':');const checked=p.wh.includes(code);return`<div class="wcard ${checked?'checked':''}" onclick="toggleWH('${code}',this)"><input type="checkbox" ${checked?'checked':''} onclick="event.stopPropagation();toggleWH('${code}',this.parentElement)"><div><div class="wcode">${code}</div><div class="wname">${name}</div></div></div>`}).join('')}</div>`;}
+  else if(t==='doc'){
+    const activeMenus=Object.keys(p.menus).filter(k=>p.menus[k].length>0);
+    const relevantDocs=[...new Set(activeMenus.flatMap(k=>DOC_MENU_MAP[k]||[]))];
+    const otherDocs=DOCS.filter(d=>!relevantDocs.includes(d));
+    if(!activeMenus.length){
+      h=`<div style="text-align:center;padding:32px 16px;color:#94A3B8;font-size:13px">⚠ ยังไม่ได้กำหนดสิทธิ์เมนู<br><span style="font-size:12px">กลับไปตั้งค่า <b>Tab 2 สิทธิ์เมนู</b> ก่อน จึงจะแสดงกลุ่มเอกสารที่เกี่ยวข้อง</span></div>`;
+    } else {
+      h=`<div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:9px 12px;font-size:12px;color:#1D4ED8;margin-bottom:12px">
+        📋 แสดงกลุ่มเอกสารที่เกี่ยวกับสิทธิ์เมนูที่เลือกไว้ใน Tab 2 (${activeMenus.map(k=>MENUS.find(m=>m.key===k)?.label||k).join(', ')})
+      </div>`;
+      if(relevantDocs.length){
+        h+=`<div style="font-size:11.5px;font-weight:700;color:#374151;margin-bottom:8px">กลุ่มเอกสารที่เกี่ยวข้อง</div>
+        <div class="dgrid">${relevantDocs.map(d=>{const checked=p.docs.includes(d);return`<div class="dc ${checked?'checked':''}" onclick="toggleDoc('${d}',this)"><input type="checkbox" ${checked?'checked':''} onclick="event.stopPropagation();toggleDoc('${d}',this.parentElement)"> ${d}</div>`}).join('')}</div>`;
+      }
+      if(otherDocs.length){
+        h+=`<details style="margin-top:14px"><summary style="font-size:11.5px;font-weight:700;color:#94A3B8;cursor:pointer;margin-bottom:8px">กลุ่มเอกสารอื่น (${otherDocs.length})</summary>
+        <div class="dgrid" style="margin-top:8px">${otherDocs.map(d=>{const checked=p.docs.includes(d);return`<div class="dc ${checked?'checked':''}" onclick="toggleDoc('${d}',this)"><input type="checkbox" ${checked?'checked':''} onclick="event.stopPropagation();toggleDoc('${d}',this.parentElement)"> ${d}</div>`}).join('')}</div></details>`;
+      }
+    }
+  }
+  else{h=`<div style="margin-bottom:10px;font-size:12.5px;color:#64748B">พนักงาน (MD-4) ที่ถูกผูกกับตำแหน่งนี้ (1 คน : 1 ตำแหน่ง)</div>`+
+    (p.users.length?p.users.map(u=>`<div class="urow"><div class="uav">${u.substring(0,2)}</div><div class="un">${u}<div class="ud">ผูกกับ "${p.name}"</div></div><span class="rm" onclick="toast_('ยกเลิกการผูกจะ remove user ออกจาก position นี้')">ยกเลิก</span></div>`).join(''):'<div style="color:#94A3B8;text-align:center;padding:20px;font-size:12.5px">ยังไม่มีพนักงาน → ไปผูกที่ MD-4 Employee</div>')+
+    `<div style="margin-top:14px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px 12px;font-size:12px;color:#1D4ED8">การผูก user กับ Position ทำได้ที่ <b>MD-4 บันทึกข้อมูลพนักงาน</b> (เลือก Position ในฟอร์มพนักงาน)</div>`;}
+  document.getElementById('etb').innerHTML=h;
+}
+
+function openDocModal(menuKey){
+  const relDocs=DOC_MENU_MAP[menuKey]||[];
+  const menuLabel=MENUS.find(m=>m.key===menuKey)?.label||menuKey;
+  document.getElementById('docmodal-title').textContent='กลุ่มเอกสาร — '+menuLabel;
+  document.getElementById('docmodal-body').innerHTML=
+    `<div style="font-size:12px;color:#64748B;margin-bottom:10px">เลือกกลุ่มเอกสารที่ตำแหน่งนี้มีสิทธิ์เข้าถึงได้</div>`+
+    (relDocs.length?`<div class="dgrid">${relDocs.map(d=>{const checked=cur.docs.includes(d);return`<div class="dc ${checked?'checked':''}" onclick="toggleDoc('${d}',this);renderMenuDocBtn('${menuKey}')"><input type="checkbox" ${checked?'checked':''} onclick="event.stopPropagation();toggleDoc('${d}',this.parentElement);renderMenuDocBtn('${menuKey}')"> ${d}</div>`}).join('')}</div>`
+    :`<div style="color:#94A3B8;text-align:center;padding:20px">ไม่มีกลุ่มเอกสารสำหรับเมนูนี้</div>`);
+  document.getElementById('docmodal').style.display='flex';
+}
+function renderMenuDocBtn(menuKey){
+  // update badge count
+  const relDocs=DOC_MENU_MAP[menuKey]||[];
+  const count=relDocs.filter(d=>cur.docs.includes(d)).length;
+  // re-render menu tab to refresh badge
+  showTab('menu');
+}
+function toggleGroup(key,on){if(on)cur.menus[key]=['ดู'];else cur.menus[key]=[];showTab('menu');}
+function toggleCrud(key,c,on){if(on){if(!cur.menus[key].includes(c))cur.menus[key].push(c);}else cur.menus[key]=cur.menus[key].filter(x=>x!==c);showTab('menu');}
+function toggleWH(code,el){if(cur.wh.includes(code))cur.wh=cur.wh.filter(x=>x!==code);else cur.wh.push(code);el.classList.toggle('checked',cur.wh.includes(code));el.querySelector('input').checked=cur.wh.includes(code);}
+function toggleDoc(d,el){if(cur.docs.includes(d))cur.docs=cur.docs.filter(x=>x!==d);else cur.docs.push(d);el.classList.toggle('checked',cur.docs.includes(d));el.querySelector('input').checked=cur.docs.includes(d);}
+function save_(){toast_('"'+cur.name+'" บันทึกแล้ว → emit position:saved');}
+function toast_(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2800);}
+renderList();
+</script></body></html>

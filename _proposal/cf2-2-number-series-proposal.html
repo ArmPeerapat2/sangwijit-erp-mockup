@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<title>CF-2.2 รหัสเอกสาร — Portal-managed | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1F2937;display:flex;min-height:100vh}
+.sb{width:240px;background:#1E3A5F;color:#D1D5DB;padding:14px 10px;flex-shrink:0}
+.sb-brand{font-size:13px;font-weight:700;color:#fff;padding:8px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:12px}
+.sb-lbl{font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;padding:4px 8px;margin-top:8px}
+.sb a{display:block;padding:7px 10px;font-size:12.5px;color:#D1D5DB;text-decoration:none;border-radius:5px;margin:1px 0}
+.sb a:hover{background:rgba(255,255,255,.08)}
+.sb a.active{background:#2563EB;color:#fff;font-weight:600}
+.sb a .c{font-size:9.5px;font-weight:700;color:#94A3B8;min-width:36px;display:inline-block}
+.main{flex:1;overflow:auto}
+.mwb{background:linear-gradient(135deg,#1E3A5F,#2563EB);color:#fff;padding:18px 28px}
+.mwb h1{font-size:20px;font-weight:700}
+.mwb .sub{font-size:12px;color:#BFDBFE;margin-top:2px}
+.mwb .adr{display:inline-block;margin-top:8px;background:rgba(255,255,255,.15);padding:3px 10px;border-radius:20px;font-size:11.5px}
+.content{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
+
+/* tabs */
+.tab-bar{display:flex;gap:0;border-bottom:2px solid #E5E7EB;background:#fff;border-radius:10px 10px 0 0;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.tb{padding:12px 20px;font-size:13px;font-weight:600;color:#64748B;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.tb.on{color:#2563EB;border-bottom-color:#2563EB;background:#EFF6FF}
+.panel{display:none}.panel.on{display:block}
+
+/* Panel A — matrix */
+.matrix-wrap{background:#fff;border-radius:0 10px 10px 10px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:auto}
+.matrix-head{padding:14px 18px;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.matrix-head h2{font-size:14px;font-weight:700}
+table{width:100%;border-collapse:collapse;min-width:800px}
+thead th{padding:9px 12px;background:#F8FAFC;font-size:11.5px;font-weight:700;color:#374151;text-align:left;border-bottom:2px solid #E5E7EB;white-space:nowrap}
+thead th:first-child{width:160px;position:sticky;left:0;z-index:2;background:#F1F5F9}
+tbody tr:hover td{background:#F8FAFC}
+tbody td{padding:9px 12px;border-bottom:1px solid #F1F5F9;font-size:12.5px;vertical-align:middle}
+tbody td:first-child{font-weight:700;background:#F8FAFC;position:sticky;left:0;z-index:1;border-right:1px solid #E5E7EB}
+.code-cell{display:flex;align-items:center;gap:6px}
+.code-tag{background:#EFF6FF;color:#1D4ED8;padding:3px 8px;border-radius:6px;font-size:11.5px;font-weight:700;font-family:monospace;cursor:pointer;border:1px solid #BFDBFE}
+.code-tag:hover{background:#DBEAFE}
+.code-tag.none{background:#F1F5F9;color:#9CA3AF;border-color:#E5E7EB}
+.running-badge{font-size:10.5px;color:#64748B}
+
+/* Panel B — DocType editor */
+.editor-wrap{background:#fff;border-radius:0 10px 10px 10px;box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex;gap:0}
+.dtype-list{width:220px;border-right:1px solid #E5E7EB;flex-shrink:0}
+.dtype-list h3{font-size:12px;font-weight:700;padding:12px 14px;border-bottom:1px solid #E5E7EB;color:#64748B;text-transform:uppercase;letter-spacing:.05em}
+.drow{padding:10px 14px;border-bottom:1px solid #F1F5F9;cursor:pointer;font-size:12.5px;font-weight:600}
+.drow:hover{background:#F8FAFC}
+.drow.sel{background:#EFF6FF;border-left:3px solid #2563EB;color:#1D4ED8}
+.drow .dsub{font-size:11px;color:#94A3B8;font-weight:400;margin-top:1px}
+.dtype-ed{flex:1;padding:20px}
+.dtype-ed h3{font-size:15px;font-weight:700;margin-bottom:16px}
+.fg{margin-bottom:14px}
+.fl{font-size:11.5px;font-weight:700;color:#374151;margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.fl .hint{font-size:10.5px;color:#94A3B8;font-weight:400}
+input[type=text],select{width:100%;padding:8px 11px;border:1px solid #D1D5DB;border-radius:7px;font-family:inherit;font-size:13px;background:#fff}
+input[type=text]:focus,select:focus{outline:none;border-color:#2563EB;box-shadow:0 0 0 2px #DBEAFE}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.preview-box{background:#1E293B;color:#F8FAFC;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:15px;font-weight:700;letter-spacing:.08em;margin-top:4px}
+.preview-box .eg{font-size:11px;color:#94A3B8;font-weight:400;font-family:'Inter','Noto Sans Thai',sans-serif;margin-top:6px;letter-spacing:0}
+
+/* branch running table */
+.br-table{width:100%;border-collapse:collapse;margin-top:10px}
+.br-table th{padding:7px 10px;background:#F8FAFC;font-size:11.5px;font-weight:700;color:#374151;text-align:left;border-bottom:1px solid #E5E7EB}
+.br-table td{padding:7px 10px;border-bottom:1px solid #F1F5F9;font-size:12.5px}
+.run-num{font-family:monospace;font-weight:700;color:#1D4ED8}
+.reset-btn{font-size:11px;color:#DC2626;cursor:pointer;font-weight:600;border:none;background:none;font-family:inherit}
+
+/* Panel C — audit */
+.audit-wrap{background:#fff;border-radius:0 10px 10px 10px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
+.audit-head{padding:14px 18px;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between}
+.audit-head h2{font-size:14px;font-weight:700}
+.alog{padding:0}
+.arow{display:flex;align-items:flex-start;gap:12px;padding:11px 18px;border-bottom:1px solid #F1F5F9;font-size:12.5px}
+.arow:hover{background:#F8FAFC}
+.aicon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.aicon.reset{background:#FEE2E2}.aicon.edit{background:#EFF6FF}.aicon.create{background:#DCFCE7}
+.atime{font-size:11px;color:#94A3B8;margin-top:2px}
+.abadge{display:inline-block;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700}
+.abadge.reset{background:#FEE2E2;color:#991B1B}
+.abadge.edit{background:#EFF6FF;color:#1D4ED8}
+.abadge.create{background:#DCFCE7;color:#166534}
+
+/* modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;align-items:center;justify-content:center}
+.modal-bg.on{display:flex}
+.modal{background:#fff;border-radius:12px;padding:24px;width:420px;max-width:95vw;box-shadow:0 20px 50px rgba(0,0,0,.2)}
+.modal h3{font-size:15px;font-weight:700;margin-bottom:16px}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.btn{padding:8px 16px;border:none;border-radius:7px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.b1{background:#2563EB;color:#fff}.b2{background:#E5E7EB;color:#374151}
+.b-danger{background:#DC2626;color:#fff}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;padding:9px 18px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:99}
+.toast.on{opacity:1}
+</style></head><body>
+
+<div class="sb">
+  <div class="sb-brand">Sangwijit ERP · v3.0</div>
+  <div class="sb-lbl">ตั้งค่าระบบ (CF)</div>
+  <a href="#"><span class="c">CF</span>Config Hub</a>
+  <a href="#"><span class="c">CF-1</span>ตำแหน่ง & สิทธิ์</a>
+  <a href="#" class="active"><span class="c">CF-2.2</span>รหัสเอกสาร</a>
+  <a href="#"><span class="c">CF-2.5</span>Template ช่าง</a>
+  <a href="#"><span class="c">CF-2.6</span>Approval Matrix</a>
+  <a href="#"><span class="c">CF-2.7</span>Doc Template</a>
+</div>
+
+<div class="main">
+  <div class="mwb">
+    <div>
+      <h1>CF-2.2 รหัสเอกสาร (Number Series)</h1>
+      <div class="sub">Portal จัดการ running เอง · Branch sub-series · reset ทุกเดือน</div>
+      <span class="adr">ADR-0004 · Portal-managed</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Tab bar -->
+    <div style="margin-bottom:-20px">
+      <div class="tab-bar">
+        <div class="tb on" onclick="switchPanel('matrix',this)">A · ตาราง Branch × DocType</div>
+        <div class="tb" onclick="switchPanel('editor',this)">B · ตั้งค่า Format ต่อ DocType</div>
+        <div class="tb" onclick="switchPanel('audit',this)">C · ประวัติ / Audit Log</div>
+      </div>
+    </div>
+
+    <!-- Panel A: Matrix -->
+    <div class="panel on" id="panel-matrix">
+      <div class="matrix-wrap">
+        <div class="matrix-head">
+          <h2>Prefix ต่อ Branch × DocType (คลิก code เพื่อแก้ไข)</h2>
+          <div style="font-size:12px;color:#64748B">Format: <b style="font-family:monospace">[BranchCode][DocCode]-[YYMM]-[###]</b></div>
+        </div>
+        <div style="overflow:auto">
+          <table id="matrix-table"></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel B: DocType editor -->
+    <div class="panel" id="panel-editor">
+      <div class="editor-wrap">
+        <div class="dtype-list">
+          <h3>ประเภทเอกสาร</h3>
+          <div id="dtype-list"></div>
+        </div>
+        <div class="dtype-ed" id="dtype-ed">
+          <div style="color:#94A3B8;font-size:13px;padding:30px 0;text-align:center">← เลือก DocType เพื่อตั้งค่า</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel C: Audit -->
+    <div class="panel" id="panel-audit">
+      <div class="audit-wrap">
+        <div class="audit-head">
+          <h2>ประวัติการเปลี่ยนแปลง</h2>
+          <div style="font-size:12px;color:#64748B">60 วันล่าสุด</div>
+        </div>
+        <div class="alog" id="audit-log"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: edit prefix -->
+<div class="modal-bg" id="modal-prefix">
+  <div class="modal">
+    <h3 id="modal-title">แก้ไข Prefix</h3>
+    <div class="fg"><div class="fl">BranchCode <span class="hint">(auto จาก login · แก้ได้เฉพาะ admin)</span></div>
+      <input type="text" id="m-branch" placeholder="08"></div>
+    <div class="fg"><div class="fl">DocCode <span class="hint">(ตัวย่อประเภทเอกสาร)</span></div>
+      <input type="text" id="m-doccode" placeholder="SO"></div>
+    <div class="fg"><div class="fl">ตัวอย่าง Running ล่าสุด</div>
+      <div class="preview-box" id="m-preview">—
+        <div class="eg">กรอก BranchCode + DocCode เพื่อดูตัวอย่าง</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn b2" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn b1" onclick="savePrefix()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: reset running -->
+<div class="modal-bg" id="modal-reset">
+  <div class="modal">
+    <h3>🔄 Reset Running Number</h3>
+    <div style="font-size:13px;color:#374151;margin-bottom:16px" id="reset-desc"></div>
+    <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:10px 12px;font-size:12.5px;color:#991B1B;margin-bottom:4px">
+      ⚠ การ reset จะเริ่ม running ใหม่จาก 001 · จะถูกบันทึกใน Audit Log
+    </div>
+    <div class="modal-foot">
+      <button class="btn b2" onclick="closeReset()">ยกเลิก</button>
+      <button class="btn b-danger" onclick="confirmReset()">Reset เป็น 001</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const BRANCHES=[
+  {code:'08',name:'สนง.ใหญ่'},
+  {code:'01',name:'สาขาอากาศ'},
+  {code:'04',name:'สาขาท่าแร่'},
+  {code:'05',name:'สาขาเซกา'},
+  {code:'02',name:'สาขาบ้านม่วง'},
+  {code:'PW',name:'ปลีกโกดัง'},
+];
+const DOC_TYPES=[
+  {key:'S',label:'ใบขอเบิก',desc:'Stock Requisition'},
+  {key:'SO',label:'ใบสั่งขาย',desc:'Sales Order'},
+  {key:'INV',label:'Invoice (บิลขาย)',desc:'Sales Invoice'},
+  {key:'QT',label:'ใบเสนอราคา',desc:'Quotation'},
+  {key:'GR',label:'ใบรับสินค้า',desc:'Goods Receipt (GRN)'},
+  {key:'TR',label:'ใบโอนสินค้า',desc:'Stock Transfer'},
+  {key:'PO',label:'ใบสั่งซื้อ',desc:'Purchase Order'},
+  {key:'AP',label:'ตั้งหนี้ Vendor',desc:'AP Invoice'},
+  {key:'RV',label:'ใบรับชำระ',desc:'Cash Receipt'},
+  {key:'SVC',label:'ใบรับงานซ่อม',desc:'Service Order'},
+];
+
+// running data: {branchCode+docKey: {running, prefix}}
+const RUNNING_DATA={
+  '08S':{running:12,prefix:'08S'},'08SO':{running:5,prefix:'08SO'},'08INV':{running:47,prefix:'08INV'},
+  '08QT':{running:3,prefix:'08QT'},'08GR':{running:18,prefix:'08GR'},'08TR':{running:7,prefix:'08TR'},
+  '08PO':{running:9,prefix:'08PO'},'08AP':{running:9,prefix:'08AP'},'08RV':{running:47,prefix:'08RV'},'08SVC':{running:22,prefix:'08SVC'},
+  '01S':{running:8,prefix:'01S'},'01SO':{running:4,prefix:'01SO'},'01INV':{running:31,prefix:'01INV'},
+  '01QT':{running:1,prefix:'01QT'},'01GR':{running:10,prefix:'01GR'},'01TR':{running:3,prefix:'01TR'},
+  '01SVC':{running:14,prefix:'01SVC'},
+  '04S':{running:15,prefix:'04S'},'04SO':{running:6,prefix:'04SO'},'04INV':{running:38,prefix:'04INV'},
+  '04QT':{running:2,prefix:'04QT'},'04SVC':{running:19,prefix:'04SVC'},
+};
+const AUDIT_LOG=[
+  {type:'reset',icon:'🔄',dt:'2026-06-01 09:12',user:'peerapat@sangwijit.co.th',msg:'Reset running: 04S-2605 → 001 (เดือนใหม่)'},
+  {type:'edit',icon:'✏️',dt:'2026-05-31 14:30',user:'peerapat@sangwijit.co.th',msg:'แก้ DocCode: 08INV → prefix "08INV" (เดิม "08IV")'},
+  {type:'create',icon:'➕',dt:'2026-05-30 10:05',user:'peerapat@sangwijit.co.th',msg:'สร้าง series ใหม่: PW-SVC (ปลีกโกดัง · ใบรับงานซ่อม)'},
+  {type:'reset',icon:'🔄',dt:'2026-05-01 00:01',user:'system',msg:'Auto-reset ทุก series เดือน 2606 (monthly reset)'},
+  {type:'edit',icon:'✏️',dt:'2026-04-28 16:55',user:'peerapat@sangwijit.co.th',msg:'แก้ DocCode: 01TR → prefix "01TR" (รองรับโอนย้ายสินค้าสาขา)'},
+  {type:'create',icon:'➕',dt:'2026-04-15 11:20',user:'peerapat@sangwijit.co.th',msg:'สร้าง series: 05S, 05SO, 05INV (สาขาเซกา · เปิดใหม่)'},
+];
+
+let editTarget=null, resetTarget=null, curDocType=DOC_TYPES[0];
+
+function pad3(n){return String(n).padStart(3,'0')}
+function ym(){const d=new Date();return String(d.getFullYear()).slice(-2)+String(d.getMonth()+1).padStart(2,'0')}
+function fmtRunning(bCode,dKey){
+  const k=bCode+dKey;
+  const r=RUNNING_DATA[k];
+  if(!r)return null;
+  return `${r.prefix}-${ym()}-${pad3(r.running)}`;
+}
+
+// Panel switch
+function switchPanel(id,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(t=>t.classList.remove('on'));
+  document.getElementById('panel-'+id).classList.add('on');
+  el.classList.add('on');
+}
+
+// Panel A: render matrix
+function renderMatrix(){
+  const thead=`<thead><tr>
+    <th>สาขา</th>
+    ${DOC_TYPES.map(d=>`<th>${d.label}<div style="font-size:10px;font-weight:400;color:#94A3B8">${d.desc}</div></th>`).join('')}
+  </tr></thead>`;
+  const tbody=BRANCHES.map(b=>`<tr>
+    <td><div style="font-size:12.5px">${b.name}</div><div style="font-size:11px;color:#64748B">${b.code}</div></td>
+    ${DOC_TYPES.map(d=>{
+      const k=b.code+d.key;
+      const r=RUNNING_DATA[k];
+      if(r){
+        return`<td><div class="code-cell"><span class="code-tag" onclick="openEdit('${b.code}','${d.key}','${b.name}','${d.label}')">${r.prefix}</span></div>
+        <div class="running-badge">${ym()}-${pad3(r.running)}</div></td>`;
+      }
+      return`<td><span class="code-tag none" onclick="openEdit('${b.code}','${d.key}','${b.name}','${d.label}')">+ เพิ่ม</span></td>`;
+    }).join('')}
+  </tr>`).join('');
+  document.getElementById('matrix-table').innerHTML=thead+'<tbody>'+tbody+'</tbody>';
+}
+
+// Panel B: doctype list + editor
+function renderDtypeList(){
+  document.getElementById('dtype-list').innerHTML=DOC_TYPES.map(d=>`
+    <div class="drow ${d.key===curDocType.key?'sel':''}" onclick="selectDtype('${d.key}')">
+      <span style="font-family:monospace;font-size:12px;color:#2563EB;font-weight:700">[${d.key}]</span> ${d.label}
+      <div class="dsub">${d.desc}</div>
+    </div>`).join('');
+}
+function selectDtype(key){curDocType=DOC_TYPES.find(d=>d.key===key);renderDtypeList();renderDtypeEditor();}
+
+function renderDtypeEditor(){
+  const d=curDocType;
+  const branchRows=BRANCHES.map(b=>{
+    const k=b.code+d.key;
+    const r=RUNNING_DATA[k];
+    const ex=r?`${r.prefix}-${ym()}-${pad3(r.running)}`:'—';
+    return`<tr>
+      <td><b>${b.name}</b><div style="font-size:11px;color:#94A3B8">${b.code}</div></td>
+      <td><span style="font-family:monospace;font-weight:700;color:#1D4ED8">${r?r.prefix:'—'}</span></td>
+      <td>${r?`<span class="run-num">${ym()}-${pad3(r.running)}</span>`:'<span style="color:#9CA3AF">ยังไม่เปิด</span>'}</td>
+      <td><span style="font-family:monospace;font-size:12px">${ex}</span></td>
+      <td>${r?`<button class="reset-btn" onclick="openReset('${b.code}','${d.key}','${b.name}','${d.label}')">🔄 Reset</button>`:'<button class="reset-btn" style="color:#2563EB" onclick="openEdit(\'${b.code}\',\'${d.key}\',\'${b.name}\',\'${d.label}\')">+ เปิดใช้</button>'}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('dtype-ed').innerHTML=`
+    <h3><span style="font-family:monospace;color:#2563EB">[${d.key}]</span> ${d.label} <span style="font-size:12px;color:#94A3B8;font-weight:400">${d.desc}</span></h3>
+    <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:10px 14px;font-size:12.5px;margin-bottom:16px">
+      <b>Format มาตรฐาน:</b> <span style="font-family:monospace">[BranchCode][${d.key}]-[YYMM]-[###]</span>
+      <div style="margin-top:4px;color:#64748B;font-size:12px">ตัวอย่าง: <span style="font-family:monospace;color:#166534">08${d.key}-${ym()}-001</span> = สนง.ใหญ่ · ${d.label} · มิ.ย.69 · #1</div>
+    </div>
+    <div style="font-size:12.5px;font-weight:700;margin-bottom:8px">Running ต่อสาขา</div>
+    <table class="br-table">
+      <thead><tr><th>สาขา</th><th>Prefix</th><th>Running ปัจจุบัน</th><th>ตัวอย่างเลขล่าสุด</th><th></th></tr></thead>
+      <tbody>${branchRows}</tbody>
+    </table>
+    <div style="margin-top:12px;font-size:12px;color:#94A3B8">🔄 Reset อัตโนมัติทุกวันที่ 1 ของเดือน (YYMM เปลี่ยน → running กลับ 001)</div>`;
+}
+
+// Panel C: audit
+function renderAudit(){
+  document.getElementById('audit-log').innerHTML=AUDIT_LOG.map(a=>`
+    <div class="arow">
+      <div class="aicon ${a.type}">${a.icon}</div>
+      <div style="flex:1">
+        <span class="abadge ${a.type}">${a.type==='reset'?'Reset':a.type==='edit'?'แก้ไข':'สร้างใหม่'}</span>
+        <span style="margin-left:8px;font-size:12.5px">${a.msg}</span>
+        <div class="atime">${a.dt} · ${a.user}</div>
+      </div>
+    </div>`).join('');
+}
+
+// modal: edit prefix
+let editB='',editD='';
+function openEdit(bCode,dKey,bName,dLabel){
+  editB=bCode; editD=dKey;
+  document.getElementById('modal-title').textContent=`แก้ไข Prefix — ${bName} · ${dLabel}`;
+  document.getElementById('m-branch').value=bCode;
+  document.getElementById('m-doccode').value=dKey;
+  updatePreview();
+  document.getElementById('modal-prefix').classList.add('on');
+}
+function updatePreview(){
+  const b=document.getElementById('m-branch').value||'XX';
+  const d=document.getElementById('m-doccode').value||'DOC';
+  const k=b+d;
+  const r=RUNNING_DATA[k];
+  const next=r?r.running+1:1;
+  document.getElementById('m-preview').innerHTML=`${b}${d}-${ym()}-${pad3(next)}<div class="eg">${b} = BranchCode · ${d} = DocCode · ${ym()} = เดือน มิ.ย.69 · ${pad3(next)} = running ถัดไป</div>`;
+}
+document.addEventListener('input',e=>{if(e.target.id==='m-branch'||e.target.id==='m-doccode')updatePreview();});
+function savePrefix(){
+  const b=document.getElementById('m-branch').value;
+  const d=document.getElementById('m-doccode').value;
+  if(!b||!d){toast_('กรุณากรอก BranchCode และ DocCode');return;}
+  const k=b+d;
+  if(!RUNNING_DATA[k])RUNNING_DATA[k]={running:0,prefix:b+d};
+  else RUNNING_DATA[k].prefix=b+d;
+  closeModal();
+  renderMatrix();
+  if(curDocType)renderDtypeEditor();
+  toast_(`บันทึก prefix "${b+d}" แล้ว`);
+}
+function closeModal(){document.getElementById('modal-prefix').classList.remove('on');}
+
+// modal: reset
+function openReset(bCode,dKey,bName,dLabel){
+  resetTarget={bCode,dKey};
+  const k=bCode+dKey;
+  const r=RUNNING_DATA[k];
+  document.getElementById('reset-desc').innerHTML=`<b>${bName} · ${dLabel}</b><br>Running ปัจจุบัน: <span style="font-family:monospace;color:#2563EB">${k}-${ym()}-${pad3(r?.running||0)}</span><br>หลัง reset: <span style="font-family:monospace;color:#DC2626">${k}-${ym()}-001</span>`;
+  document.getElementById('modal-reset').classList.add('on');
+}
+function confirmReset(){
+  if(!resetTarget)return;
+  const k=resetTarget.bCode+resetTarget.dKey;
+  if(RUNNING_DATA[k])RUNNING_DATA[k].running=1;
+  closeReset();
+  renderMatrix();
+  if(curDocType)renderDtypeEditor();
+  AUDIT_LOG.unshift({type:'reset',icon:'🔄',dt:'2026-06-01 '+new Date().toTimeString().slice(0,5),user:'peerapat@sangwijit.co.th',msg:`Reset running: ${k}-${ym()} → 001 (manual reset)`});
+  renderAudit();
+  toast_(`Reset ${k} เป็น 001 แล้ว`);
+}
+function closeReset(){document.getElementById('modal-reset').classList.remove('on');resetTarget=null;}
+
+function toast_(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2800);}
+
+// init
+renderMatrix();
+renderDtypeList();
+renderDtypeEditor();
+renderAudit();
+</script></body></html>

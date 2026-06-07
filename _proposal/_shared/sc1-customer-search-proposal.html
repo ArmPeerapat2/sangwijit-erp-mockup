@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SharedCustomerSearch — interactive prototype | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#E5EAF0;color:#1F2937;padding:24px;min-width:980px}
+  .head{display:flex;align-items:center;gap:10px}.head h1{font-size:19px;font-weight:700}
+  .head .sc{background:#2563EB;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px}
+  .sub{font-size:12.5px;color:#475569;margin:6px 0 14px}
+  .tip{font-size:12px;background:#FEF9C3;border:1px solid #FDE68A;color:#854D0E;padding:7px 12px;border-radius:8px;margin-bottom:14px;display:inline-block}
+  /* SEARCH POPUP */
+  .popwin{background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.25);width:760px;overflow:hidden}
+  .winbar{background:#F1F5F9;border-bottom:1px solid #CBD5E1;padding:8px 14px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#334155}
+  .winbar .x{margin-left:auto;color:#94A3B8;cursor:pointer}
+  .findbar{padding:12px 14px;display:flex;gap:10px;align-items:center}
+  .findbar input{flex:1;padding:9px 12px;border:1px solid #94A3B8;border-radius:6px;font-family:inherit;font-size:13px}
+  .addbtn{background:#16A34A;color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:12px;font-weight:700;padding:9px 13px;cursor:pointer;white-space:nowrap}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{background:#EFF3F8;text-align:left;font-weight:600;color:#475569;font-size:11.5px;padding:7px 10px;border-bottom:1px solid #CBD5E1}
+  td{padding:8px 10px;border-bottom:1px solid #F1F5F9}
+  tr.r{cursor:pointer}tr.r:hover{background:#EFF6FF}
+  .amt{text-align:right;font-variant-numeric:tabular-nums}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+  .d-ok{background:#10B981}.d-warn{background:#F59E0B}.d-blk{background:#374151}
+  .empty{padding:24px;text-align:center;color:#94A3B8;font-size:13px}
+  .empty button{margin-top:10px;background:#16A34A;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-family:inherit;font-weight:700;cursor:pointer}
+  /* INFO MODAL */
+  .overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;z-index:50}
+  .overlay.on{display:flex}
+  .info{background:#fff;border-radius:10px;box-shadow:0 16px 50px rgba(0,0,0,.4);width:640px;overflow:hidden}
+  .ih{padding:14px 18px;border-bottom:1px solid #E5E7EB;display:flex;justify-content:space-between;align-items:flex-start}
+  .ih .n{font-size:17px;font-weight:700}.ih .m{font-size:12px;color:#64748B;margin-top:2px}.ih .x{cursor:pointer;color:#94A3B8;font-size:18px}
+  .creditbar{display:flex;padding:10px 18px;background:#F8FAFC;border-bottom:1px solid #E5E7EB}
+  .cb{flex:1;text-align:center}.cb .l{font-size:10px;color:#64748B}.cb .v{font-size:15px;font-weight:700}.cb .v.red{color:#DC2626}.cb .v.amb{color:#F59E0B}
+  .tabs{display:flex;border-bottom:1px solid #E5E7EB;padding:0 12px}
+  .tab{padding:9px 14px;font-size:12.5px;font-weight:600;color:#64748B;border-bottom:2px solid transparent;cursor:pointer}
+  .tab.on{color:#2563EB;border-bottom-color:#2563EB}
+  .tabbody{padding:14px 18px;max-height:240px;overflow:auto;font-size:12.5px}
+  .kv{display:flex;justify-content:space-between;padding:4px 0}.kv .k{color:#6B7280}.kv .v{font-weight:600}
+  .pf{border-top:1px solid #E5E7EB;padding:11px 18px;display:flex;justify-content:flex-end;gap:9px;background:#F8FAFC}
+  .btn{padding:8px 16px;border:none;border-radius:6px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+  .btn-2{background:#E5E7EB;color:#374151}.btn-1{background:#2563EB;color:#fff}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:99}
+  .toast.on{opacity:1}
+</style>
+</head>
+<body>
+  <div class="head"><h1>SharedCustomerSearch</h1><span class="sc">SC-1</span><span style="font-size:12px;color:#16A34A;font-weight:700">— interactive prototype (กดได้จริง)</span></div>
+  <div class="sub">บริบท: ค้นหาลูกค้าตอนเปิดบิลขาย · ลองพิมพ์ค้น · คลิกชื่อดู popup · สลับ tab · ลองพิมพ์ "xyz" เพื่อดูเคสไม่เจอ → เพิ่มลูกค้า</div>
+  <div class="tip">👆 ลองเล่นได้: พิมพ์ในช่อง Find · คลิกแถวลูกค้า · กดแท็บใน popup · กดปุ่มเพิ่มลูกค้า</div>
+
+  <div class="popwin">
+    <div class="winbar">🔍 Customer Search <span style="margin-left:8px;font-weight:500;color:#94A3B8">(popup ตอนเปิดบิล · mode: create)</span><span class="x" onclick="alert('ปิด popup ค้นหา')">✕</span></div>
+    <div class="findbar">
+      <input id="q" placeholder="Find: รหัส / ชื่อ / ผู้ติดต่อ / เบอร์" oninput="render()" autofocus>
+      <button class="addbtn" onclick="addCust()">+ เพิ่มลูกค้า</button>
+    </div>
+    <div id="listwrap">
+      <table>
+        <thead><tr><th>รหัส</th><th>ชื่อ</th><th>ผู้ติดต่อ</th><th>ที่อยู่</th><th>โทรศัพท์</th><th class="amt">ยอดหนี้</th><th>สถานะ</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div id="empty" class="empty" style="display:none">
+        ไม่พบลูกค้าที่ตรงกับ "<b id="qx"></b>"
+        <br><button onclick="addCust()">+ เพิ่มลูกค้าใหม่</button>
+      </div>
+    </div>
+    <div style="padding:7px 14px;font-size:11px;color:#94A3B8;border-top:1px solid #F1F5F9" id="cnt"></div>
+  </div>
+
+  <!-- INFO MODAL -->
+  <div class="overlay" id="ov" onclick="if(event.target.id==='ov')closeInfo()">
+    <div class="info">
+      <div class="ih"><div><div class="n" id="i_name"></div><div class="m" id="i_meta"></div></div><span class="x" onclick="closeInfo()">✕</span></div>
+      <div class="creditbar">
+        <div class="cb"><div class="l">วงเงิน</div><div class="v" id="i_lim"></div></div>
+        <div class="cb"><div class="l">ยอดหนี้ค้าง</div><div class="v amb" id="i_used"></div></div>
+        <div class="cb"><div class="l">คงเหลือ</div><div class="v red" id="i_rem"></div></div>
+        <div class="cb"><div class="l">เช็คในมือ</div><div class="v" id="i_chq"></div></div>
+      </div>
+      <div class="tabs">
+        <span class="tab" data-t="customer" onclick="tab(this)">Customer</span>
+        <span class="tab on" data-t="out" onclick="tab(this)">OutStanding</span>
+        <span class="tab" data-t="sales" onclick="tab(this)">Sales</span>
+        <span class="tab" data-t="ytd" onclick="tab(this)">YTD</span>
+      </div>
+      <div class="tabbody" id="i_body"></div>
+      <div class="pf"><button class="btn btn-2" onclick="closeInfo()">ปิด</button><button class="btn btn-1" onclick="pick()">✓ เลือกลูกค้านี้</button></div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+<script>
+const DATA=[
+ {code:'cr484804',name:'ร้าน วัฒนาการไฟฟ้า',contact:'-',addr:'95/2 ม.13 ต.บ้านแพง',tel:'042-591-715',debt:926590,st:'warn',type:'นิติบุคคล (ดีลเลอร์)',pg:'VIP',terms:'เครดิต 30 วัน',lim:1000000,used:926590,rem:73410,chq:147048,zone:'อีสาน / ทีม B',
+   out:[['25/04/69','TSSA6904','ใบขายส่ง','09/06/69',9500],['13/05/69','TSSA6905','ใบขายส่ง','27/06/69',31200],['20/05/69','00259994','Cheque In','05/06/69',147048]],
+   sales:[['20/05/69','INV-2605-0042','เครื่องใช้ไฟฟ้า 12 รายการ',485000],['02/05/69','INV-2605-0011','หลอด LED + อุปกรณ์',128400]], ytd:'ยอดขายสะสมปีนี้ 2,140,000 · 14 บิล'},
+ {code:'010553503',name:'บ. ทีอาร์บี เชอร์เม็ดติก้า',contact:'-',addr:'อาคารคิวเฮ้าส์',tel:'081-944-4946',debt:0,st:'ok',type:'นิติบุคคล',pg:'A',terms:'เงินสด',lim:500000,used:0,rem:500000,chq:0,zone:'กลาง / ทีม A',out:[],sales:[['10/05/69','INV-2605-0030','สายไฟ',58000]],ytd:'ยอดขายสะสม 320,000 · 3 บิล'},
+ {code:'010555804',name:'บ. บ้านสานบุญเนอร์สซิ่งโฮม',contact:'คุณ ภิชาวุฒิ',addr:'40/8 บรมราชชนนี',tel:'-',debt:0,st:'ok',type:'นิติบุคคล',pg:'B',terms:'เครดิต 15 วัน',lim:200000,used:0,rem:200000,chq:0,zone:'กลาง',out:[],sales:[],ytd:'ลูกค้าใหม่'},
+ {code:'047354000',name:'โรงเรียนบ้านป่าพาง',contact:'-',addr:'191 ม.7 ต.นาตงวัฒนา',tel:'086-241-4939',debt:0,st:'ok',type:'ราชการ',pg:'C',terms:'เครดิต 45 วัน',lim:300000,used:0,rem:300000,chq:0,zone:'อีสาน',out:[],sales:[['15/03/69','INV-2603-0099','คอมพิวเตอร์',95000]],ytd:'95,000 · 1 บิล'},
+ {code:'099400038',name:'โรงเรียนบ้านโพนวัฒนาวิทยา',contact:'-',addr:'210 ม.4 ต.บ้านโพน',tel:'095-663-6672',debt:0,st:'ok',type:'ราชการ',pg:'C',terms:'เครดิต 45 วัน',lim:300000,used:0,rem:300000,chq:0,zone:'อีสาน',out:[],sales:[],ytd:'ลูกค้าใหม่'},
+ {code:'041354000',name:'หจก. วิทยกุลก่อสร้าง',contact:'-',addr:'44/6 ถนนวัฒนานุวงศ์',tel:'042-212-040',debt:50000,st:'blk',type:'นิติบุคคล',pg:'B',terms:'เครดิต 30 วัน',lim:200000,used:250000,rem:-50000,chq:0,zone:'อีสาน',out:[['01/03/69','TSSA6903','ใบขายส่ง','15/04/69',50000]],sales:[],ytd:'180,000 · 2 บิล · ⚠ เกินวงเงิน'}
+];
+let cur=null;
+const fmt=n=>n.toLocaleString('en-US');
+function render(){
+  const q=(document.getElementById('q').value||'').trim().toLowerCase();
+  const f=DATA.filter(c=>!q||c.name.toLowerCase().includes(q)||c.code.includes(q)||(c.contact||'').toLowerCase().includes(q)||(c.tel||'').includes(q));
+  const dots={ok:'d-ok',warn:'d-warn',blk:'d-blk'},stt={ok:'ปกติ',warn:'เครดิต',blk:'Blocked'};
+  document.getElementById('rows').innerHTML=f.map((c,i)=>`<tr class="r" onclick="openInfo(${DATA.indexOf(c)})"><td>${c.code}</td><td>${c.name}</td><td>${c.contact}</td><td>${c.addr}</td><td>${c.tel}</td><td class="amt">${fmt(c.debt)}</td><td><span class="dot ${dots[c.st]}"></span>${stt[c.st]}</td></tr>`).join('');
+  document.getElementById('empty').style.display=f.length?'none':'block';
+  document.getElementById('qx').textContent=q;
+  document.getElementById('cnt').textContent='ผลลัพธ์ '+f.length+' รายการ · รายชื่ออาจมีหลายรายการ (scroll)';
+}
+function openInfo(i){
+  cur=DATA[i];const c=cur;
+  document.getElementById('i_name').textContent=c.name;
+  document.getElementById('i_meta').textContent=c.code+' · '+c.type+' · '+c.terms;
+  document.getElementById('i_lim').textContent=fmt(c.lim);
+  document.getElementById('i_used').textContent=fmt(c.used);
+  document.getElementById('i_rem').textContent=fmt(c.rem)+(c.rem<0?' ⚠':'');
+  document.getElementById('i_chq').textContent=fmt(c.chq);
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.t==='out'));
+  showTab('out');
+  document.getElementById('ov').classList.add('on');
+}
+function showTab(t){
+  const c=cur;let h='';
+  if(t==='customer'){h=`<div class="kv"><span class="k">ประเภท</span><span class="v">${c.type}</span></div><div class="kv"><span class="k">กลุ่มราคา</span><span class="v">${c.pg}</span></div><div class="kv"><span class="k">เงื่อนไขชำระ</span><span class="v">${c.terms}</span></div><div class="kv"><span class="k">โซน/เซล</span><span class="v">${c.zone}</span></div><div class="kv"><span class="k">โทร</span><span class="v">${c.tel}</span></div><div class="kv"><span class="k">ที่อยู่</span><span class="v">${c.addr}</span></div>`;}
+  else if(t==='out'){h=c.out.length?`<table><thead><tr><th>DocDate</th><th>DocNo</th><th>DocName</th><th>DueDate</th><th class="amt">InDue</th></tr></thead><tbody>`+c.out.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td class="amt">${fmt(r[4])}</td></tr>`).join('')+`</tbody></table>`:'<div style="color:#94A3B8;padding:14px;text-align:center">ไม่มียอดค้าง</div>';}
+  else if(t==='sales'){h=c.sales.length?`<table><thead><tr><th>วันที่</th><th>เลขที่บิล</th><th>รายการ</th><th class="amt">ยอด</th></tr></thead><tbody>`+c.sales.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="amt">${fmt(r[3])}</td></tr>`).join('')+`</tbody></table>`:'<div style="color:#94A3B8;padding:14px;text-align:center">ยังไม่มีประวัติการซื้อ</div>';}
+  else{h=`<div style="padding:14px;font-size:13px">${c.ytd}</div>`;}
+  document.getElementById('i_body').innerHTML=h;
+}
+function tab(el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');showTab(el.dataset.t);}
+function closeInfo(){document.getElementById('ov').classList.remove('on');}
+function pick(){closeInfo();toast('✓ เลือก "'+cur.name+'" → emit customer:selected (auto-fill บิล + ดึง Price List)');}
+function addCust(){toast('+ เปิด popup สร้างลูกค้าใหม่ → ออกแบบใน MD-2 Customer master');}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2600);}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SharedSerialNumber v2 — interactive | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#E5EAF0;color:#1F2937;padding:22px;min-width:720px}
+.head{display:flex;align-items:center;gap:10px}.head h1{font-size:19px;font-weight:700}.head .sc{background:#2563EB;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px}
+.sub{font-size:12.5px;color:#475569;margin:6px 0 8px}.tip{font-size:12px;background:#FEF9C3;border:1px solid #FDE68A;color:#854D0E;padding:7px 12px;border-radius:8px;margin-bottom:14px;display:inline-block}
+.win{background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.25);width:660px;overflow:hidden}
+.wb{background:#1E3A5F;color:#fff;padding:10px 16px;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.wb .cnt{font-size:13px;background:rgba(255,255,255,.15);padding:3px 12px;border-radius:10px;font-weight:700}
+.bd{padding:16px}
+.scanbox{background:#0F172A;border-radius:10px;padding:14px;margin-bottom:8px}
+.scanbox .sl{color:#7DD3FC;font-size:11px;font-weight:700;margin-bottom:6px;display:flex;justify-content:space-between}
+.scanbox input{width:100%;padding:12px 14px;border:2px solid #0EA5E9;border-radius:8px;font-family:monospace;font-size:16px;background:#fff;font-weight:700}
+.modebar{display:flex;gap:8px;margin-bottom:8px}
+.b{padding:8px 13px;border:none;border-radius:7px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}.b-csv{background:#E5E7EB;color:#374151}.b-clr{background:#FEE2E2;color:#DC2626}
+.msg{font-size:11.5px;min-height:16px;margin-bottom:6px}.msg.err{color:#DC2626;font-weight:600}.msg.ok{color:#16A34A}
+.listwrap{max-height:230px;overflow:auto;border:1px solid #E5E7EB;border-radius:8px}
+table{width:100%;border-collapse:collapse;font-size:12px}th{background:#F1F5F9;text-align:left;font-size:11px;color:#475569;padding:6px 10px;position:sticky;top:0}td{padding:5px 10px;border-bottom:1px solid #F1F5F9}
+.st{font-size:10px;font-weight:700;padding:1px 8px;border-radius:8px;background:#ECFDF5;color:#047857}
+.del{color:#DC2626;cursor:pointer;font-weight:700}
+.pf{border-top:1px solid #E5E7EB;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;background:#F8FAFC}
+.btn{padding:9px 18px;border:none;border-radius:7px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}.btn-1{background:#16A34A;color:#fff}.btn-1:disabled{background:#E5E7EB;color:#9CA3AF;cursor:not-allowed}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#166534;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:99}.toast.on{opacity:1}
+</style></head><body>
+<div class="head"><h1>SharedSerialNumber</h1><span class="sc">SC</span><span style="font-size:12px;color:#16A34A;font-weight:700">— v2 (สแกนต่อเนื่อง · CSV · ถึง 1,000)</span></div>
+<div class="sub">เน้น <b>สแกนต่อเนื่อง</b> (ยิงบาร์โค้ดทีละตัว auto-add) · <b>นำเข้า CSV</b> · รองรับถึง 1,000 serial/รายการ · ตรวจซ้ำ/ใช้แล้ว real-time</div>
+<span class="tip">👆 คลิกช่องสแกน → พิมพ์/ยิง serial กด Enter (เพิ่มทันที เคอร์เซอร์ค้างไว้สแกนต่อ) · ลอง "SN-USED-001" · กด CSV นำเข้าชุด</span>
+
+<div class="win">
+  <div class="wb"><span>🔢 Serial — แอร์ 12000 BTU (ยิงเข้า GRN)</span><span class="cnt"><span id="cnt">0</span> / 50 <span style="font-size:10px;opacity:.7">(สูงสุด 1,000)</span></span></div>
+  <div class="bd">
+    <div class="scanbox"><div class="sl"><span>📷 โหมดสแกนต่อเนื่อง — ยิงแล้ว Enter (เคอร์เซอร์ค้าง)</span><span id="rate"></span></div>
+      <input id="sn" placeholder="ยิงบาร์โค้ด / พิมพ์ serial แล้ว Enter" autocomplete="off" onkeydown="if(event.key==='Enter')add()"></div>
+    <div class="modebar"><button class="b b-csv" onclick="csv()">📄 นำเข้า CSV (ชุดใหญ่)</button><button class="b b-csv" onclick="demo()">⚡ จำลองยิง 20 ตัว</button><button class="b b-clr" onclick="clr()">ล้างทั้งหมด</button></div>
+    <div class="msg" id="msg"></div>
+    <div class="listwrap"><table><thead><tr><th>#</th><th>Serial</th><th>สถานะ</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+  </div>
+  <div class="pf"><span style="font-size:12px;color:#475569" id="status">รอสแกน</span><button class="btn btn-1" id="ok" disabled onclick="ok_()">✓ ครบ → serial:added</button></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const NEED=50,MAX=1000;const USED=['SN-USED-001','SN-USED-002'];let sns=[];
+function add(v){const inp=document.getElementById('sn');const s=(v||inp.value||'').trim().toUpperCase();const msg=document.getElementById('msg');
+ if(!s)return;
+ if(sns.includes(s)){msg.className='msg err';msg.textContent='✕ ซ้ำ: '+s+' → serial:duplicate';inp.select();return;}
+ if(USED.includes(s)){msg.className='msg err';msg.textContent='✕ ใช้แล้ว: '+s+' → serial:invalid';inp.select();return;}
+ if(sns.length>=MAX){msg.className='msg err';msg.textContent='✕ เกิน '+MAX;return;}
+ sns.push(s);inp.value='';inp.focus();msg.className='msg ok';msg.textContent='✓ +'+s;render();}
+function csv(){let n=0;for(let i=1;i<=30&&sns.length<MAX;i++){const s='SN-CSV-'+String(8000+i);if(!sns.includes(s)&&!USED.includes(s)){sns.push(s);n++;}}document.getElementById('msg').className='msg ok';document.getElementById('msg').textContent='✓ นำเข้า CSV '+n+' serial';render();}
+function demo(){let n=0;for(let i=1;i<=20&&sns.length<MAX;i++){const s='SN-2026-'+String(2000+sns.length+i);if(!sns.includes(s)){sns.push(s);n++;}}document.getElementById('msg').className='msg ok';document.getElementById('msg').textContent='✓ จำลองยิง '+n+' ตัว';render();}
+function clr(){sns=[];render();document.getElementById('msg').textContent='';}
+function rm(i){sns.splice(i,1);render();}
+function render(){document.getElementById('cnt').textContent=sns.length;
+ const rows=sns.map((s,i)=>`<tr><td>${i+1}</td><td style="font-family:monospace">${s}</td><td><span class="st">ว่าง</span></td><td><span class="del" onclick="rm(${i})">✕</span></td></tr>`).join('');
+ document.getElementById('rows').innerHTML=rows||'<tr><td colspan="4" style="color:#94A3B8;text-align:center;padding:14px">ยิงสแกน / นำเข้า CSV</td></tr>';
+ const done=sns.length>=NEED;document.getElementById('ok').disabled=!done;
+ document.getElementById('status').textContent=done?'✓ ครบ '+NEED+' (มี '+sns.length+')':'สแกนแล้ว '+sns.length+'/'+NEED+' ต้องครบก่อน';
+ document.getElementById('rate').textContent=sns.length?(sns.length+' ตัว'):'';}
+render();document.getElementById('sn').focus();
+function ok_(){toast('✓ serial:added · '+sns.length+' serial → unlock Confirm');}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);}
+</script></body></html>

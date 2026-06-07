@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SharedDelivery v2 — interactive | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#E5EAF0;color:#1F2937;padding:22px;min-width:760px}
+.head{display:flex;align-items:center;gap:10px}.head h1{font-size:19px;font-weight:700}.head .sc{background:#2563EB;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px}
+.sub{font-size:12.5px;color:#475569;margin:6px 0 8px}.tip{font-size:12px;background:#FEF9C3;border:1px solid #FDE68A;color:#854D0E;padding:7px 12px;border-radius:8px;margin-bottom:14px;display:inline-block}
+.win{background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.25);width:700px;overflow:hidden}
+.wb{background:#1E3A5F;color:#fff;padding:10px 16px;font-size:13px;font-weight:700}.bd{padding:16px 18px}
+.fl{font-size:12px;font-weight:600;color:#374151;margin:12px 0 5px}.fl:first-child{margin-top:0}.new{font-size:9px;font-weight:700;background:#EA580C;color:#fff;padding:1px 6px;border-radius:4px;margin-left:5px}
+select,input[type=text],input[type=date],input[type=time],textarea{width:100%;padding:8px 11px;border:1px solid #CBD5E1;border-radius:7px;font-family:inherit;font-size:13px}
+textarea{resize:vertical;min-height:54px}
+.row3{display:flex;gap:10px}.row3>div{flex:1}
+.radios{display:flex;gap:8px}.radios label{flex:1;border:1px solid #CBD5E1;border-radius:8px;padding:9px;text-align:center;font-size:12.5px;cursor:pointer}.radios label.on{border-color:#2563EB;background:#EFF6FF;font-weight:700;color:#2563EB}
+.maprow{display:flex;gap:10px;align-items:center;margin-top:6px}
+.mapbtn{background:#0EA5E9;color:#fff;border:none;border-radius:7px;font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 14px;cursor:pointer;white-space:nowrap}
+.pin{font-size:12px;color:#0369A1;background:#E0F2FE;border:1px solid #BAE6FD;border-radius:7px;padding:7px 11px;flex:1}
+.inst{margin-top:14px;border:1px solid #E5E7EB;border-radius:10px;overflow:hidden}
+.inst-h{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:#F8FAFC;cursor:pointer}.inst-h b{font-size:13px}
+.sw{width:42px;height:23px;background:#CBD5E1;border-radius:12px;position:relative;transition:.2s}.sw.on{background:#16A34A}.sw::after{content:'';position:absolute;width:19px;height:19px;background:#fff;border-radius:50%;top:2px;left:2px;transition:.2s}.sw.on::after{left:21px}
+.inst-b{padding:14px;display:none;border-top:1px solid #E5E7EB}.inst-b.on{display:block}
+.note{background:#ECFDF5;border:1px solid #A7F3D0;color:#065F46;padding:9px 12px;border-radius:8px;font-size:12px;margin-top:10px;font-weight:600}
+.pf{border-top:1px solid #E5E7EB;padding:12px 16px;display:flex;justify-content:flex-end;gap:9px;background:#F8FAFC}
+.btn{padding:9px 18px;border:none;border-radius:7px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}.btn-1{background:#2563EB;color:#fff}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#166534;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:99}.toast.on{opacity:1}
+</style></head><body>
+<div class="head"><h1>SharedDelivery</h1><span class="sc">SC</span><span style="font-size:12px;color:#16A34A;font-weight:700">— v2 (เวลานัด · รายละเอียด · ปักพิกัด)</span></div>
+<div class="sub">จัดส่ง + ติดตั้ง · เพิ่ม เวลานัด · รายละเอียดการนัด · ปักพิกัดแผนที่ (ผูก SC-10 Map Picker)</div>
+<span class="tip">👆 เลือกที่อยู่/วันเวลานัด · กด "ปักพิกัด" · เปิด toggle ติดตั้ง → กรอกนัดติดตั้ง (วัน+เวลา) → spawn Service WO</span>
+
+<div class="win">
+  <div class="wb">🚚 จัดส่ง & ติดตั้ง — INV-2605-0042 · ลูกค้า ก.เจริญ</div>
+  <div class="bd">
+    <div class="fl">ที่อยู่จัดส่ง (Address Book)</div>
+    <select><option>95/2 ม.13 ต.บ้านแพง (Default)</option><option>อาคารคิวเฮ้าส์</option><option>+ ที่อยู่ใหม่</option></select>
+    <div class="row3">
+      <div><div class="fl">วันนัดส่ง</div><input type="date" value="2026-06-05"></div>
+      <div><div class="fl">เวลานัด<span class="new">เพิ่ม</span></div><input type="time" value="10:00"></div>
+      <div><div class="fl">ผู้รับ/เบอร์</div><input type="text" value="คุณเจริญ 081-234-5678"></div>
+    </div>
+    <div class="fl">รายละเอียดการนัดหมาย<span class="new">เพิ่ม</span></div>
+    <textarea placeholder="เช่น โทรก่อนถึง 30 นาที · ขนของขึ้นชั้น 2 · จอดรถหลังร้าน">โทรก่อนถึง 30 นาที · มีคนรับหน้าร้าน</textarea>
+    <div class="fl">พิกัดสถานที่ (Map)<span class="new">เพิ่ม</span></div>
+    <div class="maprow"><button class="mapbtn" onclick="pin()">📍 ปักพิกัดบนแผนที่</button><span class="pin" id="pin">ยังไม่ปักพิกัด — ผูก SC-10 Map Picker</span></div>
+    <div class="fl">วิธีส่ง</div>
+    <div class="radios" id="rad"><label class="on" onclick="r(this)"><span>🚛 รถบริษัท</span></label><label onclick="r(this)"><span>📦 ขนส่งเอกชน</span></label><label onclick="r(this)"><span>🏪 รับเอง</span></label></div>
+    <div class="inst"><div class="inst-h" onclick="tog()"><b>🔧 ต้องการติดตั้ง</b><span class="sw" id="sw"></span></div>
+      <div class="inst-b" id="ib">
+        <div class="row3"><div><div class="fl">วันนัดติดตั้ง</div><input type="date" value="2026-06-06"></div><div><div class="fl">เวลานัดติดตั้ง<span class="new">เพิ่ม</span></div><input type="time" value="13:30"></div><div><div class="fl">ทีม/ช่าง</div><select><option>ทีมช่าง A</option><option>ทีมช่าง B</option></select></div></div>
+        <div class="fl">รายละเอียดติดตั้ง</div><textarea placeholder="อุปกรณ์/เงื่อนไขหน้างาน"></textarea>
+        <div class="note">✓ Post บิล → emit <b>install:triggerService</b> → สร้าง Service Work Order (เข้าคิว SV) พร้อมวัน-เวลา-พิกัด</div>
+      </div></div>
+  </div>
+  <div class="pf"><button class="btn btn-1" onclick="save_()">✓ บันทึก → delivery:changed</button></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+let install=false;
+function r(el){document.querySelectorAll('#rad label').forEach(l=>l.classList.remove('on'));el.classList.add('on');}
+function tog(){install=!install;document.getElementById('sw').classList.toggle('on',install);document.getElementById('ib').classList.toggle('on',install);}
+function pin(){document.getElementById('pin').textContent='📍 14.9799° N, 102.0978° E · นครราชสีมา (จาก SC-10)';document.getElementById('pin').style.color='#065F46';toast('เปิด SC-10 Map Picker → ปักพิกัด (mock)');}
+function save_(){toast('✓ delivery:changed (วัน+เวลา+พิกัด)'+(install?' + install:triggerService → spawn Service WO':''));}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);}
+</script></body></html>

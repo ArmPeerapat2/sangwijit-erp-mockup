@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SharedDeposit/Settlement v2 — interactive | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#E5EAF0;color:#1F2937;padding:22px;min-width:820px}
+.head{display:flex;align-items:center;gap:10px}.head h1{font-size:19px;font-weight:700}.head .sc{background:#2563EB;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px}
+.sub{font-size:12.5px;color:#475569;margin:6px 0 8px}.tip{font-size:12px;background:#FEF9C3;border:1px solid #FDE68A;color:#854D0E;padding:7px 12px;border-radius:8px;margin-bottom:14px;display:inline-block}
+.win{background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.25);width:780px;overflow:hidden}
+.wb{background:#1E3A5F;color:#fff;padding:10px 16px;font-size:13px;font-weight:700}
+.tabs{display:flex;border-bottom:1px solid #E5E7EB;background:#F8FAFC}
+.tab{padding:11px 16px;font-size:12.5px;font-weight:600;color:#64748B;border-bottom:2px solid transparent;cursor:pointer}.tab.on{color:#2563EB;border-bottom-color:#2563EB;background:#fff}
+.bd{padding:16px;min-height:240px}
+.desc{font-size:12px;color:#64748B;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}th{background:#F1F5F9;text-align:left;font-size:11px;color:#475569;padding:7px 10px}td{padding:7px 10px;border-bottom:1px solid #F1F5F9}.amt{text-align:right;font-variant-numeric:tabular-nums}
+.api{width:90px;padding:5px 7px;border:1px solid #CBD5E1;border-radius:5px;font-family:inherit;text-align:right}
+.sumbar{padding:11px 16px;background:#EFF6FF;border-top:2px solid #2563EB;display:flex;justify-content:space-between;align-items:center;font-size:13px}.sumbar b{font-size:16px;color:#1D4ED8}
+.pf{border-top:1px solid #E5E7EB;padding:12px 16px;display:flex;justify-content:flex-end;gap:9px;background:#F8FAFC}
+.btn{padding:9px 16px;border:none;border-radius:7px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}.btn-g{background:#16A34A;color:#fff}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:99}.toast.on{opacity:1}
+</style></head><body>
+<div class="head"><h1>SharedDeposit / Settlement</h1><span class="sc">SC</span><span style="font-size:12px;color:#16A34A;font-weight:700">— v2 (กลุ่มเอกสารบัญชี)</span></div>
+<div class="sub">ปรับตาม feedback: รวมกลุ่มฟังก์ชันบัญชี — <b>ตัดมัดจำ · วางบิล · รับวางบิล · ดึงตัดชำระ</b> (เลือกโหมดจากแท็บ)</div>
+<span class="tip">👆 สลับแท็บดูแต่ละฟังก์ชัน · ติ๊กเอกสาร + ใส่ยอด → กดทำรายการ</span>
+
+<div class="win">
+  <div class="wb">💰 กลุ่มเอกสารบัญชี — ลูกค้า/คู่ค้า ก.เจริญการไฟฟ้า</div>
+  <div class="tabs">
+    <span class="tab on" data-t="apply" onclick="tab(this)">ตัดมัดจำ</span>
+    <span class="tab" data-t="billout" onclick="tab(this)">วางบิล (AR)</span>
+    <span class="tab" data-t="billin" onclick="tab(this)">รับวางบิล (AP)</span>
+    <span class="tab" data-t="settle" onclick="tab(this)">ดึงตัดชำระ</span>
+  </div>
+  <div class="bd" id="bd"></div>
+  <div class="sumbar"><span id="sumlbl">รวม</span><b id="sum">0</b></div>
+  <div class="pf"><button class="btn btn-g" id="act" onclick="doAct()">ทำรายการ</button></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const fmt=n=>n.toLocaleString('en-US');let mode='apply';
+const D={
+ apply:{desc:'ตัดมัดจำที่ลูกค้าวางไว้ → หักจากบิลขาย (เลือกได้หลายใบ · ไม่เกินยอดบิล 485,000)',col:['','เลขที่มัดจำ','วันที่','คงเหลือ','ตัดครั้งนี้'],
+   rows:[['DEP-2605-0002','15 พ.ค.69',30000],['DEP-2605-0005','20 พ.ค.69',20000],['DEP-2604-0099','28 เม.ย.69',40000]],act:'✓ ตัดมัดจำ → deposit:applied',lbl:'ตัดมัดจำรวม'},
+ billout:{desc:'วางบิล (ใบวางบิล AR) → รวมบิลขายที่ครบกำหนด ไปวางเก็บเงินลูกค้า',col:['','เลขที่บิลขาย','ครบกำหนด','ยอด','วางบิล'],
+   rows:[['INV-2605-0042','09 มิ.ย.69',485000],['INV-2605-0011','18 มิ.ย.69',128400],['INV-2604-0188','30 พ.ค.69',256900]],act:'✓ สร้างใบวางบิล AR → billing:created',lbl:'ยอดวางบิลรวม'},
+ billin:{desc:'รับวางบิล (AP) → vendor มาวางบิล รับเข้าระบบเพื่อรอจ่าย',col:['','เลขที่บิล vendor','กำหนดจ่าย','ยอด','รับวางบิล'],
+   rows:[['VINV-2605-0103','25 มิ.ย.69',1240000],['VINV-2605-0118','30 มิ.ย.69',678900]],act:'✓ รับวางบิล → AP scheduled',lbl:'ยอดรับวางบิลรวม'},
+ settle:{desc:'ดึงตัดชำระ → จับคู่เงินรับ/จ่าย กับบิลที่ค้าง เพื่อปิดยอด (apply payment)',col:['','เลขที่บิลค้าง','ครบกำหนด','ค้างชำระ','ตัดชำระ'],
+   rows:[['INV-2605-0042','09 มิ.ย.69',485000],['TSSA6905','27 มิ.ย.69',31200]],act:'✓ ตัดชำระปิดยอด → settlement:applied',lbl:'ยอดตัดชำระรวม'}
+};
+function render(){const d=D[mode];
+ document.getElementById('bd').innerHTML=`<div class="desc">${d.desc}</div><table><thead><tr>${d.col.map((c,i)=>`<th class="${i>=3?'amt':''}">${c}</th>`).join('')}</tr></thead><tbody>`+
+  d.rows.map((r,i)=>`<tr><td><input type="checkbox" id="c${i}" onchange="calc()"></td><td>${r[0]}</td><td>${r[1]}</td><td class="amt">${fmt(r[2])}</td><td class="amt"><input class="api" id="a${i}" type="number" value="${r[2]}" max="${r[2]}" oninput="calc()"></td></tr>`).join('')+`</tbody></table>`;
+ document.getElementById('sumlbl').textContent=d.lbl;document.getElementById('act').textContent=d.act;calc();}
+function calc(){const d=D[mode];let t=0;d.rows.forEach((r,i)=>{if(document.getElementById('c'+i)&&document.getElementById('c'+i).checked)t+=Math.min(+document.getElementById('a'+i).value||0,r[2]);});document.getElementById('sum').textContent=fmt(t);}
+function tab(el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');mode=el.dataset.t;render();}
+function doAct(){toast(D[mode].act+' ('+document.getElementById('sum').textContent+')');}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);}
+render();
+</script></body></html>
