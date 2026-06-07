@@ -73,12 +73,23 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 .mono{font-family:'Inter',monospace}
 .recv-sel{padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit;background:#fff;color:#111827}
 
-/* receive-mode toggle */
-.mode-toggle{display:flex;gap:6px;margin-top:4px}
-.mode-toggle label{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:11.5px;font-weight:600;color:#6B7280;cursor:pointer}
-.mode-toggle input{display:none}
-.mode-toggle label.partial.on{background:#F3E8FF;border-color:#C4B5FD;color:#6D28D9}
-.mode-toggle label.full.on{background:#ECFDF5;border-color:#A7F3D0;color:#065F46}
+/* receive-mode segmented control (เด่น · เต็มความกว้างเหนือรายการสินค้า) */
+.mode-bar{display:flex;gap:0;background:#fff;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;flex:none}
+.mode-bar .lbl{display:flex;align-items:center;padding:0 14px;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.05em;border-right:1px solid #E5E7EB;background:#F8FAFC;white-space:nowrap}
+.mode-seg{flex:1;display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;border-right:1px solid #E5E7EB;transition:all .15s}
+.mode-seg:last-child{border-right:none}
+.mode-seg .ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;background:#F3F4F6;flex:none}
+.mode-seg .mt{font-size:13px;font-weight:700;color:#6B7280}
+.mode-seg .md{font-size:10.5px;color:#9CA3AF;margin-top:1px}
+.mode-seg .rb{margin-left:auto;width:18px;height:18px;border-radius:50%;border:2px solid #D1D5DB;flex:none}
+.mode-seg.partial.on{background:#FAF5FF}
+.mode-seg.partial.on .ic{background:#EDE9FE}
+.mode-seg.partial.on .mt{color:#6D28D9}
+.mode-seg.partial.on .rb{border-color:#7C3AED;background:radial-gradient(#7C3AED 42%,#fff 46%)}
+.mode-seg.full.on{background:#F0FDF4}
+.mode-seg.full.on .ic{background:#DCFCE7}
+.mode-seg.full.on .mt{color:#065F46}
+.mode-seg.full.on .rb{border-color:#10B981;background:radial-gradient(#10B981 42%,#fff 46%)}
 
 /* STATUS STRIP */
 .status-strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:4px 12px}
@@ -224,7 +235,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       <div class="sc11-pills">
         <span class="pill pill-neutral" title="BC Purchase Receipt: รอ Post">📦 รอรับ</span>
         <span class="pill pill-info">📥 ประเภท: จาก Vendor</span>
-        <span class="pill pill-violet">🟣 โหมด: ทยอยรับ</span>
+        <span class="pill pill-violet" id="modePill">🟣 โหมด: ทยอยรับ</span>
         <span class="pill pill-warning">⏳ ค้างรับ 90 เครื่อง (ยังไม่ครบ → ยังไม่ตั้งหนี้)</span>
       </div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
@@ -263,13 +274,21 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           </div>
           <div class="field"><div class="field-label">ผู้รับสินค้า</div><div class="field-value">ก้อง · แผนกคลัง</div></div>
         </div>
-        <div class="field" style="margin-top:6px">
-          <div class="field-label">โหมดการรับ (ระบุตั้งแต่แรก)</div>
-          <div class="mode-toggle">
-            <label class="partial on" onclick="wh1Mode('partial')"><input type="radio" name="rmode" checked>🟣 ทยอยรับ (Partial)</label>
-            <label class="full" onclick="wh1Mode('full')"><input type="radio" name="rmode">🟢 รับทั้งบิล (Full)</label>
-          </div>
-        </div>
+      </div>
+    </div>
+
+    <!-- ④b2 โหมดการรับ — segmented control เด่น (ระบุตั้งแต่แรก) -->
+    <div class="mode-bar">
+      <div class="lbl">โหมดการรับ</div>
+      <div class="mode-seg partial on" onclick="wh1Mode('partial')">
+        <div class="ic">🟣</div>
+        <div><div class="mt">ทยอยรับ (Partial)</div><div class="md">รับบางส่วน · วนหลายล็อตจนครบ · เหมาะกับบิลฝาก</div></div>
+        <div class="rb"></div>
+      </div>
+      <div class="mode-seg full" onclick="wh1Mode('full')">
+        <div class="ic">🟢</div>
+        <div><div class="mt">รับทั้งบิล (Full)</div><div class="md">รับครบรอบเดียว · auto-fill เต็ม → ส่งตั้งหนี้ (PO-6)</div></div>
+        <div class="rb"></div>
       </div>
     </div>
 
@@ -434,8 +453,10 @@ function wh1Serial(sku,qty){
 }
 /* โหมดการรับ: full = auto-fill รับครั้งนี้ = ค้างรับ ทุกไลน์ */
 function wh1Mode(m){
-  document.querySelectorAll('.mode-toggle label').forEach(function(l){l.classList.remove('on');});
-  document.querySelector('.mode-toggle label.'+m).classList.add('on');
+  document.querySelectorAll('.mode-seg').forEach(function(s){s.classList.remove('on');});
+  document.querySelector('.mode-seg.'+m).classList.add('on');
+  var pill=document.getElementById('modePill');
+  if(pill){ pill.className='pill '+(m==='full'?'pill-success':'pill-violet'); pill.textContent=(m==='full'?'🟢 โหมด: รับทั้งบิล':'🟣 โหมด: ทยอยรับ'); }
   if(m==='full'){
     alert('โหมด "รับทั้งบิล" (Full):\n• ระบบ auto-fill "รับครั้งนี้" = ค้างรับ ทุกไลน์\n• Post แล้วถ้ารับครบจริง → 🚩 ส่งตั้งหนี้ (PO-6) เลย\n\n⚠️ ถ้าของจริงมาไม่ครบ (ปรับจำนวนลง) ระบบจะสลับเป็นทยอยรับอัตโนมัติ — กันของขาดหลุดไปตั้งหนี้');
   } else {
