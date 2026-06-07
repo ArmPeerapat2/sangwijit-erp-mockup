@@ -11,7 +11,8 @@
   var DONE = [
     'slq-sales-queue-mockup.html','sl1-quotation-mockup.html','sl2-reservation-mockup.html',
     'sl3-deposit-mockup.html','sl4-invoice-mockup.html','slcn-credit-memo-mockup.html',
-    'po1-purchase-request-mockup.html','po4-purchase-order-mockup.html','sc3-vendor-search-mockup.html'
+    'po1-purchase-request-mockup.html','po4-purchase-order-mockup.html','sc3-vendor-search-mockup.html',
+    'wh1-grn-mockup.html'
   ];
 
   /* nav data — canonical (เปลี่ยนเมนูที่นี่ที่เดียว) */
@@ -28,7 +29,7 @@
       ['PM-5','pm5-vat-simulator-mockup.html','VAT Simulator'],['CM-1','cm1-commission-mockup.html','Commission'],
       ['CL-1','cl1-claims-mockup.html','Claims']]},
     {ico:'📦', label:'คลังสินค้า (WH)', links:[
-      ['WH-Q','wh-queue-mockup.html','Dashboard'],['WH-1','wh1-grn-mockup.html','คิวรอรับสินค้า'],
+      ['WH-Q','wh-queue-mockup.html','Dashboard'],['WH-1','wh1-grn-mockup.html','ใบรับสินค้า (GRN)'],
       ['WH-2','wh2-stock-transfer-mockup.html','คิวโอนย้ายสต็อก'],['WH-3','wh3-sales-issue-mockup.html','คิวเบิกสินค้า'],
       ['WH-4','wh4-stock-count-mockup.html','คิวนับสต็อก'],['WH-R','wh-r-stock-card-mockup.html','Stock Card'],
       ['WH-NM','wh-nm-non-move-report-mockup.html','สินค้าไม่เคลื่อนไหว']]},

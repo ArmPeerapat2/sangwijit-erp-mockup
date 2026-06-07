@@ -24,6 +24,21 @@ project_type: "frontend-mockup (HTML + docs)"
 - **🔑 Form Build Pattern (ใช้ทุกครั้ง ทุก module):** memory `feedback_form_build_pattern` — (1) ดึง Flow+Document+spec → Blueprint → confirm · (2) build บน `_form-template.html` (fit จอ 100vh · status+doc-chain รวมแถวบน · ตาราง 15 บรรทัด+grid · เลขที่อ้างอิงเป็นคอลัมน์ · sidebar+✦marker) · (3) shared: ลูกค้า=sc1 · สินค้า=sc2 (dfOpenCust/dfOpenProd) · อ้างอิง=dfOpenRef (multi-select) · ปุ่มค้นหาลูกค้าต้องมีเสมอ · (4) **ระบุ action หลัง Save/Post = สถานะ+routing ปลายทางทุกฟอร์ม** (ref: `.agents/topics/sl-post-save-routing.md`) · (5) archive+เทียบ full path+mirror Obsidian
 - **Form Blueprint ก่อนสร้างทุกฟอร์ม:** ก่อนสร้าง/refactor mockup ฟอร์มใดๆ ต้องวาง Blueprint 5 ส่วนให้ confirm ก่อนเขียนโค้ดเสมอ — (1) โครงสร้าง section จาก Flow PDF + Document DD + spec · (2) shared component ต่อ section · (3) field list + อธิบายรายฟิลด์ · (4) **ข้อเสนอ (แนะนำ + เหตุผล) ต่อ section** · (5) จุดต่างเฉพาะฟอร์ม. ห้าม batch หลายฟอร์ม. (memory: `feedback_form_blueprint_standard`)
 
+## 🔒 PO↔WH Receiving Boundary (locked 2026-06-07)
+
+**หลักการ: "รับสินค้า = งานคลัง (WH)" ทั้งหมด** (ปกติ + ทยอยรับ + บิลฝาก) · จัดซื้อ (PO) เก็บแค่ สั่ง + ตั้งหนี้
+```
+PO-4 ใบสั่งซื้อ (สั่ง Vendor)
+ ├ ปกติ:    → WH-1 ใบรับสินค้า (รับ·ทยอยรับ·serial/bin) ─รับครบ flag→ PO-6 ใบตั้งหนี้
+ └ บิลฝาก:  → PO-6 ใบตั้งหนี้ (โหมดบิลฝาก·ตั้งก่อน+ดิวชำระ) → PO-8 บิลฝาก (Deposit Pool·เรียกออกหลายปลายทาง)
+              ├ เข้าคลัง → WH-1 ใบรับสินค้า    └ ส่งลูกค้าตรง → SL-4 ใบขาย (drop-ship)
+```
+- **✂️ ตัด PO-5 (Finance GRN)** — ซ้ำ WH-1 (รับ) + PO-6 (ตั้งหนี้) · archive + เอาออกจาก swt-sidebar.js
+- **WH-1 = ศูนย์รับ** · โหมดการรับ (ทยอยรับ/รับทั้งบิล) ระบุในหัวบิล · **"รับครบ" จริง = รับสะสม=สั่ง ทุกไลน์ (qty-based)** ไม่ใช่ดูจากโหมด (กันของขาดหลุดไปตั้งหนี้)
+- **PO-8 บิลฝาก = Deposit Pool** (กองฝากที่ Vendor · ทยอยเรียกออกหลายปลายทาง 100→เรียก 40→เหลือ 60) · soft alert เงินจม (คนตัดสิน) · งานเรียก/รับ = ฝั่ง WH
+- คนกดตั้งหนี้ = บัญชีการเงิน/จัดซื้อ
+- **Backlog:** SC-2 tab ประวัติการซื้อ · PO-2 redo (Vendor Commitment) · dfOpenRef localize สายซื้อ · **SL-4 เติมบริหารเครดิต+วงเงินลูกค้า+drop-ship** · PO-6 refine โหมดบิลฝาก · ยุบ/ตัด PO-5
+
 ## Session Summary 2026-06-01 (ERP BC2 Part 2)
 
 ### ✅ งานที่เสร็จ
