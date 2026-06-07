@@ -118,6 +118,20 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .match-chip{display:inline-block;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:700}
 .match-chip.ok{background:#DCFCE7;color:#166534}.match-chip.warn{background:#FEF3C7;color:#92400E}
 .col-grn{background:#F0FDF4}.col-inv{background:#EFF6FF}
+.btype{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:9px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.btype.grn{background:#ECFDF5;color:#065F46}.btype.promo{background:#FEF3C7;color:#92400E}.btype.cn{background:#F3E8FF;color:#6D28D9}.btype.ret{background:#FEF2F2;color:#991B1B}
+.amt-pos{color:#111827;font-weight:700}.amt-neg{color:#059669;font-weight:700}
+.drill-btn{padding:3px 9px;border:1px solid #BFDBFE;background:#EFF6FF;color:#1D4ED8;border-radius:5px;font-size:10.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.tpl-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:900;align-items:center;justify-content:center}
+.tpl-modal-bg.on{display:flex}
+.tpl-modal{background:#fff;border-radius:10px;padding:20px;box-shadow:0 8px 30px rgba(0,0,0,.2)}
+.tpl-modal h3{font-size:14px;margin-bottom:12px}
+.tpl-modal .m-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+.m-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.m-tbl th{background:#F8FAFC;padding:7px 9px;text-align:left;border-bottom:2px solid #E5E7EB;font-size:10.5px;color:#6B7280;text-transform:uppercase;white-space:nowrap}
+.m-tbl td{padding:7px 9px;border-bottom:1px solid #F3F4F6}
+.m-tbl .num{text-align:right;font-family:'Inter',monospace}
+.m-chip{display:inline-block;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:700;background:#DCFCE7;color:#166534}
 
 /* TABS */
 .tabset{background:#fff;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden}
@@ -283,55 +297,37 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       </div>
     </div>
 
-    <!-- ④c PO-6.3 LINE ITEMS (3-Way Match) -->
+    <!-- ④c PO-6.3 รายการเจ้าหนี้ — ลิสต์บิลมาตั้งหนี้/หักลบ (ตามเลขที่บิล · โหมดคุมประเภท) -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">PO-6.3</span><span class="ico">📦</span>รายการ — จับคู่ 3 ทาง (3-Way Match) <span class="tpl-zone">PO ↔ รับ(WH-1) ↔ Invoice</span></div>
+        <div class="card-title"><span class="secno">PO-6.3</span><span class="ico">🧾</span>รายการเจ้าหนี้ — ดึงบิลมาตั้งหนี้/หักลบ <span class="tpl-zone">ตามเลขที่บิล · โหมดคุมประเภท</span></div>
         <div class="card-spacer"></div>
-        <span style="font-size:11px;color:#065F46;font-weight:600">✓ จับคู่ครบ 3/3 รายการ</span>
+        <button class="card-btn primary" onclick="dfOpenRef()">🔍 ดึงบิลเพิ่ม</button>
       </div>
       <div class="items-wrap">
         <table class="items">
-          <thead><tr><th>#</th><th>รหัส</th><th>รายการ</th><th class="num">PO Qty</th><th class="num col-grn">รับ (WH-1)</th><th class="num col-inv">Invoice Qty</th><th class="num">ราคา PO</th><th class="num col-inv">ราคา Invoice</th><th>ผล Match</th></tr></thead>
+          <thead><tr><th>#</th><th>ประเภทบิล</th><th>เลขที่บิล</th><th>วันที่</th><th class="num">มูลค่า</th><th>สถานะ</th><th></th></tr></thead>
           <tbody>
-            <tr>
-              <td>1</td><td class="item-code"><a href="md1-item-master-mockup-v3.html">DAI-FTKM24</a></td>
-              <td class="item-name">แอร์ Daikin FTKM 24,000 BTU</td>
-              <td class="num">80</td><td class="num col-grn">80</td><td class="num col-inv">80</td>
-              <td class="num">14,500.00</td><td class="num col-inv">14,500.00</td>
-              <td><span class="match-chip ok">✓ ตรง</span></td>
-            </tr>
-            <tr>
-              <td>2</td><td class="item-code"><a href="md1-item-master-mockup-v3.html">DAI-FTKM18</a></td>
-              <td class="item-name">แอร์ Daikin FTKM 18,000 BTU</td>
-              <td class="num">40</td><td class="num col-grn">40</td><td class="num col-inv">40</td>
-              <td class="num">12,800.00</td><td class="num col-inv">12,800.00</td>
-              <td><span class="match-chip ok">✓ ตรง</span></td>
-            </tr>
-            <tr>
-              <td>3</td><td class="item-code"><a href="md1-item-master-mockup-v3.html">DAI-FTKM12</a></td>
-              <td class="item-name">แอร์ Daikin FTKM 12,000 BTU</td>
-              <td class="num">60</td><td class="num col-grn">60</td><td class="num col-inv">60</td>
-              <td class="num">9,800.00</td><td class="num col-inv">9,800.00</td>
-              <td><span class="match-chip ok">✓ ตรง</span></td>
-            </tr>
-            <tr class="empty-row"><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>11</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>12</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>13</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>14</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>15</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>1</td><td><span class="btype grn">📥 ใบรับของ (GRN)</span></td><td class="item-code"><a href="wh1-grn-mockup.html">GR-2606-0210</a></td><td>24 มิ.ย. 26</td><td class="num amt-pos">+2,260,000.00</td><td><span class="match-chip ok">3-Way ✓ รับครบ</span></td><td><button class="drill-btn" onclick="openMatch()">🔍 ดูรายสินค้า</button></td></tr>
+            <tr><td>2</td><td><span class="btype promo">🎁 ส่งเสริม Sell-in</span></td><td class="item-code">VC-SI-2604-007</td><td>—</td><td class="num amt-neg">-45,200.00</td><td>หักบนบิล (ก่อน VAT)</td><td></td></tr>
+            <tr><td>3</td><td><span class="btype cn">↩️ ใบลดหนี้ (CN/APCN)</span></td><td class="item-code">APCN-2606-0012</td><td>20 มิ.ย. 26</td><td class="num amt-neg">-30,000.00</td><td>ตัดหนี้</td><td></td></tr>
+            <tr><td>4</td><td><span class="btype ret">↩️ คืนสินค้า Vendor</span></td><td class="item-code"><a href="po-cn-credit-note-mockup.html">PO-CN · ออกใบลดหนี้</a></td><td>—</td><td class="num">—</td><td>ต้องออกใบลดหนี้ก่อน</td><td><button class="drill-btn" onclick="location.href='po-cn-credit-note-mockup.html'">เปิด PO-CN</button></td></tr>
+            <tr class="empty-row"><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>11</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>12</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>13</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>14</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>15</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
           </tbody>
         </table>
       </div>
       <div style="padding:8px 14px;border-top:1px dashed #E5E7EB;background:#FAFBFC;font-size:11px;color:#6B7280">
-        💡 จับคู่ 3 ทาง: <b>PO Qty</b> (สั่ง) = <b>รับ WH-1</b> (รับจริง) = <b>Invoice Qty</b> (ใบแจ้งหนี้ Vendor) · ราคาต่างจาก PO เกิน 5% → ⚠ ต้องอนุมัติพิเศษ
+        💡 ลิสต์ตามเลขที่บิล · ดึงรวมกันได้ (ใบรับของ + ส่งเสริม + ใบลดหนี้ + คืน/เคลม) → net เป็นยอดตั้งหนี้ · <b>🟢 รับครบปกติ</b> ดึงใบรับของ (GRN) ที่รับครบ · <b>🟣 บิลฝาก</b> ดึง PO-8 บิลฝาก · คลิก "🔍 ดูรายสินค้า" = 3-Way Match รายตัว
       </div>
     </div>
 
@@ -405,7 +401,26 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 </div><!-- /main -->
 </div><!-- /layout -->
 
+<!-- DRILL: 3-Way Match detail (รายสินค้าของใบรับ GR-2606-0210) -->
+<div class="tpl-modal-bg" id="matchModal">
+  <div class="tpl-modal" style="width:820px;max-width:94vw">
+    <h3>🔍 3-Way Match รายสินค้า — <span class="mono">GR-2606-0210</span> ↔ <span class="mono">PO-2606-0042</span> ↔ <span class="mono">DKN-INV-25088</span></h3>
+    <table class="m-tbl">
+      <thead><tr><th>รหัส</th><th>รายการ</th><th class="num">PO</th><th class="num">รับ (WH-1)</th><th class="num">Invoice</th><th class="num">ราคา PO</th><th class="num">ราคา Inv</th><th>Match</th></tr></thead>
+      <tbody>
+        <tr><td>DAI-FTKM24</td><td>แอร์ Daikin FTKM 24,000 BTU</td><td class="num">80</td><td class="num">80</td><td class="num">80</td><td class="num">14,500.00</td><td class="num">14,500.00</td><td><span class="m-chip">✓ ตรง</span></td></tr>
+        <tr><td>DAI-FTKM18</td><td>แอร์ Daikin FTKM 18,000 BTU</td><td class="num">40</td><td class="num">40</td><td class="num">40</td><td class="num">12,800.00</td><td class="num">12,800.00</td><td><span class="m-chip">✓ ตรง</span></td></tr>
+        <tr><td>DAI-FTKM12</td><td>แอร์ Daikin FTKM 12,000 BTU</td><td class="num">60</td><td class="num">60</td><td class="num">60</td><td class="num">9,800.00</td><td class="num">9,800.00</td><td><span class="m-chip">✓ ตรง</span></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:10px;font-size:11px;color:#6B7280">💡 จับคู่ 3 ทาง: PO Qty (สั่ง) = รับ WH-1 (รับจริง) = Invoice Qty · ราคาต่างจาก PO เกิน 5% → ⚠ ต้องอนุมัติพิเศษ</div>
+    <div class="m-actions"><button class="btn btn-primary" onclick="closeMatch()">ปิด</button></div>
+  </div>
+</div>
+
 <script>
+function openMatch(){ document.getElementById('matchModal').classList.add('on'); }
+function closeMatch(){ document.getElementById('matchModal').classList.remove('on'); }
 function swTab(e,id){
   var nav=e.currentTarget.parentElement;
   nav.querySelectorAll('button').forEach(b=>b.classList.remove('on'));

@@ -12,7 +12,7 @@
     'slq-sales-queue-mockup.html','sl1-quotation-mockup.html','sl2-reservation-mockup.html',
     'sl3-deposit-mockup.html','sl4-invoice-mockup.html','slcn-credit-memo-mockup.html',
     'po1-purchase-request-mockup.html','po4-purchase-order-mockup.html','sc3-vendor-search-mockup.html',
-    'wh1-grn-mockup.html','po6-ap-invoice-mockup.html'
+    'wh1-grn-mockup.html','po6-ap-invoice-mockup.html','po-cn-credit-note-mockup.html'
   ];
 
   /* nav data — canonical (เปลี่ยนเมนูที่นี่ที่เดียว) */
@@ -38,7 +38,8 @@
       ['PO-2','po2-rfq-mockup.html','Trade Agreement / Vendor'],['PO-3','po3-vendor-onboarding-mockup.html','Vendor Onboarding'],
       ['PO-4','po4-purchase-order-mockup.html','ใบสั่งซื้อ (PO)'],['PO-5','po5-finance-grn-mockup.html','Finance GRN'],
       ['PO-7','po7-rebate-dashboard.html','Rebate Dashboard'],
-      ['PO-8','po8-deposit-bill-mockup.html','บิลฝาก (Deposit)']]},
+      ['PO-8','po8-deposit-bill-mockup.html','บิลฝาก (Deposit)'],
+      ['PO-CN','po-cn-credit-note-mockup.html','ใบลดหนี้เจ้าหนี้']]},
     {ico:'💵', label:'บัญชี/การเงิน', links:[
       ['FI-Q','fiq-finance-queue-mockup.html','คิวงานการเงิน'],['FI-1','fi1-ar-receive-mockup.html','รับชำระ AR'],
       ['FI-1Q','fi1q-apply-queue-mockup.html','Apply Queue'],['FI-2','fi2-ap-payment-mockup.html','จ่ายชำระ AP'],

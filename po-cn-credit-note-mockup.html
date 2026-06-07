@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PO-CN ใบลดหนี้เจ้าหนี้ (Purchase Credit Note) — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   PO-CN ใบลดหนี้เจ้าหนี้ (Purchase Credit Note / APCN) — build บน _form-template.html
+   ⚠️ NEW 2026-06-07: เคสคืนสินค้าให้ Vendor / ลดราคา / เคลม → ออกใบลดหนี้ → ตัด AP (เจ้าหนี้)
+   อ้างอิงบิลเดิม (PO/GRN/AP) · ส่งสัญญาณ "ตัดหนี้" ไป PO-6 (ใบตั้งหนี้เจ้าหนี้)
+   sidebar = swt-sidebar.js (shared)
+   ═══════════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#111827;min-width:1440px;font-size:13px;line-height:1.45;height:100vh;overflow:hidden}
+.layout{display:flex;height:100vh;overflow:hidden}
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;margin-left:240px}
+.topbar{height:56px;background:#fff;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;padding:0 24px;gap:16px;flex:none;z-index:40}
+.topbar-breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:#6B7280}
+.topbar-breadcrumb .current{color:#2563EB;font-weight:600}
+.topbar-breadcrumb .sep{color:#D1D5DB}
+.topbar-spacer{flex:1}
+.topbar-search{display:flex;align-items:center;gap:8px;background:#F3F4F6;border-radius:8px;padding:6px 12px;font-size:13px;color:#9CA3AF;width:220px}
+.topbar-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#F3F4F6;cursor:pointer;font-size:16px}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.branch-sel{background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;font-size:11px;font-weight:600;padding:4px 8px;border-radius:20px;font-family:inherit;cursor:pointer}
+.main-header{background:linear-gradient(90deg,#7C2D12 0%,#EF4444 100%);color:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;z-index:30;box-shadow:0 2px 8px rgba(0,0,0,0.08);flex:none}
+.mh-left{display:flex;align-items:center;gap:18px}
+.mh-title{display:flex;align-items:center;gap:10px}
+.mh-title .ico{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+.mh-title h1{font-size:16px;font-weight:700;letter-spacing:-0.01em;line-height:1.15}
+.mh-title p{font-size:11px;color:rgba(255,255,255,0.75);margin-top:1px}
+.mh-divider{width:1px;height:32px;background:rgba(255,255,255,0.2)}
+.mh-meta{display:flex;gap:20px}
+.mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:0.04em}
+.mh-meta-item .val{font-size:12px;font-weight:600;margin-top:1px;font-family:'Inter',monospace}
+.mh-right{display:flex;align-items:center;gap:8px}
+.mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.3)}
+.mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
+.mh-btn-ghost{background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.25)}
+.mh-btn-ghost:hover{background:rgba(255,255,255,0.25)}
+.mh-btn-primary{background:#fff;color:#B91C1C}
+.saab{display:flex;align-items:center;gap:8px;background:#fff;border-bottom:1px solid #E5E7EB;padding:7px 24px;flex-wrap:wrap;flex:none}
+.saab-status{margin-left:auto;font-size:11px;color:#6B7280;display:flex;align-items:center;gap:6px}
+.saab-status .dot{width:8px;height:8px;border-radius:50%;background:#F59E0B;display:inline-block}
+.content{flex:1;padding:12px 24px;display:flex;flex-direction:column;gap:12px;overflow:hidden;min-height:0}
+.card{background:#fff;border-radius:8px;border:1px solid #E5E7EB;padding:14px;overflow:hidden}
+.card-header{display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid #F3F4F6;margin-bottom:10px}
+.card-title{font-size:12px;font-weight:600;color:#374151;display:flex;align-items:center;gap:6px}
+.card-title .ico{font-size:14px}
+.card-title .secno{font-family:'Inter',monospace;font-weight:700;color:#B91C1C;font-size:11px}
+.card-spacer{flex:1}
+.card-btn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;background:transparent;border:1px solid #E5E7EB;color:#6B7280;cursor:pointer;font-family:inherit}
+.card-btn:hover{background:#F9FAFB;color:#2563EB;border-color:#BFDBFE}
+.card-btn.primary{background:#EFF6FF;border-color:#BFDBFE;color:#2563EB}
+.card.compact{padding:10px 12px}
+.row-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.row-bottom{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+.field{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}
+.field-label{font-size:10px;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.03em}
+.field-value{font-size:12.5px;color:#111827;font-weight:500}
+.field-value.highlight{font-weight:700;color:#B91C1C;font-family:'Inter',monospace}
+.field-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.mono{font-family:'Inter',monospace}
+.reason-sel{padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit;background:#fff;width:100%;color:#111827}
+
+/* mode bar (3 โหมดลดหนี้) */
+.mode-bar{display:flex;gap:0;background:#fff;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;flex:none}
+.mode-bar .lbl{display:flex;align-items:center;padding:0 14px;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.05em;border-right:1px solid #E5E7EB;background:#F8FAFC;white-space:nowrap}
+.mode-seg{flex:1;display:flex;align-items:center;gap:9px;padding:9px 14px;cursor:pointer;border-right:1px solid #E5E7EB}
+.mode-seg:last-child{border-right:none}
+.mode-seg .ic{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;background:#F3F4F6;flex:none}
+.mode-seg .mt{font-size:12.5px;font-weight:700;color:#6B7280}
+.mode-seg .md{font-size:10px;color:#9CA3AF;margin-top:1px}
+.mode-seg .rb{margin-left:auto;width:16px;height:16px;border-radius:50%;border:2px solid #D1D5DB;flex:none}
+.mode-seg.on{background:#FEF2F2}.mode-seg.on .ic{background:#FEE2E2}.mode-seg.on .mt{color:#B91C1C}.mode-seg.on .rb{border-color:#EF4444;background:radial-gradient(#EF4444 42%,#fff 46%)}
+
+.status-strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:4px 12px}
+.sc11-pills{display:flex;gap:5px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:10.5px;font-weight:600}
+.pill-success{background:#ECFDF5;color:#065F46}.pill-danger{background:#FEF2F2;color:#991B1B}.pill-info{background:#EFF6FF;color:#0C4A6E}.pill-neutral{background:#F3F4F6;color:#374151}
+.dc-node{padding:3px 10px;border-radius:5px;background:#F3F4F6;color:#6B7280;font-weight:600}
+.dc-node.done{background:#ECFDF5;color:#065F46}.dc-node.current{background:#FEF2F2;color:#B91C1C;border:1px solid #FCA5A5}
+.dc-arrow{color:#CBD5E1}
+a.dc-node{text-decoration:none;cursor:pointer}a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
+
+.items-card{padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
+.items-card .card-header{padding:12px 14px;margin:0;border-bottom:1px solid #E5E7EB}
+.items-wrap{overflow-y:auto;flex:1;min-height:60px}
+table.items{width:100%;border-collapse:collapse;background:#fff}
+table.items thead{position:sticky;top:0;background:#F8FAFC;z-index:5}
+table.items thead th{padding:9px 10px;font-size:10.5px;font-weight:600;color:#6B7280;text-align:left;border-bottom:2px solid #E5E7EB;text-transform:uppercase;white-space:nowrap}
+table.items tbody td{padding:10px 10px;font-size:12.5px;color:#111827;border-bottom:1px solid #F3F4F6;vertical-align:top}
+table.items tbody tr.empty-row td{height:30px;color:#9CA3AF}
+table.items th,table.items td{border-right:1px solid #EDEFF2}
+table.items th:last-child,table.items td:last-child{border-right:none}
+.item-code a{font-size:10.5px;color:#2563EB;font-family:'Inter',monospace;font-weight:700;text-decoration:none}
+.item-name{font-weight:500}
+.num{text-align:right;font-family:'Inter',monospace}
+.qty-input{width:56px;padding:3px 6px;border:1px solid #FCA5A5;border-radius:4px;font-size:12px;text-align:center;font-family:inherit;background:#FEF2F2;font-weight:600}
+.rcv-sel{padding:3px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:11px;font-family:inherit}
+
+.tabset{background:#fff;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden}
+.tabset-nav{display:flex;border-bottom:1px solid #E5E7EB;background:#F8FAFC}
+.tabset-nav button{padding:10px 16px;font-size:12px;font-weight:600;color:#6B7280;background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit}
+.tabset-nav button.on{color:#2563EB;border-bottom-color:#2563EB;background:#fff}
+.tabset-pane{display:none;padding:14px}.tabset-pane.on{display:block}
+.tab-grid{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:12px;align-items:center}
+.tab-grid .k{color:#9CA3AF}.tab-grid .v{font-weight:500}
+.tl{display:flex;flex-direction:column;gap:6px;font-size:11.5px}
+.tl-item{display:flex;gap:8px;align-items:center}
+.tl-dot{width:8px;height:8px;border-radius:50%;background:#10B981;flex:none}.tl-dot.pending{background:#D1D5DB}
+
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px}
+.summary-row .lbl{color:#6B7280}.summary-row .val{color:#111827;font-weight:600;font-family:'Inter',monospace}
+.summary-total{margin-top:8px;padding:10px 12px;background:linear-gradient(90deg,#7C2D12 0%,#EF4444 100%);border-radius:6px;color:#fff;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700}
+.summary-total .val{color:#fff;font-family:'Inter',monospace}
+.vat-sel{padding:3px 4px;border:1px solid #E5E7EB;border-radius:4px;font-size:11px;font-family:inherit}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
+.btn-primary{background:#2563EB;color:#fff}.btn-outline{background:#fff;color:#374151;border-color:#E5E7EB}.btn-ghost{background:transparent;color:#6B7280}
+.row-2col .card.compact{padding:7px 10px}.row-2col .card-header{padding-bottom:5px;margin-bottom:5px}
+.row-2col .field{margin-bottom:3px}.row-2col .field-grid-2{gap:3px 14px}
+.content>.items-card{flex:1 1 0;min-height:110px}
+.content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col,.mode-bar{flex:none}
+.row-bottom{font-size:12px;height:150px}
+.row-bottom .tabset,.row-bottom>.card{overflow:auto}
+.row-bottom .tabset-pane{padding:10px}.row-bottom .tabset-nav button{padding:6px 12px;font-size:11px}
+.row-bottom .summary-row{padding:2px 0;font-size:11px}.row-bottom .summary-total{font-size:12px;padding:6px 10px;margin-top:4px}
+.row-bottom .card-header{padding-bottom:5px;margin-bottom:5px}
+.ph{color:#9CA3AF;font-style:italic}
+.tpl-zone{font-size:9px;font-weight:700;color:#B91C1C;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:4px;padding:1px 6px;margin-left:6px;text-transform:uppercase;letter-spacing:0.04em}
+</style>
+  <link rel="stylesheet" href="swt-patterns.css">
+</head>
+<body>
+<div class="layout">
+<div class="main">
+
+  <div class="topbar">
+    <div class="topbar-breadcrumb">จัดซื้อ <span class="sep">›</span> ใบลดหนี้เจ้าหนี้ <span class="sep">›</span> <span class="current">PCN-2606-0007</span></div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+    <div class="topbar-icon">🔔</div>
+    <select class="branch-sel" title="สาขา"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 คลังกลาง</option></select>
+    <select class="branch-sel" title="แผนก"><option>แผนกจัดซื้อ</option><option>คลัง</option><option>บัญชี</option></select>
+    <div class="topbar-avatar">สศ</div>
+  </div>
+
+  <header class="main-header">
+    <div class="mh-left">
+      <div class="mh-title">
+        <div class="ico">↩️</div>
+        <div><h1>ใบลดหนี้เจ้าหนี้</h1><p>Purchase Credit Note / APCN (PO-CN)</p></div>
+      </div>
+      <div class="mh-divider"></div>
+      <div class="mh-meta">
+        <div class="mh-meta-item"><div class="lbl">เลขที่ PCN</div><div class="val">PCN-2606-0007</div></div>
+        <div class="mh-meta-item"><div class="lbl">วันที่</div><div class="val">26 มิ.ย. 26</div></div>
+        <div class="mh-meta-item"><div class="lbl">อ้างอิงบิล</div><div class="val">GR-2606-0210</div></div>
+      </div>
+    </div>
+    <div class="mh-right">
+      <span class="mh-badge">🕓 ร่าง</span>
+      <button class="mh-btn mh-btn-ghost" onclick="location.href='po6-ap-invoice-mockup.html'">🧾 ไปใบตั้งหนี้</button>
+      <button class="mh-btn mh-btn-primary" onclick="poCnPost()">↩️ Post ลดหนี้ → ตัด AP</button>
+    </div>
+  </header>
+
+  <div class="saab">
+    <button class="btn btn-outline" onclick="dfOpen()">📂 เปิดเอกสารเก่า</button>
+    <button class="btn btn-outline">💾 Save Draft</button>
+    <button class="btn btn-outline" onclick="window.print()">🖨️ พิมพ์</button>
+    <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
+    <span class="saab-status"><span class="dot"></span>สถานะ: <strong>ร่าง</strong> · โหมด: คืนสินค้า · ตัด AP เจ้าหนี้ Daikin</span>
+  </div>
+
+  <div class="content">
+
+    <!-- ④a STATUS + DOC-CHAIN -->
+    <div class="status-strip">
+      <div class="sc11-pills">
+        <span class="pill pill-neutral">📄 ร่าง</span>
+        <span class="pill pill-danger" id="modePill">🔄 โหมด: คืนสินค้า</span>
+        <span class="pill pill-info">฿ VAT ซื้อ 7%</span>
+        <span class="pill pill-neutral">ตัด AP: Daikin V-00045</span>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+        <span style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
+        <a class="dc-node done" href="wh1-grn-mockup.html" target="_blank">รับ GR-0210</a><span class="dc-arrow">→</span>
+        <span class="dc-node current">ลดหนี้ PCN-0007</span><span class="dc-arrow">→</span>
+        <a class="dc-node" href="po6-ap-invoice-mockup.html" target="_blank">ตัด PO-6 ตั้งหนี้</a>
+      </div>
+    </div>
+
+    <!-- ④a2 MODE BAR (3 โหมดลดหนี้) -->
+    <div class="mode-bar">
+      <div class="lbl">โหมดลดหนี้</div>
+      <div class="mode-seg on" onclick="poCnMode('return','🔄 โหมด: คืนสินค้า')">
+        <div class="ic">🔄</div><div><div class="mt">คืนสินค้า (Return)</div><div class="md">คืนของชำรุด/ผิด → ลดหนี้ตามจำนวนคืน</div></div><div class="rb"></div>
+      </div>
+      <div class="mode-seg" onclick="poCnMode('price','💰 โหมด: ลดราคา')">
+        <div class="ic">💰</div><div><div class="mt">ลดราคา (Price Adj)</div><div class="md">ของครบ แต่ Vendor ลดราคา/ส่วนลดเพิ่ม</div></div><div class="rb"></div>
+      </div>
+      <div class="mode-seg" onclick="poCnMode('claim','🎫 โหมด: เคลม')">
+        <div class="ic">🎫</div><div><div class="mt">เคลม (Claim)</div><div class="md">เคลมชดเชยจาก Vendor → ลดหนี้</div></div><div class="rb"></div>
+      </div>
+    </div>
+
+    <!-- ④b ROW-2COL: PO-CN.1 เจ้าหนี้ + PO-CN.2 ข้อมูลใบลดหนี้ -->
+    <div class="row-2col">
+      <div class="card compact">
+        <div class="card-header">
+          <div class="card-title"><span class="secno">PO-CN.1</span><span class="ico">🏭</span>เจ้าหนี้ (Vendor) <span class="tpl-zone">SC-3</span></div>
+          <div class="card-spacer"></div>
+          <button class="card-btn primary" onclick="dfOpenVend()">🔍 เลือก/เปลี่ยน</button>
+        </div>
+        <div class="field-grid-2">
+          <div class="field"><div class="field-label">รหัส · ชื่อ</div><div class="field-value"><span class="highlight">V-00045</span> · Daikin Industries (TH) Ltd.</div></div>
+          <div class="field"><div class="field-label">เลขภาษี</div><div class="field-value mono">0-1055-12345-67-8</div></div>
+          <div class="field"><div class="field-label">AP คงค้าง (ก่อนลดหนี้)</div><div class="field-value" style="color:#B45309">2,339,836</div></div>
+          <div class="field"><div class="field-label">หลังลดหนี้ใบนี้</div><div class="field-value" style="color:#065F46">2,287,406</div></div>
+        </div>
+      </div>
+      <div class="card compact">
+        <div class="card-header"><div class="card-title"><span class="secno">PO-CN.2</span><span class="ico">📋</span>ข้อมูลใบลดหนี้</div>
+          <div class="card-spacer"></div>
+          <button class="card-btn" onclick="dfOpenRef()" title="อ้างอิงบิลเดิม: ใบรับของ (GRN) / ใบตั้งหนี้ (AP) / ใบสั่งซื้อ (PO)">🔗 อ้างอิงบิลเดิม</button>
+        </div>
+        <div class="field-grid-2">
+          <div class="field"><div class="field-label">เลข CN ของ Vendor</div><div class="field-value highlight">DKN-CN-0042</div></div>
+          <div class="field"><div class="field-label">วันที่ออกใบลดหนี้</div><div class="field-value">26 มิ.ย. 26</div></div>
+          <div class="field"><div class="field-label">อ้างอิงใบรับ (GRN)</div><div class="field-value">GR-2606-0210</div></div>
+          <div class="field"><div class="field-label">อ้างอิงใบตั้งหนี้ (AP)</div><div class="field-value">AP-2606-0088</div></div>
+        </div>
+        <div class="field" style="margin-top:4px"><div class="field-label">เหตุผลลดหนี้</div>
+          <select class="reason-sel">
+            <option>🔧 สินค้าชำรุด/เสียหายระหว่างขนส่ง</option>
+            <option>📦 ส่งผิดรุ่น/ผิดสเปก</option>
+            <option>🔢 ส่งเกินจำนวน</option>
+            <option>💰 Vendor ลดราคาเพิ่ม (หลังบิล)</option>
+            <option>🎫 เคลมชดเชย</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ④c PO-CN.3 รายการลดหนี้ -->
+    <div class="card items-card">
+      <div class="card-header">
+        <div class="card-title"><span class="secno">PO-CN.3</span><span class="ico">↩️</span>รายการลดหนี้ <span class="tpl-zone">copy จากใบรับ GR-0210 · ปรับจำนวนคืน</span></div>
+        <div class="card-spacer"></div>
+        <button class="card-btn primary" onclick="dfOpenProd()">🔍 เพิ่มรายการ</button>
+      </div>
+      <div class="items-wrap">
+        <table class="items">
+          <thead><tr><th>#</th><th>รหัส</th><th>รายการ</th><th class="num">รับไว้</th><th class="num">จำนวนคืน/ลด</th><th>หน่วย</th><th class="num">ราคา/หน่วย</th><th class="num">มูลค่าลด</th><th>เหตุผล</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>1</td><td class="item-code"><a href="md1-item-master-mockup-v3.html">DAI-FTKM12</a></td>
+              <td class="item-name">แอร์ Daikin FTKM 12,000 BTU</td>
+              <td class="num">60</td><td class="num"><input class="qty-input" value="5"></td><td>เครื่อง</td>
+              <td class="num">9,800.00</td><td class="num" style="color:#B91C1C;font-weight:700">49,000.00</td>
+              <td><select class="rcv-sel"><option>ชำรุด</option><option>ผิดรุ่น</option><option>เกินจำนวน</option></select></td>
+            </tr>
+            <tr class="empty-row"><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>11</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>12</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>13</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>14</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>15</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:8px 14px;border-top:1px dashed #E5E7EB;background:#FEF7F7;font-size:11px;color:#6B7280">
+        💡 คืนสินค้า: ของออกจากคลัง (WH-1 ตัดสต็อก) + ลดหนี้ตามมูลค่าคืน → Post แล้วยอด AP เจ้าหนี้ลดลง · ส่งสัญญาณ "ตัดหนี้" ไป PO-6
+      </div>
+    </div>
+
+    <!-- ④d ROW-BOTTOM: PO-CN.4 Tabs + PO-CN.5 Summary -->
+    <div class="row-bottom">
+      <div class="tabset">
+        <div class="tabset-nav">
+          <button class="on" onclick="swTab(event,'t-ref')">อ้างอิง</button>
+          <button onclick="swTab(event,'t-tax')">ภาษี/GL</button>
+          <button onclick="swTab(event,'t-hist')">ประวัติ</button>
+        </div>
+        <div class="tabset-pane on" id="t-ref">
+          <div class="tab-grid">
+            <span class="k">ใบสั่งซื้อ (PO)</span><span class="v">PO-2606-0042</span>
+            <span class="k">ใบรับของ (GRN)</span><span class="v">GR-2606-0210 (คืน 5 จาก 60)</span>
+            <span class="k">ใบตั้งหนี้ (AP)</span><span class="v">AP-2606-0088 → ตัดยอดหนี้</span>
+          </div>
+        </div>
+        <div class="tabset-pane" id="t-tax">
+          <div class="tab-grid">
+            <span class="k">มูลค่าลด (ก่อน VAT)</span><span class="v">49,000.00</span>
+            <span class="k">VAT ซื้อ (กลับ)</span><span class="v">7% = 3,430.00 (ลดภาษีซื้อ)</span>
+            <span class="k">ลง GL</span><span class="v">Dr เจ้าหนี้การค้า / Cr สินค้า + Cr ภาษีซื้อ</span>
+          </div>
+        </div>
+        <div class="tabset-pane" id="t-hist">
+          <div class="tl">
+            <div class="tl-item"><span class="tl-dot"></span> พบสินค้าชำรุด 5 เครื่อง (FTKM12) · 26 มิ.ย. 26 · คลัง</div>
+            <div class="tl-item"><span class="tl-dot"></span> เปิดใบลดหนี้ PCN-2606-0007 · จัดซื้อ</div>
+            <div class="tl-item"><span class="tl-dot pending"></span> Post → คืนของ (WH-1 ตัดสต็อก) + ตัด AP · บัญชี</div>
+            <div class="tl-item"><span class="tl-dot pending"></span> ส่งสัญญาณ "ตัดหนี้" → PO-6 ใบตั้งหนี้</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="secno">PO-CN.5</span><span class="ico">💰</span>สรุปลดหนี้</div></div>
+        <div class="summary-row"><span class="lbl">มูลค่าลด (ก่อนภาษี)</span><span class="val">49,000.00</span></div>
+        <div class="summary-row"><span class="lbl">VAT ซื้อ (กลับ) <select class="vat-sel"><option>7%</option></select></span><span class="val">3,430.00</span></div>
+        <div class="summary-total"><span>ลดหนี้สุทธิ (ตัด AP)</span><span class="val">-52,430.00</span></div>
+      </div>
+    </div>
+
+    <!-- ④e NOTES -->
+    <div class="card" style="padding:8px 12px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:12px;font-weight:600;color:#374151">🗒️ หมายเหตุ</span>
+      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="คืน FTKM12 ชำรุด 5 เครื่อง (คอมเพรสเซอร์รั่ว) · Vendor ออก CN DKN-CN-0042 · ตัด AP-2606-0088">
+    </div>
+
+  </div><!-- /content -->
+
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+function swTab(e,id){
+  var nav=e.currentTarget.parentElement;
+  nav.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+  e.currentTarget.classList.add('on');
+  var set=nav.parentElement;
+  set.querySelectorAll('.tabset-pane').forEach(p=>p.classList.remove('on'));
+  set.querySelector('#'+id).classList.add('on');
+}
+function poCnMode(m,label){
+  document.querySelectorAll('.mode-seg').forEach(function(s){s.classList.remove('on');});
+  event.currentTarget.classList.add('on');
+  document.getElementById('modePill').textContent=label;
+}
+/* ↩️ Post ลดหนี้ → ตัด AP + คืนของ (WH-1) + ส่งสัญญาณ PO-6 */
+function poCnPost(){
+  if(confirm('Post ใบลดหนี้เจ้าหนี้ PCN-2606-0007 (mock):\n\n• ลง GL: Dr เจ้าหนี้การค้า / Cr สินค้า + ภาษีซื้อ\n• โหมดคืนสินค้า → ของออกจากคลัง (WH-1 ตัดสต็อก)\n• ตัด AP-2606-0088 ลง -52,430\n• ส่งสัญญาณ "ตัดหนี้" → PO-6 ใบตั้งหนี้')){
+    location.href='po6-ap-invoice-mockup.html';
+  }
+}
+</script>
+<script src="swt-doc-finder.js"></script>
+<script src="swt-sidebar.js"></script>
+</body></html>
