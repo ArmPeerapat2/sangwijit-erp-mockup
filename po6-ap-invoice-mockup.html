@@ -136,6 +136,8 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .summary-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px}
 .summary-row .lbl{color:#6B7280}.summary-row .val{color:#111827;font-weight:600;font-family:'Inter',monospace}
 .summary-row.wht .val{color:#EF4444}
+.summary-row.disc .val{color:#059669}
+.summary-row.base{border-top:1px dashed #E5E7EB;padding-top:4px}
 .summary-total{margin-top:8px;padding:10px 12px;background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);border-radius:6px;color:#fff;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700}
 .summary-total .val{color:#fff;font-family:'Inter',monospace}
 .vat-sel{padding:3px 4px;border:1px solid #E5E7EB;border-radius:4px;font-size:11px;font-family:inherit}
@@ -339,6 +341,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
         <div class="tabset-nav">
           <button class="on" onclick="swTab(event,'t-pay')">กำหนดชำระ</button>
           <button onclick="swTab(event,'t-tax')">ภาษี</button>
+          <button onclick="swTab(event,'t-promo')">🎁 ส่งเสริม/ตัดหนี้</button>
           <button onclick="swTab(event,'t-ref')">อ้างอิง <span class="tpl-zone">SC-5</span></button>
           <button onclick="swTab(event,'t-hist')">ประวัติ <span class="tpl-zone">SC-7</span></button>
         </div>
@@ -350,9 +353,17 @@ table.items th:last-child,table.items td:last-child{border-right:none}
         </div>
         <div class="tabset-pane" id="t-tax">
           <div class="tab-grid">
-            <span class="k">VAT ซื้อ (Input)</span><span class="v">7% = 158,200.00 (ขอคืน/เครดิตภาษีซื้อ)</span>
+            <span class="k">VAT ซื้อ (Input)</span><span class="v">7% = 155,036.00 (ฐานหลังหักส่วนลด · ขอคืน/เครดิตภาษีซื้อ)</span>
             <span class="k">WHT หัก ณ ที่จ่าย</span><span class="v">สินค้า = ไม่หัก (บริการหัก 3% · ค่าขนส่ง 1%)</span>
             <span class="k">ลง GL</span><span class="v">Dr สินค้า + Dr ภาษีซื้อ / Cr เจ้าหนี้การค้า</span>
+          </div>
+        </div>
+        <div class="tabset-pane" id="t-promo">
+          <div class="tab-grid">
+            <span class="k">🎁 Sell-in บนบิล (VC-SI-2604-007)</span><span class="v">2% บนบิล → ลดยอดก่อน VAT <b>-45,200</b> (Case 4)</span>
+            <span class="k">↩️ Rebate/CN ตัดหนี้ (APCN-2606-0012)</span><span class="v">ใบลดหนี้เจ้าหนี้จาก Vendor → หัก AP <b style="color:#059669">-30,000</b></span>
+            <span class="k">🎪 Co-op (VC-COOP-2605-003)</span><span class="v ph">งบ event 20,000 · รอเคลม (ยังไม่ออกใบลดหนี้)</span>
+            <span class="k">ที่มา</span><span class="v">ดึงจากข้อตกลงงบ Vendor — <a href="po2-rfq-mockup.html" style="color:#2563EB;font-weight:600">PO-2 บันทึกข้อตกลงงบ (Vendor Commitment)</a></span>
           </div>
         </div>
         <div class="tabset-pane" id="t-ref">
@@ -374,9 +385,12 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       <div class="card">
         <div class="card-header"><div class="card-title"><span class="secno">PO-6.5</span><span class="ico">💰</span>สรุปยอดตั้งหนี้</div></div>
         <div class="summary-row"><span class="lbl">ยอดก่อนภาษี</span><span class="val">2,260,000.00</span></div>
-        <div class="summary-row"><span class="lbl">ภาษีมูลค่าเพิ่ม (ซื้อ) <select class="vat-sel"><option>7%</option></select></span><span class="val">158,200.00</span></div>
-        <div class="summary-row wht"><span class="lbl">หัก ณ ที่จ่าย (WHT)</span><span class="val">-0.00</span></div>
-        <div class="summary-total"><span>ตั้งหนี้สุทธิ (ค้างจ่าย Vendor)</span><span class="val">2,418,200.00</span></div>
+        <div class="summary-row disc"><span class="lbl">🎁 ส่วนลดบนบิล (Sell-in 2%)</span><span class="val">-45,200.00</span></div>
+        <div class="summary-row base"><span class="lbl">หลังหักส่วนลด (ฐาน VAT)</span><span class="val">2,214,800.00</span></div>
+        <div class="summary-row"><span class="lbl">VAT ซื้อ 7%</span><span class="val">155,036.00</span></div>
+        <div class="summary-row disc"><span class="lbl">↩️ หัก CN/Rebate ตัดหนี้ (ส่งเสริมการขาย)</span><span class="val">-30,000.00</span></div>
+        <div class="summary-row wht"><span class="lbl">หัก ณ ที่จ่าย (WHT · สินค้าไม่หัก)</span><span class="val">-0.00</span></div>
+        <div class="summary-total"><span>ตั้งหนี้สุทธิ (ค้างจ่าย Vendor)</span><span class="val">2,339,836.00</span></div>
       </div>
     </div>
 
