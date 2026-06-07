@@ -1,863 +1,345 @@
 <!DOCTYPE html>
-<html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PO-7 Trade Support Tracking (4 Types) — Sangwijit ERP</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<html lang="th"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PO-7 ส่งเสริมการขาย (Trade Support Realization) — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   PO-7 ส่งเสริมการขาย (Trade Support Realization) — build บน _form-template.html
+   ⚠️ refine 2026-06-08: จาก Rebate Dashboard → ฟอร์มสรุป "ได้จริงเท่าไร" + เปลี่ยนสถานะ + ส่งตั้งหนี้
+   concept [1]: ดึงข้อตกลงจาก PO-2 → สรุป realized → forward เข้า PO-6 (ส่งเสริมได้จริง)
+   4 ประเภทงบ (A2): MOU · Sell-in · Sell-out · Co-op · status: Accrued→Doc Received→Realized
+   ไม่มี Flow PDF เฉพาะ (custom process · ยึด spec A2 + concept lock) · sidebar = swt-sidebar.js
+   ═══════════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#111827;min-width:1440px;font-size:13px;line-height:1.45;height:100vh;overflow:hidden}
+.layout{display:flex;height:100vh;overflow:hidden}
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;margin-left:240px}
+.topbar{height:56px;background:#fff;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;padding:0 24px;gap:16px;flex:none;z-index:40}
+.topbar-breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:#6B7280}
+.topbar-breadcrumb .current{color:#2563EB;font-weight:600}
+.topbar-breadcrumb .sep{color:#D1D5DB}
+.topbar-spacer{flex:1}
+.topbar-search{display:flex;align-items:center;gap:8px;background:#F3F4F6;border-radius:8px;padding:6px 12px;font-size:13px;color:#9CA3AF;width:220px}
+.topbar-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#F3F4F6;cursor:pointer;font-size:16px}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.branch-sel{background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;font-size:11px;font-weight:600;padding:4px 8px;border-radius:20px;font-family:inherit;cursor:pointer}
+.main-header{background:linear-gradient(90deg,#065F46 0%,#10B981 100%);color:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;z-index:30;box-shadow:0 2px 8px rgba(0,0,0,0.08);flex:none}
+.mh-left{display:flex;align-items:center;gap:18px}
+.mh-title{display:flex;align-items:center;gap:10px}
+.mh-title .ico{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+.mh-title h1{font-size:16px;font-weight:700;letter-spacing:-0.01em;line-height:1.15}
+.mh-title p{font-size:11px;color:rgba(255,255,255,0.8);margin-top:1px}
+.mh-divider{width:1px;height:32px;background:rgba(255,255,255,0.2)}
+.mh-meta{display:flex;gap:20px}
+.mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.8);text-transform:uppercase;letter-spacing:0.04em}
+.mh-meta-item .val{font-size:12px;font-weight:600;margin-top:1px;font-family:'Inter',monospace}
+.mh-right{display:flex;align-items:center;gap:8px}
+.mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.3)}
+.mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
+.mh-btn-ghost{background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.25)}
+.mh-btn-ghost:hover{background:rgba(255,255,255,0.25)}
+.mh-btn-primary{background:#fff;color:#065F46}
+.saab{display:flex;align-items:center;gap:8px;background:#fff;border-bottom:1px solid #E5E7EB;padding:7px 24px;flex-wrap:wrap;flex:none}
+.saab-status{margin-left:auto;font-size:11px;color:#6B7280;display:flex;align-items:center;gap:6px}
+.saab-status .dot{width:8px;height:8px;border-radius:50%;background:#F59E0B;display:inline-block}
+.content{flex:1;padding:12px 24px;display:flex;flex-direction:column;gap:12px;overflow:hidden;min-height:0}
+.card{background:#fff;border-radius:8px;border:1px solid #E5E7EB;padding:14px;overflow:hidden}
+.card-header{display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid #F3F4F6;margin-bottom:10px}
+.card-title{font-size:12px;font-weight:600;color:#374151;display:flex;align-items:center;gap:6px}
+.card-title .ico{font-size:14px}
+.card-title .secno{font-family:'Inter',monospace;font-weight:700;color:#065F46;font-size:11px}
+.card-spacer{flex:1}
+.card-btn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;background:transparent;border:1px solid #E5E7EB;color:#6B7280;cursor:pointer;font-family:inherit}
+.card-btn:hover{background:#F9FAFB;color:#2563EB;border-color:#BFDBFE}
+.card-btn.primary{background:#EFF6FF;border-color:#BFDBFE;color:#2563EB}
+.card.compact{padding:10px 12px}
+.row-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.row-bottom{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+.field{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}
+.field-label{font-size:10px;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.03em}
+.field-value{font-size:12.5px;color:#111827;font-weight:500}
+.field-value.highlight{font-weight:700;color:#065F46;font-family:'Inter',monospace}
+.field-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.mono{font-family:'Inter',monospace}
+
+/* status stepper */
+.status-strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:6px 12px}
+.stepper{display:flex;align-items:center;gap:4px}
+.step{display:flex;align-items:center;gap:5px;padding:3px 9px;border-radius:14px;font-size:10.5px;font-weight:600;background:#F3F4F6;color:#9CA3AF}
+.step.done{background:#ECFDF5;color:#065F46}.step.current{background:#10B981;color:#fff}
+.step-arrow{color:#CBD5E1}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:10.5px;font-weight:600}
+.pill-success{background:#ECFDF5;color:#065F46}.pill-warning{background:#FEF3C7;color:#92400E}.pill-info{background:#EFF6FF;color:#0C4A6E}.pill-neutral{background:#F3F4F6;color:#374151}
+.dc-node{padding:3px 10px;border-radius:5px;background:#F3F4F6;color:#6B7280;font-weight:600}
+.dc-node.done{background:#ECFDF5;color:#065F46}.dc-node.current{background:#ECFDF5;color:#065F46;border:1px solid #6EE7B7}
+.dc-arrow{color:#CBD5E1}
+a.dc-node{text-decoration:none;cursor:pointer}a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
+
+.items-card{padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
+.items-card .card-header{padding:12px 14px;margin:0;border-bottom:1px solid #E5E7EB}
+.items-wrap{overflow-y:auto;flex:1;min-height:60px}
+table.items{width:100%;border-collapse:collapse;background:#fff}
+table.items thead{position:sticky;top:0;background:#F8FAFC;z-index:5}
+table.items thead th{padding:9px 10px;font-size:10.5px;font-weight:600;color:#6B7280;text-align:left;border-bottom:2px solid #E5E7EB;text-transform:uppercase;white-space:nowrap}
+table.items tbody td{padding:10px 10px;font-size:12.5px;color:#111827;border-bottom:1px solid #F3F4F6;vertical-align:top}
+table.items tbody tr.empty-row td{height:30px;color:#9CA3AF}
+table.items th,table.items td{border-right:1px solid #EDEFF2}
+table.items th:last-child,table.items td:last-child{border-right:none}
+.vc-code{font-size:10.5px;color:#2563EB;font-family:'Inter',monospace;font-weight:700;text-decoration:none}
+.num{text-align:right;font-family:'Inter',monospace}
+.got-input{width:90px;padding:3px 6px;border:1.5px solid #6EE7B7;border-radius:4px;font-size:12px;text-align:right;font-family:'Inter',monospace;background:#F0FDF4;font-weight:600}
+.tp-chip{display:inline-block;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:700}
+.tp-chip.mou{background:#DBEAFE;color:#1D4ED8}.tp-chip.si{background:#FEF3C7;color:#92400E}.tp-chip.so{background:#F3E8FF;color:#6D28D9}.tp-chip.coop{background:#FCE7F3;color:#9D174D}
+.rec{font-weight:700}.rec.ok{color:#065F46}.rec.low{color:#B45309}
+.st-chip{display:inline-block;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:700}
+.st-chip.acc{background:#F3F4F6;color:#6B7280}.st-chip.doc{background:#FEF3C7;color:#92400E}.st-chip.real{background:#DCFCE7;color:#166534}
+
+.tabset{background:#fff;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden}
+.tabset-nav{display:flex;border-bottom:1px solid #E5E7EB;background:#F8FAFC}
+.tabset-nav button{padding:10px 16px;font-size:12px;font-weight:600;color:#6B7280;background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit}
+.tabset-nav button.on{color:#2563EB;border-bottom-color:#2563EB;background:#fff}
+.tabset-pane{display:none;padding:14px}.tabset-pane.on{display:block}
+.tab-grid{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:12px;align-items:center}
+.tab-grid .k{color:#9CA3AF}.tab-grid .v{font-weight:500}
+.tl{display:flex;flex-direction:column;gap:6px;font-size:11.5px}
+.tl-item{display:flex;gap:8px;align-items:center}
+.tl-dot{width:8px;height:8px;border-radius:50%;background:#10B981;flex:none}.tl-dot.pending{background:#D1D5DB}
+.sanction{font-size:11px;padding:6px 10px;border-radius:6px;background:#FEF2F2;color:#991B1B;border:1px solid #FECACA;margin-top:6px}
+
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px}
+.summary-row .lbl{color:#6B7280}.summary-row .val{color:#111827;font-weight:600;font-family:'Inter',monospace}
+.summary-row.open .val{color:#B45309}
+.summary-total{margin-top:8px;padding:10px 12px;background:linear-gradient(90deg,#065F46 0%,#10B981 100%);border-radius:6px;color:#fff;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700}
+.summary-total .val{color:#fff;font-family:'Inter',monospace}
+.rr-box{margin-top:8px;padding:8px 10px;border-radius:6px;font-size:11px;font-weight:600;text-align:center;background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
+.btn-primary{background:#2563EB;color:#fff}.btn-outline{background:#fff;color:#374151;border-color:#E5E7EB}.btn-ghost{background:transparent;color:#6B7280}
+.row-2col .card.compact{padding:7px 10px}.row-2col .card-header{padding-bottom:5px;margin-bottom:5px}
+.row-2col .field{margin-bottom:3px}.row-2col .field-grid-2{gap:3px 14px}
+.content>.items-card{flex:1 1 0;min-height:110px}
+.content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
+.row-bottom{font-size:12px;height:160px}
+.row-bottom .tabset,.row-bottom>.card{overflow:auto}
+.row-bottom .tabset-pane{padding:10px}.row-bottom .tabset-nav button{padding:6px 12px;font-size:11px}
+.row-bottom .summary-row{padding:2px 0;font-size:11px}.row-bottom .summary-total{font-size:12px;padding:6px 10px;margin-top:4px}
+.row-bottom .card-header{padding-bottom:5px;margin-bottom:5px}
+.ph{color:#9CA3AF;font-style:italic}
+.tpl-zone{font-size:9px;font-weight:700;color:#065F46;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:4px;padding:1px 6px;margin-left:6px;text-transform:uppercase;letter-spacing:0.04em}
+</style>
   <link rel="stylesheet" href="swt-patterns.css">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter','Noto Sans Thai', sans-serif; }
-    body { background: #F8FAFC; min-height: 100vh; display: flex; min-width:1440px; }
-    .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
-    .topbar { height: 56px; background: #fff; border-bottom: 1px solid #E5E7EB; display: flex; align-items: center; padding: 0 24px; gap: 12px; position: sticky; top: 0; z-index: 50; }
-
-    /* sl-4 main-header */
-    .main-header{background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 2px 8px rgba(0,0,0,0.08);flex-wrap:wrap;row-gap:10px}
-    .mh-left{display:flex;align-items:center;gap:18px}
-    .mh-title{display:flex;align-items:center;gap:10px}
-    .mh-title .ico{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px}
-    .mh-title h1{font-size:16px;font-weight:700;letter-spacing:-0.01em;line-height:1.15;margin:0;color:#fff}
-    .mh-title p{font-size:11px;color:rgba(255,255,255,0.7);margin:1px 0 0}
-    .mh-divider{width:1px;height:32px;background:rgba(255,255,255,0.2)}
-    .mh-meta{display:flex;gap:20px}
-    .mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em}
-    .mh-meta-item .val{font-size:12px;font-weight:600;margin-top:1px;font-family:'Inter',monospace;white-space:nowrap;color:#fff}
-    .mh-right{display:flex;align-items:center;gap:8px}
-    .mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(16,185,129,0.25);color:#A7F3D0;border:1px solid rgba(16,185,129,0.35)}
-    .mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid transparent;font-family:inherit;text-decoration:none}
-    .mh-btn-ghost{background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.2)}
-    .mh-btn-ghost:hover{background:rgba(255,255,255,0.22)}
-    .mh-btn-primary{background:#10B981;color:#fff}
-    .mh-btn-primary:hover{background:#059669}
-
-    /* View Tabs */
-    .view-tabs{display:flex;gap:0;border-bottom:2px solid #E5E7EB;margin-bottom:16px;align-items:center}
-    .view-tab{padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;font-size:13px;font-weight:500;color:#6B7280;cursor:pointer;font-family:inherit}
-    .view-tab.active{border-bottom-color:#2563EB;color:#2563EB;font-weight:600}
-
-    /* 4-type breakdown card */
-    .type4-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
-    .type-card{background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:14px;border-left:4px solid #9CA3AF}
-    .type-card.mou{border-left-color:#10B981}
-    .type-card.si{border-left-color:#2563EB}
-    .type-card.so{border-left-color:#F59E0B}
-    .type-card.co{border-left-color:#7C3AED}
-    .type-card-title{font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px;display:flex;align-items:center;gap:4px}
-    .type-card-amount{font-size:18px;font-weight:700;color:#111827;font-variant-numeric:tabular-nums}
-    .type-card-rate{font-size:11px;font-weight:600;margin-top:2px;display:inline-flex;align-items:center;gap:3px}
-    .type-card-rate.good{color:#10B981}
-    .type-card-rate.warn{color:#F59E0B}
-    .type-card-rate.bad{color:#DC2626}
-    .type-card-target{font-size:10px;color:#9CA3AF;margin-top:4px}
-
-    /* Sanction strip */
-    .sanction-strip{background:#FEF3C7;border:1px solid #FCD34D;border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-    .sanction-stage-mini{display:flex;align-items:center;gap:6px;padding:4px 10px;background:#fff;border-radius:6px;font-size:11.5px;font-weight:600}
-    .sanction-stage-mini.day0{color:#065F46;border:1px solid #6EE7B7}
-    .sanction-stage-mini.day7{color:#92400E;border:1px solid #FCD34D}
-    .sanction-stage-mini.day15{color:#92400E;border:1px solid #F59E0B}
-    .sanction-stage-mini.day30{color:#991B1B;border:1px solid #DC2626;background:#FEE2E2;animation:pulse 2s infinite}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
-    .breadcrumb { font-size: 13px; color: #6B7280; }
-    .breadcrumb a { color: #2563EB; text-decoration: none; }
-    .page-content { padding: 24px; flex: 1; }
-    .page-header { margin-bottom: 24px; }
-    .page-title { font-size: 20px; font-weight: 700; color: #111827; display: flex; align-items: center; gap: 10px; }
-    .bc-badge { font-size: 11px; background: #DCFCE7; color: #16A34A; padding: 2px 8px; border-radius: 12px; font-weight: 500; }
-    .page-subtitle { font-size: 13px; color: #6B7280; margin-top: 4px; }
-    
-    /* Summary Cards */
-    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-    .summary-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 16px; }
-    .summary-label { font-size: 12px; color: #6B7280; font-weight: 500; }
-    .summary-value { font-size: 22px; font-weight: 700; color: #111827; margin-top: 4px; }
-    .summary-sub { font-size: 11px; color: #9CA3AF; margin-top: 2px; }
-    .summary-card.accent { border-left: 3px solid #2563EB; }
-    .summary-card.warn { border-left: 3px solid #F59E0B; }
-    .summary-card.green { border-left: 3px solid #10B981; }
-    
-    /* Filters */
-    .filter-bar { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 16px; margin-bottom: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-    .filter-label { font-size: 12px; font-weight: 600; color: #374151; }
-    .filter-select { border: 1px solid #D1D5DB; border-radius: 6px; padding: 6px 10px; font-size: 12px; }
-    .filter-btn { background: #2563EB; color: #fff; border: none; border-radius: 6px; padding: 6px 16px; font-size: 12px; cursor: pointer; font-weight: 600; }
-    .btn-export { background: #fff; color: #374151; border: 1px solid #D1D5DB; border-radius: 6px; padding: 6px 14px; font-size: 12px; cursor: pointer; }
-    
-    /* Table */
-    .table-wrap { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; overflow: hidden; }
-    .table-header { padding: 12px 16px; border-bottom: 1px solid #E5E7EB; display: flex; justify-content: space-between; align-items: center; }
-    .table-title { font-size: 13px; font-weight: 600; color: #111827; }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    th { background: #F9FAFB; padding: 8px 12px; text-align: left; color: #6B7280; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #E5E7EB; }
-    td { padding: 9px 12px; border-bottom: 1px solid #F3F4F6; color: #374151; }
-    tr:hover td { background: #F9FAFB; }
-    .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; }
-    .badge-green { background: #DCFCE7; color: #16A34A; }
-    .badge-yellow { background: #FEF3C7; color: #92400E; }
-    .badge-blue { background: #DBEAFE; color: #1D4ED8; }
-    .badge-gray { background: #F3F4F6; color: #6B7280; }
-    .amount-col { text-align: right; font-weight: 600; }
-    .amount-pos { color: #16A34A; }
-    .notice { background: #FEF3C7; border: 1px solid #FCD34D; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #92400E; margin-bottom: 20px; }
-    .notice strong { font-weight: 700; }
-  </style>
 </head>
 <body>
-
-
-<nav class="sidebar">
-    </nav>
-
+<div class="layout">
 <div class="main">
+
   <div class="topbar">
-    <div class="breadcrumb">
-      <a href="portal-mockup-index.html">Portal</a> / 
-      <a href="md1-item-master-mockup-v3.html">MD-1 ทะเบียนสินค้า</a> / 
-      <b>PO Rebate Dashboard</b>
-    </div>
-    <div style="flex:1"></div>
-    <button class="btn-export" onclick="alert('Export Excel')">📥 Export</button>
+    <div class="topbar-breadcrumb">จัดซื้อ <span class="sep">›</span> ส่งเสริมการขาย <span class="sep">›</span> <span class="current">ACR-2606-0015</span></div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+    <div class="topbar-icon">🔔</div>
+    <select class="branch-sel" title="สาขา"><option>🏢 HQ สนง.ใหญ่</option></select>
+    <select class="branch-sel" title="แผนก"><option>แผนกจัดซื้อ</option><option>บัญชี</option></select>
+    <div class="topbar-avatar">สศ</div>
   </div>
-  
-  <!-- MAIN HEADER (sl-4) -->
+
   <header class="main-header">
     <div class="mh-left">
       <div class="mh-title">
-        <div class="ico">💰</div>
-        <div>
-          <h1>Trade Support Tracking</h1>
-          <p>4 Types · MOU · Sell-in · Sell-out · Co-op (PO-7)</p>
-        </div>
+        <div class="ico">🎁</div>
+        <div><h1>ส่งเสริมการขาย</h1><p>Trade Support Realization (PO-7) · สรุปได้จริง → ตั้งหนี้</p></div>
       </div>
       <div class="mh-divider"></div>
       <div class="mh-meta">
-        <div class="mh-meta-item"><div class="lbl">งวด</div><div class="val">FY2026 · Q2</div></div>
-        <div class="mh-meta-item"><div class="lbl">Vendor active</div><div class="val">12 / 28</div></div>
-        <div class="mh-meta-item"><div class="lbl">Recovery rate</div><div class="val">32%</div></div>
+        <div class="mh-meta-item"><div class="lbl">เลขที่ Accrual</div><div class="val">ACR-2606-0015</div></div>
+        <div class="mh-meta-item"><div class="lbl">งวด Claim</div><div class="val">Q2/2026</div></div>
+        <div class="mh-meta-item"><div class="lbl">อ้างอิงข้อตกลง</div><div class="val">PO-2 (Daikin)</div></div>
       </div>
     </div>
     <div class="mh-right">
-      <span class="mh-badge">📊 Live</span>
-      <button class="mh-btn mh-btn-ghost">📥 Export Excel</button>
-      <button class="mh-btn mh-btn-primary">+ บันทึกข้อตกลงงบ (VC)</button>
+      <span class="mh-badge">🕓 Accrued</span>
+      <button class="mh-btn mh-btn-ghost" onclick="location.href='po2-rfq-mockup.html'">📑 ข้อตกลง PO-2</button>
+      <button class="mh-btn mh-btn-primary" onclick="po7Realize()">✅ Confirm & Realize → ตั้งหนี้</button>
     </div>
   </header>
 
-  <div class="page-content">
+  <div class="saab">
+    <button class="btn btn-outline" onclick="dfOpen()">📂 เปิดเอกสารเก่า</button>
+    <button class="btn btn-outline">💾 Save Draft</button>
+    <button class="btn btn-outline">📎 แนบ CN/เอกสารจากห้าง</button>
+    <button class="btn btn-outline" onclick="window.print()">🖨️ พิมพ์</button>
+    <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
+    <span class="saab-status"><span class="dot"></span>สถานะ: <strong>Accrued</strong> · รอ Doc/Realize · Vendor Daikin · งวด Q2/2026</span>
+  </div>
 
-    <!-- View Tabs (Dashboard | List | Form) -->
-    <div class="view-tabs">
-      <button onclick="po7SwView(this,'p7dash')" class="view-tab active">📊 Dashboard</button>
-      <button onclick="po7SwView(this,'p7list')" class="view-tab">📋 List · Vendor Obligations</button>
-      <button onclick="po7SwView(this,'p7form')" class="view-tab">📝 Form · บันทึก/ตรวจ CN</button>
-      <span style="margin-left:auto;font-size:11px;color:#6B7280">💡 Form view = บันทึก Accrual + แนบ CN · spec PO-7</span>
-    </div>
+  <div class="content">
 
-    <!-- Sanction strip (per A3 · always visible) -->
-    <div class="sanction-strip">
-      <span style="font-size:13px;font-weight:700;color:#92400E">🛡 Sanction (CN Outstanding)</span>
-      <div class="sanction-stage-mini day0">12 · Day-0</div>
-      <span style="color:#9CA3AF;font-size:14px">→</span>
-      <div class="sanction-stage-mini day7">5 · Day-7</div>
-      <span style="color:#9CA3AF;font-size:14px">→</span>
-      <div class="sanction-stage-mini day15">2 · Day-15</div>
-      <span style="color:#9CA3AF;font-size:14px">→</span>
-      <div class="sanction-stage-mini day30">1 · Day-30 ⚠ STOP</div>
-      <span style="margin-left:auto;font-size:11px;color:#92400E">บุญมีพาณิชย์ เกิน 30 วัน · auto-block PR/PO ใหม่ · ดูใน <a href="poq-purchase-queue-mockup.html" style="color:#2563EB;font-weight:600">PO-Q Panel F ↗</a></span>
-    </div>
-
-    <div id="p7dash" class="po7-pane">
-
-    <!-- 4 Trade Promotion Types breakdown (per A2 v2.1) -->
-    <div class="type4-grid">
-      <div class="type-card mou">
-        <div class="type-card-title">🟢 MOU/Rebate</div>
-        <div class="type-card-amount">฿1,580,000</div>
-        <div class="type-card-rate good">▲ 96% recovery</div>
-        <div class="type-card-target">Target ≥95% · ✓ ผ่าน</div>
+    <!-- ④a STATUS STEPPER + DOC-CHAIN -->
+    <div class="status-strip">
+      <div class="stepper">
+        <span class="step done">✓ Draft</span><span class="step-arrow">→</span>
+        <span class="step current">● Accrued (commit·รับรู้)</span><span class="step-arrow">→</span>
+        <span class="step">Doc Received</span><span class="step-arrow">→</span>
+        <span class="step">Realized (ได้จริง)</span>
       </div>
-      <div class="type-card si">
-        <div class="type-card-title">🔵 Sell-in</div>
-        <div class="type-card-amount">฿1,267,200</div>
-        <div class="type-card-rate good">▲ 100% recovery</div>
-        <div class="type-card-target">Target 100% · ✓ ผ่าน · บนบิล Case 4</div>
-      </div>
-      <div class="type-card so">
-        <div class="type-card-title">🟡 Sell-out</div>
-        <div class="type-card-amount">฿920,000</div>
-        <div class="type-card-rate warn">▼ 78% recovery</div>
-        <div class="type-card-target">Target ≥85% · ⚠ ต่ำกว่า · serial รอ data</div>
-      </div>
-      <div class="type-card co">
-        <div class="type-card-title">🟣 Co-op</div>
-        <div class="type-card-amount">฿80,000</div>
-        <div class="type-card-rate good">▲ 92% recovery</div>
-        <div class="type-card-target">Target ≥90% · ✓ ผ่าน · งบ Event</div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+        <span style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
+        <a class="dc-node done" href="po2-rfq-mockup.html" target="_blank">PO-2 ข้อตกลง</a><span class="dc-arrow">→</span>
+        <span class="dc-node current">PO-7 ได้จริง</span><span class="dc-arrow">→</span>
+        <a class="dc-node" href="po6-ap-invoice-mockup.html" target="_blank">ตัด PO-6 ตั้งหนี้</a>
       </div>
     </div>
 
-    <div class="notice">
-      <strong>📌 v2.2 update:</strong> ตัด Sell-thru (B2B) ออกแล้ว · ใช้ <b>4 ประเภท</b> · Recovery แต่ละประเภทคำนวณจาก <b>Vendor Commitment (PO-2)</b> ที่ active · Sell-out ค้าง 78% เพราะรอ serial-match จาก SL-4
+    <!-- ④b ROW-2COL: PO-7.1 เจ้าหนี้ + PO-7.2 ข้อมูล -->
+    <div class="row-2col">
+      <div class="card compact">
+        <div class="card-header">
+          <div class="card-title"><span class="secno">PO-7.1</span><span class="ico">🏭</span>เจ้าหนี้ (Vendor) <span class="tpl-zone">SC-3</span></div>
+          <div class="card-spacer"></div>
+          <button class="card-btn primary" onclick="dfOpenVend()">🔍 เลือก/เปลี่ยน</button>
+        </div>
+        <div class="field-grid-2">
+          <div class="field"><div class="field-label">รหัส · ชื่อ</div><div class="field-value"><span class="highlight">V-00045</span> · Daikin Industries (TH) Ltd.</div></div>
+          <div class="field"><div class="field-label">Buyer ผู้ดูแล</div><div class="field-value">สมศรี วงศ์ทอง</div></div>
+          <div class="field"><div class="field-label">Tier · เกรด</div><div class="field-value">T2 · Recovery รวม 90.5%</div></div>
+          <div class="field"><div class="field-label">ยอดซื้อ 12 เดือน</div><div class="field-value">8,420,000</div></div>
+        </div>
+      </div>
+      <div class="card compact">
+        <div class="card-header"><div class="card-title"><span class="secno">PO-7.2</span><span class="ico">📋</span>ข้อมูลสรุปงบ</div>
+          <div class="card-spacer"></div>
+          <button class="card-btn" onclick="dfOpenRef()" title="ดึงข้อตกลงงบจาก PO-2 (Vendor Commitment) ของ Vendor นี้ตามงวด">🔗 ดึงข้อตกลง PO-2</button>
+        </div>
+        <div class="field-grid-2">
+          <div class="field"><div class="field-label">เลขที่ Accrual</div><div class="field-value highlight">ACR-2606-0015</div></div>
+          <div class="field"><div class="field-label">งวด Claim</div><div class="field-value">ไตรมาส Q2/2026 (เม.ย.–มิ.ย.)</div></div>
+          <div class="field"><div class="field-label">จำนวนข้อตกลง (VC)</div><div class="field-value">3 รายการ (MOU · Sell-in · Co-op)</div></div>
+          <div class="field"><div class="field-label">ส่งตั้งหนี้ที่</div><div class="field-value">PO-6 (เมื่อ Realized)</div></div>
+        </div>
+      </div>
     </div>
 
-    <!-- Summary Cards (overall) -->
-    <div class="summary-grid">
-      <div class="summary-card accent">
-        <div class="summary-label">งบรวมทั้งหมด (4 Types · ปีนี้)</div>
-        <div class="summary-value">3,847,200</div>
-        <div class="summary-sub">บาท / FY2026</div>
+    <!-- ④c PO-7.3 รายการส่งเสริมการขาย (ดึงจาก PO-2 · สรุปได้จริง) -->
+    <div class="card items-card">
+      <div class="card-header">
+        <div class="card-title"><span class="secno">PO-7.3</span><span class="ico">🎁</span>รายการส่งเสริมการขาย — เป้า vs ได้จริง <span class="tpl-zone">ดึงจาก PO-2 · 4 ประเภท</span></div>
+        <div class="card-spacer"></div>
+        <span style="font-size:11px;color:#065F46;font-weight:600">Recovery รวม 90.5% (เป้า ≥90%)</span>
       </div>
-      <div class="summary-card green">
-        <div class="summary-label">Realized (รับเงิน + CN)</div>
-        <div class="summary-value">1,220,000</div>
-        <div class="summary-sub">32% ของที่ควรได้</div>
-      </div>
-      <div class="summary-card warn">
-        <div class="summary-label">Accrued · รอ CN/Doc</div>
-        <div class="summary-value">2,627,200</div>
-        <div class="summary-sub">68% ยังไม่ได้เอกสาร · ⚠ aging risk</div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-label">VC Active (ใช้งานอยู่)</div>
-        <div class="summary-value">23</div>
-        <div class="summary-sub">12 Vendor · 4 types</div>
-      </div>
-    </div>
-    
-    <!-- Filter Bar -->
-    <div class="filter-bar">
-      <span class="filter-label">Vendor:</span>
-      <select class="filter-select">
-        <option>ทั้งหมด</option>
-        <option selected>Daikin Thailand</option>
-        <option>LG Electronics</option>
-        <option>Mitsubishi Electric</option>
-        <option>Samsung Electronics</option>
-        <option>Panasonic</option>
-      </select>
-      <span class="filter-label">หมวด:</span>
-      <select class="filter-select">
-        <option>ทั้งหมด</option>
-        <option selected>เครื่องปรับอากาศ</option>
-        <option>เครื่องซักผ้า</option>
-        <option>ตู้เย็น</option>
-        <option>TV</option>
-      </select>
-      <span class="filter-label">ปีงบ:</span>
-      <select class="filter-select">
-        <option selected>FY2026</option>
-        <option>FY2025</option>
-      </select>
-      <button class="filter-btn">🔍 ค้นหา</button>
-      <div style="flex:1"></div>
-      <button class="btn-export" onclick="alert('Export to Excel')">📥 Export Excel</button>
-    </div>
-    
-    <!-- Rebate Table -->
-    <div class="table-wrap">
-      <div class="table-header">
-        <span class="table-title">💰 รายการ Rebate ตาม Vendor × หมวดสินค้า</span>
-        <span style="font-size:12px;color:#6B7280;">แสดง 8 รายการ</span>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Vendor</th>
-            <th>หมวดสินค้า</th>
-            <th>Target ยอดซื้อ</th>
-            <th>ยอดสั่งซื้อจริง</th>
-            <th>% สำเร็จ</th>
-            <th>Rebate Rate</th>
-            <th class="amount-col">Rebate ควรได้</th>
-            <th class="amount-col">เบิกแล้ว</th>
-            <th>สถานะ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><b>Daikin Thailand</b></td>
-            <td>เครื่องปรับอากาศ</td>
-            <td>12,000,000</td>
-            <td>14,250,000</td>
-            <td><span class="badge badge-green">118.8%</span></td>
-            <td>3.5%</td>
-            <td class="amount-col amount-pos">498,750</td>
-            <td class="amount-col">498,750</td>
-            <td><span class="badge badge-green">เบิกแล้ว</span></td>
-          </tr>
-          <tr>
-            <td><b>LG Electronics</b></td>
-            <td>เครื่องซักผ้า</td>
-            <td>8,000,000</td>
-            <td>9,180,000</td>
-            <td><span class="badge badge-green">114.8%</span></td>
-            <td>2.0%</td>
-            <td class="amount-col amount-pos">183,600</td>
-            <td class="amount-col">0</td>
-            <td><span class="badge badge-yellow">ค้างรับ</span></td>
-          </tr>
-          <tr>
-            <td><b>LG Electronics</b></td>
-            <td>ตู้เย็น</td>
-            <td>5,000,000</td>
-            <td>4,320,000</td>
-            <td><span class="badge badge-yellow">86.4%</span></td>
-            <td>1.5%</td>
-            <td class="amount-col" style="color:#9CA3AF">—</td>
-            <td class="amount-col">0</td>
-            <td><span class="badge badge-gray">ไม่ถึง Target</span></td>
-          </tr>
-          <tr>
-            <td><b>Mitsubishi Electric</b></td>
-            <td>เครื่องปรับอากาศ</td>
-            <td>10,000,000</td>
-            <td>11,450,000</td>
-            <td><span class="badge badge-green">114.5%</span></td>
-            <td>3.0%</td>
-            <td class="amount-col amount-pos">343,500</td>
-            <td class="amount-col">343,500</td>
-            <td><span class="badge badge-green">เบิกแล้ว</span></td>
-          </tr>
-          <tr>
-            <td><b>Samsung Electronics</b></td>
-            <td>TV</td>
-            <td>6,000,000</td>
-            <td>6,820,000</td>
-            <td><span class="badge badge-green">113.7%</span></td>
-            <td>2.5%</td>
-            <td class="amount-col amount-pos">170,500</td>
-            <td class="amount-col">0</td>
-            <td><span class="badge badge-yellow">ค้างรับ</span></td>
-          </tr>
-          <tr>
-            <td><b>Samsung Electronics</b></td>
-            <td>เครื่องซักผ้า</td>
-            <td>4,000,000</td>
-            <td>4,590,000</td>
-            <td><span class="badge badge-green">114.8%</span></td>
-            <td>2.0%</td>
-            <td class="amount-col amount-pos">91,800</td>
-            <td class="amount-col">0</td>
-            <td><span class="badge badge-yellow">ค้างรับ</span></td>
-          </tr>
-          <tr>
-            <td><b>Panasonic</b></td>
-            <td>เครื่องปรับอากาศ</td>
-            <td>7,000,000</td>
-            <td>6,320,000</td>
-            <td><span class="badge badge-yellow">90.3%</span></td>
-            <td>2.5%</td>
-            <td class="amount-col" style="color:#9CA3AF">—</td>
-            <td class="amount-col">0</td>
-            <td><span class="badge badge-gray">ไม่ถึง Target</span></td>
-          </tr>
-          <tr>
-            <td><b>Toshiba</b></td>
-            <td>เครื่องปรับอากาศ</td>
-            <td>3,000,000</td>
-            <td>3,560,000</td>
-            <td><span class="badge badge-green">118.7%</span></td>
-            <td>3.0%</td>
-            <td class="amount-col amount-pos">106,800</td>
-            <td class="amount-col">0</td>
-            <td><span class="badge badge-yellow">ค้างรับ</span></td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr style="background:#F9FAFB;border-top:2px solid #E5E7EB;">
-            <td colspan="6" style="font-weight:700;font-size:12px;">รวมทั้งหมด</td>
-            <td class="amount-col" style="font-weight:700;color:#16A34A;">1,394,950</td>
-            <td class="amount-col" style="font-weight:700;">842,250</td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-    
-    <div style="margin-top:12px;font-size:11px;color:#9CA3AF;text-align:right;">
-      ⚠️ ข้อมูลนี้ยังเป็น Mockup — Phase 2 จะเชื่อม BC365 OData API จริง
-      | <a href="md1-item-master-mockup-v3.html" style="color:#2563EB;">กลับ MD-1</a>
-    </div>
-
-    </div><!-- /p7dash -->
-
-    <!-- LIST VIEW -->
-    <div id="p7list" class="po7-pane" style="display:none">
-      <div class="filter-bar">
-        <span class="filter-label">Type:</span>
-        <select class="filter-select"><option>ทุกประเภท</option><option>🟢 MOU</option><option>🔵 Sell-in</option><option>🟡 Sell-out</option><option>🟣 Co-op</option></select>
-        <span class="filter-label">Status:</span>
-        <select class="filter-select"><option>ทุก Status</option><option>Draft</option><option>Accrued</option><option>Doc Received</option><option>Realized</option></select>
-        <span class="filter-label">Vendor:</span>
-        <select class="filter-select"><option>ทุก Vendor</option><option>Daikin</option><option>LG</option><option>Mitsubishi</option><option>Samsung</option></select>
-        <button class="filter-btn">🔍 ค้นหา</button>
-        <span style="margin-left:auto;font-size:11px;color:#6B7280">รวม <b style="color:#111827">23 records</b></span>
-      </div>
-      <div class="table-wrap">
-        <div class="table-header"><div class="table-title">📋 Vendor Obligations · All Records</div></div>
-        <table>
-          <thead><tr><th>VC No.</th><th>Vendor</th><th>Type</th><th>Period</th><th class="amount-col">งบ Accrued</th><th class="amount-col">Realized</th><th>Status</th><th>Aging</th><th></th></tr></thead>
+      <div class="items-wrap">
+        <table class="items">
+          <thead><tr><th>#</th><th>ประเภทงบ</th><th>อ้างอิง VC (PO-2)</th><th class="num">เป้า (Agreement)</th><th class="num">ได้รับจริง</th><th class="num">ผลต่าง</th><th class="num">Recovery%</th><th>สถานะ</th><th>เลข CN/Invoice</th></tr></thead>
           <tbody>
-            <tr><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">VC-MOU-2604-001</a></td><td>Daikin (TH)</td><td><span class="badge badge-green">🟢 MOU</span></td><td>Q2 26</td><td class="amount-col">฿60,000</td><td class="amount-col amount-pos">฿0</td><td><span class="badge badge-yellow">Accrued · 68%</span></td><td>15 d</td><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-size:12px">↗</a></td></tr>
-            <tr><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">VC-SI-2604-005</a></td><td>Daikin (TH)</td><td><span class="badge badge-blue">🔵 Sell-in</span></td><td>15-30 เม.ย.</td><td class="amount-col">฿88,200</td><td class="amount-col amount-pos">฿88,200</td><td><span class="badge badge-green">Realized 100%</span></td><td>—</td><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-size:12px">↗</a></td></tr>
-            <tr><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-weight:600;text-decoration:none">VC-SO-2604-008</a></td><td>Daikin (TH)</td><td><span class="badge badge-yellow">🟡 Sell-out</span></td><td>เม.ย.-มิ.ย.</td><td class="amount-col">฿20,000</td><td class="amount-col">฿0</td><td><span class="badge badge-yellow">รอ data 0%</span></td><td>10 d</td><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-size:12px">↗</a></td></tr>
-            <tr style="background:#FEE2E2"><td><a href="po2-rfq-mockup.html" style="color:#991B1B;font-weight:700;text-decoration:none">VC-MOU-2603-008 ⚠</a></td><td>บุญมีพาณิชย์</td><td><span class="badge badge-green">🟢 MOU</span></td><td>Q1 26</td><td class="amount-col">฿85,000</td><td class="amount-col">฿0</td><td><span class="badge" style="background:#FEE2E2;color:#991B1B">🚨 STOP NEW PO</span></td><td style="color:#991B1B;font-weight:700">32 d</td><td><a href="po2-rfq-mockup.html" style="color:#2563EB;font-size:12px">↗</a></td></tr>
-            <tr><td colspan="9" style="background:#F9FAFB;text-align:center;color:#9CA3AF;font-style:italic;padding:14px">— แสดง 4 / 23 records · กรองดูเพิ่มเติมในตัวกรอง —</td></tr>
+            <tr>
+              <td>1</td><td><span class="tp-chip mou">MOU (Rebate)</span></td><td><a class="vc-code" href="po2-rfq-mockup.html">VC-MOU-2601-001</a></td>
+              <td class="num">252,600.00</td><td class="num"><input class="got-input" value="242,500.00"></td><td class="num" style="color:#B45309">-10,100</td>
+              <td class="num rec ok">96%</td><td><span class="st-chip doc">Doc Received</span></td><td class="mono" style="font-size:11px">APCN-2606-0012</td>
+            </tr>
+            <tr>
+              <td>2</td><td><span class="tp-chip si">Sell-in</span></td><td><a class="vc-code" href="po2-rfq-mockup.html">VC-SI-2604-007</a></td>
+              <td class="num">45,200.00</td><td class="num"><input class="got-input" value="45,200.00"></td><td class="num bal-zero" style="color:#10B981">0</td>
+              <td class="num rec ok">100%</td><td><span class="st-chip real">Realized (บนบิล)</span></td><td class="mono" style="font-size:11px">— (หักบนบิล PO-6)</td>
+            </tr>
+            <tr>
+              <td>3</td><td><span class="tp-chip coop">Co-op</span></td><td><a class="vc-code" href="po2-rfq-mockup.html">VC-COOP-2605-003</a></td>
+              <td class="num">20,000.00</td><td class="num"><input class="got-input" value="0.00"></td><td class="num" style="color:#B91C1C">-20,000</td>
+              <td class="num rec low">0%</td><td><span class="st-chip acc">Accrued (รอเคลม)</span></td><td class="mono" style="font-size:11px">⚠ รอเอกสาร</td>
+            </tr>
+            <tr class="empty-row"><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>11</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>12</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>13</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>14</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>15</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
           </tbody>
         </table>
       </div>
-    </div>
-
-    <!-- FORM VIEW (NEW · per spec) -->
-    <div id="p7form" class="po7-pane" style="display:none">
-      <div class="notice"><b>💡 Form view (NEW v2.2):</b> บันทึก Accrual entry ใหม่ + แนบ CN จาก Vendor + ตรวจสอบตาม CN Audit Checklist 7 ข้อ (A3) · spec PO-7 Section 1-7</div>
-
-      <div class="table-wrap" style="padding:16px">
-        <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px">📝 New Accrual Entry</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px">
-          <div><label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px">Type</label><select class="filter-select" style="width:100%"><option>🟢 MOU</option><option selected>🔵 Sell-in</option><option>🟡 Sell-out</option><option>🟣 Co-op</option></select></div>
-          <div><label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px">Vendor</label><select class="filter-select" style="width:100%"><option selected>Daikin (TH)</option><option>LG</option></select></div>
-          <div><label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px">อ้างอิง VC</label><input type="text" value="VC-SI-2604-005" style="border:1px solid #D1D5DB;border-radius:6px;padding:6px 10px;font-size:12px;width:100%;font-family:inherit"></div>
-          <div><label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px">งวด</label><input type="text" value="15-30 เม.ย. 26" style="border:1px solid #D1D5DB;border-radius:6px;padding:6px 10px;font-size:12px;width:100%;font-family:inherit"></div>
-          <div><label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px">ยอด Accrual</label><input type="text" value="88,200" style="border:1px solid #D1D5DB;border-radius:6px;padding:6px 10px;font-size:12px;width:100%;text-align:right;font-family:inherit"></div>
-          <div><label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px">เลข CN จาก Vendor</label><input type="text" placeholder="ใส่หลังได้ CN" style="border:1px solid #D1D5DB;border-radius:6px;padding:6px 10px;font-size:12px;width:100%;font-family:inherit"></div>
-        </div>
-
-        <div style="font-size:12px;font-weight:700;color:#374151;margin:14px 0 8px;text-transform:uppercase;letter-spacing:0.04em">CN Audit Checklist (A3 · 7 items)</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#374151">
-          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#F0FDF4;border:1px solid #86EFAC;border-radius:5px"><input type="checkbox" checked> ✓ Category ระบุชัด (1/2/3)</label>
-          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#F0FDF4;border:1px solid #86EFAC;border-radius:5px"><input type="checkbox" checked> ✓ Agreement reference number</label>
-          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#F0FDF4;border:1px solid #86EFAC;border-radius:5px"><input type="checkbox" checked> ✓ ยอดเงิน + VAT ตรงสัญญา</label>
-          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#F0FDF4;border:1px solid #86EFAC;border-radius:5px"><input type="checkbox" checked> ✓ Date issue ภายใน lead time</label>
-          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#FEF3C7;border:1px solid #FCD34D;border-radius:5px"><input type="checkbox"> ⏱ Document supporting ครบ</label>
-          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#FEF3C7;border:1px solid #FCD34D;border-radius:5px"><input type="checkbox"> ⏱ Tax invoice format ถูกต้อง</label>
-          <label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#F3F4F6;border:1px solid #D1D5DB;border-radius:5px"><input type="checkbox"> ⌛ Offset กับ AP แล้ว (auto on Forward)</label>
-        </div>
-
-        <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end;border-top:1px solid #E5E7EB;padding-top:14px">
-          <button class="btn-export">💾 Save Draft</button>
-          <button class="btn-export">📎 แนบ CN PDF</button>
-          <button class="filter-btn" style="background:#10B981">✓ Forward to AP (PO-6 Settle)</button>
-        </div>
+      <div style="padding:8px 14px;border-top:1px dashed #E5E7EB;background:#F0FDF4;font-size:11px;color:#6B7280">
+        💡 Sell-in = หักบนบิลแล้ว (Realized ตรงเข้า PO-6) · MOU/Sell-out/Co-op = หลังบิล (ได้ CN ก่อนถึง Realized) · กด "Confirm & Realize" → ยอด<b>ได้รับจริง</b>ส่งเข้า PO-6 ตั้งหนี้
       </div>
     </div>
 
-  </div>
-</div>
+    <!-- ④d ROW-BOTTOM: PO-7.4 Tabs + PO-7.5 Summary -->
+    <div class="row-bottom">
+      <div class="tabset">
+        <div class="tabset-nav">
+          <button class="on" onclick="swTab(event,'t-agree')">ข้อตกลง (PO-2)</button>
+          <button onclick="swTab(event,'t-doc')">เอกสารจากห้าง</button>
+          <button onclick="swTab(event,'t-sanction')">Sanction</button>
+          <button onclick="swTab(event,'t-hist')">ประวัติ</button>
+        </div>
+        <div class="tabset-pane on" id="t-agree">
+          <div class="tab-grid">
+            <span class="k">MOU (รายหมวด)</span><span class="v">เป้า 3% · ซื้อสะสม 8.4M → Rebate 252,600 (Recovery ≥95%)</span>
+            <span class="k">Sell-in (รายรุ่น)</span><span class="v">2% บนบิล (Case 4) · หักทันทีตอนเปิด PO</span>
+            <span class="k">Co-op (Event)</span><span class="v">งบจัด event 20,000 · ตามแคมเปญ</span>
+          </div>
+        </div>
+        <div class="tabset-pane" id="t-doc">
+          <div class="tab-grid">
+            <span class="k">CN MOU (ได้แล้ว)</span><span class="v">APCN-2606-0012 · 242,500 · 20 มิ.ย. 26</span>
+            <span class="k">Co-op (ค้าง)</span><span class="v" style="color:#B91C1C">⚠ ยังไม่ได้เอกสาร event จากห้าง</span>
+          </div>
+        </div>
+        <div class="tabset-pane" id="t-sanction">
+          <div class="tab-grid">
+            <span class="k">Co-op VC-COOP-2605-003</span><span class="v">ครบกำหนดส่ง CN: เกิน 15 วัน</span>
+          </div>
+          <div class="sanction">⚠ Sanction Day 15: Escalate ผจก.บัญชี + Formal Letter · ถ้าเกิน Day 30 → STOP NEW PO กับ Vendor</div>
+        </div>
+        <div class="tabset-pane" id="t-hist">
+          <div class="tl">
+            <div class="tl-item"><span class="tl-dot"></span> ดึงข้อตกลงจาก PO-2 (3 VC) · งวด Q2 · สมศรี</div>
+            <div class="tl-item"><span class="tl-dot"></span> Sell-in Realized (หักบนบิล PO-6) · 100%</div>
+            <div class="tl-item"><span class="tl-dot"></span> MOU ได้ CN APCN-2606-0012 (Doc Received) · 96%</div>
+            <div class="tl-item"><span class="tl-dot pending"></span> Co-op รอเอกสาร → Confirm & Realize ส่วนที่ได้จริง → PO-6</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="secno">PO-7.5</span><span class="ico">💰</span>สรุปยอดได้จริง</div></div>
+        <div class="summary-row"><span class="lbl">ยอดตามข้อตกลง (เป้า)</span><span class="val">317,800.00</span></div>
+        <div class="summary-row"><span class="lbl">ได้เอกสารแล้ว (Doc)</span><span class="val">287,700.00</span></div>
+        <div class="summary-row"><span class="lbl">รับจริง (Realized)</span><span class="val" style="color:#065F46">287,700.00</span></div>
+        <div class="summary-row open"><span class="lbl">⏳ ค้าง (Co-op)</span><span class="val">30,100.00</span></div>
+        <div class="summary-total"><span>ส่งตั้งหนี้ (ได้จริง → PO-6)</span><span class="val">287,700.00</span></div>
+        <div class="rr-box">Recovery Rate 90.5% · ผ่านเกณฑ์รวม (≥90%) · Co-op ยังต้องตาม</div>
+      </div>
+    </div>
+
+    <!-- ④e NOTES -->
+    <div class="card" style="padding:8px 12px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:12px;font-weight:600;color:#374151">🗒️ หมายเหตุ</span>
+      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="งวด Q2 · Sell-in+MOU Realized 287,700 ส่งตั้งหนี้ได้ · Co-op 20,000 รอเอกสาร event (Sanction Day 15)">
+    </div>
+
+  </div><!-- /content -->
+
+</div><!-- /main -->
+</div><!-- /layout -->
 
 <script>
-function po7SwView(btn,id){
-  document.querySelectorAll('.view-tab').forEach(function(b){b.classList.remove('active');});
-  document.querySelectorAll('.po7-pane').forEach(function(p){p.style.display='none';});
-  btn.classList.add('active');
-  document.getElementById(id).style.display='';
+function swTab(e,id){
+  var nav=e.currentTarget.parentElement;
+  nav.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+  e.currentTarget.classList.add('on');
+  var set=nav.parentElement;
+  set.querySelectorAll('.tabset-pane').forEach(p=>p.classList.remove('on'));
+  set.querySelector('#'+id).classList.add('on');
+}
+/* ✅ Confirm & Realize → เปลี่ยนสถานะ Accrued→Realized + ส่งยอดได้จริงเข้า PO-6 ตั้งหนี้ */
+function po7Realize(){
+  if(confirm('Confirm & Realize ส่งเสริมการขาย ACR-2606-0015 (mock):\n\n• เปลี่ยนสถานะ Accrued → Realized (เฉพาะที่ได้ CN จริง)\n• ส่งยอด "ได้รับจริง" 287,700 → PO-6 ใบตั้งหนี้ (ดึงเป็น "ส่งเสริมได้จริง" ตัด AP)\n• Co-op 20,000 ยังค้าง → คงสถานะ Accrued + ตาม Sanction\n• GL impact เกิดตอน Realized (forward เข้า AP offset)')){
+    location.href='po6-ap-invoice-mockup.html';
+  }
 }
 </script>
-
-<!-- SWT_ITEM_SEARCH_START -->
-<style>
-/* ---- SC-2 shared item-search modal (prefix swt-is-*) ---- */
-#swtIsRoot{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.45);z-index:1000;align-items:flex-start;justify-content:center;padding:40px 20px 30px;overflow-y:auto;font-family:'Inter','Noto Sans Thai',sans-serif;font-size:12.5px;line-height:1.45;color:#1F2937}
-#swtIsRoot.swt-is-open{display:flex}
-#swtIsTestBtn{position:fixed;bottom:22px;right:22px;z-index:900;background:#1E3A5F;color:#fff;border:none;padding:10px 16px;border-radius:24px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 6px 18px rgba(15,23,42,0.25);font-family:'Inter','Noto Sans Thai',sans-serif;display:inline-flex;align-items:center;gap:6px}
-#swtIsTestBtn:hover{background:#2563EB}
-.swt-is-dlg,.swt-is-dlg *{box-sizing:border-box}
-.swt-is-dlg{background:#fff;border-radius:10px;box-shadow:0 20px 60px rgba(15,23,42,0.3);width:1140px;max-width:calc(100vw - 40px);overflow:hidden;border:1px solid #E2E8F0}
-.swt-is-title{background:linear-gradient(180deg,#1E3A5F 0%,#172A47 100%);color:#fff;padding:9px 14px;display:flex;align-items:center;gap:10px}
-.swt-is-title .ico{font-size:15px}
-.swt-is-title h1{font-size:13px;font-weight:600;flex:1;margin:0}
-.swt-is-title .winbtn{width:24px;height:22px;display:flex;align-items:center;justify-content:center;font-size:13px;opacity:0.75;cursor:pointer;border-radius:3px}
-.swt-is-title .winbtn:hover{background:rgba(255,255,255,0.12);opacity:1}
-.swt-is-title .winbtn.close:hover{background:#DC2626}
-.swt-is-tb{background:linear-gradient(180deg,#F8FAFC 0%,#E2E8F0 100%);border-bottom:1px solid #CBD5E1;padding:6px 10px;display:flex;align-items:center;gap:3px;flex-wrap:wrap}
-.swt-is-tbbtn{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:transparent;border:1px solid transparent;border-radius:4px;font-size:11.5px;color:#334155;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap}
-.swt-is-tbbtn:hover{background:#fff;border-color:#CBD5E1}
-.swt-is-tbbtn.nav{padding:5px 7px;color:#64748B}
-.swt-is-tbbtn.histon{background:#FCD34D;border-color:#F59E0B;color:#78350F;font-weight:700}
-.swt-is-tbbtn.cbtn{background:#FEE2E2;border-color:#FCA5A5;color:#B91C1C;margin-left:auto}
-.swt-is-tbbtn.cbtn:hover{background:#DC2626;color:#fff;border-color:#DC2626}
-.swt-is-tbbtn.act{background:#FEF9E7;border-color:#FCD34D;color:#92400E}
-.swt-is-tbsep{width:1px;height:22px;background:#CBD5E1;margin:0 4px}
-.swt-is-sr{background:#F8FAFC;border-bottom:1px solid #CBD5E1;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.swt-is-sr label{font-size:12px;color:#475569;font-weight:600}
-.swt-is-sbox{display:flex;align-items:center;gap:0;flex:0 0 320px}
-.swt-is-sbox input{flex:1;padding:7px 10px;border:1.5px solid #CBD5E1;border-right:none;border-radius:5px 0 0 5px;font-size:13px;font-family:inherit;outline:none;background:#fff}
-.swt-is-sbox input:focus{border-color:#2563EB}
-.swt-is-sbox button{padding:7px 12px;background:#2563EB;color:#fff;border:1.5px solid #2563EB;border-radius:0 5px 5px 0;font-size:13px;cursor:pointer}
-.swt-is-hint{font-size:11.5px;color:#94A3B8;font-style:italic}
-.swt-is-hint b{color:#64748B;font-style:normal;font-weight:500}
-.swt-is-kbd{display:inline-flex;padding:1px 6px;background:#fff;border:1px solid #CBD5E1;border-bottom-width:2px;border-radius:3px;font-size:10px;color:#64748B;font-family:monospace;font-weight:600;margin-left:6px}
-.swt-is-ckb{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:#475569;cursor:pointer}
-.swt-is-ckb input{cursor:pointer}
-.swt-is-rcount{padding:6px 14px;background:#F8FAFC;border-bottom:1px solid #CBD5E1;font-size:11px;color:#64748B;display:flex;align-items:center;gap:12px}
-.swt-is-rcount b{color:#1E3A5F}
-.swt-is-rwrap{background:#fff;max-height:220px;overflow:auto;border-bottom:1px solid #CBD5E1}
-.swt-is-rtbl{width:100%;border-collapse:collapse;font-size:11.5px}
-.swt-is-rtbl thead th{background:linear-gradient(180deg,#EFF6FF 0%,#DBEAFE 100%);color:#1E3A5F;font-weight:700;padding:7px 10px;text-align:left;border-bottom:2px solid #93C5FD;border-right:1px solid #BFDBFE;position:sticky;top:0;white-space:nowrap;cursor:pointer}
-.swt-is-rtbl thead th .arrow{font-size:9px;color:#60A5FA;margin-left:2px}
-.swt-is-rtbl tbody td{padding:6px 10px;border-bottom:1px solid #F1F5F9;border-right:1px solid #F8FAFC;font-feature-settings:"tnum";color:#1F2937;height:28px;white-space:nowrap}
-.swt-is-rtbl tbody tr:nth-child(even){background:#FAFBFC}
-.swt-is-rtbl tbody tr.sel,.swt-is-rtbl tbody tr.sel:nth-child(even){background:#FEF3C7 !important}
-.swt-is-rtbl tbody tr.sel td{border-right-color:#FCD34D;font-weight:500}
-.swt-is-rtbl tbody tr:hover{background:#EFF6FF;cursor:pointer}
-.swt-is-rtbl tbody tr.sel:hover{background:#FDE68A}
-.swt-is-code{font-family:monospace;color:#1D4ED8;font-weight:700}
-.swt-is-name{font-weight:500;color:#0F172A}
-.swt-is-n{text-align:right;font-weight:600}
-.swt-is-n.pos{color:#047857}.swt-is-n.low{color:#B45309}.swt-is-n.alert{color:#B91C1C;font-weight:700}
-.swt-is-bgS{background:#FEF3C7}.swt-is-bgSO{background:#FECACA}.swt-is-bgNE{background:#CFFAFE}
-.swt-is-bgPO{background:#DDD6FE}.swt-is-bgOU{background:#FED7AA}.swt-is-bgTF{background:#BBF7D0}
-.swt-is-rtbl tr.sel td.swt-is-bgS,.swt-is-rtbl tr.sel td.swt-is-bgSO,.swt-is-rtbl tr.sel td.swt-is-bgNE,.swt-is-rtbl tr.sel td.swt-is-bgPO,.swt-is-rtbl tr.sel td.swt-is-bgOU,.swt-is-rtbl tr.sel td.swt-is-bgTF{background:transparent}
-.swt-is-db{background:linear-gradient(180deg,#1E3A5F 0%,#1D4ED8 100%);color:#fff;padding:8px 14px;display:flex;align-items:center;gap:12px}
-.swt-is-db h2{font-size:13px;font-weight:700;margin:0}
-.swt-is-db .meta{margin-left:auto;display:flex;gap:8px;font-size:10.5px;opacity:0.88}
-.swt-is-db .pill{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:10px}
-.swt-is-dt{background:#F1F5F9;border-bottom:1px solid #CBD5E1;display:flex;overflow-x:auto}
-.swt-is-tab{padding:9px 14px;font-size:11.5px;font-weight:600;color:#64748B;cursor:pointer;border-right:1px solid #CBD5E1;white-space:nowrap;border-top:2px solid transparent;position:relative;top:1px;background:transparent}
-.swt-is-tab:hover{background:#E2E8F0;color:#1E3A5F}
-.swt-is-tab.act{background:#fff;color:#1D4ED8;border-top-color:#2563EB;box-shadow:0 -2px 4px rgba(37,99,235,0.08)}
-.swt-is-body{background:#fff}
-.swt-is-pane{display:none}
-.swt-is-pane.act{display:block}
-.swt-is-pb{padding:8px 12px;background:#F8FAFC;border-bottom:1px solid #E2E8F0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.swt-is-pb label{font-size:11px;color:#64748B;font-weight:500}
-.swt-is-pb input,.swt-is-pb select{padding:4px 8px;border:1px solid #CBD5E1;border-radius:4px;font-size:11px;font-family:inherit;background:#fff;outline:none}
-.swt-is-refbtn{padding:5px 12px;background:#fff;border:1px solid #CBD5E1;border-radius:4px;font-size:11px;color:#1E3A5F;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
-.swt-is-refbtn:hover{background:#DBEAFE;border-color:#93C5FD}
-.swt-is-pbody{max-height:320px;overflow:auto}
-.swt-is-stbl{width:100%;border-collapse:collapse;font-size:11.5px}
-.swt-is-stbl thead th{background:linear-gradient(180deg,#EFF6FF 0%,#DBEAFE 100%);color:#1E3A5F;font-weight:700;padding:6px 10px;text-align:left;border-bottom:1px solid #93C5FD;border-right:1px solid #BFDBFE;white-space:nowrap}
-.swt-is-stbl tbody td{padding:5px 10px;border-bottom:1px solid #F1F5F9;border-right:1px solid #F8FAFC;font-feature-settings:"tnum";color:#334155}
-.swt-is-stbl tbody tr:nth-child(even){background:#FAFBFC}
-.swt-is-stbl tbody tr:hover{background:#EFF6FF}
-.swt-is-stbl tbody tr.empty td{color:#CBD5E1;font-style:italic;text-align:center;height:24px}
-.swt-is-tp{display:inline-flex;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700}
-.swt-is-tp.sw{background:#DBEAFE;color:#1D4ED8}
-.swt-is-tp.swe{background:#D1FAE5;color:#047857}
-.swt-is-tp.vm{background:#FEF3C7;color:#92400E}
-.swt-is-ft{background:linear-gradient(180deg,#F8FAFC 0%,#E2E8F0 100%);border-top:1px solid #CBD5E1;padding:7px 14px;display:flex;align-items:center;gap:10px;font-size:11px;color:#64748B}
-.swt-is-ft .d{width:8px;height:8px;border-radius:50%;background:#10B981;display:inline-block}
-.swt-is-ft b{color:#1E3A5F}
-.swt-is-ft .sp{flex:1}
-.swt-is-ft .kh{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#fff;border:1px solid #CBD5E1;border-radius:4px;color:#475569}
-.swt-is-imgpane{display:grid;grid-template-columns:280px 1fr;gap:18px;padding:18px}
-.swt-is-thumb{background:#F1F5F9;border:1px solid #CBD5E1;border-radius:8px;padding:18px;text-align:center;font-size:56px;color:#94A3B8;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
-.swt-is-info{font-size:12px;line-height:1.6}
-.swt-is-info .grp{display:grid;grid-template-columns:120px 1fr;gap:5px 14px;margin-bottom:10px}
-.swt-is-info .grp label{color:#64748B;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.03em}
-.swt-is-info .grp span{color:#0F172A;font-weight:500}
-</style>
-
-<button id="swtIsTestBtn" type="button" onclick="window.openItemSearch()">🔍 ค้นหาสินค้า <span style="opacity:0.6;font-size:10px">Alt+I</span></button>
-
-<div id="swtIsRoot" role="dialog" aria-modal="true" aria-label="ค้นหาสินค้า">
-  <div class="swt-is-dlg" onclick="event.stopPropagation()">
-    <div class="swt-is-title">
-      <span class="ico">🔍</span>
-      <h1>Product Search — SC-2 (Shared Component)</h1>
-      <span class="winbtn">─</span><span class="winbtn">▢</span>
-      <span class="winbtn close" onclick="window.closeItemSearch()">✕</span>
-    </div>
-    <div class="swt-is-tb">
-      <button class="swt-is-tbbtn act">📦 สินค้า</button>
-      <button class="swt-is-tbbtn">🛠️ บริการ</button>
-      <button class="swt-is-tbbtn">📚 สินค้าชุด</button>
-      <div class="swt-is-tbsep"></div>
-      <button class="swt-is-tbbtn nav">⏮</button>
-      <button class="swt-is-tbbtn nav">⏭</button>
-      <div class="swt-is-tbsep"></div>
-      <button class="swt-is-tbbtn">📂 ค้นตามกลุ่ม</button>
-      <button class="swt-is-tbbtn histon" onclick="swtIsToggleHist(this)">ℹ️ แสดงประวัติ</button>
-      <button class="swt-is-tbbtn">📝 Memo</button>
-      <button class="swt-is-tbbtn">📋 Multi ใส่ปริมาณ</button>
-      <button class="swt-is-tbbtn" style="color:#2563EB">❓</button>
-      <button class="swt-is-tbbtn cbtn" onclick="window.closeItemSearch()">✕ ปิด</button>
-    </div>
-    <div class="swt-is-sr">
-      <label>ค้นหา:</label>
-      <div class="swt-is-sbox">
-        <input type="text" value="tt10" id="swtIsQ">
-        <button>🔍</button>
-      </div>
-      <span class="swt-is-hint">ตัวอย่างเช่น: <b>ไขควง ซันโต แบน</b></span>
-      <span class="swt-is-kbd">F3</span>
-      <label class="swt-is-ckb"><input type="checkbox"> Only Cust Product</label>
-    </div>
-    <div class="swt-is-rcount">
-      <span>พบ <b>3</b> รายการ · keyword "tt10"</span>
-      <span>·</span><span>Branch: <b>HO · สนง.ใหญ่</b></span>
-      <span>·</span><span>BC365 sync: <b>2 นาทีที่แล้ว</b></span>
-      <span style="margin-left:auto">Click row เพื่อดูประวัติ</span>
-    </div>
-    <div class="swt-is-rwrap">
-      <table class="swt-is-rtbl">
-        <thead><tr>
-          <th style="width:110px">รหัสสินค้า <span class="arrow">▲</span></th>
-          <th style="width:340px">ชื่อสินค้า <span class="arrow">▼</span></th>
-          <th style="width:60px">หน่วย</th>
-          <th style="width:72px" class="swt-is-bgS">สต็อก</th>
-          <th style="width:72px" class="swt-is-bgSO">สั่งขาย</th>
-          <th style="width:72px" class="swt-is-bgNE">สุทธิ</th>
-          <th style="width:72px" class="swt-is-bgPO">สั่งซื้อ</th>
-          <th style="width:72px" class="swt-is-bgOU">ขอจ่าย</th>
-          <th style="width:72px" class="swt-is-bgTF">ขอโอน</th>
-          <th>หมายเหตุ</th>
-        </tr></thead>
-        <tbody>
-          <tr class="sel" onclick="swtIsSelRow(this)">
-            <td class="swt-is-code">7XXX71XX…</td>
-            <td class="swt-is-name">เครื่องซักผ้า 2 ถัง LG TT10NARG (10 kg.)</td>
-            <td style="text-align:center;color:#64748B">เครื่อง</td>
-            <td class="swt-is-n swt-is-bgS">145</td>
-            <td class="swt-is-n swt-is-bgSO">2</td>
-            <td class="swt-is-n swt-is-bgNE pos"><b>143</b></td>
-            <td class="swt-is-n swt-is-bgPO">19</td>
-            <td class="swt-is-n swt-is-bgOU">103</td>
-            <td class="swt-is-n swt-is-bgTF">15</td>
-            <td style="color:#64748B">2-Tub Washing machine LG Thinq</td>
-          </tr>
-          <tr onclick="swtIsSelRow(this)">
-            <td class="swt-is-code">7XXX71XY…</td>
-            <td class="swt-is-name">เครื่องซักผ้า 2 ถัง LG TT10NBRG (10 kg.) รุ่นใหม่</td>
-            <td style="text-align:center;color:#64748B">เครื่อง</td>
-            <td class="swt-is-n swt-is-bgS">62</td>
-            <td class="swt-is-n swt-is-bgSO">—</td>
-            <td class="swt-is-n swt-is-bgNE pos"><b>62</b></td>
-            <td class="swt-is-n swt-is-bgPO">10</td>
-            <td class="swt-is-n swt-is-bgOU">—</td>
-            <td class="swt-is-n swt-is-bgTF">—</td>
-            <td style="color:#64748B">Successor model TT10N</td>
-          </tr>
-          <tr onclick="swtIsSelRow(this)">
-            <td class="swt-is-code">8XXX71ZZ…</td>
-            <td class="swt-is-name">Drum Belt สำหรับ TT10NARG (อะไหล่)</td>
-            <td style="text-align:center;color:#64748B">เส้น</td>
-            <td class="swt-is-n swt-is-bgS low">3</td>
-            <td class="swt-is-n swt-is-bgSO">1</td>
-            <td class="swt-is-n swt-is-bgNE low"><b>2</b></td>
-            <td class="swt-is-n swt-is-bgPO alert">0</td>
-            <td class="swt-is-n swt-is-bgOU">—</td>
-            <td class="swt-is-n swt-is-bgTF">—</td>
-            <td style="color:#B45309">⚠ Low-stock · BC reorder needed</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div id="swtIsDetail">
-      <div class="swt-is-db">
-        <span style="font-size:14px">📦</span>
-        <h2>เครื่องซักผ้า 2 ถัง LG TT10NARG (10 kg.)</h2>
-        <div class="meta">
-          <span class="pill">SKU <b>7XXX71XX</b></span>
-          <span class="pill">📊 Sale Rank #47</span>
-          <span class="pill">✓ BC synced</span>
-        </div>
-      </div>
-      <div class="swt-is-dt">
-        <div class="swt-is-tab act" onclick="swtIsSwTab(event,'p1')">สต็อกแต่ละคลัง</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p2')">ราคาขาย</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p3')">รายการสั่งซื้อ</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p4')">ค้างส่ง</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p5')">รูปสินค้า</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p6')">ยอดขายตามช่วงวันที่</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p7')">ยอดขายแต่ละคลัง</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p8')">Rebate</div>
-      </div>
-      <div class="swt-is-body">
-
-        <div class="swt-is-pane act" id="p1">
-          <div class="swt-is-pb">
-            <button class="swt-is-refbtn">🔄 Refresh</button>
-            <label>Entity:</label>
-            <select><option>ทั้งหมด</option><option>Tag 1 · SWT</option><option>Tag 2 · SWE</option><option>Tag 3 · VMN</option></select>
-            <span style="margin-left:auto;font-size:11px;color:#64748B">รวม <b style="color:#1E3A5F">145 เครื่อง</b> กระจาย 12 คลัง · BC live</span>
-          </div>
-          <div class="swt-is-pbody">
-            <table class="swt-is-stbl">
-              <thead><tr>
-                <th style="width:32px">#</th><th style="width:90px">รหัสคลัง</th><th>คลังสินค้า</th>
-                <th style="width:120px">ที่เก็บ</th><th style="width:70px">หน่วย</th>
-                <th style="width:70px;text-align:right">สต็อก</th><th style="width:70px;text-align:right">สั่งขาย</th>
-                <th style="width:70px;text-align:right">สุทธิ</th><th style="width:70px;text-align:right">สั่งซื้อ</th>
-                <th style="width:70px;text-align:right">ขอจ่าย</th><th style="width:70px;text-align:right">ขอโอน</th>
-                <th style="width:80px;text-align:right">จุดต่ำสุด</th><th style="width:80px">Entity</th>
-              </tr></thead>
-              <tbody>
-                <tr><td>1</td><td class="swt-is-code">AK</td><td>คลังสาขาอากาศ…</td><td>อากาศ</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700">5</td><td style="text-align:right">—</td><td style="text-align:right">17</td><td style="text-align:right">7</td><td style="text-align:right;color:#94A3B8">5</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
-                <tr><td>2</td><td class="swt-is-code">HO</td><td>สนง.ใหญ่</td><td>HO</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857"><b>119</b></td><td style="text-align:right">2</td><td style="text-align:right;font-weight:700;color:#047857"><b>117</b></td><td style="text-align:right">19</td><td style="text-align:right">2</td><td style="text-align:right">1</td><td style="text-align:right;color:#94A3B8">30</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
-                <tr><td>3</td><td class="swt-is-code">OIR</td><td>ทวีศักดิ์ธาดา…</td><td>OIR</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="swt-is-tp vm">VMN</span></td></tr>
-                <tr><td>4</td><td class="swt-is-code">S08</td><td>เซกา</td><td>S08</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700">5</td><td style="text-align:right">11</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">3</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
-                <tr><td>5</td><td class="swt-is-code">SD</td><td>สว่างฯ</td><td>SD</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">8</td><td style="text-align:right">4</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
-                <tr><td>6</td><td class="swt-is-code">SHO</td><td>ปลีกโกดัง</td><td>SHO</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857">1</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700">1</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">2</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
-                <tr class="empty"><td colspan="13">— ย่อ 6 คลังที่ไม่มีสต็อก — คลิก Refresh เพื่อดูทั้งหมด —</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="swt-is-pane" id="p2">
-          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><span style="margin-left:10px;font-size:11px;color:#64748B">⚖ VAT Golden Rule — ราคา ex-VAT · <b style="color:#2563EB">PM-5</b></span></div>
-          <div class="swt-is-pbody"><table class="swt-is-stbl">
-            <thead><tr><th>#</th><th>หน่วย</th><th style="text-align:right">ราคาปลีก</th><th style="text-align:right">Disc1</th><th style="text-align:right">ราคาส่ง</th><th style="text-align:right">Disc2</th><th style="text-align:right">ต้นทุน INV</th><th style="text-align:right">ต้นทุน ผปย</th><th style="text-align:right">Price5</th></tr></thead>
-            <tbody><tr><td>1</td><td>เครื่อง</td><td style="text-align:right;font-weight:700">5,990.00</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600">5,450.00</td><td style="text-align:right">—</td><td style="text-align:right">5,636.76</td><td style="text-align:right">5,268.00</td><td style="text-align:right;color:#94A3B8">—</td></tr></tbody>
-          </table></div>
-        </div>
-
-        <div class="swt-is-pane" id="p3">
-          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><label>ช่วง:</label><select><option>6 เดือนล่าสุด</option><option>1 ปีล่าสุด</option></select><span style="margin-left:auto;font-size:11px;color:#64748B">1 ใบสั่งซื้อ · 42 เครื่อง · คงค้าง 19</span></div>
-          <div class="swt-is-pbody"><table class="swt-is-stbl">
-            <thead><tr><th>#</th><th>วันที่สั่งซื้อ</th><th>ใบสั่งซื้อ</th><th>กลุ่มเอกสาร</th><th>คลัง</th><th>หน่วย</th><th style="text-align:right">Qty</th><th style="text-align:right">Remain</th><th>กำหนดรับ</th><th>$</th><th style="text-align:right">Rate</th></tr></thead>
-            <tbody><tr><td>1</td><td>24/03/69</td><td class="swt-is-code">TVPO690324…</td><td>ใบสั่งซื้อเทร…</td><td>HO</td><td>เครื่อง</td><td style="text-align:right">42</td><td style="text-align:right;font-weight:700;color:#B45309">19</td><td>24/03/69</td><td>฿</td><td style="text-align:right">1.00000</td></tr></tbody>
-          </table></div>
-        </div>
-
-        <div class="swt-is-pane" id="p4">
-          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><span style="margin-left:auto;font-size:11px;color:#64748B">ค้างส่ง <b style="color:#B91C1C">11 ใบ · 19 เครื่อง</b></span></div>
-          <div class="swt-is-pbody"><table class="swt-is-stbl">
-            <thead><tr><th>#</th><th>วันที่สั่ง</th><th>ใบสั่งขาย</th><th>กลุ่มเอกสาร</th><th>คลัง</th><th>หน่วย</th><th style="text-align:right">Qty</th><th style="text-align:right">Remain</th><th>หมายเหตุ</th></tr></thead>
-            <tbody>
-              <tr><td>1</td><td>24/06/63</td><td class="swt-is-code">TSRT6306…</td><td>ใบขอโอนสิ…</td><td>AK</td><td>เครื่อง</td><td style="text-align:right">1</td><td style="text-align:right;color:#B45309">1</td><td></td></tr>
-              <tr><td>2</td><td>31/12/63</td><td class="swt-is-code">SWEPO631…</td><td>SWEPO</td><td>SL</td><td>เครื่อง</td><td style="text-align:right">2</td><td style="text-align:right;color:#B45309">2</td><td style="color:#94A3B8">ร้าน อุดมทร…</td></tr>
-              <tr><td>3</td><td>16/06/65</td><td class="swt-is-code">SWEPO650…</td><td>SWEPO</td><td>HO</td><td>เครื่อง</td><td style="text-align:right">30</td><td style="text-align:right;color:#B45309">30</td><td style="color:#94A3B8">ร้าน ก.เจริญ…</td></tr>
-              <tr class="empty"><td colspan="9">— ย่อ 8 รายการ —</td></tr>
-            </tbody>
-          </table></div>
-        </div>
-
-        <div class="swt-is-pane" id="p5">
-          <div class="swt-is-imgpane">
-            <div class="swt-is-thumb">🧺</div>
-            <div class="swt-is-info">
-              <div class="grp">
-                <label>ชื่อเต็ม</label><span>เครื่องซักผ้า 2 ถัง LG รุ่น TT10NARG 10 กก.</span>
-                <label>Brand</label><span>LG Thinq</span>
-                <label>รุ่น</label><span>TT10NARG</span>
-                <label>Barcode</label><span>8801234567890</span>
-                <label>UOM</label><span>เครื่อง</span>
-                <label>Warranty</label><span>12 เดือน · บริษัท</span>
-              </div>
-              <div class="grp">
-                <label>หมวด</label><span>WH-LG-01 Washer</span>
-                <label>Dimension</label><span>960×540×880 mm · 38 kg</span>
-                <label>Country</label><span>ไทย</span>
-                <label>VAT</label><span>V07 — 7% Output</span>
-                <label>Status</label><span style="color:#047857;font-weight:600">Active</span>
-                <label>BC Sync</label><span style="color:#047857">✓ last 2 นาที</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swt-is-pane" id="p6">
-          <div class="swt-is-pb" style="background:#1E3A5F;color:#fff">
-            <span style="color:#fff;font-weight:700;margin-right:10px">หจก.สกลนครศรีเจริญ</span>
-            <label style="color:#CBD5E1">จาก:</label><input type="text" value="01/01/2569" style="width:100px">
-            <label style="color:#CBD5E1">ถึง:</label><input type="text" value="16/04/2569" style="width:100px">
-            <label style="color:#CBD5E1">Group:</label><select><option>No</option><option>Document</option></select>
-            <button class="swt-is-refbtn">…</button>
-            <span style="margin-left:auto;font-size:11px;color:#FCA5A5">⚠ เคสนี้เมนูยังไม่ได้ระบุร้าน</span>
-          </div>
-          <div class="swt-is-pbody"><table class="swt-is-stbl">
-            <thead><tr><th>#</th><th>DocDate</th><th>DocNo</th><th>DocName</th><th>Unit</th><th style="text-align:right">Qty</th><th style="text-align:right">UnitPrice</th><th>DiscWord</th><th>Customer</th><th>TaxType</th></tr></thead>
-            <tbody><tr class="empty"><td colspan="10">— กรุณาเลือกลูกค้าเพื่อดูยอดขาย —</td></tr><tr class="empty"><td colspan="10"></td></tr><tr class="empty"><td colspan="10"></td></tr><tr class="empty"><td colspan="10"></td></tr></tbody>
-          </table></div>
-        </div>
-
-        <div class="swt-is-pane" id="p7">
-          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><span style="margin-left:auto;font-size:11px;color:#64748B">YTD: 1 ม.ค. 26 → 17 เม.ย. 26</span></div>
-          <div class="swt-is-pbody"><table class="swt-is-stbl">
-            <thead><tr><th>#</th><th>คลังสินค้า</th><th>หน่วย</th><th style="text-align:right">จุดต่ำสุด</th><th style="text-align:right">สต็อก</th><th style="text-align:right">YTD</th><th style="text-align:right">WTD</th><th style="text-align:right">Today</th><th style="text-align:right">เฉลี่ย 60 วัน</th></tr></thead>
-            <tbody>
-              <tr><td>1</td><td>SL</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700;color:#047857"><b>213</b></td><td style="text-align:right;font-weight:600">26</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600">2</td></tr>
-              <tr><td>2</td><td>SM</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">2</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">1</td><td style="text-align:right">—</td><td style="text-align:right">0</td></tr>
-              <tr><td>3</td><td>S08</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">5</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">0</td></tr>
-              <tr><td>4</td><td>ST</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">3</td><td style="text-align:right;color:#047857">2</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">0</td></tr>
-              <tr class="empty"><td colspan="9">— ย่อ 7 คลัง —</td></tr>
-            </tbody>
-          </table></div>
-        </div>
-
-        <div class="swt-is-pane" id="p8">
-          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><label>Year:</label><select><option>2026 Q1-Q2</option></select><span style="margin-left:auto;font-size:11px;color:#64748B">⚖ Rebate ≠ Discount · ดู <b style="color:#2563EB">PM-5</b> · <b style="color:#2563EB">PO-7</b></span></div>
-          <div class="swt-is-pbody"><table class="swt-is-stbl">
-            <thead><tr><th>#</th><th>Program</th><th>Period</th><th style="text-align:right">Target</th><th style="text-align:right">Sold</th><th style="text-align:right">Progress</th><th style="text-align:right">Rebate %</th><th style="text-align:right">Rebate THB</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td>1</td><td>LG Washer Q2 2026 Sell-In</td><td>Apr-Jun 26</td><td style="text-align:right">100</td><td style="text-align:right;color:#047857">68</td><td style="text-align:right;font-weight:700;color:#B45309">68%</td><td style="text-align:right">3.00%</td><td style="text-align:right;font-weight:700">฿122,236</td><td><span style="color:#B45309;font-weight:600">🟡 กำลังทำ</span></td></tr>
-              <tr><td>2</td><td>LG Q1 2026 (ปิด)</td><td>Jan-Mar 26</td><td style="text-align:right">80</td><td style="text-align:right;color:#047857"><b>87</b></td><td style="text-align:right;font-weight:700;color:#047857">109%</td><td style="text-align:right">2.50%</td><td style="text-align:right;font-weight:700;color:#047857">฿130,282</td><td><span style="color:#047857;font-weight:600">✓ Achieved</span></td></tr>
-            </tbody>
-          </table></div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="swt-is-ft">
-      <span class="d"></span><b>Ready</b> · 3 รายการ · row 1/3
-      <div class="sp"></div>
-      <span class="kh">↑↓ เลือก row</span>
-      <span class="kh">Enter ใส่ลงเอกสาร</span>
-      <span class="kh">Tab สลับ</span>
-      <span class="kh">Esc ปิด</span>
-    </div>
-  </div>
-</div>
-
-<script>
-(function(){
-  var root=document.getElementById('swtIsRoot');
-  window.openItemSearch=function(){root.classList.add('swt-is-open');setTimeout(function(){var q=document.getElementById('swtIsQ');if(q)q.focus();},50);};
-  window.closeItemSearch=function(){root.classList.remove('swt-is-open');};
-  // click outside → close
-  root.addEventListener('click',function(e){if(e.target===root)window.closeItemSearch();});
-  // keyboard
-  document.addEventListener('keydown',function(e){
-    if(e.altKey && !e.ctrlKey && e.key && e.key.toLowerCase()==='i'){e.preventDefault();window.openItemSearch();}
-    if(e.key==='Escape' && root.classList.contains('swt-is-open')){window.closeItemSearch();}
-  });
-  // tab switch
-  window.swtIsSwTab=function(e,id){
-    root.querySelectorAll('.swt-is-tab').forEach(function(t){t.classList.remove('act');});
-    root.querySelectorAll('.swt-is-pane').forEach(function(p){p.classList.remove('act');});
-    e.currentTarget.classList.add('act');
-    document.getElementById(id).classList.add('act');
-  };
-  window.swtIsSelRow=function(r){
-    root.querySelectorAll('.swt-is-rtbl tbody tr').forEach(function(x){x.classList.remove('sel');});
-    r.classList.add('sel');
-  };
-  window.swtIsToggleHist=function(btn){
-    btn.classList.toggle('histon');
-    var d=document.getElementById('swtIsDetail');
-    d.style.display=btn.classList.contains('histon')?'':'none';
-  };
-  // auto-wire triggers
-  function wire(){
-    var sel='button,a,[role="button"]';
-    document.querySelectorAll(sel).forEach(function(el){
-      if(el.id==='swtIsTestBtn'||el.closest('#swtIsRoot'))return;
-      var txt=(el.textContent||'').trim().toLowerCase();
-      var ds=el.getAttribute('data-item-search');
-      if(ds!==null||txt==='ค้นหาสินค้า'||txt==='search item'||txt==='item search'||/🔍\s*ค้นหาสินค้า/.test(el.textContent||'')){
-        if(el.dataset.swtIsBound)return;
-        el.dataset.swtIsBound='1';
-        el.addEventListener('click',function(e){e.preventDefault();window.openItemSearch();});
-      }
-    });
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
-})();
-</script>
-<!-- SWT_ITEM_SEARCH_END -->
-
+<script src="swt-doc-finder.js"></script>
 <script src="swt-sidebar.js"></script>
-</body>
-</html>
-
-<!-- SWT_LINK_START -->
-<script src="swt-link.js" defer></script>
-<!-- SWT_LINK_END -->
-
-</body>
-</html>
+</body></html>
