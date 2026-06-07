@@ -145,7 +145,7 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
   <span class="status-pill active">3. รอ Vendor ตอบ (ปัจจุบัน)</span>
   <span class="status-pill">4. Vendor อนุมัติ/ปฏิเสธ</span>
   <span class="status-pill">5. รับเงิน/ของแทน</span>
-  <span class="status-pill">6. ตั้ง APCN + ปิดเคลม</span>
+  <span class="status-pill">6. ออกใบลดหนี้ (PO-CN) → รอหักหนี้</span>
 </div>
 
 <!-- Row 2: Customer (SL-4 compact pattern) + Doc extras -->
@@ -333,16 +333,20 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
   </div>
 </div>
 
-<!-- CLM-5: Settlement → APCN -->
+<!-- CLM-5: Settlement → ใบลดหนี้เจ้าหนี้ (PO-CN) → รอหักหนี้ -->
 <div class="section-card">
-  <div class="section-title">🚀 CLM-5 · ตั้ง APCN เมื่อรับเงิน + ปิดเคลม <span class="tag">Hand-off → ฝ่าย AP</span></div>
+  <div class="section-title">🚀 CLM-5 · ออกใบลดหนี้เจ้าหนี้ (PO-CN) เมื่อรับเงิน → รอหักหนี้ <span class="tag">Hand-off → AP / บัญชี</span></div>
   <div class="alert alert-info" style="margin-top:0">
-    ✓ <div><strong>ขั้นตอน:</strong> Vendor อนุมัติ → รับเงิน/ของแทน → ตั้ง <strong>APCN</strong> (ใบลดหนี้เจ้าหนี้) ตัด ARI ของ SV-4 · ส่งต่อ AP เพื่อ post entry</div>
+    ✓ <div><strong>ขั้นตอน:</strong> Vendor อนุมัติ → รับเงิน/ของแทน → ออก <strong>ใบลดหนี้เจ้าหนี้ (PO-CN)</strong> → เข้าคิว <strong>"รอหักหนี้"</strong> → PO-6 (ใบตั้งหนี้) ดึงไปตัด AP เจ้าหนี้</div>
   </div>
   <div class="form-grid">
-    <div class="field"><label>APCN ที่จะตั้ง (เมื่ออนุมัติ)</label><div class="value"><span class="chip chip-gray">⏳ APCN-SV1-2604-{TBD}</span></div></div>
-    <div class="field"><label>ARI ที่ตัด</label><div class="value"><a href="sv4-service-close-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:700">ARI-SV1-2604-0089</a> · 11,877 ฿</div></div>
-    <div class="field"><label>Entity Tag</label><div class="value">1 · SWT (Dual-Book)</div></div>
+    <div class="field"><label>ผลเคลม</label><div class="value"><span style="display:inline-block;padding:6px 12px;border-radius:8px;background:#D1FAE5;color:#065F46;font-size:12px;font-weight:600">✓ เคลมเงิน 11,877 ฿</span></div></div>
+    <div class="field"><label>ใบลดหนี้ที่ออก (PO-CN)</label><div class="value"><span class="chip chip-gray">⏳ PCN-{TBD} · รอหักหนี้</span></div></div>
+    <div class="field"><label>อ้างอิงงานซ่อม (ARI)</label><div class="value"><a href="sv4-service-close-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:700">ARI-SV1-2604-0089</a> · 11,877 ฿</div></div>
+  </div>
+  <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <a href="po-cn-credit-note-mockup.html" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:linear-gradient(90deg,#7C2D12,#EF4444);color:#fff;border-radius:7px;font-size:13px;font-weight:700;text-decoration:none">↩️ ออกใบลดหนี้เจ้าหนี้ (PO-CN) → เข้าคิวรอหักหนี้</a>
+    <span style="font-size:11px;color:#6B7280">เมื่อ Post → PO-6 (ใบตั้งหนี้) ดึงรายการ "รอหักหนี้" นี้ไปตัด AP เจ้าหนี้</span>
   </div>
 </div>
 
