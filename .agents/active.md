@@ -19,9 +19,9 @@ project_type: "frontend-mockup (HTML + docs)"
 **chain ที่ build แล้ว:** PO-1 → PO-4 → WH-1 → PO-6 → (FI-2) · + PO-7/PO-CN/CLM (AP reduction)
 **✦ DONE:** SL-Q/1~4/CN · PO-1 · PO-4 · PO-6 · PO-7 · PO-CN · WH-1 · SC-3
 
-**⏭️ ต่อพรุ่งนี้ (ลำดับ):**
-1. **"รอหักหนี้" queue ใน PO-6** — ให้ดึงรายการรอหัก (PO-CN/CLM) ทั้งหมดมาเลือกตั้งหนี้
-2. **✂️ ตัด PO-5 (Finance GRN)** — ซ้ำ WH-1+PO-6 · archive + เอาออก swt-sidebar.js
+**⏭️ ต่อ (ลำดับ):**
+1. ~~**"รอหักหนี้" queue ใน PO-6**~~ ✅ 2026-06-08 — **ยุบเป็น picker เดียว "🔗 ดึงรายการอ้างอิง" 2 แท็บ**: (A) 🧾 ใบแจ้งหนี้ Vendor (+) เลือกหลายใบ · อ้างรับครบ · Inbox+คีย์มือ+แนบสแกน · เทียบยอด+3-Way · **ประเภทรับ (📥 รับทั้งหมด / 🟣 บิลฝาก) เลือกรายบิล** (เอา mode-bar รวมทั้งใบออก · gate/pill สรุปอัตโนมัติ) · (B) ↩️ ดึงลดหนี้/หัก (−) 4 หมวด: มัดจำ/บิลฝาก/ใบลดหนี้(PO-CN คืน/ราคาผิด/เคลม)/ส่งเสริม(PO-7) · ดึงเข้า PO-6.3 ตารางเดียว net · **PO-6.5 คำนวณสดจาก data-kind** · PO-6.2 เลิกปุ่มซ้ำ→badge · กันดึงซ้ำ+renumber · archive `_archive/po6-ap-invoice-mockup-2026-06-08.html`
+2. ~~**✂️ ตัด PO-5 (Finance GRN)**~~ ✅ 2026-06-08 — `git mv po5-finance-grn-mockup.html → _archive/` · ลบ entry PO-5 จาก swt-sidebar.js · **redirect GRN→WH-1** ใน po1(chain)/po4(5จุด)/po8(2)/wh-r(8)/architecture(2)/cf1-rbac(list) · ไม่แตะ _archive/* + sangwijit-bc-mockup/ (sub-project แยก)
 3. **PO-8 บิลฝาก (Deposit Pool)** — กองฝากเรียกออกหลายปลายทาง (เคสคุยละเอียด · 100→เรียก40→เหลือ60)
 4. **FI-2 จ่ายชำระ AP** — ปิด chain procure-to-pay
 

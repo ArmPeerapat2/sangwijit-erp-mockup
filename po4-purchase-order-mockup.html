@@ -240,7 +240,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     <button class="btn btn-outline">💾 Save Draft</button>
     <button class="btn btn-outline" onclick="tplCopyDoc()" title="clone ข้อมูลทั้งหมด → PO ใหม่ · เลขใหม่ · reset วันที่/ลายเซ็น">📋 Copy / ทำสำเนา</button>
     <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบสั่งซื้อ</button>
-    <button class="btn btn-success" onclick="po4SendPO()" title="อนุมัติแล้ว → ส่ง PO ให้ Vendor → สถานะ 'ค้างรับ' รอรับของ (PO-5)">📤 Send PO → ค้างรับ</button>
+    <button class="btn btn-success" onclick="po4SendPO()" title="อนุมัติแล้ว → ส่ง PO ให้ Vendor → สถานะ 'ค้างรับ' รอรับของ (WH-1)">📤 Send PO → ค้างรับ</button>
     <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก PO</button>
     <span class="saab-status"><span class="dot"></span>สถานะ: <strong>รออนุมัติ</strong> · BC: Open · จาก PR-2606-0019 (Make To) · ผู้สั่ง สมศรี</span>
   </div>
@@ -259,7 +259,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
         <span style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
         <a class="dc-node done" href="po1-purchase-request-mockup.html" target="_blank">PR 0019 ✓</a><span class="dc-arrow">→</span>
         <span class="dc-node current">PO 0042</span><span class="dc-arrow">→</span>
-        <a class="dc-node" href="po5-finance-grn-mockup.html" target="_blank">ค้างรับ / GRN</a><span class="dc-arrow">→</span>
+        <a class="dc-node" href="wh1-grn-mockup.html" target="_blank">ค้างรับ / รับ (WH-1)</a><span class="dc-arrow">→</span>
         <a class="dc-node" href="po6-ap-invoice-mockup.html" target="_blank">ตั้งหนี้ AP</a>
       </div>
     </div>
@@ -383,7 +383,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
         <div class="tabset-pane" id="t-recv">
           <div class="tab-grid">
             <span class="k">สถานะการรับ</span><span class="v">ยังไม่รับ (0%) · ค้างรับ 180 เครื่อง</span>
-            <span class="k">รับที่</span><span class="v"><a href="po5-finance-grn-mockup.html" style="color:#2563EB;font-weight:600">PO-5 รับสินค้า (GRN)</a> · ทยอยรับได้</span>
+            <span class="k">รับที่</span><span class="v"><a href="wh1-grn-mockup.html" style="color:#2563EB;font-weight:600">WH-1 ใบรับสินค้า (GRN)</a> · ทยอยรับได้</span>
             <span class="k">เงื่อนไขตั้งหนี้</span><span class="v">รับครบบิลก่อน → ตั้งหนี้ AP (PO-6) · ยกเว้นบิลฝาก (PO-8)</span>
           </div>
         </div>
@@ -399,7 +399,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
             <div class="tl-item"><span class="tl-dot"></span> สร้าง PO-2606-0042 จาก PR-0019 (Make To) · 07 มิ.ย. 26 09:30 · สมศรี</div>
             <div class="tl-item"><span class="tl-dot pending"></span> ส่งขออนุมัติ → ผจก.จัดซื้อ <span style="color:#92400E">· CF-2.6 · Maker ≠ Checker</span></div>
             <div class="tl-item"><span class="tl-dot pending"></span> อนุมัติ (Approved) → Send PO ให้ Vendor → Print ใบสั่งซื้อ</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> ค้างรับ → รับของที่ PO-5 (GRN)</div>
+            <div class="tl-item"><span class="tl-dot pending"></span> ค้างรับ → รับของที่ WH-1 (ใบรับสินค้า GRN)</div>
           </div>
         </div>
       </div>
@@ -465,10 +465,10 @@ function tplScan(e){
 function po4Submit(){
   alert('ส่งขออนุมัติใบสั่งซื้อ PO-2606-0042 (mock):\n\n• เข้า Approval Matrix CF-2.6 · ผจก.จัดซื้อ\n• Maker ≠ Checker — ผู้สั่งจะอนุมัติเองไม่ได้\n• BC PO status = Open (รออนุมัติ)');
 }
-/* 📤 Send PO — อนุมัติแล้ว ส่ง Vendor → สถานะ "ค้างรับ" รอรับของที่ PO-5 */
+/* 📤 Send PO — อนุมัติแล้ว ส่ง Vendor → สถานะ "ค้างรับ" รอรับของที่ WH-1 */
 function po4SendPO(){
-  if(confirm('ส่งใบสั่งซื้อนี้ให้ Vendor?\n\n• สถานะ → Approved → ส่ง PO + Print ใบสั่งซื้อ\n• เปลี่ยนเป็น "ค้างรับ" (รอ Vendor ส่งของ)\n• ไปรับของที่ PO-5 (รับสินค้า / GRN)')){
-    location.href='po5-finance-grn-mockup.html';
+  if(confirm('ส่งใบสั่งซื้อนี้ให้ Vendor?\n\n• สถานะ → Approved → ส่ง PO + Print ใบสั่งซื้อ\n• เปลี่ยนเป็น "ค้างรับ" (รอ Vendor ส่งของ)\n• ไปรับของที่ WH-1 (ใบรับสินค้า / GRN)')){
+    location.href='wh1-grn-mockup.html';
   }
 }
 /* sidebar filter */

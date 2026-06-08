@@ -37,7 +37,7 @@
     {ico:'🛒', label:'จัดซื้อ (PO)', links:[
       ['PO-Q','poq-purchase-queue-mockup.html','Purchase Queue'],['PO-1','po1-purchase-request-mockup.html','ใบขอสั่งซื้อ (PR)'],
       ['PO-2','po2-rfq-mockup.html','Trade Agreement / Vendor'],['PO-3','po3-vendor-onboarding-mockup.html','Vendor Onboarding'],
-      ['PO-4','po4-purchase-order-mockup.html','ใบสั่งซื้อ (PO)'],['PO-5','po5-finance-grn-mockup.html','Finance GRN'],
+      ['PO-4','po4-purchase-order-mockup.html','ใบสั่งซื้อ (PO)'],
       ['PO-7','po7-rebate-dashboard.html','ส่งเสริมการขาย'],
       ['PO-8','po8-deposit-bill-mockup.html','บิลฝาก (Deposit)'],
       ['PO-CN','po-cn-credit-note-mockup.html','ใบลดหนี้เจ้าหนี้']]},
