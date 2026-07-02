@@ -9,7 +9,8 @@ project_type: "frontend-mockup (HTML + docs)"
 ## 🔢 WH Renumber — ✅ EXECUTED rename+refs (2026-07-03)
 
 **execute แล้ว:** rename 5 ไฟล์ (wh1-receive/wh2-issue/wh3-transfer/wh4-count/wh-q-dashboard) · flip code WH-2↔WH-3 ทุก reference (sidebar/DOC_MAP/index/spec×5/mockup 12 หน้า) · fix dead link wh-q2-issue-queue→wh2-issue · sidebar comment R/Q planned
-**ยังไม่ทำ:** สร้างหน้า WH-Q1/Q2 + WH-2R/3R/4R (ตอน rebuild) · portal-mapping.md warehouse (flag stale) · core-erp-flows/reconcile-matrix docs อ้างชื่อเก่า (ประวัติ low-pri)
+**สร้างหน้า R/Q แล้ว (stub · 2026-07-03):** WH-Q1 คิวรับ · WH-Q2 คิวเบิก · WH-2R ขอเบิก · WH-3R ขอโอน · WH-4R เตรียมนับ — โครงจาก grill + ลิ้งเชื่อม flow · sidebar เปิดครบ · **รอ build เต็มบน design-system**
+**ยังไม่ทำ:** portal-mapping.md warehouse (flag stale) · core-erp-flows/reconcile-matrix docs อ้างชื่อเก่า (ประวัติ low-pri)
 
 plan เต็ม: `.agents/topics/wh-renumber-plan.md`
 - **Q1 ✓** เรียงตามปริมาณงาน: รับ=WH-1 · **เบิก=WH-2** · **โอน=WH-3** · นับ=WH-4 (สลับ 2↔3) — ⚠️ กระทบ audit #13: เจ้าของใบโอน WH-2→**WH-3**

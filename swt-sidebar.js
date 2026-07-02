@@ -86,11 +86,15 @@
       ['POR4','rp1-report-center-mockup.html','รายงานจัดซื้อ > สรุปตาม Vendor','new']]},
     {ico:'📦', label:'คลังสินค้า (WH)', links:[
       ['WH-Q','wh-q-dashboard-mockup.html','WH-Q แดชบอร์ดคลัง','old'],
+      ['WHQ1','wh-q1-receive-queue-mockup.html','WH-Q1 คิวรับสินค้า','new'],
+      ['WHQ2','wh-q2-issue-queue-mockup.html','WH-Q2 คิวเบิกสินค้า','new'],
       ['WH-1','wh1-receive-mockup.html','WH-1 ใบรับสินค้า','old'],
       ['WH-2','wh2-issue-mockup.html','WH-2 ใบเบิกสินค้า','old'],
+      ['WH2R','wh2r-issue-request-mockup.html','WH-2R ใบขอเบิก','new'],
       ['WH-3','wh3-transfer-mockup.html','WH-3 ใบโอนสินค้า','old'],
+      ['WH3R','wh3r-transfer-request-mockup.html','WH-3R ใบขอโอน','new'],
       ['WH-4','wh4-count-mockup.html','WH-4 ใบนับสินค้า','old'],
-      /* planned · ยังไม่สร้าง (ดู .agents/topics/wh-renumber-plan.md): WH-Q1 คิวรับ · WH-Q2 คิวเบิก · WH-2R ขอเบิก · WH-3R ขอโอน · WH-4R เตรียมนับ */
+      ['WH4R','wh4r-count-prep-mockup.html','WH-4R ใบเตรียมนับ','new'],
       ['WH-R','wh-r-stock-card-mockup.html','รายงานคลัง > Stock Card','old'],
       ['WHNM','wh-nm-non-move-report-mockup.html','รายงานคลัง > สินค้าไม่เคลื่อนไหว','old'],
       ['WHR1','wh-r-stock-card-mockup.html','รายงานคลัง > คงเหลือสินค้าแบบรวม','new'],
