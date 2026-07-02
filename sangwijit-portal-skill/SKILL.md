@@ -607,7 +607,7 @@ Sales Module
 | # | คำถาม | Phase |
 |---|---|---|
 | ~~B1~~ | ~~Promotion Conflict Priority~~ ✅ **RESOLVED** — Priority Number + Stack ≤ 2 ชั้น (ดู PM_promotion.md) | P1 |
-| ~~B5~~ | ~~Credit Approval Tier~~ ✅ **RESOLVED** — ทั้งฝั่งขาย (SL-F1) + ฝั่งซื้อ (PO) ตั้งใน CF-7 | P1 |
+| ~~B5~~ | ~~Credit Approval Tier~~ ✅ **RESOLVED** — ทั้งฝั่งขาย (SL-F1) + ฝั่งซื้อ (PO) ตั้งใน CF-2.6 | P1 |
 | B6 | Deposit GL Account | P1 |
 | B9 | SLA กี่ชั่วโมงต่อ Doc Type? | P2 |
 | ~~B10~~ | ~~WHT Certificate: Auto หรือ Manual?~~ ✅ **RESOLVED** — Auto จาก FI-2 AP Payment → WHT List (FI-12) → Release → Print | P1 |

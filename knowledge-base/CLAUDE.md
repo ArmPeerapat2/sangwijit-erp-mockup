@@ -81,7 +81,7 @@ Sangwijit ERP Web Portal เป็น **ชั้น Frontend เดียว** 
 - **VAT Golden Rule** — ส่วนลดหักก่อน VAT เสมอ
 - **Rebate ≠ Discount** — Rebate คืนหลังขาย, Discount ลดก่อนขาย
 - **Dual-Book** — ทุก AP Invoice ต้องมี Entity Tag (1/2/3/.../novat)
-- **Credit Approval Tier** — ทั้งฝั่ง SL (SL-F1) และ PO ต้องผ่าน CF-7 Approval Matrix
+- **Credit Approval Tier** — ทั้งฝั่ง SL (SL-F1) และ PO ต้องผ่าน CF-2.6 Approval Matrix
 
 ---
 

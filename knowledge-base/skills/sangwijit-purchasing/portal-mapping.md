@@ -24,7 +24,7 @@
 | Purchasing | PO-4 | Vendor Management | Vendor Obligation |
 | Purchasing | PO-5 | Trade Agreement | Agreement management |
 | Purchasing | PO-6 | PSI / MOS Dashboard | Calculation |
-| Config | CF-7 | Credit Approval Tier | Credit policy |
+| Config | CF-2.6 | Credit Approval Tier | Credit policy |
 | Warehouse | WH-5 | Non-Move Report | Non-Move handling |
 | Finance | FI-4 | VAT Report | VAT Golden Rule |
 
@@ -67,7 +67,7 @@ fi4-tax-report-mockup.html          → VAT report
 |---|---|---|---|
 | **V — VAT Golden Rule** | discount ก่อน VAT | PO-2, FI-4 | Calculation |
 | **M — Non-Move** | สินค้า Non-Move | WH-5, PO-4 | Agreement penalty |
-| **R — Credit Approval** | SL-F1 + PO ต้องผ่าน CF-7 | CF-7, PO-2 | Credit policy |
+| **R — Credit Approval** | SL-F1 + PO ต้องผ่าน CF-2.6 | CF-2.6, PO-2 | Credit policy |
 | **True Margin** | คำนวณต้นทุนจริงหลังส่วนลด | PO-6 Dashboard | Calculation |
 | **PSI / MOS** | Plan Sales Inventory + Months of Supply | PO-6 | Calculation |
 

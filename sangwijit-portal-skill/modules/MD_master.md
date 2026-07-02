@@ -389,7 +389,7 @@ Manage employee records for commission tracking, sales assignment, technician sk
 - Employee No. must be unique; cannot be reused
 - Email must be unique across portal
 - Department assignment affects module access (via RBAC in CF-3)
-- Manager Code creates approval hierarchy (used in CF-7 Approval Matrix)
+- Manager Code creates approval hierarchy (used in CF-2.6 Approval Matrix)
 - Commission Rate can be overridden per quota period in PM-4
 - Termination Date, once set, triggers system to mark Active=False
 - Service Technician=True requires at least one Technician Skill selected
@@ -398,7 +398,7 @@ Manage employee records for commission tracking, sales assignment, technician sk
 
 **Related Components:**
 - CF-3 (RBAC) — User account linking
-- CF-7 (Approval Matrix) — Manager code for routing
+- CF-2.6 (Approval Matrix) — Manager code for routing
 - PM-4 (Quota) — Commission tracking
 - Service module — Technician assignment
 - SO module — Salesperson assignment
@@ -595,7 +595,7 @@ GET /api/companies/{id}/standardPrices/{id}?$expand=item,uom
 ### Employee Master (MD-4)
 
 25. **Department Link:** Affects CF-3 role assignment; employee automatically inherits department-level permissions
-26. **Manager Code:** Creates approval hierarchy (used in CF-7 Approval Matrix for routing documents)
+26. **Manager Code:** Creates approval hierarchy (used in CF-2.6 Approval Matrix for routing documents)
 27. **Commission Type:** Stored here; PM-4 Quota can override per period
 28. **Technician Skills:** Multi-select; Service module filters by skill when assigning jobs
 29. **Sales Territory:** Mandatory if Salesperson=True; drives SO assignment filtering

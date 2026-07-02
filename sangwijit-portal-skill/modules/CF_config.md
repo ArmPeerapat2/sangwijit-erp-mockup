@@ -161,12 +161,12 @@ Define portal user accounts, roles, and field-level permissions. Nine core roles
 | Edit Sales Order Draft (SO) | SO-E-DRAFT | Salesperson, Sales Mgr, System Admin |
 | Edit Sales Order Confirmed (SO) | SO-E-CONF | Sales Mgr, System Admin only |
 | Submit Sales Order (SO) | SO-SUBMIT | Salesperson, Sales Mgr, System Admin |
-| Approve Sales Order (SO) | SO-APPROVE | Sales Mgr, System Admin (per amount limit CF-7) |
+| Approve Sales Order (SO) | SO-APPROVE | Sales Mgr, System Admin (per amount limit CF-2.6) |
 | Cancel Sales Order (SO) | SO-CANCEL | Sales Mgr, System Admin |
 | View Sales Order Pricing (SO) | SO-PRICE-VIEW | All (SO creator/owner see own; Mgr see all) |
 | Override Price in Sales Order (SO) | SO-PRICE-OVERRIDE | Sales Mgr, System Admin (audit logged) |
 | Create Purchase Order (PO) | PO-C | Procurement Mgr, System Admin |
-| Approve Purchase Order (PO) | PO-APPROVE | Procurement Mgr, Finance Mgr, System Admin (per amount CF-7) |
+| Approve Purchase Order (PO) | PO-APPROVE | Procurement Mgr, Finance Mgr, System Admin (per amount CF-2.6) |
 | Receive Goods (GRN) | GRN-RECEIVE | Warehouse Mgr, System Admin |
 | Approve GRN (GRN) | GRN-APPROVE | Procurement Mgr, Warehouse Mgr, System Admin |
 | Create Service Order (SVC) | SVC-C | Service Mgr, System Admin |
@@ -175,12 +175,12 @@ Define portal user accounts, roles, and field-level permissions. Nine core roles
 | Approve Service Invoice (SVCI) | SVCI-APPROVE | Service Mgr, Finance Mgr, System Admin |
 | View Pricing & Cost (PRICE-VIEW) | Salesperson (own), Sales Mgr, Finance Mgr, System Admin |
 | View Cost Price (COST-VIEW) | Finance Mgr, System Admin only |
-| Approve Payment (AP/AR) | PAY-APPROVE | Finance Mgr, Accounting Officer, System Admin (per amount CF-7) |
+| Approve Payment (AP/AR) | PAY-APPROVE | Finance Mgr, Accounting Officer, System Admin (per amount CF-2.6) |
 | Post Journal Entry (GL) | JE-POST | Accounting Officer, Finance Mgr, System Admin |
 | Generate Reports | REPORT-GEN | Finance Mgr, Sales Mgr, Procurement Mgr, Warehouse Mgr, System Admin |
 | Manage Users & Roles (CF-3) | RBAC-ADMIN | System Admin only |
 | Manage Tax Setup (CF-1) | TAX-ADMIN | System Admin, Finance Mgr (view-only) |
-| Manage Approval Matrix (CF-7) | APPROVE-ADMIN | System Admin, Finance Mgr (view-only) |
+| Manage Approval Matrix (CF-2.6) | APPROVE-ADMIN | System Admin, Finance Mgr (view-only) |
 | Manage Document Templates (CF-8) | TEMPLATE-ADMIN | System Admin, Finance Mgr |
 | Access Audit Logs (IA-2) | AUDIT-VIEW | System Admin, Finance Mgr (own company only) |
 
@@ -199,7 +199,7 @@ Define portal user accounts, roles, and field-level permissions. Nine core roles
 **RBAC Matrix Summary:**
 ```
 9 Roles × 28 Functions = 252 permission cells
-Each cell: Allowed (✓) / Not Allowed (✗) / Conditional per CF-7 (◐)
+Each cell: Allowed (✓) / Not Allowed (✗) / Conditional per CF-2.6 (◐)
 ```
 
 **Principle: Maker ≠ Checker**
@@ -430,7 +430,9 @@ GET /api/companies/{id}/technicianRates?serviceType={type}&techLevel={level}
 
 ---
 
-### CF-7: Approval Matrix (ผู้อนุมัติ)
+### CF-2.6: Approval Matrix (ผู้อนุมัติ)
+
+> **หมายเหตุรหัส:** "CF-7" เป็นรหัสเก่าของหน้านี้ที่ใช้ใน spec ก่อน 2026-06-03 ก่อนตั้งชื่อไฟล์ mockup เป็น `cf2-6-approval-matrix-mockup.html` — ไม่ใช่หน้าแยก เป็นหน้าเดียวกันแค่เปลี่ยนรหัส. Canonical = **CF-2.6** (decision 2026-07-02)
 
 **Module Brief:**  
 Define document approval routing based on document type + amount threshold. Critical for Maker ≠ Checker segregation.
@@ -753,7 +755,7 @@ System Config changes (CF-1 through CF-8) affect the entire portal and all modul
 - CF-2 (Number Series): Affects document numbering; cannot be undone
 - CF-3 (RBAC): Affects user access; lockout risk
 - CF-4 (Posting Groups): Affects GL accounting; reconciliation impact
-- CF-7 (Approval Matrix): Affects approval workflows; document stuck risk
+- CF-2.6 (Approval Matrix): Affects approval workflows; document stuck risk
 - CF-9 (Entity Tag): Affects Dual-Book system; wrong tag = wrong tax room
 
 **Rollback Plan:**
@@ -773,7 +775,7 @@ System Config changes (CF-1 through CF-8) affect the entire portal and all modul
 | Posting Group (Customer) | 92 | CF-4 | Code, AR Account, VAT Account |
 | Posting Group (Vendor) | 93 | CF-4 | Code, AP Account, WHT Account |
 | User | Custom | CF-3 | User ID, Role, Employee Link |
-| Approval Entry | 454 | CF-7 | Document Type, Approver, Status |
+| Approval Entry | 454 | CF-2.6 | Document Type, Approver, Status |
 | Entity Tag | Custom | CF-9 | Tag Code, Entity Name, Tax ID, Tax Room |
 | Tax Room | Custom | CF-9/FI-13 | Tag Code, Period, Input VAT, Output VAT |
 

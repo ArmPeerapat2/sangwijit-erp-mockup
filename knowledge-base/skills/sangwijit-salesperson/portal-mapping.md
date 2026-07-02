@@ -68,7 +68,7 @@ md2-product-category-mockup.html    → หมวดสินค้า
 | Rule | รายละเอียด | Portal ใช้ที่ไหน | Skill อ้างอิง |
 |---|---|---|---|
 | **V — VAT Golden Rule** | discount ก่อน VAT | SL-1, SL-F2 | Calculation |
-| **R — Credit Tier** | SL-F1 + PO ต้องผ่าน CF-7 | SL-F1, CF-7 | ข้อจำกัดการขาย |
+| **R — Credit Tier** | SL-F1 + PO ต้องผ่าน CF-2.6 | SL-F1, CF-2.6 | ข้อจำกัดการขาย |
 | **F — Floor Price** | ห้ามขายต่ำกว่าราคาพื้น | SL-1, SL-F2 | ข้อจำกัดการลดราคา |
 | **B1 — Sale-In Accrual** | commission ตั้งเร้าตามใบเสนอ | SL-F5 | KPI |
 

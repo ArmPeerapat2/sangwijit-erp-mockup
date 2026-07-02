@@ -47,7 +47,7 @@ Trust priority when sources conflict: latest user instruction → codebase state
 - **VAT Golden Rule** — discount is applied **before** VAT, always.
 - **Rebate ≠ Discount** — rebate is returned after the sale; discount reduces price before the sale.
 - **Dual-Book** — every AP Invoice carries an Entity Tag (`1 / 2 / 3 / ... / novat`).
-- **Credit Approval Tier** — both SL (SL-F1) and PO flows must route through CF-7 Approval Matrix.
+- **Credit Approval Tier** — both SL (SL-F1) and PO flows must route through CF-2.6 Approval Matrix.
 - **Maker ≠ Checker** — a user cannot approve their own document anywhere an Approval step exists.
 - **Portal is UI only** — no local DB, no posting outside BC365. Posting/numbering/status are owned by BC. See `sangwijit-portal-skill/SKILL.md` "Mental Model" section before designing anything.
 
