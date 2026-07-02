@@ -44,9 +44,10 @@
 | SL-2 | Reservation ใบจอง | ✅ | 📋 `sl2-reservation-mockup.html` |
 | SL-3 | Deposit รับมัดจำ | ✅ | 📋 `sl3-deposit-mockup.html` |
 | SL-4 | Invoice บิลขาย | ✅ | 📋 `sl4-invoice-mockup.html` |
-| SL-5 | Credit Memo / CRM Followup | ✅ | 📋 `sl5-crm-followup-mockup.html` |
-| SL-6 | Promotion Setup | ✅ | 📋 `sl6-promotion-setup-mockup.html` |
-| SL-7 | Sales Report | ✅ | 📋 `sl7-sales-report-mockup.html` |
+| SL-CN | Credit Memo ใบลดหนี้ขาย (เดิมรหัส SL-5) | ✅ | 📋 `slcn-credit-memo-mockup.html` |
+| ~~SL-5~~ | ~~CRM Followup~~ 📦 archived 2026-07-02 (เกิน scope P1) | — | `_archive/sl5-crm-followup-mockup.html` |
+| ~~SL-6~~ | ~~Promotion Setup~~ 📦 archived → PM ใน P2 | — | `_archive/sl6-promotion-setup-mockup.html` |
+| ~~SL-7~~ | ~~Sales Report~~ 📦 archived → ยุบเข้า RP-1 | — | `_archive/sl7-sales-report-mockup.html` |
 | SL-F1 | Credit Approval (ฝั่ง Sales) | ✅ B5 | — |
 | PM-1 | Price List | ✅ | — |
 | PM-2 | Promotion Scheme | ✅ B1 | — |
@@ -73,7 +74,7 @@
 | PO-5 | GRN (ใบรับสินค้า) | ✅ | — |
 | PO-6 | AP Invoice | ✅ | — |
 | PO-7 | Sale-In Accrual | 🆕 | — |
-| PO-8 | Deposit Bill (บิลฝาก) | 🆕 | — |
+| PO-8 | สั่งซื้อสินค้าฝาก (Deposit Bill · ชื่อเดิม "บิลฝาก") | 🆕 | 📋 `po8-deposit-bill-mockup.html` |
 | — | Rebate Dashboard | (support) | 📋 `po7-rebate-dashboard.html` |
 | SM-1 | SKU Slot Planner | ✅ | 📋 `sm1-sku-slot-planner-mockup.html` |
 | SM-2 | SKU Health Monitor | ✅ | 📋 `sm2-sku-health-mockup.html` |
@@ -88,12 +89,12 @@
 
 | Code | ชื่อ | สถานะ | Mockup |
 |------|-----|------|--------|
-| WH-Q | Warehouse Queue (SLA) | ✅ | 📋 `wh-q-dashboard-mockup.html` |
-| WH-1 | GRN + Transfer Receipt | ✅ | 📋 `wh1-receive-mockup.html` |
-| WH-2 | Stock Transfer | ✅ | 📋 `wh3-transfer-mockup.html` |
-| WH-3 | Sales Issue / Stock Count | ✅ | 📋 `wh4-count-mockup.html` |
+| WH-Q | Warehouse Queue (SLA) | ✅ | 📋 `wh-queue-mockup.html` |
+| WH-1 | GRN + Transfer Receipt | ✅ | 📋 `wh1-grn-mockup.html` |
+| WH-2 | Stock Transfer | ✅ | 📋 `wh2-stock-transfer-mockup.html` |
+| WH-3 | Sales Issue / Stock Count | ✅ | 📋 `wh4-stock-count-mockup.html` |
 | WH-4 | Stock Count | ✅ | (รวมกับ WH-3) |
-| WH-R | Stock Card / Goods Issue | ✅ | 📋 `wh-q2-issue-queue-mockup.html` |
+| WH-R | Stock Card / Goods Issue | ✅ | 📋 `wh3-sales-issue-mockup.html` |
 | WH-NM | Non-Move Report | 🆕 | — |
 | ⭐ Auto Replenishment | Phase ถัดไป |  | — |
 | ⭐ Pick / Pack / Ship | Phase ถัดไป |  | — |
@@ -133,7 +134,7 @@
 | SV-3 | Parts Requisition | ✅ | — |
 | SV-4 | QA Close | ✅ | — |
 | SV-6 | Delivery & Installation | ✅ | 📋 `sv6-delivery-install-mockup.html` |
-| CL-1 | Claim Intake | ✅ | 📋 `cl1-claims-mockup.html` |
+| ~~CL-1~~ | ~~Claim Intake~~ 📦 decomposed 2026-07-02 — เคลม = job type ใน SV-1 | — | `_archive/cl1-claims-mockup.html` |
 | CL-2 | Claim Tracking | ✅ | — |
 | CL-3 | Claim Credit Note | ✅ | — |
 | ⭐ Fleet/Vehicle Tracking | Phase ถัดไป |  | — |

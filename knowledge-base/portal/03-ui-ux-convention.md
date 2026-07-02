@@ -311,7 +311,17 @@ font-family: 'Inter', 'Noto Sans Thai', -apple-system, sans-serif;
 
 ---
 
-## 10. Reference Files
+## 10. Naming Convention — ชื่อโมดูล/เอกสาร (decision 2026-07-02 #6)
+
+- **ชื่อที่เสี่ยงชนข้ามโมดูล** (ความหมายอังกฤษเดียวกัน เช่น "deposit") → ใส่ **prefix ฝั่งงาน** นำหน้า: "ขาย มัดจำ" / "ซื้อ มัดจำ"
+- ตัวอย่างที่ตัดสินแล้ว:
+  - **SL-3 ใบมัดจำ** = ฝั่งขาย "ขาย มัดจำ" (ลูกค้าจ่ายเราล่วงหน้า · AR · หักบิล SL-4)
+  - **PO-8 สั่งซื้อสินค้าฝาก** (ชื่อเดิม "บิลฝาก") = ฝั่งซื้อ (vendor วางบิลเราก่อนรับของครบ · AP · PO-6 โหมด Deposit)
+- shorthand ในเนื้อ flow ภายในโมดูลเดียวกัน (เช่น "บิลฝาก" ใน PO-6 picker) ใช้ต่อได้ — convention บังคับเฉพาะ**ชื่อหน้า/เมนู/cross-module reference**
+
+---
+
+## 11. Reference Files
 
 - ตัวอย่างหน้าสวยสมบูรณ์: `sl1-quotation-mockup.html`
 - ตัวอย่างฟอร์ม + table: `po4-purchase-order-mockup.html`

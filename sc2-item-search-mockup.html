@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>SC-2 Product Search — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:transparent;color:#1F2937;min-width:1440px;font-size:12.5px;line-height:1.45}
+.main{margin-left:0;min-height:100vh;padding:0;position:relative}
+
+/* ========== parent document (dimmed behind modal) ========== */
+.parent-doc{background:#F1F5F9;padding:16px 24px;border-bottom:1px solid #CBD5E1;opacity:0.55;filter:grayscale(0.3);pointer-events:none;position:relative}
+.parent-doc::after{content:"";position:absolute;inset:0;background:rgba(30,58,95,0.08)}
+.pd-tabs{display:flex;gap:2px;margin-bottom:10px;font-size:11px}
+.pd-tab{background:#fff;border:1px solid #CBD5E1;border-bottom:none;padding:6px 14px;border-radius:6px 6px 0 0;color:#64748B}
+.pd-tab.active{background:#DBEAFE;color:#1D4ED8;font-weight:600;border-color:#93C5FD}
+.pd-toolbar{display:flex;gap:5px;padding:6px;background:#F8FAFC;border:1px solid #CBD5E1;border-radius:6px;margin-bottom:10px;align-items:center;flex-wrap:wrap}
+.pd-btn{padding:4px 10px;background:#fff;border:1px solid #CBD5E1;border-radius:4px;font-size:11px;color:#475569;font-weight:500;display:inline-flex;align-items:center;gap:4px}
+.pd-form{background:#fff;border:1px solid #CBD5E1;border-radius:6px;padding:10px 14px;font-size:11px}
+.pd-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:6px}
+.pd-cell{display:flex;align-items:center;gap:6px;font-size:11px;color:#64748B}
+.pd-cell b{color:#1F2937;background:#F1F5F9;padding:3px 8px;border-radius:3px;font-weight:500;min-width:100px}
+.pd-grid{background:#fff;border:1px solid #CBD5E1;border-radius:6px;overflow:hidden;margin-top:8px}
+.pd-grid table{width:100%;border-collapse:collapse;font-size:11px}
+.pd-grid th{background:#F1F5F9;padding:6px 10px;text-align:left;color:#64748B;font-weight:600;border-bottom:1px solid #CBD5E1;border-right:1px solid #E2E8F0}
+.pd-grid td{padding:4px 10px;border-bottom:1px solid #F1F5F9;color:#94A3B8;height:22px;border-right:1px solid #F1F5F9}
+.pd-grid td.active-cell{background:#FEF3C7;color:#1F2937}
+
+/* ========== MODAL OVERLAY ========== */
+.modal-overlay{position:absolute;inset:0;background:rgba(15,23,42,0.35);display:flex;align-items:flex-start;justify-content:center;padding:50px 30px 60px;z-index:20;overflow-y:auto}
+
+.ref-badge{position:fixed;top:10px;right:14px;background:#2563EB;color:#fff;padding:5px 12px;border-radius:14px;font-size:11px;font-weight:700;z-index:999;box-shadow:0 4px 12px rgba(37,99,235,0.3)}
+
+/* ========== PRODUCT SEARCH DIALOG ========== */
+.psd{background:#fff;border-radius:10px;box-shadow:0 20px 60px rgba(15,23,42,0.25);width:1160px;max-width:100%;overflow:hidden;border:1px solid #E2E8F0}
+
+/* title bar */
+.psd-title{background:linear-gradient(180deg,#1E3A5F 0%,#172A47 100%);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.psd-title .ico{font-size:15px}
+.psd-title h1{font-size:13px;font-weight:600;flex:1}
+.psd-title .win-btn{width:24px;height:22px;display:flex;align-items:center;justify-content:center;font-size:13px;opacity:0.75;cursor:pointer;border-radius:3px}
+.psd-title .win-btn:hover{background:rgba(255,255,255,0.12);opacity:1}
+.psd-title .win-btn.close:hover{background:#DC2626}
+
+/* toolbar with icon buttons */
+.psd-toolbar{background:linear-gradient(180deg,#F8FAFC 0%,#E2E8F0 100%);border-bottom:1px solid #CBD5E1;padding:7px 10px;display:flex;align-items:center;gap:3px;flex-wrap:wrap}
+.tb-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:transparent;border:1px solid transparent;border-radius:4px;font-size:11.5px;color:#334155;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap}
+.tb-btn:hover{background:#fff;border-color:#CBD5E1}
+.tb-btn .ico{font-size:14px}
+.tb-btn.nav{padding:5px 7px;color:#64748B}
+.tb-btn.history-active{background:#FCD34D;border-color:#F59E0B;color:#78350F;font-weight:700;box-shadow:inset 0 1px 0 rgba(255,255,255,0.5)}
+.tb-btn.close-btn{background:#FEE2E2;border-color:#FCA5A5;color:#B91C1C;margin-left:auto}
+.tb-btn.close-btn:hover{background:#DC2626;color:#fff;border-color:#DC2626}
+.tb-btn.help{color:#2563EB;padding:5px 8px}
+.tb-sep{width:1px;height:22px;background:#CBD5E1;margin:0 4px}
+
+/* search bar */
+.psd-search{background:#F8FAFC;border-bottom:1px solid #CBD5E1;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.psd-search label{font-size:12px;color:#475569;font-weight:600}
+.search-box{display:flex;align-items:center;gap:0;flex:0 0 320px}
+.search-box input{flex:1;padding:7px 10px;border:1.5px solid #CBD5E1;border-right:none;border-radius:5px 0 0 5px;font-size:13px;font-family:inherit;outline:none;background:#fff}
+.search-box input:focus{border-color:#2563EB}
+.search-box button{padding:7px 12px;background:#2563EB;color:#fff;border:1.5px solid #2563EB;border-radius:0 5px 5px 0;font-size:13px;cursor:pointer}
+.search-box button:hover{background:#1D4ED8}
+.search-hint{font-size:11.5px;color:#94A3B8;font-style:italic}
+.search-hint b{color:#64748B;font-style:normal;font-weight:500}
+.checkbox-lbl{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:#475569;cursor:pointer}
+.checkbox-lbl input{cursor:pointer}
+.kbd{display:inline-flex;align-items:center;padding:1px 6px;background:#fff;border:1px solid #CBD5E1;border-bottom-width:2px;border-radius:3px;font-size:10px;color:#64748B;font-family:monospace;font-weight:600;margin-left:6px}
+
+/* MAIN RESULT TABLE */
+.result-wrap{background:#fff;max-height:250px;overflow:auto;border-bottom:1px solid #CBD5E1}
+.result-tbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.result-tbl thead th{background:linear-gradient(180deg,#EFF6FF 0%,#DBEAFE 100%);color:#1E3A5F;font-weight:700;padding:7px 10px;text-align:left;border-bottom:2px solid #93C5FD;border-right:1px solid #BFDBFE;position:sticky;top:0;white-space:nowrap;cursor:pointer;user-select:none}
+.result-tbl thead th .arrow{font-size:9px;color:#60A5FA;margin-left:2px}
+.result-tbl thead th:last-child{border-right:none}
+.result-tbl tbody td{padding:6px 10px;border-bottom:1px solid #F1F5F9;border-right:1px solid #F8FAFC;font-feature-settings:"tnum";color:#1F2937;height:28px;white-space:nowrap}
+.result-tbl tbody tr:nth-child(even){background:#FAFBFC}
+.result-tbl tbody tr.selected,.result-tbl tbody tr.selected:nth-child(even){background:#FEF3C7 !important}
+.result-tbl tbody tr.selected td{border-right-color:#FCD34D;font-weight:500}
+.result-tbl tbody tr:hover{background:#EFF6FF}
+.result-tbl tbody tr:hover td{cursor:pointer}
+.result-tbl tbody tr.selected:hover{background:#FDE68A}
+
+.col-code{font-family:monospace;color:#1D4ED8;font-weight:700}
+.col-name{font-weight:500;color:#0F172A}
+.col-unit{color:#64748B;text-align:center}
+.col-num{text-align:right;font-weight:600}
+.col-num.pos{color:#047857}
+.col-num.low{color:#B45309}
+.col-num.alert{color:#B91C1C;font-weight:700}
+
+/* tinted columns (match reference) */
+.result-tbl .bg-stock{background:#FEF3C7}
+.result-tbl .bg-sold{background:#FECACA}
+.result-tbl .bg-net{background:#CFFAFE}
+.result-tbl .bg-po{background:#DDD6FE}
+.result-tbl .bg-out{background:#FED7AA}
+.result-tbl .bg-tf{background:#BBF7D0}
+.result-tbl tr.selected .bg-stock,.result-tbl tr.selected .bg-sold,.result-tbl tr.selected .bg-net,.result-tbl tr.selected .bg-po,.result-tbl tr.selected .bg-out,.result-tbl tr.selected .bg-tf{background:transparent}
+
+/* row count */
+.result-count{padding:6px 14px;background:#F8FAFC;border-bottom:1px solid #CBD5E1;font-size:11px;color:#64748B;display:flex;align-items:center;gap:12px}
+.result-count b{color:#1E3A5F}
+
+/* ========== DETAIL BANNER ========== */
+.detail-banner{background:linear-gradient(180deg,#1E3A5F 0%,#1D4ED8 100%);color:#fff;padding:9px 14px;display:flex;align-items:center;gap:12px}
+.detail-banner .ico{font-size:14px}
+.detail-banner h2{font-size:13px;font-weight:700}
+.detail-banner .meta{margin-left:auto;display:flex;gap:10px;font-size:10.5px;opacity:0.88}
+.detail-banner .meta .pill{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:10px;display:inline-flex;align-items:center;gap:4px}
+
+/* ========== DETAIL TABS ========== */
+.detail-tabs{background:#F1F5F9;border-bottom:1px solid #CBD5E1;display:flex;gap:0;overflow-x:auto}
+.dt{padding:9px 14px;font-size:11.5px;font-weight:600;color:#64748B;cursor:pointer;border-right:1px solid #CBD5E1;white-space:nowrap;background:transparent;border-top:2px solid transparent;border-bottom:1px solid transparent;position:relative;top:1px}
+.dt:hover{background:#E2E8F0;color:#1E3A5F}
+.dt.active{background:#fff;color:#1D4ED8;border-top-color:#2563EB;border-bottom-color:#fff;box-shadow:0 -2px 4px rgba(37,99,235,0.08)}
+
+/* detail body */
+.detail-body{background:#fff;padding:0}
+.pane{display:none;padding:0}
+.pane.active{display:block}
+.pane-bar{padding:8px 12px;background:#F8FAFC;border-bottom:1px solid #E2E8F0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pane-bar .btn-sm{padding:4px 10px;background:#fff;border:1px solid #CBD5E1;border-radius:4px;font-size:11px;color:#1E3A5F;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.pane-bar .btn-sm:hover{background:#EFF6FF;border-color:#93C5FD}
+.pane-bar label{font-size:11px;color:#64748B;font-weight:500}
+.pane-bar input,.pane-bar select{padding:4px 8px;border:1px solid #CBD5E1;border-radius:4px;font-size:11px;font-family:inherit;background:#fff;outline:none}
+.pane-bar input:focus,.pane-bar select:focus{border-color:#2563EB}
+
+.sub-tbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.sub-tbl thead th{background:linear-gradient(180deg,#EFF6FF 0%,#DBEAFE 100%);color:#1E3A5F;font-weight:700;padding:6px 10px;text-align:left;border-bottom:1px solid #93C5FD;border-right:1px solid #BFDBFE;white-space:nowrap}
+.sub-tbl thead th:last-child{border-right:none}
+.sub-tbl tbody td{padding:5px 10px;border-bottom:1px solid #F1F5F9;border-right:1px solid #F8FAFC;font-feature-settings:"tnum";color:#334155}
+.sub-tbl tbody tr:nth-child(even){background:#FAFBFC}
+.sub-tbl tbody tr:hover{background:#EFF6FF}
+.sub-tbl tbody tr.empty td{color:#CBD5E1;font-style:italic;text-align:center;height:24px}
+
+/* pane min-height so empty panes don't collapse too much */
+.pane-body{min-height:280px;max-height:380px;overflow:auto}
+.pane-body.grid{padding:0}
+
+/* tag pills */
+.tag-pill{display:inline-flex;align-items:center;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700}
+.tp-swt{background:#DBEAFE;color:#1D4ED8}
+.tp-swe{background:#D1FAE5;color:#047857}
+.tp-vmn{background:#FEF3C7;color:#92400E}
+
+/* product image pane */
+.img-pane{display:grid;grid-template-columns:360px 1fr;gap:18px;padding:18px}
+.img-thumb{background:#F1F5F9;border:1px solid #CBD5E1;border-radius:8px;padding:18px;text-align:center;font-size:60px;color:#94A3B8;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.img-info{font-size:12px;line-height:1.7}
+.img-info .grp{display:grid;grid-template-columns:120px 1fr;gap:6px 14px;margin-bottom:12px}
+.img-info .grp label{color:#64748B;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.03em}
+.img-info .grp span{color:#0F172A;font-weight:500}
+
+/* status footer */
+.psd-footer{background:linear-gradient(180deg,#F8FAFC 0%,#E2E8F0 100%);border-top:1px solid #CBD5E1;padding:7px 14px;display:flex;align-items:center;gap:10px;font-size:11px;color:#64748B}
+.psd-footer .st-dot{width:8px;height:8px;border-radius:50%;background:#10B981;display:inline-block}
+.psd-footer b{color:#1E3A5F;font-weight:700}
+.psd-footer .spacer{flex:1}
+.psd-footer .key-hint{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#fff;border:1px solid #CBD5E1;border-radius:4px;color:#475569}
+
+/* refresh in pane */
+.ref-btn{padding:5px 12px;background:#fff;border:1px solid #CBD5E1;border-radius:4px;font-size:11px;color:#1E3A5F;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.ref-btn:hover{background:#DBEAFE;border-color:#93C5FD}
+</style>
+  <link rel="stylesheet" href="swt-patterns.css">
+</head>
+<body>
+
+
+
+
+<main class="main">
+
+
+  <!-- MODAL OVERLAY -->
+  <div class="modal-overlay">
+
+    <div class="psd">
+      <!-- Title bar -->
+      <div class="psd-title">
+        <span class="ico">🔍</span>
+        <h1>Product Search — SC-2 (Shared Component)</h1>
+        <span class="win-btn">─</span>
+        <span class="win-btn">▢</span>
+        <span class="win-btn close">✕</span>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="psd-toolbar">
+        <button class="tb-btn" style="background:#FEF9E7;border-color:#FCD34D;color:#92400E"><span class="ico">📦</span>สินค้า</button>
+        <button class="tb-btn"><span class="ico">🛠️</span>บริการ</button>
+        <button class="tb-btn"><span class="ico">📚</span>สินค้าชุด</button>
+        <div class="tb-sep"></div>
+        <button class="tb-btn nav" title="ก่อนหน้า">⏮</button>
+        <button class="tb-btn nav" title="ถัดไป">⏭</button>
+        <div class="tb-sep"></div>
+        <button class="tb-btn"><span class="ico">📂</span>ค้นตามกลุ่ม</button>
+        <button class="tb-btn history-active" onclick="toggleHistory(this)"><span class="ico">ℹ️</span>แสดงประวัติ</button>
+        <button class="tb-btn"><span class="ico">📝</span>Memo</button>
+        <button class="tb-btn"><span class="ico">📋</span>Multi ใส่ปริมาณ</button>
+        <button class="tb-btn help" title="Help">❓</button>
+        <button class="tb-btn close-btn"><span class="ico">✕</span>ปิด</button>
+      </div>
+
+      <!-- Search bar -->
+      <div class="psd-search">
+        <label>ค้นหา:</label>
+        <div class="search-box">
+          <input type="text" value="tt10" autofocus>
+          <button>🔍</button>
+        </div>
+        <span class="search-hint">ตัวอย่างเช่น: <b>ไขควง ซันโต แบน</b></span>
+        <span class="kbd">F3</span>
+        <label class="checkbox-lbl"><input type="checkbox"> Only Cust Product</label>
+      </div>
+
+      <!-- Row count bar -->
+      <div class="result-count">
+        <span>พบ <b>3</b> รายการจาก keyword "tt10"</span>
+        <span>·</span>
+        <span>Branch: <b>HO · สนง.ใหญ่</b></span>
+        <span>·</span>
+        <span>Last sync BC365: <b>2 นาทีที่แล้ว</b></span>
+        <span style="margin-left:auto">Click row → ดู tab ประวัติด้านล่าง</span>
+      </div>
+
+      <!-- MAIN RESULT TABLE -->
+      <div class="result-wrap">
+        <table class="result-tbl">
+          <thead>
+            <tr>
+              <th style="width:110px">รหัสสินค้า <span class="arrow">▲</span></th>
+              <th style="width:360px">ชื่อสินค้า <span class="arrow">▼</span></th>
+              <th style="width:60px">หน่วย <span class="arrow">▼</span></th>
+              <th style="width:72px" class="bg-stock">สต็อก <span class="arrow">▼</span></th>
+              <th style="width:72px" class="bg-sold">สั่งขาย <span class="arrow">▼</span></th>
+              <th style="width:72px" class="bg-net">สุทธิ <span class="arrow">▼</span></th>
+              <th style="width:72px" class="bg-po">สั่งซื้อ <span class="arrow">▼</span></th>
+              <th style="width:72px" class="bg-out">ขอจ่าย <span class="arrow">▼</span></th>
+              <th style="width:72px" class="bg-tf">ขอโอน <span class="arrow">▼</span></th>
+              <th>หมายเหตุ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="selected" onclick="selectRow(this)">
+              <td class="col-code">7XXX71XX…</td>
+              <td class="col-name">เครื่องซักผ้า 2 ถัง LG TT10NARG (10 kg.)</td>
+              <td class="col-unit">เครื่อง</td>
+              <td class="col-num bg-stock">145</td>
+              <td class="col-num bg-sold">2</td>
+              <td class="col-num bg-net pos"><b>143</b></td>
+              <td class="col-num bg-po">19</td>
+              <td class="col-num bg-out">103</td>
+              <td class="col-num bg-tf">15</td>
+              <td style="color:#64748B">2-Tub Washing machine LG Thinq</td>
+            </tr>
+            <tr onclick="selectRow(this)">
+              <td class="col-code">7XXX71XY…</td>
+              <td class="col-name">เครื่องซักผ้า 2 ถัง LG TT10NBRG (10 kg.) รุ่นใหม่</td>
+              <td class="col-unit">เครื่อง</td>
+              <td class="col-num bg-stock">62</td>
+              <td class="col-num bg-sold">—</td>
+              <td class="col-num bg-net pos"><b>62</b></td>
+              <td class="col-num bg-po">10</td>
+              <td class="col-num bg-out">—</td>
+              <td class="col-num bg-tf">—</td>
+              <td style="color:#64748B">Successor model TT10N</td>
+            </tr>
+            <tr onclick="selectRow(this)">
+              <td class="col-code">8XXX71ZZ…</td>
+              <td class="col-name">Drum Belt สำหรับ TT10NARG (อะไหล่)</td>
+              <td class="col-unit">เส้น</td>
+              <td class="col-num bg-stock low">3</td>
+              <td class="col-num bg-sold">1</td>
+              <td class="col-num bg-net low"><b>2</b></td>
+              <td class="col-num bg-po alert">0</td>
+              <td class="col-num bg-out">—</td>
+              <td class="col-num bg-tf">—</td>
+              <td style="color:#B45309">⚠ Low-stock · BC reorder needed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- DETAIL BANNER -->
+      <div class="detail-banner">
+        <span class="ico">📦</span>
+        <h2>เครื่องซักผ้า 2 ถัง LG TT10NARG (10 kg.)</h2>
+        <div class="meta">
+          <span class="pill">SKU <b>7XXX71XX</b></span>
+          <span class="pill">📊 Sale Rank #47</span>
+          <span class="pill">✓ BC synced</span>
+        </div>
+      </div>
+
+      <!-- DETAIL TABS -->
+      <div class="detail-tabs">
+        <div class="dt active" onclick="swTab(event,'t1')">สต็อกแต่ละคลัง</div>
+        <div class="dt" onclick="swTab(event,'t2')">ราคาขาย</div>
+        <div class="dt" onclick="swTab(event,'t3')">รายการสั่งซื้อ</div>
+        <div class="dt" onclick="swTab(event,'t4')">ค้างส่ง</div>
+        <div class="dt" onclick="swTab(event,'t5')">รูปสินค้า</div>
+        <div class="dt" onclick="swTab(event,'t6')">ยอดขายตามช่วงวันที่</div>
+        <div class="dt" onclick="swTab(event,'t7')">ยอดขายแต่ละคลัง</div>
+        <div class="dt" onclick="swTab(event,'t8')">Rebate</div>
+      </div>
+
+      <!-- DETAIL BODY -->
+      <div class="detail-body">
+
+        <!-- TAB 1: สต็อกแต่ละคลัง -->
+        <div class="pane active" id="t1">
+          <div class="pane-bar">
+            <button class="ref-btn">🔄 Refresh</button>
+            <label style="margin-left:10px">Entity:</label>
+            <select><option>ทั้งหมด</option><option>Tag 1 · SWT</option><option>Tag 2 · SWE</option><option>Tag 3 · VMN</option></select>
+            <label>แสดงเฉพาะ:</label>
+            <select><option>คลังที่มีสต็อก</option><option>คลังทั้งหมด</option><option>คลังต่ำกว่าจุดต่ำสุด</option></select>
+            <span style="margin-left:auto;font-size:11px;color:#64748B">รวม <b style="color:#1E3A5F">145 เครื่อง</b> กระจาย 12 คลัง · ค่า BC live</span>
+          </div>
+          <div class="pane-body grid">
+            <table class="sub-tbl">
+              <thead><tr>
+                <th style="width:32px">#</th>
+                <th style="width:90px">รหัสคลัง</th>
+                <th>คลังสินค้า</th>
+                <th style="width:130px">ที่เก็บ</th>
+                <th style="width:70px">หน่วย</th>
+                <th style="width:70px;text-align:right">สต็อก</th>
+                <th style="width:70px;text-align:right">สั่งขาย</th>
+                <th style="width:70px;text-align:right">สุทธิ</th>
+                <th style="width:70px;text-align:right">สั่งซื้อ</th>
+                <th style="width:70px;text-align:right">ขอจ่าย</th>
+                <th style="width:70px;text-align:right">ขอโอน</th>
+                <th style="width:80px;text-align:right">จุดต่ำสุด</th>
+                <th style="width:90px">Entity</th>
+              </tr></thead>
+              <tbody>
+                <tr><td>1</td><td class="col-code">AK</td><td>คลังสาขาอากาศ…</td><td>อากาศ</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700">5</td><td style="text-align:right">—</td><td style="text-align:right">17</td><td style="text-align:right">7</td><td style="text-align:right;color:#94A3B8">5</td><td><span class="tag-pill tp-swt">SWT</span></td></tr>
+                <tr><td>2</td><td class="col-code">HO</td><td>สนง.ใหญ่</td><td>HO</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857"><b>119</b></td><td style="text-align:right">2</td><td style="text-align:right;font-weight:700;color:#047857"><b>117</b></td><td style="text-align:right">19</td><td style="text-align:right">2</td><td style="text-align:right">1</td><td style="text-align:right;color:#94A3B8">30</td><td><span class="tag-pill tp-swt">SWT</span></td></tr>
+                <tr><td>3</td><td class="col-code">INS</td><td>คลังติดตั้ง</td><td>INS</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="tag-pill tp-swt">SWT</span></td></tr>
+                <tr><td>4</td><td class="col-code">NA</td><td>NA (นาจาน)</td><td>NA</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="tag-pill tp-swt">SWT</span></td></tr>
+                <tr><td>5</td><td class="col-code">OIR</td><td>ทวีศักดิ์ธาดา…</td><td>OIR</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="tag-pill tp-vmn">VMN</span></td></tr>
+                <tr><td>6</td><td class="col-code">ONL</td><td>ONL (ออนไลน์)</td><td>ONL</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="tag-pill tp-swt">SWT</span></td></tr>
+                <tr><td>7</td><td class="col-code">PM</td><td>คลังพักสินค้า</td><td>PM</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="tag-pill tp-swt">SWT</span></td></tr>
+                <tr><td>8</td><td class="col-code">S07</td><td>คลังสินเชื่อ</td><td>S07</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="tag-pill tp-swt">SWT</span></td></tr>
+                <tr><td>9</td><td class="col-code">S08</td><td>เซกา</td><td>S08</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700">5</td><td style="text-align:right">11</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">3</td><td><span class="tag-pill tp-swt">SWT</span></td></tr>
+                <tr><td>10</td><td class="col-code">S09</td><td>คลังมือถือ</td><td>คลังมือถือ</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">9</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="tag-pill tp-swt">SWT</span></td></tr>
+                <tr><td>11</td><td class="col-code">SD</td><td>สว่างฯ</td><td>SD</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">8</td><td style="text-align:right">4</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="tag-pill tp-swt">SWT</span></td></tr>
+                <tr><td>12</td><td class="col-code">SHO</td><td>ปลีกโกดัง</td><td>SHO</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857">1</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700">1</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">2</td><td><span class="tag-pill tp-swt">SWT</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 2: ราคาขาย -->
+        <div class="pane" id="t2">
+          <div class="pane-bar">
+            <button class="ref-btn">🔄 Refresh</button>
+            <span style="margin-left:10px;font-size:11px;color:#64748B">⚖ VAT Golden Rule — ราคาแสดงแบบ ex-VAT · ดู simulator ที่ <b style="color:#2563EB">PM-5</b></span>
+          </div>
+          <div class="pane-body grid">
+            <table class="sub-tbl">
+              <thead><tr>
+                <th style="width:32px">#</th>
+                <th style="width:70px">หน่วย</th>
+                <th style="width:100px;text-align:right">ราคาปลีก</th>
+                <th style="width:70px;text-align:right">Disc1</th>
+                <th style="width:100px;text-align:right">ราคาส่ง</th>
+                <th style="width:70px;text-align:right">Disc2</th>
+                <th style="width:100px;text-align:right">ต้นทุน INV</th>
+                <th style="width:70px;text-align:right">Disc3</th>
+                <th style="width:100px;text-align:right">ต้นทุน ผปย</th>
+                <th style="width:70px;text-align:right">Disc4</th>
+                <th style="width:100px;text-align:right">Price5</th>
+                <th style="width:70px;text-align:right">Disc5</th>
+                <th style="width:100px;text-align:right">Price6</th>
+              </tr></thead>
+              <tbody>
+                <tr><td>1</td><td>เครื่อง</td><td style="text-align:right;font-weight:700;color:#0F172A">5,990.00</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600">5,450.00</td><td style="text-align:right">—</td><td style="text-align:right;color:#475569">5,636.76</td><td style="text-align:right">—</td><td style="text-align:right;color:#475569">5,268.00</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td></tr>
+                <tr class="empty"><td colspan="13">— ไม่มีราคาทางเลือกเพิ่มเติม —</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 3: รายการสั่งซื้อ -->
+        <div class="pane" id="t3">
+          <div class="pane-bar">
+            <button class="ref-btn">🔄 Refresh</button>
+            <label>ช่วง:</label>
+            <select><option>6 เดือนล่าสุด</option><option>1 ปีล่าสุด</option><option>ตั้งแต่เปิดบัญชี</option></select>
+            <span style="margin-left:auto;font-size:11px;color:#64748B">รวม <b style="color:#1E3A5F">1 ใบสั่งซื้อ</b> · 42 เครื่อง · คงค้าง 19</span>
+          </div>
+          <div class="pane-body grid">
+            <table class="sub-tbl">
+              <thead><tr>
+                <th style="width:32px">#</th>
+                <th style="width:90px">วันที่สั่งซื้อ</th>
+                <th style="width:130px">ใบสั่งซื้อ</th>
+                <th style="width:150px">กลุ่มเอกสาร</th>
+                <th style="width:70px">คลัง</th>
+                <th style="width:100px">ที่เก็บ</th>
+                <th style="width:60px">หน่วย</th>
+                <th style="width:60px;text-align:right">Qty</th>
+                <th style="width:80px;text-align:right">Remain</th>
+                <th>หมายเหตุ</th>
+                <th style="width:90px">กำหนดรับ</th>
+                <th style="width:40px">$</th>
+                <th style="width:80px;text-align:right">Rate</th>
+              </tr></thead>
+              <tbody>
+                <tr><td>1</td><td>24/03/69</td><td class="col-code">TVPO690324…</td><td>ใบสั่งซื้อเทร…</td><td>HO</td><td>สนง.ใหญ่</td><td>เครื่อง</td><td style="text-align:right">42</td><td style="text-align:right;font-weight:700;color:#B45309">19</td><td style="color:#94A3B8">Normal stock-up</td><td>24/03/69</td><td>฿</td><td style="text-align:right">1.00000</td></tr>
+                <tr class="empty"><td colspan="13">— สิ้นสุดรายการ —</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 4: ค้างส่ง -->
+        <div class="pane" id="t4">
+          <div class="pane-bar">
+            <button class="ref-btn">🔄 Refresh</button>
+            <span style="margin-left:auto;font-size:11px;color:#64748B">รวมค้างส่ง <b style="color:#B91C1C">11 ใบ · 19 เครื่อง</b></span>
+          </div>
+          <div class="pane-body grid">
+            <table class="sub-tbl">
+              <thead><tr>
+                <th style="width:32px">#</th>
+                <th style="width:90px">วันที่สั่ง</th>
+                <th style="width:130px">ใบสั่งขาย</th>
+                <th style="width:120px">กลุ่มเอกสาร</th>
+                <th style="width:70px">คลัง</th>
+                <th style="width:100px">ที่เก็บ</th>
+                <th style="width:60px">หน่วย</th>
+                <th style="width:60px;text-align:right">Qty</th>
+                <th style="width:70px;text-align:right">Remain</th>
+                <th>หมายเหตุ</th>
+              </tr></thead>
+              <tbody>
+                <tr><td>1</td><td>24/06/63</td><td class="col-code">TSRT6306…</td><td>ใบขอโอนสิ…</td><td>AK</td><td>อากาศ</td><td>เครื่อง</td><td style="text-align:right">1</td><td style="text-align:right;color:#B45309">1</td><td style="color:#94A3B8"></td></tr>
+                <tr><td>2</td><td>31/12/63</td><td class="col-code">SWEPO631…</td><td>SWEPO</td><td>SL</td><td>ขายส่ง</td><td>เครื่อง</td><td style="text-align:right">2</td><td style="text-align:right;color:#B45309">2</td><td style="color:#94A3B8">ร้าน อุดมทร…</td></tr>
+                <tr><td>3</td><td>03/04/64</td><td class="col-code">TSRT6404…</td><td>ใบขอโอนสิ…</td><td>AK</td><td>อากาศ</td><td>เครื่อง</td><td style="text-align:right">3</td><td style="text-align:right;color:#B45309">3</td><td style="color:#94A3B8"></td></tr>
+                <tr><td>4</td><td>03/04/64</td><td class="col-code">TSSD6404…</td><td>ใบขอโอนสิ…</td><td>SD</td><td>สว่างฯ</td><td>เครื่อง</td><td style="text-align:right">4</td><td style="text-align:right;color:#B45309">4</td><td style="color:#94A3B8"></td></tr>
+                <tr><td>5</td><td>06/04/64</td><td class="col-code">TNRT6404…</td><td>ใบขอโอนสิ…</td><td>SWE-1</td><td>HaierShop</td><td>เครื่อง</td><td style="text-align:right">2</td><td style="text-align:right;color:#B45309">2</td><td style="color:#94A3B8"></td></tr>
+                <tr><td>6</td><td>29/05/64</td><td class="col-code">TNRT6405…</td><td>ใบขอโอนสิ…</td><td>SWE-1</td><td>HaierShop</td><td>เครื่อง</td><td style="text-align:right">3</td><td style="text-align:right;color:#B45309">3</td><td style="color:#94A3B8"></td></tr>
+                <tr><td>7</td><td>19/05/65</td><td class="col-code">TSRT6505…</td><td>ใบขอโอนสิ…</td><td>AK</td><td>อากาศ</td><td>เครื่อง</td><td style="text-align:right">3</td><td style="text-align:right;color:#B45309">3</td><td style="color:#94A3B8"></td></tr>
+                <tr><td>8</td><td>16/06/65</td><td class="col-code">SWEPO650…</td><td>SWEPO</td><td>HO</td><td>สนง.ใหญ่</td><td>เครื่อง</td><td style="text-align:right">30</td><td style="text-align:right;color:#B45309">30</td><td style="color:#94A3B8">ร้าน ก.เจริญ…</td></tr>
+                <tr><td>9</td><td>06/12/65</td><td class="col-code">03S6512-001</td><td>ใบขอเบิกสา…</td><td>SM</td><td>บ้านม่วง</td><td>เครื่อง</td><td style="text-align:right">1</td><td style="text-align:right;color:#B45309">1</td><td style="color:#94A3B8"></td></tr>
+                <tr><td>10</td><td>20/12/65</td><td class="col-code">TTRT6512…</td><td>ใบขอโอนสิ…</td><td>HO</td><td>สนง.ใหญ่</td><td>เครื่อง</td><td style="text-align:right">1</td><td style="text-align:right;color:#B45309">1</td><td style="color:#94A3B8">เพื่อนำสินค้า…</td></tr>
+                <tr><td>11</td><td>15/02/66</td><td class="col-code">03S6602-009</td><td>ใบขอเบิกสา…</td><td>SM</td><td>บ้านม่วง</td><td>เครื่อง</td><td style="text-align:right">4</td><td style="text-align:right;color:#B45309">4</td><td style="color:#94A3B8"></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 5: รูปสินค้า -->
+        <div class="pane" id="t5">
+          <div class="img-pane">
+            <div class="img-thumb">🧺</div>
+            <div class="img-info">
+              <div class="grp">
+                <label>ชื่อเต็ม</label><span>เครื่องซักผ้า 2 ถัง LG รุ่น TT10NARG ขนาด 10 กก.</span>
+                <label>Brand</label><span>LG</span>
+                <label>Series</label><span>Thinq (2 Tub)</span>
+                <label>รุ่น (Model)</label><span>TT10NARG</span>
+                <label>Barcode</label><span>8801234567890</span>
+                <label>UOM</label><span>เครื่อง · ไม่มี conversion</span>
+              </div>
+              <div class="grp">
+                <label>หมวดสินค้า</label><span>WH-LG-01 Washer</span>
+                <label>Group</label><span>เครื่องใช้ไฟฟ้า · ซัก/อบ</span>
+                <label>Warranty</label><span>12 เดือน · บริษัท</span>
+                <label>Dimension</label><span>960 × 540 × 880 mm · 38 kg</span>
+                <label>Country of Origin</label><span>ไทย</span>
+                <label>VAT</label><span>V07 — 7% Output</span>
+              </div>
+              <div class="grp">
+                <label>ปีที่เริ่มขาย</label><span>2024 (ค.ศ.)</span>
+                <label>สถานะ</label><span style="color:#047857;font-weight:600">Active</span>
+                <label>BC Sync</label><span style="color:#047857">✓ last 2 นาที</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 6: ยอดขายตามช่วงวันที่ -->
+        <div class="pane" id="t6">
+          <div class="pane-bar" style="background:#1E3A5F;color:#fff;border-bottom:1px solid #1E3A5F">
+            <span style="color:#fff;font-weight:700;margin-right:10px">หจก.สกลนครศรีเจริญ</span>
+            <label style="color:#CBD5E1">จากวันที่:</label>
+            <input type="text" value="01/01/2569" style="width:110px">
+            <label style="color:#CBD5E1">ถึงวันที่:</label>
+            <input type="text" value="16/04/2569" style="width:110px">
+            <label style="color:#CBD5E1">Group By:</label>
+            <select><option>No</option><option>Document</option><option>Customer</option><option>Branch</option></select>
+            <button class="ref-btn">…</button>
+            <span style="margin-left:auto;font-size:11px;color:#FCA5A5">⚠ เคสนี้เมนูยังไม่ได้ระบุร้าน</span>
+          </div>
+          <div class="pane-body grid">
+            <table class="sub-tbl">
+              <thead><tr>
+                <th style="width:32px">#</th>
+                <th style="width:85px">DocDate</th>
+                <th style="width:120px">DocNo</th>
+                <th style="width:140px">DocName</th>
+                <th style="width:70px">Unit</th>
+                <th style="width:60px;text-align:right">Qty</th>
+                <th style="width:100px;text-align:right">UnitPrice</th>
+                <th style="width:90px;text-align:right">DiscWord</th>
+                <th>Customer</th>
+                <th style="width:80px">TaxType</th>
+              </tr></thead>
+              <tbody>
+                <tr class="empty"><td colspan="10">— กรุณาเลือกลูกค้าเพื่อดูยอดขาย —</td></tr>
+                <tr class="empty"><td colspan="10"></td></tr>
+                <tr class="empty"><td colspan="10"></td></tr>
+                <tr class="empty"><td colspan="10"></td></tr>
+                <tr class="empty"><td colspan="10"></td></tr>
+                <tr class="empty"><td colspan="10"></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 7: ยอดขายแต่ละคลัง -->
+        <div class="pane" id="t7">
+          <div class="pane-bar">
+            <button class="ref-btn">🔄 Refresh</button>
+            <span style="margin-left:auto;font-size:11px;color:#64748B">ช่วง YTD: 1 ม.ค. 26 → 17 เม.ย. 26 · คำนวณจาก BC Sales Ledger</span>
+          </div>
+          <div class="pane-body grid">
+            <table class="sub-tbl">
+              <thead><tr>
+                <th style="width:32px">#</th>
+                <th>คลังสินค้า</th>
+                <th style="width:70px">หน่วย</th>
+                <th style="width:80px;text-align:right">จุดต่ำสุด</th>
+                <th style="width:70px;text-align:right">สต็อก</th>
+                <th style="width:70px;text-align:right">สั่งขาย</th>
+                <th style="width:70px;text-align:right">สั่งซื้อ</th>
+                <th style="width:70px;text-align:right">YTD</th>
+                <th style="width:70px;text-align:right">WTD</th>
+                <th style="width:70px;text-align:right">Today</th>
+                <th style="width:90px;text-align:right">เฉลี่ย 60 วัน</th>
+              </tr></thead>
+              <tbody>
+                <tr><td>1</td><td>INS</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td></tr>
+                <tr><td>2</td><td>คลังมือถือ</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td></tr>
+                <tr><td>3</td><td>S08</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">5</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600;color:#047857">5</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">0</td></tr>
+                <tr><td>4</td><td>S07</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td></tr>
+                <tr><td>5</td><td>OIR</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td></tr>
+                <tr><td>6</td><td>ST</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">3</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600;color:#047857">2</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">0</td></tr>
+                <tr><td>7</td><td>SM</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">2</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600;color:#047857">5</td><td style="text-align:right;font-weight:600">1</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">0</td></tr>
+                <tr><td>8</td><td>SD</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td></tr>
+                <tr><td>9</td><td>SL</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700;color:#047857"><b>213</b></td><td style="text-align:right;font-weight:600">26</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600">2</td></tr>
+                <tr><td>10</td><td>ONL</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600;color:#047857">1</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td></tr>
+                <tr><td>11</td><td>PM</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 8: Rebate -->
+        <div class="pane" id="t8">
+          <div class="pane-bar">
+            <button class="ref-btn">🔄 Refresh</button>
+            <label>Year:</label>
+            <select><option>2026 · Q1-Q2</option><option>2025</option></select>
+            <span style="margin-left:auto;font-size:11px;color:#64748B">⚖ Rebate ≠ Discount — ดู <b style="color:#2563EB">PM-5 Simulator</b> · <b style="color:#2563EB">PO-7 Dashboard</b></span>
+          </div>
+          <div class="pane-body grid">
+            <table class="sub-tbl">
+              <thead><tr>
+                <th style="width:32px">#</th>
+                <th>Program</th>
+                <th style="width:110px">Period</th>
+                <th style="width:80px">Target</th>
+                <th style="width:80px;text-align:right">Sold (unit)</th>
+                <th style="width:80px;text-align:right">Progress</th>
+                <th style="width:100px;text-align:right">Rebate %</th>
+                <th style="width:110px;text-align:right">Rebate THB</th>
+                <th style="width:100px">Status</th>
+              </tr></thead>
+              <tbody>
+                <tr><td>1</td><td>LG Washer Q2 2026 Sell-In</td><td>Apr-Jun 26</td><td style="text-align:right">100</td><td style="text-align:right;color:#047857">68</td><td style="text-align:right;font-weight:700;color:#B45309">68%</td><td style="text-align:right">3.00%</td><td style="text-align:right;font-weight:700">฿122,236</td><td><span style="color:#B45309;font-weight:600">🟡 กำลังทำ</span></td></tr>
+                <tr><td>2</td><td>LG Loyalty Ladder</td><td>YTD 2026</td><td style="text-align:right">500</td><td style="text-align:right">213</td><td style="text-align:right;color:#B45309">42.6%</td><td style="text-align:right">1.50%</td><td style="text-align:right">฿19,147</td><td><span style="color:#B45309;font-weight:600">🟡 กำลังทำ</span></td></tr>
+                <tr><td>3</td><td>LG Q1 2026 (ปิดแล้ว)</td><td>Jan-Mar 26</td><td style="text-align:right">80</td><td style="text-align:right;color:#047857"><b>87</b></td><td style="text-align:right;font-weight:700;color:#047857">109%</td><td style="text-align:right">2.50%</td><td style="text-align:right;font-weight:700;color:#047857">฿130,282</td><td><span style="color:#047857;font-weight:600">✓ Achieved</span></td></tr>
+                <tr class="empty"><td colspan="9">— สิ้นสุดรายการ —</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer status bar -->
+      <div class="psd-footer">
+        <span class="st-dot"></span>
+        <b>Ready</b> · พบ 3 รายการ · เลือก row 1 ของ 3
+        <div class="spacer"></div>
+        <span class="key-hint">↑↓ เลือก row</span>
+        <span class="key-hint">Enter ใส่ลงเอกสาร</span>
+        <span class="key-hint">Tab สลับ tab</span>
+        <span class="key-hint">Esc ปิด</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+function swTab(e,id){
+  document.querySelectorAll('.dt').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  e.currentTarget.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+function selectRow(row){
+  document.querySelectorAll('.result-tbl tbody tr').forEach(r=>r.classList.remove('selected'));
+  row.classList.add('selected');
+}
+function toggleHistory(btn){
+  btn.classList.toggle('history-active');
+  const banner = document.querySelector('.detail-banner');
+  const tabs = document.querySelector('.detail-tabs');
+  const body = document.querySelector('.detail-body');
+  const footer = document.querySelector('.psd-footer');
+  const show = btn.classList.contains('history-active');
+  [banner,tabs,body].forEach(el=>{ if(el) el.style.display = show ? '' : 'none'; });
+}
+</script>
+
+<!-- SWT_LINK_START -->
+<script src="swt-link.js" defer></script>
+<!-- SWT_LINK_END -->
+
+</body>
+</html>

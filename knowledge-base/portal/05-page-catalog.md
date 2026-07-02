@@ -24,9 +24,10 @@
 | `sl2-reservation-mockup.html` | SL-2 | จองสินค้า + ตัด stock preview | Ref quote, reservation date, item lines |
 | `sl3-deposit-mockup.html` | SL-3 | รับเงินมัดจำ | Amount, payment method, reference order |
 | `sl4-invoice-mockup.html` | SL-4 | บิลขายครบ 5 ส่วน (ใบกำกับ, ใบส่ง, ...) | Invoice detail, VAT breakdown, payment terms |
-| `sl5-crm-followup-mockup.html` | SL-5 | ติดตามลูกค้า / Sales CRM | Activity log, next action, customer status |
-| `sl6-promotion-setup-mockup.html` | SL-6 | ตั้งโปรโมชั่น (B1 conflict rule) | Priority, valid period, applicable items |
-| `sl7-sales-report-mockup.html` | SL-7 | รายงานยอดขาย Dashboard | ยอดขายแยก sales/branch/product |
+| `slcn-credit-memo-mockup.html` | SL-CN | ใบลดหนี้ขาย 3 โหมด (ปรับราคา/คืนบางรายการ/คืนทั้งบิล) | อ้างบิลต้นทาง, รูปแบบเอกสาร auto, gate รอรับของคืน |
+| `_archive/sl5-crm-followup-mockup.html` | SL-5 | 📦 archived 2026-07-02 — CRM เกิน scope P1 | (grill Q10) |
+| `_archive/sl6-promotion-setup-mockup.html` | SL-6 | 📦 archived 2026-07-02 — ย้ายไป PM ใน P2 | (grill Q10) |
+| `_archive/sl7-sales-report-mockup.html` | SL-7 | 📦 archived 2026-07-02 — ยุบเข้า RP-1 | (grill Q10) |
 | `cm1-commission-mockup.html` | CM-1 | คำนวณคอมมิชชั่นรายพนักงาน | Base/Brand/Category bonus, total due |
 
 ---
@@ -35,11 +36,11 @@
 
 | ไฟล์ | Module | วัตถุประสงค์ | ฟิลด์หลัก |
 |-----|--------|-------------|----------|
-| `wh-q-dashboard-mockup.html` | WH-Q | Queue คลังทั้งระบบ (receive/transfer/issue/count) | SLA, priority, aging |
-| `wh1-receive-mockup.html` | WH-1 | รับสินค้า GRN จาก PO | PO ref, expected vs received, serial/lot |
-| `wh3-transfer-mockup.html` | WH-2 | โอนย้ายระหว่างคลัง/สาขา | From-To location, transit, receive status |
-| `wh4-count-mockup.html` | WH-3 | นับสต็อก + ปรับยอด | Count sheet, variance, adjustment reason |
-| `wh-q2-issue-queue-mockup.html` | WH-R | เบิกสินค้า / Goods Issue | Issue type (sales/service), stock card |
+| `wh-queue-mockup.html` | WH-Q | Queue คลังทั้งระบบ (receive/transfer/issue/count) | SLA, priority, aging |
+| `wh1-grn-mockup.html` | WH-1 | รับสินค้า GRN จาก PO | PO ref, expected vs received, serial/lot |
+| `wh2-stock-transfer-mockup.html` | WH-2 | โอนย้ายระหว่างคลัง/สาขา | From-To location, transit, receive status |
+| `wh4-stock-count-mockup.html` | WH-3 | นับสต็อก + ปรับยอด | Count sheet, variance, adjustment reason |
+| `wh3-sales-issue-mockup.html` | WH-R | เบิกสินค้า / Goods Issue | Issue type (sales/service), stock card |
 
 ---
 
@@ -97,7 +98,7 @@
 
 | ไฟล์ | Module | วัตถุประสงค์ | ฟิลด์หลัก |
 |-----|--------|-------------|----------|
-| `cl1-claims-mockup.html` | CL-1/2/3 | รับเคลม + ติดตาม + credit note | Claim type, status flow, refund |
+| `_archive/cl1-claims-mockup.html` | ~~CL-1/2/3~~ | 📦 archived 2026-07-02 — decomposed: เคลม = job type ใน SV-1 · ติดตาม vendor = CLM · ลดหนี้ = PO-CN/SL-CN | ดู `.agents/svc-claim-jobtype-spec.md` |
 
 ---
 

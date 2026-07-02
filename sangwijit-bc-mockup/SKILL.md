@@ -31,7 +31,7 @@ Format: `{module-code}{n}-{slug}-mockup[-v<N>].html`
 ตัวอย่าง:
 - `sl1-quotation-mockup.html`
 - `po4-purchase-order-mockup.html`
-- `wh1-receive-mockup.html`
+- `wh1-grn-mockup.html`
 - `md1-item-master-mockup-v3.html`
 - `cf2-5-tech-template-mockup.html`
 
@@ -249,7 +249,7 @@ Sidebar 240px น้ำเงินเข้ม · 12 กลุ่ม collapsibl
 1. **VAT Golden Rule** — ส่วนลด **ก่อน** VAT เสมอ
 2. **Rebate ≠ Discount** — rebate คืนหลังขาย · discount ลดก่อนขาย
 3. **Dual-Book** — AP Invoice ทุกใบมี Entity Tag (`1 / 2 / 3 / ... / novat`)
-4. **Credit Approval Tier** — SL-F1 และ PO ผ่าน CF-7 Approval Matrix
+4. **Credit Approval Tier** — SL-F1 และ PO ผ่าน CF-2.6 Approval Matrix
 5. **Maker ≠ Checker** — คนทำกับคนอนุมัติต้องต่างคน
 6. **Portal is UI only** — ไม่มี local DB / posting; เลข/สถานะ owned by BC365
 

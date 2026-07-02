@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SV-2 ใบมอบหมายงานซ่อม — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
+.app-container{display:flex;min-height:100vh}
+.main-content{flex:1;margin-left:240px;padding:0;background:#F8FAFC}
+.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.breadcrumb{font-size:13px;color:#6B7280}
+.breadcrumb strong{color:#111827}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.search-box{width:320px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;background:#F9FAFB}
+.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.content-wrapper{padding:24px}
+.page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;gap:16px}
+.page-title{font-size:24px;font-weight:700;color:#111827;margin-bottom:4px}
+.page-title .en{font-size:13px;color:#6B7280;font-weight:500;margin-left:6px}
+.page-subtitle{font-size:13px;color:#6B7280}
+.doc-ids{display:flex;gap:14px;margin-top:10px;align-items:center;flex-wrap:wrap}
+.doc-id{font-size:13px;color:#374151}
+.doc-id b{font-family:'Inter',monospace;color:#111827;font-weight:700}
+.header-actions{display:flex;gap:8px;flex-shrink:0}
+.btn{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.btn-primary{background:#2563EB;color:#fff}
+.btn-secondary{background:#fff;color:#374151;border:1px solid #D1D5DB}
+.btn-success{background:#10B981;color:#fff}
+.btn-ghost{background:transparent;color:#6B7280;border:1px solid transparent}
+
+/* Status badge — hex per design guide */
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:16px;font-size:12px;font-weight:700;color:#fff}
+.sb-draft{background:#BFBFBF}
+.sb-pending{background:#C55A11}
+.sb-confirmed{background:#4472C4}
+.sb-partial{background:#70AD47}
+.sb-posted{background:#375623}
+.sb-cancelled{background:#C00000}
+.sb-scheduled{background:#7030A0}
+.sb-live{background:#00B050}
+.sb-expired{background:#843C0C}
+
+.section-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:20px;margin-bottom:16px}
+.section-title{font-size:15px;font-weight:600;color:#111827;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title .num{font-size:12px;font-weight:700;background:#F3F4F6;color:#6B7280;padding:2px 8px;border-radius:4px;font-family:monospace}
+.section-title .en{font-size:12px;font-weight:500;color:#9CA3AF;margin-left:auto}
+.section-title .tag{font-size:11px;background:#EFF6FF;color:#1E40AF;padding:2px 8px;border-radius:4px;font-weight:600}
+
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 16px}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
+.form-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 16px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;color:#6B7280;font-weight:500;display:flex;gap:6px;align-items:baseline}
+.field label .en{font-size:10.5px;color:#9CA3AF;font-weight:400}
+.field label .req{color:#C55A11;margin-left:2px}
+.field input,.field select,.field textarea{padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;font-family:inherit;background:#fff;color:#111827;outline:none;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#4472C4;background:#fff}
+.field input[readonly]{background:#F9FAFB;color:#374151}
+.field textarea{min-height:58px;resize:vertical;line-height:1.5}
+.field .value{font-size:14px;color:#111827;padding:8px 10px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:6px;min-height:36px;display:flex;align-items:center}
+.field .value a{color:#4472C4;font-weight:600;text-decoration:none}
+.field .value a:hover{text-decoration:underline}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#F9FAFB;padding:10px;text-align:left;font-weight:600;color:#374151;border-bottom:1px solid #E5E7EB;font-size:12px;text-transform:uppercase;letter-spacing:0.05em}
+td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.chip-green{background:#D1FAE5;color:#065F46}
+.chip-yellow{background:#FEF3C7;color:#92400E}
+.chip-red{background:#FEE2E2;color:#991B1B}
+.chip-blue{background:#DBEAFE;color:#1E40AF}
+.chip-gray{background:#F3F4F6;color:#374151}
+
+/* Tech picker grid */
+.tech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:8px}
+.tech-card{border:2px solid #E5E7EB;border-radius:10px;padding:14px;cursor:pointer;background:#fff;transition:all 0.15s;position:relative}
+.tech-card:hover{border-color:#93C5FD;background:#F8FAFC}
+.tech-card.selected{border-color:#4472C4;background:#EFF6FF}
+.tech-card .tc-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.tech-card .tc-avatar{width:36px;height:36px;border-radius:50%;background:#4472C4;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.tech-card .tc-name{font-size:14px;font-weight:700;color:#111827}
+.tech-card .tc-code{font-size:11px;color:#6B7280;font-family:monospace;margin-top:1px}
+.tech-card .tc-meta{font-size:11.5px;color:#6B7280;line-height:1.5}
+.tech-card .tc-meta b{color:#374151}
+.tech-card .tc-workload{margin-top:8px;display:flex;align-items:center;gap:8px;font-size:11px}
+.tech-card .tc-workload .bar{flex:1;height:6px;background:#E5E7EB;border-radius:3px;overflow:hidden}
+.tech-card .tc-workload .fill{height:100%;background:#4472C4;border-radius:3px}
+.tech-card .tc-workload.busy .fill{background:#C55A11}
+.tech-card .tc-workload.full .fill{background:#C00000}
+.tech-card .tc-skills{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.tech-card .tc-skill{font-size:10px;background:#F0F9FF;color:#1E40AF;padding:2px 6px;border-radius:3px;font-weight:600}
+.tech-card.selected .tc-check{position:absolute;top:10px;right:10px;width:22px;height:22px;background:#4472C4;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+.tech-card .tc-check{display:none}
+
+/* Tabs */
+.tabs{display:flex;gap:0;border-bottom:2px solid #E5E7EB;margin-bottom:16px}
+.tab-btn{padding:10px 16px;border:none;background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:#6B7280;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;display:flex;align-items:center;gap:6px}
+.tab-btn:hover{color:#4472C4}
+.tab-btn.active{color:#4472C4;border-bottom-color:#4472C4}
+.tab-btn .dot{width:6px;height:6px;border-radius:50%;background:#C55A11}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* Timeline (SC7) */
+.timeline-list{display:flex;flex-direction:column;gap:12px}
+.tl-item{display:flex;gap:12px;align-items:flex-start}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:#D1D5DB;margin-top:5px;flex-shrink:0}
+.tl-item.done .tl-dot{background:#375623}
+.tl-item.active .tl-dot{background:#4472C4;box-shadow:0 0 0 4px rgba(68,114,196,0.15)}
+.tl-content{flex:1}
+.tl-title{font-size:13px;font-weight:600;color:#111827}
+.tl-meta{font-size:11.5px;color:#6B7280;margin-top:1px}
+
+/* SLA banner */
+.sla-banner{background:linear-gradient(90deg,#FEF3C7 0%,#FFFBEB 100%);border:1px solid #FCD34D;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.sla-banner .ico{font-size:24px}
+.sla-banner .txt{flex:1;font-size:13px;color:#92400E}
+.sla-banner .txt b{color:#78350F;font-weight:700}
+.sla-banner .countdown{background:#fff;border:1px solid #FCD34D;padding:6px 14px;border-radius:8px;font-size:14px;font-weight:700;color:#92400E;font-variant-numeric:tabular-nums}
+
+/* Customer notification options */
+.notif-group{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.notif-card{border:2px solid #E5E7EB;border-radius:8px;padding:12px;cursor:pointer;background:#fff;display:flex;align-items:center;gap:10px;transition:all 0.15s}
+.notif-card:hover{border-color:#93C5FD}
+.notif-card.selected{border-color:#4472C4;background:#EFF6FF}
+.notif-card .nc-ico{font-size:22px}
+.notif-card .nc-title{font-size:12.5px;font-weight:700;color:#111827}
+.notif-card .nc-meta{font-size:10.5px;color:#6B7280;margin-top:1px}
+
+/* Footer */
+.footer-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid #E5E7EB;padding:14px 24px;margin:24px -24px -24px;display:flex;gap:8px;align-items:center;box-shadow:0 -4px 12px rgba(0,0,0,0.05);z-index:40}
+.footer-actions .spacer{flex:1}
+.footer-actions .hint{font-size:12px;color:#6B7280}
+</style>
+</head>
+<body>
+
+
+<div class="app-container"><div class="main-content"><div class="topbar">
+<div class="breadcrumb">หน้าแรก › ศูนย์บริการ › <strong>SV-2 ใบมอบหมายงานซ่อม</strong></div>
+<div class="topbar-right">
+<input class="search-box" placeholder="ค้นหา... (Ctrl+K)">
+<span>🔔</span>
+<span class="branch-tag">BKK-Service · SWE</span>
+<div class="avatar">P</div>
+</div>
+</div><div class="content-wrapper">
+
+<!-- Section 1: Main Header (SL-4 pattern) -->
+<header class="swt-mh">
+  <div class="swt-mh-left">
+    <div class="swt-mh-title">
+      <div class="swt-mh-ico">📋</div>
+      <div>
+        <h1>ใบมอบหมายงานซ่อม</h1>
+        <p>Service Assignment (SV-2)</p>
+      </div>
+    </div>
+    <div class="swt-mh-divider"></div>
+    <div class="swt-mh-meta">
+      <div class="swt-mh-meta-item"><div class="lbl">เลขที่ใบมอบหมาย</div><div class="val">JA-SV1-2604-0089</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">อ้างอิง SV-1</div><div class="val">SV-SV1-2604-0146</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">วันที่-เวลา</div><div class="val">23 เม.ย. 26 · 14:35</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">สาขา</div><div class="val">BKK-Service</div></div>
+    </div>
+  </div>
+  <div class="swt-mh-right">
+    <span class="swt-mh-badge draft">🕓 รอมอบหมาย</span>
+    <button class="swt-mh-btn swt-mh-btn-ghost">📄 พิมพ์</button>
+    <button class="swt-mh-btn swt-mh-btn-ghost">💾 Draft</button>
+    <button class="swt-mh-btn swt-mh-btn-primary">✓ มอบหมาย + แจ้งช่าง</button>
+  </div>
+</header>
+
+<!-- SLA Banner -->
+<div class="sla-banner">
+  <span class="ico">⏰</span>
+  <div class="txt">
+    <b>SLA Target:</b> ต้องมอบหมายช่างภายใน 24 ชม. จากเวลารับเรื่อง · รับเรื่องเมื่อ <b>23 เม.ย. 26 · 14:20 น.</b> — ครบกำหนด <b>24 เม.ย. 26 · 14:20 น.</b>
+  </div>
+  <div class="countdown">เหลือ 18:42:15</div>
+</div>
+
+<!-- Row: Customer (SL-4 compact) + Doc extras -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+
+  <div class="swt-cust-card">
+    <div class="swt-cust-head">
+      <div class="swt-cust-title"><span class="ico">👤</span>SV-2.1 · ลูกค้า <span style="font-size:9px;background:#F3F4F6;color:#6B7280;padding:1px 5px;border-radius:3px;font-weight:700;margin-left:4px">SC-1 · Read-only จาก SV-1</span></div>
+      <div class="swt-cust-head-spacer"></div>
+      <a href="md2-customer-master-mockup-v3.html" class="swt-cust-btn">👁️ ดูบัตร</a>
+    </div>
+
+    <div class="swt-cust-grid">
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">รหัส · ชื่อ</div>
+        <div class="swt-cust-value"><span class="highlight">C-00125</span> · คุณสมหญิง เจริญสุข</div>
+      </div>
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">เบอร์ · LINE</div>
+        <div class="swt-cust-value">081-xxx-1234 · @somying</div>
+      </div>
+    </div>
+
+    <div class="swt-credit-line">
+      <div class="cell"><span class="lbl">ประกัน</span><span class="val g">ในประกัน</span></div>
+      <div class="cell"><span class="lbl">Tier</span><span class="val b">VIP 2</span></div>
+      <div class="cell"><span class="lbl">สินค้า</span><span class="val m">Daikin FTKM24</span></div>
+      <div class="cell"><span class="lbl">Vendor Claim</span><span class="val g">✓ DKN-0089</span></div>
+    </div>
+
+    <details class="swt-addr">
+      <summary>📍 ที่อยู่บริการ &amp; หมายเหตุสถานที่ (SC-4)</summary>
+      <div class="swt-addr-line"><strong>🏠 ที่บริการ</strong>123 ซ.สุขุมวิท 71 แขวงคลองตัน เขตวัฒนา กรุงเทพฯ 10110</div>
+      <div class="swt-addr-line"><strong>📝 หมายเหตุ</strong>ชั้น 5 ของตึก ห้อง A · เข้าประตูใหญ่แจ้งยาม · ลิฟต์ตัวกลาง</div>
+      <div class="swt-addr-line"><strong>🗺️ แผนที่</strong>BKK-Service → 123 ซ.สุขุมวิท 71 · ~8 กม. · ~25 นาที</div>
+    </details>
+  </div>
+
+  <div class="swt-cust-card">
+    <div class="swt-cust-head">
+      <div class="swt-cust-title"><span class="ico">📋</span>SV-2.2 · ข้อมูลเอกสาร &amp; งาน</div>
+      <div class="swt-cust-head-spacer"></div>
+    </div>
+
+    <div class="swt-cust-grid">
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">ประเภทงาน</div>
+        <div class="swt-cust-value"><span class="chip chip-blue" style="display:inline-flex;padding:2px 6px;border-radius:3px;font-size:10px;background:#DBEAFE;color:#1E40AF;font-weight:600">🔧 ซ่อม</span> · แอร์ Daikin Inverter</div>
+      </div>
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">Priority</div>
+        <div class="swt-cust-value">
+          <select style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"><option>🟡 ปกติ (Normal)</option><option>🔴 เร่งด่วน</option><option>🟢 ไม่รีบ</option></select>
+        </div>
+      </div>
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">วันที่มอบหมาย <span style="color:#C55A11">*</span></div>
+        <div class="swt-cust-value"><input value="23 เม.ย. 26" style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"></div>
+      </div>
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">SLA Target</div>
+        <div class="swt-cust-value warn">ซ่อมเสร็จ ≤ 3 วันทำการ · 26 เม.ย. 26</div>
+      </div>
+    </div>
+
+    <details class="swt-addr">
+      <summary>⚙️ ตั้งค่าขั้นสูง (Entity · Sync · ผู้มอบหมาย)</summary>
+      <div class="swt-addr-line"><strong>Entity Tag</strong>1 · SWT (Dual-Book)</div>
+      <div class="swt-addr-line"><strong>ผู้มอบหมาย</strong>คุณปภาวรินทร์ · ADM-002 · BKK-Service</div>
+      <div class="swt-addr-line"><strong>BC Sync</strong>🔄 Live API · จะ sync เมื่อกด "มอบหมาย + แจ้งช่าง"</div>
+    </details>
+  </div>
+</div>
+
+<!-- Section 4: Item / Symptom (read-only from SV-1) -->
+<div class="section-card">
+  <div class="section-title"><span class="num">SV-2.3</span> รายการสินค้าและอาการ <span class="en">Item &amp; Symptom</span> <span class="tag" style="margin-left:auto">SC-2 + SC-8 · Read-only</span></div>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:180px">รหัสสินค้า</th>
+        <th>ชื่อ / รุ่น</th>
+        <th style="width:160px">Serial No.</th>
+        <th style="width:110px">ประกัน</th>
+        <th>อาการที่แจ้ง</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-family:monospace">AC-DAI-FTKM24</td>
+        <td>Daikin FTKM24SV2S<br><span style="font-size:11px;color:#6B7280">Inverter 24k BTU · 2 HP</span></td>
+        <td style="font-family:monospace">SN 1234567890</td>
+        <td><span class="chip chip-green">🟢 ในประกัน</span><br><span style="font-size:10px;color:#6B7280;margin-top:2px;display:block">Comp 7 ปี (Daikin TH)</span></td>
+        <td>เปิดแล้วไม่เย็น · มีน้ำหยดจากเครื่องตัวเมียข้างใน · ได้ยินเสียงดังตอนคอมทำงาน</td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="margin-top:14px;padding:12px;background:#F9FAFB;border-radius:6px;font-size:12.5px;color:#374151">
+    <b>ประมาณการจาก SV-1:</b> ค่าอะไหล่ ฿8,500 · ค่าแรง ฿1,500 · ค่าเดินทาง ฿300 · <b>รวม ฿10,300</b> <span style="color:#6B7280">(ตัดสินใจใน SV-4 Admin)</span>
+  </div>
+</div>
+
+<!-- Section 5: Tabs — Appointment / Pre-Parts / Notify / Ref / Timeline -->
+<div class="section-card">
+  <div class="section-title"><span class="num">SV-2.4</span> รายละเอียดการมอบหมาย <span class="en">Assignment Details</span></div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(event,'tab-tech')">👷 เลือกช่าง <span class="en">/ Technician</span></button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-slot')">📅 วันเวลานัด <span class="en">/ Schedule</span></button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-prep')">🧰 เบิกอะไหล่ล่วงหน้า <span class="en">/ Pre-Parts</span><span class="dot"></span></button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-notify')">📱 แจ้งลูกค้า+ช่าง <span class="en">/ Notify</span></button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-ref')">🔗 อ้างอิง <span class="en">/ Reference</span></button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-tl')">🕑 Timeline <span class="en">/ SC-7</span></button>
+  </div>
+
+  <!-- Tab 1: Choose Tech -->
+  <div class="tab-pane active" id="tab-tech">
+    <div style="margin-bottom:12px;font-size:12.5px;color:#6B7280">
+      เลือกช่างที่มีทักษะตรงงาน · ดูภาระงานวันนั้น · <strong>Maker ≠ Checker</strong> — ผู้มอบหมาย ≠ ช่างที่รับ
+    </div>
+
+    <div style="margin-bottom:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <span style="font-size:12px;color:#6B7280">ประเภท:</span>
+      <select style="padding:5px 10px;font-size:12px;border:1px solid #E5E7EB;border-radius:5px"><option>ทั้งหมด</option><option>🏢 ช่างภายใน (Internal)</option><option>🚚 ช่างภายนอก (Outsource)</option></select>
+      <span style="font-size:12px;color:#6B7280;margin-left:8px">ทักษะ:</span>
+      <select style="padding:5px 10px;font-size:12px;border:1px solid #E5E7EB;border-radius:5px"><option>แอร์ + Inverter</option><option>แอร์ทั่วไป</option><option>ตู้เย็น</option><option>เครื่องซักผ้า</option></select>
+      <span style="font-size:12px;color:#6B7280;margin-left:8px">สาขา:</span>
+      <select style="padding:5px 10px;font-size:12px;border:1px solid #E5E7EB;border-radius:5px"><option>ทั้งหมด</option><option>BKK</option><option>รังสิต</option><option>บางนา</option></select>
+    </div>
+
+    <div class="tech-grid">
+      <label class="tech-card selected">
+        <div class="tc-check">✓</div>
+        <input type="radio" name="tech" value="007" checked style="display:none">
+        <div class="tc-head">
+          <div class="tc-avatar">สม</div>
+          <div>
+            <div class="tc-name">สมศักดิ์ ดีเยี่ยม</div>
+            <div class="tc-code"><a href="md4-employee-master-mockup-v3.html" style="color:#4472C4;text-decoration:none">TECH-007</a> · ช่างภายใน · BKK-Service</div>
+          </div>
+        </div>
+        <div class="tc-meta">
+          <div>📞 087-123-4567</div>
+          <div>⭐ <b>4.9</b> (128 งาน) · ทำเสร็จตรงเวลา <b>97%</b></div>
+          <div>💵 อัตราค่าแรง: ฿250/ชม. (Incentive จ่ายต่องาน)</div>
+        </div>
+        <div class="tc-workload busy">
+          <span>ภาระวันนี้</span>
+          <div class="bar"><div class="fill" style="width:66%"></div></div>
+          <b>2/3 งาน</b>
+        </div>
+        <div class="tc-skills">
+          <span class="tc-skill">แอร์</span><span class="tc-skill">Inverter</span><span class="tc-skill">ตู้เย็น</span>
+        </div>
+      </label>
+
+      <label class="tech-card">
+        <div class="tc-check">✓</div>
+        <input type="radio" name="tech" value="012" style="display:none">
+        <div class="tc-head">
+          <div class="tc-avatar" style="background:#6B7280">วช</div>
+          <div>
+            <div class="tc-name">วิชัย ใจดี</div>
+            <div class="tc-code">TECH-012 · ช่างภายใน · รังสิต</div>
+          </div>
+        </div>
+        <div class="tc-meta">
+          <div>📞 086-789-0123</div>
+          <div>⭐ <b>4.7</b> (95 งาน) · ตรงเวลา <b>92%</b></div>
+          <div>💵 อัตราค่าแรง: ฿220/ชม.</div>
+        </div>
+        <div class="tc-workload">
+          <span>ภาระวันนี้</span>
+          <div class="bar"><div class="fill" style="width:33%"></div></div>
+          <b>1/3 งาน</b>
+        </div>
+        <div class="tc-skills">
+          <span class="tc-skill">แอร์</span><span class="tc-skill">ซักผ้า</span>
+        </div>
+      </label>
+
+      <label class="tech-card">
+        <div class="tc-check">✓</div>
+        <input type="radio" name="tech" value="019" style="display:none">
+        <div class="tc-head">
+          <div class="tc-avatar" style="background:#C55A11">สย</div>
+          <div>
+            <div class="tc-name">สมยศ รวดเร็ว <span class="chip chip-yellow" style="font-size:9px;margin-left:3px">Outsource</span></div>
+            <div class="tc-code">OUT-VDR-019 · ช่างภายนอก · <a href="md3-vendor-master-mockup-v3.html" style="color:#4472C4;text-decoration:none">V-AC-102</a></div>
+          </div>
+        </div>
+        <div class="tc-meta">
+          <div>📞 083-456-7890</div>
+          <div>⭐ <b>4.6</b> (42 งาน) · ตรงเวลา <b>90%</b></div>
+          <div>💵 ค่าแรง AP: ฿500/งาน (ตั้งหนี้ Vendor)</div>
+        </div>
+        <div class="tc-workload full">
+          <span>ภาระวันนี้</span>
+          <div class="bar"><div class="fill" style="width:100%"></div></div>
+          <b style="color:#C00000">3/3 เต็ม</b>
+        </div>
+        <div class="tc-skills">
+          <span class="tc-skill">แอร์</span><span class="tc-skill">Inverter</span>
+        </div>
+      </label>
+    </div>
+
+    <div style="margin-top:14px;padding:12px 14px;background:#EFF6FF;border:1px solid #93C5FD;border-radius:8px;font-size:12.5px;color:#1E40AF">
+      <strong>✓ เลือก TECH-007 สมศักดิ์ ดีเยี่ยม</strong> — ทักษะครบ (แอร์+Inverter) · ภาระ 2/3 · อยู่ BKK (ใกล้ลูกค้า) · ⭐ 4.9
+    </div>
+  </div>
+
+  <!-- Tab 2: Schedule -->
+  <div class="tab-pane" id="tab-slot">
+    <div class="form-grid">
+      <div class="field"><label>วันที่นัด <span class="en">Appointment Date</span> <span class="req">*</span></label><input value="25 เม.ย. 26 (ศุกร์)"></div>
+      <div class="field"><label>ช่วงเวลา <span class="en">Time Slot</span> <span class="req">*</span></label>
+        <select><option>🌤️ 09:00 - 12:00 (เช้า)</option><option>☀️ 13:00 - 17:00 (บ่าย)</option><option>🕐 ระบุเวลาเป๊ะ...</option></select>
+      </div>
+      <div class="field"><label>เวลาเข้างาน <span class="en">Start Time</span></label><input value="10:00 น."></div>
+      <div class="field"><label>เวลาคาดเสร็จ <span class="en">Expected End</span></label><input value="12:30 น. (~2.5 ชม.)"></div>
+      <div class="field"><label>สถานที่นัด <span class="en">Location</span></label>
+        <select><option>🏠 ที่บ้านลูกค้า (SC-4)</option><option>🏢 สาขา BKK-Service</option><option>📍 ที่อื่น (ระบุ)</option></select>
+      </div>
+      <div class="field"><label>รูปแบบนัด <span class="en">Visit Type</span></label>
+        <select><option>🚐 ไปให้ถึงที่</option><option>🏢 ลูกค้านำมาสาขา</option></select>
+      </div>
+    </div>
+    <div style="margin-top:14px;font-size:12.5px;color:#374151">
+      <b>📍 เส้นทาง:</b> BKK-Service (บางรัก) → 123 ซ.สุขุมวิท 71 · ระยะทาง ~8 กม. · ~25 นาที (Google Maps)
+      <a href="#" style="color:#4472C4;margin-left:8px">🗺️ ดูแผนที่</a>
+    </div>
+  </div>
+
+  <!-- Tab 3: Pre-parts -->
+  <div class="tab-pane" id="tab-prep">
+    <div style="margin-bottom:12px;font-size:12.5px;color:#6B7280">
+      ถ้ารู้ล่วงหน้าว่าต้องใช้อะไหล่ใด ให้เบิกจาก SV-3 ก่อน · ถ้าไม่มีในสต็อก ให้สั่งผ่าน SV-Order
+    </div>
+    <table>
+      <thead>
+        <tr><th style="width:160px">Part No.</th><th>ชื่อ</th><th style="width:80px" class="num">จำนวน</th><th style="width:100px">สต็อก</th><th style="width:130px">วิธี</th><th style="width:120px">สถานะ</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-family:monospace">DAI-COMP-2HP-01</td>
+          <td>Compressor 2 HP (Daikin)</td>
+          <td class="num">1</td>
+          <td><span class="chip chip-green">มี 3 ชิ้น</span></td>
+          <td><a href="sv3-spare-part-issue-mockup.html" style="color:#4472C4;font-size:12px;font-weight:600">🗃️ เบิกจากสต็อก</a></td>
+          <td><span class="status-badge sb-confirmed" style="font-size:10px;padding:3px 8px">✓ เบิกแล้ว</span></td>
+        </tr>
+        <tr>
+          <td style="font-family:monospace">REF-GAS-R32-1KG</td>
+          <td>น้ำยา R32 1 กก.</td>
+          <td class="num">1</td>
+          <td><span class="chip chip-green">มี 12 ชิ้น</span></td>
+          <td><a href="sv3-spare-part-issue-mockup.html" style="color:#4472C4;font-size:12px;font-weight:600">🗃️ เบิกจากสต็อก</a></td>
+          <td><span class="status-badge sb-draft" style="font-size:10px;padding:3px 8px">⚪ รอเบิก</span></td>
+        </tr>
+        <tr>
+          <td style="font-family:monospace">DAI-PAN-STD-12</td>
+          <td>ถาดน้ำทิ้ง 12k BTU</td>
+          <td class="num">1</td>
+          <td><span class="chip chip-red">หมด!</span></td>
+          <td><a href="sv-order-parts-request-mockup.html" style="color:#C55A11;font-size:12px;font-weight:600">🛒 สั่งซื้อ</a></td>
+          <td><span class="status-badge sb-pending" style="font-size:10px;padding:3px 8px">⏳ รอสั่งอะไหล่</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="btn btn-secondary" style="margin-top:12px">+ เพิ่มรายการ</button>
+  </div>
+
+  <!-- Tab 4: Notify -->
+  <div class="tab-pane" id="tab-notify">
+    <div style="margin-bottom:12px;font-size:12.5px;color:#6B7280">เลือกช่องทางแจ้งลูกค้าว่านัดเรียบร้อย + แจ้งช่าง</div>
+
+    <div style="font-size:13px;font-weight:600;color:#374151;margin-bottom:8px">แจ้งลูกค้า (Customer Notification)</div>
+    <div class="notif-group">
+      <label class="notif-card selected">
+        <span class="nc-ico">💬</span>
+        <div>
+          <div class="nc-title">SMS</div>
+          <div class="nc-meta">081-xxx-1234</div>
+        </div>
+      </label>
+      <label class="notif-card selected">
+        <span class="nc-ico">💚</span>
+        <div>
+          <div class="nc-title">LINE OA</div>
+          <div class="nc-meta">@somying</div>
+        </div>
+      </label>
+      <label class="notif-card">
+        <span class="nc-ico">📧</span>
+        <div>
+          <div class="nc-title">Email</div>
+          <div class="nc-meta">somying@email.com</div>
+        </div>
+      </label>
+      <label class="notif-card">
+        <span class="nc-ico">📞</span>
+        <div>
+          <div class="nc-title">โทรยืนยัน</div>
+          <div class="nc-meta">แอดมินโทร</div>
+        </div>
+      </label>
+    </div>
+
+    <div style="font-size:13px;font-weight:600;color:#374151;margin:18px 0 8px">แจ้งช่าง (Technician Dispatch)</div>
+    <div class="notif-group">
+      <label class="notif-card selected">
+        <span class="nc-ico">📲</span>
+        <div>
+          <div class="nc-title">Push Mobile</div>
+          <div class="nc-meta">SWT Tech App</div>
+        </div>
+      </label>
+      <label class="notif-card selected">
+        <span class="nc-ico">💚</span>
+        <div>
+          <div class="nc-title">LINE กลุ่ม</div>
+          <div class="nc-meta">BKK-Tech Team</div>
+        </div>
+      </label>
+      <label class="notif-card">
+        <span class="nc-ico">💬</span>
+        <div>
+          <div class="nc-title">SMS</div>
+          <div class="nc-meta">087-123-4567</div>
+        </div>
+      </label>
+      <label class="notif-card">
+        <span class="nc-ico">📄</span>
+        <div>
+          <div class="nc-title">พิมพ์ใบงาน</div>
+          <div class="nc-meta">แจกหน้าร้าน</div>
+        </div>
+      </label>
+    </div>
+
+    <div class="form-grid-2" style="margin-top:18px">
+      <div class="field"><label>ข้อความถึงลูกค้า <span class="en">Customer Message</span></label>
+        <textarea>คุณสมหญิงค่ะ · ช่างสมศักดิ์ TECH-007 จะเข้าบริการวันศุกร์ที่ 25 เม.ย. 69 เวลา 10:00-12:30 น. · ที่อยู่: 123 ซ.สุขุมวิท 71 · ติดต่อช่าง 087-123-4567 · แสงวิจิตร 🙏</textarea>
+      </div>
+      <div class="field"><label>ข้อความถึงช่าง <span class="en">Tech Briefing</span></label>
+        <textarea>งาน JA-SV1-2604-0089 · ลูกค้าคุณสมหญิง 081-xxx-1234 · Daikin FTKM24 SN1234567890 (ในประกัน) · อาการ: ไม่เย็น+น้ำหยด · พกอะไหล่: Compressor 2HP + R32 1กก. · ถาดน้ำทิ้งรอสั่ง</textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 5: Reference -->
+  <div class="tab-pane" id="tab-ref">
+    <table>
+      <thead><tr><th style="width:140px">เอกสาร</th><th>เลขที่ / Link</th><th style="width:150px">วันที่</th><th style="width:110px">สถานะ</th></tr></thead>
+      <tbody>
+        <tr><td><strong>ใบรับงานซ่อม</strong></td><td><a href="sv1-service-intake-mockup.html" style="color:#4472C4;font-family:monospace;font-weight:700">SV-SV1-2604-0146</a></td><td>23 เม.ย. 26</td><td><span class="status-badge sb-confirmed" style="font-size:10px;padding:3px 8px">✓ รอมอบหมาย</span></td></tr>
+        <tr><td><strong>บิลขายต้นทาง</strong></td><td><a href="sl4-invoice-mockup.html" style="color:#4472C4;font-family:monospace;font-weight:700">SI-2406-0128</a> · 32,900 ฿</td><td>10 มิ.ย. 24</td><td><span class="status-badge sb-posted" style="font-size:10px;padding:3px 8px">✓ Posted</span></td></tr>
+        <tr><td><strong>Vendor Claim Ref</strong></td><td>DKN-CLM-2604-0089 · Daikin Thailand</td><td>23 เม.ย. 26</td><td><span class="chip chip-green">✓ รับเคลม</span></td></tr>
+        <tr><td><strong>ประวัติลูกค้า</strong></td><td>ไม่มีประวัติซ่อมเดิมกับเรา</td><td>—</td><td><span class="chip chip-gray">—</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Tab 6: Timeline (SC-7) -->
+  <div class="tab-pane" id="tab-tl">
+    <div class="timeline-list">
+      <div class="tl-item done"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">รับเรื่องซ่อม (SV-1)</div><div class="tl-meta">23 เม.ย. 26 · 14:20 น. · คุณปภาวรินทร์ · สาขา BKK</div></div></div>
+      <div class="tl-item active"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">ใบมอบหมายสร้าง (SV-2 · ปัจจุบัน)</div><div class="tl-meta">23 เม.ย. 26 · 14:35 น. · คุณปภาวรินทร์ · กำลังเลือกช่าง</div></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">ช่างกดรับงาน (Acknowledge)</div><div class="tl-meta">รอ — ช่างจะกดรับใน Mobile App หลังได้รับแจ้ง</div></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">เริ่มงาน (SV-5 Job Card)</div><div class="tl-meta">รอ · นัด 25 เม.ย. 26 · 10:00 น.</div></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><div class="tl-title">ปิดงาน (SV-4 + SV-7)</div><div class="tl-meta">รอ — admin รับจากช่าง → ส่งลูกค้าเซ็น</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Section 6: Summary -->
+<div class="section-card">
+  <div class="section-title"><span class="num">SV-2.5</span> สรุปก่อนมอบหมาย <span class="en">Pre-Assign Summary</span></div>
+  <div class="form-grid-4">
+    <div class="field"><label>ช่างที่จะมอบหมาย</label><div class="value">TECH-007 · สมศักดิ์</div></div>
+    <div class="field"><label>วันเวลานัด</label><div class="value">25 เม.ย. 26 · 10:00 น.</div></div>
+    <div class="field"><label>อะไหล่พร้อม</label><div class="value">2/3 รายการ · 1 รอสั่ง</div></div>
+    <div class="field"><label>SLA Status</label><div class="value"><span class="status-badge sb-live" style="font-size:10px;padding:3px 8px">🟢 ภายใน SLA</span></div></div>
+  </div>
+</div>
+
+<!-- Section 7: Action Bar -->
+<div class="footer-actions">
+  <div class="hint">🔒 กด "มอบหมาย" จะ: Post ไป BC (Status: <b>Assigned</b>) · แจ้งช่างผ่าน LINE+Push · แจ้งลูกค้าผ่าน SMS+LINE · สร้าง SV-5 Job Card Draft</div>
+  <div class="spacer"></div>
+  <button class="btn btn-ghost">❌ ยกเลิก</button>
+  <button class="btn btn-secondary">💾 บันทึก Draft</button>
+  <button class="btn btn-success">✓ มอบหมาย + แจ้งช่าง → SV-5</button>
+</div>
+
+</div></div></div>
+
+<script>
+function switchTab(e,id){
+  var card=e.target.closest('.section-card');
+  card.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  card.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  e.target.closest('.tab-btn').classList.add('active');
+  card.querySelector('#'+id).classList.add('active');
+}
+document.querySelectorAll('.tech-card').forEach(function(c){
+  c.addEventListener('click',function(){
+    document.querySelectorAll('.tech-card').forEach(function(x){x.classList.remove('selected');});
+    c.classList.add('selected');
+    c.querySelector('input').checked=true;
+  });
+});
+document.querySelectorAll('.notif-card').forEach(function(c){
+  c.addEventListener('click',function(){c.classList.toggle('selected');});
+});
+</script>
+<script src="swt-link.js"></script>
+<script src="swt-sidebar.js"></script>
+</body>
+</html>

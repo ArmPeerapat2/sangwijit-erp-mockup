@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>SV-6 Job Queue — จัดส่ง & ติดตั้ง | Sangwijit ERP Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+  /* ═══════════════════════════════════════════════════════════
+     SV-6 Job Queue — Delivery & Installation
+     Focus: admin-only queue management, sticky assignment
+     ═══════════════════════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', 'Noto Sans Thai', sans-serif;
+    background: #F3F4F6;
+    color: #111827;
+    min-width: 1440px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .layout { display: flex; min-height: 100vh; }
+  .main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* ─── TOPBAR ─── */
+  .topbar {
+    height: 56px; background: #fff; border-bottom: 1px solid #E5E7EB;
+    display: flex; align-items: center; padding: 0 24px; gap: 16px;
+    position: sticky; top: 0; z-index: 40;
+  }
+  .topbar-breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6B7280; }
+  .topbar-breadcrumb .current { color: #2563EB; font-weight: 600; }
+  .topbar-breadcrumb .sep { color: #D1D5DB; }
+  .topbar-spacer { flex: 1; }
+  .topbar-search {
+    display: flex; align-items: center; gap: 8px;
+    background: #F3F4F6; border-radius: 8px; padding: 6px 12px;
+    font-size: 13px; color: #9CA3AF; width: 220px;
+  }
+  .topbar-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #F3F4F6; cursor: pointer; font-size: 16px; }
+  .topbar-avatar { width: 32px; height: 32px; border-radius: 50%; background: #2563EB; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; }
+  .branch-tag { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1D4ED8; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
+
+  /* ─── MAIN HEADER ─── */
+  .main-header {
+    background: linear-gradient(90deg, #1E3A5F 0%, #2563EB 100%);
+    color: #fff; padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    position: sticky; top: 56px; z-index: 30;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .mh-left { display: flex; align-items: center; gap: 18px; }
+  .mh-title { display: flex; align-items: center; gap: 10px; }
+  .mh-title .ico { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .mh-title h1 { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; }
+  .mh-title p { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 1px; }
+  .mh-divider { width: 1px; height: 32px; background: rgba(255,255,255,0.2); }
+  .mh-meta { display: flex; gap: 20px; }
+  .mh-meta-item .lbl { font-size: 10px; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.04em; }
+  .mh-meta-item .val { font-size: 13px; font-weight: 700; margin-top: 1px; font-family: 'Inter', monospace; }
+  .mh-right { display: flex; align-items: center; gap: 8px; }
+  .mh-btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 13px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid transparent; font-family: inherit; }
+  .mh-btn-ghost { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.2); }
+  .mh-btn-ghost:hover { background: rgba(255,255,255,0.22); }
+  .mh-btn-primary { background: #10B981; color: #fff; }
+  .mh-btn-primary:hover { background: #059669; }
+
+  /* ─── CONTENT ─── */
+  .content { flex: 1; padding: 16px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+  /* ─── KPI STRIP ─── */
+  .kpi-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .kpi-card {
+    background: #fff; border: 1px solid #E5E7EB; border-radius: 8px;
+    padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;
+    position: relative; overflow: hidden;
+  }
+  .kpi-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: currentColor;
+  }
+  .kpi-card.neutral { color: #6B7280; }
+  .kpi-card.warn    { color: #F59E0B; }
+  .kpi-card.info    { color: #2563EB; }
+  .kpi-card.success { color: #10B981; }
+  .kpi-card.danger  { color: #EF4444; }
+  .kpi-label { font-size: 10.5px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.04em; display: flex; align-items: center; gap: 5px; }
+  .kpi-value { font-size: 26px; font-weight: 800; color: #0F172A; font-family: 'Inter', monospace; letter-spacing: -0.5px; line-height: 1.1; }
+  .kpi-delta { font-size: 11px; color: #6B7280; }
+
+  /* ─── CARD ─── */
+  .card {
+    background: #fff; border-radius: 8px; border: 1px solid #E5E7EB;
+    padding: 14px; overflow: hidden;
+  }
+  .card-header {
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 10px; border-bottom: 1px solid #F3F4F6; margin-bottom: 10px;
+  }
+  .card-title { font-size: 13px; font-weight: 700; color: #1F2937; display: flex; align-items: center; gap: 6px; }
+  .card-spacer { flex: 1; }
+  .card-btn {
+    padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 600;
+    background: transparent; border: 1px solid #E5E7EB; color: #6B7280;
+    cursor: pointer; font-family: inherit;
+  }
+  .card-btn:hover { background: #F9FAFB; color: #2563EB; border-color: #BFDBFE; }
+  .card-btn.primary { background: #EFF6FF; border-color: #BFDBFE; color: #2563EB; }
+
+  /* ─── QUEUE LAYOUT ─── */
+  .queue-layout { display: grid; grid-template-columns: 1fr 300px; gap: 16px; }
+
+  /* Filters */
+  .queue-filters {
+    display: flex; gap: 6px; padding: 10px 14px; margin: 0;
+    border-bottom: 1px solid #F3F4F6; flex-wrap: wrap;
+  }
+  .q-filter-btn {
+    padding: 5px 12px; border-radius: 5px; font-size: 11.5px;
+    border: 1px solid #E5E7EB; background: #fff; color: #6B7280;
+    cursor: pointer; font-family: inherit; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .q-filter-btn .cnt { background: #F3F4F6; color: #6B7280; padding: 1px 6px; border-radius: 8px; font-size: 10px; font-weight: 700; }
+  .q-filter-btn.active { background: #2563EB; color: #fff; border-color: #2563EB; font-weight: 700; }
+  .q-filter-btn.active .cnt { background: rgba(255,255,255,0.25); color: #fff; }
+  .q-filter-btn.warn-flash { color: #B45309; border-color: #FCD34D; background: #FEF3C7; }
+  .q-filter-btn.warn-flash .cnt { background: #F59E0B; color: #fff; }
+  .q-filter-btn.danger-flash { color: #991B1B; border-color: #FCA5A5; background: #FEF2F2; }
+  .q-filter-btn.danger-flash .cnt { background: #EF4444; color: #fff; }
+
+  /* Job Cards (Queue) */
+  .queue-list { padding: 14px; display: flex; flex-direction: column; gap: 10px; max-height: 640px; overflow-y: auto; }
+  .job-card {
+    border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden;
+    background: #fff; display: grid; grid-template-columns: 6px 1fr;
+    transition: border-color 0.15s;
+  }
+  .job-card:hover { border-color: #2563EB; }
+  .job-card .status-bar { background: #9CA3AF; }
+  .job-card.pending .status-bar   { background: #F59E0B; }
+  .job-card.assigned .status-bar  { background: #3B82F6; }
+  .job-card.progress .status-bar  { background: #10B981; }
+  .job-card.partial .status-bar   { background: #F59E0B; }
+  .job-card.completed .status-bar { background: #6B7280; }
+  .job-card.delayed .status-bar   { background: #EF4444; }
+  .job-card.delayed { border-color: #FCA5A5; background: #FEF2F2; }
+  .job-body { padding: 12px 14px; }
+
+  .job-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .job-id { font-family: 'Inter', monospace; font-size: 12.5px; font-weight: 800; color: #2563EB; letter-spacing: -0.3px; }
+  .job-inv-ref { font-size: 11px; color: #6B7280; }
+  .job-inv-ref a { color: #2563EB; font-weight: 600; font-family: 'Inter', monospace; }
+  .job-urgency { margin-left: auto; }
+
+  .job-cust {
+    font-size: 12.5px; color: #374151; display: grid;
+    grid-template-columns: auto 1fr auto; gap: 4px 10px;
+    align-items: center; margin-bottom: 6px;
+  }
+  .job-cust .name { font-weight: 700; color: #0F172A; }
+  .job-cust .phone { color: #2563EB; font-family: 'Inter', monospace; }
+  .job-addr { font-size: 11.5px; color: #6B7280; margin-bottom: 8px; line-height: 1.5; }
+  .job-addr::before { content: '📍 '; }
+
+  .job-items {
+    font-size: 11.5px; color: #334155;
+    background: #F8FAFC; border-radius: 5px; padding: 6px 10px; margin-bottom: 8px;
+  }
+  .job-items .item-line { display: flex; gap: 8px; align-items: center; padding: 2px 0; }
+  .job-items .item-qty { font-family: 'Inter', monospace; font-weight: 700; color: #1E40AF; min-width: 28px; }
+
+  .job-meta {
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    font-size: 11px; color: #6B7280; margin-bottom: 8px;
+  }
+  .job-meta .meta-item { display: inline-flex; align-items: center; gap: 4px; }
+  .job-meta .meta-item b { color: #0F172A; font-weight: 700; }
+  .job-meta .meta-item.warn b { color: #B45309; }
+
+  .job-tech {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    padding: 6px 10px; background: #EFF6FF; border: 1px solid #BFDBFE;
+    border-radius: 5px; margin-bottom: 8px; font-size: 11.5px;
+  }
+  .job-tech .tech-ico { font-size: 14px; }
+  .job-tech .tech-name { font-weight: 700; color: #1E40AF; }
+  .job-tech .tech-ref { color: #2563EB; font-family: 'Inter', monospace; font-size: 10.5px; }
+  .job-tech .sticky-lock { margin-left: auto; background: #F59E0B; color: #fff; padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+
+  .job-actions {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    padding-top: 8px; border-top: 1px dashed #E5E7EB;
+  }
+  .job-btn {
+    padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 600;
+    cursor: pointer; border: 1px solid; font-family: inherit;
+  }
+  .job-btn.primary { background: #2563EB; color: #fff; border-color: #2563EB; }
+  .job-btn.primary:hover { background: #1D4ED8; }
+  .job-btn.success { background: #10B981; color: #fff; border-color: #10B981; }
+  .job-btn.warn    { background: #FEF3C7; color: #92400E; border-color: #FCD34D; }
+  .job-btn.ghost   { background: transparent; color: #6B7280; border-color: #E5E7EB; }
+  .job-btn.danger  { background: transparent; color: #EF4444; border-color: #FECACA; }
+
+  /* ─── Tech Panel (right sidebar) ─── */
+  .tech-panel { padding: 0; overflow: hidden; height: fit-content; }
+  .tech-panel .card-header { padding: 12px 14px; margin: 0; border-bottom: 1px solid #E5E7EB; }
+  .tech-list { display: flex; flex-direction: column; gap: 0; }
+  .tech-row {
+    padding: 10px 14px; border-bottom: 1px solid #F3F4F6;
+    display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center;
+  }
+  .tech-row:last-child { border-bottom: none; }
+  .tech-row:hover { background: #FAFBFC; cursor: pointer; }
+  .tech-name { font-size: 12px; font-weight: 700; color: #0F172A; }
+  .tech-type { font-size: 9.5px; padding: 2px 7px; border-radius: 10px; font-weight: 700; letter-spacing: 0.03em; }
+  .tech-type.internal { background: #DBEAFE; color: #1E40AF; }
+  .tech-type.outsource { background: #FEF3C7; color: #92400E; }
+  .tech-stats { font-size: 10.5px; color: #6B7280; font-family: 'Inter', monospace; grid-column: 1 / -1; }
+  .tech-bar { grid-column: 1 / -1; height: 5px; background: #F1F5F9; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+  .tech-bar .fill { height: 100%; transition: width 0.3s; }
+  .tech-bar .fill.low  { background: #10B981; }
+  .tech-bar .fill.mid  { background: #F59E0B; }
+  .tech-bar .fill.high { background: #EF4444; }
+
+  /* ─── CALENDAR ─── */
+  .cal-tabs { display: flex; gap: 2px; padding: 10px 14px; border-bottom: 1px solid #F3F4F6; }
+  .cal-tab {
+    padding: 6px 16px; border-radius: 5px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 1px solid #E5E7EB; background: #fff; color: #6B7280;
+    font-family: inherit;
+  }
+  .cal-tab.active { background: #2563EB; color: #fff; border-color: #2563EB; }
+
+  .cal-grid {
+    padding: 14px; display: grid;
+    grid-template-columns: 80px repeat(5, 1fr);
+    gap: 1px; background: #E5E7EB; border-radius: 6px; overflow: hidden;
+  }
+  .cal-grid.week { grid-template-columns: 80px repeat(7, 1fr); }
+  .cal-head {
+    background: #F1F5F9; padding: 8px 10px; font-size: 11px;
+    font-weight: 700; color: #334155; text-align: center;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .cal-head.today { background: #2563EB; color: #fff; }
+  .cal-slot-label {
+    background: #F8FAFC; padding: 10px 8px; font-size: 10.5px;
+    font-weight: 700; color: #64748B; text-align: center;
+    border-right: 2px solid #E5E7EB;
+  }
+  .cal-cell {
+    background: #fff; padding: 4px; min-height: 56px;
+    position: relative; font-size: 10.5px;
+  }
+  .cal-cell:hover { background: #FAFBFC; cursor: pointer; }
+  .cal-job {
+    display: block; padding: 4px 6px; border-radius: 3px;
+    font-size: 10px; font-weight: 600; margin-bottom: 2px;
+    line-height: 1.3;
+  }
+  .cal-job.assigned { background: #DBEAFE; color: #1E40AF; border-left: 3px solid #3B82F6; }
+  .cal-job.progress { background: #D1FAE5; color: #065F46; border-left: 3px solid #10B981; }
+  .cal-job.partial { background: #FEF3C7; color: #92400E; border-left: 3px solid #F59E0B; }
+  .cal-cell.empty::after { content: '—'; color: #CBD5E1; display: block; text-align: center; line-height: 48px; }
+  .cal-cell.conflict { background: #FEF2F2; }
+  .cal-cell.conflict::before { content: '⚠'; position: absolute; top: 2px; right: 4px; color: #EF4444; font-size: 11px; font-weight: 700; }
+
+  /* ─── MODALS ─── */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 1000; display: none; align-items: flex-start; justify-content: center; padding: 40px 20px; overflow-y: auto; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 10px; box-shadow: 0 20px 60px rgba(15,23,42,0.3); width: 100%; max-width: 640px; overflow: hidden; }
+  .modal.sm  { max-width: 480px; }
+  .modal.md  { max-width: 720px; }
+  .modal-head { padding: 14px 18px; background: linear-gradient(180deg, #1E3A5F 0%, #172A47 100%); color: #fff; display: flex; align-items: center; gap: 10px; }
+  .modal-head .ico { font-size: 15px; }
+  .modal-head .ttl { flex: 1; font-size: 13px; font-weight: 600; }
+  .modal-head .sub { font-size: 10.5px; color: rgba(255,255,255,0.7); margin-top: 1px; }
+  .modal-close-x { width: 24px; height: 22px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 13px; cursor: pointer; opacity: 0.75; color: #fff; border: none; background: transparent; }
+  .modal-close-x:hover { background: #DC2626; opacity: 1; }
+  .modal-body { padding: 18px; max-height: 70vh; overflow-y: auto; font-size: 13px; }
+  .modal-foot { padding: 12px 18px; background: #F8FAFC; border-top: 1px solid #E5E7EB; display: flex; gap: 8px; justify-content: flex-end; }
+
+  .btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid transparent; font-family: inherit; }
+  .btn-primary { background: #2563EB; color: #fff; }
+  .btn-success { background: #10B981; color: #fff; }
+  .btn-danger { background: #EF4444; color: #fff; }
+  .btn-outline { background: #fff; color: #374151; border-color: #E5E7EB; }
+  .btn-ghost { background: transparent; color: #6B7280; }
+
+  .form-label { font-size: 10.5px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 4px; display: block; }
+  .form-input, .form-select, .form-textarea { width: 100%; padding: 7px 10px; border: 1px solid #CBD5E1; border-radius: 5px; font-size: 12.5px; font-family: inherit; outline: none; background: #fff; }
+  .form-input:focus, .form-select:focus { border-color: #2563EB; box-shadow: 0 0 0 2px rgba(37,99,235,0.1); }
+  .form-textarea { min-height: 60px; resize: vertical; }
+  .field-row { margin-bottom: 12px; }
+  .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .required { color: #EF4444; }
+  .helper { font-size: 10.5px; color: #6B7280; margin-top: 3px; }
+
+  ::-webkit-scrollbar { width: 7px; height: 7px; }
+  ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <span>Service</span><span class="sep">›</span><span class="current">Job Queue</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">🔍 Search...</div>
+      <div class="topbar-icon">🔔</div>
+      <div class="branch-tag">HQ</div>
+      <div class="topbar-avatar">สช</div>
+    </div>
+
+    <!-- MAIN HEADER -->
+    <header class="main-header">
+      <div class="mh-left">
+        <div class="mh-title">
+          <div class="ico">🚚</div>
+          <div>
+            <h1>SV-6 จัดส่ง & ติดตั้ง</h1>
+            <p>Job Queue · Admin Dispatch</p>
+          </div>
+        </div>
+        <div class="mh-divider"></div>
+        <div class="mh-meta">
+          <div class="mh-meta-item"><div class="lbl">วันนี้</div><div class="val">22 เม.ย. 26 · พุธ</div></div>
+          <div class="mh-meta-item"><div class="lbl">งานทั้งหมด</div><div class="val">24</div></div>
+          <div class="mh-meta-item"><div class="lbl">ช่างว่าง</div><div class="val">3/5</div></div>
+          <div class="mh-meta-item"><div class="lbl">SLA</div><div class="val" style="color:#FCA5A5;">1 เกิน</div></div>
+        </div>
+      </div>
+      <div class="mh-right">
+        <a href="slq-sales-queue-mockup.html" class="mh-btn mh-btn-ghost">💼 Sales Queue</a>
+        <button class="mh-btn mh-btn-ghost" onclick="alert('Export queue to CSV')">📥 Export</button>
+        <button class="mh-btn mh-btn-primary" onclick="openAssignModal()">+ มอบหมายงาน</button>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ─── KPI STRIP ─── -->
+      <div class="kpi-strip">
+        <div class="kpi-card warn">
+          <div class="kpi-label">🕒 รอมอบหมาย</div>
+          <div class="kpi-value">5</div>
+          <div class="kpi-delta">จาก SL-4 เมื่อวาน · <b style="color:#B45309">ด่วน 1</b></div>
+        </div>
+        <div class="kpi-card info">
+          <div class="kpi-label">🔵 มอบหมายแล้ว</div>
+          <div class="kpi-value">8</div>
+          <div class="kpi-delta">รอเริ่มงานวันนี้</div>
+        </div>
+        <div class="kpi-card success">
+          <div class="kpi-label">🟢 กำลังทำ</div>
+          <div class="kpi-value">4</div>
+          <div class="kpi-delta">ช่าง check-in แล้ว</div>
+        </div>
+        <div class="kpi-card warn">
+          <div class="kpi-label">⏳ ค้างส่ง (Partial)</div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-delta">รอช่างกลับไปจบ</div>
+        </div>
+        <div class="kpi-card danger">
+          <div class="kpi-label">⚠️ เกิน SLA</div>
+          <div class="kpi-value">1</div>
+          <div class="kpi-delta">JOB-0186 · เลย 1 วัน</div>
+        </div>
+      </div>
+
+      <!-- ─── QUEUE + TECH PANEL ─── -->
+      <div class="queue-layout">
+
+        <div class="card" style="padding:0">
+          <div class="card-header" style="padding:12px 14px;margin:0">
+            <div class="card-title">📋 SV-6.1 · Job Queue — คิวงานติดตั้ง/จัดส่ง</div>
+            <div class="card-spacer"></div>
+            <button class="card-btn">📅 Calendar view</button>
+            <button class="card-btn primary" onclick="openAssignModal()">+ สร้าง Job</button>
+          </div>
+
+          <div class="queue-filters">
+            <button class="q-filter-btn active">ทั้งหมด <span class="cnt">24</span></button>
+            <button class="q-filter-btn warn-flash">🕒 รอมอบหมาย <span class="cnt">5</span></button>
+            <button class="q-filter-btn">🔵 มอบหมายแล้ว <span class="cnt">8</span></button>
+            <button class="q-filter-btn">🟢 กำลังทำ <span class="cnt">4</span></button>
+            <button class="q-filter-btn warn-flash">⏳ ค้างส่ง <span class="cnt">3</span></button>
+            <button class="q-filter-btn">✓ เสร็จ <span class="cnt">3</span></button>
+            <button class="q-filter-btn danger-flash">⚠️ เกิน SLA <span class="cnt">1</span></button>
+          </div>
+
+          <div class="queue-list">
+
+            <!-- JOB 1: Delayed/SLA Breach -->
+            <div class="job-card delayed">
+              <div class="status-bar"></div>
+              <div class="job-body">
+                <div class="job-head">
+                  <span class="job-id">JOB-26-0186</span>
+                  <span class="job-inv-ref">from <a href="sl4-invoice-mockup.html">INV-26-0028</a></span>
+                  <span class="job-urgency swt-chip danger">⚠️ เกิน SLA 1 วัน</span>
+                </div>
+                <div class="job-cust">
+                  <span class="name">ร้าน ELD อิเล็คทรอนิคส์</span>
+                  <span class="phone">02-111-2233</span>
+                  <span class="swt-chip info">Corporate</span>
+                </div>
+                <div class="job-addr">88/1 ถ.บางนา-ตราด แขวงบางนา กรุงเทพฯ 10260</div>
+                <div class="job-items">
+                  <div class="item-line"><span class="item-qty">×2</span> แอร์ LG 18k BTU (ติดตั้ง)</div>
+                  <div class="item-line"><span class="item-qty">×1</span> ตู้เย็น Samsung (จัดส่ง+ติดตั้ง)</div>
+                </div>
+                <div class="job-meta">
+                  <span class="meta-item">📅 <b>นัด 21 เม.ย.</b> (เมื่อวาน)</span>
+                  <span class="meta-item warn">🕒 <b>13:00-17:00</b> (ลูกค้าไม่อยู่บ้าน)</span>
+                  <span class="meta-item">🚚 ระยะ 42 กม.</span>
+                </div>
+                <div class="job-tech">
+                  <span class="tech-ico">👷</span>
+                  <span class="tech-name">ช่างวิชัย (Internal)</span>
+                  <span class="tech-ref">TECH-008</span>
+                  <span class="sticky-lock">🔒 Sticky</span>
+                </div>
+                <div class="job-actions">
+                  <button class="job-btn primary" onclick="openAssignModal()">📅 นัดใหม่</button>
+                  <button class="job-btn warn" onclick="openReassignModal()">🔓 Reassign (Admin)</button>
+                  <button class="job-btn ghost" onclick="alert('Escalate to manager')">⚠ Escalate</button>
+                  <button class="job-btn ghost">👁 รายละเอียด</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- JOB 2: Pending Assignment -->
+            <div class="job-card pending">
+              <div class="status-bar"></div>
+              <div class="job-body">
+                <div class="job-head">
+                  <span class="job-id">JOB-26-0201</span>
+                  <span class="job-inv-ref">from <a href="sl4-invoice-mockup.html">INV-26-0042</a></span>
+                  <span class="job-urgency swt-chip warn">🆕 ใหม่ · รอมอบหมาย</span>
+                </div>
+                <div class="job-cust">
+                  <span class="name">คุณวิชัย สุขสมบูรณ์</span>
+                  <span class="phone">081-234-5678</span>
+                  <span class="swt-chip neutral">Individual</span>
+                </div>
+                <div class="job-addr">99/1 หมู่บ้านสุขสันต์ ถ.ลาดพร้าว กรุงเทพฯ 10230</div>
+                <div class="job-items">
+                  <div class="item-line"><span class="item-qty">×2</span> Daikin FTKM35 12k BTU (INS-AC-9k12k)</div>
+                  <div class="item-line"><span class="item-qty">×1</span> Mitsubishi MSY-GN18 18k BTU (INS-AC-18k24k)</div>
+                </div>
+                <div class="job-meta">
+                  <span class="meta-item">📅 <b>นัด 25 เม.ย.</b> (อีก 3 วัน)</span>
+                  <span class="meta-item">🕒 <b>13:00-17:00</b></span>
+                  <span class="meta-item">🚚 ระยะ 18 กม.</span>
+                  <span class="meta-item">📦 Bundle × 3 · อุปกรณ์ 6 รายการ</span>
+                </div>
+                <div class="job-actions">
+                  <button class="job-btn primary" onclick="openAssignModal()">👷 มอบหมายช่าง</button>
+                  <button class="job-btn ghost" onclick="openSplitModal()">✂️ Split (1→N)</button>
+                  <button class="job-btn ghost">👁 รายละเอียด</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- JOB 3: Assigned -->
+            <div class="job-card assigned">
+              <div class="status-bar"></div>
+              <div class="job-body">
+                <div class="job-head">
+                  <span class="job-id">JOB-26-0198</span>
+                  <span class="job-inv-ref">from <a href="sl4-invoice-mockup.html">INV-26-0040</a></span>
+                  <span class="job-urgency swt-chip info">🔵 มอบหมายแล้ว</span>
+                </div>
+                <div class="job-cust">
+                  <span class="name">คุณสมหญิง เจริญสุข</span>
+                  <span class="phone">081-xxx-1234</span>
+                </div>
+                <div class="job-addr">123 ซ.สุขุมวิท 71 คลองตันเหนือ กรุงเทพฯ 10110</div>
+                <div class="job-items">
+                  <div class="item-line"><span class="item-qty">×1</span> Samsung AR13TY 12k BTU (INS-AC-9k12k)</div>
+                </div>
+                <div class="job-meta">
+                  <span class="meta-item">📅 <b>นัด 24 เม.ย.</b> (พรุ่งนี้)</span>
+                  <span class="meta-item">🕒 <b>13:00-17:00</b></span>
+                </div>
+                <div class="job-tech">
+                  <span class="tech-ico">👷</span>
+                  <span class="tech-name">สมศักดิ์ ดีเยี่ยม</span>
+                  <span class="tech-ref">TECH-007 · Internal</span>
+                  <span class="sticky-lock">🔒 Sticky</span>
+                </div>
+                <div class="job-actions">
+                  <button class="job-btn ghost">✏️ Edit</button>
+                  <button class="job-btn warn" onclick="openReassignModal()">🔓 Reassign (Admin)</button>
+                  <button class="job-btn ghost">💬 แจ้งช่าง</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- JOB 4: In Progress -->
+            <div class="job-card progress">
+              <div class="status-bar"></div>
+              <div class="job-body">
+                <div class="job-head">
+                  <span class="job-id">JOB-26-0195</span>
+                  <span class="job-inv-ref">from <a href="sl4-invoice-mockup.html">INV-26-0038</a></span>
+                  <span class="job-urgency swt-chip success">🟢 กำลังทำ · ช่าง check-in</span>
+                </div>
+                <div class="job-cust">
+                  <span class="name">ร้าน ก.ล้าน อิเล็คทรอนิคส์</span>
+                  <span class="phone">02-222-3344</span>
+                  <span class="swt-chip info">Dealer</span>
+                </div>
+                <div class="job-addr">45/6 ถ.รัชดาภิเษก แขวงดินแดง กรุงเทพฯ 10400</div>
+                <div class="job-items">
+                  <div class="item-line"><span class="item-qty">×2</span> LG Washer TopLoad (INS-WM-TopLoad)</div>
+                </div>
+                <div class="job-meta">
+                  <span class="meta-item">📅 <b>22 เม.ย.</b> (วันนี้)</span>
+                  <span class="meta-item">🕒 <b>09:00-12:00</b> · เริ่มแล้ว 09:15</span>
+                  <span class="meta-item" style="color:#10B981"><b>⏱ ใช้ไป 1h 45m</b></span>
+                </div>
+                <div class="job-tech">
+                  <span class="tech-ico">👷</span>
+                  <span class="tech-name">ประเสริฐ ใจดี</span>
+                  <span class="tech-ref">TECH-012 · Internal</span>
+                  <span class="sticky-lock">🔒 Sticky</span>
+                </div>
+                <div class="job-actions">
+                  <button class="job-btn success" onclick="openCloseModal()">✓ ปิดงาน (Admin ตรวจรับ)</button>
+                  <button class="job-btn warn" onclick="openPartialModal()">⏳ มี Partial</button>
+                  <button class="job-btn ghost">📷 Photos</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- JOB 5: Partial (ค้างส่ง) -->
+            <div class="job-card partial">
+              <div class="status-bar"></div>
+              <div class="job-body">
+                <div class="job-head">
+                  <span class="job-id">JOB-26-0192</span>
+                  <span class="job-inv-ref">from <a href="sl4-invoice-mockup.html">INV-26-0035</a></span>
+                  <span class="job-urgency swt-chip warn">⏳ ค้างส่ง 1/2 · รอจบ</span>
+                </div>
+                <div class="job-cust">
+                  <span class="name">คุณมณี รุ่งเรือง</span>
+                  <span class="phone">089-876-5432</span>
+                </div>
+                <div class="job-addr">77/88 ซ.รามคำแหง 24 หัวหมาก กรุงเทพฯ 10240</div>
+                <div class="job-items">
+                  <div class="item-line" style="color:#10B981;text-decoration:line-through"><span class="item-qty">×1</span> ✓ Daikin 12k (ติดตั้งเสร็จ · ผ่าน QA)</div>
+                  <div class="item-line" style="color:#B45309"><span class="item-qty">×1</span> ⏳ Daikin 18k (ยังไม่ติดตั้ง · ขาดท่อยาว)</div>
+                </div>
+                <div class="job-meta">
+                  <span class="meta-item">📅 <b>นัดแรก 20 เม.ย.</b></span>
+                  <span class="meta-item warn">📅 <b>นัดใหม่ 26 เม.ย.</b> 13:00-17:00</span>
+                  <span class="meta-item">📝 Admin note: ลูกค้ารออะไหล่</span>
+                </div>
+                <div class="job-tech">
+                  <span class="tech-ico">👷</span>
+                  <span class="tech-name">ช่างวิชัย (Outsource)</span>
+                  <span class="tech-ref">V-00034 · ลาดพร้าว</span>
+                  <span class="sticky-lock">🔒 Sticky (ช่างเดิม)</span>
+                </div>
+                <div class="job-actions">
+                  <button class="job-btn primary" onclick="openPartialModal()">📝 บันทึก Partial</button>
+                  <button class="job-btn ghost">🔧 เบิกอะไหล่เสริม</button>
+                  <button class="job-btn warn" onclick="openReassignModal()">🔓 Reassign (Admin)</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- JOB 6: Completed -->
+            <div class="job-card completed">
+              <div class="status-bar"></div>
+              <div class="job-body" style="opacity:0.7">
+                <div class="job-head">
+                  <span class="job-id">JOB-26-0188</span>
+                  <span class="job-inv-ref">from <a href="sl4-invoice-mockup.html">INV-26-0030</a></span>
+                  <span class="job-urgency swt-chip success">✓ เสร็จ · รอ AP</span>
+                </div>
+                <div class="job-cust">
+                  <span class="name">บจก. ABC เทรดดิ้ง</span>
+                  <span class="phone">02-555-6677</span>
+                  <span class="swt-chip info">Corporate</span>
+                </div>
+                <div class="job-addr">555 อาคาร ABC ถ.สีลม กรุงเทพฯ 10500</div>
+                <div class="job-items">
+                  <div class="item-line" style="color:#10B981"><span class="item-qty">×3</span> ✓ Mitsubishi MSY 12k (ติดตั้งเสร็จทั้งหมด)</div>
+                </div>
+                <div class="job-meta">
+                  <span class="meta-item">📅 เสร็จเมื่อ 21 เม.ย. 16:45</span>
+                  <span class="meta-item"><b>⏱ รวม 3h 30m</b></span>
+                  <span class="meta-item">⭐⭐⭐⭐⭐ (ลูกค้าให้)</span>
+                </div>
+                <div class="job-tech">
+                  <span class="tech-ico">👷</span>
+                  <span class="tech-name">สมหญิง ขายเก่ง</span>
+                  <span class="tech-ref">TECH-014 · Internal</span>
+                </div>
+                <div class="job-actions">
+                  <button class="job-btn success" onclick="alert('สร้าง Payroll entry ให้ TECH-014')">💰 Trigger Payroll</button>
+                  <button class="job-btn ghost">📷 POD</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tech Panel -->
+        <div class="card tech-panel">
+          <div class="card-header">
+            <div class="card-title">👷 SV-6.2 · ช่างประจำวัน</div>
+            <div class="card-spacer"></div>
+            <button class="card-btn">+ เพิ่ม</button>
+          </div>
+          <div class="tech-list">
+            <div class="tech-row">
+              <span class="tech-name">สมศักดิ์ ดีเยี่ยม</span>
+              <span class="tech-type internal">Internal</span>
+              <span class="tech-stats">TECH-007 · <b style="color:#0F172A">3/4 slots</b> · 75% · AC expert</span>
+              <div class="tech-bar"><div class="fill mid" style="width:75%"></div></div>
+            </div>
+            <div class="tech-row">
+              <span class="tech-name">ประเสริฐ ใจดี</span>
+              <span class="tech-type internal">Internal</span>
+              <span class="tech-stats">TECH-012 · <b style="color:#10B981">2/4 slots</b> · 50% · Trainee</span>
+              <div class="tech-bar"><div class="fill low" style="width:50%"></div></div>
+            </div>
+            <div class="tech-row">
+              <span class="tech-name">วิชัย แซ่ลิ้ม</span>
+              <span class="tech-type internal">Internal</span>
+              <span class="tech-stats">TECH-008 · <b style="color:#EF4444">4/4 slots</b> · 100% · FULL</span>
+              <div class="tech-bar"><div class="fill high" style="width:100%"></div></div>
+            </div>
+            <div class="tech-row">
+              <span class="tech-name">สมหญิง ขายเก่ง</span>
+              <span class="tech-type internal">Internal</span>
+              <span class="tech-stats">TECH-014 · <b style="color:#10B981">1/4 slots</b> · 25% · ว่าง</span>
+              <div class="tech-bar"><div class="fill low" style="width:25%"></div></div>
+            </div>
+            <div class="tech-row" style="border-top:2px dashed #F1F5F9">
+              <span class="tech-name">วิชัย ต.ลาดพร้าว</span>
+              <span class="tech-type outsource">Outsource</span>
+              <span class="tech-stats">V-00034 · <b style="color:#10B981">1/3 jobs</b> · Partial JC-0192</span>
+              <div class="tech-bar"><div class="fill low" style="width:33%"></div></div>
+            </div>
+            <div class="tech-row">
+              <span class="tech-name">สมหมาย ต่างจว.</span>
+              <span class="tech-type outsource">Outsource</span>
+              <span class="tech-stats">V-00057 · <b style="color:#10B981">0/3 jobs</b> · ว่าง</span>
+              <div class="tech-bar"><div class="fill low" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /queue-layout -->
+
+      <!-- ─── CALENDAR ─── -->
+      <div class="card" style="padding:0">
+        <div class="card-header" style="padding:12px 14px;margin:0">
+          <div class="card-title">🗓️ SV-6.3 · Calendar · Slot Planner</div>
+          <div class="card-spacer"></div>
+          <button class="card-btn">🔍 Filter by ช่าง</button>
+        </div>
+
+        <div class="cal-tabs">
+          <button class="cal-tab active" onclick="swCalTab(this, 'today')">📌 วันนี้ (22 เม.ย.)</button>
+          <button class="cal-tab" onclick="swCalTab(this, 'week')">🗓️ สัปดาห์นี้</button>
+        </div>
+
+        <!-- TODAY view -->
+        <div id="cal-today" class="cal-grid">
+          <div class="cal-head">Slot</div>
+          <div class="cal-head">สมศักดิ์</div>
+          <div class="cal-head">ประเสริฐ</div>
+          <div class="cal-head">วิชัย ซ.</div>
+          <div class="cal-head">สมหญิง</div>
+          <div class="cal-head">วิชัย นอก</div>
+
+          <div class="cal-slot-label">08:00<br>12:00</div>
+          <div class="cal-cell"><span class="cal-job assigned">JOB-0198<br>Samsung 12k</span></div>
+          <div class="cal-cell"><span class="cal-job progress">JOB-0195<br>LG Washer ×2</span></div>
+          <div class="cal-cell conflict"><span class="cal-job assigned">JOB-0186⚠<br>LG 18k ×2</span></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+
+          <div class="cal-slot-label">13:00<br>17:00</div>
+          <div class="cal-cell"><span class="cal-job assigned">JOB-0199<br>แอร์ MIT ×1</span></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell"><span class="cal-job assigned">JOB-0200<br>ตู้เย็น SAM</span></div>
+          <div class="cal-cell"><span class="cal-job assigned">JOB-0202<br>Daikin ×2</span></div>
+          <div class="cal-cell partial"><span class="cal-job partial">JOB-0192<br>ค้าง Daikin 18k</span></div>
+
+          <div class="cal-slot-label">17:00<br>21:00</div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+
+          <div class="cal-slot-label">ทั้งวัน<br>ไกล</div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+        </div>
+
+        <!-- WEEK view -->
+        <div id="cal-week" class="cal-grid week" style="display:none">
+          <div class="cal-head">ช่าง</div>
+          <div class="cal-head">จ. 21</div>
+          <div class="cal-head today">พ. 22 ✓</div>
+          <div class="cal-head">พฤ. 23</div>
+          <div class="cal-head">ศ. 24</div>
+          <div class="cal-head">ส. 25</div>
+          <div class="cal-head">อา. 26</div>
+          <div class="cal-head">จ. 27</div>
+
+          <div class="cal-slot-label">สมศักดิ์</div>
+          <div class="cal-cell"><span class="cal-job assigned">JC-0189</span></div>
+          <div class="cal-cell"><span class="cal-job assigned">JC-0198</span><span class="cal-job assigned">JC-0199</span></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell"><span class="cal-job assigned">JC-0203</span></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+
+          <div class="cal-slot-label">ประเสริฐ</div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell"><span class="cal-job progress">JC-0195</span></div>
+          <div class="cal-cell"><span class="cal-job assigned">JC-0204</span></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+
+          <div class="cal-slot-label">วิชัย ซ.</div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell conflict"><span class="cal-job assigned">JC-0186⚠</span><span class="cal-job assigned">JC-0200</span></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+
+          <div class="cal-slot-label">สมหญิง</div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell"><span class="cal-job assigned">JC-0202</span></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell"><span class="cal-job assigned">JC-0201</span></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+
+          <div class="cal-slot-label">วิชัย นอก</div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell partial"><span class="cal-job partial">JC-0192</span></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+          <div class="cal-cell empty"></div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+
+<!-- MODAL 1: ASSIGN TECH -->
+<div class="modal-overlay" id="mAssign">
+  <div class="modal md" onclick="event.stopPropagation()">
+    <div class="modal-head" style="background:linear-gradient(180deg,#2563EB 0%,#1D4ED8 100%)">
+      <span class="ico">👷</span>
+      <div style="flex:1"><div class="ttl">มอบหมายช่าง (Assign Technician)</div><div class="sub">JOB-26-0201 · INV-26-0042 · คุณวิชัย สุขสมบูรณ์</div></div>
+      <button class="modal-close-x" onclick="closeModal('mAssign')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-row">
+        <label class="form-label">เลือกช่าง <span class="required">*</span></label>
+        <select class="form-select">
+          <option value="">-- เลือกช่าง --</option>
+          <optgroup label="🏢 ช่างภายใน (Internal)">
+            <option>TECH-007 สมศักดิ์ · AC expert · 3/4 slots</option>
+            <option>TECH-012 ประเสริฐ · Trainee · 2/4 slots</option>
+            <option disabled>TECH-008 วิชัย · FULL 4/4</option>
+            <option>TECH-014 สมหญิง · 1/4 slots · ว่างสุด</option>
+          </optgroup>
+          <optgroup label="🚚 ช่างนอก (Outsource)">
+            <option>V-00034 วิชัย ลาดพร้าว · 1/3 · rate ±0%</option>
+            <option>V-00057 สมหมาย ต่างจว. · 0/3 · rate +50%</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="form-2col">
+        <div class="field-row">
+          <label class="form-label">วันนัด <span class="required">*</span></label>
+          <input type="date" class="form-input" value="2026-04-25">
+        </div>
+        <div class="field-row">
+          <label class="form-label">ช่วงเวลา</label>
+          <select class="form-select">
+            <option>08:00 - 12:00</option>
+            <option selected>13:00 - 17:00</option>
+            <option>17:00 - 21:00</option>
+            <option>ทั้งวัน (ไกล &gt; 80 km)</option>
+          </select>
+        </div>
+      </div>
+      <div style="padding:10px 12px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:6px;font-size:11.5px;color:#065F46;margin-top:6px">
+        ✓ <b>Slot ว่าง</b> — ไม่ชนคิวอื่น · ระบบจะ lock slot นี้เมื่อกดบันทึก
+      </div>
+      <div class="field-row" style="margin-top:12px">
+        <label class="form-label">Note (เห็นเฉพาะช่าง)</label>
+        <textarea class="form-textarea" placeholder="เช่น โทรก่อนไปถึง · ขึ้นลิฟต์ตัวที่ 2"></textarea>
+      </div>
+      <div style="padding:10px 12px;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;font-size:11.5px;color:#92400E">
+        🔒 <b>Sticky Assignment</b> — หลังกดมอบหมาย ช่างคนนี้จะถูก lock ติดงาน · ช่างส่งต่อไม่ได้ · admin เท่านั้นที่ reassign ได้
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('mAssign')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="alert('✓ มอบหมายงาน · ส่ง notification');closeModal('mAssign')">✔ ยืนยันมอบหมาย</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 2: SPLIT JOB -->
+<div class="modal-overlay" id="mSplit">
+  <div class="modal md" onclick="event.stopPropagation()">
+    <div class="modal-head" style="background:linear-gradient(180deg,#8B5CF6 0%,#6D28D9 100%)">
+      <span class="ico">✂️</span>
+      <div style="flex:1"><div class="ttl">แยกงาน 1 job → N jobs</div><div class="sub">JOB-26-0201 · 3 รายการติดตั้ง</div></div>
+      <button class="modal-close-x" onclick="closeModal('mSplit')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:#6B7280;font-size:12px;margin-bottom:12px">แยกงานนี้เป็นหลาย job เพื่อให้ admin มอบหมายช่างต่างคนกันได้ · แต่ละ sub-job จะเป็น sticky อิสระ</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="padding:10px 12px;border:1px solid #E0E7FF;border-radius:6px;background:#F0F9FF">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <span style="font-weight:700;font-size:12.5px;color:#1E40AF">📦 Sub-job #1</span>
+            <button class="btn btn-ghost" style="padding:2px 8px;font-size:10.5px">🗑 ลบ</button>
+          </div>
+          <div style="font-size:11.5px;color:#334155"><input type="checkbox" checked> Daikin FTKM35 × 2 (INS-AC-9k12k)</div>
+        </div>
+        <div style="padding:10px 12px;border:1px solid #E0E7FF;border-radius:6px;background:#F0F9FF">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <span style="font-weight:700;font-size:12.5px;color:#1E40AF">📦 Sub-job #2</span>
+            <button class="btn btn-ghost" style="padding:2px 8px;font-size:10.5px">🗑 ลบ</button>
+          </div>
+          <div style="font-size:11.5px;color:#334155"><input type="checkbox" checked> Mitsubishi MSY-GN18 × 1 (INS-AC-18k24k)</div>
+        </div>
+        <button class="btn btn-outline" style="align-self:flex-start">+ เพิ่ม Sub-job</button>
+      </div>
+      <div style="margin-top:12px;padding:10px 12px;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;font-size:11.5px;color:#92400E">
+        ⚠ หลัง split: JOB-26-0201 จะกลายเป็น <b>JOB-26-0201A</b> และ <b>JOB-26-0201B</b> · stock lock ยังคงอยู่รวม
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('mSplit')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="alert('✓ แยกเป็น 2 jobs');closeModal('mSplit')">✔ แยกงาน</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 3: REASSIGN -->
+<div class="modal-overlay" id="mReassign">
+  <div class="modal sm" onclick="event.stopPropagation()">
+    <div class="modal-head" style="background:linear-gradient(180deg,#DC2626 0%,#991B1B 100%)">
+      <span class="ico">🔓</span>
+      <div style="flex:1"><div class="ttl">Reassign Tech (Admin Override)</div><div class="sub">ทำลาย Sticky Lock · Admin เท่านั้น</div></div>
+      <button class="modal-close-x" onclick="closeModal('mReassign')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="padding:12px 14px;background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;margin-bottom:14px">
+        <div style="font-weight:700;color:#991B1B;font-size:13px;margin-bottom:4px">⚠ ยืนยัน Admin Override</div>
+        <div style="color:#B91C1C;font-size:11.5px">ช่างคนเดิมจะถูกปลดออกจากงานนี้ · Sticky Lock จะถูกบันทึกใน audit log · ช่างใหม่จะได้รับ sticky ต่อ</div>
+      </div>
+      <div class="field-row">
+        <label class="form-label">ช่างปัจจุบัน</label>
+        <input type="text" class="form-input" value="TECH-008 วิชัย แซ่ลิ้ม" readonly style="background:#F9FAFB">
+      </div>
+      <div class="field-row">
+        <label class="form-label">มอบหมายช่างใหม่ <span class="required">*</span></label>
+        <select class="form-select">
+          <option>-- เลือกช่าง --</option>
+          <option>TECH-007 สมศักดิ์ (3/4 slots)</option>
+          <option>TECH-012 ประเสริฐ (2/4 slots)</option>
+          <option>V-00034 วิชัย ลาดพร้าว (Outsource)</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <label class="form-label">เหตุผล <span class="required">*</span></label>
+        <select class="form-select">
+          <option>ช่างเดิม ลา/ป่วย</option>
+          <option selected>ช่างเดิม งานเลย SLA / ไม่ไปงาน</option>
+          <option>ลูกค้าร้องขอเปลี่ยนช่าง</option>
+          <option>งาน urgent · ช่างว่างสุดอยู่คนอื่น</option>
+          <option>อื่นๆ (ระบุ)</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <label class="form-label">รายละเอียด</label>
+        <textarea class="form-textarea" placeholder="อธิบายสาเหตุการ override sticky lock..."></textarea>
+      </div>
+      <div class="field-row">
+        <label class="form-label">Admin Password <span class="required">*</span></label>
+        <input type="password" class="form-input" placeholder="กรอกรหัสผ่าน admin">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('mReassign')">ยกเลิก</button>
+      <button class="btn btn-danger" onclick="alert('✓ Reassign + sticky reset · logged to audit');closeModal('mReassign')">🔓 Override & Reassign</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 4: PARTIAL REPORT -->
+<div class="modal-overlay" id="mPartial">
+  <div class="modal md" onclick="event.stopPropagation()">
+    <div class="modal-head" style="background:linear-gradient(180deg,#F59E0B 0%,#D97706 100%)">
+      <span class="ico">⏳</span>
+      <div style="flex:1"><div class="ttl">บันทึก Partial (ค้างส่ง)</div><div class="sub">JOB-26-0195 · งานบางส่วนยังไม่เสร็จ</div></div>
+      <button class="modal-close-x" onclick="closeModal('mPartial')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:#6B7280;font-size:12.5px;margin-bottom:12px">ระบุว่า item ไหนเสร็จ · ไหนยังไม่เสร็จ · และนัดใหม่วันไหน · <b>Sticky lock ช่างคนเดิม</b> จะยังคงอยู่</p>
+      <div class="field-row">
+        <label class="form-label">รายการในงาน</label>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="padding:8px 10px;border:1.5px solid #10B981;background:#ECFDF5;border-radius:5px;display:flex;align-items:center;gap:8px">
+            <input type="radio" name="item1" value="done" checked>
+            <span style="flex:1;font-size:12px">LG Washer × 1 (เครื่องแรก)</span>
+            <span class="swt-chip success">✓ เสร็จ · ผ่าน QA</span>
+          </label>
+          <label style="padding:8px 10px;border:1.5px solid #F59E0B;background:#FEF3C7;border-radius:5px;display:flex;align-items:center;gap:8px">
+            <input type="radio" name="item2" value="partial" checked>
+            <span style="flex:1;font-size:12px">LG Washer × 1 (เครื่องที่ 2)</span>
+            <span class="swt-chip warn">⏳ ยังไม่เสร็จ</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-2col">
+        <div class="field-row">
+          <label class="form-label">นัดใหม่ <span class="required">*</span></label>
+          <input type="date" class="form-input" value="2026-04-24">
+        </div>
+        <div class="field-row">
+          <label class="form-label">ช่วงเวลา</label>
+          <select class="form-select">
+            <option>08:00 - 12:00</option>
+            <option selected>13:00 - 17:00</option>
+            <option>17:00 - 21:00</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <label class="form-label">สาเหตุที่ไม่เสร็จ <span class="required">*</span></label>
+        <select class="form-select">
+          <option>ขาดอะไหล่ (ต้องเบิกเพิ่ม)</option>
+          <option>ลูกค้าไม่พร้อม / ไม่อยู่</option>
+          <option>อาการเครื่องซับซ้อน ต้องช่างอื่นช่วย</option>
+          <option>สภาพพื้นที่/ไฟฟ้าไม่พร้อม</option>
+          <option>อื่นๆ</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <label class="form-label">บันทึกเพิ่มเติม</label>
+        <textarea class="form-textarea" placeholder="รายละเอียดที่ต้องทำในวันนัดใหม่..."></textarea>
+      </div>
+      <div style="padding:10px 12px;background:#F0F9FF;border:1px solid #BAE6FD;border-radius:6px;font-size:11.5px;color:#0C4A6E">
+        💡 <b>Status จะเปลี่ยน:</b> 🟢 กำลังทำ → ⏳ <b>ค้างส่ง (Partial)</b> · ช่างคนเดิมจะต้องกลับไปทำให้จบ · ค่าแรงจ่ายเมื่อจบทั้งงาน
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('mPartial')">ยกเลิก</button>
+      <button class="btn btn-primary" style="background:#F59E0B;border-color:#F59E0B" onclick="alert('✓ บันทึก Partial · นัดใหม่');closeModal('mPartial')">✔ บันทึก Partial</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 5: CLOSE JOB -->
+<div class="modal-overlay" id="mClose">
+  <div class="modal md" onclick="event.stopPropagation()">
+    <div class="modal-head" style="background:linear-gradient(180deg,#10B981 0%,#059669 100%)">
+      <span class="ico">✓</span>
+      <div style="flex:1"><div class="ttl">ปิดงาน (Admin QA + ตั้งหนี้ค่าแรง)</div><div class="sub">JOB-26-0195 · LG Washer × 2 · ช่างประเสริฐ</div></div>
+      <button class="modal-close-x" onclick="closeModal('mClose')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-row">
+        <label class="form-label">QA Checklist (admin ตรวจรับ)</label>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="padding:6px 10px;display:flex;align-items:center;gap:8px;font-size:12.5px">
+            <input type="checkbox" checked> ✓ ทดสอบฟังก์ชันหลัก (เปิด/ปิด/โหมด)
+          </label>
+          <label style="padding:6px 10px;display:flex;align-items:center;gap:8px;font-size:12.5px">
+            <input type="checkbox" checked> ✓ รูปถ่าย Before/After (2/2)
+          </label>
+          <label style="padding:6px 10px;display:flex;align-items:center;gap:8px;font-size:12.5px">
+            <input type="checkbox" checked> ✓ ลายเซ็นลูกค้า
+          </label>
+          <label style="padding:6px 10px;display:flex;align-items:center;gap:8px;font-size:12.5px">
+            <input type="checkbox" checked> ✓ ทำความสะอาดพื้นที่
+          </label>
+          <label style="padding:6px 10px;display:flex;align-items:center;gap:8px;font-size:12.5px">
+            <input type="checkbox" checked> ✓ ลูกค้าให้ Rating ⭐⭐⭐⭐⭐
+          </label>
+        </div>
+      </div>
+      <div style="padding:12px 14px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:6px">
+        <div style="font-size:10.5px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">💰 ค่าแรงช่าง (หลังบ้าน · ไม่แสดงลูกค้า)</div>
+        <div class="form-2col" style="gap:6px 14px;font-size:12px">
+          <div><span style="color:#6B7280">ประเภทช่าง:</span> <span class="swt-chip info">Internal</span></div>
+          <div><span style="color:#6B7280">Rate:</span> <b>฿500/ชม.</b> (CF-2.5 standard)</div>
+          <div><span style="color:#6B7280">ใช้เวลา:</span> <b>3h 30m</b></div>
+          <div><span style="color:#6B7280">ค่าแรงก่อน incentive:</span> <b>฿1,750</b></div>
+          <div style="grid-column:1/-1;padding-top:8px;border-top:1px dashed #E5E7EB;margin-top:4px">
+            <span style="color:#6B7280">✓ เสร็จในเวลา (3h 30m ≤ 4h std) · Incentive × 1.0:</span>
+            <b style="color:#10B981;font-size:14px;margin-left:6px">฿1,750</b>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:10px 12px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;font-size:11.5px;color:#1E40AF">
+        📤 <b>หลังกดปิด:</b> ระบบจะ create Payroll entry ให้ TECH-012 ประเสริฐ · รวมในรอบเงินเดือนสิ้นเดือน
+        <br><span style="font-size:10.5px;color:#2563EB">💡 สำหรับช่างนอก (Outsource) จะสร้าง AP Invoice + WHT 3%</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('mClose')">ยกเลิก</button>
+      <button class="btn btn-success" onclick="alert('✓ ปิดงาน · Payroll +฿1,750');closeModal('mClose')">✔ ปิดงาน + Trigger Payroll</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- SCRIPTS -->
+<script>
+  function openModal(id){ document.getElementById(id).classList.add('open'); }
+  function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+  document.querySelectorAll('.modal-overlay').forEach(ov => {
+    ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); });
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  });
+
+  function openAssignModal(){ openModal('mAssign'); }
+  function openSplitModal(){ openModal('mSplit'); }
+  function openReassignModal(){ openModal('mReassign'); }
+  function openPartialModal(){ openModal('mPartial'); }
+  function openCloseModal(){ openModal('mClose'); }
+
+  function swCalTab(btn, target){
+    document.querySelectorAll('.cal-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('cal-today').style.display = target === 'today' ? '' : 'none';
+    document.getElementById('cal-week').style.display  = target === 'week'  ? '' : 'none';
+  }
+</script>
+
+
+<!-- SHARED COMPONENTS -->
+
+
+<!-- SWT_LINK_START -->
+<script src="swt-link.js" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (typeof swtRenderBreadcrumb === 'function') {
+    swtRenderBreadcrumb([
+      { type: 'INV', label: 'บิลขาย (SL-4)' },
+      { type: 'SV6', label: 'Job Queue', current: true },
+      { type: 'JOB', label: 'Dispatched', pending: true },
+      { type: 'POD', label: 'Proof of Delivery', pending: true },
+      { type: 'AP',  label: 'ตั้งหนี้ค่าแรง', pending: true }
+    ]);
+  }
+});
+</script>
+<!-- SWT_LINK_END -->
+
+<script src="swt-sidebar.js"></script>
+</body>
+</html>
