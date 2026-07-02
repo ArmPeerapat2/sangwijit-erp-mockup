@@ -44,9 +44,10 @@
 | SL-2 | Reservation ใบจอง | ✅ | 📋 `sl2-reservation-mockup.html` |
 | SL-3 | Deposit รับมัดจำ | ✅ | 📋 `sl3-deposit-mockup.html` |
 | SL-4 | Invoice บิลขาย | ✅ | 📋 `sl4-invoice-mockup.html` |
-| SL-5 | Credit Memo / CRM Followup | ✅ | 📋 `sl5-crm-followup-mockup.html` |
-| SL-6 | Promotion Setup | ✅ | 📋 `sl6-promotion-setup-mockup.html` |
-| SL-7 | Sales Report | ✅ | 📋 `sl7-sales-report-mockup.html` |
+| SL-CN | Credit Memo ใบลดหนี้ขาย (เดิมรหัส SL-5) | ✅ | 📋 `slcn-credit-memo-mockup.html` |
+| ~~SL-5~~ | ~~CRM Followup~~ 📦 archived 2026-07-02 (เกิน scope P1) | — | `_archive/sl5-crm-followup-mockup.html` |
+| ~~SL-6~~ | ~~Promotion Setup~~ 📦 archived → PM ใน P2 | — | `_archive/sl6-promotion-setup-mockup.html` |
+| ~~SL-7~~ | ~~Sales Report~~ 📦 archived → ยุบเข้า RP-1 | — | `_archive/sl7-sales-report-mockup.html` |
 | SL-F1 | Credit Approval (ฝั่ง Sales) | ✅ B5 | — |
 | PM-1 | Price List | ✅ | — |
 | PM-2 | Promotion Scheme | ✅ B1 | — |
@@ -73,7 +74,7 @@
 | PO-5 | GRN (ใบรับสินค้า) | ✅ | — |
 | PO-6 | AP Invoice | ✅ | — |
 | PO-7 | Sale-In Accrual | 🆕 | — |
-| PO-8 | Deposit Bill (บิลฝาก) | 🆕 | — |
+| PO-8 | สั่งซื้อสินค้าฝาก (Deposit Bill · ชื่อเดิม "บิลฝาก") | 🆕 | 📋 `po8-deposit-bill-mockup.html` |
 | — | Rebate Dashboard | (support) | 📋 `po7-rebate-dashboard.html` |
 | SM-1 | SKU Slot Planner | ✅ | 📋 `sm1-sku-slot-planner-mockup.html` |
 | SM-2 | SKU Health Monitor | ✅ | 📋 `sm2-sku-health-mockup.html` |

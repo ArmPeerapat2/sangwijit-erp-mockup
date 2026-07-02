@@ -187,7 +187,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
     <button class="btn btn-outline">💾 Save</button>
     <button class="btn btn-outline" onclick="tplCopyDoc()">📋 Copy</button>
     <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบลดหนี้</button>
-    <button class="btn btn-success">📥 Post (→ ลด AR / Customer Ledger)</button>
+    <button class="btn btn-success" id="btnPost" onclick="cnPost()" title="Post ได้เมื่อ: (1) อนุมัติผ่าน CF-2.6 แล้ว (2) โหมดคืนของ ต้องมีหลักฐานรับของคืนก่อนเท่านั้น — WH Return posted หรือ SV รับของตอน intake (grill Q5/Q7)">📥 Post (→ ลด AR / Customer Ledger)</button>
     <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
     <span class="saab-status"><span class="dot"></span>สถานะ: <strong>ร่าง</strong> · รอ Post</span>
   </div>
@@ -200,7 +200,9 @@ table.items th:last-child,table.items td:last-child{border-right:none}
         <span class="pill pill-neutral">📄 ร่าง</span>
         <span class="pill pill-danger" id="modePill">✏️ โหมด: ปรับราคา (ลดบางส่วน)</span>
         <span class="pill pill-info">เหตุผล: ราคาผิด</span>
-        <span class="pill pill-warning">นอกประกัน (ใบลดหนี้)</span>
+        <span class="pill pill-warning" title="auto ตามบิลต้นทาง (grill Q4)">🧾 ใบลดหนี้/ใบกำกับภาษี (auto)</span>
+        <span class="pill pill-info" title="ทุกใบต้องผ่านผู้อนุมัติ ≠ ผู้สร้าง ตาม tier ยอดใน CF-2.6 — ไม่มี threshold ยกเว้น (grill Q7)">🔐 รออนุมัติ CF-2.6 (tier ตามยอด)</span>
+        <span class="pill pill-warning" id="gatePill" style="display:none" title="ของก่อนเงินเท่านั้น (grill Q5) — WH Return Receipt posted หรือ SV รับของตอน intake แล้ว จึง Post ได้">⛔ รอรับของคืน</span>
       </div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
         <span class="dc-lbl">Doc Chain</span>
@@ -241,12 +243,12 @@ table.items th:last-child,table.items td:last-child{border-right:none}
               <option value="full">↩️ คืนทั้งบิล</option>
             </select></div>
           <div class="field"><div class="field-label">เหตุผล</div>
-            <select class="cn-sel"><option>ราคาผิด</option><option>คืนสินค้า</option><option>ส่วนลดพิเศษ</option><option>สินค้าชำรุด</option></select></div>
+            <select class="cn-sel" title="ทางเข้า 2 ทาง (grill Q3): Sales เปิดจากบิล = เลือกได้ 3 แบบแรก · มาจากคิวเคลม SV = ล็อกเป็น 'เคลม (จาก SV)' แก้ไม่ได้ + prefill อ้างอิงงานเคลม"><option>ราคาผิด</option><option>คืนสินค้า</option><option>ส่วนลดพิเศษ</option><option>🛠️ เคลม (จาก SV) — ล็อกเมื่อมาจากคิว</option></select></div>
           <div class="field"><div class="field-label">อ้างอิงบิลขาย <span style="color:#EF4444">*</span></div><div class="field-value"><a href="sl4-invoice-mockup.html" style="color:#2563EB;text-decoration:none">INV 08INV-2606-0221 ↗</a></div></div>
-          <div class="field"><div class="field-label">ประเภทใบ</div>
-            <select class="cn-sel"><option>นอกประกัน (ใบลดหนี้)</option><option>ในประกัน (ใบลดหนี้+ใบกำกับภาษี)</option></select></div>
+          <div class="field"><div class="field-label">รูปแบบเอกสาร 🔒</div>
+            <div class="field-value" title="AUTO ตามบิลต้นทาง แก้ไม่ได้ (grill 2026-07-02 Q4) — บิลมีใบกำกับภาษี → ใบลดหนี้/ใบกำกับภาษี (ปรับ VAT Output) · บิลไม่มีใบกำกับ → ใบลดหนี้ธรรมดา · ให้เลือกเอง = เสี่ยงออกผิดแบบ VAT เพี้ยน">ใบลดหนี้/ใบกำกับภาษี <span style="font-size:10.5px;color:#64748B">· auto — บิลต้นทางมีใบกำกับภาษี</span></div></div>
           <div class="field"><div class="field-label">ผู้ทำรายการ</div><div class="field-value">สัญญาลักษณ์ วังคะฮาต</div></div>
-          <div class="field"><div class="field-label">เครดิตที่ได้ → </div><div class="field-value">หักบิลถัดไป / คืนเงินสด</div></div>
+          <div class="field"><div class="field-label">เครดิตที่ได้</div><div class="field-value" title="CN จบหน้าที่ที่สร้างเครดิตค้าง (grill Q6) — การใช้เครดิตเป็นขั้นแยกที่ FI: หักบิลถัดไป = คิว apply FI-1Q · คืนเงินสด = Finance สร้างรายการจ่ายคืน + approval · ห้าม CN สั่งเงินออกเอง (Maker≠Checker)">ค้างในบัญชีลูกหนี้ <span style="font-size:10.5px;color:#64748B">→ ใช้หักบิล/ขอคืนเงินที่ FI (FI-1Q)</span></div></div>
         </div>
       </div>
     </div>
@@ -397,6 +399,18 @@ function cnSetMode(){
   /* คืนสินค้า → ช่องส่วนลด/ราคา แก้ไม่ได้ · ปรับราคา → จำนวนคืน แก้ไม่ได้ */
   document.querySelectorAll('.items .line-num').forEach(function(i){ i.disabled=isReturn; i.style.background=isReturn?'#F1F5F9':'#FFF7F7'; i.style.opacity=isReturn?'.55':''; i.style.borderColor=isReturn?'#E5E7EB':'#FCA5A5'; });
   document.querySelectorAll('.items .qty-input').forEach(function(i){ i.disabled=!isReturn; i.style.opacity=!isReturn?'.55':''; });
+  /* gate ของก่อนเงิน (grill Q5): โหมดคืนของ → แสดง "รอรับของคืน" + Post ติด gate */
+  var gate=document.getElementById('gatePill');
+  if(gate) gate.style.display=isReturn?'':'none';
+}
+/* 📥 Post — gate: อนุมัติ CF-2.6 + (โหมดคืนของ) รับของคืนก่อนเท่านั้น (grill Q5/Q7) */
+function cnPost(){
+  var m=document.getElementById('cnMode').value;
+  if(m!=='price'){
+    alert('⛔ Post ไม่ได้ — รอรับของคืน (demo)\n\nโหมดคืนสินค้าต้องมีหลักฐานรับของก่อนเท่านั้น:\n• สายขาย: WH Return Receipt posted\n• สายเคลม: SV รับของตอน intake แล้ว (ใช้เป็นหลักฐานได้เลย)\n\nและทุกใบต้องอนุมัติผ่าน CF-2.6 ก่อน (Maker≠Checker)');
+    return;
+  }
+  alert('Post ใบลดหนี้ (demo)\n\n• เช็คอนุมัติ CF-2.6 ผ่านแล้ว → BC post reverse AR + ปรับ VAT Output\n• เครดิตค้างใน Customer Ledger → ใช้หักบิล/ขอคืนเงินที่ FI (FI-1Q)');
 }
 /* ตั้งค่าเริ่มต้น (โหมดปรับราคา → จำนวนคืน disabled) */
 cnSetMode();

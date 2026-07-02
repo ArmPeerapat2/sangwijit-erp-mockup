@@ -25,8 +25,8 @@
       ['SL-Q','slq-sales-queue-mockup.html','คิวงานขาย'],['SL-1','sl1-quotation-mockup.html','ใบเสนอราคา'],
       ['SL-2','sl2-reservation-mockup.html','ใบจอง'],['SL-3','sl3-deposit-mockup.html','ใบมัดจำ'],
       ['SL-4','sl4-invoice-mockup.html','บิลขาย/Invoice'],['SL-CN','slcn-credit-memo-mockup.html','ใบลดหนี้'],
-      ['SL-5','sl5-crm-followup-mockup.html','CRM Follow-up'],['SL-6','sl6-promotion-setup-mockup.html','โปรโมชั่น'],
-      ['SL-7','sl7-sales-report-mockup.html','รายงานยอดขาย'],['SL-F1','slf1-credit-approval-mockup.html','อนุมัติวงเงิน'],
+      /* SL-5 CRM / SL-6 โปรโมชั่น / SL-7 รายงาน → _archive/ (grill 2026-07-02 Q10 — เกิน scope P1) */
+      ['SL-F1','slf1-credit-approval-mockup.html','อนุมัติวงเงิน'],
       ['PM-5','pm5-vat-simulator-mockup.html','VAT Simulator'],['CM-1','cm1-commission-mockup.html','Commission'],
       ['CL-1','cl1-claims-mockup.html','Claims']]},
     {ico:'📦', label:'คลังสินค้า (WH)', links:[
@@ -39,7 +39,7 @@
       ['PO-2','po2-rfq-mockup.html','Trade Agreement / Vendor'],['PO-3','po3-vendor-onboarding-mockup.html','Vendor Onboarding'],
       ['PO-4','po4-purchase-order-mockup.html','ใบสั่งซื้อ (PO)'],
       ['PO-7','po7-rebate-dashboard.html','ส่งเสริมการขาย'],
-      ['PO-8','po8-deposit-bill-mockup.html','บิลฝาก (Deposit)'],
+      ['PO-8','po8-deposit-bill-mockup.html','สั่งซื้อสินค้าฝาก'],
       ['PO-CN','po-cn-credit-note-mockup.html','ใบลดหนี้เจ้าหนี้']]},
     {ico:'💵', label:'บัญชี/การเงิน', links:[
       ['FI-Q','fiq-finance-queue-mockup.html','คิวงานการเงิน'],['FI-1','fi1-ar-receive-mockup.html','รับชำระ AR'],
