@@ -6,6 +6,17 @@ branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
 
+## 🔒 SV Claim/Service Deep-Dive Grill (decisions 2026-07-02)
+
+grill เจาะงานเคลม+บริการ · full spec `.agents/svc-claim-jobtype-spec.md` (§11 = build backlog B1-B10)
+- **แยก 2 concept:** ① เคลมสินค้า (ของเราซื้อมาเสีย→คืน vendor · S1-S4 · chain CLM→PO-CN) vs ② เคลมงานบริการ (ศูนย์บริการซ่อมในประกัน ไม่ว่าซื้อจากไหน)
+- **ประกัน per-component** (เครื่อง 1 ปี · คอมเพรสเซอร์ 5 ปี) → S/N lookup ได้ตารางประกันรายชิ้น
+- **Billing:** assignable payer ต่อบรรทัดที่ SV-4 · default จากประกันรายชิ้น · แบรนด์→ARI · ลูกค้า→SL-4 · 2 บิลได้
+- **อะไหล่ 2 แหล่ง:** ในประกัน (แบรนด์ส่งฟรี→ต้องคืนเก่า gate) / นอกประกัน (สั่ง PO via SV-Order→ไม่คืน) · return per-line + gate ปิดงาน + exception (แบรนด์ยืนยัน→admin ติ๊ก)
+- **Entry A-E** (E = ซื้อที่อื่นในประกัน ซ่อม+เคลมอะไหล่/ค่าแรงได้ แต่เปลี่ยนสินค้าใหม่ไม่ได้) · **6 bins** WH-SVC-CTR · **SLA** per-ขั้น visibility config CF
+- **5 job types** (ตรวจเช็ค≠ล้าง) checklist template ราย product type · **รายงานช่าง→CM-1** (เรทจ่ายช่าง≠ราคาขาย)
+- CL decomposed: cl1-claims archived · เคลม = job type ใน SV-1 · SV_service.md sync ตาราง Menu List ตรงโครงจริง 9 หน้า
+
 ## 🔒 Flow Redundancy Closeout (decisions 2026-07-02)
 
 จากรายงาน `.agents/flow-redundancy-analysis.html` — user ตัดสิน 10 overlap เปิดค้าง:
