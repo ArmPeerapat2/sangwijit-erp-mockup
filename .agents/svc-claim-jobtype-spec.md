@@ -1,6 +1,7 @@
 # SVC — Service & Claim Spec (เคลม + งานบริการ = job type ใน Service Intake)
 
-> **สถานะ:** decisions locked — grill รอบ 1 (Q1-Q15 · 2026-07-01) + grill SL-CN (2026-07-02) + **grill SV deep-dive (2026-07-02 · เรื่อง 2.1-2.8)**
+> **สถานะ:** decisions locked — grill รอบ 1 (Q1-Q15 · 2026-07-01) + grill SL-CN (2026-07-02) + **grill SV deep-dive (2026-07-02 · เรื่อง 2.1-2.8)** + **grill รอบ 2 (2026-07-02 · goodwill/pre-sale/refund-cap · ดู §12)**
+> **หน้าเริ่มต้นงาน service = `sv1-service-intake-mockup.html`** (rebuild เป็น 5 job types · ⚠️ path `bc365/service-intake-mockup.html` ที่ note เก่าอ้าง = ไม่มีจริง)
 > **Trust:** ไฟล์นี้แพ้ mockup จริง (`sv1-service-intake`, `sv4-service-close`, `clm-vendor-claim`, `sv-order-parts-request`) ถ้าขัดกัน
 
 ---
@@ -16,6 +17,13 @@
 | chain | **CLM → PO-CN** (ฝั่ง vendor/AP) | SV-1 → SV-5 → SV-4 → SV-7 (ฝั่งบริการ) |
 
 > **"งานเบิกค่าแรง/งานบริการ ≠ งานเคลมสินค้า"** — คนละ flow คนละ ledger
+
+### sub-type เคลม (จาก wip Design Note · reconcile 2026-07-02) map เข้า 2 concept
+| sub-type เดิม | = ในโมเดลนี้ |
+|---|---|
+| **Warranty** | ② เคลมงานบริการ (ของอยู่กับลูกค้า · ในประกัน) |
+| **Pre-sale** | ① เคลมสินค้า (ของยังเป็นสต๊อกเรา ก่อนขาย · **ไม่มีลูกค้า** — ดู §12.2) |
+| **Goodwill** | ไม่ใช่ sub-type — เป็น **payer option** (การตัดสินใจคนจ่าย · ดู §12.1) |
 
 ---
 
@@ -172,11 +180,37 @@
 
 ---
 
+## 12. เพิ่มจาก reconcile wip + grill รอบ 2 (2026-07-02)
+
+### 12.1 Goodwill = payer option ที่ 3 (ต่อยอด §4 billing)
+- ปกติคนจ่าย: ในประกัน→แบรนด์ · หมดประกัน→ลูกค้า
+- **Goodwill = หมดประกัน/ไม่เข้าเงื่อนไข แต่มีคนรับภาระให้** — 2 แบบ: **แบรนด์-goodwill** / **SWT-goodwill** · ลูกค้าไม่จ่าย
+- เป็น dropdown "คนจ่าย" ตัวเลือกเพิ่มที่ SV-4 (ไม่ใช่ sub-type/เอกสารใหม่)
+- **ต้องอนุมัติตาม tier + บันทึกเหตุผล** (เพราะยกเงินให้ = เสี่ยง fraud/relations decision)
+
+### 12.2 Pre-sale = ① เคลมสินค้า (ไม่มีลูกค้า)
+- ของเสียตอน**ยังเป็นสต๊อกเรา ก่อนขาย** — เจอตอน incoming QC / pre-delivery check / DOA แกะกล่อง
+- **ไม่มีลูกค้าเข้ามาเกี่ยว** — อ้างอิง**การรับเข้า/บิลซื้อของเราเอง** → ส่งคืน vendor ได้เลย (CLM→PO-CN · S1-S4)
+- ต่างจาก Warranty (②) ที่ของอยู่กับลูกค้าแล้ว · ไม่ต้องแยก flow ใหม่ = ถือเป็นงานเคลม ① ปกติ
+
+### 12.3 Refund ≤ sale price (cap บน SL-CN)
+- **คืน/ลดหนี้ต่อบรรทัด ≤ ราคาขายเดิม**ในบิลต้นทาง (SL-CN บังคับอ้างบิลอยู่แล้ว → เทียบรายบรรทัดได้)
+- กันคืนเกินที่ลูกค้าจ่ายจริง (เช่นอะไหล่แพงขึ้น คืนได้แค่ที่จ่ายมา) — guard error/fraud
+- ยึดทั้ง 3 โหมด SL-CN (ปรับราคา/คืนบางรายการ/คืนทั้งบิล) · เสริม gate "ของก่อนเงิน" + "อนุมัติทุกใบ"
+
+### 12.4 หน้าเริ่มต้นงาน service
+- = **`sv1-service-intake-mockup.html`** (rebuild เป็น 5 job types + `.jx` extension slot ตาม wip mechanism)
+- ⚠️ path `bc365/service-intake-mockup.html` ที่ wip note อ้าง = **ไม่มีจริงในทุก branch/worktree** (aspirational)
+
+---
+
 ## 11. Build backlog (หลัง grill นี้ — ยังไม่ทำ)
 
 | # | งาน | ผูก grill |
 |---|-----|-----------|
-| B1 | SV-1 แยก job type 5 ตัว + toggle extension ต่อประเภท (ตอนนี้ dropdown 4 ตัว) | §1 |
+| B1 | **`sv1-service-intake-mockup.html`** rebuild — แยก job type 5 ตัว + `.jx` extension slot (ตอนนี้ dropdown 4 ตัว) | §1 · §12.4 |
+| B4b | SV-4 billing เพิ่ม payer option "goodwill" (แบรนด์/SWT) + approval | §12.1 |
+| B11 | SL-CN validation: refund ≤ ราคาขายเดิม รายบรรทัด | §12.3 |
 | B2 | Resolution A-E ตอน S/N-first entry | §2 |
 | B3 | S/N lookup → ตารางประกันรายชิ้น | §3 |
 | B4 | SV-4 billing: assignable payer ต่อบรรทัด + default + แยก ARI/SL-4 | §4 |
