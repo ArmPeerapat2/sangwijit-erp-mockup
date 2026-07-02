@@ -36,12 +36,14 @@
 
 **🔒 grill ครบ Q1-Q4 · plan LOCKED · หยิบไป execute ได้ตอน rebuild WH บน design-system**
 
-## Impact checklist (ตอน execute — ต้องแก้ทุกจุด)
-- [ ] rename ไฟล์ html (git mv)
-- [ ] swt-sidebar.js (code + label + href)
-- [ ] swt-link.js DOC_MAP (GRN/ISS/TRN/CNT → ชื่อไฟล์ใหม่)
-- [ ] breadcrumb/doc-chain ทุกหน้าที่อ้าง WH
-- [ ] spec WH_warehouse.md (audit #13 rules · code)
-- [ ] knowledge-base catalog 01/05
-- [ ] index.html nav + cards
-- [ ] cross-link จากหน้าอื่น (SL-4→WH-เบิก · PO-4→WH-รับ ฯลฯ)
+## ✅ EXECUTED (rename + refs · 2026-07-03) — R/Q pages ยังไม่สร้าง
+- [x] rename 5 ไฟล์ html (git mv): wh1-grn→wh1-receive · wh3-sales-issue→wh2-issue · wh2-stock-transfer→wh3-transfer · wh4-stock-count→wh4-count · wh-queue→wh-q-dashboard
+- [x] swt-sidebar.js (href ตรง · ตัด 5 entry R/Q dead ออก → comment planned)
+- [x] swt-link.js DOC_MAP (GRN/REC/TRN/CNT/GIS/ISS → ไฟล์ใหม่ · GIS/ISS→wh2-issue)
+- [x] spec WH_warehouse.md (code swap WH-2↔WH-3 · Menu List เรียง · audit #13 → WH-3 owner)
+- [x] SKILL.md Cross-Module Flow Rules (swap) · SL_sales · PO_purchase · knowhow×2 (WH-3 เบิก→WH-2 · WH-2 transfer→WH-3)
+- [x] knowledge-base catalog 01/05 (filename refs)
+- [x] ~40 ไฟล์ที่อ้างชื่อไฟล์เก่า (bulk replace · ไม่แตะ _archive)
+- [ ] ⏳ **ยังไม่สร้าง:** WH-Q1/Q2 (คิวรับ/เบิก) · WH-2R/3R/4R (ขอเบิก/ขอโอน/เตรียมนับ) — sidebar comment ไว้ · สร้างตอน rebuild
+- [ ] ⚠️ `knowledge-base/skills/sangwijit-warehouse/portal-mapping.md` = stale (WH-2=GRN ผิดมาก่อน) · flag ไว้ · รอ reconcile รอบแยก
+- [ ] index.html — ตรวจ nav/cards (ถ้ามี WH cross-link)

@@ -46,8 +46,8 @@
     TRF: 'wh3-transfer-mockup.html',
     STK: 'wh4-count-mockup.html',
     CNT: 'wh4-count-mockup.html',
-    GIS: 'wh-q2-issue-queue-mockup.html',
-    ISS: 'wh-q2-issue-queue-mockup.html',
+    GIS: 'wh2-issue-mockup.html',
+    ISS: 'wh2-issue-mockup.html',
     // Service
     SVC: 'bc365/service-board-mockup.html',
     SVQ: 'bc365/service-board-mockup.html',

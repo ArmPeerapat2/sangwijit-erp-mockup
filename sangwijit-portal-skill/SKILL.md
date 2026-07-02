@@ -142,9 +142,9 @@ Azure / SQL (BC Database)
 |---|---|---|---|
 | Approval Matrix | **CF-2.6** (รหัสเดียว — CF-7 คือ alias เก่า) | ทุกโมดูลอ้าง CF-2.6 | wire ผิด matrix |
 | จ่ายเงินส่งเสริม (Trade Support) | **PO-7** Record Payment/Realize | FI-8 = read-only aging + ส่งทวง | GL ซ้ำ 2 เท่า |
-| Serial Number | กรอกที่ **WH-3 เบิกออก** เท่านั้น → BC itemLedger | SL-4 แสดง chip "รอคลังกรอกตอนเบิก" · PO-7 sell-out ดึงจาก ledger ผูกกลับ SL-4 | serial ไม่ตรง 2 ที่ |
-| Reservation | **BC ledger** เป็นเจ้าของ — Portal แค่ trigger | SL-2 reserve/release · WH-3 อ่านคอลัมน์ "สต๊อก (จองไว้)" | จองค้าง/ขายเกิน |
-| Transfer Order | **WH-2** สร้างได้ที่เดียว | WH-3 = ส่งคำขอ · WH-1 = รับครั้งเดียว (idempotent) | ใบซ้อน/รับซ้ำ |
+| Serial Number | กรอกที่ **WH-2 เบิกออก** เท่านั้น → BC itemLedger | SL-4 แสดง chip "รอคลังกรอกตอนเบิก" · PO-7 sell-out ดึงจาก ledger ผูกกลับ SL-4 | serial ไม่ตรง 2 ที่ |
+| Reservation | **BC ledger** เป็นเจ้าของ — Portal แค่ trigger | SL-2 reserve/release · WH-2 อ่านคอลัมน์ "สต๊อก (จองไว้)" | จองค้าง/ขายเกิน |
+| Transfer Order | **WH-3** สร้างได้ที่เดียว | WH-2 = ส่งคำขอ · WH-1 = รับครั้งเดียว (idempotent) | ใบซ้อน/รับซ้ำ |
 | WHT Certificate + ภ.ง.ด. | **FI-12** Release/Print ที่เดียว · เรทเป็น dropdown ในฟอร์ม | FI-2/FI-4 สร้าง WHT record (pending) เท่านั้น | cert ซ้ำ 2 ใบ (ปัญหากรมสรรพากร) |
 | ใบลดหนี้ขาย | **SL-CN** (Sales/Finance ออก) | SV ส่งคำขอเข้า SL-Q (เคลมผลจบ "คืนเงิน/ลดหนี้" เท่านั้น) | SV แตะเอกสารบัญชี |
 
@@ -160,7 +160,7 @@ Azure / SQL (BC Database)
 
 ### Naming & Display Rules
 
-- **ที่อยู่ 2 บทบาทใน SL-4:** header = ที่อยู่ใบกำกับภาษี (Bill-to) ≠ tab จัดส่ง = ที่อยู่ส่งของ (Ship-to แก้อิสระ) — SV-6/WH-3 อ่าน Ship-to เท่านั้น
+- **ที่อยู่ 2 บทบาทใน SL-4:** header = ที่อยู่ใบกำกับภาษี (Bill-to) ≠ tab จัดส่ง = ที่อยู่ส่งของ (Ship-to แก้อิสระ) — SV-6/WH-2 อ่าน Ship-to เท่านั้น
 - **ชื่อชนข้ามโมดูล → prefix ฝั่งงาน:** "ขาย มัดจำ" (SL-3) / PO-8 = "สั่งซื้อสินค้าฝาก" (ดู `knowledge-base/portal/03-ui-ux-convention.md` §10)
 - **Doc breadcrumb:** แสดงเฉพาะเอกสารที่อ้างอิงถึงกันจริง (swt-link.js filter `pending`) — ไม่โชว์ chain ทฤษฎีทั้งสาย
 

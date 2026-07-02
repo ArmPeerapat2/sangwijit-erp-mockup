@@ -359,7 +359,7 @@ Output:  Commitment record ที่ถูกอ้างอิงจาก PR/P
 #### Type ③ Sell-out (รายหมวด/รุ่น)
 - Scope: SKU หรือ หมวด
 - ส่วนลด/หน่วย เมื่อขายออกสำเร็จ (เช่น ฿200/ตัว)
-- **Serial match condition** — ผูก **SL-4 invoice เป็นหลัก** แต่แหล่ง serial จริง = **BC itemLedgerEntries** (serial ลงที่ WH-3 เบิกออกตอน post shipment — SL-4 ไม่มี field serial ตาม rule "Serial บังคับที่ WH Issue") · match path: itemLedgerEntry → Posted Shipment → SL-4 Invoice (decision 2026-07-02 #11)
+- **Serial match condition** — ผูก **SL-4 invoice เป็นหลัก** แต่แหล่ง serial จริง = **BC itemLedgerEntries** (serial ลงที่ WH-2 เบิกออกตอน post shipment — SL-4 ไม่มี field serial ตาม rule "Serial บังคับที่ WH Issue") · match path: itemLedgerEntry → Posted Shipment → SL-4 Invoice (decision 2026-07-02 #11)
 - **Exception ไม่มีบิลอ้างอิง:** serial ที่เบิกออกแต่หา SL-4 ผูกไม่เจอ → แสดง tab แยก "Serial ไม่มีบิลอ้างอิง" + ปุ่ม "ผูกบิลย้อนหลัง" — ห้ามปล่อยเงียบ (rebate ตกหล่นโดยไม่มีใครรู้)
 - **Status ต่อ serial:** ✅ Matched · ⏳ Pending shipment (รอเบิก) · ❌ No invoice ref
 - Effective period

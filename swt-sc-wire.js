@@ -16,7 +16,7 @@
     'po6-ap-invoice-mockup': 'po6',
     'po8-deposit-bill-mockup': 'po8',
     'po-cn-credit-note-mockup': 'po-cn',
-    'wh1-grn-mockup': 'wh1',
+    'wh1-receive-mockup': 'wh1',
     'fi2-ap-payment-mockup': 'fi2',
     'fi1-ar-receive-mockup': 'fi1'
   };

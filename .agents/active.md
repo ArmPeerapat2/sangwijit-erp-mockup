@@ -6,9 +6,12 @@ branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
 
-## 🔢 WH Renumber — 🔒 LOCKED grill Q1-Q4 (2026-07-02 · execute ตอน rebuild)
+## 🔢 WH Renumber — ✅ EXECUTED rename+refs (2026-07-03)
 
-plan เต็ม: `.agents/topics/wh-renumber-plan.md` · **execute ตอน rebuild แต่ละหน้า** (ไม่ทำตอนนี้ กันแก้ reference 2 รอบ)
+**execute แล้ว:** rename 5 ไฟล์ (wh1-receive/wh2-issue/wh3-transfer/wh4-count/wh-q-dashboard) · flip code WH-2↔WH-3 ทุก reference (sidebar/DOC_MAP/index/spec×5/mockup 12 หน้า) · fix dead link wh-q2-issue-queue→wh2-issue · sidebar comment R/Q planned
+**ยังไม่ทำ:** สร้างหน้า WH-Q1/Q2 + WH-2R/3R/4R (ตอน rebuild) · portal-mapping.md warehouse (flag stale) · core-erp-flows/reconcile-matrix docs อ้างชื่อเก่า (ประวัติ low-pri)
+
+plan เต็ม: `.agents/topics/wh-renumber-plan.md`
 - **Q1 ✓** เรียงตามปริมาณงาน: รับ=WH-1 · **เบิก=WH-2** · **โอน=WH-3** · นับ=WH-4 (สลับ 2↔3) — ⚠️ กระทบ audit #13: เจ้าของใบโอน WH-2→**WH-3**
 - **Q2 ✓** R = "ขอ/เตรียม": WH-2R ขอเบิก · WH-3R ขอโอน · WH-4R เตรียมนับ → ออกเอกสารจริง
 - **Q3 ✓** WH-Q dashboard · WH-Q1 คิวรับ · WH-Q2 คิวเบิก · โอน/นับไม่มีคิว · **timing: จองกันสต๊อกก่อน (SL-2) → ขึ้นคิวเบิกเมื่อแพลนวัน** (เชื่อม audit #7)
@@ -321,8 +324,8 @@ flow-understanding: `.agents/topics/finance-flow-understanding.md` (user confirm
 - **PO/WH Rename Cleanup ✅ 2026-04-21** — ปรับเลข mockup ให้ตรง `sangwijit-portal-skill` spec
   - `po3-vendor-invoice-mockup.html` → `po6-ap-invoice-mockup.html` (เดิมผิดแมป — จริงๆ คือ PO-6 AP Invoice)
   - `po-rebate-dashboard.html` → `po7-rebate-dashboard.html`
-  - `whr-goods-issue-mockup.html` → `wh3-sales-issue-mockup.html` (spec: WH-3 = Sales Issue)
-  - `wh3-stock-count-mockup.html` → `wh4-stock-count-mockup.html` (spec: WH-4 = Physical Count)
+  - `whr-goods-issue-mockup.html` → `wh2-issue-mockup.html` (spec: WH-3 = Sales Issue)
+  - `wh3-stock-count-mockup.html` → `wh4-count-mockup.html` (spec: WH-4 = Physical Count)
   - Updated: 73 .html files + swt-link.js + 3 .md docs (filename refs + sidebar code labels + titles + breadcrumbs + stale `PO-Rebate` → `PO-7`)
   - _archive/ ไม่แตะ
 - **Gap + KPI Matrix ✅ NEW 2026-04-21** — `.agents/topics/po-wh-gap-kpi-matrix.md` เทียบ spec vs mockup (PO 9 + WH 7), map 27 KPI, Priority P0-P3

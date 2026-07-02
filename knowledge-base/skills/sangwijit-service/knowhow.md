@@ -175,7 +175,7 @@ C. เคลม (Claim)             ส่งคืน Vendor / Credit Note
 
 **Behavior:**
 - SO อื่นดึงไม่ได้
-- WH-2 Transfer ข้ามคลังไม่ได้
+- WH-3 Transfer ข้ามคลังไม่ได้
 - เบิกสต็อกจริงวันนัดงาน (admin/ช่างกดเบิก)
 
 ### 3.6 1 Invoice Line → N Jobs (Admin ตัดสินใจ)

@@ -44,11 +44,11 @@
 
 | รหัส | ไฟล์ | สถานะ | หมายเหตุ |
 |---|---|---|---|
-| WH-Q | wh-queue-mockup | ✅ | |
-| WH-1 | wh1-grn-mockup | ✅ | session: กันรับซ้ำ (idempotent) + TR-In note |
-| WH-2 | wh2-stock-transfer-mockup | ✅ | session: owner ใบโอน |
-| WH-3 | wh3-sales-issue-mockup | ✅ | session: คอลัมน์สต๊อก(จองไว้) + ขอโอน→WH-2 |
-| WH-4 | wh4-stock-count-mockup | ✅ | |
+| WH-Q | wh-q-dashboard-mockup | ✅ | |
+| WH-1 | wh1-receive-mockup | ✅ | session: กันรับซ้ำ (idempotent) + TR-In note |
+| WH-2 | wh3-transfer-mockup | ✅ | session: owner ใบโอน |
+| WH-3 | wh2-issue-mockup | ✅ | session: คอลัมน์สต๊อก(จองไว้) + ขอโอน→WH-2 |
+| WH-4 | wh4-count-mockup | ✅ | |
 | WH-R | wh-r-stock-card-mockup | ✅ | report |
 | WH-NM | wh-nm-non-move-report-mockup | ✅ | report |
 

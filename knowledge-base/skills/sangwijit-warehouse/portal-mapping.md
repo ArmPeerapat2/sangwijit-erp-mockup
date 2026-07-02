@@ -1,5 +1,6 @@
 # Portal Mapping — sangwijit-warehouse
 
+> ⚠️ **STALE — ตาราง WH mapping ด้านล่างไม่ตรงกับ spec ปัจจุบัน** (มี WH-2=GRN ซึ่งผิดตั้งแต่ก่อน renumber · WH-1=GRN จริง) · **ยึด `sangwijit-portal-skill/modules/WH_warehouse.md` + `.agents/topics/wh-renumber-plan.md` เป็นหลัก** — WH ปัจจุบัน: WH-1 รับ · WH-2 เบิก · WH-3 โอน · WH-4 นับ · ไฟล์นี้รอ reconcile รอบแยก
 > **จุดประสงค์:** เชื่อม Skill `sangwijit-warehouse` กับ Dynamic Web Portal
 > ใช้คู่กับ `/knowledge-base/portal/` และ `SKILL.md` ของ skill นี้
 

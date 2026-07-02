@@ -12,9 +12,11 @@
 |---|---|---|---|---|
 | WH-Q | Queue Dashboard (คิวคลัง) | P1 | Multiple | รายการรอดำเนินการ |
 | WH-1 | รับสินค้า GRN + Transfer Receipt | P1 | purchaseReceipts + transferReceiptsLines | List + Form |
-| WH-2 | โอนสินค้า (Stock Transfer) | P1 | transferOrders (5740/5741) | List + Form |
-| WH-3 | เบิกจ่ายขาย (Sales Issue) | P1 | warehouseShipmentLines | List + Form |
+| WH-2 | เบิกจ่ายขาย (Sales Issue) | P1 | warehouseShipmentLines | List + Form |
+| WH-3 | โอนสินค้า (Stock Transfer) | P1 | transferOrders (5740/5741) | List + Form |
 | WH-4 | นับสต็อก (Stock Count / Physical Inventory) | P1 | physInventoryOrderLines | List + Form |
+
+> **🔢 WH Renumber (2026-07-02):** เดิม WH-2=โอน · WH-3=เบิก → สลับเป็น **WH-2=เบิก · WH-3=โอน** (เรียงตามปริมาณงาน เบิก>โอน) · ดู `.agents/topics/wh-renumber-plan.md` · **execute ตอน rebuild หน้า · ไฟล์ rename แล้ว (wh2-issue/wh3-transfer)**
 | WH-R | Stock Card / รายงานสต็อก | P1 | itemLedgerEntries (32) | Report View |
 | WH-NM | รายงานสินค้าไม่เคลื่อนไหว (Non-Move) | P1 | itemLedgerEntries + items + vendors | Report + Alert |
 
@@ -73,7 +75,7 @@ Purchase GRN Flow:
   WH-1 (Warehouse): ลง Serial + จัดวาง Bin
 
 Transfer Receipt Flow:
-  WH-2 (คลังต้นทาง): โอนออก
+  WH-3 (คลังต้นทาง): โอนออก
       ↓
   WH-1 (คลังปลายทาง): รับโอน + ลง Serial + Bin
 ```
@@ -147,11 +149,11 @@ GET  /items/{id}/stockByLocation                 → ตรวจสต็อก
 
 ---
 
-## WH-2 — โอนสินค้า (Stock Transfer)
+## WH-3 — โอนสินค้า (Stock Transfer)
 
 ### Module Brief
 ```
-Module:  WH-2 Stock Transfer
+Module:  WH-3 Stock Transfer
 Phase:   P1
 BC:      transferOrders (Header 5740, Line 5741)
 Trigger: ต้องการย้ายสินค้าจากคลัง A ไป คลัง B / สาขาอื่น
@@ -235,18 +237,18 @@ PATCH /itemSerialNumbers                            → โอน Serial
 - Transfer In Transit: สินค้าอยู่ระหว่างทาง → ไม่นับสต็อกทั้ง 2 Location
 - ถ้า ปลายทางรับไม่ครบ → ส่วนที่เหลือ Return กลับหรือทำ Transfer ใหม่
 - **🔒 Transfer Ownership (decision 2026-07-02 #13):**
-  - **WH-2 = เจ้าของใบโอน** — จุดเดียวที่สร้าง Transfer Order ได้
-  - **WH-3 "TR-Out ขอโอน" = request only** — ส่งคำขอเข้าคิว WH-2 ไม่สร้าง TO เอง (กันใบซ้อน 2 ใบสำหรับของชุดเดียว)
+  - **WH-3 = เจ้าของใบโอน** — จุดเดียวที่สร้าง Transfer Order ได้
+  - **WH-2 "TR-Out ขอโอน" = request only** — ส่งคำขอเข้าคิว WH-3 ไม่สร้าง TO เอง (กันใบซ้อน 2 ใบสำหรับของชุดเดียว)
   - **WH-1 "TR-In รับโอน" = receive once (idempotent)** — ต้อง match TO status=Shipped · ยืนยันรับได้ครั้งเดียว → status=Received แล้วปุ่ม disable (กันสต๊อกปลายทางเข้าซ้ำ 2 เท่า)
   - ทั้ง 3 คิวแสดงสถานะใบโอนเดียวกัน real-time จาก BC Transfer Header status
 
 ---
 
-## WH-3 — เบิกจ่ายขาย (Sales Issue)
+## WH-2 — เบิกจ่ายขาย (Sales Issue)
 
 ### Module Brief
 ```
-Module:  WH-3 Sales Issue
+Module:  WH-2 Sales Issue
 Phase:   P1
 BC:      warehouseShipmentLines (ผลจาก SO Ship)
 Trigger: Sales Order Confirmed + Finance Approved → WH เบิกสินค้า
