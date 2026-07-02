@@ -270,7 +270,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           <div class="field"><div class="field-label">วันที่รับ</div><div class="field-value">17 มิ.ย. 26</div></div>
           <div class="field"><div class="field-label">คลังรับ (ปลายทาง)</div><div class="field-value"><span class="highlight">WH-01</span> คลังกลาง บางนา</div></div>
           <div class="field"><div class="field-label">ประเภทรับ</div>
-            <select class="recv-sel"><option>📥 จาก Vendor (PO)</option><option>🔄 รับโอน (Transfer In · WH-2)</option><option>🟣 เรียกจากบิลฝาก (PO-8)</option></select>
+            <select class="recv-sel" title="TR-In: ต้อง match Transfer Order status=Shipped จาก WH-2 · ยืนยันรับได้ครั้งเดียว (รับแล้ว status→Received ปุ่ม disable — กันสต๊อกเข้าซ้ำ 2 เท่า · decision 2026-07-02 #13)"><option>📥 จาก Vendor (PO)</option><option>🔄 รับโอน (Transfer In · WH-2)</option><option>🟣 เรียกจากสั่งซื้อสินค้าฝาก (PO-8)</option></select>
           </div>
           <div class="field"><div class="field-label">ผู้รับสินค้า</div><div class="field-value">ก้อง · แผนกคลัง</div></div>
         </div>
@@ -463,8 +463,11 @@ function wh1Mode(m){
     alert('โหมด "ทยอยรับ" (Partial):\n• กรอก "รับครั้งนี้" เอง (≤ ค้างรับ)\n• วนรับหลายล็อตจนครบ\n• รับครบเมื่อไหร่ → 🚩 ส่งตั้งหนี้ (PO-6)');
   }
 }
-/* 📥 Post รับสินค้า — ครบจริง (รับสะสม=สั่ง ทุกไลน์) = flag → PO-6 · ไม่ครบ = ทยอย → WH-Q */
+/* 📥 Post รับสินค้า — ครบจริง (รับสะสม=สั่ง ทุกไลน์) = flag → PO-6 · ไม่ครบ = ทยอย → WH-Q
+   #13: idempotent — Post สำเร็จแล้วปุ่ม disable ทันที กันกดรับซ้ำ (สต๊อกเข้า 2 เท่า) */
+var wh1Posted=false;
 function wh1Post(){
+  if(wh1Posted){ alert('ใบนี้ Post รับแล้ว — รับซ้ำไม่ได้ (status = Received · กันสต๊อกเข้าซ้ำ)'); return; }
   var full=false; /* demo: รับสะสม 90/180 = ยังไม่ครบ */
   if(full){
     if(confirm('รับครบทั้งบิลแล้ว (รับสะสม = สั่ง ทุกไลน์)\n\n• ของเข้าสต็อก BC + ลง Bin/Serial\n• 🚩 flag "รับครบ" → ส่ง PO-6 ใบตั้งหนี้ (พร้อมตั้งหนี้)')){
@@ -472,6 +475,7 @@ function wh1Post(){
     }
   } else {
     if(confirm('Post รับสินค้า (ทยอยรับ) ล็อตนี้ 90 เครื่อง\n\n• ของเข้าสต็อก BC + ลง Bin/Serial\n• ยังค้างรับ 90 เครื่อง → ยังไม่ส่งตั้งหนี้\n• เปิดใบรับล็อตถัดไป หรือกลับคิวรับ (WH-Q)')){
+      wh1Posted=true;
       location.href='wh-queue-mockup.html';
     }
   }

@@ -16,7 +16,7 @@
 | FI-1Q | Apply Queue — รายการเงินเข้ารอจัดสรร (URC) | P1 | bankAccountReconciliations + customerLedgerEntries | Queue List |
 | FI-2 | ตัดหนี้เจ้าหนี้ AP Payment | P1 | vendorLedgerEntries (25) | List + Form |
 | FI-3 | กระทบยอดธนาคาร (Bank Reconciliation) | P1 | bankAccLedgerEntries (274) | Form |
-| FI-4 | บันทึกรายการทั่วไป JV (Journal Voucher) | P1 | genJournalLines (81) | Form |
+| FI-4 | ค่าใช้จ่าย + WHT (Expense Voucher · กลไก JV) | P1 | genJournalLines (81) | Form |
 | FI-5 | ค่าใช้จ่าย & ใบสำคัญจ่าย (Expense Voucher) | **P2** | paymentJournals | List + Form |
 | FI-6 | บริหารวงเงินลูกหนี้ (Credit Control) | **P2** | customerLedgerEntries | Dashboard |
 | FI-7 | รายงานภาษีขาย/ภาษีซื้อ (ภ.พ.30) | P1 | vatEntries (254) | List + Release + Print |
@@ -306,7 +306,10 @@ POST /bankAccReconciliations/{id}/Microsoft.NAV.post   → Post Recon
 
 ---
 
-## FI-4 — บันทึกรายการทั่วไป JV (Journal Voucher)
+## FI-4 — ค่าใช้จ่าย + WHT (Expense Voucher · กลไก JV)
+
+> **หมายเหตุชื่อ (decision 2026-07-02 #9):** spec เดิมเรียก "JV (Journal Voucher)" แต่ไฟล์จริงคือ `fi4-expense-wht-mockup.html` (ค่าใช้จ่าย + WHT) — reconcile ให้ตามไฟล์ (mockup ชนะ notes). JV คือกลไก posting ภายใต้หน้านี้ ไม่ใช่ชื่อหน้า
+> **WHT rule:** FI-4 สร้าง WHT record (pending) เท่านั้น — **ห้ามออกหนังสือรับรอง/แบบ ภ.ง.ด. ที่หน้านี้** ทุกอย่างออกที่ FI-12 จุดเดียว
 
 ### Module Brief
 ```
@@ -715,10 +718,13 @@ PATCH /fixedAssets/{id} → Status = Disposed
 Module:  FI-12 WHT
 Phase:   P1
 BC:      Custom WHT Table (AL Extension) + vendorPaymentJournals
-Trigger: จ่ายเงินเจ้าหนี้ (FI-2 AP Payment) → ระบบคำนวณ WHT อัตโนมัติ
+Trigger: จ่ายเงินเจ้าหนี้ (FI-2 AP Payment) หรือ ค่าใช้จ่าย+WHT (FI-4) → ระบบคำนวณ WHT อัตโนมัติ
 Output:  WHT Certificate (หนังสือรับรอง หัก ณ ที่จ่าย) + ภ.ง.ด.3/53
 Flowchart: Account/Flow/07 - WHT
 ```
+
+> **🔒 Single Certificate Point (decision 2026-07-02 #9):** WHT สร้างได้ 2 ที่ (FI-2 หักจาก AP payment · FI-4 หักจาก expense voucher) แต่ **Release + Print หนังสือรับรอง + ภ.ง.ด.3/53 ทำที่ FI-12 ที่เดียว** — FI-2/FI-4 ห้ามมีปุ่ม cert (กัน vendor ได้หนังสือ 2 ใบ = ปัญหากรมสรรพากร)
+> **อัตราหักเป็นตัวเลือก:** dropdown ในรายการ WHT — 1% (ขนส่ง) / 2% (โฆษณา) / 3% (บริการ/จ้างทำของ) / 5% (เช่า) · auto-default ตาม WHT Category ของ vendor · แก้ได้ก่อน Release — ไม่แยกฟอร์มตามเรท
 
 ### Flow (จาก Flowchart)
 ```

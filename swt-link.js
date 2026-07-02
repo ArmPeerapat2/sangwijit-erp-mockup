@@ -28,8 +28,7 @@
     SO: 'sl4-invoice-mockup.html',
     INV: 'sl4-invoice-mockup.html',
     BIL: 'sl4-invoice-mockup.html',
-    CRM: 'sl5-crm-followup-mockup.html',
-    PROMO: 'sl6-promotion-setup-mockup.html',
+    /* CRM (sl5) + PROMO (sl6) → _archive/ (grill 2026-07-02 Q10) — ตัดจาก DOC_MAP กัน dead link */
     CRD: 'slf1-credit-approval-mockup.html',
     CRA: 'slf1-credit-approval-mockup.html',
     // Purchase
@@ -414,13 +413,19 @@
     if (!Array.isArray(chain) || !chain.length) return;
     opts = opts || {};
 
+    /* #17 (decision 2026-07-02): แสดงเฉพาะเอกสารที่อ้างอิงถึงรายการนี้จริง —
+       ตัดขั้นทฤษฎีที่ยังไม่เกิด (pending:true) ออกที่จุดเดียวนี้ ครอบทุกหน้า
+       (ขายสดไม่มีใบจอง / ยังไม่เบิก = ไม่ต้องโชว์) */
+    chain = chain.filter(function (it) { return !it.pending; });
+    if (!chain.length) return;
+
     // Find insertion point: right after the page's .topbar
     var anchor = document.querySelector(opts.after || '.topbar');
     var bar = document.createElement('div');
     bar.className = 'swt-bc';
     bar.id = 'swt-bc-bar';
 
-    var html = '<span class="swt-bc-label">Doc Chain</span>';
+    var html = '<span class="swt-bc-label">เอกสารที่เกี่ยวข้อง</span>';
     chain.forEach(function (it, i) {
       if (i > 0) html += '<span class="swt-bc-arrow">›</span>';
       var cls = 'swt-bc-item';

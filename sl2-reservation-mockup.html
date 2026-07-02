@@ -204,7 +204,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     <button class="btn btn-outline" onclick="alert('เปิดใบมัดจำ (SL-3) — รับเงินมัดจำแยกเอกสาร · ผูกกับใบจองนี้')" title="รับมัดจำ → ต้องเปิดใบมัดจำ SL-3 แยก">💰 รับมัดจำ (เปิดใบ SL-3)</button>
     <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบจอง</button>
     <button class="btn btn-success">↪ แปลงเป็นบิล (INV)</button>
-    <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก (คืนสต็อก)</button>
+    <button class="btn btn-ghost" style="color:#EF4444" onclick="alert('ยกเลิกใบจอง → ปล่อยยอดจอง 2 ชิ้นคืนสต๊อกทันที (BC release reservation) · สถานะ → Cancelled')" title="ยกเลิกแล้วระบบปล่อย reservation ใน BC ทันที — ของกลับเข้า Available ให้ใบอื่นจองได้">❌ ยกเลิก (คืนสต็อก)</button>
     <span class="saab-status"><span class="dot"></span>สถานะ: <strong>Confirmed</strong> · จองสต็อกแล้ว</span>
   </div>
 
@@ -261,10 +261,26 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
             <select class="resv-sel"><option>ขายปลีก (SO)</option><option>ขายส่ง (SOW)</option></select></div>
           <div class="field"><div class="field-label">พนักงานขาย</div><div class="field-value">สัญญาลักษณ์ วังคะฮาต</div></div>
           <div class="field"><div class="field-label">วันที่ส่งสินค้า <span style="color:#EF4444">*</span></div><div class="field-value">13 มิ.ย. 26</div></div>
+          <div class="field"><div class="field-label">อายุใบจอง (auto-expire)</div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <select class="resv-sel" id="resvAge" onchange="resvAgeChange()" style="flex:0 0 auto;width:auto" title="ครบกำหนดแล้วระบบปล่อยยอดจองคืนสต๊อกอัตโนมัติ · default ตั้งค่ากลางได้ที่ CF Config">
+                <option value="7">7 วัน</option><option value="15" selected>15 วัน (ค่ามาตรฐาน)</option><option value="30">30 วัน</option><option value="custom">กำหนดเอง…</option>
+              </select>
+              <input id="resvAgeCustom" type="number" min="1" max="365" placeholder="วัน" onchange="resvAgeChange()" style="display:none;width:56px;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit">
+              <span id="resvExpire" style="font-size:11px;color:#B45309;font-weight:600;white-space:nowrap">หมดอายุ 21 มิ.ย. 26</span>
+            </div>
+          </div>
           <div class="field"><div class="field-label">เงื่อนไขชำระ</div><div class="field-value">เครดิต 7 วัน</div></div>
           <div class="field"><div class="field-label">อ้างอิงใบเสนอราคา</div><div class="field-value"><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 08QT-2606-0047 ↗</a></div></div>
         </div>
       </div>
+    </div>
+
+    <!-- ⏳ Auto-expire banner (#7 decision 2026-07-02) -->
+    <div style="margin:10px 0;padding:9px 14px;background:#FFFBEB;border:1px solid #FCD34D;border-left:4px solid #D97706;border-radius:6px;font-size:12.5px;color:#92400E;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span>⏳ <b>ใบจองจะหมดอายุใน 5 วัน</b> (ครบกำหนด 21 มิ.ย. 26 · อายุใบจอง 15 วัน) — ครบแล้วระบบปล่อยยอดจองคืนสต๊อกอัตโนมัติ</span>
+      <span style="flex:1"></span>
+      <button class="btn btn-outline" style="font-size:11px;padding:3px 10px" onclick="alert('ต่ออายุใบจอง +15 วัน (mock) → หมดอายุใหม่ 06 ก.ค. 26')">🔄 ต่ออายุ</button>
     </div>
 
     <!-- ④c LINE ITEMS -->
@@ -346,6 +362,16 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
             <tr class="empty-row"><td>13</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
           </tbody>
         </table>
+      </div>
+      <!-- ⛔ Guard double-reserve (#7 decision 2026-07-02): สต๊อกไม่พอ → ลิสต์ใบจองที่ถือของ เพื่อไปคุยกับเซลล์ให้ถอนใบจอง -->
+      <div style="margin:8px 12px;padding:10px 14px;background:#FEF2F2;border:1px solid #FECACA;border-left:4px solid #EF4444;border-radius:6px;font-size:12px">
+        <div style="font-weight:700;color:#991B1B;margin-bottom:6px">⛔ สต๊อกไม่พอ — "ชุดรางครอบติดตั้งแอร์" ขอจอง 1 · Available 0 · ของถูกจองโดยใบจองเหล่านี้:</div>
+        <table style="width:100%;border-collapse:collapse;font-size:11.5px;background:#fff;border-radius:4px">
+          <tr style="color:#6B7280;text-align:left;border-bottom:1px solid #FECACA"><th style="padding:4px 8px">ใบจอง</th><th style="padding:4px 8px">เซลล์ผู้จอง</th><th style="padding:4px 8px;text-align:center">จำนวนจอง</th><th style="padding:4px 8px">หมดอายุ</th><th></th></tr>
+          <tr><td style="padding:4px 8px"><a href="#" style="color:#2563EB;text-decoration:none">08SO-2606-0018</a></td><td style="padding:4px 8px">วีระพงษ์ ส.</td><td style="padding:4px 8px;text-align:center">2</td><td style="padding:4px 8px">18 มิ.ย. 26 <span style="color:#D97706;font-weight:600">(อีก 2 วัน)</span></td><td style="padding:4px 8px;text-align:right"><button class="btn btn-outline" style="font-size:10.5px;padding:2px 8px" onclick="alert('ส่ง notification ถึง วีระพงษ์ ส. — ขอถอน/ลดยอดจอง 08SO-2606-0018 (mock)')">📨 ขอถอนจอง</button></td></tr>
+          <tr style="border-top:1px solid #FEE2E2"><td style="padding:4px 8px"><a href="#" style="color:#2563EB;text-decoration:none">08SO-2606-0015</a></td><td style="padding:4px 8px">สุภาพร ก.</td><td style="padding:4px 8px;text-align:center">1</td><td style="padding:4px 8px">28 มิ.ย. 26</td><td style="padding:4px 8px;text-align:right"><button class="btn btn-outline" style="font-size:10.5px;padding:2px 8px" onclick="alert('ส่ง notification ถึง สุภาพร ก. — ขอถอน/ลดยอดจอง 08SO-2606-0015 (mock)')">📨 ขอถอนจอง</button></td></tr>
+        </table>
+        <div style="color:#991B1B;margin-top:6px">→ คุยกับเซลล์เจ้าของใบจองเพื่อถอน/ลดยอด หรือรอใบจองหมดอายุ (ระบบปล่อยอัตโนมัติ)</div>
       </div>
       <div class="add-row-bar" onclick="dfOpenProd()">🔍 + เพิ่มรายการ — สินค้า · ค่าแรง · บริการ</div>
     </div>
@@ -444,6 +470,16 @@ function tplScan(e){
   var isSN=/^SN|^S\/N|\-SN/i.test(v)||v.length>=10;
   alert((isSN?'อ่านเป็น S/N: ':'อ่านเป็น Barcode: ')+v); e.currentTarget.value='';
 }
+/* #7: อายุใบจอง auto-expire — ระบุวันเองได้ต่อใบ + default dropdown (decision 2026-07-02) */
+function resvAgeChange(){
+  var s=document.getElementById('resvAge'), c=document.getElementById('resvAgeCustom');
+  c.style.display = s.value==='custom' ? '' : 'none';
+  var d = s.value==='custom' ? (parseInt(c.value,10)||15) : parseInt(s.value,10);
+  var M=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  var base=new Date(2026,5,6); base.setDate(base.getDate()+d); /* วันที่จอง 06 มิ.ย. 26 + อายุ (ค.ศ.) */
+  document.getElementById('resvExpire').textContent='หมดอายุ '+base.getDate()+' '+M[base.getMonth()]+' '+String(base.getFullYear()%100);
+}
+
 /* ประเภทการจอง (per-document) → เปลี่ยน routing pill */
 function resvRoute(){
   var t=document.getElementById('resvType').value;
