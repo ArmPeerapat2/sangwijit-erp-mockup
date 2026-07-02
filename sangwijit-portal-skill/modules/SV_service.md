@@ -19,9 +19,11 @@
 | SV-4 | ปิดงาน / QA (Service Close & QA) | P2 | ปิดงาน |
 | SV-5 | ใบงานช่าง / Job Card (งานซ่อม) | P2 | ดำเนินงาน |
 | SV-6 | จัดส่งและติดตั้ง (Delivery & Installation) | P2 | Sub-module ใหม่ (renamed from DL-1, 2026-04-22) |
-| CL-1 | รับเรื่องเคลม Supplier (Claim Intake) | P2 | เคลม |
-| CL-2 | ส่งเคลม & ติดตาม | P2 | เคลม |
-| CL-3 | ใบลดหนี้เคลม (Claim Credit Note) | P2 | เคลม |
+| ~~CL-1~~ | ~~รับเรื่องเคลม Supplier~~ **decomposed** → เคลม = job type ใน SV-1 intake | — | เคลม |
+| ~~CL-2~~ | ~~ส่งเคลม & ติดตาม~~ **decomposed** → CLM ใบเคลม vendor (`clm-vendor-claim-mockup.html`) | — | เคลม |
+| ~~CL-3~~ | ~~ใบลดหนี้เคลม~~ **decomposed** → PO-CN ใบลดหนี้เจ้าหนี้ (ฝั่ง vendor) · SL-CN (ฝั่งลูกค้า ผ่านคำขอใน SL-Q) | — | เคลม |
+
+> **🔒 CL decomposed (grill 2026-07-01 + SL-CN grill 2026-07-02):** เคลม**ไม่เป็น module แยก** — เป็น**ประเภทงาน (job type)** ใน SV-1 Service Intake · ผลจบ 3 ทาง (ซ่อม = จบใน SV / เปลี่ยนตัว = SV+WH → ไล่ vendor ผ่าน CLM→PO-CN / คืนเงิน = ส่งคำขอ → SL-Q → SL-CN) · cost binary (Vendor 100% หรือ SWT) ลูกค้าไม่จ่าย · **full spec: `.agents/svc-claim-jobtype-spec.md`** — section CL-1/2/3 ด้านล่างเก็บไว้เป็น reference field-level เท่านั้น ห้ามใช้เป็นโครง module
 
 ---
 
@@ -288,6 +290,8 @@ QR Track Update: อัปเดตสถานะ "ส่งมอบแล้�
 ---
 
 ## CL-1 — รับเรื่องเคลม Supplier (Claim Intake)
+
+> ⚠️ **DECOMPOSED** — section นี้เป็น reference field-level เท่านั้น · เคลม = job type ใน SV-1 (ไม่ใช่ module แยก) · โครงจริงดู `.agents/svc-claim-jobtype-spec.md`
 
 ### Module Brief
 ```
