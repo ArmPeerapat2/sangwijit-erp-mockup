@@ -15,7 +15,7 @@
 | SL-2 | ใบสั่งจอง (Reservation) | P1 | salesOrders (36/37) | List + Form |
 | SL-3 | ใบมัดจำ (Deposit) | P1 | Custom Prepayment | List + Form |
 | SL-4 | บิลขาย / ขายสด (Invoice) | P1 | salesInvoices (112/113) | List + Form |
-| SL-5 | ใบลดหนี้ (Credit Memo) | P1 | creditMemos (114) | List + Form |
+| SL-CN | ใบลดหนี้ขาย (Credit Memo) — เดิมรหัส SL-5 | P1 | creditMemos (114) | List + Form |
 | SL-F1 | ขออนุมัติวงเงิน (Credit Approval) | P1 | customers (18) | Workflow Panel |
 
 ---
@@ -225,6 +225,12 @@ Draft → รออนุมัติวงเงิน (ถ้าเกิน) 
                 ↓                       ↓
             ปฏิเสธ               ยกเลิก (คืนสต็อก)
 ```
+
+### Business Rules — Reservation (decision 2026-07-02 #7)
+- **BC เป็นเจ้าของ reservation ledger** — Portal แค่ trigger: Confirm → reserve · Cancel/Expire → release ทันที (Portal ไม่เก็บ reservation เอง)
+- **อายุใบจอง (auto-expire):** ระบุจำนวนวันเองได้ต่อใบ + dropdown ค่ามาตรฐาน (7/15/30 วัน · default กลางตั้งที่ CF Config) · ใกล้ครบกำหนด → banner เตือน + ปุ่มต่ออายุ/ยกเลิก · ครบแล้วระบบปล่อยยอดจองคืนสต๊อกอัตโนมัติ
+- **Guard double-reserve:** สร้างใบจองแล้วสต๊อกไม่พอ → แสดง**ลิสต์ใบจองที่ถือของ** (เลขใบจอง · เซลล์ผู้จอง · จำนวน · วันหมดอายุ) + ปุ่ม "ขอถอนจอง" (notification ถึงเซลล์เจ้าของใบ) — ไม่ใช่ warning เฉย ๆ ต้อง actionable
+- **WH-3 อ่าน reserved qty จาก BC ledger** — pick list แสดงคอลัมน์ "สต๊อก (จองไว้)" กันเบิกเกิน
 
 ### SC ที่ใช้
 SC1, SC2, SC3, SC4, SC5, SC6, SC7, SC8, SC9
@@ -514,7 +520,7 @@ POST   /vatEntries                      → บันทึก VAT Output (⑤)
 
 ### Business Rules
 - **Serial ไม่บังคับที่บิลขาย** — บังคับที่ WH Issue (Rule จาก Sale.docx)
-- ถ้า Post ไปแล้วแต่ต้องแก้ → ต้องออก Credit Memo (SL-5) เท่านั้น
+- ถ้า Post ไปแล้วแต่ต้องแก้ → ต้องออก Credit Memo (SL-CN) เท่านั้น
 - QR Code บนใบเสร็จ → ลูกค้าดูสถานะจัดส่งได้ (UX9)
 - e-Tax Invoice XML → ส่ง RD API หลัง Post (Phase 2)
 - **① กันสต็อก**: เลือกสินค้า → Reserve ทันที → ยกเลิกบิล = คืนสต็อก
@@ -522,6 +528,7 @@ POST   /vatEntries                      → บันทึก VAT Output (⑤)
 - **③ จัดส่ง/ติดตั้ง**: Post แล้วถ้ามีจัดส่ง → Auto-push คิวจัดส่ง + Notification มือถือ
 - **④ โปรฯ Auto-Match**: SC9 แสดงโปรฯ ที่ match → ซ้อนได้ ≤ 2 ชั้น (B1 Rule)
 - **⑤ ใบกำกับ**: ลูกค้าขอ = ออกทันที → VAT Output auto-post → ฐานข้อมูลภาษี
+- **⑥ ที่อยู่ 2 บทบาท (decision 2026-07-02 #12)**: header มี 2 field แยกกันโดยเจตนา — **ที่อยู่ใบกำกับภาษี (Bill-to)** ต้องตรงทะเบียน VAT (ผิด = ใบกำกับใช้เครดิตภาษีไม่ได้) · **ที่อยู่จัดส่งสินค้า (Ship-to)** แก้อิสระได้ (หน้างาน/สาขา/ไซต์) · SV-6 + WH-3 อ่านจาก **Ship-to เท่านั้น** ห้ามอ่าน Bill-to · Ship-to ≠ Bill-to → แสดง badge "📍 ส่งของคนละที่กับที่อยู่ใบกำกับ" กันเข้าใจว่ากรอกผิด
 
 ### Flowchart Reference
 ```
@@ -532,39 +539,53 @@ Flow/09 Sales - Sales Invoice  → Sub-flow เฉพาะส่วนออก
 
 ---
 
-## SL-5 — ใบลดหนี้ (Credit Memo)
+## SL-CN — ใบลดหนี้ขาย (Credit Memo)
+
+> **หมายเหตุรหัส (grill 2026-07-02 Q1):** spec เดิมใช้รหัส "SL-5" แต่ไฟล์จริงคือ `slcn-credit-memo-mockup.html` — canonical = **SL-CN** (คู่สมมาตรกับ PO-CN ฝั่งซื้อ) · รหัส SL-5 ปล่อยให้ CRM (archived Phase 2)
 
 ### Module Brief
 ```
-Module:  SL-5 Credit Memo
+Module:  SL-CN Credit Memo
 Phase:   P1
 BC:      creditMemos (Header 114)
-Trigger: คืนสินค้า / แก้ไขราคาหลัง Post / ส่วนลดพิเศษหลังขาย
-Output:  ใบลดหนี้ + ลด AR + คืนสต็อก (ถ้าเกี่ยวข้อง)
+Trigger: (1) Sales เปิดจากบิล — ราคาผิด / ส่วนลดพิเศษ / คืนสินค้า
+         (2) คำขอจากงานเคลม SV — ผลจบเคลม "คืนเงิน/ลดหนี้" เท่านั้น
+Output:  ใบลดหนี้ + ลด AR/VAT + เครดิตค้างใน Customer Ledger
 ```
 
-**2 ประเภท (จาก UX Issue List):**
-- **ในประกัน**: ใช้ Credit Note แบบ "ใบลดหนี้ ใบกำกับภาษี" — Flow: Service → Credit Memo
-- **นอกประกัน**: ใช้ Credit Note แบบ "ใบลดหนี้" — Flow: ขาย → ลดราคา / คืนสินค้า
+### ทางเข้า 2 ทาง — ฟอร์มเดียว (Q2/Q3/Q8/Q9)
+- **สายขาย:** Sales เปิดจาก SL-4 บิลขาย → เหตุผล: ราคาผิด / ส่วนลดพิเศษ / คืนสินค้า (ไม่เกี่ยวชำรุด)
+- **สายเคลม:** SV จบงานเคลมผลลัพธ์ "คืนเงิน/ลดหนี้" → ส่ง**คำขอ**เข้า SL-Q กลุ่ม CN (badge "🛠️ จากเคลม SV") → Sales เปิดฟอร์ม prefill อ้างอิงงานเคลม + **เหตุผลล็อกเป็น "เคลม (จาก SV)" แก้ไม่ได้**
+- ผลจบเคลมอื่นไม่ออก CN: ซ่อมเสร็จ = จบใน SV · **เปลี่ยนตัวใหม่ = จบใน SV/WH** (เบิกเครื่องใหม่ + ไล่ vendor ผ่าน CLM→PO-CN) ไม่แตะ AR
+
+### โหมดการลดหนี้ 3 โหมด (ตาม mockup)
+| โหมด | ยอดลด | ของคืน |
+|---|---|---|
+| ✏️ ปรับราคา | ส่วนต่างราคา | ไม่มี |
+| 📦 คืนบางรายการ | ราคาเดิม × จำนวนคืน | มี — ระบุ Serial (SC8) |
+| ↩️ คืนทั้งบิล | เต็มยอด | มี — ทั้งหมด |
 
 ### ERP Form 7 Sections
 
 **Section 2 — Doc Header**
 ```
-เลขที่ CM      : Auto | วันที่ CM : Today
+เลขที่ CN      : Auto | วันที่ CN : Today
 อ้างอิงบิลขาย : SC5 [Required] ← ต้องระบุบิลต้นทาง
-เหตุผล        : Dropdown (คืนสินค้า / ราคาผิด / ส่วนลดพิเศษ / ชำรุด)
+เหตุผล        : Dropdown (ราคาผิด / ส่วนลดพิเศษ / คืนสินค้า / เคลม (จาก SV) — ล็อกเมื่อมาจากคิว SV)
+รูปแบบเอกสาร  : AUTO ตามบิลต้นทาง แก้ไม่ได้ (Q4) —
+                บิลมีใบกำกับภาษี → "ใบลดหนี้/ใบกำกับภาษี" (ปรับ VAT Output)
+                บิลไม่มีใบกำกับ  → "ใบลดหนี้"
 ```
 
 **Section 4 — Line Items**
 ```
-Copy มาจาก Invoice ต้นทาง (Auto-fill) → แก้ไขจำนวน/ราคาที่ต้องลด
+Copy มาจาก Invoice ต้นทาง (Auto-fill) → แก้ตามโหมด
 ถ้าคืนสินค้า: ระบุ Serial ที่คืน (SC8)
 ```
 
-### Status Flow
+### Status Flow (Q5/Q7)
 ```
-Draft → รออนุมัติ (ถ้ายอดเกิน Threshold) → Approved → Posted
+Draft → รออนุมัติ (CF-2.6 ทุกใบ) → Approved → [gate: รอรับของคืน] → Posted
 ```
 
 ### BC API
@@ -574,10 +595,13 @@ PATCH /salesCreditMemos/{id}
 POST  /salesCreditMemos/{id}/Microsoft.NAV.post → Post CM
 ```
 
-### Business Rules
-- Credit Memo ต้อง Link กับ Invoice ต้นทางเสมอ (SC5)
-- ถ้าคืนสินค้า → Trigger WH Return Receipt อัตโนมัติ
-- Credit ที่ได้ → ใช้หักบิลถัดไปหรือคืนเงินสด (กำหนดใน Config)
+### Business Rules (grill 2026-07-02 Q1-Q10)
+1. **Link บิลต้นทางเสมอ** (SC5) — ไม่มีบิลอ้างอิง = สร้างไม่ได้
+2. **อนุมัติทุกใบผ่าน CF-2.6 Approval Matrix** ตาม tier ยอดเงิน — ไม่มี threshold ยกเว้น (CN = ช่องทาง fraud คลาสสิก ซอยใบเล็กหนีไม่ได้) · Maker≠Checker
+3. **ของก่อนเงินเท่านั้น (Q5):** โหมดคืนของ Post ได้ต่อเมื่อมีหลักฐานรับของคืนแล้ว — สายขาย = WH Return Receipt posted · สายเคลม = SV รับของตอน intake แล้ว (ใช้เป็นหลักฐานได้เลย ไม่รับซ้ำ) · ก่อนครบเงื่อนไข ปุ่ม Post disable "รอรับของคืน"
+4. **เครดิตค้างใน AR ledger เสมอ (Q6):** CN จบหน้าที่ที่สร้างเครดิต balance — การใช้เครดิตเป็นขั้นแยกที่ FI: หักบิลถัดไป = คิว apply FI-1/FI-1Q · คืนเงินสด = Finance สร้างรายการจ่ายคืน + approval (เงินออกจริง) · **ห้าม CN trigger จ่ายเงินเอง**
+5. **รูปแบบเอกสาร auto ตามบิลต้นทาง (Q4)** — ห้ามให้เลือกเอง กันออกผิดแบบ (บิลมี VAT แต่ออกใบลดหนี้ธรรมดา = VAT Output ไม่ถูกปรับ)
+6. Post ไปแล้วแก้ไม่ได้ — ต้อง Reverse + สร้างใหม่ (BC เป็นเจ้าของ posting)
 
 ---
 

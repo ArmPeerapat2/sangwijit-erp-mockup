@@ -30,7 +30,7 @@
 | การเงิน | FI-13A | Dual-Book Entity CF-9 | `05-gl-closing.md` |
 | การเงิน | FI-13B | Dual-Book Entity CF-9 | `05-gl-closing.md` |
 | การเงิน | FI-10 | Accounting Dashboard | `01-overview.md`, `07-kpi.md` |
-| Config | CF-7 | Credit Limit / Tier | `03-ar.md` |
+| Config | CF-2.6 | Credit Limit / Tier | `03-ar.md` |
 | Config | CF-9 | Entity Tagging (Dual-Book) | `05-gl-closing.md` |
 
 ---
@@ -76,7 +76,7 @@ cf9-entity-tagging-mockup.html       → 05-gl-closing.md
 | **V — VAT Golden Rule** | discount ก่อน VAT | FI-4, SL-1, PO | `04-tax.md` |
 | **D — Dual-Book** | Entity Tag CF-9 → FI-13A/B | FI-13, CF-9 | `05-gl-closing.md` |
 | **B5 — AP 3-ชั้นตรวจ** | PO + GRN + Invoice ต้องตรง | FI-2 | `11-ap-mindset.md` |
-| **R — Credit Tier** | SL-F1 + PO ผ่าน CF-7 | SL, CF-7, FI-1 | `03-ar.md` |
+| **R — Credit Tier** | SL-F1 + PO ผ่าน CF-2.6 | SL, CF-2.6, FI-1 | `03-ar.md` |
 
 ---
 

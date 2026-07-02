@@ -13,7 +13,7 @@ Business Central 365 เป็น ERP มาตรฐานที่ดี แ�
 |----------------|-------------------|
 | UI ไม่เป็นภาษาไทย 100% + ไม่ใช้ พ.ศ. native | Portal ใช้ไทย + พ.ศ. ทั้งหมด |
 | ไม่รองรับ Dual-Book (บัญชี 2 เล่ม: หลัก/ภาษี) | Portal บังคับ Entity Tag ทุก AP Invoice |
-| ไม่มี Credit Approval Tier (หลายระดับ) | Portal ใช้ CF-7 Approval Matrix ร่วม SL-F1/PO |
+| ไม่มี Credit Approval Tier (หลายระดับ) | Portal ใช้ CF-2.6 Approval Matrix ร่วม SL-F1/PO |
 | Rebate ปนกับ Discount | Portal แยก Rebate Dashboard (PO-7/FI-8) |
 | Workflow cross-module แย่ (เช่น Service → GRN → AP) | Portal รวม Queue Dashboard ทุก module |
 
@@ -94,7 +94,7 @@ Business Central 365 เป็น ERP มาตรฐานที่ดี แ�
 โปรโมชั่นซ้อนได้สูงสุด 2 ชั้น + กำหนด Priority ชัดเจน
 
 ### B5 — Credit Approval Tier Architecture
-Credit Approval มี 2 ด้าน (SL-F1 + PO) ใช้ CF-7 Approval Matrix ร่วมกัน
+Credit Approval มี 2 ด้าน (SL-F1 + PO) ใช้ CF-2.6 Approval Matrix ร่วมกัน
 
 ### V — VAT Golden Rule
 **ส่วนลดหักก่อน VAT เสมอ** — คำนวณ VAT จากราคาหลังหักส่วนลด
@@ -120,7 +120,7 @@ Threshold สินค้าหมุนช้าแยกตามหมวด�
 |------|------|
 | Sale-In Accrual | PO-7 → FI-8 → PM-Q |
 | Non-Move Stock Alert | WH-NM → PO (ปรับ Threshold) |
-| Credit Approval | SL-F1 + PO → CF-7 |
+| Credit Approval | SL-F1 + PO → CF-2.6 |
 | Dual-Book | CF-9 → PO-6 → FI-13A → FI-13B |
 | Fixed Asset Lifecycle | FI-9 → FI-10 / FI-11 |
 | PO Deposit → AP Settlement | PO-8 → FI-2 → PO-5 |

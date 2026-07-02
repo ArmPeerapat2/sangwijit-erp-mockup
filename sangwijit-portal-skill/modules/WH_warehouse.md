@@ -234,6 +234,11 @@ PATCH /itemSerialNumbers                            → โอน Serial
 - Serial ต้นทาง ≠ สร้างใหม่ — ต้อง Select จาก Stock เดิมเสมอ
 - Transfer In Transit: สินค้าอยู่ระหว่างทาง → ไม่นับสต็อกทั้ง 2 Location
 - ถ้า ปลายทางรับไม่ครบ → ส่วนที่เหลือ Return กลับหรือทำ Transfer ใหม่
+- **🔒 Transfer Ownership (decision 2026-07-02 #13):**
+  - **WH-2 = เจ้าของใบโอน** — จุดเดียวที่สร้าง Transfer Order ได้
+  - **WH-3 "TR-Out ขอโอน" = request only** — ส่งคำขอเข้าคิว WH-2 ไม่สร้าง TO เอง (กันใบซ้อน 2 ใบสำหรับของชุดเดียว)
+  - **WH-1 "TR-In รับโอน" = receive once (idempotent)** — ต้อง match TO status=Shipped · ยืนยันรับได้ครั้งเดียว → status=Received แล้วปุ่ม disable (กันสต๊อกปลายทางเข้าซ้ำ 2 เท่า)
+  - ทั้ง 3 คิวแสดงสถานะใบโอนเดียวกัน real-time จาก BC Transfer Header status
 
 ---
 

@@ -354,7 +354,7 @@ sv6_job
 | SV-4 | Warranty Check | [sv4-warranty-check-mockup.html](../../sv4-warranty-check-mockup.html) |
 | SV-5 | **Job Card** (ซ่อม) | [sv5-job-card-mockup.html](../../sv5-job-card-mockup.html) |
 | **SV-6** | **Delivery & Install** | [sv6-delivery-install-mockup.html](../../sv6-delivery-install-mockup.html) ✅ renamed 2026-04-22 |
-| CL-1 | Claim Intake | [cl1-claims-mockup.html](../../cl1-claims-mockup.html) |
+| ~~CL-1~~ | ~~Claim Intake~~ decomposed 2026-07-02 — เคลม = job type ใน SV-1 (spec: `.agents/svc-claim-jobtype-spec.md`) | [archived](../../_archive/cl1-claims-mockup.html) |
 
 > ⚠️ **Spec drift:** `SV_service.md` เคยระบุ SV-5 = Delivery · แต่ mockup ใช้ SV-5 = Job Card → ต้อง update spec ให้ SV-5 = Job Card, SV-6 = Delivery
 

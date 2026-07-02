@@ -8,20 +8,25 @@
 
 ---
 
-## 📋 Menu List
+## 📋 Menu List (sync กับโครงจริง 2026-07-02 — mockup ชนะ spec เดิม)
 
-| รหัส | เมนู | Phase | ประเภท |
+| รหัส | เมนู | ไฟล์จริง | State หลัก |
 |---|---|---|---|
-| SV-Q | Service Queue Dashboard | P2 | คิวงานช่าง |
-| SV-1 | รับเรื่องซ่อม (Service Intake) | P2 | รับงาน |
-| SV-2 | ใบงานช่าง (Job Card) | P2 | ดำเนินงาน |
-| SV-3 | เบิกอะไหล่ (Parts Requisition) | P2 | เบิก |
-| SV-4 | ปิดงาน / QA (Service Close & QA) | P2 | ปิดงาน |
-| SV-5 | ใบงานช่าง / Job Card (งานซ่อม) | P2 | ดำเนินงาน |
-| SV-6 | จัดส่งและติดตั้ง (Delivery & Installation) | P2 | Sub-module ใหม่ (renamed from DL-1, 2026-04-22) |
-| CL-1 | รับเรื่องเคลม Supplier (Claim Intake) | P2 | เคลม |
-| CL-2 | ส่งเคลม & ติดตาม | P2 | เคลม |
-| CL-3 | ใบลดหนี้เคลม (Claim Credit Note) | P2 | เคลม |
+| SV-Q | Service Queue Dashboard (ทุกสถานะ) | `sv-q-service-queue-mockup.html` | filter ตาม state |
+| SV-1 | ใบรับงานซ่อม (รับเรื่อง · ประมาณการ · **job type selector**) | `sv1-service-intake-mockup.html` | `รอมอบหมาย` |
+| SV-2 | **ใบมอบหมายงาน** (Admin เลือกช่าง+นัด) — *ไม่ใช่ Job Card ตาม spec เดิม* | `sv2-service-assignment-mockup.html` | `รอมอบหมาย → มอบหมายแล้ว` |
+| SV-5 | Job Card ช่าง (กรอกอาการ+แก้ไข) | `sv5-job-card-mockup.html` | `งานช่าง → ส่งงาน/รออะไหล่` |
+| SV-3 | เบิกอะไหล่จาก**สต็อก** | `sv3-spare-part-issue-mockup.html` | `PendingApproval → Issued` |
+| SV-Order | **สั่งอะไหล่** (ไม่มีในสต็อก · spawn PO-4) | `sv-order-parts-request-mockup.html` | `สั่ง → จ่าย → รอรับ → นัด → คืนของเก่า` |
+| SV-4 | ใบรับสินค้าจากงานซ่อม (admin pricing + Vendor billing) | `sv4-service-close-mockup.html` | `รอส่งคืนลูกค้า` |
+| SV-7 | ส่งงานลูกค้า (เซ็น+QR+Invoice+ปิดงาน) | `sv7-service-delivery-mockup.html` | `ปิดงาน (เรา-ลูกค้า)` |
+| SV-6 | จัดส่งและติดตั้ง (Delivery & Installation · แยก loop) | `sv6-delivery-install-mockup.html` +2 sub | — |
+| CLM | ใบเคลม Vendor (ติดตาม + settlement) | `clm-vendor-claim-mockup.html` | `Draft → ส่งเคลม → รอ vendor → APCN` |
+| ~~CL-1~~ | ~~รับเรื่องเคลม Supplier~~ **decomposed** → เคลม = job type ใน SV-1 intake | — | เคลม |
+| ~~CL-2~~ | ~~ส่งเคลม & ติดตาม~~ **decomposed** → CLM ใบเคลม vendor (`clm-vendor-claim-mockup.html`) | — | เคลม |
+| ~~CL-3~~ | ~~ใบลดหนี้เคลม~~ **decomposed** → PO-CN ใบลดหนี้เจ้าหนี้ (ฝั่ง vendor) · SL-CN (ฝั่งลูกค้า ผ่านคำขอใน SL-Q) | — | เคลม |
+
+> **🔒 CL decomposed (grill 2026-07-01 + SL-CN grill 2026-07-02):** เคลม**ไม่เป็น module แยก** — เป็น**ประเภทงาน (job type)** ใน SV-1 Service Intake · ผลจบ 3 ทาง (ซ่อม = จบใน SV / เปลี่ยนตัว = SV+WH → ไล่ vendor ผ่าน CLM→PO-CN / คืนเงิน = ส่งคำขอ → SL-Q → SL-CN) · cost binary (Vendor 100% หรือ SWT) ลูกค้าไม่จ่าย · **full spec: `.agents/svc-claim-jobtype-spec.md`** — section CL-1/2/3 ด้านล่างเก็บไว้เป็น reference field-level เท่านั้น ห้ามใช้เป็นโครง module
 
 ---
 
@@ -66,17 +71,6 @@ Trigger: ลูกค้านำสินค้ามาซ่อม หรื�
 Output:  Service Order + นัดหมายช่าง
 ```
 
-> ### 🔄 Design Note — Claim Decompose + Job-Type Model (locked 2026-07-01)
-> **CL-1 Claims ไม่เป็น module แยก · claim = "ประเภทงาน" ตัวหนึ่งใน Service Intake.** service form เป็น skeleton · แต่ละ job type toggle extension inline (`.jx` slot). full spec: **`.agents/svc-claim-jobtype-spec.md`** (grill Q1-Q15).
-> - **5 job types:** ซ่อม (core) · **เคลม** (extension: menu A-E · vendor settlement V1-V5 · cost coverage) · ติดตั้ง (pull SL · จุด/วัสดุ/ประกัน) · ตรวจเช็ค (diagnostic checklist) · ล้าง (batch checklist + MA). ~~จัดส่ง~~ ตัด (→WH / ยุบเข้าติดตั้ง).
-> - **เคลม sub-type (auto จาก warranty):** Warranty / Goodwill / Pre-sale.
-> - **Cost = BINARY** (Vendor 100% in-condition · หรือ SWT รับภาระ out) · **ลูกค้าไม่จ่าย** · Refund ≤ sale price · ไม่แบ่ง %.
-> - **Vendor settlement:** V1 ส่งใหม่/ซ่อมกลับ · V2 pay-in · V3 CN · V4 refuses→VRA(doc ใหม่) · V5 goodwill.
-> - **Approval 2-tier:** ผจก.ศูนย์ (INT-APPR · รับเข้าคลัง) + จนท.เซล/บริการ (EXT-APPR · ส่ง vendor).
-> - **คลังเคลม:** WH-SVC-CTR + 6 bins · reuse ✦ WH-1/WH-3/PO-CN/SL-CN/FI-1.
-> - **UI:** ยึด density guideline `knowledge-base/portal/06-density-hierarchy.md` (`.dz-*` · ยุบ vs เด่น).
-> - Mockup: `bc365/service-intake-mockup.html` (job-type bar + `.jx` slot · built ครบ 5).
-
 ### ERP Form 7 Sections
 
 **Section 1 — Page Header**
@@ -88,7 +82,7 @@ ActionBar: [Save] [นัดหมายช่าง] [พิมพ์ใบร�
 **Section 2 — Doc Header**
 ```
 เลขที่รับซ่อม : Auto | วันที่รับ    : Today
-ประเภทงาน    : ซ่อม / เคลม / ติดตั้ง / ตรวจเช็ค / ล้าง   (claim = job type · ดู Design Note ↓)
+ประเภทงาน    : ซ่อม / ติดตั้ง / ตรวจสภาพ / เคลม
 อ้างอิงบิล   : SC5 (บิลขายต้นทาง — ถ้ามี)
 วันนัดช่าง   : Required (ระบุทันที)
 ช่างที่รับผิดชอบ: Assign จาก Technician List
@@ -299,6 +293,8 @@ QR Track Update: อัปเดตสถานะ "ส่งมอบแล้�
 ---
 
 ## CL-1 — รับเรื่องเคลม Supplier (Claim Intake)
+
+> ⚠️ **DECOMPOSED** — section นี้เป็น reference field-level เท่านั้น · เคลม = job type ใน SV-1 (ไม่ใช่ module แยก) · โครงจริงดู `.agents/svc-claim-jobtype-spec.md`
 
 ### Module Brief
 ```

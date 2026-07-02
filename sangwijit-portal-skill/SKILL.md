@@ -110,9 +110,9 @@ Azure / SQL (BC Database)
 
 | Module | ย่อ | Phase | หน้าจอหลัก |
 |---|---|---|---|
-| Sales | SL | P1 | Quotation, SO, Invoice, Credit Memo, Deposit, Cash Sale |
+| Sales | SL | P1 | SL-Q, Quotation, SO, Deposit, Invoice, **Credit Memo = SL-CN** (เดิม SL-5), SL-F1 — *SL-5 CRM / SL-6 Promo / SL-7 Report archived 2026-07-02* |
 | Warehouse | WH | P1 | GRN, Issue, Transfer, Adjust, Stock Card, Serial |
-| Purchase | PO | P1 | PR, PO, GRN, AP Invoice, Credit Memo, Vendor Return, **Sale-In Accrual (PO-7)**, **PO บิลฝาก (PO-8)** |
+| Purchase | PO | P1 | PR, PO, GRN, AP Invoice, Credit Memo, Vendor Return, **Sale-In Accrual (PO-7)**, **สั่งซื้อสินค้าฝาก (PO-8 · เดิม "บิลฝาก")** |
 | Finance | FI | P1+P2+P3 | AR Receive, AP Payment, Expense Voucher (P2), Bank Recon, Credit Control (P2), Period Close, **Fixed Asset (FI-9/10/11)**, **WHT (FI-12)**, **Dual-Book (FI-13)** |
 | Service & Delivery | SV | P2 | Service Queue, Job Card, QA Close, Delivery & Installation, Mobile · **Intake รับ 5 ประเภทงาน: ซ่อม/เคลม/ติดตั้ง/ตรวจเช็ค/ล้าง** (claim decompose เข้าที่นี่) |
 | Promotion/Pricing | PM | P1+P3 | Price List, Step Discount, Bundle, Promotion Scheme, Quota, Simulator |
@@ -129,6 +129,40 @@ Azure / SQL (BC Database)
 - **Master Data (MD)** = ข้อมูลอ้างอิงที่ User สร้างขึ้น (Item, Customer, Vendor, Employee, Branch)
 - **System Config (CF)** = ตั้งค่าระบบโดย Admin (Tax Code, Number Series, Posting Group, Bin Policy)
 - **Promotion Scheme** อยู่ใน Promotion module ไม่ใช่ Config → เพราะเกี่ยวข้องกับ Business Logic การขาย
+
+---
+
+## 🔒 Cross-Module Flow Rules (audit closeout 2026-07-02 — ห้าม re-litigate)
+
+จาก Flow Redundancy Audit 17 overlaps (`.agents/flow-redundancy-analysis.html`) — กติกา ownership/gate ที่ล็อกแล้ว:
+
+### ตาราง "ใครเป็นเจ้าของอะไร" (Single Owner Rules)
+
+| เรื่อง | เจ้าของ (จุดเดียว) | คนอื่นทำได้แค่ | กันอะไร |
+|---|---|---|---|
+| Approval Matrix | **CF-2.6** (รหัสเดียว — CF-7 คือ alias เก่า) | ทุกโมดูลอ้าง CF-2.6 | wire ผิด matrix |
+| จ่ายเงินส่งเสริม (Trade Support) | **PO-7** Record Payment/Realize | FI-8 = read-only aging + ส่งทวง | GL ซ้ำ 2 เท่า |
+| Serial Number | กรอกที่ **WH-3 เบิกออก** เท่านั้น → BC itemLedger | SL-4 แสดง chip "รอคลังกรอกตอนเบิก" · PO-7 sell-out ดึงจาก ledger ผูกกลับ SL-4 | serial ไม่ตรง 2 ที่ |
+| Reservation | **BC ledger** เป็นเจ้าของ — Portal แค่ trigger | SL-2 reserve/release · WH-3 อ่านคอลัมน์ "สต๊อก (จองไว้)" | จองค้าง/ขายเกิน |
+| Transfer Order | **WH-2** สร้างได้ที่เดียว | WH-3 = ส่งคำขอ · WH-1 = รับครั้งเดียว (idempotent) | ใบซ้อน/รับซ้ำ |
+| WHT Certificate + ภ.ง.ด. | **FI-12** Release/Print ที่เดียว · เรทเป็น dropdown ในฟอร์ม | FI-2/FI-4 สร้าง WHT record (pending) เท่านั้น | cert ซ้ำ 2 ใบ (ปัญหากรมสรรพากร) |
+| ใบลดหนี้ขาย | **SL-CN** (Sales/Finance ออก) | SV ส่งคำขอเข้า SL-Q (เคลมผลจบ "คืนเงิน/ลดหนี้" เท่านั้น) | SV แตะเอกสารบัญชี |
+
+### Gate Rules (ลำดับบังคับ)
+
+| Gate | กติกา |
+|---|---|
+| **ของก่อนเงิน (ฝั่งขาย)** | SL-CN โหมดคืนของ Post ได้เมื่อรับของคืนแล้วเท่านั้น (WH Return posted / SV intake) |
+| **ของก่อนเงิน (ฝั่งซื้อ)** | PO-6 โหมด Normal ต้อง GRN full-received · ยกเว้นโหมด Deposit (สั่งซื้อสินค้าฝาก PO-8 · 2-Way Match) |
+| **อนุมัติ CN ทุกใบ** | ผ่าน CF-2.6 ตาม tier ยอด — ไม่มี threshold ยกเว้น (กัน fraud ซอยใบเล็ก) · Maker≠Checker |
+| **เครดิตจาก CN** | ค้างใน AR ledger เสมอ → apply/refund เป็นขั้นแยกที่ FI (FI-1Q) — ห้าม CN สั่งเงินออกเอง |
+| **อายุใบจอง** | ระบุวันได้ต่อใบ + default dropdown (CF Config) → หมดอายุปล่อยคืนอัตโนมัติ |
+
+### Naming & Display Rules
+
+- **ที่อยู่ 2 บทบาทใน SL-4:** header = ที่อยู่ใบกำกับภาษี (Bill-to) ≠ tab จัดส่ง = ที่อยู่ส่งของ (Ship-to แก้อิสระ) — SV-6/WH-3 อ่าน Ship-to เท่านั้น
+- **ชื่อชนข้ามโมดูล → prefix ฝั่งงาน:** "ขาย มัดจำ" (SL-3) / PO-8 = "สั่งซื้อสินค้าฝาก" (ดู `knowledge-base/portal/03-ui-ux-convention.md` §10)
+- **Doc breadcrumb:** แสดงเฉพาะเอกสารที่อ้างอิงถึงกันจริง (swt-link.js filter `pending`) — ไม่โชว์ chain ทฤษฎีทั้งสาย
 
 ---
 

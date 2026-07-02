@@ -65,7 +65,7 @@
 | PO-5 GRN | `Posted Purch. Receipt` |
 | PO-6 AP Invoice | `Purchase Invoice` + `Posted Purch. Invoice` |
 | PO-7 Sale-In Accrual | (Custom) + `G/L Entry` |
-| PO-8 Deposit Bill | `Vendor Deposit` (custom) |
+| PO-8 สั่งซื้อสินค้าฝาก (Deposit Bill) | `Vendor Deposit` (custom) |
 
 ### 2.4 Warehouse (WH)
 

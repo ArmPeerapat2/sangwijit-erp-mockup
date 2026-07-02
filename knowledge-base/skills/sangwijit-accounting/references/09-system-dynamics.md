@@ -136,7 +136,7 @@ Bank Rec
 
 ```
 Portal: SL-2 → สร้าง SO
-  ↓ Credit check (R rule) via CF-7 → BC365 customer credit limit
+  ↓ Credit check (R rule) via CF-2.6 → BC365 customer credit limit
   ↓ (API POST)
 BC365: Sales Order (released)
   ↓

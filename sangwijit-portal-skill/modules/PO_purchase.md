@@ -208,7 +208,7 @@ MOS = สต๊อกในมือ ÷ (ยอดขาย 2 เดือน ÷
 | **PO-5** | รับสินค้า GRN — ทยอยรับ + full-receive gate ⚠️ | P1 | purchaseReceipts | List + Form | ✅ มี · audit ค้าง ทยอยรับ |
 | PO-6 | ตั้งหนี้เจ้าหนี้ AP Invoice | P1 | purchaseInvoices (122/123) | List + Form | ✅ ปรับ sl-4 + Doc Chain + mode toggle (Normal/Deposit) |
 | PO-7 | Trade Support 5 Types Tracking | P1 | Custom: vendorObligations | List + Form + Dashboard | ✅ มี (Rebate Dashboard) · ขาด Form view 5 types |
-| **PO-8** | PO บิลฝาก (Deposit Bill / Prepayment) ⚠️ | P1 | purchaseOrders + generalJournalLines | Form | ❌ ยังไม่มีไฟล์ · per pivot focus |
+| **PO-8** | สั่งซื้อสินค้าฝาก (Deposit Bill / Prepayment · ชื่อเดิม "บิลฝาก" — rename 2026-07-02 #6) ⚠️ | P1 | purchaseOrders + generalJournalLines | Form | ❌ ยังไม่มีไฟล์ · per pivot focus |
 
 > **⚠️ Drift จาก v1.0 (per pivot 2026-04-23/25):**
 > - **PO-2:** เปลี่ยน scope จาก RFQ → Trade Agreement (RFQ ไม่ได้ใช้)
@@ -359,7 +359,9 @@ Output:  Commitment record ที่ถูกอ้างอิงจาก PR/P
 #### Type ③ Sell-out (รายหมวด/รุ่น)
 - Scope: SKU หรือ หมวด
 - ส่วนลด/หน่วย เมื่อขายออกสำเร็จ (เช่น ฿200/ตัว)
-- **Serial match condition** (ผูก SL-4 invoice · ต้อง serial ตรง)
+- **Serial match condition** — ผูก **SL-4 invoice เป็นหลัก** แต่แหล่ง serial จริง = **BC itemLedgerEntries** (serial ลงที่ WH-3 เบิกออกตอน post shipment — SL-4 ไม่มี field serial ตาม rule "Serial บังคับที่ WH Issue") · match path: itemLedgerEntry → Posted Shipment → SL-4 Invoice (decision 2026-07-02 #11)
+- **Exception ไม่มีบิลอ้างอิง:** serial ที่เบิกออกแต่หา SL-4 ผูกไม่เจอ → แสดง tab แยก "Serial ไม่มีบิลอ้างอิง" + ปุ่ม "ผูกบิลย้อนหลัง" — ห้ามปล่อยเงียบ (rebate ตกหล่นโดยไม่มีใครรู้)
+- **Status ต่อ serial:** ✅ Matched · ⏳ Pending shipment (รอเบิก) · ❌ No invoice ref
 - Effective period
 - VAT Case: 🟢 Case 4 (CN หลังขายออก)
 
@@ -685,7 +687,7 @@ Output:  Recovery Rate per type · Accrual ledger · CN forward to AP
 **Section 7 — Action Bar** — Save/Submit/Attach/Confirm/Send to Finance
 
 ### Cross-View
-**Finance** (FI-Q) — Accrual Monitor: ห้าง/Vendor · Accrued · ได้เอกสาร · รับเงิน · ค้าง · Aging color
+**Finance** (FI-Q / FI-8 Accrual Monitor) — **read-only เท่านั้น**: ห้าง/Vendor · Accrued · ได้เอกสาร · รับเงิน · ค้าง · Aging color (30/60/90/120d) · drill เข้า PO-7 ได้ · ปุ่มเดียวที่มี = "Follow-up/ส่งทวง" (notification ไป Purchase Mgr) — **ห้ามมีปุ่ม Record Payment/จ่ายเงิน** (decision 2026-07-02 #10)
 **Promotion** (PM-Q) — งบ Realized (ใช้ True Margin ได้) vs Accrued (ประมาณการ)
 
 ### Status Flow
@@ -726,6 +728,7 @@ GET  /vendorObligations/sanctionStatus?vendorId=    → Day-0/7/15/30 (ใหม
 8. **⚠️ Rebate ≠ Discount Rule:** Rebate book เข้า "Other Income — Vendor Rebate" (CF-4) · ห้ามดั๊มพ์เป็นส่วนลดราคาขาย
 9. **CN Audit (A3):** ทุก CN ต้องระบุ Category (1/2/3) + match Agreement + audit checklist 7 ข้อ ก่อน forward AP
 10. **Sanction (A3):** Day-30 ไม่ส่ง CN → STOP NEW PO automatic
+11. **🔒 Single Payment Point (decision 2026-07-02 #10):** Record Payment / Confirm & Realize กดได้ที่หน้า **PO-7 เท่านั้น** (เปลี่ยน Committed→Realized + post GL ทันที) · FI-8 Accrual Monitor = read-only aging view + Follow-up notification — ห้าม dev สร้างปุ่มจ่ายใน FI-8 ภายหลัง (กัน GL double-record)
 
 ### Phase 2 (รองรับ — ยังไม่ implement)
 
@@ -749,11 +752,13 @@ PO-7 Doc Received → Link CN ไปที่ FI-2 AP Payment → "หักจ�
 
 ---
 
-## PO-8 — PO บิลฝาก (Deposit Bill / Prepayment) ⚠️ NEW BUILD (per pivot focus)
+## PO-8 — สั่งซื้อสินค้าฝาก (Deposit Bill / Prepayment) ⚠️ NEW BUILD (per pivot focus)
+
+> **หมายเหตุชื่อ (decision 2026-07-02 #6):** ชื่อทางการ = **"สั่งซื้อสินค้าฝาก"** (เดิมเรียก "บิลฝาก") — เปลี่ยนเพื่อกันชนกับ SL-3 ใบมัดจำ ฝั่งขาย (ทั้งคู่แปลว่า deposit) · shorthand "บิลฝาก" ในเนื้อ flow ฝั่งซื้อยังใช้ได้ · **naming convention:** ชื่อที่เสี่ยงชนข้ามโมดูล ให้ใส่ prefix ฝั่งงาน เช่น "ขาย มัดจำ" / "ซื้อ มัดจำ"
 
 ### Module Brief
 ```
-Module:  PO-8 PO Deposit Bill (บิลฝาก)
+Module:  PO-8 สั่งซื้อสินค้าฝาก (Deposit Bill)
 Phase:   P1
 BC:      purchaseOrders (38/39), purchaseInvoices (122/123), generalJournalLines (81)
 Trigger: Credit Term ครบกำหนด แต่สินค้ายังรับไม่ครบ → ต้องจ่ายก่อน
