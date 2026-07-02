@@ -78,7 +78,7 @@
 | **07 Sales Credit Memo** | **SL-CN** | — | 🔴 gap | **สร้างใหม่** (Credit Note doc มี 2 ฉบับ: มี/ไม่มีใบกำกับภาษี) | P1 | A |
 | — (ไม่มี flow) | — | sl5-crm-followup | ✂️ excess | ตัด หรือ ดัน Phase 2 CRM (ไม่มี flow รองรับ) | P2 | A |
 | Promotion (ผิด module) | PM | sl6-promotion-setup | 🔀 misplaced | ย้ายเข้า Promotion module | P1 | A |
-| — (Credit gate) | SL-F1 | slf1-credit-approval | ✅ | keep · cross-module กับ CF-7 Approval Matrix | P1 | A |
+| — (Credit gate) | SL-F1 | slf1-credit-approval | ✅ | keep · cross-module กับ CF-2.6 Approval Matrix | P1 | A |
 | — (report) | RP? | sl7-sales-report | ✂️/🔀 | ไม่มี flow report เฉพาะ → ยุบเข้า RP-1 หรือ tie กับ dashboard | P2 | V |
 
 ---

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flow Redundancy Analysis — Sangwijit ERP Portal</title>
+<style>
+:root{--navy:#1E3A5F;--accent:#2563EB;--bg:#F8FAFC;--card:#FFFFFF;--border:#E2E8F0;--text:#1E293B;--muted:#64748B;--green:#16A34A;--amber:#D97706;--red:#DC2626;--green-bg:#F0FDF4;--amber-bg:#FFFBEB;--red-bg:#FEF2F2;--blue-bg:#EFF6FF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.header{background:linear-gradient(135deg,var(--navy) 0%,var(--accent) 100%);color:#fff;padding:32px 40px}
+.header h1{font-size:24px;font-weight:700;margin-bottom:4px}
+.header p{font-size:14px;opacity:.85}
+.container{max-width:1200px;margin:0 auto;padding:24px 40px 60px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center}
+.stat .num{font-size:32px;font-weight:700}
+.stat .lbl{font-size:13px;color:var(--muted);margin-top:4px}
+.stat.total .num{color:var(--navy)}
+.stat.open .num{color:var(--red)}
+.stat.resolved .num{color:var(--green)}
+.stat.modules .num{color:var(--accent)}
+h2{font-size:18px;font-weight:700;color:var(--navy);margin:32px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--accent)}
+.top-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;margin:16px 0}
+.top-card{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:8px;padding:16px}
+.top-card .tc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.top-card .tc-num{font-size:12px;color:var(--muted);font-weight:600}
+.top-card .tc-sev{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
+.tc-sev.med{background:var(--amber-bg);color:var(--amber)}
+.tc-sev.low{background:var(--blue-bg);color:var(--accent)}
+.top-card .tc-title{font-size:14px;font-weight:600;margin-bottom:6px}
+.top-card .tc-desc{font-size:13px;color:var(--muted);line-height:1.5}
+.top-card .tc-rec{font-size:12px;color:var(--accent);margin-top:8px;font-weight:500}
+.matrix-wrap{overflow-x:auto;margin:16px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--navy);color:#fff;padding:10px 12px;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:var(--blue-bg)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge.open{background:var(--red-bg);color:var(--red)}
+.badge.resolved{background:var(--green-bg);color:var(--green)}
+.badge.high{background:var(--red-bg);color:var(--red)}
+.badge.med{background:var(--amber-bg);color:var(--amber)}
+.badge.low{background:var(--blue-bg);color:var(--accent)}
+.modules-tag{font-size:11px;color:var(--accent);font-weight:500}
+details.flow{background:var(--card);border:1px solid var(--border);border-radius:8px;margin:10px 0;overflow:hidden}
+details.flow summary{padding:14px 16px;font-weight:600;font-size:14px;cursor:pointer;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+details.flow summary .mod-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+details.flow .flow-body{padding:16px;font-size:13px;white-space:pre-wrap;font-family:'Cascadia Code','Fira Code',monospace;line-height:1.7;background:#FAFBFC}
+.analysis-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;margin:12px 0}
+.analysis-card .ac-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:12px}
+.analysis-card .ac-title{font-size:15px;font-weight:600}
+.analysis-card .ac-badges{display:flex;gap:6px;flex-shrink:0}
+.axis{margin:8px 0}
+.axis-label{font-size:12px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.axis-body{font-size:13px;color:var(--text);line-height:1.6;padding-left:16px;border-left:3px solid var(--border)}
+.axis-body.warn{border-left-color:var(--amber)}
+.summary-box{background:var(--blue-bg);border-radius:6px;padding:12px 16px;font-size:13px;font-weight:500;margin-top:12px}
+.proposal{margin-top:14px;background:#F0F9FF;border:1px solid #BAE6FD;border-radius:8px;padding:16px}
+.proposal .pr-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.proposal ul{list-style:none;margin:0;padding:0}
+.proposal li{font-size:13px;padding:6px 0 6px 20px;position:relative;line-height:1.6;border-bottom:1px solid #E0F2FE}
+.proposal li:last-child{border-bottom:none}
+.proposal li::before{content:'→';position:absolute;left:2px;color:var(--accent);font-weight:700}
+.proposal .pr-impact{font-size:12px;color:var(--muted);margin-top:8px;font-style:italic}
+.proposal .pr-who{display:inline-block;background:var(--navy);color:#fff;font-size:10px;padding:1px 6px;border-radius:4px;margin-left:4px;font-weight:600}
+.proposal .pr-effort{display:inline-block;background:var(--amber-bg);color:var(--amber);font-size:10px;padding:1px 6px;border-radius:4px;margin-left:4px;font-weight:600}
+.proposal a.file-link{color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px dashed var(--accent)}
+.proposal a.file-link:hover{border-bottom-style:solid;background:#DBEAFE;border-radius:2px;padding:0 2px}
+.proposal .pr-reason{color:#B45309;font-weight:600;font-size:12px}
+.pr-decision{margin-top:10px;padding:10px 12px;border-radius:6px;font-size:13px;line-height:1.6;border-left:4px solid}
+.pr-decision.ok{background:#F0FDF4;border-color:#16A34A;color:#166534}
+.pr-decision.rev{background:#FFFBEB;border-color:#D97706;color:#92400E}
+.pr-decision.talk{background:#EFF6FF;border-color:#2563EB;color:#1E40AF}
+.pr-decision .pd-tag{font-weight:700;font-size:11px;letter-spacing:.5px;display:block;margin-bottom:4px}
+.file-cards{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #E0F2FE}
+.fc{display:flex;flex-direction:column;background:#fff;border:1px solid #E2E8F0;border-left:4px solid var(--mc,#94A3B8);border-radius:6px;padding:8px 12px;text-decoration:none;min-width:130px;max-width:200px;transition:box-shadow .15s,transform .15s}
+.fc:hover{box-shadow:0 2px 8px rgba(0,0,0,.12);transform:translateY(-1px)}
+.fc-code{font-size:11px;font-weight:700;color:var(--mc,#64748B);letter-spacing:.5px}
+.fc-name{font-size:13px;font-weight:600;color:var(--text);margin:2px 0}
+.fc-role{font-size:10px;padding:1px 6px;border-radius:8px;display:inline-block;width:fit-content}
+.fc-role.edit{background:#FEF3C7;color:#92400E}
+.fc-role.readonly{background:#E0F2FE;color:#0369A1}
+.fc-role.spec{background:#F3E8FF;color:#7C3AED}
+.fc-role.new{background:#DCFCE7;color:#166534}
+.fc-role.archive{background:#FEE2E2;color:#991B1B}
+.fc-role.check{background:#FFF7ED;color:#9A3412}
+.test-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin:12px 0}
+.test-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px}
+.test-card .tt-head{font-size:13px;font-weight:600;margin-bottom:8px}
+.test-item{font-size:12px;margin:4px 0;padding:4px 0 4px 12px;border-left:3px solid transparent}
+.test-item.happy{border-left-color:var(--green)}
+.test-item.edge{border-left-color:var(--amber)}
+.test-item.fail{border-left-color:var(--red)}
+.test-label{font-weight:600;font-size:11px;text-transform:uppercase;margin-right:4px}
+.test-label.happy{color:var(--green)}
+.test-label.edge{color:var(--amber)}
+.test-label.fail{color:var(--red)}
+.resolved-list{list-style:none;margin:12px 0}
+.resolved-list li{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;position:relative;padding-left:28px}
+.resolved-list li::before{content:'✓';position:absolute;left:8px;color:var(--green);font-weight:700}
+.resolved-list li strong{color:var(--navy)}
+.footer{text-align:center;font-size:12px;color:var(--muted);margin-top:40px;padding-top:16px;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Flow Redundancy Analysis</h1>
+  <p>Sangwijit ERP Portal — SL / PO / WH / SV / FI cross-module overlap analysis | 2026-07-01 · closeout 2026-07-02 — ปิดครบทั้ง 10 ข้อ ✅</p>
+</div>
+<div class="container">
+
+<div class="stats">
+  <div class="stat total"><div class="num">17</div><div class="lbl">Overlaps Found</div></div>
+  <div class="stat open"><div class="num">0</div><div class="lbl">Open — ปิดครบทุกข้อ 🎉</div></div>
+  <div class="stat resolved"><div class="num">17</div><div class="lbl">Resolved (7 guardrail + 10 closeout 07-02)</div></div>
+  <div class="stat modules"><div class="num">5</div><div class="lbl">Modules Analyzed</div></div>
+</div>
+
+<h2>Top Overlaps (by Impact) — ✅ ปิดครบแล้ว 2026-07-02</h2>
+<div class="top-cards">
+  <div class="top-card">
+    <div class="tc-head"><span class="tc-num">#14</span><span class="tc-sev med">MED</span></div>
+    <div class="tc-title">Approval Matrix อนุมัติ CF-2.6 vs CF-7</div>
+    <div class="tc-desc">ทุกโมดูล (SL-F1 งานขาย, PO จัดซื้อ tier, FI-4/6/11/JV บัญชี) พึ่ง matrix เดียว — รหัสไม่ตรง = cross-ref พังทั้งระบบ</div>
+    <div class="tc-rec">Pin canonical = CF-2.6 ตั้งค่าอนุมัติ (mockup ชนะ), แก้ CLAUDE.md/spec</div>
+  </div>
+  <div class="top-card">
+    <div class="tc-head"><span class="tc-num">#10</span><span class="tc-sev med">MED</span></div>
+    <div class="tc-title">PO-7 ส่งเสริมการขาย Accrual vs FI-8 บัญชี Monitor</div>
+    <div class="tc-desc">Record Payment กดได้ 2 ฝั่ง → เสี่ยงบันทึกซ้ำ (FI-8 บัญชี ยังไม่มีไฟล์ — ตัดสินก่อนสร้าง)</div>
+    <div class="tc-rec">PO-7 จัดซื้อ = owner, FI-8 บัญชี = read-only reconcile</div>
+  </div>
+  <div class="top-card">
+    <div class="tc-head"><span class="tc-num">#7</span><span class="tc-sev med">MED</span></div>
+    <div class="tc-title">จองสต๊อก SL-2 งานขาย vs WH-3 คลังเบิก</div>
+    <div class="tc-desc">reserve ค้าง/double-reserve ถ้ายกเลิก SO ไม่ปล่อยยอด</div>
+    <div class="tc-rec">SL งานขาย=reserve, WH-3 คลัง=issue; เช็ค release เมื่อยกเลิก/หมดอายุ</div>
+  </div>
+  <div class="top-card">
+    <div class="tc-head"><span class="tc-num">#11</span><span class="tc-sev med">MED</span></div>
+    <div class="tc-title">PO-7 จัดซื้อ Sell-out ↔ SL-4 บิลขาย Serial</div>
+    <div class="tc-desc">Serial ไม่ได้กรอกที่ SL-4 บิลขาย (rule: กรอกที่ WH-3 คลังเบิก) — recovery calc รอ field ที่ไม่มี</div>
+    <div class="tc-rec">Match serial จาก WH-3 คลังเบิก/itemLedgerEntries ไม่ใช่ SL-4 บิลขาย</div>
+  </div>
+  <div class="top-card">
+    <div class="tc-head"><span class="tc-num">#13</span><span class="tc-sev med">MED</span></div>
+    <div class="tc-title">โอนสินค้า TR-Out/In 3 คิว (WH-1/2/3 คลัง)</div>
+    <div class="tc-desc">รับซ้ำ/สร้างใบโอนซ้ำถ้าสถานะไม่ sync</div>
+    <div class="tc-rec">WH-2 คลังโอน=owner, WH-1 คลังรับ=รับ, WH-3 คลังเบิก=route; sync In-Transit 1 ใบ 1 สถานะ</div>
+  </div>
+  <div class="top-card">
+    <div class="tc-head"><span class="tc-num">#6</span><span class="tc-sev low">LOW</span></div>
+    <div class="tc-title">มัดจำ SL-3 งานขาย vs บิลฝาก PO-8 จัดซื้อ</div>
+    <div class="tc-desc">คนละทิศ (รับ vs จ่าย) คนละ ledger — แต่ทั้งคู่แปล "deposit"</div>
+    <div class="tc-rec">Pin glossary — SL-3 งานขาย="มัดจำรับ" / PO-8 จัดซื้อ="เงินฝากซื้อ"</div>
+  </div>
+</div>
+
+<h2>Flow Maps by Module</h2>
+<details class="flow" open>
+  <summary><span class="mod-dot" style="background:#2563EB"></span> SL — Sales (งานขาย)</summary>
+  <div class="flow-body">SL-1 ใบเสนอราคา (Draft→Confirmed, auto-expire 30d)
+  └─[เกินวงเงิน/Blocked]→ SL-F1 อนุมัติวงเงิน (Maker≠Checker, tier ตาม CF-2.6)
+  └─ makeOrder → SL-2 ใบจอง (จองกันสต๊อก → รอเบิก WH-3)
+       └─[สต๊อกไม่พอ]→ ประเภทจอง "จองสั่งซื้อ" → PO-Q (out)
+       └─ รับมัดจำ → SL-3 ใบมัดจำ (Post→Customer Ledger/GL, หักบิลอัตโนมัติ)
+       └─ makeInvoice → SL-4 บิลขาย (Post→ตัดสต๊อก+AR+VAT Output)
+            ├─① กันสต๊อก/แจ้งคลัง → WH-3 (out; Serial กรอกที่นี่)
+            ├─② รับเงิน/ตั้งหนี้ AR → FI-1 (out)
+            ├─③ จัดส่ง+ติดตั้ง → SV-6 (out, auto-trigger)
+            ├─④ โปรฯ auto-match → PM/SL-6 (in)
+            └─⑤ VAT Output → FI-7 (out)
+       └─ คืน/ราคาผิด → SL-CN ใบลดหนี้ (อ้างอิงบิล required → ลด AR + WH Return)
+
+Doc หลัก: SL-1, SL-2, SL-3, SL-4, SL-CN, SL-F1 · Queue: SL-Q
+เกิน spec: sl5-crm-followup, sl6-promotion-setup (ควรอยู่ PM), sl7-report</div>
+</details>
+<details class="flow">
+  <summary><span class="mod-dot" style="background:#D97706"></span> PO — Purchase (จัดซื้อ)</summary>
+  <div class="flow-body">PO-1 PR (trigger MOS/สต๊อกต่ำ) → PO-4 PO (อ้าง TA จาก PO-2)
+  → WH-1 GRN (รับ+Serial+Bin; "รับครบ" = gate) ⚠ PO-5 ถูกตัด redirect→WH-1
+  → PO-6 AP Invoice (3-way match, Entity Tag, WHT auto) → FI-2 จ่าย (out)
+Branches:
+  PO-8 บิลฝาก (Credit Term ครบ/ของยังไม่ครบ → prepay, bypass GRN gate)
+  PO-7 Trade Support (จาก PO-2; out→FI/PM, in←SL-4 serial) → ยอด Realized เข้า PO-6
+  PO-CN ใบลดหนี้ (คืน/ลดราคา/เคลม; in←CLM → ตัด PO-6)
+
+Doc หลัก: PO-1, PO-2, PO-3, PO-4, PO-6, PO-7, PO-8, PO-CN · Queue: PO-Q
+Reference: PO-2 Vendor Commitment (auto-apply Sell-in%/MOU/Free Goods)</div>
+</details>
+<details class="flow">
+  <summary><span class="mod-dot" style="background:#16A34A"></span> WH — Warehouse (คลัง)</summary>
+  <div class="flow-body">WH-Q (KPI + CTA) → WH-1 / WH-3
+WH-1 รับเข้า (จาก PO / PO-8 บิลฝาก / TR-In / RT คืน) → Post → [รับครบ qty] → PO-6 (out)
+WH-2 โอน (TR-Out/In, In-Transit, Service-Stock, Promo-Stock, Return-Flow) → ship → WH-1 รับ
+WH-3 เบิกออก 9 ประเภท (SL-4/SV-6/SV-3/SV-O/TR-Out/Promo/ADJ/RT-V) → Pick&Pack (Serial REQUIRED) → Post
+WH-4 นับสต็อก (8 ประเภท) → variance → Post Adj → FI-13 GL Entry (out)
+WH-R Stock Card (drill) · WH-NM Non-Move (alert Purchase Mgr ทุก 7 วัน)
+
+Doc หลัก: WH-Q, WH-1..4, WH-R, WH-NM
+Serial rule: ลงที่ WH-1 (รับ) + WH-3 (เบิก REQUIRED) — ไม่บังคับที่ SL-4</div>
+</details>
+<details class="flow">
+  <summary><span class="mod-dot" style="background:#7C3AED"></span> SV — Service & Claims (บริการ + เคลม)</summary>
+  <div class="flow-body">SV-1 รับเรื่อง (ซ่อม/ติดตั้ง/เคลม)
+  └─[ประเมิน]→ SIR → SQT → กลับ SV-2
+  → SV-2 มอบหมาย (เลือกช่าง+นัด, Pre-Parts)
+       ├─ SV-3 เบิกอะไหล่ → WH-3 (out)
+       └─ SV-O สั่งอะไหล่ → PO-4 → WH-1 (out)
+  → SV-5 Job Card (ช่างบันทึกผล)
+  → SV-4 ปิดงาน/QA — งานในประกัน: ตั้งหนี้ Vendor (ARI) + เปิด CLM
+  → SV-7 ส่งลูกค้า (Customer Invoice เฉพาะนอก Comp → AR)
+SV-6 จัดส่ง+ติดตั้ง (auto จาก SL-4 Delivery Flag; ยืนยัน Serial ตรง Invoice ก่อน Close)
+CLM Vendor Claim (SLA 7d) → PO-CN โหมดเคลม → รอหักหนี้ → APCN ตัด PO-6
+
+Doc หลัก: SV-Q, SV-1..7, SV-O, SIR, SQT, CLM · legacy: cl1-claims (deprecated)
+Billing: ในประกัน→ARI(SV-4)→CLM→PO-CN; นอกประกัน→Customer Invoice(SV-7)</div>
+</details>
+<details class="flow">
+  <summary><span class="mod-dot" style="background:#DB2777"></span> FI — Finance (บัญชี/การเงิน)</summary>
+  <div class="flow-body">FI-Q hub (AR/AP/Tax/WHT/JV/Close)
+AR:  SL-4 เปิด AR → QR/bank → IA-Q → URC → FI-1Q Apply → FI-1 RV ปิดบิล
+AP:  PO-6 ตั้งหนี้ → FI-2 (3-way match WH-1+PO-6, หัก WHT) → PV+WHT
+Exp: PO-3 Vendor Invoice → FI-4 Expense+WHT → ภ.ง.ด.3/53
+WHT: เกิดที่ FI-2/FI-4 → รวบรวม/Release/Print ที่ FI-12
+Bank: FI-3 Recon (±3d auto-match, unmatched→JV)
+VAT: SL-4 Output + PO-6 Input → FI-7 ภ.พ.30 (ยื่นวันที่ 15)
+Dual-Book: FI-13 Entity Tag (⚠ deferred single-entity SWT)
+
+Doc หลัก: FI-Q, FI-1, FI-1Q, FI-2, FI-3, FI-4, FI-5(AR Audit), FI-7, FI-12, FI-13
+หลักการ: FI = thin UI เหนือ BC — ไม่ออก ledger เอง, แค่ apply/pay/report
+spec-only (ยังไม่มีไฟล์): FI-6 Credit Control, FI-8 Accrual, FI-9/10/11 Fixed Asset</div>
+</details>
+
+<h2>Overlap Matrix (17 Items)</h2>
+<div class="matrix-wrap">
+<table>
+<thead><tr><th>#</th><th>Overlap</th><th>Modules</th><th>Kind</th><th>Sev</th><th>Status</th><th>Recommendation</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>GRN รับสินค้า PO-5 จัดซื้อ ซ้ำ WH-1 คลังรับ</td><td class="modules-tag">PO จัดซื้อ · WH คลัง</td><td>duplicate-work</td><td><span class="badge high">HIGH</span></td><td><span class="badge resolved">Resolved</span></td><td>merge — WH-1 คลังรับ / PO-6 ตั้งหนี้</td></tr>
+<tr><td>2</td><td>PO-CN ใบลดหนี้ vs CLM เคลมเวนเดอร์</td><td class="modules-tag">PO จัดซื้อ · SV บริการ</td><td>double-posting</td><td><span class="badge med">MED</span></td><td><span class="badge resolved">Resolved</span></td><td>CLM เคลม track / PO-CN ลดหนี้ post จุดเดียว</td></tr>
+<tr><td>3</td><td>CL-1 เคลมเก่า legacy ทับ CLM เคลมเวนเดอร์</td><td class="modules-tag">SV บริการ · PO จัดซื้อ</td><td>duplicate-work</td><td><span class="badge med">MED</span></td><td><span class="badge resolved">Resolved</span></td><td>CL-1 เคลมเก่า deprecated (P2)</td></tr>
+<tr><td>4</td><td>จัดส่ง WH-3 คลังเบิก vs SV-6 จัดส่ง+ติดตั้ง</td><td class="modules-tag">SL งานขาย · WH คลัง · SV บริการ</td><td>handoff-gap</td><td><span class="badge med">MED</span></td><td><span class="badge resolved">Resolved</span></td><td>SL-4 บิลขาย→WH-3 คลังเบิก(Serial)→SV-6 ติดตั้ง</td></tr>
+<tr><td>5</td><td>FI บัญชี AR/AP vs SL งานขาย/PO จัดซื้อ ledger owner</td><td class="modules-tag">FI บัญชี · SL งานขาย · PO จัดซื้อ</td><td>unclear-owner</td><td><span class="badge low">LOW</span></td><td><span class="badge resolved">Resolved</span></td><td>ต้นทางเป็นเจ้าของ ledger</td></tr>
+<tr><td>6</td><td>มัดจำ SL-3 งานขาย vs บิลฝาก PO-8 จัดซื้อ</td><td class="modules-tag">SL งานขาย · PO จัดซื้อ</td><td>naming</td><td><span class="badge low">LOW</span></td><td><span class="badge resolved">ปิดแล้ว</span></td><td>pin glossary (รับ vs จ่าย)</td></tr>
+<tr><td>7</td><td>จองสต๊อก SL-2 งานขาย vs WH-3 คลังเบิก</td><td class="modules-tag">SL งานขาย · WH คลัง</td><td>handoff-gap</td><td><span class="badge med">MED</span></td><td><span class="badge resolved">ปิดแล้ว</span></td><td>เช็ค release reservation</td></tr>
+<tr><td>8</td><td>ภ.พ.30 ซ้ำ FI-7 ภาษี vs FI-13 Dual-Book</td><td class="modules-tag">FI บัญชี</td><td>duplicate-work</td><td><span class="badge med">MED</span></td><td><span class="badge resolved">Resolved</span></td><td>drop FI-13 per-Tag (defer P2)</td></tr>
+<tr><td>9</td><td>ภาษีหัก ณ ที่จ่าย WHT 3 ที่ FI-2/4/12 บัญชี</td><td class="modules-tag">FI บัญชี</td><td>duplicate-work</td><td><span class="badge low">LOW</span></td><td><span class="badge resolved">ปิดแล้ว</span></td><td>FI-12 ภาษีหัก ณ ที่จ่าย = single release point</td></tr>
+<tr><td>10</td><td>PO-7 จัดซื้อ accrual vs FI-8 บัญชี Monitor</td><td class="modules-tag">PO จัดซื้อ · FI บัญชี</td><td>unclear-owner</td><td><span class="badge med">MED</span></td><td><span class="badge resolved">ปิดแล้ว</span></td><td>PO-7 จัดซื้อ owner, FI-8 บัญชี read-only</td></tr>
+<tr><td>11</td><td>PO-7 จัดซื้อ Sell-out ↔ SL-4 บิลขาย Serial</td><td class="modules-tag">PO จัดซื้อ · SL งานขาย</td><td>handoff-gap</td><td><span class="badge med">MED</span></td><td><span class="badge resolved">ปิดแล้ว</span></td><td>serial จาก WH-3 คลังเบิก/itemLedger</td></tr>
+<tr><td>12</td><td>ที่อยู่จัดส่งซ้ำ SL-4 บิลขาย header/tab</td><td class="modules-tag">SL งานขาย</td><td>duplicate-work</td><td><span class="badge low">LOW</span></td><td><span class="badge resolved">ปิดแล้ว</span></td><td>header = source เดียว</td></tr>
+<tr><td>13</td><td>โอนสินค้า TR-Out/In 3 คิว WH-1/2/3 คลัง</td><td class="modules-tag">WH คลัง</td><td>double-posting</td><td><span class="badge med">MED</span></td><td><span class="badge resolved">ปิดแล้ว</span></td><td>WH-2 คลังโอน owner, sync In-Transit</td></tr>
+<tr><td>14</td><td>Approval Matrix อนุมัติ CF-2.6 vs CF-7</td><td class="modules-tag">SL งานขาย · PO จัดซื้อ · FI บัญชี · CF ตั้งค่า</td><td>naming</td><td><span class="badge med">MED</span></td><td><span class="badge resolved">ปิดแล้ว</span></td><td>canonical = CF-2.6 ตั้งค่าอนุมัติ</td></tr>
+<tr><td>15</td><td>SL-5 งานขาย code ชน (CN ใบลดหนี้ vs CRM)</td><td class="modules-tag">SL งานขาย</td><td>naming</td><td><span class="badge low">LOW</span></td><td><span class="badge resolved">ปิดแล้ว</span></td><td>CN=SL-CN ใบลดหนี้, ตัด excess</td></tr>
+<tr><td>16</td><td>SV-4 บริการ ARI แสดงซ้ำ SV-7 วางบิล/CLM เคลม</td><td class="modules-tag">SV บริการ · FI บัญชี</td><td>double-posting</td><td><span class="badge low">LOW</span></td><td><span class="badge resolved">Resolved</span></td><td>post ที่ SV-4 บริการ จุดเดียว</td></tr>
+<tr><td>17</td><td>Doc-chain breadcrumb hard-code ข้ามโมดูล</td><td class="modules-tag">SL งานขาย · PO จัดซื้อ · WH คลัง · SV บริการ</td><td>duplicate-work</td><td><span class="badge low">LOW</span></td><td><span class="badge resolved">ปิดแล้ว</span></td><td>รวมเข้า swt-link.js</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Detailed Analysis — Open Overlaps (10 ข้อ + ข้อเสนอละเอียด)</h2>
+
+<!-- ═══════════ #14 ═══════════ -->
+<div class="analysis-card">
+  <div class="ac-head"><div class="ac-title">#14 Approval Matrix อนุมัติ — CF-2.6 ตั้งค่า vs CF-7</div><div class="ac-badges"><span class="badge med">MED</span><span class="badge resolved">✅ ปิดแล้ว 07-02</span></div></div>
+  <div class="axis"><div class="axis-label">(ก) Business Process</div><div class="axis-body">CF ตั้งค่า module เป็นเจ้าของ matrix เดียว (tier/ผู้อนุมัติ/SLA/Maker≠Checker). ผู้บริโภค = SL-F1 งานขาย, PO จัดซื้อ credit tier, FI-4/FI-6/FI-11/JV บัญชี</div></div>
+  <div class="axis"><div class="axis-label">(ข) Document Flow</div><div class="axis-body warn">ไฟล์จริง SL-F1/FI อ้าง cf26-approval-matrix-proposal (build 2026-06-03) แต่ CLAUDE.md/spec เขียน CF-7 → cross-ref แตก 2 รหัส</div></div>
+  <div class="axis"><div class="axis-label">(ค) Role/Permission</div><div class="axis-body">ทุก approval step พึ่ง tier เดียวกัน; ถ้ารหัสไม่ตรง dev อาจ wire ผิด matrix → อนุมัติผิด tier</div></div>
+  <div class="axis"><div class="axis-label">(ง) Accounting/GL</div><div class="axis-body">ไม่มี posting โดยตรง แต่ blocking gate ของ AP/JV/Override พึ่ง matrix — พังเงียบ</div></div>
+  <div class="axis"><div class="axis-label">(จ) Test</div><div class="axis-body">ยืนยัน SL-F1 กับ FI-4 ชี้ matrix instance เดียวกัน; รหัสใน footer/cross-link ตรงทุกหน้า</div></div>
+  <div class="summary-box">mockup ชนะ notes ตาม trust priority → canonical = CF-2.6, แก้ CLAUDE.md/spec + update ref ทุกจุด</div>
+  <div class="proposal">
+    <div class="pr-title">ข้อเสนอปรับ #14 — ยืนยันรหัส Approval Matrix อนุมัติ = CF-2.6 ที่เดียว <span class="pr-effort">Effort: S</span></div>
+    <div class="pr-decision ok"><span class="pd-tag">✅ คำตัดสินใจ 2026-07-02 · ✅ ดำเนินการแล้ว</span>อนุมัติตามข้อเสนอ — ดำเนินการได้เลย</div>
+    <div class="file-cards">
+      <a class="fc" href="../cf2-6-approval-matrix-mockup.html" style="--mc:#1E3A5F"><span class="fc-code">CF-2.6</span><span class="fc-name">Approval Matrix อนุมัติ</span><span class="fc-role edit">ต้องยืนยันรหัส</span></a>
+      <a class="fc" href="../slf1-credit-approval-mockup.html" style="--mc:#2563EB"><span class="fc-code">SL-F1</span><span class="fc-name">อนุมัติวงเงินลูกค้า</span><span class="fc-role check">ตรวจ cross-ref</span></a>
+      <a class="fc" href="../fi4-expense-wht-mockup.html" style="--mc:#DB2777"><span class="fc-code">FI-4</span><span class="fc-name">ค่าใช้จ่าย+WHT</span><span class="fc-role check">ตรวจ cross-ref</span></a>
+      <a class="fc" href="../CLAUDE.md" style="--mc:#64748B"><span class="fc-code">CLAUDE.md</span><span class="fc-name">Project Instructions</span><span class="fc-role spec">แก้ spec</span></a>
+    </div>
+    <ul>
+      <li><strong>ปัญหา:</strong> หน้า Approval Matrix อนุมัติ มีรหัสอ้างอิง 2 ตัวในระบบ — ไฟล์ mockup จริงใช้ "CF-2.6" (<a class="file-link" href="../cf2-6-approval-matrix-mockup.html">cf2-6-approval-matrix-mockup.html</a>) แต่ spec เก่าและ CLAUDE.md บางจุดเขียน "CF-7" ทำให้ dev ไม่รู้ว่าอ้างหน้าเดียวกันหรือคนละหน้า → เสี่ยง wire ผิด matrix (อนุมัติผิด tier / Maker=Checker หลุด)</li>
+      <li>แก้ <a class="file-link" href="../CLAUDE.md">CLAUDE.md</a> — ทุกจุดที่เขียน "CF-7" ต้องเปลี่ยนเป็น "CF-2.6 Approval Matrix อนุมัติ" <br><span class="pr-reason">ทำไม:</span> CLAUDE.md เป็น single source of truth ของ dev — ถ้ารหัสไม่ตรงกับไฟล์จริง dev จะ grep หา CF-7 แล้วไม่เจออะไร <span class="pr-who">Spec</span></li>
+      <li>แก้ <a class="file-link" href="../sangwijit-portal-skill/modules/CF.md">sangwijit-portal-skill/modules/CF.md</a> section Approval Matrix — ลบ "CF-7" แล้วเปลี่ยนเป็น "CF-2.6 Approval Matrix อนุมัติ" พร้อมระบุ: "CF-7 เป็นรหัสเก่าที่ใช้ใน spec ก่อน 2026-06-03 ก่อนที่จะตั้งชื่อไฟล์เป็น cf2-6 — ไม่ใช่หน้าแยก แค่รหัสเก่าของหน้าเดียวกัน" <br><span class="pr-reason">ทำไม:</span> ถ้าเขียนแค่ "ไม่ใช้แล้ว" คนอ่านจะไม่รู้ว่า CF-7 กับ CF-2.6 ต่างกันยังไง — ต้องอธิบายว่าเป็นหน้าเดียวกันแค่เปลี่ยนรหัส <span class="pr-who">Spec</span></li>
+      <li>Grep ทุกไฟล์ HTML ที่ cross-link ไป approval matrix — เช่น <a class="file-link" href="../slf1-credit-approval-mockup.html">SL-F1 อนุมัติวงเงินลูกค้า</a>, <a class="file-link" href="../fi4-expense-wht-mockup.html">FI-4 ค่าใช้จ่าย+ภาษีหัก ณ ที่จ่าย</a> — ตรวจว่า footer/cross-link อ้าง CF-2.6 ไม่ใช่ CF-7 <br><span class="pr-reason">ทำไม:</span> ถ้า SL-F1 อ้าง CF-2.6 แต่ FI-4 อ้าง CF-7 = dev อาจคิดว่ามี 2 matrix แยกกัน แล้ว wire คนละตัว <span class="pr-who">Mockup</span></li>
+      <li>ตรวจ <a class="file-link" href="../.agents/active.md">.agents/active.md</a> — แก้ CF-7 reference ให้เป็น CF-2.6 Approval Matrix อนุมัติ พร้อมบันทึก "เปลี่ยนรหัสจาก CF-7 เป็น CF-2.6 เพราะไฟล์ mockup ตั้งชื่อเป็น cf2-6 ตั้งแต่แรก (decision 2026-07-02)" <span class="pr-who">Agents</span></li>
+    </ul>
+    <div class="pr-impact">Impact: ป้องกัน dev wire ผิด approval matrix ข้ามทุกโมดูลที่ใช้ (SL งานขาย / PO จัดซื้อ / FI บัญชี). ถ้าไม่แก้ = ความเสี่ยงอนุมัติผิด tier, Maker=Checker หลุด</div>
+  </div>
+</div>
+
+<!-- ═══════════ #10 ═══════════ -->
+<div class="analysis-card">
+  <div class="ac-head"><div class="ac-title">#10 PO-7 จัดซื้อ ส่งเสริมการขาย Accrual vs FI-8 บัญชี Monitor</div><div class="ac-badges"><span class="badge med">MED</span><span class="badge resolved">✅ ปิดแล้ว 07-02</span></div></div>
+  <div class="axis"><div class="axis-label">(ก) Business Process</div><div class="axis-body">PO-7 จัดซื้อ = เจ้าภาพ accrual (vendorObligations, commit→realized). FI-8 บัญชี = read-only reconcile</div></div>
+  <div class="axis"><div class="axis-label">(ค) Role/Permission</div><div class="axis-body warn">Record Payment กดได้ทั้ง PO-7 จัดซื้อ (Buyer/Purchase Mgr) และ FI-8 บัญชี (Finance) → ไม่ชัดใครกดจริง</div></div>
+  <div class="axis"><div class="axis-label">(ง) Accounting/GL</div><div class="axis-body warn">เสี่ยง double-record ถ้า 2 ฝั่งกด Record Payment โดยไม่มี lock ร่วม</div></div>
+  <div class="axis"><div class="axis-label">(จ) Test</div><div class="axis-body">กด Record Payment ที่ PO-7 จัดซื้อ → FI-8 บัญชี ต้องเห็น status เปลี่ยน + ปุ่มถูก disable</div></div>
+  <div class="summary-box">PO-7 จัดซื้อ = single owner; FI-8 บัญชี = read-only + aging follow-up. FI-8 ยังไม่มีไฟล์ — ตัดสินก่อนสร้าง</div>
+  <div class="proposal">
+    <div class="pr-title">ข้อเสนอปรับ #10 — PO-7 ส่งเสริมการขาย = จุดจ่ายเดียว / FI-8 ติดตามยอดค้าง = ดูอย่างเดียว <span class="pr-effort">Effort: M</span></div>
+    <div class="pr-decision ok"><span class="pd-tag">✅ คำตัดสินใจ 2026-07-02 · ✅ ดำเนินการแล้ว</span>อนุมัติตามข้อเสนอ — PO-7 = จุดจ่ายเดียว, FI-8 = ดูอย่างเดียว</div>
+    <div class="file-cards">
+      <a class="fc" href="../po7-rebate-dashboard.html" style="--mc:#D97706"><span class="fc-code">PO-7</span><span class="fc-name">ส่งเสริมการขาย (Rebate)</span><span class="fc-role edit">ยืนยัน write owner</span></a>
+      <a class="fc" href="#" style="--mc:#DB2777;opacity:.6;pointer-events:none"><span class="fc-code">FI-8</span><span class="fc-name">ติดตามยอดค้าง (Accrual)</span><span class="fc-role new">ยังไม่มีไฟล์</span></a>
+      <a class="fc" href="../sangwijit-portal-skill/modules/PO.md" style="--mc:#64748B"><span class="fc-code">PO.md</span><span class="fc-name">Spec จัดซื้อ</span><span class="fc-role spec">เพิ่ม rule</span></a>
+    </div>
+    <ul>
+      <li><strong>ปัญหา:</strong> ปุ่ม "Record Payment / บันทึกจ่ายส่งเสริม" อาจมีทั้งใน <a class="file-link" href="../po7-rebate-dashboard.html">PO-7 ส่งเสริมการขาย (Trade Support)</a> และ FI-8 ติดตามยอดค้าง (Accrual Monitor, ยังไม่มีไฟล์) — ถ้ามี 2 จุดกดได้ อาจ post GL ซ้ำ 2 เท่า</li>
+      <li>ใน <a class="file-link" href="../po7-rebate-dashboard.html">PO-7 ส่งเสริมการขาย</a> — ปุ่ม "บันทึกจ่ายส่งเสริม" ต้องเป็น <strong>จุดเดียว</strong> ที่เปลี่ยน status จาก Committed→Realized (กดแล้ว BC post GL ทันที) <br><span class="pr-reason">ทำไม:</span> Purchase Mgr เป็นคนรู้ว่า vendor ส่งของ/จ่ายเงินส่งเสริมครบจริง — Finance ไม่ได้เห็นข้อมูลนี้โดยตรง <span class="pr-who">Mockup</span></li>
+      <li>เมื่อสร้าง FI-8 ติดตามยอดค้าง (Accrual Monitor) — ออกแบบเป็น <strong>Aging Dashboard ดูอย่างเดียว</strong>: แสดง list ยอด accrual ค้าง, filter by vendor/aging band (30/60/90/120d), กด drill เข้าไปดู PO-7 ได้แต่ <strong>ห้ามมีปุ่มจ่ายเงิน</strong> <br><span class="pr-reason">ทำไม:</span> Finance role = Reviewer (ตรวจสอบ/ทวงถาม) ไม่ใช่ Buyer (ผู้จ่าย) — ถ้าให้กดจ่ายได้ = ผิดหลัก Segregation of Duties <span class="pr-who">Mockup</span></li>
+      <li>FI-8 ติดตามยอดค้าง เพิ่ม "Follow-up / ส่งทวง" = แจ้งเตือน Purchase Mgr ผ่าน notification badge เตือนว่ายอดค้างเกินกำหนด — ไม่ใช่กดจ่ายเอง <span class="pr-who">Mockup</span></li>
+      <li>เขียน spec rule ใน <a class="file-link" href="../sangwijit-portal-skill/modules/PO.md">PO.md spec</a> section PO-7 ส่งเสริมการขาย: "Record Payment = exclusive to PO-7 เท่านั้น. FI-8 = read-only aging view + follow-up notification" <br><span class="pr-reason">ทำไม:</span> ต้องเขียนล็อกไว้ใน spec เพื่อกัน dev สร้างปุ่มจ่ายใน FI-8 ภายหลัง <span class="pr-who">Spec</span></li>
+    </ul>
+    <div class="pr-impact">Impact: ป้องกัน GL expense บันทึกซ้ำ 2 เท่า (double-record). FI-8 ยังไม่มีไฟล์ — ต้องตัดสิน scope ก่อนลงมือสร้าง</div>
+  </div>
+</div>
+
+<!-- ═══════════ #11 ═══════════ -->
+<div class="analysis-card">
+  <div class="ac-head"><div class="ac-title">#11 PO-7 จัดซื้อ Sell-out ↔ SL-4 บิลขาย Serial</div><div class="ac-badges"><span class="badge med">MED</span><span class="badge resolved">✅ ปิดแล้ว 07-02</span></div></div>
+  <div class="axis"><div class="axis-label">(ข) Document Flow</div><div class="axis-body warn">⚠ conflict — PO-7 จัดซื้อ รอ serial จาก SL-4 บิลขาย แต่ Serial ไม่กรอกที่ SL-4 (rule: กรอกที่ WH-3 คลังเบิก / itemLedgerEntries). Sell-out ค้างถาวร</div></div>
+  <div class="axis"><div class="axis-label">(ง) Accounting/GL</div><div class="axis-body warn">Realized ไม่เกิด → รายได้ rebate ตกหล่น (Other Income undercount)</div></div>
+  <div class="axis"><div class="axis-label">(จ) Test</div><div class="axis-body">ขาย SL-4 บิลขาย → เบิก WH-3 คลัง (ลง serial) → PO-7 จัดซื้อ ควร accumulate จาก itemLedger ไม่ใช่รอ SL-4 field</div></div>
+  <div class="summary-box">แก้ handoff — match serial จาก WH-3 คลังเบิก / itemLedgerEntries (ผูก SL-4 บิลขาย)</div>
+  <div class="proposal">
+    <div class="pr-title">ข้อเสนอปรับ #11 — เปลี่ยนแหล่ง Serial จากบิลขาย → คลังเบิก <span class="pr-effort">Effort: M</span></div>
+    <div class="pr-decision rev"><span class="pd-tag">🔧 คำตัดสินใจ 2026-07-02 — ปรับทิศ · ✅ ดำเนินการแล้ว</span>Serial ต้องผูกกับ <strong>บิลขาย (SL-4) เป็นหลัก</strong> — ดึง serial จาก WH-3/itemLedger ได้ แต่ปลายทางต้อง link กลับบิลขายเสมอ. จุดที่ต้องออกแบบเพิ่ม: <strong>กรณีขายที่ไม่ได้เปิดบิล</strong> (ไม่มี SL-4 ให้ผูก) → ต้องมี exception flow เช่น list "Serial ไม่มีบิลอ้างอิง" ให้ตามแก้</div>
+    <div class="file-cards">
+      <a class="fc" href="../po7-rebate-dashboard.html" style="--mc:#D97706"><span class="fc-code">PO-7</span><span class="fc-name">ส่งเสริมการขาย (Rebate)</span><span class="fc-role edit">แก้ data source</span></a>
+      <a class="fc" href="../sl4-invoice-mockup.html" style="--mc:#2563EB"><span class="fc-code">SL-4</span><span class="fc-name">บิลขาย</span><span class="fc-role check">ตรวจ field serial</span></a>
+      <a class="fc" href="../wh3-sales-issue-mockup.html" style="--mc:#16A34A"><span class="fc-code">WH-3</span><span class="fc-name">เบิกออก (Serial อยู่ที่นี่)</span><span class="fc-role readonly">แหล่ง serial จริง</span></a>
+      <a class="fc" href="../sangwijit-portal-skill/modules/PO.md" style="--mc:#64748B"><span class="fc-code">PO.md</span><span class="fc-name">Spec จัดซื้อ</span><span class="fc-role spec">แก้ spec</span></a>
+    </div>
+    <ul>
+      <li><strong>ปัญหา:</strong> <a class="file-link" href="../po7-rebate-dashboard.html">PO-7 ส่งเสริมการขาย</a> tab Sell-out (คำนวณยอดขายออกเพื่อ claim rebate จาก vendor) รอดึง Serial Number จาก <a class="file-link" href="../sl4-invoice-mockup.html">SL-4 บิลขาย</a> — แต่ SL-4 ไม่มี field serial เพราะ rule ของระบบกำหนดว่า serial กรอกที่ <a class="file-link" href="../wh3-sales-issue-mockup.html">WH-3 เบิกออก</a> เท่านั้น → ผลคือ sell-out recovery ค้างถาวร 100%, vendor rebate ตกหล่นทั้งหมด</li>
+      <li>ใน <a class="file-link" href="../po7-rebate-dashboard.html">PO-7 ส่งเสริมการขาย</a> section Sell-out — เปลี่ยน data source จาก "SL-4 บิลขาย.serialNo" (ไม่มีอยู่จริง) เป็น BC itemLedgerEntries ซึ่งเก็บ serial ที่ลงจาก WH-3 เบิกออก filter by shipmentNo→invoiceNo <br><span class="pr-reason">ทำไม:</span> itemLedgerEntries เป็นจุดที่ BC เก็บ serial จริง ๆ หลัง post shipment — ไม่ต้องกรอกซ้ำ <span class="pr-who">Mockup</span></li>
+      <li>เพิ่ม lookup chain drill-down ใน PO-7 ส่งเสริมการขาย: กดดู Invoice (<a class="file-link" href="../sl4-invoice-mockup.html">SL-4 บิลขาย</a>) → Posted Shipment → Item Ledger Entry (มี Serial) — เพื่อให้ Purchase Mgr trace ได้ว่า serial มาจากไหน <span class="pr-who">Mockup</span></li>
+      <li>ตรวจ <a class="file-link" href="../sl4-invoice-mockup.html">SL-4 บิลขาย</a> — ถ้ามี field "serialNo" ให้ลบออก เพราะ serial กรอกที่ <a class="file-link" href="../wh3-sales-issue-mockup.html">WH-3 เบิกออก</a> จุดเดียว ห้ามกรอกซ้ำ 2 ที่ <br><span class="pr-reason">ทำไม:</span> serial ซ้ำ 2 ที่ = เสี่ยง serial ไม่ตรงกัน (กรอกผิดฝั่งใดฝั่งหนึ่ง) <span class="pr-who">Mockup</span></li>
+      <li>อัปเดต <a class="file-link" href="../sangwijit-portal-skill/modules/PO.md">PO.md spec</a> section PO-7 ส่งเสริมการขาย Sell-out: "Serial recovery path = BC itemLedgerEntries (จาก WH-3 เบิกออก posted), ไม่ใช่จาก SL-4 บิลขาย" <span class="pr-who">Spec</span></li>
+      <li>PO-7 ส่งเสริมการขาย sell-out tab เพิ่มคอลัมน์สถานะ: ✅ Serial matched (จับคู่แล้ว) / ⏳ Pending shipment (รอเบิก) / ❌ No serial found (หาไม่เจอ) — เพื่อให้ Purchase Mgr เห็นว่ารายการไหนยังค้าง <span class="pr-who">Mockup</span></li>
+      <li><strong>Exception กรณีไม่มีบิลขาย (เพิ่มตามคำตัดสินใจ 2026-07-02):</strong> serial ที่เบิกออกจาก <a class="file-link" href="../wh3-sales-issue-mockup.html">WH-3 เบิกออก</a> แต่หา <a class="file-link" href="../sl4-invoice-mockup.html">SL-4 บิลขาย</a> ผูกไม่เจอ → แสดงใน tab แยก "Serial ไม่มีบิลอ้างอิง" + ปุ่ม "ผูกบิลย้อนหลัง" (เลือกบิลจาก list) <br><span class="pr-reason">ทำไม:</span> ถ้าปล่อยไว้เงียบ ๆ serial กลุ่มนี้จะ claim rebate ไม่ได้เลย และไม่มีใครรู้ว่าตกหล่น <span class="pr-who">Mockup</span></li>
+    </ul>
+    <div class="pr-impact">Impact: ถ้าไม่แก้ = sell-out recovery ค้างถาวร 100% (field ไม่มีอยู่จริง), vendor rebate income ตกหล่นเต็มจำนวน ไม่มี realized เกิดขึ้นเลย</div>
+  </div>
+</div>
+
+<!-- ═══════════ #7 ═══════════ -->
+<div class="analysis-card">
+  <div class="ac-head"><div class="ac-title">#7 จองสต๊อก SL-2 งานขาย vs WH-3 คลังเบิก</div><div class="ac-badges"><span class="badge med">MED</span><span class="badge resolved">✅ ปิดแล้ว 07-02</span></div></div>
+  <div class="axis"><div class="axis-label">(ก) Business Process</div><div class="axis-body">SL งานขาย = soft reserve (BC reservation). WH-3 คลังเบิก = physical issue จริง (ตัดสต๊อก+Serial)</div></div>
+  <div class="axis"><div class="axis-label">(ง) Stock</div><div class="axis-body warn">⚠ reserve ค้าง ถ้ายกเลิก/หมดอายุ SL-2 ไม่ปล่อย reservation; double-reserve ถ้าจองซ้ำ</div></div>
+  <div class="axis"><div class="axis-label">(จ) Test</div><div class="axis-body">(1) ยกเลิก SL-2 → reservation ปล่อย; (2) หมดอายุ 30d → auto-release; (3) WH-3 เห็น reserved qty ตรง</div></div>
+  <div class="summary-box">SL=reserve, WH-3=issue. BC เป็นเจ้าของ reservation ledger — Portal แค่ trigger</div>
+  <div class="proposal">
+    <div class="pr-title">ข้อเสนอปรับ #7 — ปล่อยยอดจองเมื่อยกเลิก + กัน double-reserve <span class="pr-effort">Effort: M</span></div>
+    <div class="pr-decision rev"><span class="pd-tag">🔧 คำตัดสินใจ 2026-07-02 — ปรับเพิ่ม 2 จุด · ✅ ดำเนินการแล้ว</span>(1) auto-expire ต้อง<strong>ระบุจำนวนวันได้เอง</strong>ต่อใบจอง โดยมีค่า default ให้เลือก (เช่น 30 วัน) ไม่ fix ตายตัว. (2) เมื่อสต๊อกไม่พอ guard double-reserve ต้องแสดง<strong>ลิสต์ใบจองที่ถือของอยู่</strong> (เลขใบจอง + ชื่อเซลล์ + วันหมดอายุ) เพื่อเอาไปคุยกับคนขายให้ถอนใบจอง</div>
+    <div class="file-cards">
+      <a class="fc" href="../sl2-reservation-mockup.html" style="--mc:#2563EB"><span class="fc-code">SL-2</span><span class="fc-name">ใบจองสินค้า</span><span class="fc-role edit">เพิ่ม release + expire</span></a>
+      <a class="fc" href="../wh3-sales-issue-mockup.html" style="--mc:#16A34A"><span class="fc-code">WH-3</span><span class="fc-name">เบิกออก</span><span class="fc-role edit">เพิ่มคอลัมน์ยอดจอง</span></a>
+      <a class="fc" href="../sangwijit-portal-skill/modules/SL.md" style="--mc:#64748B"><span class="fc-code">SL.md</span><span class="fc-name">Spec งานขาย</span><span class="fc-role spec">เพิ่ม rule</span></a>
+    </div>
+    <ul>
+      <li><strong>ปัญหา:</strong> เมื่อ <a class="file-link" href="../sl2-reservation-mockup.html">SL-2 ใบจองสินค้า</a> จอง (reserve) สต๊อกไว้ แล้วยกเลิกหรือหมดอายุ — ยอดจองไม่ถูกปล่อยออก ทำให้สต๊อกถูกล็อกค้างตลอด + ถ้าจอง 2 ใบชน item เดียวกันก็ไม่มี warning → ขายเกินได้</li>
+      <li>ใน <a class="file-link" href="../sl2-reservation-mockup.html">SL-2 ใบจองสินค้า</a> — เมื่อเปลี่ยน status เป็น "ยกเลิก" หรือ "หมดอายุ" ต้อง trigger BC API ปล่อย reservation ทันที แสดง toast "ปล่อยยอดจอง xx ชิ้น" <br><span class="pr-reason">ทำไม:</span> ถ้าไม่ปล่อย = สินค้าถูกล็อกไว้ตลอดไม่มีใครจองหรือเบิกได้ ลูกค้ารายอื่นมองเห็นว่าของหมด ทั้งที่จริง ๆ มี <span class="pr-who">Mockup</span></li>
+      <li>เพิ่ม auto-expire: ตอนสร้าง/ยืนยัน SL-2 ใบจอง มี field "อายุใบจอง (วัน)" <strong>ระบุเองได้ต่อใบ</strong> โดย default จาก dropdown ค่ามาตรฐาน (เช่น 7 / 15 / 30 วัน — ตั้งค่า default กลางได้ที่ CF Config). เมื่อใกล้ครบกำหนด → banner เตือน "ใบจองจะหมดอายุใน x วัน" + ปุ่ม ต่ออายุ / ยกเลิก <br><span class="pr-reason">ทำไม:</span> งานแต่ละประเภทถือของไม่เท่ากัน (งานโปรเจกต์อาจต้องจองนานกว่าขายหน้าร้าน) — fix 30 วันตายตัวไม่พอ แต่ต้องมี default กันเซลล์ลืมกรอก <span class="pr-who">Mockup</span></li>
+      <li>ใน <a class="file-link" href="../wh3-sales-issue-mockup.html">WH-3 เบิกออก</a> — เพิ่มคอลัมน์ "ยอดจอง (Reserved)" ใน stock panel แสดงยอดจองจาก BC เทียบกับ Available Qty <br><span class="pr-reason">ทำไม:</span> คลังต้องเห็นว่าของเท่าไหร่ถูกจองไว้แล้ว จะได้ไม่เบิกเกิน <span class="pr-who">Mockup</span></li>
+      <li>Guard double-reserve: เมื่อสร้าง SL-2 ใบจอง ใหม่แล้วสต๊อกไม่พอ → แสดง panel "สต๊อกไม่พอ — ของถูกจองโดยใบจองเหล่านี้" เป็น<strong>ลิสต์รายใบ</strong>: เลขใบจอง (SO-xxx) · ชื่อเซลล์ผู้จอง · จำนวนที่จอง · วันหมดอายุ — เพื่อให้เอา list ไปคุยกับคนขายเจ้าของใบจองให้ถอน/ลดยอดจอง <br><span class="pr-reason">ทำไม:</span> warning เฉย ๆ ไม่ actionable — คนสร้างใบจองใหม่ต้องรู้ว่าไปตามใครเพื่อปลดของ <span class="pr-who">Mockup</span></li>
+      <li>อัปเดต <a class="file-link" href="../sangwijit-portal-skill/modules/SL.md">SL.md spec</a> section SL-2 ใบจอง: "Portal trigger BC reservation on Confirm, release on Cancel/Expire. WH-3 เบิกออก reads reserved qty จาก BC ledger — Portal ไม่เก็บ reservation เอง" <span class="pr-who">Spec</span></li>
+    </ul>
+    <div class="pr-impact">Impact: ป้องกันสต๊อกล็อกค้าง (ลูกค้ายกเลิกแต่ของจองอยู่คนอื่นจองไม่ได้) + ป้องกันขายเกิน (จอง 2 ใบชน item เดียว)</div>
+  </div>
+</div>
+
+<!-- ═══════════ #13 ═══════════ -->
+<div class="analysis-card">
+  <div class="ac-head"><div class="ac-title">#13 โอนสินค้า TR-Out/In 3 คิว (WH-1/2/3 คลัง)</div><div class="ac-badges"><span class="badge med">MED</span><span class="badge resolved">✅ ปิดแล้ว 07-02</span></div></div>
+  <div class="axis"><div class="axis-label">(ก) Business Process</div><div class="axis-body">WH-2 คลังโอน = เจ้าของใบโอน. WH-1 คลังรับ = ยืนยันรับปลายทาง. WH-3 คลังเบิก "ขอโอน" = route ไป WH-2</div></div>
+  <div class="axis"><div class="axis-label">(ง) Stock</div><div class="axis-body warn">⚠ รับซ้ำ ถ้า TR-In ยืนยัน 2 ครั้ง; สร้างใบซ้ำ ถ้า WH-3 สร้างเองแทน route</div></div>
+  <div class="axis"><div class="axis-label">(จ) Test</div><div class="axis-body">สร้าง TR ที่ WH-2 → ship → WH-1 รับ 1 ครั้ง → WH-3 ต้อง link ใบเดิม ไม่สร้างใหม่</div></div>
+  <div class="summary-box">WH-2=owner, WH-1=รับ, WH-3=route only. sync In-Transit: 1 ใบโอน 1 สถานะข้ามคิว</div>
+  <div class="proposal">
+    <div class="pr-title">ข้อเสนอปรับ #13 — กำหนดเจ้าของใบโอน + กัน รับซ้ำ/สร้างซ้ำ <span class="pr-effort">Effort: L</span></div>
+    <div class="pr-decision ok"><span class="pd-tag">✅ คำตัดสินใจ 2026-07-02 · ✅ ดำเนินการแล้ว</span>อนุมัติตามข้อเสนอ — WH-2 = เจ้าของใบโอน, WH-1 = รับครั้งเดียว, WH-3 = ส่งคำขอเท่านั้น</div>
+    <div class="file-cards">
+      <a class="fc" href="../wh2-stock-transfer-mockup.html" style="--mc:#16A34A"><span class="fc-code">WH-2</span><span class="fc-name">โอนสินค้า</span><span class="fc-role edit">เจ้าของใบโอน</span></a>
+      <a class="fc" href="../wh1-grn-mockup.html" style="--mc:#16A34A"><span class="fc-code">WH-1</span><span class="fc-name">รับเข้าคลัง</span><span class="fc-role edit">กันรับซ้ำ</span></a>
+      <a class="fc" href="../wh3-sales-issue-mockup.html" style="--mc:#16A34A"><span class="fc-code">WH-3</span><span class="fc-name">เบิกออก</span><span class="fc-role edit">เปลี่ยนเป็น request</span></a>
+      <a class="fc" href="../sangwijit-portal-skill/modules/WH.md" style="--mc:#64748B"><span class="fc-code">WH.md</span><span class="fc-name">Spec คลัง</span><span class="fc-role spec">เพิ่ม rule</span></a>
+    </div>
+    <ul>
+      <li><strong>ปัญหา:</strong> การโอนสินค้าข้ามคลังผ่าน 3 คิว (<a class="file-link" href="../wh2-stock-transfer-mockup.html">WH-2 โอนสินค้า</a>, <a class="file-link" href="../wh1-grn-mockup.html">WH-1 รับเข้าคลัง</a>, <a class="file-link" href="../wh3-sales-issue-mockup.html">WH-3 เบิกออก</a>) — ถ้าไม่ชัดว่าใครเป็นเจ้าของ Transfer Order อาจเกิด: (1) WH-1 รับซ้ำ = สต๊อกเกิน (2) WH-3 สร้างใบโอนเองแทนที่จะส่งคำขอ = ใบซ้อนกัน</li>
+      <li><a class="file-link" href="../wh2-stock-transfer-mockup.html">WH-2 โอนสินค้า</a> = <strong>เจ้าของใบโอน</strong> ที่เดียวที่สร้าง Transfer Order ใหม่ได้ (ปุ่ม "สร้างใบโอน"). Status flow: Draft→Shipped→In-Transit→Received <br><span class="pr-reason">ทำไม:</span> ต้องมีจุดสร้างจุดเดียว ไม่งั้นจะมีใบโอนซ้อนกัน 2 ใบสำหรับของชุดเดียว <span class="pr-who">Mockup</span></li>
+      <li><a class="file-link" href="../wh3-sales-issue-mockup.html">WH-3 เบิกออก</a> ประเภท "ขอโอน/TR-Out" — เมื่อกดต้อง <strong>ส่งคำขอไป WH-2 คิว</strong> (สร้าง request) ไม่ใช่สร้าง Transfer Order โดยตรง → เปลี่ยนชื่อปุ่มเป็น "ส่งคำขอโอน" ไม่ใช่ "สร้างใบโอน" <br><span class="pr-reason">ทำไม:</span> ถ้า WH-3 สร้างใบโอนเองได้ = 2 ที่สร้างได้ = ใบซ้อนกัน แยกไม่ออกว่าใบไหนจริง <span class="pr-who">Mockup</span></li>
+      <li><a class="file-link" href="../wh1-grn-mockup.html">WH-1 รับเข้าคลัง</a> ประเภทรับ "TR-In โอนเข้า" — ต้อง match กับ Transfer Order ที่ status=Shipped จาก WH-2. ปุ่ม "ยืนยันรับ" กดได้ <strong>ครั้งเดียว</strong> (status→Received แล้ว disable ปุ่ม) <br><span class="pr-reason">ทำไม:</span> ถ้ากดรับซ้ำได้ = สต๊อกปลายทางเพิ่มขึ้น 2 เท่า (post GL ซ้ำ) <span class="pr-who">Mockup</span></li>
+      <li>Sync In-Transit: ทั้ง 3 คิวแสดงสถานะใบโอนเดียวกัน real-time (ใช้ BC Transfer Header status) — ของ In-Transit ไม่นับเข้าสต๊อกทั้ง 2 คลัง (ต้นทาง = ตัดแล้ว, ปลายทาง = ยังไม่รับ) <span class="pr-who">Mockup</span></li>
+      <li>อัปเดต <a class="file-link" href="../sangwijit-portal-skill/modules/WH.md">WH.md spec</a>: "Transfer Order owner = WH-2 โอนสินค้า เท่านั้น. WH-3 เบิกออก = request only. WH-1 รับเข้า = receive once (idempotent). In-Transit qty excluded from Available" <span class="pr-who">Spec</span></li>
+    </ul>
+    <div class="pr-impact">Impact: ป้องกันรับซ้ำ (สต๊อกเกิน post GL ผิด) + ป้องกันสร้างใบโอนซ้ำ (งานซ้อน). Transfer Order ข้ามคลังเป็นจุดที่ผิดบ่อยสุดใน ERP</div>
+  </div>
+</div>
+
+<!-- ═══════════ #6 ═══════════ -->
+<div class="analysis-card">
+  <div class="ac-head"><div class="ac-title">#6 มัดจำ SL-3 งานขาย vs บิลฝาก PO-8 จัดซื้อ — ชื่อชนกัน</div><div class="ac-badges"><span class="badge low">LOW</span><span class="badge resolved">✅ ปิดแล้ว 07-02</span></div></div>
+  <div class="axis"><div class="axis-label">(ก) Business Process</div><div class="axis-body">SL-3 งานขาย "มัดจำรับ" = Customer Deposit (รับเงินล่วงหน้าจากลูกค้า → AR ฝั่งรับ). PO-8 จัดซื้อ "เงินฝากซื้อ / บิลฝาก" = Vendor Prepayment (จ่ายเงินล่วงหน้าให้ vendor → AP ฝั่งจ่าย). คนละทิศ คนละ ledger แต่ทั้งคู่แปล "deposit"</div></div>
+  <div class="axis"><div class="axis-label">(ข) Document Flow</div><div class="axis-body">SL-3 → post Customer Ledger (CR) → หัก SL-4 invoice อัตโนมัติ. PO-8 → post Vendor Ledger (DR) → หัก PO-6 AP Invoice. ไม่เกี่ยวกันเลยแต่ชื่อคล้าย</div></div>
+  <div class="axis"><div class="axis-label">(ค) Role/Permission</div><div class="axis-body">SL-3 = Sales role. PO-8 = Purchase role. ไม่ข้ามสิทธิ์ แต่ user ใหม่อาจสับสนเข้าผิดหน้า</div></div>
+  <div class="axis"><div class="axis-label">(ง) Accounting/GL</div><div class="axis-body">ถ้าสลับ concept → post ผิดฝั่ง AR/AP ทำให้งบไม่ balance. ความเสี่ยงต่ำเพราะ BC แยก ledger แต่ UI ควรชัด</div></div>
+  <div class="axis"><div class="axis-label">(จ) Test</div><div class="axis-body">เปิดทั้ง 2 หน้าเทียบกัน — ชื่อ, subtitle, tooltip ต้องแยกชัดว่าฝั่งไหน</div></div>
+  <div class="summary-box">ชื่อชน — ไม่ใช่ logic ผิด แค่ naming ทำให้สับสน</div>
+  <div class="proposal">
+    <div class="pr-title">ข้อเสนอปรับ #6 — แยกชื่อให้ชัด "มัดจำรับ" vs "เงินฝากซื้อ" + เพิ่มคำอธิบายในหน้า <span class="pr-effort">Effort: S</span></div>
+    <div class="pr-decision ok"><span class="pd-tag">✅ คำตัดสินใจ 2026-07-02 · ดำเนินการแล้ว</span>PO-8 ใช้ชื่อ <strong>"PO-8 สั่งซื้อสินค้าฝาก"</strong>. Naming convention สำหรับชื่อที่มีโอกาสชนกันข้ามโมดูล: <strong>ใส่ prefix ฝั่งงานนำหน้า</strong> เช่น "ขาย มัดจำ" / "ซื้อ มัดจำ" — ให้รู้ทิศทันทีว่าฝั่งไหน. บริบท: SL-3 = ลูกค้าจ่ายเงินล่วงหน้าให้เรา (AR, หักใน SL-4) / PO-8 = vendor วางบิลเราก่อนรับของครบ (AP, PO-6 โหมด Deposit, 2-Way Match)</div>
+    <div class="file-cards">
+      <a class="fc" href="../sl3-deposit-mockup.html" style="--mc:#2563EB"><span class="fc-code">SL-3</span><span class="fc-name">ใบมัดจำ (ขาย มัดจำ)</span><span class="fc-role edit">✅ badge ฝั่งขายแล้ว</span></a>
+      <a class="fc" href="../po8-deposit-bill-mockup.html" style="--mc:#D97706"><span class="fc-code">PO-8</span><span class="fc-name">บิลฝาก → สั่งซื้อสินค้าฝาก</span><span class="fc-role edit">✅ rename แล้ว</span></a>
+      <a class="fc" href="../sl4-invoice-mockup.html" style="--mc:#2563EB"><span class="fc-code">SL-4</span><span class="fc-name">บิลขาย (หักมัดจำ)</span><span class="fc-role readonly">อ้างอิง</span></a>
+      <a class="fc" href="../po6-ap-invoice-mockup.html" style="--mc:#D97706"><span class="fc-code">PO-6</span><span class="fc-name">ตั้งหนี้เจ้าหนี้ (หักฝาก)</span><span class="fc-role readonly">อ้างอิง</span></a>
+    </div>
+    <ul>
+      <li><strong>ปัญหา:</strong> <a class="file-link" href="../sl3-deposit-mockup.html">SL-3 ใบมัดจำ (ฝั่งขาย)</a> กับ <a class="file-link" href="../po8-deposit-bill-mockup.html">PO-8 บิลฝาก (ฝั่งซื้อ)</a> ชื่อคล้ายกัน ทั้งคู่แปลว่า "deposit" ในภาษาอังกฤษ — แต่คนละทิศ คนละ ledger (AR vs AP). User ใหม่หรือ dev อาจเข้าผิดหน้า หรือสับสนว่าเป็นหน้าเดียวกัน</li>
+      <li>ใน <a class="file-link" href="../sl3-deposit-mockup.html">SL-3 ใบมัดจำ</a> — เปลี่ยน header เป็น "SL-3 มัดจำรับ (Customer Deposit)" + เพิ่ม subtitle "รับเงินล่วงหน้าจากลูกค้า → หักบิลขาย <a class="file-link" href="../sl4-invoice-mockup.html">SL-4</a> อัตโนมัติ" <br><span class="pr-reason">ทำไม:</span> คำว่า "มัดจำ" อย่างเดียวไม่บอกทิศทาง — "มัดจำรับ" ชัดว่าเราเป็นฝั่งรับเงิน (AR) <span class="pr-who">Mockup</span></li>
+      <li>ใน <a class="file-link" href="../po8-deposit-bill-mockup.html">PO-8 บิลฝาก</a> — เปลี่ยน header เป็น "PO-8 เงินฝากซื้อ (Vendor Prepayment)" + subtitle "จ่ายเงินล่วงหน้าให้ vendor → หัก AP Invoice <a class="file-link" href="../po6-ap-invoice-mockup.html">PO-6 ตั้งหนี้เจ้าหนี้</a> อัตโนมัติ" <br><span class="pr-reason">ทำไม:</span> คำว่า "บิลฝาก" ไม่ชัดว่าฝากอะไร ให้ใคร — "เงินฝากซื้อ" ชัดว่าเราเป็นฝั่งจ่าย (AP) <span class="pr-who">Mockup</span></li>
+      <li>ทั้ง 2 หน้า เพิ่ม info tooltip (ℹ icon) ข้างชื่อ: อธิบาย "มัดจำรับ = ฝั่ง AR ลูกค้าจ่ายให้เรา" / "เงินฝากซื้อ = ฝั่ง AP เราจ่ายให้ vendor" <span class="pr-who">Mockup</span></li>
+      <li>อัปเดต sidebar menu label ทุกหน้า: SL-3 แสดง "มัดจำรับ" (ไม่ใช่แค่ "มัดจำ") / PO-8 แสดง "เงินฝากซื้อ" (ไม่ใช่ "บิลฝาก") <span class="pr-who">Mockup</span></li>
+    </ul>
+    <div class="pr-impact">Impact: ลดความสับสนของ user ใหม่ + ป้องกันเข้าผิดหน้า. BC แยก ledger (AR/AP) ให้อยู่แล้วจึงไม่มีความเสี่ยง post ผิดฝั่ง — แต่ชื่อที่ชัดทำให้ UX ดีขึ้น</div>
+  </div>
+</div>
+
+<!-- ═══════════ #9 ═══════════ -->
+<div class="analysis-card">
+  <div class="ac-head"><div class="ac-title">#9 ภาษีหัก ณ ที่จ่าย WHT 3 ที่ — FI-2/FI-4/FI-12 บัญชี</div><div class="ac-badges"><span class="badge low">LOW</span><span class="badge resolved">✅ ปิดแล้ว 07-02</span></div></div>
+  <div class="axis"><div class="axis-label">(ก) Business Process</div><div class="axis-body">WHT เกิด 2 ที่: FI-2 บัญชีจ่ายเจ้าหนี้ (หักจาก AP payment) และ FI-4 ค่าใช้จ่าย+WHT (Expense voucher). FI-12 ภาษีหัก ณ ที่จ่าย = ศูนย์รวบรวม → Release → Print certificate ภ.ง.ด.3/53</div></div>
+  <div class="axis"><div class="axis-label">(ข) Document Flow</div><div class="axis-body warn">FI-2 บัญชี สร้าง WHT record → pending. FI-4 บัญชี สร้าง WHT record → pending. FI-12 บัญชี ดึง pending ทั้งหมด → release/print. ⚠ FI-4 spec เขียน "JV" แต่ไฟล์จริงชื่อ "Expense+WHT" → ชื่อไม่ตรง spec</div></div>
+  <div class="axis"><div class="axis-label">(ค) Role/Permission</div><div class="axis-body">FI-2/FI-4 = Accountant สร้าง WHT. FI-12 = Tax Officer release/print. แยก role ถูกต้อง (Maker≠Checker)</div></div>
+  <div class="axis"><div class="axis-label">(ง) Accounting/GL</div><div class="axis-body warn">ถ้า FI-4 หรือ FI-12 ออก certificate ซ้ำ → WHT ซ้ำ (vendor ได้หนังสือ 2 ใบ = ปัญหากับกรมสรรพากร)</div></div>
+  <div class="axis"><div class="axis-label">(จ) Test</div><div class="axis-body">(1) FI-2 หัก WHT → FI-12 เห็น pending. (2) FI-4 หัก WHT → FI-12 เห็น pending. (3) FI-12 release → FI-2/FI-4 ปุ่ม certificate ถูก disable</div></div>
+  <div class="summary-box">FI-12 = single release/print point. FI-2/FI-4 = สร้าง WHT record only (ไม่ออก cert)</div>
+  <div class="proposal">
+    <div class="pr-title">ข้อเสนอปรับ #9 — FI-12 ภาษีหัก ณ ที่จ่าย = จุดออกหนังสือรับรองที่เดียว + แก้ชื่อ FI-4 <span class="pr-effort">Effort: S</span></div>
+    <div class="pr-decision rev"><span class="pd-tag">🔧 คำตัดสินใจ 2026-07-02 — ยืนยันซ้ำซ้อนจริง + ปรับเพิ่ม · ✅ ดำเนินการแล้ว</span>ยืนยันว่า WHT 3 ที่ซ้ำซ้อนจริง — ตามหลักแล้ว หัก ณ ที่จ่ายออกที่<strong>ฟอร์มเดียว</strong> และ<strong>อัตราหัก (เรท) เป็นตัวเลือก</strong>ในฟอร์มนั้น (เลือก 1% / 2% / 3% / 5% ตามประเภทเงินได้) — ไม่แยกฟอร์มตามเรทหรือตามต้นทาง</div>
+    <div class="file-cards">
+      <a class="fc" href="../fi12-wht-mockup.html" style="--mc:#DB2777"><span class="fc-code">FI-12</span><span class="fc-name">ภาษีหัก ณ ที่จ่าย</span><span class="fc-role edit">รวมจุดออก WHT cert</span></a>
+      <a class="fc" href="../fi4-expense-wht-mockup.html" style="--mc:#DB2777"><span class="fc-code">FI-4</span><span class="fc-name">ค่าใช้จ่าย+WHT</span><span class="fc-role edit">แก้ชื่อ+ลบปุ่ม cert</span></a>
+      <a class="fc" href="../fi2-ap-payment-mockup.html" style="--mc:#DB2777"><span class="fc-code">FI-2</span><span class="fc-name">จ่ายเจ้าหนี้</span><span class="fc-role check">ตรวจ cross-ref WHT</span></a>
+      <a class="fc" href="../sangwijit-portal-skill/modules/FI.md" style="--mc:#DB2777"><span class="fc-code">FI.md</span><span class="fc-name">Finance Spec</span><span class="fc-role spec">แก้ spec ชื่อ FI-4</span></a>
+    </div>
+    <ul>
+      <li><strong>ปัญหา:</strong> ภาษีหัก ณ ที่จ่าย (WHT) ถูกสร้างได้ 2 ที่ (<a class="file-link" href="../fi2-ap-payment-mockup.html">FI-2 จ่ายเจ้าหนี้</a> หักจาก AP payment + <a class="file-link" href="../fi4-expense-wht-mockup.html">FI-4 ค่าใช้จ่าย+ภาษีหัก ณ ที่จ่าย</a>) แล้วรวมที่ <a class="file-link" href="../fi12-wht-mockup.html">FI-12 ภาษีหัก ณ ที่จ่าย</a> เพื่อ release/print ภ.ง.ด.3/53 — ถ้า FI-2 หรือ FI-4 มีปุ่มออกหนังสือรับรองเองด้วย จะออกซ้ำ (vendor ได้หนังสือ 2 ใบ = ปัญหากรมสรรพากร). นอกจากนี้ FI-4 ยังมีชื่อไม่ตรง spec (spec เขียน "JV" แต่ไฟล์จริงชื่อ "Expense+WHT")</li>
+      <li>ตรวจ <a class="file-link" href="../fi2-ap-payment-mockup.html">FI-2 จ่ายเจ้าหนี้</a> section WHT — ต้องมีแค่ "สร้าง WHT record" (auto calc ภ.ง.ด.3/53 ตามอัตรา). <strong>ห้ามมีปุ่ม "ออกหนังสือ/Print Certificate"</strong> — เฉพาะ link "ดูที่ FI-12 ภาษีหัก ณ ที่จ่าย" <br><span class="pr-reason">ทำไม:</span> FI-2 role = Accountant สร้าง record, FI-12 role = Tax Officer release/print — แยก Maker≠Checker <span class="pr-who">Mockup</span></li>
+      <li>ตรวจ <a class="file-link" href="../fi4-expense-wht-mockup.html">FI-4 ค่าใช้จ่าย+ภาษีหัก ณ ที่จ่าย</a> — เหมือน FI-2: สร้าง WHT record only, <strong>ห้ามมีปุ่ม print cert</strong> <br><span class="pr-reason">ทำไม:</span> เหตุผลเดียวกัน — ถ้าให้ออก cert ได้ 3 ที่ (FI-2/FI-4/FI-12) ไม่มีทางควบคุมว่าออกไปกี่ใบ <span class="pr-who">Mockup</span></li>
+      <li>แก้ชื่อ FI-4: spec (<a class="file-link" href="../sangwijit-portal-skill/modules/FI.md">FI.md</a>) เขียน "JV" แต่ไฟล์จริงชื่อ <a class="file-link" href="../fi4-expense-wht-mockup.html">fi4-expense-wht-mockup.html</a> ("Expense+WHT") → reconcile ให้ตรงกัน เลือก 1 ชื่อ <br><span class="pr-reason">ทำไม:</span> ชื่อไม่ตรงกัน = dev ไม่รู้ว่า "FI-4 JV" ใน spec หมายถึงไฟล์ไหน <span class="pr-who">Spec</span></li>
+      <li><a class="file-link" href="../fi12-wht-mockup.html">FI-12 ภาษีหัก ณ ที่จ่าย</a> = <strong>จุดเดียว</strong>ที่ Release + Print ภ.ง.ด.3/53. แสดง list WHT pending จากทั้ง FI-2 จ่ายเจ้าหนี้ + FI-4 ค่าใช้จ่าย รวมกัน filter by period/vendor <span class="pr-who">Mockup</span></li>
+      <li><strong>อัตราหักเป็นตัวเลือกในฟอร์ม (เพิ่มตามคำตัดสินใจ 2026-07-02):</strong> ฟอร์ม WHT มี dropdown "อัตราหัก" ให้เลือกตามประเภทเงินได้ — 1% (ขนส่ง) / 2% (โฆษณา) / 3% (บริการ/จ้างทำของ) / 5% (เช่า) — auto-default ตาม WHT Category ของ vendor แต่แก้ได้ <br><span class="pr-reason">ทำไม:</span> เรทต่างกันแค่ค่า ไม่ใช่คนละเอกสาร — แยกฟอร์มตามเรทจะกลายเป็นหลายฟอร์มซ้ำโครงเดิม ดูแลยาก <span class="pr-who">Mockup</span></li>
+    </ul>
+    <div class="pr-impact">Impact: ป้องกัน WHT certificate ซ้ำ (vendor ได้หนังสือรับรอง 2 ใบ = ปัญหากรมสรรพากร, โทษปรับ) + reconcile ชื่อ FI-4 ให้ spec ตรง mockup</div>
+  </div>
+</div>
+
+<!-- ═══════════ #12 ═══════════ -->
+<div class="analysis-card">
+  <div class="ac-head"><div class="ac-title">#12 ที่อยู่จัดส่งซ้ำ — SL-4 บิลขาย header vs tab จัดส่ง</div><div class="ac-badges"><span class="badge low">LOW</span><span class="badge resolved">✅ ปิดแล้ว 07-02</span></div></div>
+  <div class="axis"><div class="axis-label">(ก) Business Process</div><div class="axis-body">SL-4 บิลขาย = ใบแจ้งหนี้ที่มีที่อยู่จัดส่งเป็นส่วนของ header (ดึงจาก Ship-to Address ของ Customer). Tab "จัดส่ง" ในบิลเดียวกันแสดงที่อยู่จัดส่งอีกครั้ง → ซ้ำ</div></div>
+  <div class="axis"><div class="axis-label">(ข) Document Flow</div><div class="axis-body warn">ถ้า header กับ tab ไม่ sync → SV-6 บริการจัดส่ง + WH-3 คลังเบิก อาจอ่านคนละแหล่ง → ส่งผิดที่อยู่</div></div>
+  <div class="axis"><div class="axis-label">(ค) Role/Permission</div><div class="axis-body">Sales แก้ header ได้ แต่ tab จัดส่งอาจ editable ด้วย → ใครเป็นเจ้าของ?</div></div>
+  <div class="axis"><div class="axis-label">(ง) Accounting/GL</div><div class="axis-body">ไม่กระทบ GL โดยตรง แต่ที่อยู่ผิดทำให้ส่งของผิด = ต้นทุนขนส่งเพิ่ม</div></div>
+  <div class="axis"><div class="axis-label">(จ) Test</div><div class="axis-body">(1) เปลี่ยน header → tab จัดส่ง update auto. (2) SV-6 + WH-3 ใช้ที่อยู่จาก header ตรง</div></div>
+  <div class="summary-box">ไม่ใช่ข้อมูลซ้ำ — Header = ที่อยู่ใบกำกับภาษี (Bill-to), Tab จัดส่ง = ที่อยู่ส่งของ (Ship-to) — แยกบทบาทให้ชัด</div>
+  <div class="proposal">
+    <div class="pr-title">ข้อเสนอปรับ #12 — แยกบทบาทที่อยู่: หัวบิล = ใบกำกับภาษี / Tab จัดส่ง = ที่อยู่ส่งของ <span class="pr-effort">Effort: S</span></div>
+    <div class="pr-decision rev"><span class="pd-tag">🔧 คำตัดสินใจ 2026-07-02 — กลับทิศจากข้อเสนอเดิม · ✅ ดำเนินการแล้ว</span>ไม่ใช่ข้อมูลซ้ำ — เป็น<strong>คนละที่อยู่โดยเจตนา</strong>: ที่อยู่หัวบิล = ข้อมูลลูกค้า/ที่อยู่ออก<strong>ใบกำกับภาษี</strong> (Bill-to) ส่วนที่อยู่ใน tab จัดส่ง = ที่อยู่<strong>ส่งของจริง</strong> (Ship-to) ซึ่งอาจคนละที่กันได้ → ข้อเสนอเดิมที่ให้ tab เป็น read-only prefill จาก header <strong>ยกเลิก</strong> เปลี่ยนเป็นแยกบทบาท 2 ที่อยู่ให้ชัดแทน</div>
+    <div class="file-cards">
+      <a class="fc" href="../sl4-invoice-mockup.html" style="--mc:#2563EB"><span class="fc-code">SL-4</span><span class="fc-name">บิลขาย</span><span class="fc-role edit">label Bill-to / Ship-to แยกชัด</span></a>
+      <a class="fc" href="../sv6-delivery-install-mockup.html" style="--mc:#7C3AED"><span class="fc-code">SV-6</span><span class="fc-name">จัดส่ง+ติดตั้ง</span><span class="fc-role check">ตรวจดึงจาก tab จัดส่ง (Ship-to)</span></a>
+      <a class="fc" href="../wh3-sales-issue-mockup.html" style="--mc:#16A34A"><span class="fc-code">WH-3</span><span class="fc-name">เบิกออก</span><span class="fc-role check">ตรวจดึงจาก tab จัดส่ง (Ship-to)</span></a>
+    </div>
+    <ul>
+      <li><strong>ปัญหา (นิยามใหม่):</strong> <a class="file-link" href="../sl4-invoice-mockup.html">SL-4 บิลขาย</a> มีที่อยู่ 2 จุดที่<strong>ดูเหมือนซ้ำแต่จริง ๆ คนละบทบาท</strong> — ที่อยู่หัวบิล = ที่อยู่ตามทะเบียนภาษีของลูกค้า ใช้ออกใบกำกับภาษี (Bill-to) ส่วน tab "จัดส่ง" = ที่อยู่ส่งของจริงซึ่งอาจเป็นหน้างาน/สาขา/ไซต์ก่อสร้าง (Ship-to). ความเสี่ยงจริงคือ UI ไม่ label ให้ชัด → คนกรอกสลับกัน หรือ <a class="file-link" href="../sv6-delivery-install-mockup.html">SV-6 จัดส่ง+ติดตั้ง</a> / <a class="file-link" href="../wh3-sales-issue-mockup.html">WH-3 เบิกออก</a> ไปอ่านที่อยู่หัวบิล (ที่อยู่ภาษี) แล้วส่งของผิดที่</li>
+      <li>ใน <a class="file-link" href="../sl4-invoice-mockup.html">SL-4 บิลขาย</a> header — label ให้ชัดเป็น "ที่อยู่ใบกำกับภาษี (Bill-to)" ดึง default จาก Customer Card ที่อยู่จดทะเบียน <br><span class="pr-reason">ทำไม:</span> ที่อยู่นี้ต้องตรงทะเบียน VAT ของลูกค้า — ออกใบกำกับผิดที่อยู่ = ใบกำกับใช้เครดิตภาษีไม่ได้ ต้องออกใหม่ <span class="pr-who">Mockup</span></li>
+      <li>Tab "จัดส่ง" — label เป็น "ที่อยู่จัดส่งสินค้า (Ship-to)" <strong>แก้ไขได้อิสระจาก header</strong>: default จาก Ship-to Address ของ Customer Card + เลือกจากรายการที่อยู่ส่งของที่เคยใช้ หรือกรอกใหม่ (หน้างาน/ไซต์) <br><span class="pr-reason">ทำไม:</span> ลูกค้าบริษัทเดียวส่งของหลายไซต์เป็นเรื่องปกติ — บังคับให้ตรง header จะใช้งานจริงไม่ได้ <span class="pr-who">Mockup</span></li>
+      <li><a class="file-link" href="../sv6-delivery-install-mockup.html">SV-6 จัดส่ง+ติดตั้ง</a> + <a class="file-link" href="../wh3-sales-issue-mockup.html">WH-3 เบิกออก</a> → ดึงที่อยู่จาก <strong>tab จัดส่ง (Ship-to)</strong> เท่านั้น ห้ามอ่านที่อยู่หัวบิล <br><span class="pr-reason">ทำไม:</span> ที่อยู่หัวบิลคือที่อยู่ภาษี ไม่ใช่จุดส่งของ — อ่านผิด field = ขนของไปสำนักงานใหญ่ทั้งที่หน้างานอยู่ต่างจังหวัด <span class="pr-who">Mockup</span></li>
+      <li>เมื่อ Ship-to ≠ Bill-to → แสดง badge "📍 ส่งของคนละที่กับที่อยู่ใบกำกับ" บน header เพื่อให้คนตรวจบิลเห็นทันทีว่าตั้งใจให้ต่างกัน ไม่ใช่กรอกผิด <span class="pr-who">Mockup</span></li>
+    </ul>
+    <div class="pr-impact">Impact: ใบกำกับภาษีออกถูกที่อยู่ (ใช้เครดิตภาษีได้) + ของส่งถูกไซต์. หัวใจคือ label แยกบทบาท 2 ที่อยู่ให้ชัด ไม่ใช่บังคับให้เท่ากัน</div>
+  </div>
+</div>
+
+<!-- ═══════════ #15 ═══════════ -->
+<div class="analysis-card">
+  <div class="ac-head"><div class="ac-title">#15 SL-5 Code ชน — Credit Memo ใบลดหนี้ vs CRM vs อื่น ๆ</div><div class="ac-badges"><span class="badge low">LOW</span><span class="badge resolved">✅ ปิดแล้ว 07-02 (grill Q1-Q10)</span></div></div>
+  <div class="axis"><div class="axis-label">(ก) Business Process</div><div class="axis-body">Credit Note/ใบลดหนี้ เป็นเอกสาร doc-chain (SL-4→SL-CN) ไม่ใช่หน้าจอแยก. SL-5 ไม่ควรใช้สำหรับ CN เพราะ CN มี code SL-CN อยู่แล้ว. SL-5 ถูกใช้สำหรับ CRM/Follow-up ซึ่งเกิน scope Phase 1</div></div>
+  <div class="axis"><div class="axis-label">(ข) Document Flow</div><div class="axis-body warn">ไฟล์ปัจจุบัน: sl5-crm-followup (CRM), sl6-promotion-setup (ควรอยู่ PM), sl7-report (ซ้ำ WH-R/FI-R). ทั้ง 3 อาจเกิน scope</div></div>
+  <div class="axis"><div class="axis-label">(ค) Role/Permission</div><div class="axis-body">SL-CN ใบลดหนี้ = Sales + Finance Approval. SL-5 CRM = Sales only. ไม่ conflict แต่ confusing numbering</div></div>
+  <div class="axis"><div class="axis-label">(ง) Accounting/GL</div><div class="axis-body">SL-CN ต้อง post reverse AR (Dr AR, Cr Revenue). ถ้า code ชนกับ CRM → dev อาจสับสน GL posting logic</div></div>
+  <div class="axis"><div class="axis-label">(จ) Test</div><div class="axis-body">ยืนยัน: SL-CN = doc-chain จาก SL-4, SL-5 = CRM (ถ้ายังอยู่) ไม่เกี่ยวกัน</div></div>
+  <div class="summary-box">CN = SL-CN (doc-chain). SL-5/SL-6/SL-7 อาจเกิน scope — ประเมินตัดออก</div>
+  <div class="proposal">
+    <div class="pr-title">ข้อเสนอปรับ #15 — ใบลดหนี้ขาย = SL-CN เท่านั้น + ประเมินไฟล์เกิน scope (SL-5/6/7) <span class="pr-effort">Effort: S</span></div>
+    <div class="pr-decision ok"><span class="pd-tag">✅ Grill จบ 2026-07-02 (Q1–Q10) · ดำเนินการแล้ว</span><strong>Q1</strong> รหัส = SL-CN (spec แก้ตามไฟล์ · SL-5 ปล่อยให้ CRM) · <strong>Q2</strong> เคลม: SV ส่งคำขอ → Sales ออกใบ (pattern CLM→PO-CN) · <strong>Q3</strong> ฟอร์มเดียว 2 ทางเข้า (จากบิล / จากคิว SV prefill+ล็อกเหตุผล) · <strong>Q4</strong> รูปแบบเอกสาร auto ตามบิลต้นทาง แก้ไม่ได้ · <strong>Q5</strong> ของก่อนเงินเท่านั้น (WH Return / SV intake = gate) · <strong>Q6</strong> เครดิตค้างใน AR ledger เสมอ — apply/refund ที่ FI (FI-1Q) · <strong>Q7</strong> อนุมัติทุกใบผ่าน CF-2.6 ตาม tier · <strong>Q8</strong> คำขอ SV เข้า SL-Q กลุ่ม CN badge "จากเคลม SV" · <strong>Q9</strong> CN เฉพาะผลจบ "คืนเงิน/ลดหนี้" (เปลี่ยนตัวใหม่จบใน SV/WH→PO-CN) · <strong>Q10</strong> archive SL-5/6/7 ทั้ง 3 ไฟล์ + ลบ sidebar — spec/mockup/คิว แก้ครบแล้ว</div>
+    <div class="file-cards">
+      <a class="fc" href="../slcn-credit-memo-mockup.html" style="--mc:#2563EB"><span class="fc-code">SL-CN</span><span class="fc-name">ใบลดหนี้ขาย</span><span class="fc-role edit">canonical · ปรับ 5 จุดแล้ว</span></a>
+      <a class="fc" href="../_archive/sl5-crm-followup-mockup.html" style="--mc:#2563EB;opacity:.65"><span class="fc-code">SL-5</span><span class="fc-name">CRM ติดตามลูกค้า</span><span class="fc-role archive">📦 archived 07-02</span></a>
+      <a class="fc" href="../_archive/sl6-promotion-setup-mockup.html" style="--mc:#2563EB;opacity:.65"><span class="fc-code">SL-6</span><span class="fc-name">ตั้งค่าโปรโมชัน</span><span class="fc-role archive">📦 archived → PM (P2)</span></a>
+      <a class="fc" href="../_archive/sl7-sales-report-mockup.html" style="--mc:#2563EB;opacity:.65"><span class="fc-code">SL-7</span><span class="fc-name">รายงานขาย</span><span class="fc-role archive">📦 archived → RP-1</span></a>
+    </div>
+    <ul>
+      <li><strong>ปัญหา:</strong> ใบลดหนี้ขาย (Credit Memo) มีไฟล์ mockup ชัดเจนแล้วคือ <a class="file-link" href="../slcn-credit-memo-mockup.html">SL-CN ใบลดหนี้ขาย</a> ซึ่งเป็น doc-chain จาก <a class="file-link" href="../sl4-invoice-mockup.html">SL-4 บิลขาย</a>. แต่รหัส "SL-5" เคยใช้อ้างถึง Credit Note ในที่บางแห่ง ทั้งที่ SL-5 จริง ๆ คือ <a class="file-link" href="../sl5-crm-followup-mockup.html">SL-5 CRM ติดตามลูกค้า</a> (คนละหน้ากัน) → dev อาจสับสนว่า SL-5 = ใบลดหนี้ แล้ว wire ผิด GL posting</li>
+      <li>ยืนยันใบลดหนี้ขาย = <a class="file-link" href="../slcn-credit-memo-mockup.html">SL-CN ใบลดหนี้ขาย</a> เท่านั้น (post reverse AR: Dr AR, Cr Revenue). ทุกจุดที่อ้าง "SL-5 Credit Note" ต้องเปลี่ยนเป็น "SL-CN ใบลดหนี้ขาย" <br><span class="pr-reason">ทำไม:</span> SL-5 ไม่ใช่ใบลดหนี้ — SL-5 คือ CRM ติดตามลูกค้า (ไม่มี GL posting). ถ้า dev เอา SL-5 ไป wire GL reverse = ระบบพัง <span class="pr-who">Spec</span></li>
+      <li>ประเมิน <a class="file-link" href="../sl5-crm-followup-mockup.html">SL-5 CRM ติดตามลูกค้า</a>: เป็น sales follow-up tool ไม่ใช่เอกสารบัญชี — ถ้าเกิน scope Phase 1 → ย้ายไป <code>_archive/</code> + ลบออกจาก sidebar <br><span class="pr-reason">ทำไม:</span> ปล่อยไว้ใน sidebar ทำให้ user สับสนว่า SL มี 7+ หน้า ทั้งที่ core มีแค่ SL-1/2/3/4/CN/F1/Q <span class="pr-who">Process</span></li>
+      <li>ประเมิน <a class="file-link" href="../sl6-promotion-setup-mockup.html">SL-6 ตั้งค่าโปรโมชัน</a>: function นี้ควรอยู่ PM module (โปรโมชัน) ไม่ใช่ SL (งานขาย) → ย้ายเป็น PM-x หรือ archive <br><span class="pr-reason">ทำไม:</span> อยู่ผิด module ทำให้ dev หา function ไม่เจอ + sidebar SL ยาวเกินไป <span class="pr-who">Process</span></li>
+      <li>ประเมิน <a class="file-link" href="../sl7-sales-report-mockup.html">SL-7 รายงานขาย</a>: อาจซ้ำ <a class="file-link" href="../wh-r-stock-card-mockup.html">WH-R Stock Card</a> / <a class="file-link" href="../rp1-report-center-mockup.html">RP-1 Report Center</a>. ถ้าซ้ำ → archive. ถ้าเป็น Sales-specific → keep แต่ rename ชัด <span class="pr-who">Process</span></li>
+    </ul>
+    <div class="pr-impact">Impact: ลดความสับสนระหว่าง CN ใบลดหนี้ (เอกสารบัญชีที่ post GL) กับ CRM (sales tool ไม่ post GL). ตัดไฟล์เกิน scope ทำให้ Phase 1 ชัดขึ้น</div>
+  </div>
+</div>
+
+<!-- ═══════════ #17 ═══════════ -->
+<div class="analysis-card">
+  <div class="ac-head"><div class="ac-title">#17 Doc-chain breadcrumb hard-code ข้ามโมดูล</div><div class="ac-badges"><span class="badge low">LOW</span><span class="badge resolved">✅ ปิดแล้ว 07-02</span></div></div>
+  <div class="axis"><div class="axis-label">(ก) Business Process</div><div class="axis-body">เอกสาร ERP เชื่อมกันเป็น chain: SL-1→SL-2→SL-4→WH-3→SV-6 / PO-1→PO-4→WH-1→PO-6 etc. ทุกหน้าต้องแสดง breadcrumb chain เพื่อ trace ย้อนกลับ</div></div>
+  <div class="axis"><div class="axis-label">(ข) Document Flow</div><div class="axis-body warn">ปัจจุบัน breadcrumb/cross-link hard-code ใน HTML แต่ละไฟล์ → ถ้า chain เปลี่ยน (เช่น ตัด PO-5 ออก) ต้องแก้ทีละไฟล์ ≥10 จุด → ลืมแก้บ่อย</div></div>
+  <div class="axis"><div class="axis-label">(ค) Role/Permission</div><div class="axis-body">ไม่กระทบ role แต่กระทบ UX — user คลิก link แล้วไปหน้าผิด/หน้าที่ถูกตัดออก</div></div>
+  <div class="axis"><div class="axis-label">(ง) Accounting/GL</div><div class="axis-body">ไม่กระทบ GL โดยตรง</div></div>
+  <div class="axis"><div class="axis-label">(จ) Test</div><div class="axis-body">คลิก breadcrumb chain ทุกหน้า → ไม่มี dead link, ลำดับตรงกับ actual flow</div></div>
+  <div class="summary-box">แสดงเฉพาะเอกสารที่อ้างอิงถึงกันจริง (SC5 DocRefPanel + BC document link) — ไม่ทำ chain ทฤษฎีทั้งสาย</div>
+  <div class="proposal">
+    <div class="pr-title">ข้อเสนอปรับ #17 — แสดงเฉพาะเอกสารที่อ้างอิงถึงรายการนั้นจริง (Related Docs) <span class="pr-effort">Effort: S</span></div>
+    <div class="pr-decision rev"><span class="pd-tag">🔧 คำตัดสินใจ 2026-07-02 — ลด scope ลง · ✅ ดำเนินการแล้ว</span>ไม่ต้องทำ breadcrumb แสดง chain ทั้งสายแบบ static (SL-1→SL-2→SL-4→WH-3→SV-6 ครบทุกขั้น) — ต้องการแค่<strong>แสดงเฉพาะเอกสารที่มีการอ้างอิงถึงเอกสารรายการนั้น ๆ จริง</strong> เช่น บิลขายใบนี้เกิดจากใบจองไหน มีใบเบิก/ใบลดหนี้ไหนอ้างถึงบ้าง — เอกสารขั้นที่ยังไม่เกิดไม่ต้องโชว์</div>
+    <div class="file-cards">
+      <a class="fc" href="../sl1-quotation-mockup.html" style="--mc:#2563EB"><span class="fc-code">SL-1</span><span class="fc-name">ใบเสนอราคา</span><span class="fc-role edit">ลด chain → DocRefPanel</span></a>
+      <a class="fc" href="../sl4-invoice-mockup.html" style="--mc:#2563EB"><span class="fc-code">SL-4</span><span class="fc-name">บิลขาย</span><span class="fc-role edit">ลด chain → DocRefPanel</span></a>
+      <a class="fc" href="../wh3-sales-issue-mockup.html" style="--mc:#16A34A"><span class="fc-code">WH-3</span><span class="fc-name">เบิกออก</span><span class="fc-role edit">ลด chain → DocRefPanel</span></a>
+      <a class="fc" href="../po1-purchase-request-mockup.html" style="--mc:#D97706"><span class="fc-code">PO-1</span><span class="fc-name">ขอซื้อ</span><span class="fc-role edit">ลด chain → DocRefPanel</span></a>
+    </div>
+    <ul>
+      <li><strong>ปัญหา (นิยามใหม่):</strong> เดิมเสนอทำ breadcrumb แสดง chain ทั้งสายแบบ static — แต่ความต้องการจริงเล็กกว่านั้น: ในแต่ละเอกสาร (เช่นบิลขาย 1 ใบใน <a class="file-link" href="../sl4-invoice-mockup.html">SL-4 บิลขาย</a>) ต้องเห็นว่า<strong>มีเอกสารใบไหนอ้างอิงถึงกันจริงบ้าง</strong> — chain เต็มสายที่เป็นทฤษฎีไม่มีประโยชน์ เพราะบางขั้นอาจไม่เกิด (ขายสดไม่มีใบจอง) หรือยังไม่เกิด (ยังไม่เบิก)</li>
+      <li>ทุกหน้าเอกสารใช้ section "เอกสารที่เกี่ยวข้อง" (SC5 DocRefPanel ที่มีอยู่แล้ว) เป็นที่เดียวที่แสดง: <strong>ต้นทาง</strong> (เอกสารที่ใบนี้อ้างถึง เช่น บิลขายอ้างใบจอง SO-xxx) + <strong>ปลายทาง</strong> (เอกสารที่อ้างถึงใบนี้ เช่น ใบเบิก WH-xxx, ใบลดหนี้ CN-xxx) — แสดงเฉพาะที่เกิดขึ้นจริง เป็น list เลขที่เอกสาร + สถานะ + link <br><span class="pr-reason">ทำไม:</span> ตอบคำถามที่ user ถามจริง ("บิลนี้เบิกหรือยัง มี CN ไหม") — ไม่ใช่โชว์ผังทฤษฎีที่เหมือนกันทุกใบ <span class="pr-who">Mockup</span></li>
+      <li>ข้อมูลอ้างอิงมาจาก BC document link จริง (Quote No. / Order No. / Applies-to Doc) — Portal ไม่ต้องเก็บ mapping เอง <br><span class="pr-reason">ทำไม:</span> BC เก็บความสัมพันธ์เอกสารอยู่แล้วตอน post — ดึงมาแสดงพอ ไม่ต้องสร้างระบบ chain ใหม่ <span class="pr-who">BC API</span></li>
+      <li>ตรวจ mockup ที่มี breadcrumb ทั้งสายแบบ hard-code (เช่น <a class="file-link" href="../sl1-quotation-mockup.html">SL-1 ใบเสนอราคา</a>, <a class="file-link" href="../po1-purchase-request-mockup.html">PO-1 ขอซื้อ</a>, <a class="file-link" href="../wh3-sales-issue-mockup.html">WH-3 เบิกออก</a>) → ลดเหลือ DocRefPanel แบบเดียวกัน ตัด chain ทฤษฎีออก <br><span class="pr-reason">ทำไม:</span> สองระบบซ้อนกัน (chain ทฤษฎี + เอกสารจริง) ทำให้ user งงว่าอันไหนคือของจริง <span class="pr-who">Mockup</span></li>
+    </ul>
+    <div class="pr-impact">Impact: scope เล็กลงจากเดิมมาก (ไม่ต้องสร้าง swt-link.js/DOC_CHAINS) — ใช้ SC5 DocRefPanel ที่มีอยู่ + ข้อมูล link จาก BC. Effort ลดจาก M → S</div>
+  </div>
+</div>
+
+<h2>Test Cases per Overlap</h2>
+<div class="test-grid">
+  <div class="test-card">
+    <div class="tt-head">#14 Approval Matrix อนุมัติ (CF ตั้งค่า)</div>
+    <div class="test-item happy"><span class="test-label happy">Happy:</span> SL-F1 งานขาย ส่งขออนุมัติ → route ถูก tier ตาม CF-2.6 ตั้งค่า</div>
+    <div class="test-item edge"><span class="test-label edge">Edge:</span> Maker = Checker → ระบบ block</div>
+    <div class="test-item fail"><span class="test-label fail">Fail:</span> FI-4 บัญชี อ้าง CF-7 ≠ SL-F1 งานขาย อ้าง CF-2.6 → wire ผิด matrix</div>
+  </div>
+  <div class="test-card">
+    <div class="tt-head">#10 PO-7 จัดซื้อ vs FI-8 บัญชี</div>
+    <div class="test-item happy"><span class="test-label happy">Happy:</span> PO-7 จัดซื้อ record payment → FI-8 บัญชี เห็น read-only</div>
+    <div class="test-item edge"><span class="test-label edge">Edge:</span> aging >90d → FI-8 บัญชี flag follow-up</div>
+    <div class="test-item fail"><span class="test-label fail">Fail:</span> กด Record Payment 2 ฝั่งพร้อมกัน → double-record</div>
+  </div>
+  <div class="test-card">
+    <div class="tt-head">#11 PO-7 จัดซื้อ ↔ SL-4 บิลขาย Serial</div>
+    <div class="test-item happy"><span class="test-label happy">Happy:</span> ขาย SL-4 → เบิก WH-3 คลัง ลง serial → PO-7 จัดซื้อ accumulate</div>
+    <div class="test-item edge"><span class="test-label edge">Edge:</span> ขายบางส่วน → recovery ตาม qty จริง</div>
+    <div class="test-item fail"><span class="test-label fail">Fail:</span> PO-7 จัดซื้อ รอ serial จาก SL-4 บิลขาย (ไม่มี) → ค้างถาวร</div>
+  </div>
+  <div class="test-card">
+    <div class="tt-head">#7 จองสต๊อก SL-2 งานขาย vs WH-3 คลังเบิก</div>
+    <div class="test-item happy"><span class="test-label happy">Happy:</span> SL-2 งานขาย จอง 10 → WH-3 คลัง เห็น reserved 10</div>
+    <div class="test-item edge"><span class="test-label edge">Edge:</span> สต๊อก 8 จอง 10 → เตือน ส่งบางส่วน</div>
+    <div class="test-item fail"><span class="test-label fail">Fail:</span> ยกเลิก SL-2 งานขาย แต่ reservation ไม่ปล่อย → ล็อกค้าง</div>
+  </div>
+  <div class="test-card">
+    <div class="tt-head">#13 โอนสินค้า TR 3 คิว (WH คลัง)</div>
+    <div class="test-item happy"><span class="test-label happy">Happy:</span> WH-2 คลังโอน สร้าง TR → ship → WH-1 คลังรับ 1 ครั้ง</div>
+    <div class="test-item edge"><span class="test-label edge">Edge:</span> In-Transit → ไม่นับสต๊อกทั้ง 2 คลัง</div>
+    <div class="test-item fail"><span class="test-label fail">Fail:</span> WH-1 คลังรับ รับซ้ำ หรือ WH-3 คลังเบิก สร้างใบใหม่ซ้ำ</div>
+  </div>
+  <div class="test-card">
+    <div class="tt-head">#6 มัดจำ SL-3 งานขาย vs บิลฝาก PO-8 จัดซื้อ</div>
+    <div class="test-item happy"><span class="test-label happy">Happy:</span> SL-3 งานขาย มัดจำ 5k → หักออกจากบิล SL-4 auto</div>
+    <div class="test-item fail"><span class="test-label fail">Fail:</span> สลับ concept → PO-8 จัดซื้อ post ฝั่ง AR แทน AP</div>
+  </div>
+  <div class="test-card">
+    <div class="tt-head">#9 ภาษีหัก ณ ที่จ่าย WHT 3 ที่ (FI บัญชี)</div>
+    <div class="test-item happy"><span class="test-label happy">Happy:</span> FI-2 บัญชี หัก WHT → FI-12 ภาษีหัก ณ ที่จ่าย pending → Release/Print</div>
+    <div class="test-item fail"><span class="test-label fail">Fail:</span> FI-4 บัญชี และ FI-12 ภาษี ออก certificate ซ้ำ</div>
+  </div>
+  <div class="test-card">
+    <div class="tt-head">#12 ที่อยู่จัดส่ง SL-4 บิลขาย</div>
+    <div class="test-item happy"><span class="test-label happy">Happy:</span> กรอก header → tab จัดส่ง + SV-6 บริการ ใช้ชุดเดียว</div>
+    <div class="test-item fail"><span class="test-label fail">Fail:</span> แก้ header ไม่ update tab → ส่งผิดที่อยู่</div>
+  </div>
+  <div class="test-card">
+    <div class="tt-head">#15 SL-5 Code ชน (SL งานขาย)</div>
+    <div class="test-item happy"><span class="test-label happy">Happy:</span> SL-CN ใบลดหนี้ อ้าง SL-4 บิลขาย → reverse AR ถูก GL</div>
+    <div class="test-item edge"><span class="test-label edge">Edge:</span> SL-5 CRM ไม่มี link ไป CN flow → ไม่สับสน</div>
+    <div class="test-item fail"><span class="test-label fail">Fail:</span> Dev สับสน SL-5 = CN → wire ผิด GL posting</div>
+  </div>
+  <div class="test-card">
+    <div class="tt-head">#17 Doc-chain breadcrumb</div>
+    <div class="test-item happy"><span class="test-label happy">Happy:</span> คลิก breadcrumb SL-4→WH-3→SV-6 → ไปถูกหน้า ลำดับตรง</div>
+    <div class="test-item edge"><span class="test-label edge">Edge:</span> หน้าถูกตัด (PO-5) → breadcrumb แสดง "(removed)" ไม่ใช่ dead link</div>
+    <div class="test-item fail"><span class="test-label fail">Fail:</span> Hard-code link ชี้หน้าเก่าที่ถูก archive → 404</div>
+  </div>
+</div>
+
+<h2>Resolved Overlaps (Guardrail — Do Not Re-litigate)</h2>
+<ul class="resolved-list">
+  <li><strong>#1 GRN รับสินค้า PO-5 จัดซื้อ ซ้ำ WH-1 คลังรับ</strong> — PO-5 ถูกตัด (a60b987), WH-1 คลังรับ = ศูนย์รับเดียว, "รับครบ qty-based" = gate ปลด PO-6 ตั้งหนี้</li>
+  <li><strong>#2 PO-CN ใบลดหนี้จัดซื้อ vs CLM เคลมเวนเดอร์</strong> — CLM เคลม(SV บริการ)=track; PO-CN ใบลดหนี้=เอกสาร post ตัด AP จุดเดียว; ห้ามนับซ้ำ</li>
+  <li><strong>#3 CL-1 เคลมเก่า legacy</strong> — deprecated, defer P2; active path = CLM เคลมเวนเดอร์ (claim=job-type ใน service-intake)</li>
+  <li><strong>#4 จัดส่ง WH-3 คลังเบิก vs SV-6 จัดส่ง+ติดตั้ง</strong> — SL-4 บิลขาย→WH-3 คลังเบิก(Serial REQUIRED)→SV-6 ติดตั้ง(ยืนยัน serial ตรง Invoice ก่อน Close)</li>
+  <li><strong>#5 FI บัญชี ledger owner</strong> — AR→SL-4 บิลขาย, AP→PO-6 ตั้งหนี้, ARCN→SL-CN ใบลดหนี้ขาย, APCN→PO-CN ใบลดหนี้ซื้อ; FI บัญชี = List→Match→Release→Print</li>
+  <li><strong>#8 ภ.พ.30 FI-7 ภาษี vs FI-13 Dual-Book</strong> — FI-7 ภาษี มุมเดียว (SWT single-entity), FI-13 defer P2</li>
+  <li><strong>#16 SV-4 บริการ ARI ซ้ำ SV-7 วางบิล/CLM เคลม</strong> — ARI post ที่ SV-4 บริการ จุดเดียว; SV-7 วางบิล/CLM เคลม read-only</li>
+</ul>
+
+<div class="footer">
+  Flow Redundancy Analysis — Sangwijit ERP Portal — Generated 2026-07-02<br>
+  Source: <code>.agents/flow-redundancy-analysis.md</code> · Status: analysis only — no code changes
+</div>
+
+</div>
+</body>
+</html>

@@ -6,6 +6,20 @@ branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
 
+## 🔒 Flow Redundancy Closeout (decisions 2026-07-02)
+
+จากรายงาน `.agents/flow-redundancy-analysis.html` — user ตัดสิน 10 overlap เปิดค้าง:
+- **#14 CF-2.6 = canonical:** เปลี่ยนรหัสจาก CF-7 → CF-2.6 ทุกไฟล์ (CLAUDE.md ×2, CF_config.md +alias note, MD_master, SKILL ×2, portal docs, index/architecture html — 33 จุด) เหตุผล: ไฟล์ mockup ตั้งชื่อ cf2-6 ตั้งแต่แรก, mockup ชนะ notes
+- **#10 อนุมัติ:** PO-7 = จุดจ่ายเดียว (Record Payment exclusive) · FI-8 = read-only aging + follow-up
+- **#11 ปรับ:** Serial ผูก SL-4 บิลขายเป็นหลัก (ดึงจาก itemLedger/WH-3 แต่ link กลับบิลเสมอ) + exception "Serial ไม่มีบิลอ้างอิง" ให้ผูกบิลย้อนหลัง
+- **#7 ปรับ:** อายุใบจองระบุวันเองได้ต่อใบ + default dropdown · guard สต๊อกไม่พอ = แสดงลิสต์ใบจองที่ถือของ (เลขใบจอง+เซลล์+วันหมดอายุ) เพื่อไปคุยถอนใบจอง
+- **#13 อนุมัติ:** WH-2 = เจ้าของใบโอน · WH-1 รับครั้งเดียว · WH-3 = request only
+- **#9 ยืนยันซ้ำซ้อน:** WHT ออกฟอร์มเดียว (FI-12) · อัตราหักเป็น dropdown เลือกเรท (1/2/3/5%)
+- **#12 กลับทิศ:** ที่อยู่หัวบิล = ที่อยู่ใบกำกับภาษี (Bill-to) ≠ ที่อยู่จัดส่ง (Ship-to ใน tab จัดส่ง แก้อิสระ) — SV-6/WH-3 ต้องอ่านจาก Ship-to
+- **#17 ลด scope:** ไม่ทำ chain ทฤษฎี — แสดงเฉพาะเอกสารที่อ้างอิงถึงรายการนั้นจริง (DocRefPanel)
+- **#6 ✅ ดำเนินการแล้ว (2026-07-02):** PO-8 rename → **"สั่งซื้อสินค้าฝาก"** (title/breadcrumb/h1 ใน po8 mockup · swt-sidebar.js · PO_purchase.md +note · module-list/bc365-integration · cross-ref ใน wh1/po4) · SL-3 เพิ่ม badge "💼 ขาย มัดจำ — ลูกค้าจ่ายล่วงหน้า" · **naming convention ลง `knowledge-base/portal/03-ui-ux-convention.md` §10**: ชื่อเสี่ยงชนข้ามโมดูล → prefix ฝั่งงาน ("ขาย มัดจำ"/"ซื้อ มัดจำ") · shorthand ในเนื้อ flow โมดูลเดียวกันใช้ต่อได้ — **flow-redundancy audit ปิดครบ 17/17** 🎉
+- **#15 ✅ grill จบ + ดำเนินการแล้ว (2026-07-02 Q1-Q10):** canonical = **SL-CN** (spec แก้ตามไฟล์ · SL_sales.md rewrite section) · เคลม: SV ส่งคำขอ → SL-Q กลุ่ม CN badge "จากเคลม SV" → Sales ออกใบ (ฟอร์มเดียว 2 ทางเข้า · เหตุผลล็อก) · รูปแบบเอกสาร auto ตามบิลต้นทาง · **ของก่อนเงินเท่านั้น** (WH Return/SV intake = Post gate) · เครดิตค้างใน ledger เสมอ → apply/refund ที่ FI-1Q · อนุมัติทุกใบ CF-2.6 · CN เฉพาะผลจบ "คืนเงิน/ลดหนี้" (เปลี่ยนตัวใหม่ = SV/WH→PO-CN) · **archive sl5-crm/sl6-promotion/sl7-report → `_archive/`** + ลบ sidebar/index/DOC_MAP — SL Phase 1 เหลือ SL-Q/1/2/3/4/CN/F1
+
 ## 🌙 HANDOFF — ต่อพรุ่งนี้ (บันทึก 2026-06-08)
 
 **วันนี้ทำเสร็จ (committed · ahead origin):** procure-to-pay + AP Reduction chain เกือบครบ
