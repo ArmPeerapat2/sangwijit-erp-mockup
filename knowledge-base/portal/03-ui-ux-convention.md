@@ -2,6 +2,24 @@
 
 > **Scope:** Color / Typography / Component pattern / Layout rules
 > **ใช้เมื่อ:** ออกแบบหน้าใหม่ / รีวิวความสม่ำเสมอ
+> **📎 หน้าแน่น/ตัวเล็ก/ข้อมูลซ้ำ →** ดู **[`06-density-hierarchy.md`](06-density-hierarchy.md)** (type scale · `.dz-*` · "ยุบ vs เด่น" rule)
+
+---
+
+## 0. Template Base (กฎเหล็ก · locked 2026-07-01)
+
+> **ทุกหน้าใหม่ต้อง `<link rel="stylesheet" href="swt-patterns.css">`** — CSS pattern/component กลาง (`.swt-*`, `.dc-*`, `.dz-*` density §10, status flow, toggle card ฯลฯ). แก้ pattern = ที่เดียว → ทุกหน้าตาม. **ห้ามเขียน pattern เดิมซ้ำ inline.**
+
+| ไฟล์ | บทบาท | วิธี |
+|---|---|---|
+| `swt-patterns.css` | CSS pattern/component กลาง (67+ หน้า) | `<link>` ที่ head **ก่อน** inline `<style>` ของหน้า (source-order → inline override ค่าเฉพาะหน้าได้) |
+| `_form-template.html` | HTML skeleton canonical | copy โครงจากที่นี่ |
+| `design-tokens.css` | token layer (`--accent` ฯลฯ) | link เพิ่มถ้าจะเลิก hardcode hex |
+| `swt-patterns.js` / `swt-sidebar.js` | shared JS + sidebar | `<script src>` |
+
+**Path:** ถ้าหน้าอยู่ `bc365/` และมี `<base href="../">` → ใช้ `href="swt-patterns.css"` (base จัดการ `../` ให้). ถ้าไม่มี base → `../swt-patterns.css`.
+
+**⚠️ Divergence ที่ต้องรู้:** bc365/ หน้าเก่าส่วนใหญ่ (ก่อน 1 ก.ค.) **ไม่ได้ link** → เขียน inline เอง → เป็นต้นเหตุ **token drift** (green/amber ต่างข้ามหน้า). Migrate เมื่อแตะหน้านั้น: link ก่อน inline + verify ไม่มี bare-class ที่หน้าใช้-แต่-ไม่-define-inline (กัน style bleed). Proof: `bc365/service-intake-mockup.html`.
 
 ---
 

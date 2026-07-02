@@ -20,8 +20,8 @@
   // ── Doc-prefix → module page ──────────────────────────────
   var DOC_MAP = {
     // Sales
-    QT: 'sl1-quotation-mockup.html',
-    QUO: 'sl1-quotation-mockup.html',
+    QT: 'bc365/sl1-quotation-mockup.html',
+    QUO: 'bc365/sl1-quotation-mockup.html',
     RES: 'sl2-reservation-mockup.html',
     DPS: 'sl3-deposit-mockup.html',
     DEP: 'sl3-deposit-mockup.html',
@@ -29,34 +29,34 @@
     INV: 'sl4-invoice-mockup.html',
     BIL: 'sl4-invoice-mockup.html',
     CRM: 'sl5-crm-followup-mockup.html',
-    PROMO: 'sl6-promotion-setup-mockup.html',
+    PROMO: 'bc365/pm1-promotion-mockup.html',
     CRD: 'slf1-credit-approval-mockup.html',
     CRA: 'slf1-credit-approval-mockup.html',
     // Purchase
     PR: 'po1-purchase-request-mockup.html',
     RFQ: 'po2-rfq-mockup.html',
     PO: 'po4-purchase-order-mockup.html',
-    VBL: 'po6-ap-invoice-mockup.html',
-    VINV: 'po6-ap-invoice-mockup.html',
+    VBL: 'po3-vendor-onboarding-mockup.html',
+    VINV: 'po3-vendor-onboarding-mockup.html',
     REB: 'po7-rebate-dashboard.html',
     // Warehouse
-    GRN: 'wh1-grn-mockup.html',
-    REC: 'wh1-grn-mockup.html',
-    TRN: 'wh2-stock-transfer-mockup.html',
-    TRF: 'wh2-stock-transfer-mockup.html',
-    STK: 'wh4-stock-count-mockup.html',
-    CNT: 'wh4-stock-count-mockup.html',
-    GIS: 'wh3-sales-issue-mockup.html',
-    ISS: 'wh3-sales-issue-mockup.html',
+    GRN: 'wh1-receive-mockup.html',
+    REC: 'wh1-receive-mockup.html',
+    TRN: 'wh3-transfer-mockup.html',
+    TRF: 'wh3-transfer-mockup.html',
+    STK: 'wh4-count-mockup.html',
+    CNT: 'wh4-count-mockup.html',
+    GIS: 'wh-q2-issue-queue-mockup.html',
+    ISS: 'wh-q2-issue-queue-mockup.html',
     // Service
-    SVC: 'sv-q-service-queue-mockup.html',
-    SVQ: 'sv-q-service-queue-mockup.html',
+    SVC: 'bc365/service-board-mockup.html',
+    SVQ: 'bc365/service-board-mockup.html',
     SIR: 'sir-site-inspection-mockup.html',
-    SQT: 'sqt-service-quotation-mockup.html',
-    SIN: 'sv4-service-close-mockup.html',
-    SPR: 'sv3-spare-part-issue-mockup.html',
-    WAR: 'sv1-service-intake-mockup.html',
-    JOB: 'sv5-job-card-mockup.html',
+    SQT: 'bc365/sv-sqt-quotation-mockup.html',
+    SIN: 'bc365/service-posted-docs-mockup.html',
+    SPR: 'bc365/service-parts-claim-mockup.html',
+    WAR: 'bc365/service-intake-mockup.html',
+    JOB: 'bc365/service-tech-mobile-mockup.html',
     // Finance
     RV: 'fi1-ar-receive-mockup.html',
     PAY: 'fi2-ap-payment-mockup.html',
@@ -70,8 +70,8 @@
     URC: 'fi1q-apply-queue-mockup.html',
     UAR: 'fi1q-apply-queue-mockup.html',
     // Delivery / Approval / etc.
-    DLV: 'sv6-delivery-install-mockup.html',
-    DEL: 'sv6-delivery-install-mockup.html',
+    DLV: 'bc365/service-posted-docs-mockup.html',
+    DEL: 'bc365/service-posted-docs-mockup.html',
     APV: 'ap1-approval-center-mockup.html',
     CLM: 'clm-vendor-claim-mockup.html',
     COM: 'cm1-commission-mockup.html'
@@ -593,7 +593,7 @@
             return {
               title: x.i.name,
               sub: x.i.code + ' · คงเหลือ ' + x.i.stock + ' ' + x.i.unit + (x.i.stock === 0 ? ' ⚠️' : ''),
-              tag: 'MD-1', icon: '📦', href: 'md1-item-master-mockup-v3.html', _hl: q
+              tag: 'MD-1', icon: '📦', href: 'bc365/item-master-mockup.html', _hl: q
             };
           })
         });
@@ -1161,6 +1161,45 @@
     }
   }
 
+  // ── SC-19 BC Field Tooltip ────────────────────────────────
+  var BC_FIELDS = {
+    'Customer No.': 'customers?$select=number,displayName',
+    'Vendor No.': 'vendors?$select=number,displayName',
+    'Item No.': 'items?$select=number,displayName',
+    'Quantity': 'salesLines.quantity',
+    'Unit Price': 'salesLines.unitPrice',
+    'Amount': 'salesLines.amountIncludingVAT',
+    'Posting Date': 'header.postingDate',
+    'Due Date': 'header.dueDate'
+  };
+
+  window.swtBcTooltip = function (fieldEl, bcFieldName, opts) {
+    opts = opts || {};
+    if (!fieldEl || !bcFieldName) return;
+    var host = fieldEl.parentElement || fieldEl;
+    if (host.querySelector('.swt-bc-tip')) return;
+    var tip = document.createElement('span');
+    tip.className = 'swt-bc-tip';
+    tip.title = '';
+    tip.textContent = '?';
+    tip.setAttribute('aria-label', 'BC field: ' + bcFieldName);
+    tip.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-left:4px;border-radius:50%;background:#EFF6FF;color:#2563EB;font-size:10px;font-weight:800;cursor:help;vertical-align:middle';
+    var path = opts.odataPath || BC_FIELDS[bcFieldName] || bcFieldName;
+    tip.addEventListener('mouseenter', function () {
+      tip.title = 'BC: ' + bcFieldName + '\nOData: ' + path;
+    });
+    if (host.querySelector('label')) host.querySelector('label').appendChild(tip);
+    else host.insertBefore(tip, fieldEl.nextSibling);
+    return tip;
+  };
+
+  window.swtBcTooltipEnable = function (root, enabled) {
+    root = root || document;
+    root.querySelectorAll('.swt-bc-tip').forEach(function (t) {
+      t.style.display = enabled === false ? 'none' : 'inline-flex';
+    });
+  };
+
   // ── Boot ──────────────────────────────────────────────────
   function boot() {
     injectStyle();
@@ -1171,6 +1210,4 @@
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
   } else {
-    boot();
-  }
-})();
+    boot

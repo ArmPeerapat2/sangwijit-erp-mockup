@@ -13,7 +13,7 @@ SL-1 ใบเสนอราคา (QT) ──► SL-2 ใบจอง/สั�
    (ไม่มี upstream)         │  กันสต็อก               │  ตัดสต็อก + ตั้งหนี้
                             └──► SL-3 ใบมัดจำ (DP) ────┘  (หักมัดจำ auto · SC6)
    SL-F1 อนุมัติวงเงิน = gate คั่นได้ทุกขั้นที่เกินวงเงิน
-   SL-CN ใบลดหนี้ (Flow 07) ◄── SL-4   [⚠️ ยังไม่มีไฟล์ — gap]
+   SL-CN ใบลดหนี้ (Flow 07) ◄── SL-4   [✦ build แล้ว · slcn-credit-memo-mockup.html]
 ```
 
 | ฟอร์ม | BC entity | อ้างอิง upstream | ตัดสต็อก | ลงบัญชี | ไฟล์ |
@@ -41,7 +41,7 @@ SL-1 ใบเสนอราคา (QT) ──► SL-2 ใบจอง/สั�
 ## SL-1 — ใบเสนอราคา (Quotation)
 
 **① โครง:** หัวเอกสาร · ลูกค้า · รายการสินค้า · สรุปยอด · Tabs · Follow-up · Approval+Action
-**② SC:** SC-1 ลูกค้า · SC-2 สินค้า · SC-5 อ้างอิง · SC-7 ประวัติ · SC-9 ราคา/โปร · SC-11 pills
+**② SC:** SC-1 ลูกค้า · SC-2 สินค้า · SC-5 อ้างอิง · SC-7 ประวัติ · SC-9 ราคา/โปร · SC-11 สรุปยอด · SC-12 pills
 **③ Field สำคัญ (จาก DD):** เลขที่ · วันที่ · **ยืนราคาถึง/หมดอายุ** · วันกำหนดส่ง · หมายเลขอ้างอิง · ผู้ติดต่อ · พนักงานขาย · ส่วนลด(จำนวนเงิน) · comment line/รายการ · ยอดตัวอักษร · 3 ลายเซ็น (ขาย/ผจก.ขาย/ผู้มีอำนาจ)
 **④ ข้อเสนอ:**
 - หัวเอกสาร — **แนะนำ:** 2 โซนตาม DD + เลข ADR-0004 + badge อายุนับถอยหลัง · *เหตุผล:* ตรง DD + consistency CF
@@ -87,7 +87,7 @@ SL-1 ใบเสนอราคา (QT) ──► SL-2 ใบจอง/สั�
 ## SL-4 — บิลขาย / Invoice (Shipment + Invoice)
 
 **① โครง:** หัวเอกสาร · ลูกค้า · รายการสินค้า(+Serial) · จัดส่ง/ติดตั้ง · Payment · **หักมัดจำ** · สรุป(VAT golden) · Tabs · Approval+Action
-**② SC:** SC-1…SC-9 ครบ (SC-8 Serial · SC-6 หักมัดจำ · SC-9 Promo auto-match) + SC-11
+**② SC:** SC-1…SC-9 ครบ (SC-8 Serial · SC-6 หักมัดจำ · SC-9 Promo auto-match) + SC-11 สรุปยอด + SC-12 pills
 **③ Field (3 DD: Invoice/Delivery/Pick):**
 - Invoice: คอลัมน์การเงิน (หน่วยละ/ส่วนลด/จำนวนเงิน) + VAT 7% + ยอดตัวอักษร + เงื่อนไข/วิธีชำระ + **4 ลายเซ็น**
 - Delivery Order: คอลัมน์ logistics (วันกำหนดส่ง/จำนวน) + **สถานที่ส่งของ** + **2 ลายเซ็น** (ผู้รับ/ผู้ส่ง)
@@ -100,6 +100,13 @@ SL-1 ใบเสนอราคา (QT) ──► SL-2 ใบจอง/สั�
 - Field ขาด — **แนะนำ:** เพิ่ม warranty date, VAT toggle (UX7), ประเภทการรับ [รับเอง/จัดส่ง/+ติดตั้ง] · *เหตุผล:* flow ③ + spec
 - Tab/Entity/เลข — ตาม STANDARD 1·2·3
 **⑤ จุดต่าง:** ฟอร์มเดียวที่ **ตัดสต็อก + ลงบัญชี AR** · หักมัดจำ auto · Serial capture · VAT Golden Rule จุดสุดท้าย · **3 เอกสารพิมพ์จากบิลเดียว**
+
+## SL-CN — ใบลดหนี้ (Credit Memo · Flow 07) ✦ build แล้ว
+- **trigger/role:** ลดหนี้/รับคืนสินค้าจากลูกค้า → ออกใบลดหนี้ → ลด AR + คืน VAT ขาย
+- **โครง:** `_form-template` · อ้างบิลขายเดิม SL-4 (SC-5+) · ลูกค้า (SC-1) · items คืน (+Serial SC-8) · เหตุผล · VAT (Golden Rule) · SC-11 สรุป
+- **rules:** ลด AR + กลับ VAT ขาย · ของคืนเข้าคลัง (RT → WH-1 รับคืน) · maker≠checker · post → credit memo
+- **chain:** SL-4 → (รับคืน WH-Q2) → **SL-CN** → ปรับ AR/FI-Q-AR · BC: salesCreditMemos
+- ไฟล์: `slcn-credit-memo-mockup.html`
 
 ---
 

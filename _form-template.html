@@ -172,9 +172,9 @@ table.items thead th{border-bottom:2px solid #E5E7EB}
 .line-num{width:88px;padding:3px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;text-align:right;font-family:'Inter',monospace}
 .line-wh{padding:3px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:11px;font-family:inherit}
 /* รายการสินค้า = ตัวดูดพื้นที่เดียว (flex:1) · ที่เหลือ flex:none ตรึงไว้ → หมายเหตุ/สรุปยอดไม่โดนตัด */
-.items-card .items-wrap{flex:1;min-height:60px}
-.content>.items-card{flex:1 1 0;min-height:120px}
-.content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
+/* items-card proportion → swt-patterns.css §④c (พื้นที่ใหญ่สุด · ≥15 แถว · floor 500px) */
+.items-card .items-wrap{flex:1}
+.content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col,.row-party{flex:none}
 /* แถบล่าง: ตรึงความสูง ~150px · ย่อให้ตารางสินค้าได้พื้นที่คืน */
 .row-bottom{font-size:12px;height:150px}
 .row-bottom .tabset,.row-bottom>.card{overflow:auto}
@@ -230,72 +230,65 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 <div class="layout">
 <div class="main">
 
-  <!-- ① TOPBAR -->
-  <div class="topbar">
-    <div class="topbar-breadcrumb">งานขาย <span class="sep">›</span> <span class="current">‹ชื่อเอกสาร›</span></div>
-    <div class="topbar-spacer"></div>
-    <div class="topbar-search">🔍 ค้นหา…</div>
-    <div class="topbar-icon">🔔</div>
-    <!-- สิทธิ์หลายสาขา/ข้ามแผนก (CF-1) → selector · สิทธิ์สาขาเดียว → ใส่ disabled ให้ล็อกตามตำแหน่ง -->
-    <select class="branch-sel" title="เลือกสาขา (เฉพาะผู้มีสิทธิ์ข้ามสาขา)"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option><option>🏢 คลังกลาง</option></select>
-    <select class="branch-sel" title="เลือกแผนก (เฉพาะผู้มีสิทธิ์ข้ามแผนก)"><option>ทุกแผนก</option><option>ขาย</option><option>บริการ</option><option>คลัง</option></select>
-    <div class="topbar-avatar">PR</div>
-  </div>
-
   <!-- TEMPLATE banner (ลบตอนสร้างจริง) -->
   <div class="tpl-banner">‹TEMPLATE› แม่แบบกลาง — ทุกฟอร์มยึดโครงนี้ · เปลี่ยนแค่ข้อมูล/section ตามฟอร์ม · ลบ banner + placeholder เมื่อสร้างจริง</div>
 
-  <!-- ② MAIN HEADER -->
-  <header class="main-header">
-    <div class="mh-left">
-      <div class="mh-title">
-        <div class="ico">📄</div>
-        <div><h1>‹ชื่อเอกสาร›</h1><p>‹English subtitle (SL-x)›</p></div>
-      </div>
-      <div class="mh-divider"></div>
-      <div class="mh-meta">
-        <div class="mh-meta-item"><div class="lbl">เลขที่เอกสาร</div><div class="val">08QT-2604-0015</div></div>
-        <div class="mh-meta-item"><div class="lbl">วันที่ออก</div><div class="val">20 เม.ย. 26</div></div>
-        <div class="mh-meta-item"><div class="lbl ph">‹field เด่นเฉพาะฟอร์ม›</div><div class="val ph">‹เช่น หมดอายุ›</div></div>
+  <!-- ①② UNIFIED HEADER — Topbar + Main Header รวม -->
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">งานขาย <span class="sep">›</span> <span class="current">‹ชื่อเอกสาร›</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+        <div class="topbar-icon">🔔</div>
+        <select class="branch-sel" title="เลือกสาขา (เฉพาะผู้มีสิทธิ์ข้ามสาขา)"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option></select>
+        <select class="branch-sel" title="เลือกแผนก"><option>ทุกแผนก</option><option>ขาย</option></select>
+        <div class="topbar-avatar">PR</div>
       </div>
     </div>
-    <div class="mh-right">
-      <span class="mh-badge">🕓 ‹สถานะ›</span>
-      <button class="mh-btn mh-btn-ghost">📋 คิวงาน</button>
-      <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
-      <button class="mh-btn mh-btn-accent">📤 ‹action เด่น›</button>
+    <div class="uh-main">
+      <div class="mh-left">
+        <div class="mh-title">
+          <div class="ico">📄</div>
+          <div><h1>‹ชื่อเอกสาร›</h1><p>‹English subtitle (SL-x)›</p></div>
+        </div>
+        <div class="mh-divider"></div>
+        <div class="mh-meta">
+          <div class="mh-meta-item"><div class="lbl">เลขที่เอกสาร</div><div class="val">08QT-2604-0015</div></div>
+          <div class="mh-meta-item"><div class="lbl">วันที่ออก</div><div class="val">20 เม.ย. 26</div></div>
+          <div class="mh-meta-item"><div class="lbl ph">‹field เด่นเฉพาะฟอร์ม›</div><div class="val ph">‹เช่น หมดอายุ›</div></div>
+        </div>
+      </div>
+      <div class="mh-right">
+        <span class="mh-badge">🕓 ‹สถานะ›</span>
+        <button class="mh-btn mh-btn-ghost">📋 คิวงาน</button>
+        <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
+        <button class="mh-btn mh-btn-accent">📤 ‹action เด่น›</button>
+      </div>
     </div>
   </header>
 
-  <!-- ③ SUB-ACTION BAR -->
-  <div class="saab">
+  <!-- ③ SAAB ย่อ — ปุ่มหลัก + ⋯ (action เด่นอยู่ main-header เท่านั้น · ไม่มี saab-status) -->
+  <div class="saab saab-compact">
     <button class="btn btn-outline" onclick="dfOpen()" title="ค้นหา/เปิดเอกสารเก่า (shared swt-doc-finder.js) — 3 แท็บ + ผลลัพธ์สีตามสถานะ">📂 เปิดเอกสารเก่า</button>
-    <button class="btn btn-outline">💾 Save Draft</button>
     <button class="btn btn-outline" onclick="tplCopyDoc()" title="clone ข้อมูลทั้งหมด → เอกสารใหม่ · เลขใหม่ · reset วันที่/ลายเซ็น">📋 Copy / ทำสำเนา</button>
     <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ PDF</button>
-    <button class="btn btn-success">↪ ‹แปลงเป็นเอกสารถัดไป›</button>
-    <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
-    <span class="saab-status"><span class="dot"></span>สถานะ: <strong>‹ร่าง›</strong> · แก้ล่าสุด: เมื่อสักครู่</span>
+    <div class="saab-more-wrap">
+      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
+      <div class="saab-more-menu">
+        <button type="button" class="btn btn-outline btn-menu">💾 Save Draft</button>
+        <button type="button" class="btn btn-success btn-menu">↪ ‹แปลงเป็นเอกสารถัดไป›</button>
+        <button type="button" class="btn btn-ghost btn-menu" style="color:#EF4444">❌ ยกเลิก</button>
+      </div>
+    </div>
+    <div class="saab-spacer"></div>
   </div>
 
   <div class="content">
 
-    <!-- ④a STATUS + DOC-CHAIN รวมแถวเดียว (pills ซ้าย · doc-chain ขวา · ไม่ซ้ำซ้อน) -->
-    <div class="status-strip" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div class="sc11-pills">
-        <span class="pill pill-neutral">📄 ‹DRAFT›</span>
-        <span class="pill pill-info">฿ VAT 7%</span>
-        <span class="pill pill-success">✓ CR OK</span>
-        <span class="pill pill-warning">⏳ ‹rule เฉพาะฟอร์ม›</span>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
-        <span class="dc-lbl" style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
-        <a class="dc-node done" href="‹url ต้นทาง›" target="_blank">‹ต้นทาง› ✓</a><span class="dc-arrow">→</span>
-        <span class="dc-node current">‹ปัจจุบัน›</span><span class="dc-arrow">→</span>
-        <a class="dc-node" href="‹url ถัดไป›" target="_blank">‹ถัดไป›</a><span class="dc-arrow">→</span>
-        <a class="dc-node" href="‹url ปลายทาง›" target="_blank">‹ปลายทาง›</a>
-      </div>
-    </div>
+    <!-- ④a SC-12 Status — pills + maker-checker (ไม่มี doc-chain · ไม่ซ้ำ badge แถว 2) -->
+    <div id="tplSc12" class="status-strip"></div>
+    <!-- Gate: .ok ซ่อน (compactOk) · แสดงเต็มเฉพาะ warn/block -->
+    <div id="tplGate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL: ลูกค้า (SC-1) + ข้อมูลเอกสาร -->
     <div class="row-2col">
@@ -414,6 +407,9 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 
   </div><!-- /content -->
 
+  <!-- ⑤ DOC-CHAIN แถบล่าง main -->
+  <div id="tplDcStrip" class="dc-strip"></div>
+
 </div><!-- /main -->
 </div><!-- /layout -->
 
@@ -434,7 +430,32 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
   </div>
 </div>
 
+<script src="swt-patterns.js"></script>
 <script>
+function tplInitPatterns(){
+  if(typeof swtRenderStatusStrip!=='function')return;
+  swtRenderStatusStrip('#tplSc12',{
+    pills:[
+      {text:'฿ VAT 7%',type:'info'},
+      {text:'⏳ ‹rule เฉพาะฟอร์ม›',type:'warning'}
+    ],
+    makerChecker:{nodes:[
+      {role:'Maker ✓',step:'สร้าง',state:'ok'},
+      {role:'Checker ⏱',step:'อนุมัติ',state:'wait'}
+    ]}
+  });
+  swtRenderDocChain('#tplDcStrip',{
+    label:'Doc Chain',
+    nodes:[
+      {label:'‹ต้นทาง› ✓',href:'‹url ต้นทาง›',state:'done'},
+      {label:'‹ปัจจุบัน›',state:'current'},
+      {label:'‹ถัดไป›',href:'‹url ถัดไป›'},
+      {label:'‹ปลายทาง›',href:'‹url ปลายทาง›'}
+    ]
+  });
+  swtRenderGateAlert('#tplGate',{type:'ok',compactOk:true,text:'✅ ‹gate ผ่าน — ซ่อนเมื่อ ok›'});
+}
+document.addEventListener('DOMContentLoaded',tplInitPatterns);
 function swTab(e,id){
   var nav=e.currentTarget.parentElement;
   nav.querySelectorAll('button').forEach(b=>b.classList.remove('on'));

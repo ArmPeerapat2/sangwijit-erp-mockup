@@ -1,409 +1,395 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FI-12 ภาษีหัก ณ ที่จ่าย WHT (ภ.ง.ด.3/53) | Sangwijit ERP Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', 'Noto Sans Thai', sans-serif;
-            min-width: 1440px;
-            background: #F8FAFC;
-            color: #1F2937;
-        }
-
-        .main-content {
-            margin-left: 240px;
-            padding: 32px;
-            padding-bottom: 120px;
-            min-height: 100vh;
-        }
-
-        .main-header {
-            background: linear-gradient(135deg, #1E3A5F 0%, #2563EB 100%);
-            border-radius: 12px;
-            padding: 24px 28px;
-            margin-bottom: 24px;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 14px rgba(30, 58, 95, 0.25);
-        }
-        .main-header .mh-left { display: flex; flex-direction: column; gap: 6px; }
-        .main-header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
-        .main-header .mh-sub { font-size: 12.5px; color: #BFDBFE; }
-        .main-header .mh-right { display: flex; align-items: center; gap: 16px; }
-        .mh-docno {
-            font-family: 'Inter', monospace; font-size: 15px; font-weight: 700;
-            background: rgba(255,255,255,0.14); padding: 8px 14px; border-radius: 8px;
-            letter-spacing: 0.5px;
-        }
-        .mh-status {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 700;
-        }
-        .mh-status.matched { background: #FEF3C7; color: #92400E; }
-        .mh-status-track { display: flex; gap: 6px; margin-top: 4px; }
-        .mh-step {
-            font-size: 10.5px; font-weight: 600; padding: 2px 9px; border-radius: 10px;
-            background: rgba(255,255,255,0.12); color: #BFDBFE;
-        }
-        .mh-step.done { background: rgba(255,255,255,0.28); color: #fff; }
-        .mh-step.current { background: #FCD34D; color: #78350F; }
-
-        .filter-bar {
-            display: flex; gap: 16px; margin-bottom: 8px; align-items: flex-end; flex-wrap: wrap;
-        }
-        .filter-group { display: flex; flex-direction: column; gap: 5px; }
-        .filter-label { font-size: 12px; font-weight: 600; color: #374151; }
-        select, input {
-            padding: 8px 12px; border: 1px solid #D1D5DB; border-radius: 6px;
-            font-family: 'Inter', 'Noto Sans Thai', sans-serif; font-size: 13px;
-            background: white; color: #1F2937;
-        }
-        select { min-width: 200px; }
-        select:focus, input:focus {
-            outline: none; border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-        }
-        .filter-note {
-            font-size: 11.5px; color: #92400E; background: #FEF3C7;
-            padding: 6px 12px; border-radius: 6px; margin: 10px 0 24px;
-            display: inline-flex; align-items: center; gap: 6px; font-weight: 600;
-        }
-
-        .card {
-            background: white; border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            padding: 24px; margin-bottom: 24px;
-        }
-        .card-title {
-            font-size: 15px; font-weight: 700; color: #1F2937; margin-bottom: 16px;
-            display: flex; align-items: center; gap: 8px;
-        }
-        .card-title .hint { font-size: 11.5px; font-weight: 500; color: #6B7280; }
-
-        .summary-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
-        }
-        .sum-card {
-            background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 10px; padding: 18px;
-        }
-        .sum-card.diff-bad { background: #FEF2F2; border-color: #FECACA; }
-        .sum-label {
-            font-size: 11.5px; font-weight: 600; color: #6B7280;
-            text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px;
-        }
-        .sum-value {
-            font-size: 22px; font-weight: 700; color: #1F2937;
-            font-variant-numeric: tabular-nums;
-        }
-        .sum-value.blue { color: #2563EB; }
-        .sum-sub { font-size: 11.5px; color: #6B7280; margin-top: 4px; }
-
-        .legend-chip {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: #EEF2FF; color: #3730A3; border: 1px solid #C7D2FE;
-            padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
-        }
-
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        thead { background: #F3F4F6; }
-        th {
-            padding: 11px 12px; text-align: left; font-weight: 600;
-            color: #374151; border-bottom: 2px solid #E5E7EB; font-size: 12px;
-            white-space: nowrap;
-        }
-        td { padding: 12px; border-bottom: 1px solid #E5E7EB; color: #1F2937; vertical-align: middle; }
-        tbody tr:hover { background: #F9FAFB; }
-        tr.total-row { background: #F3F4F6; font-weight: 700; }
-        tr.total-row:hover { background: #F3F4F6; }
-        .amount { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
-        .doc-code { font-family: 'Inter', monospace; font-weight: 700; color: #2563EB; }
-        .muted { color: #9CA3AF; }
-
-        .pnd-pill {
-            display: inline-block; padding: 2px 8px; border-radius: 10px;
-            font-size: 11px; font-weight: 700;
-        }
-        .pnd-pill.p53 { background: #EEF2FF; color: #3730A3; }
-        .pnd-pill.p3 { background: #FCE7F3; color: #9D174D; }
-        .status-rel { color: #10B981; font-weight: 600; }
-        .status-pend { color: #F59E0B; font-weight: 600; }
-
-        .chk { width: 17px; height: 17px; cursor: pointer; vertical-align: middle; }
-        .mini-btn {
-            padding: 4px 10px; border-radius: 5px; font-size: 11.5px; font-weight: 600;
-            border: 1px solid #93C5FD; background: #EFF6FF; color: #1D4ED8; cursor: pointer;
-        }
-        .mini-btn:hover { background: #DBEAFE; }
-
-        button.act { padding: 10px 20px; border: none; border-radius: 6px;
-            font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
-        .btn-primary { background: #2563EB; color: white; }
-        .btn-primary:hover { background: #1D4ED8; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
-        .btn-secondary { background: #E5E7EB; color: #1F2937; }
-        .btn-secondary:hover { background: #D1D5DB; }
-
-        .sticky-action-bar {
-            position: fixed; bottom: 0; left: 240px; right: 0; height: 84px;
-            background: #fff; border-top: 1px solid #E5E7EB;
-            padding: 14px 32px; display: flex; align-items: center;
-            justify-content: space-between; box-shadow: 0 -2px 8px rgba(0,0,0,0.08); z-index: 90;
-        }
-        .sab-left { display: flex; flex-direction: column; gap: 3px; }
-        .sab-title { font-size: 14px; font-weight: 700; color: #1F2937; }
-        .sab-info { font-size: 12px; color: #6B7280; }
-        .sab-info .blue { color: #2563EB; font-weight: 700; }
-        .sab-buttons { display: flex; align-items: center; gap: 12px; }
-        .sab-note {
-            font-size: 11px; color: #92400E; background: #FEF3C7;
-            padding: 4px 10px; border-radius: 6px; max-width: 240px; line-height: 1.4;
-        }
-
-        .bc-note {
-            font-size: 11.5px; color: #6B7280; background: #F3F4F6;
-            border-left: 3px solid #9CA3AF; padding: 10px 14px; border-radius: 6px;
-            margin-top: 16px; line-height: 1.5;
-        }
-        .bc-note b { color: #374151; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FI-12 ภาษีหัก ณ ที่จ่าย WHT (ภ.ง.ด.3/53) | Sangwijit ERP Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* WHT-specific only — โครงหลักมาจาก swt-patterns.css */
+    .pnd-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
+    .pnd-pill.p53{background:#EEF2FF;color:#3730A3}
+    .pnd-pill.p3{background:#FCE7F3;color:#9D174D}
+    .wht-stat.pend{color:#F59E0B;font-weight:700}
+    .wht-stat.rel{color:#10B981;font-weight:700}
+    .cert-btn{padding:3px 9px;border-radius:5px;font-size:11px;font-weight:600;border:1px solid #93C5FD;background:#EFF6FF;color:#1D4ED8;cursor:pointer;font-family:inherit}
+    .cert-btn:hover{background:#DBEAFE}
+    .cert-btn:disabled{opacity:.45;cursor:not-allowed}
+    .sum-mini{display:grid;grid-template-columns:1fr auto;gap:7px 12px;font-size:12.5px;padding:4px 2px}
+    .sum-mini .k{color:#6B7280}
+    .sum-mini .v{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+    .sum-mini .v.blue{color:#2563EB}
+    .sum-mini .sep{grid-column:1/-1;border-top:1px dashed #E5E7EB;margin:2px 0}
+    .sum-mini .grand{font-size:15px;font-weight:800;color:#1E3A5F}
+    .rate-grid{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:12px}
+    .rate-grid .r{font-weight:700;color:#1D4ED8;font-variant-numeric:tabular-nums}
+  </style>
   <link rel="stylesheet" href="swt-patterns.css">
 </head>
-<body>
+<body data-swt-sc="fi12">
+<div class="layout"><div class="main">
 
-
-<div class="main-content">
-
-    <!-- ===== FI-12.1 · MAIN-HEADER ===== -->
-    <div class="main-header">
-        <div class="mh-left">
-            <h1>FI-12 ภาษีหัก ณ ที่จ่าย · WHT List (ภ.ง.ด.3 / 53)</h1>
-            <div class="mh-sub">WHT คำนวณอัตโนมัติจากการจ่าย (FI-2) · Release → พิมพ์หนังสือรับรอง + ภ.ง.ด.3/53 · ยื่นภายในวันที่ 7</div>
-            <div class="mh-status-track">
-                <span class="mh-step done">ดึงจาก Payment</span>
-                <span class="mh-step done">ตรวจรายการ</span>
-                <span class="mh-step current">Release</span>
-                <span class="mh-step">พิมพ์หนังสือรับรอง</span>
-                <span class="mh-step">ยื่น ภ.ง.ด.</span>
-            </div>
+  <!-- ①② UNIFIED HEADER -->
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">บัญชี/การเงิน <span class="sep">›</span> ภาษีหัก ณ ที่จ่าย <span class="sep">›</span> <span class="current">WHT-2605-SWT</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+        <div class="topbar-icon">🔔</div>
+        <select class="branch-sel"><option>🏢 HQ สนง.ใหญ่</option></select>
+        <select class="branch-sel"><option>แผนกการเงิน</option></select>
+        <div class="topbar-avatar">FI</div>
+      </div>
+    </div>
+    <div class="uh-main">
+      <div class="mh-left">
+        <div class="mh-title">
+          <div class="ico">📑</div>
+          <div><h1>ภาษีหัก ณ ที่จ่าย</h1><p>WHT List · ภ.ง.ด.3 / 53 (FI-12) · งานการเงิน</p></div>
         </div>
-        <div class="mh-right">
-            <span class="mh-docno">WHT-2605-SWT</span>
-            <span class="mh-status matched">● รอ Release</span>
+        <div class="mh-divider"></div>
+        <div class="mh-meta">
+          <div class="mh-meta-item"><div class="lbl">เลขชุด WHT</div><div class="val">WHT-2605-SWT</div></div>
+          <div class="mh-meta-item"><div class="lbl">งวด</div><div class="val">พ.ค. 2026</div></div>
+          <div class="mh-meta-item"><div class="lbl">WHT รวม</div><div class="val" id="mhWhtTotal">฿4,244.86</div></div>
         </div>
+      </div>
+      <div class="mh-right">
+        <span class="mh-badge" id="mhBadge">🕓 รอ Release 3 รายการ</span>
+        <button class="mh-btn mh-btn-ghost" onclick="location.href='fiq-ap-finance-queue-mockup.html'">📋 คิวเจ้าหนี้ (FI-Q-AP)</button>
+        <button class="mh-btn mh-btn-accent" onclick="fi12Release()">🔒 Release ที่เลือก</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ③ SAAB ย่อ -->
+  <div class="saab saab-compact">
+    <button class="btn btn-outline" onclick="dfOpen()">📂 เปิดชุดเก่า</button>
+    <button class="btn btn-outline" onclick="fi12Pull()">🔄 ดึง WHT จาก Payment</button>
+    <button class="btn btn-outline" onclick="fi12PrintCert()">🖨️ พิมพ์หนังสือรับรอง</button>
+    <div class="saab-more-wrap">
+      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
+      <div class="saab-more-menu">
+        <button type="button" class="btn btn-menu btn-ghost" onclick="alert('Export ไฟล์ ภ.ง.ด.3 (mock · ยื่นสรรพากร)')">📤 Export ภ.ง.ด.3</button>
+        <button type="button" class="btn btn-menu btn-ghost" onclick="alert('Export ไฟล์ ภ.ง.ด.53 (mock · ยื่นสรรพากร)')">📤 Export ภ.ง.ด.53</button>
+        <button type="button" class="btn btn-menu btn-ghost" style="color:#EF4444" onclick="alert('Reverse รายการที่ Release แล้ว — ทำบน BC365 (Reverse + สร้างใหม่)')">↩ Reverse</button>
+      </div>
+    </div>
+    <div class="saab-spacer"></div>
+  </div>
+
+  <div class="content">
+
+    <div id="fi12Sc12" class="status-strip"></div>
+    <div id="fi12Gate" class="gate-alert"></div>
+
+    <!-- ④b หัวชุด + สรุปงวด (แทน party) -->
+    <div class="row-party">
+      <div class="card party-mini">
+        <div class="party-lines">
+          <div class="party-line party-hd">
+            <div class="card-title"><span class="secno">FI-12.1</span>🗓️ หัวชุด WHT (นิติบุคคล + งวด)</div>
+            <span class="card-spacer"></span>
+            <button class="card-btn primary" onclick="fi12Pull()">🔄 ดึงจาก Payment</button>
+          </div>
+          <div class="party-line">
+            <span class="ctl"><span class="lbl">นิติบุคคล</span>
+              <select class="pay-sel" style="min-width:210px">
+                <option>SWT — แสงวิจิตรเทรดดิ้ง</option>
+                <option>SWE — แสงวิจิตรอีเล็คทริค</option>
+                <option>VMN — วีมันนี่ พาร์ทเนอร์ชิพ</option>
+                <option>WPS — วีพาวเวอร์ซัพพลาย</option>
+              </select>
+            </span>
+            <span class="ctl"><span class="lbl">งวด</span><input class="pay-sel" value="พฤษภาคม 2026" style="min-width:130px"></span>
+          </div>
+          <div class="party-line">
+            <span class="ctl"><span class="lbl">ประเภท</span>
+              <select class="pay-sel" id="fi12Type" onchange="fi12Filter()" style="min-width:180px">
+                <option value="all">ทั้งหมด</option>
+                <option value="53">ภ.ง.ด.53 (นิติบุคคล)</option>
+                <option value="3">ภ.ง.ด.3 (บุคคลธรรมดา)</option>
+              </select>
+            </span>
+            <span style="color:#6B7280;font-size:11px">🤖 WHT สร้างอัตโนมัติจาก <a href="fi2-ap-payment-mockup.html" style="color:#2563EB">FI-2 จ่ายชำระเจ้าหนี้</a> ตาม WHT Category ของ Vendor</span>
+          </div>
+        </div>
+      </div>
+      <div class="card party-mini">
+        <div class="party-lines">
+          <div class="party-line party-hd">
+            <div class="card-title"><span class="secno">FI-12.2</span>🧾 สรุปงวด (แยกแบบยื่น)</div>
+          </div>
+          <div class="party-line">
+            <span class="lbl">ภ.ง.ด.53 (นิติ)</span><b id="sumP53">฿2,344.86</b> <span style="color:#9CA3AF;font-size:11px">2 รายการ</span>
+            <span class="lbl">ภ.ง.ด.3 (บุคคล)</span><b id="sumP3">฿1,900.00</b> <span style="color:#9CA3AF;font-size:11px">2 รายการ</span>
+          </div>
+          <div class="party-line">
+            <span class="lbl">WHT รวม</span><b style="color:#2563EB" id="sumTotal">฿4,244.86</b>
+            <span class="lbl">กำหนดยื่น ภ.ง.ด.</span><b style="color:#B45309">7 มิ.ย. 2026</b>
+            <span style="color:#9CA3AF;font-size:11px">(ภายในวันที่ 7 ของเดือนถัดไป)</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- ===== FI-12.2 · ตัวกรอง ===== -->
-    <div class="card">
-        <h3 class="card-title">🗓️ ส่วนหัวรายการ (นิติบุคคล + งวด + ประเภท)</h3>
-        <div class="filter-bar">
-            <div class="filter-group">
-                <label class="filter-label">นิติบุคคล *</label>
-                <select>
-                    <option>SWT — แสงวิจิตรเทรดดิ้ง</option>
-                    <option>SWE — แสงวิจิตรอีเล็คทริค</option>
-                    <option>VMN — วีมันนี่ พาร์ทเนอร์ชิพ</option>
-                    <option>WPS — วีพาวเวอร์ซัพพลาย</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label class="filter-label">งวด (เดือน)</label>
-                <input type="text" value="พฤษภาคม 2026" style="min-width:160px">
-            </div>
-            <div class="filter-group">
-                <label class="filter-label">ประเภท</label>
-                <select style="min-width:170px">
-                    <option>ทั้งหมด</option>
-                    <option>ภ.ง.ด.53 (นิติบุคคล)</option>
-                    <option>ภ.ง.ด.3 (บุคคลธรรมดา)</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label class="filter-label">&nbsp;</label>
-                <button class="act btn-primary">🔄 ดึง WHT จาก Payment Journal</button>
-            </div>
-        </div>
-        <div class="filter-note">ℹ WHT สร้างอัตโนมัติจาก FI-2 AP Payment ตาม WHT Category ของ Vendor · บุคคลธรรมดา → ภ.ง.ด.3 · นิติบุคคล → ภ.ง.ด.53</div>
-    </div>
-
-    <!-- ===== FI-12.3 · WHT List (Core) ===== -->
-    <div class="card">
-        <h3 class="card-title">
-            📋 รายการภาษีหัก ณ ที่จ่าย (WHT List)
-            <span class="hint">เลือกรายการแล้วกด Release ที่แถบล่าง</span>
-        </h3>
-        <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-            <span class="legend-chip">รวม 4 รายการ · WHT ฿4,244.86</span>
-            <span class="legend-chip" style="background:#FFFBEB;color:#92400E;border-color:#FDE68A">⚠ รอ Release 3</span>
-            <span class="legend-chip" style="background:#F0FDF4;color:#065F46;border-color:#A7F3D0">✓ Released 1</span>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th style="width:34px"></th>
-                    <th>เลขที่ WHT</th>
-                    <th>วันที่จ่าย</th>
-                    <th>ผู้รับเงิน</th>
-                    <th>ประเภทเงินได้</th>
-                    <th class="amount">ฐานจ่าย</th>
-                    <th class="amount">อัตรา</th>
-                    <th class="amount">WHT หัก</th>
-                    <th>ภ.ง.ด.</th>
-                    <th>สถานะ</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><input type="checkbox" class="chk" checked></td>
-                    <td><span class="doc-code">WHT-2605-0021</span></td>
-                    <td>12 พ.ค. 2026</td>
-                    <td>บ. ออฟโฟร์ จำกัด</td>
-                    <td>ค่าบริการ</td>
-                    <td class="amount">50,000.00</td>
-                    <td class="amount">3%</td>
-                    <td class="amount">1,500.00</td>
-                    <td><span class="pnd-pill p53">ภ.ง.ด.53</span></td>
-                    <td><span class="status-pend">⚠ รอ Release</span></td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" class="chk"></td>
-                    <td><span class="doc-code">WHT-2605-0022</span></td>
-                    <td>23 พ.ค. 2026</td>
-                    <td>บ. เคอรี่ เอ็กซ์เพรส จำกัด</td>
-                    <td>ค่าขนส่ง</td>
-                    <td class="amount">84,486.00</td>
-                    <td class="amount">1%</td>
-                    <td class="amount">844.86</td>
-                    <td><span class="pnd-pill p53">ภ.ง.ด.53</span></td>
-                    <td><span class="status-rel">✓ Released</span></td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" class="chk" checked></td>
-                    <td><span class="doc-code">WHT-2605-0023</span></td>
-                    <td>20 พ.ค. 2026</td>
-                    <td>นายสมพงษ์ ช่างรับเหมา</td>
-                    <td>ค่าจ้างทำของ</td>
-                    <td class="amount">30,000.00</td>
-                    <td class="amount">3%</td>
-                    <td class="amount">900.00</td>
-                    <td><span class="pnd-pill p3">ภ.ง.ด.3</span></td>
-                    <td><span class="status-pend">⚠ รอ Release</span></td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" class="chk" checked></td>
-                    <td><span class="doc-code">WHT-2605-0024</span></td>
-                    <td>25 พ.ค. 2026</td>
-                    <td>นางสาวมาลี (ค่าเช่าอาคาร)</td>
-                    <td>ค่าเช่า</td>
-                    <td class="amount">20,000.00</td>
-                    <td class="amount">5%</td>
-                    <td class="amount">1,000.00</td>
-                    <td><span class="pnd-pill p3">ภ.ง.ด.3</span></td>
-                    <td><span class="status-pend">⚠ รอ Release</span></td>
-                </tr>
-                <tr class="total-row">
-                    <td colspan="7">รวม WHT หัก ณ ที่จ่าย · 4 รายการ</td>
-                    <td class="amount">4,244.86</td>
-                    <td colspan="2"></td>
-                </tr>
-            </tbody>
+    <!-- ④c WHT List — หัวใจ -->
+    <div class="card items-card">
+      <div class="card-header">
+        <div class="card-title"><span class="secno">FI-12.3</span>📋 รายการภาษีหัก ณ ที่จ่าย (WHT List)</div>
+        <div class="card-spacer"></div>
+        <span style="font-size:11px;color:#6B7280">เลือกรายการ → กด <b>🔒 Release</b> ที่ส่วนหัว</span>
+      </div>
+      <div class="items-wrap">
+        <table class="items">
+          <thead>
+            <tr>
+              <th style="width:32px"><input type="checkbox" id="fi12All" checked onchange="fi12ToggleAll(this)"></th>
+              <th>#</th><th>เลขที่ WHT</th><th>วันจ่าย</th><th>ผู้รับเงิน</th><th>เลขผู้เสียภาษี</th>
+              <th>ประเภทเงินได้</th><th class="num">ฐานจ่าย</th><th class="num">อัตรา</th><th class="num">WHT หัก</th>
+              <th>ภ.ง.ด.</th><th>สถานะ</th><th>Cert</th>
+            </tr>
+          </thead>
+          <tbody id="whtRows">
+            <tr data-pnd="53" data-base="50000" data-wht="1500" data-status="pend">
+              <td><input type="checkbox" class="wht-chk" checked onchange="fi12Recompute()"></td>
+              <td>1</td>
+              <td class="item-code"><a href="fi2-ap-payment-mockup.html" target="_blank">WHT-2605-0021</a></td>
+              <td class="mono">12 พ.ค. 26</td>
+              <td>บ. ออฟโฟร์ จำกัด</td>
+              <td class="mono">0105551023456</td>
+              <td>ค่าบริการ</td>
+              <td class="num">50,000.00</td>
+              <td class="num">3%</td>
+              <td class="num" style="font-weight:700">1,500.00</td>
+              <td><span class="pnd-pill p53">ภ.ง.ด.53</span></td>
+              <td><span class="wht-stat pend">⚠ รอ Release</span></td>
+              <td><button class="cert-btn" onclick="fi12PrintCert('WHT-2605-0021')">🖨️</button></td>
+            </tr>
+            <tr data-pnd="53" data-base="84486" data-wht="844.86" data-status="rel">
+              <td><input type="checkbox" class="wht-chk" disabled></td>
+              <td>2</td>
+              <td class="item-code"><a href="fi2-ap-payment-mockup.html" target="_blank">WHT-2605-0022</a></td>
+              <td class="mono">23 พ.ค. 26</td>
+              <td>บ. เคอรี่ เอ็กซ์เพรส จำกัด</td>
+              <td class="mono">0105556078912</td>
+              <td>ค่าขนส่ง</td>
+              <td class="num">84,486.00</td>
+              <td class="num">1%</td>
+              <td class="num" style="font-weight:700">844.86</td>
+              <td><span class="pnd-pill p53">ภ.ง.ด.53</span></td>
+              <td><span class="wht-stat rel">✓ Released</span></td>
+              <td><button class="cert-btn" onclick="fi12PrintCert('WHT-2605-0022')">🖨️</button></td>
+            </tr>
+            <tr data-pnd="3" data-base="30000" data-wht="900" data-status="pend">
+              <td><input type="checkbox" class="wht-chk" checked onchange="fi12Recompute()"></td>
+              <td>3</td>
+              <td class="item-code"><a href="fi2-ap-payment-mockup.html" target="_blank">WHT-2605-0023</a></td>
+              <td class="mono">20 พ.ค. 26</td>
+              <td>นายสมพงษ์ ช่างรับเหมา</td>
+              <td class="mono">1102003456789</td>
+              <td>ค่าจ้างทำของ</td>
+              <td class="num">30,000.00</td>
+              <td class="num">3%</td>
+              <td class="num" style="font-weight:700">900.00</td>
+              <td><span class="pnd-pill p3">ภ.ง.ด.3</span></td>
+              <td><span class="wht-stat pend">⚠ รอ Release</span></td>
+              <td><button class="cert-btn" onclick="fi12PrintCert('WHT-2605-0023')">🖨️</button></td>
+            </tr>
+            <tr data-pnd="3" data-base="20000" data-wht="1000" data-status="pend">
+              <td><input type="checkbox" class="wht-chk" checked onchange="fi12Recompute()"></td>
+              <td>4</td>
+              <td class="item-code"><a href="fi2-ap-payment-mockup.html" target="_blank">WHT-2605-0024</a></td>
+              <td class="mono">25 พ.ค. 26</td>
+              <td>นางสาวมาลี (ค่าเช่าอาคาร)</td>
+              <td class="mono">3102001234567</td>
+              <td>ค่าเช่า</td>
+              <td class="num">20,000.00</td>
+              <td class="num">5%</td>
+              <td class="num" style="font-weight:700">1,000.00</td>
+              <td><span class="pnd-pill p3">ภ.ง.ด.3</span></td>
+              <td><span class="wht-stat pend">⚠ รอ Release</span></td>
+              <td><button class="cert-btn" onclick="fi12PrintCert('WHT-2605-0024')">🖨️</button></td>
+            </tr>
+            <tr class="empty-row"><td></td><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td></td><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td></td><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td></td><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td></td><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td></td><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          </tbody>
         </table>
+      </div>
+      <div style="padding:8px 14px;border-top:1px dashed #E5E7EB;background:#FAFBFC;font-size:11px;color:#6B7280">
+        💡 แสดงเฉพาะ WHT ที่เกิดจาก <b>FI-2 จ่ายชำระเจ้าหนี้</b> งวดนี้ · บุคคลธรรมดา → <b>ภ.ง.ด.3</b> · นิติบุคคล → <b>ภ.ง.ด.53</b> · ที่ Release แล้วแก้ไม่ได้ (ต้อง Reverse)
+      </div>
     </div>
 
-    <!-- ===== FI-12.4 · สรุป + กำหนดยื่น ===== -->
-    <div class="card">
-        <h3 class="card-title">🧾 สรุปยอด WHT (แยกตามแบบยื่น)</h3>
-        <div class="summary-grid">
-            <div class="sum-card">
-                <div class="sum-label">ภ.ง.ด.53 (นิติบุคคล)</div>
-                <div class="sum-value">฿2,344.86</div>
-                <div class="sum-sub">2 รายการ</div>
-            </div>
-            <div class="sum-card">
-                <div class="sum-label">ภ.ง.ด.3 (บุคคลธรรมดา)</div>
-                <div class="sum-value">฿1,900.00</div>
-                <div class="sum-sub">2 รายการ</div>
-            </div>
-            <div class="sum-card diff-bad">
-                <div class="sum-label">WHT รวมทั้งสิ้น</div>
-                <div class="sum-value blue">฿4,244.86</div>
-                <div class="sum-sub">4 รายการ · งวด พ.ค. 2026</div>
-            </div>
-            <div class="sum-card">
-                <div class="sum-label">กำหนดยื่น ภ.ง.ด.</div>
-                <div class="sum-value" style="font-size:18px">7 มิ.ย. 2026</div>
-                <div class="sum-sub">ภายในวันที่ 7 ของเดือนถัดไป</div>
-            </div>
+    <!-- ④d tabs + สรุป -->
+    <div class="row-bottom">
+      <div class="tabset">
+        <div class="tabset-nav">
+          <button class="on" onclick="swTab(event,'t-detail')">รายละเอียดภาษี</button>
+          <button onclick="swTab(event,'t-rate')">อัตรา WHT</button>
+          <button onclick="swTab(event,'t-hist')">ประวัติ <span class="tpl-zone">SC-7</span></button>
         </div>
-        <div class="bc-note" style="margin-top:18px">
-            📄 <b>หนังสือรับรองหัก ณ ที่จ่าย:</b> พิมพ์ตามแบบสรรพากร (ผู้จ่าย/ผู้รับ + เลขผู้เสียภาษี + ประเภทเงินได้ + อัตรา + ยอดหัก) ·
-            อัตรา: 1% ค่าขนส่ง · 2% ค่าโฆษณา · 3% ค่าบริการ/ค่าเช่า(นิติ) · 5% ค่าเช่า(บุคคล)/ค่าจ้างทำของ
+        <div class="tabset-pane on" id="t-detail">
+          <div class="tab-grid">
+            <span class="k">นิติบุคคลผู้จ่าย</span><span class="v">SWT — แสงวิจิตรเทรดดิ้ง · เลขผู้เสียภาษี 0105551000001</span>
+            <span class="k">งวด/กำหนดยื่น</span><span class="v">พ.ค. 2026 · ยื่นภายใน <b style="color:#B45309">7 มิ.ย. 2026</b> (ภ.ง.ด.3 + 53)</span>
+            <span class="k">หลัง Release</span><span class="v">ล็อกห้ามแก้ · ออกเลขเอกสาร + WHT Entry บน <b>BC365</b> · พิมพ์หนังสือรับรอง → ยื่น ภ.ง.ด.</span>
+          </div>
         </div>
+        <div class="tabset-pane" id="t-rate">
+          <div class="rate-grid">
+            <span class="r">1%</span><span>ค่าขนส่ง</span>
+            <span class="r">2%</span><span>ค่าโฆษณา</span>
+            <span class="r">3%</span><span>ค่าบริการ · ค่าจ้างทำของ · ค่าเช่า (นิติบุคคล)</span>
+            <span class="r">5%</span><span>ค่าเช่า (บุคคลธรรมดา) · ค่าจ้างบางประเภท</span>
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:#6B7280">อัตราตามประเภทเงินได้ · กำหนดที่ WHT Category ของ Vendor (MD-3 ทะเบียน Vendor)</div>
+        </div>
+        <div class="tabset-pane" id="t-hist">
+          <div class="tl">
+            <div class="tl-item"><span class="tl-dot"></span> FI-2 จ่ายเจ้าหนี้ → คำนวณ WHT อัตโนมัติ · 25 พ.ค. 26</div>
+            <div class="tl-item"><span class="tl-dot"></span> ดึง WHT จาก Payment Journal → 4 รายการ · 1 มิ.ย. 26 · ฿4,244.86</div>
+            <div class="tl-item"><span class="tl-dot pending"></span> Released 1 · รอ Release 3 · 1 มิ.ย. 26</div>
+            <div class="tl-item"><span class="tl-dot pending"></span> Release ที่เหลือ → พิมพ์หนังสือรับรอง → ยื่น ภ.ง.ด.3/53</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="secno">FI-12.5</span>🧾 สรุปยอด WHT <span class="tpl-zone">SC-11</span></div></div>
+        <div class="sum-mini" id="fi12Sc11">
+          <span class="k">ฐานจ่ายรวม</span><span class="v" id="sumBase">฿184,486.00</span>
+          <span class="k">WHT · ภ.ง.ด.3</span><span class="v" id="sumP3b">฿1,900.00</span>
+          <span class="k">WHT · ภ.ง.ด.53</span><span class="v" id="sumP53b">฿2,344.86</span>
+          <span class="sep"></span>
+          <span class="k grand">WHT รวมทั้งสิ้น</span><span class="v blue grand" id="sumGrand">฿4,244.86</span>
+        </div>
+      </div>
     </div>
 
-    <!-- ===== FI-12.5 · BC Note ===== -->
-    <div class="bc-note" style="margin-top:0">
-        ℹ️ <b>Portal เป็น UI layer เท่านั้น</b> — WHT คำนวณ/สร้างอัตโนมัติจาก <b>FI-2 AP Payment</b> ·
-        การ <b>Release</b> (ล็อกห้ามแก้), การออกเลขเอกสาร และ WHT Entry เป็นของ <b>BC365</b> ·
-        ที่ Release แล้วแก้ไม่ได้ (ต้อง Reverse + สร้างใหม่) · หน้านี้ List → Release → Print เท่านั้น
+    <div class="card" style="padding:8px 12px;display:flex;align-items:center;gap:8px;flex:none">
+      <span style="font-size:12px;font-weight:600">🗒️ หมายเหตุ</span>
+      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="WHT งวด พ.ค. 2026 · ดึงจาก FI-2 จ่ายเจ้าหนี้ · ยื่น ภ.ง.ด.3/53 ภายใน 7 มิ.ย. 26">
     </div>
 
-</div>
+  </div>
 
-<!-- ===== STICKY ACTION BAR ===== -->
-<div class="sticky-action-bar">
-    <div class="sab-left">
-        <div class="sab-title">WHT-2605-SWT · งวด พ.ค. 2026</div>
-        <div class="sab-info">เลือก 3 รายการ · WHT รวม <span class="blue">฿3,400.00</span> · รอ Release</div>
+  <!-- ⑤ DOC-CHAIN -->
+  <div id="fi12DcStrip" class="dc-strip"></div>
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<!-- พิมพ์หนังสือรับรอง modal -->
+<div class="tpl-modal-bg" id="certModal">
+  <div class="tpl-modal" style="max-width:480px">
+    <h3>🖨️ พิมพ์หนังสือรับรองหัก ณ ที่จ่าย</h3>
+    <div style="font-size:13px;color:#374151;line-height:1.7;margin:10px 0">
+      พิมพ์ตามแบบสรรพากร: ผู้จ่าย/ผู้รับ + เลขผู้เสียภาษี + ประเภทเงินได้ + อัตรา + ยอดหัก<br>
+      <span id="certTarget" style="color:#2563EB;font-weight:700"></span>
     </div>
-    <div class="sab-buttons">
-        <span class="sab-note">⚠ Release / เลขเอกสาร ทำโดย BC365</span>
-        <button class="act btn-secondary">🖨️ พิมพ์หนังสือรับรอง</button>
-        <button class="act btn-secondary">📤 Export ภ.ง.ด.3</button>
-        <button class="act btn-secondary">📤 Export ภ.ง.ด.53</button>
-        <button class="act btn-primary">🔒 Release รายการที่เลือก</button>
+    <div style="display:flex;gap:10px;margin:14px 0 4px">
+      <label style="font-size:12.5px;display:flex;align-items:center;gap:6px"><input type="radio" name="certCopy" checked> ต้นฉบับ (ผู้ถูกหัก)</label>
+      <label style="font-size:12.5px;display:flex;align-items:center;gap:6px"><input type="radio" name="certCopy"> สำเนา (ผู้จ่าย)</label>
     </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+      <button class="btn btn-outline" onclick="fi12CloseCert()">ยกเลิก</button>
+      <button class="btn" style="background:#2563EB;color:#fff" onclick="alert('พิมพ์หนังสือรับรอง (mock)');fi12CloseCert()">🖨️ พิมพ์</button>
+    </div>
+  </div>
 </div>
 
 <script>
-    document.querySelectorAll('.sab-buttons .act').forEach(function(btn){
-        btn.addEventListener('click', function(){
-            alert('Demo · ' + btn.textContent.trim() + ' — Release/เลขเอกสาร ดำเนินการบน BC365');
-        });
+  function fmt(n){return '฿'+Number(n).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});}
+
+  function fi12Recompute(){
+    var base=0,p3=0,p53=0,pendCount=0;
+    document.querySelectorAll('#whtRows tr[data-wht]').forEach(function(tr){
+      var c=tr.querySelector('.wht-chk');
+      var wht=Number(tr.getAttribute('data-wht')||0);
+      var b=Number(tr.getAttribute('data-base')||0);
+      var pend=tr.getAttribute('data-status')==='pend';
+      // นับยอด "ที่เลือก" สำหรับ summary; รวมทั้งหมดสำหรับ mh
+      if(c&&c.checked){
+        base+=b;
+        if(tr.getAttribute('data-pnd')==='3')p3+=wht; else p53+=wht;
+      }
+      if(pend&&c&&c.checked)pendCount++;
     });
-</script>
-
-<!-- SWT_LINK_START -->
-<script src="swt-link.js" defer></script>
-<script>
-window.addEventListener('DOMContentLoaded', function () {
-  if (typeof swtRenderBreadcrumb === 'function') {
-    swtRenderBreadcrumb([
-      { type: 'PV',  no: 'PV-2605-xx',   label: 'จ่ายเจ้าหนี้ (FI-2)' },
-      { type: 'WHT', no: 'WHT-2605-SWT', label: 'รายการ WHT', current: true },
-      { type: 'CERT', no: 'หนังสือรับรอง', label: 'พิมพ์ Cert' },
-      { type: 'ภงด', no: 'ภ.ง.ด.3/53',  label: 'ยื่นภาษี' }
-    ]);
+    var total=p3+p53;
+    document.getElementById('sumBase').textContent=fmt(base);
+    document.getElementById('sumP3b').textContent=fmt(p3);
+    document.getElementById('sumP53b').textContent=fmt(p53);
+    document.getElementById('sumGrand').textContent=fmt(total);
+    // sync การ์ดสรุปงวด + header
+    document.getElementById('sumP3').textContent=fmt(p3);
+    document.getElementById('sumP53').textContent=fmt(p53);
+    document.getElementById('sumTotal').textContent=fmt(total);
+    document.getElementById('mhWhtTotal').textContent=fmt(total);
+    document.getElementById('mhBadge').textContent='🕓 รอ Release '+pendCount+' รายการ';
   }
-  if (typeof swtAppendTimeline !== 'function') return;
-  swtAppendTimeline('Doc Chain — WHT-2605-SWT (ภาษีหัก ณ ที่จ่าย · งวด พ.ค. 2026)', [
-    { action: 'FI-2 จ่ายเจ้าหนี้ → คำนวณ WHT อัตโนมัติตาม Vendor Category', time: '2026-05-25 16:00',
-      sub: 'สร้างรายการ WHT เข้า List', color: 'blue' },
-    { action: 'ดึง WHT จาก Payment Journal → 4 รายการ', time: '2026-06-01 09:10',
-      sub: 'ภ.ง.ด.53: 2 · ภ.ง.ด.3: 2 · WHT รวม ฿4,244.86', color: 'gray' },
-    { action: 'ตรวจรายการ → รอ Release 3 · Released 1', time: '2026-06-01 09:15',
-      sub: 'ที่ Release แล้วแก้ไม่ได้ (ต้อง Reverse)', color: 'amber' },
-    { action: 'Release + พิมพ์หนังสือรับรอง → ยื่น ภ.ง.ด.3/53', time: 'รอดำเนินการ',
-      sub: 'Release / เลขเอกสาร โดย BC365 · ยื่นภายใน 7 มิ.ย. 2026', color: 'gray' }
-  ], { meta: 'Payment(FI-2) → ดึง WHT → Release → Print Cert → ภ.ง.ด. (BC365)' });
-});
-</script>
-<!-- SWT_LINK_END -->
 
+  function fi12ToggleAll(cb){
+    document.querySelectorAll('#whtRows .wht-chk:not(:disabled)').forEach(function(c){c.checked=cb.checked;});
+    fi12Recompute();
+  }
+  function fi12Filter(){
+    var v=document.getElementById('fi12Type').value;
+    document.querySelectorAll('#whtRows tr[data-pnd]').forEach(function(tr){
+      tr.style.display=(v==='all'||tr.getAttribute('data-pnd')===v)?'':'none';
+    });
+  }
+  function fi12Pull(){ alert('🔄 ดึง WHT จาก Payment Journal (FI-2) · งวด พ.ค. 2026 — mock\n\nพบ 4 รายการ · ภ.ง.ด.53: 2 · ภ.ง.ด.3: 2 · WHT รวม ฿4,244.86'); }
+  function fi12Release(){
+    var n=document.querySelectorAll('#whtRows .wht-chk:checked:not(:disabled)').length;
+    if(!n){ alert('ยังไม่ได้เลือกรายการที่จะ Release'); return; }
+    if(confirm('🔒 Release '+n+' รายการ WHT (mock · งานการเงิน):\n\n• ล็อกห้ามแก้ + ออกเลขเอกสาร (BC365)\n• สร้าง WHT Entry\n• พร้อมพิมพ์หนังสือรับรอง + ยื่น ภ.ง.ด.3/53')){
+      alert('Released — เลขเอกสาร/WHT Entry ดำเนินการบน BC365');
+    }
+  }
+  var certEl=document.getElementById('certModal');
+  function fi12PrintCert(no){
+    document.getElementById('certTarget').textContent=no?('รายการ: '+no):'ทั้งชุด WHT-2605-SWT (4 รายการ)';
+    certEl.classList.add('show');
+  }
+  function fi12CloseCert(){ certEl.classList.remove('show'); }
+  certEl.addEventListener('click',function(e){ if(e.target===certEl)fi12CloseCert(); });
+
+  function swTab(e,id){
+    var nav=e.target.closest('.tabset');
+    nav.querySelectorAll('.tabset-nav button').forEach(function(b){b.classList.remove('on');});
+    nav.querySelectorAll('.tabset-pane').forEach(function(p){p.classList.remove('on');});
+    e.target.classList.add('on');
+    document.getElementById(id).classList.add('on');
+  }
+
+  function fi12InitPatterns(){
+    if(typeof swtRenderStatusStrip==='function')swtRenderStatusStrip('#fi12Sc12',{
+      pills:[
+        {text:'📄 งวด พ.ค. 2026',type:'neutral'},
+        {text:'🤖 auto จาก FI-2',type:'info'},
+        {text:'ภ.ง.ด.3 + 53',type:'info'},
+        {text:'⏳ ยื่นภายใน 7 มิ.ย. 26',type:'warning'}
+      ]});
+    if(typeof swtRenderDocChain==='function')swtRenderDocChain('#fi12DcStrip',{label:'Doc Chain',nodes:[
+        {label:'FI-2 จ่ายเจ้าหนี้ PV',href:'fi2-ap-payment-mockup.html',state:'done'},
+        {label:'WHT-2605-SWT ชุด WHT',state:'current'},
+        {label:'หนังสือรับรองหัก ณ ที่จ่าย'},
+        {label:'ยื่น ภ.ง.ด.3 / 53'}
+      ]});
+    if(typeof swtRenderGateAlert==='function')swtRenderGateAlert('#fi12Gate',{
+      type:'ok',
+      text:'✅ WHT 4 รายการดึงจาก FI-2 จ่ายเจ้าหนี้ · Released 1 · รอ Release 3 · ยอด ฿4,244.86 · ยื่นภายใน 7 มิ.ย. 2026'
+    });
+    fi12Recompute();
+  }
+  document.addEventListener('DOMContentLoaded',fi12InitPatterns);
+</script>
+<script src="swt-patterns.js"></script>
+<script src="swt-doc-finder.js"></script>
 <script src="swt-sidebar.js"></script>
+<script src="swt-link.js"></script>
 </body>
 </html>

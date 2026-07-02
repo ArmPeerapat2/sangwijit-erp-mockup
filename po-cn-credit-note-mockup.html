@@ -85,7 +85,7 @@ a.dc-node{text-decoration:none;cursor:pointer}a.dc-node:hover{filter:brightness(
 
 .items-card{padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
 .items-card .card-header{padding:12px 14px;margin:0;border-bottom:1px solid #E5E7EB}
-.items-wrap{overflow-y:auto;flex:1;min-height:60px}
+.items-wrap{overflow-y:auto;flex:1}
 table.items{width:100%;border-collapse:collapse;background:#fff}
 table.items thead{position:sticky;top:0;background:#F8FAFC;z-index:5}
 table.items thead th{padding:9px 10px;font-size:10.5px;font-weight:600;color:#6B7280;text-align:left;border-bottom:2px solid #E5E7EB;text-transform:uppercase;white-space:nowrap}
@@ -119,7 +119,6 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .btn-primary{background:#2563EB;color:#fff}.btn-outline{background:#fff;color:#374151;border-color:#E5E7EB}.btn-ghost{background:transparent;color:#6B7280}
 .row-2col .card.compact{padding:7px 10px}.row-2col .card-header{padding-bottom:5px;margin-bottom:5px}
 .row-2col .field{margin-bottom:3px}.row-2col .field-grid-2{gap:3px 14px}
-.content>.items-card{flex:1 1 0;min-height:110px}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col,.mode-bar{flex:none}
 .row-bottom{font-size:12px;height:150px}
 .row-bottom .tabset,.row-bottom>.card{overflow:auto}
@@ -131,22 +130,24 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 </style>
   <link rel="stylesheet" href="swt-patterns.css">
 </head>
-<body>
+<body data-swt-sc="po-cn">
 <div class="layout">
 <div class="main">
 
-  <div class="topbar">
-    <div class="topbar-breadcrumb">จัดซื้อ <span class="sep">›</span> ใบลดหนี้เจ้าหนี้ <span class="sep">›</span> <span class="current">PCN-2606-0007</span></div>
-    <div class="topbar-spacer"></div>
-    <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+    <!-- ①② UNIFIED HEADER — Topbar + Main Header รวม -->
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">จัดซื้อ <span class="sep">›</span> ใบลดหนี้เจ้าหนี้ <span class="sep">›</span> <span class="current">PCN-2606-0007</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
     <div class="topbar-icon">🔔</div>
     <select class="branch-sel" title="สาขา"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 คลังกลาง</option></select>
     <select class="branch-sel" title="แผนก"><option>แผนกจัดซื้อ</option><option>คลัง</option><option>บัญชี</option></select>
     <div class="topbar-avatar">สศ</div>
-  </div>
-
-  <header class="main-header">
-    <div class="mh-left">
+      </div>
+    </div>
+    <div class="uh-main">
+      <div class="mh-left">
       <div class="mh-title">
         <div class="ico">↩️</div>
         <div><h1>ใบลดหนี้เจ้าหนี้</h1><p>Purchase Credit Note / APCN (PO-CN)</p></div>
@@ -163,34 +164,28 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       <button class="mh-btn mh-btn-ghost" onclick="location.href='po6-ap-invoice-mockup.html'">🧾 ไปใบตั้งหนี้</button>
       <button class="mh-btn mh-btn-primary" onclick="poCnPost()">↩️ Post ลดหนี้ → ตัด AP</button>
     </div>
+    </div>
   </header>
 
-  <div class="saab">
+    <!-- ③ SAAB ย่อ — ปุ่มหลัก + ⋯ (action เด่นอยู่ main-header เท่านั้น) -->
+  <div class="saab saab-compact">
     <button class="btn btn-outline" onclick="dfOpen()">📂 เปิดเอกสารเก่า</button>
     <button class="btn btn-outline">💾 Save Draft</button>
-    <button class="btn btn-outline" onclick="window.print()">🖨️ พิมพ์</button>
-    <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
-    <span class="saab-status"><span class="dot"></span>สถานะ: <strong>ร่าง</strong> · โหมด: คืนสินค้า · ตัด AP เจ้าหนี้ Daikin</span>
+    <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์</button>
+    <div class="saab-more-wrap">
+      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
+      <div class="saab-more-menu">
+        <button type="button" class="btn btn-menu btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
+      </div>
+    </div>
+    <div class="saab-spacer"></div>
   </div>
 
   <div class="content">
 
-    <!-- ④a STATUS + DOC-CHAIN -->
-    <div class="status-strip">
-      <div class="sc11-pills">
-        <span class="pill pill-neutral">📄 ร่าง</span>
-        <span class="pill pill-danger" id="modePill">🔄 โหมด: คืนสินค้า</span>
-        <span class="pill pill-info">฿ VAT ซื้อ 7%</span>
-        <span class="pill pill-neutral">ตัด AP: Daikin V-00045</span>
-        <span class="pill pill-warning">⏳ รอหักหนี้ (PO-6 ดึงไปตัด)</span>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
-        <span style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
-        <a class="dc-node done" href="wh1-grn-mockup.html" target="_blank">รับ GR-0210</a><span class="dc-arrow">→</span>
-        <span class="dc-node current">ลดหนี้ PCN-0007</span><span class="dc-arrow">→</span>
-        <a class="dc-node" href="po6-ap-invoice-mockup.html" target="_blank">ตัด PO-6 ตั้งหนี้</a>
-      </div>
-    </div>
+    <!-- ④a SC-12 Status (pills + maker-checker · ไม่มี doc-chain) -->
+    <div id="po_cnSc12" class="status-strip"></div>
+    <div id="po_cnGate" class="gate-alert"></div>
 
     <!-- ④a2 MODE BAR (3 โหมดลดหนี้) -->
     <div class="mode-bar">
@@ -256,7 +251,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           <thead><tr><th>#</th><th>รหัส</th><th>รายการ</th><th class="num">รับไว้</th><th class="num">จำนวนคืน/ลด</th><th>หน่วย</th><th class="num">ราคา/หน่วย</th><th class="num">มูลค่าลด</th><th>เหตุผล</th></tr></thead>
           <tbody>
             <tr>
-              <td>1</td><td class="item-code"><a href="md1-item-master-mockup-v3.html">DAI-FTKM12</a></td>
+              <td>1</td><td class="item-code"><a href="bc365/item-master-mockup.html">DAI-FTKM12</a></td>
               <td class="item-name">แอร์ Daikin FTKM 12,000 BTU</td>
               <td class="num">60</td><td class="num"><input class="qty-input" value="5"></td><td>เครื่อง</td>
               <td class="num">9,800.00</td><td class="num" style="color:#B91C1C;font-weight:700">49,000.00</td>
@@ -332,6 +327,9 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 
   </div><!-- /content -->
 
+
+  <!-- ⑤ DOC-CHAIN แถบล่าง main -->
+  <div id="po_cnDcStrip" class="dc-strip"></div>
 </div><!-- /main -->
 </div><!-- /layout -->
 
@@ -355,7 +353,28 @@ function poCnPost(){
     location.href='po6-ap-invoice-mockup.html';
   }
 }
+function poCnInitPatterns(){
+  swtRenderStatusStrip('#po_cnSc12',{
+    pills:[
+      {text:'📄 ร่าง',type:'neutral'},
+      {text:'🔄 โหมด: คืนสินค้า',type:'danger',id:'modePill'},
+      {text:'฿ VAT ซื้อ 7%',type:'info'},
+      {text:'ตัด AP: Daikin V-00045',type:'neutral'},
+      {text:'⏳ รอหักหนี้ (PO-6 ดึงไปตัด)',type:'warning'}
+    ]
+  });
+  swtRenderDocChain('#po_cnDcStrip',{label:'Doc Chain',nodes:[
+    {label:'รับ GR-0210',href:'wh1-receive-mockup.html',state:'done'},
+    {label:'ลดหนี้ PCN-0007',state:'current'},
+    {label:'ตัด PO-6 ตั้งหนี้',href:'po6-ap-invoice-mockup.html'}
+  ]});
+  swtRenderGateAlert('#po_cnGate',{type:'ok',compactOk:true,text:'✅ อ้างอิง GR-0210 · พร้อม Post ลดหนี้ → ตัด AP'});
+}
+document.addEventListener('DOMContentLoaded',poCnInitPatterns);
 </script>
 <script src="swt-doc-finder.js"></script>
+<script src="swt-patterns.js"></script>
+<script src="swt-sc-modals.js"></script>
+<script src="swt-sc-wire.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>

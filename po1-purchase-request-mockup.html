@@ -104,7 +104,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 /* ITEMS TABLE */
 .items-card{padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
 .items-card .card-header{padding:12px 14px;margin:0;border-bottom:1px solid #E5E7EB}
-.items-wrap{overflow-y:auto;flex:1;min-height:60px}
+.items-wrap{overflow-y:auto;flex:1}
 table.items{width:100%;border-collapse:collapse;background:#fff}
 table.items thead{position:sticky;top:0;background:#F8FAFC;z-index:5}
 table.items thead th{padding:9px 12px;font-size:10.5px;font-weight:600;color:#6B7280;text-align:left;border-bottom:2px solid #E5E7EB;text-transform:uppercase;white-space:nowrap}
@@ -178,7 +178,6 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .row-2col .field{margin-bottom:3px}
 .row-2col .field-grid-2{gap:3px 14px}
 .row-2col .credit-line{margin-top:5px;padding:4px 8px}
-.content>.items-card{flex:1 1 0;min-height:120px}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
 .row-bottom{font-size:12px;height:150px}
 .row-bottom .tabset,.row-bottom>.card{overflow:auto}
@@ -202,24 +201,24 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 </style>
   <link rel="stylesheet" href="swt-patterns.css">
 </head>
-<body>
+<body data-swt-sc="po1">
 <div class="layout">
 <div class="main">
 
-  <!-- ① TOPBAR -->
-  <div class="topbar">
-    <div class="topbar-breadcrumb">จัดซื้อ <span class="sep">›</span> ใบขอสั่งซื้อ <span class="sep">›</span> <span class="current">PR-2606-0019</span></div>
-    <div class="topbar-spacer"></div>
-    <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+  <!-- ①② UNIFIED HEADER — Topbar + Main Header รวม -->
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">จัดซื้อ <span class="sep">›</span> ใบขอสั่งซื้อ <span class="sep">›</span> <span class="current">PR-2606-0019</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
     <div class="topbar-icon">🔔</div>
     <select class="branch-sel" title="เลือกสาขา (เฉพาะผู้มีสิทธิ์ข้ามสาขา)"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option><option>🏢 คลังกลาง</option></select>
     <select class="branch-sel" title="เลือกแผนก (เฉพาะผู้มีสิทธิ์ข้ามแผนก)"><option>แผนกจัดซื้อ</option><option>คลัง</option><option>ขายโครงการ</option></select>
     <div class="topbar-avatar">สศ</div>
-  </div>
-
-  <!-- ② MAIN HEADER -->
-  <header class="main-header">
-    <div class="mh-left">
+      </div>
+    </div>
+    <div class="uh-main">
+      <div class="mh-left">
       <div class="mh-title">
         <div class="ico">📝</div>
         <div><h1>ใบขอสั่งซื้อ</h1><p>Purchase Requisition (PO-1)</p></div>
@@ -237,38 +236,30 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
       <button class="mh-btn mh-btn-accent" onclick="po1Submit()">📤 ส่งขออนุมัติ</button>
     </div>
+    </div>
   </header>
 
-  <!-- ③ SUB-ACTION BAR -->
-  <div class="saab">
+  <!-- ③ SAAB ย่อ — ปุ่มหลัก + ⋯ (action เด่นอยู่ main-header เท่านั้น) -->
+  <div class="saab saab-compact">
     <button class="btn btn-outline" onclick="dfOpen()" title="ค้นหา/เปิดเอกสารเก่า — 3 แท็บ + ผลลัพธ์สีตามสถานะ">📂 เปิดเอกสารเก่า</button>
     <button class="btn btn-outline">💾 Save Draft</button>
     <button class="btn btn-outline" onclick="tplCopyDoc()" title="clone ข้อมูลทั้งหมด → PR ใหม่ · เลขใหม่ · reset วันที่/ลายเซ็น">📋 Copy / ทำสำเนา</button>
-    <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบขอสั่งซื้อ</button>
-    <button class="btn btn-success" onclick="po1ToQueue()" title="หลังอนุมัติ → เข้าคิว 'รอสั่งซื้อ (PR Pending)' ให้จัดซื้อดึงไปเปิด PO">↪ ส่งเข้าคิวรอสั่งซื้อ</button>
-    <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก PR</button>
-    <span class="saab-status"><span class="dot"></span>สถานะ: <strong>รออนุมัติ</strong> · BC: Open · ผู้ขอ สมศรี · แผนกจัดซื้อ</span>
+    <div class="saab-more-wrap">
+      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
+      <div class="saab-more-menu">
+        <button type="button" class="btn btn-menu btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบขอสั่งซื้อ</button>
+        <button type="button" class="btn btn-menu btn-success" onclick="po1ToQueue()" title="หลังอนุมัติ → เข้าคิว 'รอสั่งซื้อ (PR Pending)' ให้จัดซื้อดึงไปเปิด PO">↪ ส่งเข้าคิวรอสั่งซื้อ</button>
+        <button type="button" class="btn btn-menu btn-ghost" style="color:#EF4444">❌ ยกเลิก PR</button>
+      </div>
+    </div>
+    <div class="saab-spacer"></div>
   </div>
 
   <div class="content">
 
-    <!-- ④a STATUS + DOC-CHAIN รวมแถวเดียว (pills ซ้าย · doc-chain ขวา) -->
-    <div class="status-strip" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div class="sc11-pills">
-        <span class="pill pill-neutral" title="BC PR status: Open">📄 รออนุมัติ (BC: Open)</span>
-        <span class="pill pill-info">฿ VAT 7%</span>
-        <span class="pill pill-danger" title="MOS ≤ 2 เดือน = ต้องสั่ง (rule A5)">🔴 MOS FTKM24 1.8ด · ต้องสั่ง</span>
-        <span class="pill pill-success">✓ Vendor Daikin · CN ตรงเวลา</span>
-        <span class="pill pill-warning" title="ต้องผ่าน CF-2.6 Approval Matrix · Maker ≠ Checker">⏳ รอ MD อนุมัติ (T2)</span>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
-        <span style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
-        <span class="dc-node done" title="สินค้าต่ำกว่าขั้นต่ำ = ตัว trigger การขอ (ยังไม่มี PSI ในระบบ)">📉 ต่ำกว่าขั้นต่ำ ✓</span><span class="dc-arrow">→</span>
-        <span class="dc-node current">PR 0019</span><span class="dc-arrow">→</span>
-        <a class="dc-node" href="po4-purchase-order-mockup.html" target="_blank">ใบสั่งซื้อ PO</a><span class="dc-arrow">→</span>
-        <a class="dc-node" href="wh1-grn-mockup.html" target="_blank">รับของ (WH-1)</a>
-      </div>
-    </div>
+    <!-- ④a SC-12 Status (pills + maker-checker · ไม่มี doc-chain) -->
+    <div id="po1Sc12" class="status-strip"></div>
+    <div id="po1Gate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL: PO-1.1 เจ้าหนี้ (SC-3) + PO-1.2 ข้อมูลใบขอสั่งซื้อ -->
     <div class="row-2col">
@@ -327,7 +318,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           <thead><tr><th>#</th><th>รหัส</th><th>รายการ · PSI (ซื้อ/สต๊อก/ขาย) · อ้างอิง</th><th title="Months of Stock">MOS</th><th>คลังปลายทาง</th><th>ขอสั่ง</th><th>หน่วย</th><th style="text-align:right">ราคา/หน่วย</th><th style="text-align:right">ส่วนลด</th><th style="text-align:right">จำนวนเงิน</th><th></th></tr></thead>
           <tbody>
             <tr>
-              <td>1</td><td><div class="item-code"><a href="md1-item-master-mockup-v3.html" title="ดูทุน · ประวัติราคา · กำหนดราคา (MD-1)">DAI-FTKM24 💰↗</a></div></td>
+              <td>1</td><td><div class="item-code"><a href="bc365/item-master-mockup.html" title="ดูทุน · ประวัติราคา · กำหนดราคา (MD-1)">DAI-FTKM24 💰↗</a></div></td>
               <td><div class="item-name">แอร์ Daikin FTKM 24,000 BTU</div>
                   <div><span class="psi-chip">PSI · ซื้อ <b>0</b> · สต๊อก <b>45</b> · ขาย <b>62</b></span><span class="ref-chip">↩ ต่ำกว่าขั้นต่ำ (min 60 · เหลือ 45)</span></div></td>
               <td><span class="mos-chip crit">1.8</span></td>
@@ -340,7 +331,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
               <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
             </tr>
             <tr>
-              <td>2</td><td><div class="item-code"><a href="md1-item-master-mockup-v3.html" title="ดูทุน · ประวัติราคา (MD-1)">DAI-FTKM18 💰↗</a></div></td>
+              <td>2</td><td><div class="item-code"><a href="bc365/item-master-mockup.html" title="ดูทุน · ประวัติราคา (MD-1)">DAI-FTKM18 💰↗</a></div></td>
               <td><div class="item-name">แอร์ Daikin FTKM 18,000 BTU</div>
                   <div><span class="psi-chip">PSI · ซื้อ <b>0</b> · สต๊อก <b>60</b> · ขาย <b>55</b></span><span class="ref-chip">↩ ต่ำกว่าขั้นต่ำ (min 70 · เหลือ 60)</span></div></td>
               <td><span class="mos-chip ok">2.2</span></td>
@@ -353,7 +344,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
               <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
             </tr>
             <tr>
-              <td>3</td><td><div class="item-code"><a href="md1-item-master-mockup-v3.html" title="ดูทุน · ประวัติราคา (MD-1)">DAI-FTKM12 💰↗</a></div></td>
+              <td>3</td><td><div class="item-code"><a href="bc365/item-master-mockup.html" title="ดูทุน · ประวัติราคา (MD-1)">DAI-FTKM12 💰↗</a></div></td>
               <td><div class="item-name">แอร์ Daikin FTKM 12,000 BTU</div>
                   <div><span class="psi-chip">PSI · ซื้อ <b>0</b> · สต๊อก <b>120</b> · ขาย <b>96</b></span></div></td>
               <td><span class="mos-chip ok">2.5</span></td>
@@ -395,7 +386,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
         <div class="tabset-pane on" id="t-term">
           <div class="tab-grid">
             <span class="k">เงื่อนไขชำระ</span><span class="v">เครดิต 60 วัน · หลัง Invoice</span>
-            <span class="k">Vendor Commitment</span><span class="v">VC-MOU-2601-001 (Rebate 3%) · VC-SI-2604-007 (Sell-in 2% บนบิล) → auto-apply</span>
+            <span class="k">ข้อตกลงส่งเสริมการขาย (PO-2)</span><span class="v">AG-MOU-2601-001 (Rebate 3%) · AG-SI-2604-007 (Sell-in 2% บนบิล) → auto-apply</span>
             <span class="k">VAT</span><span class="v">7% บนบิล (Golden Rule: ส่วนลดก่อน VAT)</span>
           </div>
         </div>
@@ -438,11 +429,14 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     <!-- ④e NOTES -->
     <div class="card" style="padding:8px 12px;display:flex;align-items:center;gap:8px">
       <span style="font-size:12px;font-weight:600;color:#374151">🗒️ หมายเหตุ</span>
-      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="ขอสั่งเร่งด่วน FTKM24 (MOS 1.8 ด. ต่ำกว่าเกณฑ์) · ขอ Sell-in 2% บนบิลตาม VC-SI-2604-007 · กำหนดรับ 30 มิ.ย. 26">
+      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="ขอสั่งเร่งด่วน FTKM24 (MOS 1.8 ด. ต่ำกว่าเกณฑ์) · ขอ Sell-in 2% บนบิลตาม AG-SI-2604-007 · กำหนดรับ 30 มิ.ย. 26">
     </div>
 
   </div><!-- /content -->
 
+
+  <!-- ⑤ DOC-CHAIN แถบล่าง main -->
+  <div id="po1DcStrip" class="dc-strip"></div>
 </div><!-- /main -->
 </div><!-- /layout -->
 
@@ -498,6 +492,10 @@ function swtSbFilter(v){
   });
 }
 </script>
-<script src="swt-doc-finder.js"></script>
 <script src="swt-sidebar.js"></script>
-</body></html>
+<script src="swt-doc-finder.js"></script>
+<script src="swt-patterns.js"></script>
+<script src="swt-sc-modals.js"></script>
+<script src="swt-panels.js"></script>
+<script src="swt-sc-wire.js"></script>
+<sc

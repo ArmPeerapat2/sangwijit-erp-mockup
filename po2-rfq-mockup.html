@@ -1,67 +1,33 @@
 <!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<html lang="th"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PO-2 Trade Agreement / เงื่อนไข Vendor — Sangwijit ERP</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="swt-patterns.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
-.app-container{display:flex;min-height:100vh}
-.main-content{flex:1;margin-left:240px;padding:0;background:#F8FAFC}
-.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.breadcrumb{font-size:13px;color:#6B7280}
-.breadcrumb strong{color:#111827}
-.topbar-right{display:flex;align-items:center;gap:16px}
-.search-box{width:320px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;background:#F9FAFB}
-.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
-.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
-.content-wrapper{padding:24px}
-.btn{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
-.btn-primary{background:#2563EB;color:#fff}
-.btn-secondary{background:#fff;color:#374151;border:1px solid #D1D5DB}
-.btn-success{background:#10B981;color:#fff}
-.btn-danger{background:#EF4444;color:#fff}
+/* ═══════════════════════════════════════════════════════════════
+   PO-2 Trade Agreement / Vendor — rebuild บน _form-template.html (2026-06-12)
+   โซน: ①② unified-header → ③ SAAB → ④ content(a status · b party · c lines · d tabs+summary · e notes) → ⑤ doc-chain
+   จุดเฉพาะ PO-2: ส่วนลด 3 แบบเลือก "รายบรรทัด" · โควต้าเลือกหน่วย ตัว/บาท ·
+   เพิ่มสินค้าได้ 2 ทาง (SC product / Filter Scope แตกรายสินค้า) · Co-op = ลิสต์บันทึกความเข้าใจ
+   ═══════════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#111827;min-width:1280px;font-size:13px;line-height:1.45;height:100vh;overflow:hidden}
 
-.section-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:20px;margin-bottom:16px}
-.section-title{font-size:15px;font-weight:600;color:#111827;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.section-title .num{font-size:12px;font-weight:700;background:#F3F4F6;color:#6B7280;padding:2px 8px;border-radius:4px;font-family:monospace}
-.section-title .en{font-size:12px;font-weight:500;color:#9CA3AF;margin-left:auto}
-.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 16px}
-.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
-.form-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 16px}
-.field{display:flex;flex-direction:column;gap:4px}
-.field label{font-size:12px;color:#6B7280;font-weight:500;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
-.field label .en{font-size:10.5px;color:#9CA3AF;font-weight:400}
-.field .value{font-size:14px;color:#111827;padding:8px 10px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:6px;min-height:36px;display:flex;align-items:center;gap:6px}
-.field .value a{color:#2563EB;font-weight:600;text-decoration:none}
-.field .value a:hover{text-decoration:underline}
-.field .value.highlight{color:#2563EB;font-weight:700}
-.field input,.field select{padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;font-family:inherit;background:#fff;color:#111827;outline:none;width:100%}
+/* ① LAYOUT SHELL — fix เต็มจอ ไม่มี scroll หน้า */
+.layout{display:flex;height:100vh;overflow:hidden}
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;margin-left:240px}
 
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:#F9FAFB;padding:10px;text-align:left;font-weight:600;color:#374151;border-bottom:1px solid #E5E7EB;font-size:12px;text-transform:uppercase;letter-spacing:0.05em}
-td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827}
-.num{text-align:right;font-variant-numeric:tabular-nums}
-.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600}
-.chip-green{background:#D1FAE5;color:#065F46}
-.chip-yellow{background:#FEF3C7;color:#92400E}
-.chip-blue{background:#DBEAFE;color:#1E40AF}
-.chip-gray{background:#F3F4F6;color:#374151}
-.chip-violet{background:#EDE9FE;color:#5B21B6}
-.alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
-.alert-info{background:#DBEAFE;color:#1E40AF;border:1px solid #93C5FD}
-.alert-warn{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
+.topbar-search{display:flex;align-items:center;gap:8px;background:#F3F4F6;border-radius:8px;padding:6px 12px;font-size:13px;color:#9CA3AF;width:220px}
+.topbar-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#F3F4F6;cursor:pointer;font-size:16px}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.branch-sel{background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;font-size:11px;font-weight:600;padding:4px 8px;border-radius:20px;font-family:inherit;cursor:pointer}
 
-/* ─── MAIN HEADER (sl-4 pattern) ─── */
-.main-header{background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+/* ② MAIN HEADER bits */
 .mh-left{display:flex;align-items:center;gap:18px}
 .mh-title{display:flex;align-items:center;gap:10px}
 .mh-title .ico{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px}
-.mh-title h1{font-size:16px;font-weight:700;letter-spacing:-0.01em;line-height:1.15;margin:0}
-.mh-title p{font-size:11px;color:rgba(255,255,255,0.7);margin:1px 0 0}
+.mh-title h1{font-size:16px;font-weight:700;letter-spacing:-0.01em;line-height:1.15}
+.mh-title p{font-size:11px;color:rgba(255,255,255,0.7);margin-top:1px}
 .mh-divider{width:1px;height:32px;background:rgba(255,255,255,0.2)}
 .mh-meta{display:flex;gap:20px}
 .mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em}
@@ -69,501 +35,669 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827}
 .mh-right{display:flex;align-items:center;gap:8px}
 .mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(16,185,129,0.25);color:#A7F3D0;border:1px solid rgba(16,185,129,0.35)}
 .mh-badge.draft{background:rgba(251,191,36,0.2);color:#FCD34D;border-color:rgba(251,191,36,0.3)}
-.mh-badge.expired{background:rgba(239,68,68,0.25);color:#FECACA;border-color:rgba(239,68,68,0.35)}
 .mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid transparent;font-family:inherit;text-decoration:none}
 .mh-btn-ghost{background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.2)}
 .mh-btn-ghost:hover{background:rgba(255,255,255,0.22)}
 .mh-btn-primary{background:#10B981;color:#fff}
 .mh-btn-primary:hover{background:#059669}
 
-/* ─── SAAB (sl-4) ─── */
-.saab-wrap{background:transparent;margin-bottom:14px}
-.saab-trigger{height:5px;cursor:pointer;position:relative;background:linear-gradient(90deg,transparent 0%,rgba(37,99,235,0.35) 20%,rgba(37,99,235,0.55) 50%,rgba(37,99,235,0.35) 80%,transparent 100%);transition:background 0.15s}
-.saab-trigger:hover{background:linear-gradient(90deg,transparent 0%,#2563EB 20%,#1D4ED8 50%,#2563EB 80%,transparent 100%)}
-.saab-trigger::after{content:'⌄ action bar ⌄';letter-spacing:1px;position:absolute;top:4px;left:50%;transform:translateX(-50%) translateY(-4px);padding:1px 12px;border-radius:0 0 8px 8px;background:#2563EB;color:#fff;font-size:9px;font-weight:700;white-space:nowrap;opacity:0;transition:opacity 0.15s,transform 0.15s;pointer-events:none}
-.saab-wrap:hover .saab-trigger::after{opacity:1;transform:translateX(-50%) translateY(0)}
-.saab{background:#fff;border-bottom:2px solid #2563EB;padding:0 24px;display:flex;align-items:center;gap:10px;max-height:0;overflow:hidden;transition:max-height 0.25s ease,padding 0.25s ease;box-shadow:0 4px 12px rgba(37,99,235,0.12)}
-.saab-wrap:hover .saab,.saab-wrap.pinned .saab{max-height:70px;padding:10px 24px}
-.saab-wrap.pinned .saab-trigger{display:none}
-.saab .btn{padding:6px 12px;font-size:12px}
-.saab-status{font-size:11.5px;color:#6B7280}
-.saab-status strong{color:#111827}
-.saab-status .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#10B981;margin-right:4px;vertical-align:middle}
-.pin-btn{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid transparent;cursor:pointer;font-size:14px;color:#9CA3AF;transition:all 0.15s;font-family:inherit}
-.pin-btn:hover{background:#F3F4F6;color:#6B7280}
-.pin-btn.pinned{background:#FEF3C7;border-color:#FCD34D;color:#92400E;transform:rotate(-30deg)}
+/* ④ CONTENT */
+.content{flex:1;padding:10px 20px;display:flex;flex-direction:column;gap:8px;overflow:hidden;min-height:0}
 
-/* ─── STATUS STRIP — TA-adapted ─── */
-.status-strip{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:6px 12px;margin-bottom:14px}
-.ss-label{font-size:9px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.06em;padding:0 4px 0 0;white-space:nowrap}
-.sc11-pills{display:flex;gap:5px;flex-wrap:wrap}
-.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:10.5px;font-weight:600}
-.pill-success{background:#ECFDF5;color:#065F46}
-.pill-warning{background:#FEF3C7;color:#92400E}
-.pill-danger{background:#FEF2F2;color:#991B1B}
-.pill-info{background:#EFF6FF;color:#0C4A6E}
-.pill-accent{background:#F5F3FF;color:#5B21B6}
+/* CARD */
+.card{background:#fff;border-radius:8px;border:1px solid #E5E7EB;padding:14px;overflow:hidden}
+.card-header{display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid #F3F4F6;margin-bottom:8px}
+.card-title{font-size:12px;font-weight:600;color:#374151;display:flex;align-items:center;gap:6px}
+.card-title .ico{font-size:14px}
+.card-title .secno{font-size:10px;font-weight:700;background:#F3F4F6;color:#6B7280;padding:1px 6px;border-radius:4px;font-family:monospace}
+.card-spacer{flex:1}
+.card-btn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;background:transparent;border:1px solid #E5E7EB;color:#6B7280;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.card-btn:hover{background:#F9FAFB;color:#2563EB;border-color:#BFDBFE}
+.card-btn.primary{background:#EFF6FF;border-color:#BFDBFE;color:#2563EB}
+.card.compact{padding:8px 10px}
+.tpl-zone{font-size:9px;font-weight:700;color:#2563EB;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:4px;padding:1px 6px;margin-left:6px;text-transform:uppercase;letter-spacing:0.04em}
 
-/* TA-specific: usage bar (วงเงินใช้แล้ว / รวม) */
-.usage-bar{display:flex;align-items:center;gap:8px}
-.usage-track{width:120px;height:6px;background:#E5E7EB;border-radius:3px;overflow:hidden}
-.usage-fill{height:100%;background:linear-gradient(90deg,#10B981,#F59E0B);border-radius:3px}
-.usage-text{font-size:11px;color:#6B7280;font-weight:600;font-family:'Inter',monospace;white-space:nowrap}
+/* ROW LAYOUTS */
+.row-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row-bottom{display:grid;grid-template-columns:1.35fr 1fr;gap:10px;font-size:12px;height:150px}
+.row-bottom .tabset,.row-bottom>.card{overflow:auto}
+.content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
 
-/* Volume Tier table */
-.tier-table th,.tier-table td{padding:8px 10px;font-size:12.5px}
-.tier-table .tier-current{background:#ECFDF5}
-.tier-progress{display:inline-flex;align-items:center;gap:4px}
-.tier-progress .bar{width:60px;height:5px;background:#E5E7EB;border-radius:3px;overflow:hidden}
-.tier-progress .fill{height:100%;background:#10B981}
+/* FIELD */
+.field{display:flex;flex-direction:column;gap:2px;margin-bottom:4px}
+.field-label{font-size:10px;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.03em}
+.field-value{font-size:12.5px;color:#111827;font-weight:500}
+.field-value.highlight{font-weight:700;color:#2563EB;font-family:'Inter',monospace}
+.field-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:3px 14px}
+.mono{font-family:'Inter',monospace}
+
+/* STATUS STRIP (SC-12 mount) */
+.status-strip{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:4px 12px}
+
+/* PO-2.2 type compact */
+.po2-type-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.po2-type-select{min-width:330px;max-width:440px;padding:6px 10px;border:1px solid #E5E7EB;border-radius:6px;font-size:12.5px;font-family:inherit;background:#fff}
+.po2-kpi-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:14px;font-size:11px;font-weight:700;background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE}
+.po2-kpi-chip.ok{background:#ECFDF5;color:#065F46;border-color:#A7F3D0}
+.po2-flow-note{font-size:11px;color:#6B7280}
+
+/* ④c ITEMS TABLE — ตัวดูดพื้นที่เดียว */
+.items-card{padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1 1 0;min-height:0}
+.items-card .card-header{padding:10px 14px;margin:0;border-bottom:1px solid #E5E7EB}
+.items-card .items-wrap{flex:1;overflow-y:auto;min-height:0}
+table.items{width:100%;border-collapse:collapse;background:#fff}
+table.items thead{position:sticky;top:0;background:#F8FAFC;z-index:5}
+table.items thead th{padding:8px 8px;font-size:10px;font-weight:600;color:#6B7280;text-align:left;border-bottom:2px solid #E5E7EB;text-transform:uppercase;white-space:nowrap}
+table.items tbody td{padding:7px 8px;font-size:12px;color:#111827;border-bottom:1px solid #F3F4F6;vertical-align:top}
+table.items tbody tr:hover{background:#FAFBFC}
+table.items tbody tr.empty-row td{height:28px;color:#9CA3AF}
+table.items th,table.items td{border-right:1px solid #EDEFF2}
+table.items th:last-child,table.items td:last-child{border-right:none}
+.item-code{font-size:10.5px;color:#6B7280;font-family:'Inter',monospace;font-weight:600}
+.item-name{font-weight:500}
+.item-model{font-size:10.5px;color:#9CA3AF}
+.scope-chip{display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:3px;font-size:9.5px;font-weight:700;background:#FEF3C7;color:#92400E;margin-top:2px}
+.pick-chip{display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:3px;font-size:9.5px;font-weight:700;background:#EFF6FF;color:#1D4ED8;margin-top:2px}
+.line-mode{padding:3px 4px;border:1px solid #E5E7EB;border-radius:4px;font-size:11px;font-family:inherit;max-width:118px;background:#fff}
+.line-txt{width:100%;padding:3px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:11.5px;font-family:inherit}
+.line-num{width:74px;padding:3px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;text-align:right;font-family:'Inter',monospace}
+.line-num.sm{width:56px}
+.line-date{width:78px;padding:3px 4px;border:1px solid #E5E7EB;border-radius:4px;font-size:11px;font-family:'Inter',monospace;text-align:center}
+.quota-cell{display:flex;gap:3px;align-items:center}
+.quota-unit{padding:3px 2px;border:1px solid #E5E7EB;border-radius:4px;font-size:10.5px;font-family:inherit}
+input:disabled,select:disabled{background:#F3F4F6;color:#C2C8D0;cursor:not-allowed;border-color:#EDEFF2}
+.line-after{text-align:right;font-weight:700;font-family:'Inter',monospace;white-space:nowrap}
+.add-row-bar{padding:8px 14px;border-top:1px dashed #E5E7EB;display:flex;align-items:center;gap:14px;color:#2563EB;font-size:12px;font-weight:500;background:#FAFBFC;flex:none}
+.add-row-bar span.lnk{cursor:pointer}
+.add-row-bar span.lnk:hover{text-decoration:underline}
+.items-note{padding:5px 14px;border-top:1px solid #F3F4F6;background:#F0FDF4;font-size:10.5px;color:#6B7280;flex:none}
+
+/* ④d TABS + SUMMARY */
+.tabset{background:#fff;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden}
+.tabset-nav{display:flex;border-bottom:1px solid #E5E7EB;background:#F8FAFC}
+.tabset-nav button{padding:6px 12px;font-size:11px;font-weight:600;color:#6B7280;background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit}
+.tabset-nav button.on{color:#2563EB;border-bottom-color:#2563EB;background:#fff}
+.tabset-pane{display:none;padding:8px;min-height:40px}
+.tabset-pane.on{display:block}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:2px 0;font-size:11px}
+.summary-row .lbl{color:#6B7280}
+.summary-row .val{color:#111827;font-weight:600;font-family:'Inter',monospace}
+.summary-total{margin-top:4px;padding:6px 10px;background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);border-radius:6px;color:#fff;display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:700}
+.summary-total .val{color:#fff;font-family:'Inter',monospace}
+.row-bottom .card-header{padding-bottom:5px;margin-bottom:5px}
+.doc-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:10.5px;font-weight:600;background:#F3F4F6;color:#374151;margin:1px 2px}
+.doc-chip.ok{background:#D1FAE5;color:#065F46}
+.doc-chip.wait{background:#FEF3C7;color:#92400E}
+.mini-line{display:flex;align-items:center;gap:6px;padding:3px 6px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:5px;font-size:11px;line-height:1.35;margin-bottom:3px}
+.mini-k{font-size:9.5px;font-weight:700;color:#6B7280;text-transform:uppercase;min-width:64px}
+
+/* ⑤ DOC-CHAIN strip (fallback ถ้า swt-patterns ไม่โหลด) */
+.dc-strip{position:relative;flex:none;background:#fff;border-top:1px solid #E5E7EB;padding:6px 20px;display:flex;align-items:center;gap:8px;font-size:11px;z-index:20;box-shadow:0 -2px 8px rgba(0,0,0,0.04)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
+.btn-primary{background:#2563EB;color:#fff}.btn-success{background:#10B981;color:#fff}
+.btn-outline{background:#fff;color:#374151;border-color:#E5E7EB}
+.btn-ghost{background:transparent;color:#6B7280}
+.btn.sm{padding:4px 9px;font-size:11px}
+
+/* CHIPS */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.chip-green{background:#D1FAE5;color:#065F46}
+.chip-yellow{background:#FEF3C7;color:#92400E}
+.chip-blue{background:#DBEAFE;color:#1E40AF}
+.chip-gray{background:#F3F4F6;color:#374151}
+
+/* ─── Standard popup ─── */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.55);display:none;align-items:center;justify-content:center;z-index:1100;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{width:min(960px,96vw);max-height:88vh;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #E5E7EB;box-shadow:0 24px 48px rgba(15,23,42,.35);display:flex;flex-direction:column}
+.modal-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff}
+.modal-head .ttl{font-size:13px;font-weight:700;flex:1}
+.modal-head .sub{font-size:10.5px;color:rgba(255,255,255,.8)}
+.modal-close-x{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.16);color:#fff;border-radius:6px;padding:3px 9px;cursor:pointer;font-size:12px;font-family:inherit}
+.modal-close-x:hover{background:rgba(255,255,255,.25)}
+.modal-body{padding:14px;overflow:auto;background:#F8FAFC;flex:1}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:10px 14px;border-top:1px solid #E5E7EB;background:#fff}
+.modal table{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff}
+.modal th{background:#F9FAFB;padding:8px 10px;text-align:left;font-weight:600;color:#374151;border-bottom:1px solid #E5E7EB;font-size:11px;text-transform:uppercase}
+.modal td{padding:8px 10px;border-bottom:1px solid #F3F4F6}
+/* Filter scope modal */
+.scope-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.scope-grid .field select,.scope-grid .field input{padding:6px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:12px;font-family:inherit;background:#fff;width:100%}
+.scope-bar{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;margin-bottom:10px;font-size:12px}
+.scope-bar input{width:70px;padding:4px 8px;border:1px solid #BFDBFE;border-radius:5px;text-align:right;font-family:'Inter',monospace}
+
+/* SAAB more-menu fallback */
+.saab{display:flex;align-items:center;gap:6px;background:#fff;border-bottom:1px solid #E5E7EB;padding:5px 20px;flex-wrap:nowrap;flex:none}
+.saab-spacer{flex:1}
 </style>
+<link rel="stylesheet" href="swt-patterns.css">
 </head>
 <body>
 
+<div class="layout">
+<div class="main">
 
-<div class="app-container"><div class="main-content"><div class="topbar">
-<div class="breadcrumb">หน้าแรก › จัดซื้อ › <strong>PO-2 Trade Agreement</strong></div>
-<div class="topbar-right">
-<input class="search-box" placeholder="ค้นหา... (Ctrl+K)">
-<span>🔔</span>
-<span class="branch-tag">HQ · SWT</span>
-<div class="avatar">P</div>
-</div>
-</div>
-
-<!-- MAIN HEADER (sl-4 pattern) -->
-<header class="main-header">
-  <div class="mh-left">
-    <div class="mh-title">
-      <div class="ico">🤝</div>
-      <div>
-        <h1>Trade Agreement</h1>
-        <p>เงื่อนไขส่งเสริมการขายจาก Vendor (PO-2)</p>
+  <!-- ①② UNIFIED HEADER -->
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">จัดซื้อ <span class="sep">›</span> ส่งเสริมการขาย <span class="sep">›</span> <span class="current">PO-2 Trade Agreement / Vendor</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+        <div class="topbar-icon">🔔</div>
+        <select class="branch-sel" title="สาขา"><option>🏢 HQ · SWT</option></select>
+        <select class="branch-sel" title="แผนก"><option>แผนกจัดซื้อ</option><option>บัญชี</option></select>
+        <div class="topbar-avatar">P</div>
       </div>
     </div>
-    <div class="mh-divider"></div>
-    <div class="mh-meta">
-      <div class="mh-meta-item"><div class="lbl">เลขที่ TA</div><div class="val">TA-2604-0015</div></div>
-      <div class="mh-meta-item"><div class="lbl">Vendor</div><div class="val">Daikin (TH)</div></div>
-      <div class="mh-meta-item"><div class="lbl">รอบสัญญา</div><div class="val">Q2 2026 · เม.ย.-มิ.ย.</div></div>
-    </div>
-  </div>
-  <div class="mh-right">
-    <span class="mh-badge">✓ Active</span>
-    <span class="mh-badge" style="background:rgba(16,185,129,0.25);color:#A7F3D0;border-color:rgba(16,185,129,0.35)" title="CN ส่งตรงเวลา · ยังไม่ trigger Sanction">🛡 CN On-time</span>
-    <button class="mh-btn mh-btn-primary">💾 บันทึกเงื่อนไข</button>
-    <span style="font-size:10px;color:rgba(255,255,255,0.55);margin-left:6px">⌄ hover</span>
-  </div>
-</header>
-
-<!-- SAAB -->
-<div class="saab-wrap" id="saabWrap">
-  <div class="saab-trigger" title="hover / กด 📌 ปักหมุด"></div>
-  <div class="saab">
-    <button class="btn btn-secondary">💾 Save Draft</button>
-    <button class="btn btn-secondary">📋 Copy จาก TA เก่า</button>
-    <button class="btn btn-secondary">📎 แนบสัญญา PDF</button>
-    <button class="btn btn-secondary">🖨️ พิมพ์</button>
-    <button class="btn btn-secondary">📜 ประวัติแก้ไข</button>
-    <button class="btn btn-secondary" style="color:#EF4444">⚠ ยกเลิกสัญญา</button>
-    <div style="flex:1"></div>
-    <span class="saab-status"><span class="dot"></span>สถานะ: <strong>Active</strong> · ใช้กับ 4 PO · เริ่มใช้ 1 เม.ย. 26</span>
-    <button class="pin-btn" id="pinBtn" onclick="po2TogglePin()" title="ปักหมุดแถบเครื่องมือ">📌</button>
-  </div>
-</div>
-
-<div class="content-wrapper">
-
-<!-- STATUS STRIP — TA-adapted -->
-<div class="status-strip">
-  <span class="ss-label">SC11</span>
-  <div class="sc11-pills">
-    <span class="pill pill-success">✓ <strong>Tier</strong> ปัจจุบัน T2 (3%)</span>
-    <span class="pill pill-info">🎯 <strong>Rebate</strong> 3% Q-end</span>
-    <span class="pill pill-warning">⌛ <strong>Settle</strong> ทุก Q ปลายเดือน</span>
-    <span class="pill pill-accent">📜 <strong>Linked</strong> 4 PO</span>
-  </div>
-  <div class="usage-bar" title="ยอดสะสม Q2 → 1.36M / target 2M">
-    <span class="ss-label">Q2 Progress</span>
-    <div class="usage-track"><div class="usage-fill" style="width:68%"></div></div>
-    <span class="usage-text">฿1.36M / ฿2.00M (68%)</span>
-  </div>
-</div>
-
-<div class="alert alert-info">💡 <b>Vendor Commitment (PO-2)</b> = <b>1 record / 1 type</b> · ไม่รวม 4 types ในใบเดียว · 1 สินค้า/Vendor มีหลาย VC พร้อมกันได้ (เช่น LG TT10 = 5 records: 2 MOU + 1 Sell-in + 1 Sell-out + 1 Co-op) · ดูทั้งหมดที่ <b>List view ↓</b></div>
-
-<!-- ═══ Section PO-2.1 — Vendor Card | Agreement Meta Card (sl-1 pattern) ═══ -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-
-  <!-- Vendor Card -->
-  <div class="swt-cust-card">
-    <div class="swt-cust-head">
-      <div class="swt-cust-title"><span class="ico">🏭</span>Vendor (คู่สัญญา)</div>
-      <div class="swt-cust-head-spacer"></div>
-      <a href="md3-vendor-master-mockup-v3.html" class="swt-cust-btn">👁️ ดูบัตร</a>
-      <button class="swt-cust-btn primary" data-vendor-search>🔍 เปลี่ยน</button>
-    </div>
-
-    <div class="swt-cust-grid">
-      <div class="swt-cust-field">
-        <div class="swt-cust-label">รหัส · ชื่อ</div>
-        <div class="swt-cust-value"><span class="highlight">V-00045</span> · Daikin Industries (TH) Ltd.</div>
+    <div class="uh-main">
+      <div class="mh-left">
+        <div class="mh-title">
+          <div class="ico">🤝</div>
+          <div><h1>Trade Agreement</h1><p>ข้อตกลงส่งเสริมการขายจาก Vendor (PO-2)</p></div>
+        </div>
+        <div class="mh-divider"></div>
+        <div class="mh-meta">
+          <div class="mh-meta-item"><div class="lbl">เลขที่ข้อตกลง</div><div class="val" id="mhAgNo">AG-SI-2604-005</div></div>
+          <div class="mh-meta-item"><div class="lbl">Vendor</div><div class="val">Daikin (TH)</div></div>
+          <div class="mh-meta-item"><div class="lbl">รอบสัญญา</div><div class="val">Q2 2026 · เม.ย.-มิ.ย.</div></div>
+        </div>
       </div>
-      <div class="swt-cust-field">
-        <div class="swt-cust-label">เบอร์ · เลขภาษี</div>
-        <div class="swt-cust-value">02-715-9888 · <span class="mono">0-1055-12345-67-8</span></div>
+      <div class="mh-right">
+        <span class="mh-badge" id="mhStatusBadge">✓ Active</span>
+        <span class="mh-badge" title="CN ส่งตรงเวลา · ยังไม่ trigger Sanction">🛡 CN On-time</span>
+        <button class="mh-btn mh-btn-primary">💾 บันทึกข้อตกลง</button>
+        <button class="mh-btn mh-btn-ghost">🔏 ส่งให้เซลเซ็นสัญญา</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ③ SAAB ย่อ -->
+  <div class="saab saab-compact">
+    <button class="btn btn-outline" onclick="dfOpen()" title="ค้นหา/เปิดข้อตกลงเก่า (shared swt-doc-finder.js)">📂 เปิดเอกสารเก่า</button>
+    <button class="btn btn-outline" onclick="po2CopyDoc()" title="clone ข้อตกลง → เลขใหม่ · reset วันที่/ลายเซ็น · สถานะร่าง">📋 Copy ข้อตกลง</button>
+    <button class="btn btn-outline" onclick="po2OpenPrint()">🖨️ พิมพ์</button>
+    <button class="btn btn-outline" onclick="openModal('mPo2UploadedDocs')">📎 แนบหลักฐาน</button>
+    <div class="saab-more-wrap">
+      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
+      <div class="saab-more-menu">
+        <button type="button" class="btn btn-outline btn-menu">💾 Save Draft</button>
+        <button type="button" class="btn btn-success btn-menu" onclick="location.href='po7-rebate-dashboard.html'">↪ ไป PO-7 สรุปงบจัดซื้อ</button>
+        <button type="button" class="btn btn-ghost btn-menu" style="color:#EF4444">❌ ยกเลิกข้อตกลง</button>
+      </div>
+    </div>
+    <div class="saab-spacer"></div>
+  </div>
+
+  <div class="content">
+
+    <!-- ④a SC-12 Status strip + Gate -->
+    <div id="po2Sc12" class="status-strip"></div>
+    <div id="po2Gate" class="gate-alert"></div>
+
+    <!-- ④b ROW-2COL: PO-2.1 Vendor (SC-3) + ข้อมูลสัญญา -->
+    <div class="row-2col">
+      <div class="card compact">
+        <div class="card-header">
+          <div class="card-title"><span class="secno">PO-2.1</span><span class="ico">🏭</span>Vendor (คู่สัญญา) <span class="tpl-zone">SC-3</span></div>
+          <div class="card-spacer"></div>
+          <a href="md3-vendor-master-mockup-v3.html" class="card-btn" target="_blank">👁️ ดูบัตร</a>
+          <button class="card-btn primary" onclick="dfOpenVend()">🔍 เลือก/เปลี่ยน</button>
+        </div>
+        <div class="field-grid-2">
+          <div class="field"><div class="field-label">รหัส · ชื่อ</div><div class="field-value"><span class="highlight">V-00045</span> · Daikin Industries (TH) Ltd.</div></div>
+          <div class="field"><div class="field-label">เบอร์ · เลขภาษี</div><div class="field-value">02-715-9888 · 0-1055-12345-67-8</div></div>
+          <div class="field"><div class="field-label">ที่อยู่หลัก</div><div class="field-value">123 ถ.พหลโยธิน เขตจตุจักร กทม. 10900</div></div>
+          <div class="field"><div class="field-label">เงื่อนไขชำระ · AP ค้าง</div><div class="field-value">Credit 60 วัน · <span style="color:#EF4444;font-weight:700">AP ฿1,240,000</span></div></div>
+        </div>
+      </div>
+      <div class="card compact">
+        <div class="card-header">
+          <div class="card-title"><span class="secno">PO-2.1b</span><span class="ico">🤝</span>ข้อมูลสัญญา &amp; ผู้รับผิดชอบ</div>
+          <div class="card-spacer"></div>
+          <button class="card-btn" onclick="dfOpenRef({docType:'PO'})" title="อ้างอิงเอกสารต้นทาง (ถ้ามี · ไม่บังคับ)">🔗 อ้างอิงเอกสาร</button>
+          <button class="card-btn">📜 ประวัติแก้ไข</button>
+        </div>
+        <div class="field-grid-2">
+          <div class="field"><div class="field-label">เลขที่ข้อตกลง · รอบ</div><div class="field-value"><span class="highlight" id="metaAgNo">AG-SI-2604-005</span> · 01/04/26 - 30/06/26 (เหลือ 67 วัน)</div></div>
+          <div class="field"><div class="field-label">ผู้รับผิดชอบ</div><div class="field-value">K.อำนาจ (จัดซื้อ)</div></div>
+          <div class="field"><div class="field-label">เอกสารแนบ</div><div class="field-value">main-agreement.pdf · sign-photo-01.jpg <button class="card-btn" onclick="openModal('mPo2UploadedDocs')">📁 ดูไฟล์</button></div></div>
+          <div class="field"><div class="field-label">สถานะ</div><div class="field-value" id="metaStatus"><span class="chip chip-green">✓ Active</span> <span class="chip chip-yellow">เซลเซ็น 16/4</span></div></div>
+        </div>
       </div>
     </div>
 
-    <div class="swt-credit-line">
-      <div class="cell"><span class="lbl">AP คงค้าง</span><span class="val r">฿1,250,000</span></div>
-      <div class="cell"><span class="lbl">PO Active</span><span class="val b">4 ใบ</span></div>
-      <div class="cell"><span class="lbl">Tier</span><span class="val g">T2 · 3%</span></div>
-      <div class="cell"><span class="lbl">🛡 CN</span><span class="val g">On-time</span></div>
-    </div>
-
-    <span class="swt-addr-chip" onclick="this.nextElementSibling.open=!this.nextElementSibling.open">📍 ที่อยู่ (2) ▼</span>
-    <details class="swt-addr">
-      <summary style="display:none"></summary>
-      <div class="swt-addr-line"><strong>Billing</strong>123 ถ.พหลโยธิน เขตจตุจักร กทม. 10900</div>
-      <div class="swt-addr-line"><strong>Pickup</strong>โรงงาน Bang Bo · ถ.บางนา-ตราด km 27 ฉะเชิงเทรา 24130</div>
-    </details>
-  </div>
-
-  <!-- Agreement Meta Card -->
-  <div class="swt-cust-card">
-    <div class="swt-cust-head">
-      <div class="swt-cust-title"><span class="ico">🤝</span>ข้อมูลสัญญา &amp; ผู้รับผิดชอบ</div>
-      <div class="swt-cust-head-spacer"></div>
-      <button class="swt-cust-btn">📜 ประวัติแก้ไข</button>
-    </div>
-
-    <div class="swt-cust-grid">
-      <div class="swt-cust-field">
-        <div class="swt-cust-label">เลขที่ TA · วันที่สร้าง</div>
-        <div class="swt-cust-value"><span class="highlight">TA-2604-0015</span> · 28 มี.ค. 26</div>
-      </div>
-      <div class="swt-cust-field">
-        <div class="swt-cust-label">ผู้รับผิดชอบ</div>
-        <div class="swt-cust-value">K.อำนาจ · จัดซื้อ</div>
-      </div>
-      <div class="swt-cust-field">
-        <div class="swt-cust-label">รอบสัญญา (Period)</div>
-        <div class="swt-cust-value">1 เม.ย. — 30 มิ.ย. 26</div>
-      </div>
-      <div class="swt-cust-field">
-        <div class="swt-cust-label">เหลือถึงหมดอายุ</div>
-        <div class="swt-cust-value warn">67 วัน</div>
+    <!-- PO-2.2 ประเภทข้อตกลง (1 record = 1 type · ส่วนลดเลือกรายบรรทัด) -->
+    <div class="card compact">
+      <div class="po2-type-row">
+        <span class="card-title"><span class="secno">PO-2.2</span><span class="ico">🎯</span>ประเภทข้อตกลง</span>
+        <select id="agreementTypeSelect" class="po2-type-select" onchange="po2TypeChange(this.value)">
+          <option value="mou">① MOU — วางกรอบยอดซื้อ/รับสินค้า</option>
+          <option value="si" selected>② Sell-in — ฝั่งการซื้อ (หมวด/รุ่น)</option>
+          <option value="so">③ Sell-out — อ้างอิงยอดขายออก ตามช่วงวันที่</option>
+          <option value="co">④ Co-op — งบสนับสนุน (บันทึกความเข้าใจ)</option>
+        </select>
+        <span class="po2-kpi-chip">ใช้ใน PO: 2 ใบ</span>
+        <span class="po2-kpi-chip">ยอดใช้สิทธิ์: ฿1,960,000</span>
+        <span class="po2-kpi-chip ok">Recovery 100% · CN ฿88,200</span>
+        <span class="po2-flow-note">1 record = 1 type · แบบส่วนลด <b>เลือกรายบรรทัด</b> ใน PO-2.3</span>
       </div>
     </div>
 
-    <div class="swt-cust-field" style="margin-top:10px">
-      <div class="swt-cust-label">เอกสารอ้างอิง · Contract</div>
-      <div class="swt-cust-value">📎 <a href="#" style="color:#2563EB;font-weight:600;text-decoration:none">Daikin-MOU-2026-Q2.pdf ↗</a> <span style="color:#9CA3AF;font-size:10px;margin-left:8px">2.4 MB · เซ็น 28 มี.ค.</span></div>
+    <!-- ④c PO-2.3 LINE รายการสินค้า + เงื่อนไขส่วนลด -->
+    <div class="card items-card">
+      <div class="card-header">
+        <div class="card-title"><span class="secno">PO-2.3</span><span class="ico">📦</span><span id="po23Title">รายการสินค้า + เงื่อนไขส่วนลด</span> <span class="tpl-zone">SC-2</span></div>
+        <div class="card-spacer"></div>
+        <button class="card-btn primary" onclick="dfOpenProd()" id="btnAddProd">🔍 เพิ่มสินค้า</button>
+        <button class="card-btn" onclick="openModal('mPo2Scope')" id="btnAddScope" title="เลือก ประเภท/ยี่ห้อ/หมวด/สินค้า หลายเงื่อนไข → ระบบแตกเป็นรายสินค้า">⚡ เพิ่มจาก Filter Scope</button>
+      </div>
+
+      <!-- ตารางโหมดสินค้า (MOU / Sell-in / Sell-out) -->
+      <div class="items-wrap" id="prodTableWrap">
+        <table class="items">
+          <thead><tr>
+            <th style="width:28px">#</th>
+            <th>สินค้า</th>
+            <th style="width:122px">แบบส่วนลด</th>
+            <th style="width:110px">รายละเอียดบิล</th>
+            <th style="width:116px">เลขที่อ้างอิง/เอกสาร</th>
+            <th style="width:84px">วันที่</th>
+            <th style="width:128px">โควต้า</th>
+            <th style="width:80px;text-align:right">ลด ฿/ตัว</th>
+            <th style="width:62px;text-align:right">ลด %</th>
+            <th style="width:88px;text-align:right">ราคาหลังลด</th>
+            <th style="width:30px"></th>
+          </tr></thead>
+          <tbody id="po23Rows">
+            <tr data-price="6490">
+              <td>1</td>
+              <td><div class="item-code">RF-1001</div><div class="item-name">ตู้เย็น Daikin 1 ประตู 6.4Q</div><div><span class="pick-chip">🔍 เลือกเอง</span></div></td>
+              <td><select class="line-mode" onchange="po2LineMode(this)"><option value="m1" selected>① ลดบาท/ตัว</option><option value="m2">② ลด %</option><option value="m3">③ ลด+โควต้า</option></select></td>
+              <td><input class="line-txt" value="บิลหลัก Q2"></td>
+              <td><input class="line-txt" value="AG-SI-2604-005"></td>
+              <td><input class="line-date" value="15/04/26"></td>
+              <td><div class="quota-cell"><input class="line-num sm" value="" placeholder="—" disabled><select class="quota-unit" disabled><option>ตัว</option><option>บาท</option></select></div></td>
+              <td style="text-align:right"><input class="line-num" value="300" oninput="po2Recalc(this)"></td>
+              <td style="text-align:right"><input class="line-num sm" value="" disabled></td>
+              <td class="line-after">6,190.00</td>
+              <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
+            </tr>
+            <tr data-price="8990">
+              <td>2</td>
+              <td><div class="item-code">RF-1005</div><div class="item-name">ตู้เย็น Daikin 2 ประตู 7.9Q</div><div><span class="pick-chip">🔍 เลือกเอง</span></div></td>
+              <td><select class="line-mode" onchange="po2LineMode(this)"><option value="m1" selected>① ลดบาท/ตัว</option><option value="m2">② ลด %</option><option value="m3">③ ลด+โควต้า</option></select></td>
+              <td><input class="line-txt" value="บิลหลัก Q2"></td>
+              <td><input class="line-txt" value="AG-SI-2604-005"></td>
+              <td><input class="line-date" value="15/04/26"></td>
+              <td><div class="quota-cell"><input class="line-num sm" value="" placeholder="—" disabled><select class="quota-unit" disabled><option>ตัว</option><option>บาท</option></select></div></td>
+              <td style="text-align:right"><input class="line-num" value="250" oninput="po2Recalc(this)"></td>
+              <td style="text-align:right"><input class="line-num sm" value="" disabled></td>
+              <td class="line-after">8,740.00</td>
+              <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
+            </tr>
+            <tr data-price="12900">
+              <td>3</td>
+              <td><div class="item-code">TV-3002</div><div class="item-name">TV Daikin Smart 43"</div><div><span class="pick-chip">🔍 เลือกเอง</span></div></td>
+              <td><select class="line-mode" onchange="po2LineMode(this)"><option value="m1">① ลดบาท/ตัว</option><option value="m2">② ลด %</option><option value="m3" selected>③ ลด+โควต้า</option></select></td>
+              <td><input class="line-txt" value="แคมเปญเปิดตัว"></td>
+              <td><input class="line-txt" value="PR-2604-0031"></td>
+              <td><input class="line-date" value="20/04/26"></td>
+              <td><div class="quota-cell"><input class="line-num sm" value="50" oninput="po2Recalc(this)"><select class="quota-unit"><option selected>ตัว</option><option>บาท</option></select></div></td>
+              <td style="text-align:right"><input class="line-num" value="500" oninput="po2Recalc(this)"></td>
+              <td style="text-align:right"><input class="line-num sm" value="" disabled></td>
+              <td class="line-after">12,400.00</td>
+              <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
+            </tr>
+            <tr data-price="15900">
+              <td>4</td>
+              <td><div class="item-code">AC-2001</div><div class="item-name">แอร์ Daikin Inverter 12000 BTU</div><div><span class="scope-chip">⚡ จาก scope: แอร์ · Daikin</span></div></td>
+              <td><select class="line-mode" onchange="po2LineMode(this)"><option value="m1">① ลดบาท/ตัว</option><option value="m2" selected>② ลด %</option><option value="m3">③ ลด+โควต้า</option></select></td>
+              <td><input class="line-txt" value="จาก scope"></td>
+              <td><input class="line-txt" value="AG-SI-2604-005"></td>
+              <td><input class="line-date" value="15/04/26"></td>
+              <td><div class="quota-cell"><input class="line-num sm" value="" placeholder="—" disabled><select class="quota-unit" disabled><option>ตัว</option><option>บาท</option></select></div></td>
+              <td style="text-align:right"><input class="line-num" value="" disabled></td>
+              <td style="text-align:right"><input class="line-num sm" value="3" oninput="po2Recalc(this)"></td>
+              <td class="line-after">15,423.00</td>
+              <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
+            </tr>
+            <tr data-price="21900">
+              <td>5</td>
+              <td><div class="item-code">AC-2008</div><div class="item-name">แอร์ Daikin Inverter 18000 BTU</div><div><span class="scope-chip">⚡ จาก scope: แอร์ · Daikin</span></div></td>
+              <td><select class="line-mode" onchange="po2LineMode(this)"><option value="m1">① ลดบาท/ตัว</option><option value="m2" selected>② ลด %</option><option value="m3">③ ลด+โควต้า</option></select></td>
+              <td><input class="line-txt" value="จาก scope"></td>
+              <td><input class="line-txt" value="AG-SI-2604-005"></td>
+              <td><input class="line-date" value="15/04/26"></td>
+              <td><div class="quota-cell"><input class="line-num sm" value="" placeholder="—" disabled><select class="quota-unit" disabled><option>ตัว</option><option>บาท</option></select></div></td>
+              <td style="text-align:right"><input class="line-num" value="" disabled></td>
+              <td style="text-align:right"><input class="line-num sm" value="3" oninput="po2Recalc(this)"></td>
+              <td class="line-after">21,243.00</td>
+              <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
+            </tr>
+            <tr class="empty-row"><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ตารางโหมดบันทึกความเข้าใจ (Co-op) -->
+      <div class="items-wrap" id="memoTableWrap" style="display:none">
+        <table class="items">
+          <thead><tr>
+            <th style="width:28px">#</th>
+            <th style="width:150px">หัวข้อ</th>
+            <th>รายละเอียดบันทึกความเข้าใจ</th>
+            <th style="width:160px">ผู้รับผิดชอบ</th>
+            <th style="width:110px">งบ (บาท)</th>
+            <th style="width:180px">เอกสารแนบ</th>
+            <th style="width:30px"></th>
+          </tr></thead>
+          <tbody>
+            <tr><td>1</td><td><b>วัตถุประสงค์</b></td><td>สนับสนุนงบกิจกรรมเปิดตัวสินค้าใหม่ Q2 — ระบุ KPI/ผลลัพธ์ที่คาดหวัง</td><td>จัดซื้อ + Vendor</td><td class="mono" style="text-align:right">150,000</td><td><span class="doc-chip ok">campaign-brief.pdf</span></td><td></td></tr>
+            <tr><td>2</td><td><b>ขอบเขตความรับผิดชอบ</b></td><td>ร้าน: จัดพื้นที่ + พนักงาน · Vendor: สนับสนุนงบ + สื่อ POP</td><td>ผจก.สาขา / เซล Daikin</td><td class="mono" style="text-align:right">—</td><td><span class="doc-chip ok">responsibility-matrix.docx</span></td><td></td></tr>
+            <tr><td>3</td><td><b>เงื่อนไขการยืนยัน</b></td><td>รูปกิจกรรม + รายงานผล + เอกสารเซ็นรับรอง — ยืนยันเมื่อเอกสารครบ</td><td>จัดซื้อ</td><td class="mono" style="text-align:right">—</td><td><span class="doc-chip wait">event-photo-set.zip รอ</span></td><td></td></tr>
+            <tr><td>4</td><td><b>สถานะติดตาม</b></td><td>ติดตามเป้า/จริง/Adj ผ่าน PO-7 สรุปงบจัดซื้อ — ยืนยันรายงวด</td><td>จัดซื้อ</td><td class="mono" style="text-align:right">—</td><td><span class="doc-chip">po7-reference-note.pdf</span></td><td></td></tr>
+            <tr class="empty-row"><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="add-row-bar" id="addRowBar">
+        <span class="lnk" onclick="dfOpenProd()">🔍 + เพิ่มสินค้า (SC-2 product picker)</span>
+        <span class="lnk" onclick="openModal('mPo2Scope')" style="color:#92400E">⚡ + เพิ่มจาก Filter Scope — แตกเป็นรายสินค้า</span>
+      </div>
+      <div class="items-note" id="po23Note">⚠️ ส่วนลดทุกแบบหักก่อน VAT เสมอ (VAT Golden Rule) · แบบ② % เก็บที่ scope แล้วระบบลิสต์เป็นรายสินค้าให้ทั้งหมด · แบบ③ บังคับกรอกโควต้า (เลือกหน่วย ตัว/บาท)</div>
     </div>
-  </div>
 
-</div>
+    <!-- ④d ROW-BOTTOM: Tabs (PO-2.4 หลักฐาน · PO-2.5 เซ็นยืนยัน · ประวัติ) + สรุปข้อตกลง -->
+    <div class="row-bottom">
+      <div class="tabset">
+        <div class="tabset-nav">
+          <button class="on" onclick="swTab(event,'t-evidence')">📎 หลักฐานอ้างอิง (PO-2.4)</button>
+          <button onclick="swTab(event,'t-sign')">✍️ Approval · เซลเซ็น (PO-2.5)</button>
+          <button onclick="swTab(event,'t-hist')">🕓 ประวัติ <span class="tpl-zone">SC-7</span></button>
+        </div>
+        <div class="tabset-pane on" id="t-evidence">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+            <button class="btn btn-outline sm">➕ แนบภาพ/ประกาศส่งเสริมการขาย</button>
+            <button class="btn btn-outline sm" onclick="openModal('mPo2UploadedDocs')">📁 ดูไฟล์ทั้งหมด (Popup)</button>
+          </div>
+          <span class="doc-chip ok">📄 AG-SI-2604-005-main-agreement.pdf ✓</span>
+          <span class="doc-chip ok">📝 meeting-note-scope.docx ✓</span>
+          <span class="doc-chip ok">📢 promo-announcement-q2.jpg ✓</span>
+          <span class="doc-chip wait">🖼 sign-photo-01.jpg รอตรวจ</span>
+          <span class="doc-chip wait">🖼 sign-photo-02.jpg รอตรวจ</span>
+        </div>
+        <div class="tabset-pane" id="t-sign">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+            <button class="btn btn-primary sm">📤 ส่งคำขอให้เซลเซ็น</button>
+            <button class="btn btn-outline sm">🖨️ พิมพ์ใบยืนยัน</button>
+            <button class="btn btn-outline sm">🔗 สร้างลิงก์เซ็นในระบบ</button>
+            <button class="btn btn-outline sm">📎 แนบไฟล์ที่เซ็นแล้ว</button>
+            <button class="btn btn-outline sm" onclick="openModal('mPo2SignedDocs')">👁️ ดูหลักฐานการเซ็น</button>
+            <button class="btn btn-outline sm">✅ ยืนยันว่าเซลเซ็นแล้ว</button>
+          </div>
+          <div class="mini-line"><span class="mini-k">อนุมัติภายใน</span>K.อำนาจ (ผจก.จัดซื้อ) ✓ 15/4 14:20 · Activate ✓ 15/4 16:00</div>
+          <div class="mini-line"><span class="mini-k">เซลเซ็น</span>คุณกฤตธี (Daikin) · ลิงก์เซ็น ✓ 16/4 09:30 · สแกนกระดาษรอตรวจ</div>
+        </div>
+        <div class="tabset-pane" id="t-hist">
+          <div class="mini-line"><span class="mini-k">28/03 09:41</span>K.อำนาจ สร้างข้อตกลง + แนบ main-agreement.pdf</div>
+          <div class="mini-line"><span class="mini-k">15/04 14:20</span>ผจก.จัดซื้อ อนุมัติ → Activate 16:00</div>
+          <div class="mini-line"><span class="mini-k">16/04 09:30</span>เซลเซ็นผ่านลิงก์ในระบบ ✓</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="ico">💰</span>สรุปข้อตกลง</div></div>
+        <div class="summary-row"><span class="lbl">รายการสินค้าในข้อตกลง</span><span class="val" id="sumLines">5 รายการ</span></div>
+        <div class="summary-row"><span class="lbl">โควต้ารวม (แบบ③)</span><span class="val">50 ตัว</span></div>
+        <div class="summary-row"><span class="lbl">ประมาณการส่วนลดรวม</span><span class="val" style="color:#10B981">฿117,700</span></div>
+        <div class="summary-row"><span class="lbl">ยอดใช้สิทธิ์แล้ว (จาก PO)</span><span class="val">฿1,960,000</span></div>
+        <div class="summary-row"><span class="lbl">CN รับคืนแล้ว</span><span class="val" style="color:#10B981">฿88,200</span></div>
+        <div class="summary-total"><span>Recovery</span><span class="val">100%</span></div>
+      </div>
+    </div>
 
-<!-- ═══ View Tabs (Form / List) ═══ -->
-<div style="display:flex;gap:0;border-bottom:2px solid #E5E7EB;margin-bottom:16px;align-items:center">
-  <button onclick="vcSwView(this,'vcForm')" class="vc-vtab active" style="padding:12px 20px;background:transparent;border:none;border-bottom:2px solid #2563EB;margin-bottom:-2px;font-size:14px;font-weight:600;color:#2563EB;cursor:pointer;font-family:inherit">📋 Form view <span style="font-size:11px;color:#6B7280;font-weight:500;margin-left:4px">(VC-SI-2604-005)</span></button>
-  <button onclick="vcSwView(this,'vcList')" class="vc-vtab" style="padding:12px 20px;background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;font-size:14px;font-weight:500;color:#6B7280;cursor:pointer;font-family:inherit">📊 List view <span style="font-size:11px;background:#F3F4F6;color:#374151;padding:2px 8px;border-radius:10px;margin-left:4px">5</span></button>
-  <span style="flex:1"></span>
-  <button class="btn btn-primary" style="padding:6px 14px;font-size:12px">+ สร้าง VC ใหม่</button>
-</div>
+    <!-- ④e NOTES -->
+    <div class="card" style="padding:6px 12px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:12px;font-weight:600;color:#374151">🗒️ หมายเหตุ</span>
+      <input style="flex:1;padding:4px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" placeholder="หมายเหตุท้ายข้อตกลง…">
+    </div>
 
-<!-- ═══════ FORM VIEW ═══════ -->
-<div id="vcForm" class="vc-vpane">
+  </div><!-- /content -->
 
-<!-- ═══ Section PO-2.2: Type Selector ═══ -->
-<div class="section-card">
-  <div class="section-title"><span class="num">PO-2.2</span>🎯 ประเภทส่งเสริมการขาย
-    <span class="en">Trade Promotion Type · 1 type per record</span>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:8px">
-    <button onclick="vcSwType(this,'mou')" class="vc-typebtn" data-type="mou" style="padding:14px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;cursor:pointer;font-family:inherit;text-align:left">
-      <div style="font-size:13px;font-weight:700;color:#065F46">🟢 ① MOU</div>
-      <div style="font-size:11px;color:#6B7280;margin-top:2px">ซื้อถึงเป้า สิ้น Q/Y</div>
-      <div style="font-size:10.5px;color:#9CA3AF;margin-top:4px">Scope: <b>รายหมวด</b></div>
-    </button>
-    <button onclick="vcSwType(this,'si')" class="vc-typebtn active" data-type="si" style="padding:14px;border:2px solid #2563EB;border-radius:8px;background:#EFF6FF;cursor:pointer;font-family:inherit;text-align:left">
-      <div style="font-size:13px;font-weight:700;color:#1E40AF">🔵 ② Sell-in ⭐</div>
-      <div style="font-size:11px;color:#1D4ED8;margin-top:2px">ส่วนลดทันทีตอน PO</div>
-      <div style="font-size:10.5px;color:#1D4ED8;margin-top:4px">Scope: หมวด/<b>รายรุ่น</b></div>
-    </button>
-    <button onclick="vcSwType(this,'so')" class="vc-typebtn" data-type="so" style="padding:14px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;cursor:pointer;font-family:inherit;text-align:left">
-      <div style="font-size:13px;font-weight:700;color:#92400E">🟡 ③ Sell-out</div>
-      <div style="font-size:11px;color:#6B7280;margin-top:2px">จ่ายเมื่อขายออกสำเร็จ</div>
-      <div style="font-size:10.5px;color:#9CA3AF;margin-top:4px">Scope: หมวด/<b>รายรุ่น</b></div>
-    </button>
-    <button onclick="vcSwType(this,'co')" class="vc-typebtn" data-type="co" style="padding:14px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;cursor:pointer;font-family:inherit;text-align:left">
-      <div style="font-size:13px;font-weight:700;color:#5B21B6">🟣 ④ Co-op</div>
-      <div style="font-size:11px;color:#6B7280;margin-top:2px">งบ Event/Marketing</div>
-      <div style="font-size:10.5px;color:#9CA3AF;margin-top:4px">Scope: <b>Event/แคมเปญ</b></div>
-    </button>
-  </div>
-  <div class="alert alert-info" style="margin-top:0;font-size:12px">💡 <b>1 record = 1 type</b> · ถ้าต้องบันทึกประเภทอื่นกับ Vendor นี้ → กด "+ สร้าง VC ใหม่" ที่บนขวา · ตอนนี้แสดง <b>Sell-in</b> (showcase)</div>
-</div>
+  <!-- ⑤ DOC-CHAIN — PO-2 = master/setup · ถูกอ้างอิงโดย PO-7 สรุปงบจัดซื้อ → PO-6 ใบตั้งหนี้เจ้าหนี้ (AP) -->
+  <div id="po2DcStrip" class="dc-strip"></div>
 
-<!-- ═══ Section PO-2.3: Promotion Detail (Sell-in showcase) ═══ -->
-<div class="section-card" id="vcDetailSI">
-  <div class="section-title"><span class="num">PO-2.3</span>🔵 Sell-in Detail
-    <span class="en">Sell-in Promotion Details</span>
-  </div>
+</div><!-- /main -->
+</div><!-- /layout -->
 
-  <div class="form-grid">
-    <div class="field"><label>เลขที่ VC <span class="en">Commitment No.</span></label><div class="value"><span class="highlight">VC-SI-2604-005</span></div></div>
-    <div class="field"><label>วันที่บันทึก</label><div class="value">15 เม.ย. 26</div></div>
-    <div class="field"><label>Status</label><div class="value"><span class="chip chip-green">✓ Active</span> <span class="chip chip-yellow" style="margin-left:6px">เซลล์เซ็น 16/4</span></div></div>
-  </div>
-
-  <div style="font-size:12px;font-weight:700;color:#6B7280;margin:16px 0 8px;text-transform:uppercase;letter-spacing:0.04em">Scope · สินค้าที่ใช้ Sell-in</div>
-  <table>
-    <thead><tr><th>SKU</th><th>ชื่อสินค้า</th><th>หมวด</th><th class="num">จำนวนซื้อ Lot</th><th class="num">ราคา/หน่วย</th></tr></thead>
-    <tbody>
-      <tr><td><b>LG-WT-TT10</b></td><td>เครื่องซักผ้า LG TT10 · 10 kg</td><td>ซักผ้า</td><td class="num">100 ตัว</td><td class="num">฿9,800</td></tr>
-      <tr class="swt-add-line"><td colspan="5" style="padding:8px 14px;background:#F8FAFC;border-top:1px dashed #93C5FD;color:#6B7280;font-size:12px">+ เพิ่มสินค้าในสโคปนี้</td></tr>
-    </tbody>
-  </table>
-
-  <div style="font-size:12px;font-weight:700;color:#6B7280;margin:16px 0 8px;text-transform:uppercase;letter-spacing:0.04em">Promotion · ส่วนลด</div>
-  <div class="form-grid-4">
-    <div class="field"><label>Ontop% <span class="en">Discount%</span></label><div class="value highlight">4.50% <span class="chip chip-green" style="margin-left:6px">🟢 Case 4 บนบิล</span></div></div>
-    <div class="field"><label>ส่วนลดบาท <span class="en">Discount THB</span></label><div class="value">— (ใช้ % แทน)</div></div>
-    <div class="field"><label>Free Goods <span class="en">FoC</span></label><div class="value">25 แถม 1 (ตัวที่ 26 ฟรี)</div></div>
-    <div class="field"><label>VAT Trap (A1)</label><div class="value"><span class="chip chip-green">🟢 Case 4 ✓</span></div></div>
-  </div>
-
-  <div style="font-size:12px;font-weight:700;color:#6B7280;margin:16px 0 8px;text-transform:uppercase;letter-spacing:0.04em">เงื่อนไข Trigger · Effective Period</div>
-  <div class="form-grid-4">
-    <div class="field"><label>เริ่มใช้</label><div class="value">15 เม.ย. 26</div></div>
-    <div class="field"><label>สิ้นสุด</label><div class="value">30 เม.ย. 26 (16 วัน)</div></div>
-    <div class="field"><label>จำนวนซื้อขั้นต่ำ</label><div class="value">100 ตัว / lot</div></div>
-    <div class="field"><label>เงื่อนไขเพิ่ม</label><div class="value">ลอตเดียว · ไม่ทบรอบ</div></div>
-  </div>
-
-  <div class="alert alert-warn" style="margin-top:12px">⚠️ <b>VAT Trap A1 (Sell-in best practice):</b> Ontop 4.5% บนบิล · ฐาน VAT คิดจากราคาหลังหักส่วนลด (ม.79/3) · STNPR ก่อน ฿9,800 → หลัง ~฿9,359 (saving 4.5%)</div>
-</div>
-
-<!-- Hidden form templates per type — for showcase only -->
-<div id="vcDetailMOU" class="section-card" style="display:none">
-  <div class="section-title"><span class="num">PO-2.3</span>🟢 MOU Detail · Tier Step</div>
-  <div style="font-size:12px;color:#6B7280;margin-bottom:8px">[Template] หมวดสินค้า (multi-select) · Tier ยอดสะสม → Rebate% · Period Q/Y</div>
-</div>
-<div id="vcDetailSO" class="section-card" style="display:none">
-  <div class="section-title"><span class="num">PO-2.3</span>🟡 Sell-out Detail · Per-unit Discount</div>
-  <div style="font-size:12px;color:#6B7280;margin-bottom:8px">[Template] หมวด/รุ่น · ส่วนลด/หน่วย เมื่อขายออก · Serial match condition · เริ่ม-สิ้น</div>
-</div>
-<div id="vcDetailCO" class="section-card" style="display:none">
-  <div class="section-title"><span class="num">PO-2.3</span>🟣 Co-op Detail · Marketing Budget</div>
-  <div style="font-size:12px;color:#6B7280;margin-bottom:8px">[Template] Sub-type: <b>Fixed</b> (Event 10K) หรือ <b>Triggered</b> (ซื้อสะสม 100K → 2K marketing budget)</div>
-</div>
-
-<!-- ═══ Section PO-2.4: Recovery Tracking ═══ -->
-<div class="section-card">
-  <div class="section-title"><span class="num">PO-2.4</span>📊 Recovery Tracking
-    <span class="en">Recovery Status (Sell-in)</span>
-  </div>
-  <div class="form-grid-4">
-    <div class="field"><label>ใช้ใน PO</label><div class="value highlight">2 ใบ</div></div>
-    <div class="field"><label>ยอดที่ใช้สิทธิ์</label><div class="value">฿1,960,000</div></div>
-    <div class="field"><label>ยอดเก็บคืน (CN)</label><div class="value" style="color:#10B981;font-weight:700">฿88,200 (4.5%)</div></div>
-    <div class="field"><label>Recovery Rate</label><div class="value"><span class="chip chip-green">100% (target 100%)</span></div></div>
-  </div>
-  <div class="alert alert-info" style="margin-top:12px">💡 Recovery Target ของ Sell-in = <b>100%</b> (per A2) · ดู audit trail ที่ <a href="po7-rebate-dashboard.html" style="color:#2563EB;font-weight:600">PO-7 ↗</a></div>
-</div>
-
-<!-- ═══ Section PO-2.5: Approval + Signature ═══ -->
-<div class="section-card">
-  <div class="section-title"><span class="num">PO-2.5</span>✅ Approval · เซลล์เซ็นรับทราบ
-    <span class="en">Approval & Vendor Sign</span>
-  </div>
-  <div class="form-grid-2" style="gap:24px">
-    <div>
-      <div style="font-size:12px;font-weight:700;color:#6B7280;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.04em">Approval Chain (ภายใน)</div>
+<!-- POPUP: เอกสารหลังอัปโหลด (PO-2.4) -->
+<div class="modal-overlay" id="mPo2UploadedDocs" onclick="closeModal('mPo2UploadedDocs')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="ttl">📁 เอกสารหลักฐานอ้างอิง (PO-2.4)</div>
+      <div class="sub">ภาพ / ประกาศส่งเสริมการขาย / PDF / DOC ที่ใช้อ้างอิงข้อตกลง</div>
+      <button class="modal-close-x" onclick="closeModal('mPo2UploadedDocs')">✕</button>
+    </div>
+    <div class="modal-body">
       <table>
-        <thead><tr><th>ลำดับ</th><th>ผู้อนุมัติ</th><th>ตำแหน่ง</th><th>สถานะ</th></tr></thead>
+        <thead><tr><th>ไฟล์</th><th>ชนิด</th><th>หมวด</th><th>เวลาอัปโหลด</th><th>ผู้แนบ</th><th>สถานะ</th></tr></thead>
         <tbody>
-          <tr><td>1</td><td>K.อำนาจ</td><td>ผจก.จัดซื้อ</td><td><span class="chip chip-green">✓ 15/4 14:20</span></td></tr>
-          <tr><td>2</td><td>ระบบ</td><td>Activate</td><td><span class="chip chip-green">✓ 15/4 16:00</span></td></tr>
+          <tr><td><a href="#" style="color:#2563EB">AG-SI-2604-005-main-agreement.pdf ↗</a></td><td>.pdf</td><td>ข้อตกลงหลัก</td><td>28/03/26 09:41</td><td>K.อำนาจ</td><td><span class="chip chip-green">✓ verified</span></td></tr>
+          <tr><td><a href="#" style="color:#2563EB">promo-announcement-q2.jpg ↗</a></td><td>.jpg</td><td>ประกาศส่งเสริมการขาย</td><td>28/03/26 10:02</td><td>เซล Daikin</td><td><span class="chip chip-green">✓ verified</span></td></tr>
+          <tr><td><a href="#" style="color:#2563EB">meeting-note-scope.docx ↗</a></td><td>.docx</td><td>บันทึกประชุม</td><td>29/03/26 10:12</td><td>K.อำนาจ</td><td><span class="chip chip-green">✓ verified</span></td></tr>
+          <tr><td><a href="#" style="color:#2563EB">sign-photo-01.jpg ↗</a></td><td>.jpg</td><td>รูปประกอบ</td><td>29/03/26 11:08</td><td>เซล</td><td><span class="chip chip-yellow">รอตรวจ</span></td></tr>
+          <tr><td><a href="#" style="color:#2563EB">sign-photo-02.jpg ↗</a></td><td>.jpg</td><td>รูปประกอบ</td><td>29/03/26 11:11</td><td>เซล</td><td><span class="chip chip-yellow">รอตรวจ</span></td></tr>
         </tbody>
       </table>
     </div>
-    <div>
-      <div style="font-size:12px;font-weight:700;color:#6B7280;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.04em">เซลล์ Vendor เซ็นรับทราบ</div>
-      <table>
-        <thead><tr><th>ผู้เซ็น</th><th>ตำแหน่ง</th><th>สถานะ</th></tr></thead>
-        <tbody>
-          <tr><td>คุณกฤตธี (Daikin)</td><td>Sales Mgr</td><td><span class="chip chip-green">✓ ลายเซ็นดิจิทัล · 16/4 09:30</span></td></tr>
-        </tbody>
-      </table>
-      <div class="alert alert-info" style="margin-top:8px;font-size:11.5px">💡 <b>ไม่มีผลทางภาษี (A6)</b> · เป็นเอกสารยืนยันระหว่างร้าน + เซลล์เพื่อใช้คำนวณราคาขาย + Recovery</div>
+    <div class="modal-foot">
+      <button class="btn btn-outline">➕ แนบไฟล์เพิ่ม</button>
+      <button class="btn btn-outline" onclick="closeModal('mPo2UploadedDocs')">ปิด</button>
     </div>
   </div>
 </div>
 
-<!-- ═══ Section PO-2.6: Linked Documents ═══ -->
-<div class="section-card">
-  <div class="section-title"><span class="num">PO-2.6</span>📎 Linked Documents
-    <span class="en">PO/AP that used this VC</span>
+<!-- POPUP: หลักฐานการเซ็น (PO-2.5) -->
+<div class="modal-overlay" id="mPo2SignedDocs" onclick="closeModal('mPo2SignedDocs')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="ttl">✍️ หลักฐานการเซ็นยืนยัน (PO-2.5)</div>
+      <div class="sub">ทั้งแบบพิมพ์เซ็นแล้วแนบไฟล์ และลิงก์เซ็นในระบบ</div>
+      <button class="modal-close-x" onclick="closeModal('mPo2SignedDocs')">✕</button>
+    </div>
+    <div class="modal-body">
+      <table>
+        <thead><tr><th>ผู้เซ็น</th><th>ช่องทาง</th><th>หลักฐาน</th><th>เวลายืนยัน</th><th>ผู้ตรวจ</th><th>สถานะ</th></tr></thead>
+        <tbody>
+          <tr><td>คุณกฤตธี (Daikin)</td><td>ลิงก์เซ็นในระบบ</td><td><a href="#" style="color:#2563EB">sign-link-log.pdf ↗</a></td><td>16/04/26 09:30</td><td>จัดซื้อ</td><td><span class="chip chip-green">✓ เซ็นแล้ว</span></td></tr>
+          <tr><td>คุณกฤตธี (Daikin)</td><td>พิมพ์เอกสาร+สแกนกลับ</td><td><a href="#" style="color:#2563EB">signed-paper-scan.jpg ↗</a></td><td>16/04/26 10:05</td><td>จัดซื้อ</td><td><span class="chip chip-yellow">รอตรวจลายเซ็น</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('mPo2SignedDocs')">ปิด</button>
+    </div>
   </div>
-  <table>
-    <thead><tr><th>เอกสาร</th><th>วันที่</th><th class="num">จำนวน</th><th class="num">ส่วนลดได้</th><th>Status</th></tr></thead>
-    <tbody>
-      <tr><td><a href="po4-purchase-order-mockup.html" style="color:#2563EB">PO-2604-0035 ↗</a></td><td>16 เม.ย.</td><td class="num">100 ตัว · ฿980,000</td><td class="num" style="color:#10B981">฿44,100</td><td><span class="chip chip-green">✓ Posted · CN ได้</span></td></tr>
-      <tr><td><a href="po4-purchase-order-mockup.html" style="color:#2563EB">PO-2604-0040 ↗</a></td><td>22 เม.ย.</td><td class="num">100 ตัว · ฿980,000</td><td class="num" style="color:#10B981">฿44,100</td><td><span class="chip chip-green">✓ Posted · CN ได้</span></td></tr>
-      <tr><td colspan="2" style="text-align:right;font-weight:700;background:#F9FAFB">รวม</td><td class="num" style="font-weight:700;background:#F9FAFB">200 ตัว · ฿1,960,000</td><td class="num" style="font-weight:700;color:#10B981;background:#F9FAFB">฿88,200</td><td style="background:#F9FAFB"><span class="chip chip-green">100%</span></td></tr>
-    </tbody>
-  </table>
 </div>
 
-</div><!-- /vcForm -->
-
-
-<!-- ═══════ LIST VIEW (5 records · LG TT10 example) ═══════ -->
-<div id="vcList" class="vc-vpane" style="display:none">
-
-<div class="section-card">
-  <div class="section-title">📊 Vendor Commitments — Daikin (TH) · Q2 2026
-    <span class="en">All active VC for this vendor</span>
+<!-- POPUP: Filter Scope — เพิ่มสินค้าแบบ scope แล้วแตกรายสินค้า -->
+<div class="modal-overlay" id="mPo2Scope" onclick="closeModal('mPo2Scope')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="ttl">⚡ เพิ่มสินค้าจาก Filter Scope</div>
+      <div class="sub">เลือกหลายเงื่อนไขพร้อมกัน — ระบบจะแตกรายการเป็น "รายสินค้า" ลงตาราง PO-2.3</div>
+      <button class="modal-close-x" onclick="closeModal('mPo2Scope')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="scope-grid">
+        <div class="field"><div class="field-label">ประเภทสินค้า</div><select><option>ทั้งหมด</option><option selected>เครื่องใช้ไฟฟ้า</option></select></div>
+        <div class="field"><div class="field-label">ยี่ห้อ</div><select><option>ทั้งหมด</option><option selected>Daikin</option><option>LG</option><option>Samsung</option></select></div>
+        <div class="field"><div class="field-label">หมวด</div><select><option>ทั้งหมด</option><option selected>เครื่องปรับอากาศ</option><option>ตู้เย็น</option><option>TV</option></select></div>
+        <div class="field"><div class="field-label">กลุ่มย่อย / รุ่น</div><select><option selected>ทั้งหมด</option><option>Inverter</option><option>Fixed-speed</option></select></div>
+      </div>
+      <div class="scope-bar">
+        <b>ส่วนลดเริ่มต้น (แบบ②)</b> ลด <input value="3"> % ทุกตัวใน scope · แก้รายตัวได้หลังแตกลงตาราง
+        <span style="flex:1"></span>
+        <button class="btn btn-outline sm">🔄 Preview รายการ</button>
+      </div>
+      <table>
+        <thead><tr><th style="width:30px"><input type="checkbox" checked></th><th>SKU</th><th>ชื่อสินค้า</th><th style="text-align:right">ราคา/หน่วย</th><th style="text-align:right">ลด %</th><th style="text-align:right">หลังลด</th></tr></thead>
+        <tbody>
+          <tr><td><input type="checkbox" checked></td><td class="mono">AC-2001</td><td>แอร์ Daikin Inverter 12000 BTU</td><td class="mono" style="text-align:right">15,900.00</td><td class="mono" style="text-align:right">3%</td><td class="mono" style="text-align:right">15,423.00</td></tr>
+          <tr><td><input type="checkbox" checked></td><td class="mono">AC-2008</td><td>แอร์ Daikin Inverter 18000 BTU</td><td class="mono" style="text-align:right">21,900.00</td><td class="mono" style="text-align:right">3%</td><td class="mono" style="text-align:right">21,243.00</td></tr>
+          <tr><td><input type="checkbox" checked></td><td class="mono">AC-2015</td><td>แอร์ Daikin Inverter 24000 BTU</td><td class="mono" style="text-align:right">28,900.00</td><td class="mono" style="text-align:right">3%</td><td class="mono" style="text-align:right">28,033.00</td></tr>
+          <tr><td><input type="checkbox"></td><td class="mono">AC-2020</td><td>แอร์ Daikin Fixed 9000 BTU</td><td class="mono" style="text-align:right">11,900.00</td><td class="mono" style="text-align:right">3%</td><td class="mono" style="text-align:right">11,543.00</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('mPo2Scope')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="alert('แตกรายการที่เลือกลงตาราง PO-2.3 เป็นรายสินค้า (mock)');closeModal('mPo2Scope')">⚡ แตกลงตาราง (3 รายการ)</button>
+    </div>
   </div>
-
-  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;padding:10px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:6px">
-    <span style="font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase">Filter:</span>
-    <select style="padding:4px 8px;border:1px solid #D1D5DB;border-radius:4px;font-size:12px;font-family:inherit;background:#fff"><option>ทุก Type</option><option>🟢 MOU</option><option>🔵 Sell-in</option><option>🟡 Sell-out</option><option>🟣 Co-op</option></select>
-    <select style="padding:4px 8px;border:1px solid #D1D5DB;border-radius:4px;font-size:12px;font-family:inherit;background:#fff"><option>Q2 2026</option><option>Q1 2026</option><option>ทั้งปี</option></select>
-    <select style="padding:4px 8px;border:1px solid #D1D5DB;border-radius:4px;font-size:12px;font-family:inherit;background:#fff"><option>ทุก Status</option><option>Active</option><option>Expired</option><option>Cancelled</option></select>
-    <input type="text" placeholder="🔍 ค้นหา SKU/หมวด..." style="padding:4px 10px;border:1px solid #D1D5DB;border-radius:4px;font-size:12px;font-family:inherit;background:#fff;flex:1;min-width:200px">
-    <span style="margin-left:auto;font-size:11px;color:#6B7280">รวม <b style="color:#111827">5 records</b></span>
-  </div>
-
-  <div class="alert alert-info" style="margin-bottom:12px">💡 ตัวอย่าง: สินค้า <b>LG TT10</b> มี VC <b>5 records</b> พร้อมกัน — 2 MOU + 1 Sell-in + 1 Sell-out + 1 Co-op · แต่ละใบแยก approve + เซลล์เซ็น</div>
-
-  <table>
-    <thead><tr><th>VC No.</th><th>Type</th><th>Scope (สินค้า/หมวด)</th><th>เงื่อนไข</th><th class="num">มูลค่า</th><th>Period</th><th>Status</th><th></th></tr></thead>
-    <tbody>
-      <tr>
-        <td><a href="#" style="color:#2563EB;font-weight:600">VC-MOU-2604-001</a></td>
-        <td><span class="chip chip-green">🟢 MOU</span></td>
-        <td><b>หมวด: ซักผ้า + ตู้เย็น</b></td>
-        <td>เป้าสะสม Q2 ≥ ฿2M → Rebate Tier T2 = 3%</td>
-        <td class="num">~฿60,000</td>
-        <td>Q2 26</td>
-        <td><span class="chip chip-yellow">🔥 68%</span></td>
-        <td><a href="#" style="color:#2563EB;font-size:12px">↗</a></td>
-      </tr>
-      <tr>
-        <td><a href="#" style="color:#2563EB;font-weight:600">VC-MOU-2604-002</a></td>
-        <td><span class="chip chip-green">🟢 MOU</span></td>
-        <td><b>หมวด: ตู้เย็น + เครื่องทำน้ำอุ่น</b></td>
-        <td>เป้าสะสม Q2 ≥ ฿1.5M → Rebate 2.5%</td>
-        <td class="num">~฿37,500</td>
-        <td>Q2 26</td>
-        <td><span class="chip chip-yellow">🔥 42%</span></td>
-        <td><a href="#" style="color:#2563EB;font-size:12px">↗</a></td>
-      </tr>
-      <tr style="background:#EFF6FF">
-        <td><a href="#" style="color:#2563EB;font-weight:700">VC-SI-2604-005 ⭐</a></td>
-        <td><span class="chip chip-blue">🔵 Sell-in</span></td>
-        <td><b>รายรุ่น: LG-WT-TT10</b> (ซักผ้า)</td>
-        <td>Lot 100 ตัว · Ontop 4.5% บนบิล + 25 แถม 1</td>
-        <td class="num">฿88,200</td>
-        <td>15-30 เม.ย.</td>
-        <td><span class="chip chip-green">✓ Active · ใช้แล้ว 200/200</span></td>
-        <td><b style="color:#2563EB;font-size:11px">▶ กำลังดู</b></td>
-      </tr>
-      <tr>
-        <td><a href="#" style="color:#2563EB;font-weight:600">VC-SO-2604-008</a></td>
-        <td><span class="chip chip-yellow">🟡 Sell-out</span></td>
-        <td><b>รายรุ่น: LG-WT-TT10</b> (ซักผ้า)</td>
-        <td>เมื่อขายออก B2C → คืน ฿200/ตัว · serial match</td>
-        <td class="num">฿0 / target ~฿20K</td>
-        <td>เม.ย.-มิ.ย.</td>
-        <td><span class="chip chip-yellow">รอ data</span></td>
-        <td><a href="#" style="color:#2563EB;font-size:12px">↗</a></td>
-      </tr>
-      <tr>
-        <td><a href="#" style="color:#2563EB;font-weight:600">VC-CO-2604-012</a></td>
-        <td><span class="chip chip-violet">🟣 Co-op</span></td>
-        <td><b>หมวด: LG ทั้งหมด</b></td>
-        <td>Triggered: ซื้อสะสม Q2 ≥ ฿100,000 → marketing budget ฿2,000</td>
-        <td class="num">฿2,000</td>
-        <td>Q2 26</td>
-        <td><span class="chip chip-green">✓ ผ่าน trigger · ใช้งบได้</span></td>
-        <td><a href="#" style="color:#2563EB;font-size:12px">↗</a></td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr><td colspan="4" style="text-align:right;font-weight:700;padding:10px;background:#F9FAFB">รวม Recovery ที่คาดได้ใน Q2</td><td class="num" style="font-weight:700;color:#2563EB;background:#F9FAFB">฿207,700</td><td colspan="3" style="background:#F9FAFB;font-size:11px;color:#6B7280">+ MOU bonus ตอนสิ้น Q ถ้าถึง T2/T3</td></tr>
-    </tfoot>
-  </table>
 </div>
 
-<div class="section-card">
-  <div class="section-title">💡 หมายเหตุการบันทึก Multi-VC per Item</div>
-  <ul style="font-size:13px;color:#374151;line-height:1.8;padding-left:20px">
-    <li><b>1 record = 1 type</b> — ไม่รวม MOU+Sell-in+Sell-out+Co-op ในใบเดียว</li>
-    <li><b>1 สินค้า/Vendor มีหลาย VC พร้อมกันได้</b> — ตัวอย่าง LG TT10 = 5 records (2 MOU + 1 Sell-in + 1 Sell-out + 1 Co-op)</li>
-    <li><b>VC numbering:</b> <code>VC-{TYPE}-{YYMM}-{seq}</code> เช่น <code>VC-MOU-2604-001</code></li>
-    <li><b>Co-op มี 2 sub-types:</b> 🔵 Fixed (งบ event 10K) · 🟣 Triggered (ซื้อสะสม 100K → 2K marketing budget)</li>
-    <li><b>เซลล์เซ็นรับทราบ</b> ทุก VC ก่อน Active · ไม่มีผลทางภาษี (เป็นเอกสารยืนยัน)</li>
-    <li>ตอน <b>PR/PO line item</b> ระบบจะ auto-fetch VC ที่ active กับ item นี้ → apply ส่วนลด/Free goods/Tier ทั้งหมดที่เข้าเงื่อนไข</li>
-  </ul>
+<!-- PRINT MODAL -->
+<div class="modal-overlay" id="mPo2Print" onclick="closeModal('mPo2Print')">
+  <div class="modal" style="width:360px" onclick="event.stopPropagation()">
+    <div class="modal-head"><div class="ttl">🖨️ เลือกแบบฟอร์มก่อนพิมพ์</div><button class="modal-close-x" onclick="closeModal('mPo2Print')">✕</button></div>
+    <div class="modal-body" style="background:#fff">
+      <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;margin-bottom:6px;font-size:12.5px;cursor:pointer"><input type="radio" name="prnForm" checked> ใบข้อตกลง (ต้นฉบับ)</label>
+      <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;margin-bottom:6px;font-size:12.5px;cursor:pointer"><input type="radio" name="prnForm"> ใบยืนยันให้เซลเซ็น</label>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('mPo2Print')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="window.print();closeModal('mPo2Print')">พิมพ์</button>
+    </div>
+  </div>
 </div>
 
-</div><!-- /vcList -->
-
+<script src="swt-patterns.js"></script>
 <script>
-/* View tab switch */
-function vcSwView(btn,id){
-  document.querySelectorAll('.vc-vtab').forEach(function(b){b.style.borderBottomColor='transparent';b.style.color='#6B7280';b.style.fontWeight='500';});
-  document.querySelectorAll('.vc-vpane').forEach(function(p){p.style.display='none';});
-  btn.style.borderBottomColor='#2563EB';btn.style.color='#2563EB';btn.style.fontWeight='600';
-  document.getElementById(id).style.display='';
-}
-/* Type selector switch (in Form view) */
-function vcSwType(btn,type){
-  document.querySelectorAll('.vc-typebtn').forEach(function(b){
-    b.style.borderColor='#E5E7EB';b.style.background='#fff';
-    var t=b.querySelectorAll('div');
-    if(t[0]) t[0].style.color='';
-    if(t[1]) t[1].style.color='';
-    if(t[2]) t[2].style.color='';
-  });
-  btn.style.borderColor='#2563EB';btn.style.background='#EFF6FF';
-  /* Hide all detail templates · show selected */
-  ['vcDetailSI','vcDetailMOU','vcDetailSO','vcDetailCO'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='none';});
-  var map={mou:'vcDetailMOU',si:'vcDetailSI',so:'vcDetailSO',co:'vcDetailCO'};
-  var show=document.getElementById(map[type]);
-  if(show) show.style.display='';
-}
-</script>
+/* ═══ modal helpers ═══ */
+function openModal(id){var el=document.getElementById(id);if(el)el.classList.add('open');}
+function closeModal(id){var el=document.getElementById(id);if(el)el.classList.remove('open');}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape')document.querySelectorAll('.modal-overlay.open').forEach(function(el){el.classList.remove('open');});
+});
+function po2OpenPrint(){openModal('mPo2Print');}
+function po2CopyDoc(){alert('Copy ข้อตกลง (mock):\n• clone Vendor + รายการสินค้า + เงื่อนไขส่วนลดทั้งหมด\n• ออกเลขที่ AG ใหม่ · วันที่ = วันนี้ · ลบลายเซ็น/อนุมัติ\n• สถานะเริ่ม "ร่าง"');}
 
-<script>
-/* ── PO-2 saab pin (sl-4 pattern) ── */
-(function(){
-  var saved=false;
-  try{ saved=localStorage.getItem('po2_saab_pinned')==='1'; }catch(e){}
-  if(saved){
-    var w=document.getElementById('saabWrap'),p=document.getElementById('pinBtn');
-    if(w) w.classList.add('pinned'); if(p) p.classList.add('pinned');
+/* ═══ ④a SC-12 + Gate + ⑤ Doc Chain ═══ */
+function po2InitPatterns(){
+  if(typeof swtRenderStatusStrip==='function'){
+    swtRenderStatusStrip('#po2Sc12',{
+      pills:[
+        {text:'🤝 1 record = 1 type',type:'info'},
+        {text:'฿ ส่วนลดหักก่อน VAT',type:'info'},
+        {text:'⚡ แบบ② % แตก list รายสินค้า',type:'warning'},
+        {text:'🛡 CN On-time',type:'success'}
+      ],
+      makerChecker:{nodes:[
+        {role:'Maker ✓',step:'K.อำนาจ สร้าง',state:'ok'},
+        {role:'Checker ✓',step:'ผจก.จัดซื้อ อนุมัติ',state:'ok'},
+        {role:'เซลเซ็น ✓',step:'Daikin 16/4',state:'ok'}
+      ]}
+    });
   }
-  window.po2TogglePin=function(){
-    var w=document.getElementById('saabWrap'),p=document.getElementById('pinBtn');
-    var on=w.classList.toggle('pinned'); p.classList.toggle('pinned',on);
-    try{ localStorage.setItem('po2_saab_pinned',on?'1':'0'); }catch(e){}
-  };
-})();
+  if(typeof swtRenderGateAlert==='function'){
+    swtRenderGateAlert('#po2Gate',{type:'ok',compactOk:true,text:'✅ ข้อตกลง Active · หลักฐานครบ'});
+  }
+  if(typeof swtRenderDocChain==='function'){
+    swtRenderDocChain('#po2DcStrip',{
+      label:'ใช้อ้างอิงโดย',
+      nodes:[
+        {label:'PO-2 ข้อตกลง AG-SI-2604-005',state:'current'},
+        {label:'PO-7 สรุปงบจัดซื้อ',href:'po7-rebate-dashboard.html'},
+        {label:'PO-6 ใบตั้งหนี้เจ้าหนี้ (AP)',href:'po6-ap-invoice-mockup.html'}
+      ]
+    });
+  }
+}
+document.addEventListener('DOMContentLoaded',po2InitPatterns);
+
+/* ═══ ④d tabs ═══ */
+function swTab(e,id){
+  var nav=e.currentTarget.parentElement;
+  nav.querySelectorAll('button').forEach(function(b){b.classList.remove('on');});
+  e.currentTarget.classList.add('on');
+  var set=nav.parentElement;
+  set.querySelectorAll('.tabset-pane').forEach(function(p){p.classList.remove('on');});
+  set.querySelector('#'+id).classList.add('on');
+}
+
+/* ═══ PO-2.2 type switch — MOU/SI/SO = ตารางสินค้า · Co-op = ลิสต์บันทึกความเข้าใจ ═══ */
+var PO2_TYPES={
+  mou:{agNo:'AG-MOU-2604-001',title:'รายการสินค้า + เงื่อนไขส่วนลด (MOU กรอบยอดซื้อ)',status:'<span class="chip chip-green">✓ Active</span> <span class="chip chip-yellow">เซลเซ็น 03/4</span>',memo:false,
+       note:'⚠️ ส่วนลดทุกแบบหักก่อน VAT เสมอ (VAT Golden Rule) · MOU = กรอบยอดซื้อ เลือก scope ประเภท/ยี่ห้อ/หมวด/สินค้า แล้วระบบแตกรายสินค้าให้'},
+  si:{agNo:'AG-SI-2604-005',title:'รายการสินค้า + เงื่อนไขส่วนลด (Sell-in)',status:'<span class="chip chip-green">✓ Active</span> <span class="chip chip-yellow">เซลเซ็น 16/4</span>',memo:false,
+      note:'⚠️ ส่วนลดทุกแบบหักก่อน VAT เสมอ (VAT Golden Rule) · แบบ② % เก็บที่ scope แล้วระบบลิสต์เป็นรายสินค้าให้ทั้งหมด · แบบ③ บังคับกรอกโควต้า (เลือกหน่วย ตัว/บาท)'},
+  so:{agNo:'AG-SO-2604-008',title:'รายการสินค้า + เงื่อนไขส่วนลด (Sell-out · ตามช่วงวันที่)',status:'<span class="chip chip-yellow">รอข้อมูลขายออก</span> <span class="chip chip-gray">รอหลักฐานครบ</span>',memo:false,
+      note:'⚠️ ส่วนลดหักก่อน VAT เสมอ · Sell-out ยึดยอดขายออกตามช่วงวันที่ของข้อตกลง · PO-7 สรุปงบจัดซื้อ ดึงยอดจริงตามรายการนี้'},
+  co:{agNo:'AG-CO-2604-012',title:'บันทึกความเข้าใจ (Co-op Memorandum)',status:'<span class="chip chip-green">✓ ผ่าน trigger</span> <span class="chip chip-blue">Co-op budget</span>',memo:true,
+      note:'💡 Co-op = ลิสต์บันทึกความเข้าใจ — ใครรับผิดชอบอะไร งบเท่าไร ยืนยันด้วยเอกสารแนบ · ติดตามเป้า/จริง/Adj ผ่าน PO-7 สรุปงบจัดซื้อ'}
+};
+function po2TypeChange(type){
+  var cfg=PO2_TYPES[type]||PO2_TYPES.si;
+  document.getElementById('mhAgNo').textContent=cfg.agNo;
+  document.getElementById('metaAgNo').textContent=cfg.agNo;
+  document.getElementById('metaStatus').innerHTML=cfg.status;
+  document.getElementById('po23Title').textContent=cfg.title;
+  document.getElementById('po23Note').textContent=cfg.note;
+  document.getElementById('prodTableWrap').style.display=cfg.memo?'none':'';
+  document.getElementById('memoTableWrap').style.display=cfg.memo?'':'none';
+  document.getElementById('btnAddProd').style.display=cfg.memo?'none':'';
+  document.getElementById('btnAddScope').style.display=cfg.memo?'none':'';
+  document.getElementById('addRowBar').innerHTML=cfg.memo
+    ?'<span class="lnk">📝 + เพิ่มบันทึกความเข้าใจ</span>'
+    :'<span class="lnk" onclick="dfOpenProd()">🔍 + เพิ่มสินค้า (SC-2 product picker)</span><span class="lnk" onclick="openModal(\'mPo2Scope\')" style="color:#92400E">⚡ + เพิ่มจาก Filter Scope — แตกเป็นรายสินค้า</span>';
+}
+
+/* ═══ PO-2.3 แบบส่วนลดรายบรรทัด — เปิด/ปิดช่องตามแบบ ═══
+   ① m1 ลดบาท/ตัว: เปิด ฿ · ปิด % · โควต้า optional(ปิด)
+   ② m2 ลด %:      เปิด % · ปิด ฿ + โควต้า  (แถวมักมาจาก Filter Scope)
+   ③ m3 ลด+โควต้า:  เปิด ฿ + โควต้า(บังคับ · เลือกหน่วย ตัว/บาท) · ปิด % */
+function po2LineMode(sel){
+  var tr=sel.closest('tr');
+  var quotaIn=tr.querySelector('.quota-cell input');
+  var quotaUnit=tr.querySelector('.quota-unit');
+  var bahtIn=tr.querySelectorAll('td')[7].querySelector('input');
+  var pctIn=tr.querySelectorAll('td')[8].querySelector('input');
+  var m=sel.value;
+  bahtIn.disabled=(m==='m2');
+  pctIn.disabled=(m!=='m2');
+  quotaIn.disabled=(m!=='m3');
+  quotaUnit.disabled=(m!=='m3');
+  if(m==='m3'){quotaIn.style.borderColor='#F59E0B';quotaIn.placeholder='บังคับ';}
+  else{quotaIn.style.borderColor='';quotaIn.placeholder='—';quotaIn.value='';}
+  if(m==='m2'){bahtIn.value='';}else{pctIn.value='';}
+  po2Recalc(sel);
+}
+/* คำนวณราคาหลังลด (mock · ส่วนลดก่อน VAT) */
+function po2Recalc(el){
+  var tr=el.closest('tr');
+  var price=parseFloat(tr.getAttribute('data-price')||'0');
+  var mode=tr.querySelector('.line-mode').value;
+  var baht=parseFloat((tr.querySelectorAll('td')[7].querySelector('input').value||'0').replace(/,/g,''))||0;
+  var pct=parseFloat(tr.querySelectorAll('td')[8].querySelector('input').value||'0')||0;
+  var after=(mode==='m2')?price*(1-pct/100):price-baht;
+  tr.querySelector('.line-after').textContent=after.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
 </script>
 
-</div></div></div>
 <!-- SWT_LINK_START -->
 <script src="swt-link.js" defer></script>
-<!-- Doc Chain disabled · PO-2 = master/setup (Trade Agreement) ไม่อยู่ใน transaction chain
-     กลับกัน TA นี้ถูกอ้างอิงจาก PR/PO/AP — แสดงใน "Linked Documents" section แทน -->
+<!-- Doc Chain transaction: disabled · PO-2 = master/setup (Trade Agreement) ไม่อยู่ใน transaction chain
+     กลับกัน ข้อตกลงนี้ถูกอ้างอิงจาก PO-7 สรุปงบจัดซื้อ → PO-6 ใบตั้งหนี้เจ้าหนี้ (AP) — แสดงผ่าน dc-strip "ใช้อ้างอิงโดย" -->
 <!-- SWT_LINK_END -->
 
+<script src="swt-doc-finder.js"></script>
 <script src="swt-sidebar.js"></script>
-</body>
-</html>
+</body></html>

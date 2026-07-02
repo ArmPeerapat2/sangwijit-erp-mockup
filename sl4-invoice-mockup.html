@@ -3,6 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SL-4 บิลขาย / Invoice — Sangwijit ERP</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
 <style>
 /* ═══ SL-4 บิลขาย/Invoice — build บน _form-template.html · รวม 5 ส่วน ═══ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -29,7 +30,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 .mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em}
 .mh-meta-item .val{font-size:12px;font-weight:600;margin-top:1px;font-family:'Inter',monospace}
 .mh-right{display:flex;align-items:center;gap:8px}
-.mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(16,185,129,0.2);color:#6EE7B7;border:1px solid rgba(16,185,129,0.3)}
+.mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(251,191,36,0.2);color:#FCD34D;border:1px solid rgba(251,191,36,0.3)}
 .mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
 .mh-btn-ghost{background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.2)}
 .mh-btn-primary{background:#10B981;color:#fff}
@@ -71,7 +72,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 .pill-promo{background:#FCE7F3;color:#9D174D}
 .items-card{padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
 .items-card .card-header{padding:12px 14px;margin:0;border-bottom:1px solid #E5E7EB}
-.items-wrap{overflow-y:auto;flex:1;min-height:60px}
+.items-wrap{overflow-y:auto;flex:1}
 table.items{width:100%;border-collapse:collapse;background:#fff}
 table.items thead{position:sticky;top:0;background:#F8FAFC;z-index:5}
 table.items thead th{padding:9px 12px;font-size:10.5px;font-weight:600;color:#6B7280;text-align:left;border-bottom:2px solid #E5E7EB;text-transform:uppercase;white-space:nowrap}
@@ -141,11 +142,11 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .row-2col .field{margin-bottom:3px}
 .row-2col .field-grid-2{gap:3px 14px}
 .row-2col .credit-line{margin-top:5px;padding:4px 8px}
-.content>.items-card{flex:1 1 0;min-height:120px}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
-.row-bottom{font-size:12px;height:172px}
-.row-bottom .tabset,.row-bottom>.card{overflow:auto}
-.row-bottom .tabset-pane{padding:10px;min-height:40px}
+.row-bottom{font-size:12px}
+.row-bottom .tabset,.row-bottom>.card{overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.row-bottom .tabset-pane{padding:6px 8px;min-height:0;overflow:hidden;flex:1}
+.row-bottom .tabset-pane.on{display:flex;flex-direction:column}
 .row-bottom .tabset-nav button{padding:6px 10px;font-size:11px}
 .row-bottom .summary-row{padding:2px 0;font-size:11px}
 .row-bottom .summary-total{font-size:13px;padding:8px 10px;margin-top:4px}
@@ -158,79 +159,99 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .tpl-modal .m-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
 .ph{color:#9CA3AF;font-style:italic}
 .tpl-zone{font-size:9px;font-weight:700;color:#2563EB;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:4px;padding:1px 6px;margin-left:6px;text-transform:uppercase}
+/* ⚡ ยิงเปิดบิลเร็ว — hotbar คีย์ลัด */
+.hotbar{flex:none;display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#0F2238;color:#CBD5E1;padding:5px 24px;font-size:11px;border-bottom:1px solid #1E3A5F}
+.hotbar .hb-title{font-weight:800;color:#FBBF24;font-size:11px;letter-spacing:.3px}
+.hotbar .hb-item{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.hotbar .hb-sep{width:1px;height:14px;background:#33507a}
+.kbd{display:inline-block;min-width:14px;text-align:center;background:#1E3A5F;color:#fff;border:1px solid #3a5a85;border-bottom-width:2px;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;font-family:'Inter',monospace}
+.scan-box{transition:box-shadow .15s,border-color .15s,background .15s}
+.scan-box.scan-focus{box-shadow:0 0 0 3px rgba(37,99,235,.25);border-color:#2563EB;background:#fff}
+.scan-box .scan-hint{font-size:9px;font-weight:700;color:#64748B;background:#E2E8F0;border-radius:3px;padding:1px 4px}
+@keyframes rowflash{0%{background:#FEF9C3}100%{background:transparent}}
+.row-flash{animation:rowflash .7s ease}
+.sl4-toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:#111827;color:#fff;padding:9px 18px;border-radius:8px;font-size:12.5px;font-weight:600;z-index:1200;box-shadow:0 6px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .15s,transform .15s}
+.sl4-toast.show{opacity:1;transform:translateX(-50%) translateY(-5px)}
+.sl4-toast.ok{background:#065F46}.sl4-toast.warn{background:#92400E}
+.mh-btn-accent.pulse{animation:btnpulse .55s ease 2}
+@keyframes btnpulse{50%{box-shadow:0 0 0 5px rgba(139,92,246,.45)}}
 
 </style>
 </head>
-<body>
+<body data-swt-sc="sl4">
 <div class="layout">
 <div class="main">
 
-  <!-- ① TOPBAR -->
-  <div class="topbar">
-    <div class="topbar-breadcrumb">งานขาย <span class="sep">›</span> บิลขาย <span class="sep">›</span> <span class="current">08INV-2606-0221</span></div>
-    <div class="topbar-spacer"></div>
-    <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
-    <div class="topbar-icon">🔔</div>
-    <select class="branch-sel"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option></select>
-    <select class="branch-sel"><option>แผนกขายปลีก</option></select>
-    <div class="topbar-avatar">สว</div>
-  </div>
-
-  <!-- ② MAIN HEADER -->
-  <header class="main-header">
-    <div class="mh-left">
-      <div class="mh-title">
-        <div class="ico">🧾</div>
-        <div><h1>บิลขาย / ใบกำกับภาษี</h1><p>Sales Invoice (SL-4)</p></div>
-      </div>
-      <div class="mh-divider"></div>
-      <div class="mh-meta">
-        <div class="mh-meta-item"><div class="lbl">เลขที่บิล (Tax Inv.)</div><div class="val">08INV-2606-0221</div></div>
-        <div class="mh-meta-item"><div class="lbl">วันที่บิล</div><div class="val">13 มิ.ย. 26</div></div>
-        <div class="mh-meta-item"><div class="lbl">ยอดชำระสุทธิ</div><div class="val">11,140.30</div></div>
+  <!-- ①② UNIFIED HEADER — Topbar + Main Header รวม -->
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">งานขาย <span class="sep">›</span> บิลขาย <span class="sep">›</span> <span class="current">08INV-2606-0221</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+        <div class="topbar-icon">🔔</div>
+        <select class="branch-sel"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option></select>
+        <select class="branch-sel"><option>แผนกขายปลีก</option></select>
+        <div class="topbar-avatar">สว</div>
       </div>
     </div>
-    <div class="mh-right">
-      <span class="mh-badge">🕓 ร่าง · รอ Post</span>
-      <button class="mh-btn mh-btn-ghost">📋 คิวงาน</button>
-      <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
-      <button class="mh-btn mh-btn-accent">📥 Post Invoice</button>
+    <div class="uh-main">
+      <div class="mh-left">
+        <div class="mh-title">
+          <div class="ico">🧾</div>
+          <div><h1>บิลขาย / ใบกำกับภาษี</h1><p>Sales Invoice (SL-4)</p></div>
+        </div>
+        <div class="mh-divider"></div>
+        <div class="mh-meta">
+          <div class="mh-meta-item"><div class="lbl">เลขที่บิล (Tax Inv.)</div><div class="val">08INV-2606-0221</div></div>
+          <div class="mh-meta-item"><div class="lbl">วันที่บิล</div><div class="val">13 มิ.ย. 26</div></div>
+          <div class="mh-meta-item"><div class="lbl">ยอดชำระสุทธิ</div><div class="val">11,140.30</div></div>
+        </div>
+      </div>
+      <div class="mh-right">
+        <span class="mh-badge">🕓 ร่าง · รอ Post</span>
+        <button class="mh-btn mh-btn-ghost">📋 คิวงาน</button>
+        <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
+        <button class="mh-btn mh-btn-accent">📥 Post Invoice</button>
+      </div>
     </div>
   </header>
 
-  <!-- ③ SUB-ACTION BAR -->
-  <div class="saab">
+  <!-- ③ SAAB ย่อ — ปุ่มหลัก + ⋯ (Post อยู่ main-header เท่านั้น) -->
+  <div class="saab saab-compact">
     <button class="btn btn-outline" onclick="dfOpen()">📂 เปิดเอกสารเก่า</button>
-    <button class="btn btn-outline">💾 Save</button>
     <button class="btn btn-outline" onclick="tplCopyDoc()">📋 Copy</button>
     <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบกำกับ</button>
-    <button class="btn btn-success">📥 Post Invoice (→ BC Ledger + VAT Output)</button>
-    <button class="btn btn-outline" title="รับชำระเงิน">💳 รับชำระ (FI-1)</button>
-    <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
-    <span class="saab-status"><span class="dot"></span>สถานะ: <strong>ร่าง</strong> · รอ Post</span>
+    <div class="saab-more-wrap">
+      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
+      <div class="saab-more-menu">
+        <button type="button" class="btn btn-outline btn-menu">💾 Save Draft</button>
+        <button type="button" class="btn btn-outline btn-menu" onclick="location.href='fi1-ar-receive-mockup.html'">💳 รับชำระ (FI-1 รับชำระลูกหนี้)</button>
+        <button type="button" class="btn btn-ghost btn-menu" style="color:#EF4444">❌ ยกเลิก</button>
+      </div>
+    </div>
+    <div class="saab-spacer"></div>
+  </div>
+
+  <!-- ⚡ HOTBAR — คีย์ลัดยิงเปิดบิลเร็ว -->
+  <div class="hotbar">
+    <span class="hb-title">⚡ ยิงเปิดบิลเร็ว</span>
+    <span class="hb-item"><span class="kbd">⏎</span> ยิง = เพิ่ม/บวกจำนวน</span>
+    <span class="hb-sep"></span>
+    <span class="hb-item"><span class="kbd">F2</span> กลับช่องยิง</span>
+    <span class="hb-item"><span class="kbd">F4</span> เพิ่มสินค้า</span>
+    <span class="hb-item"><span class="kbd">F6</span> ลูกค้า</span>
+    <span class="hb-item"><span class="kbd">F7</span> อ้างอิง</span>
+    <span class="hb-item"><span class="kbd">F8</span> ชำระเงิน</span>
+    <span class="hb-item"><span class="kbd">F9</span> Post บิล</span>
+    <span class="hb-sep"></span>
+    <span class="hb-item"><span class="kbd">↑↓</span> เลือกแถว · <span class="kbd">Del</span> ลบ</span>
   </div>
 
   <div class="content">
 
-    <!-- ④a STATUS + DOC-CHAIN รวมแถวเดียว (ประหยัดพื้นที่ · ไม่ซ้ำซ้อน) -->
-    <div class="status-strip" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div class="sc11-pills">
-        <span class="pill pill-neutral">📄 ร่าง</span>
-        <span class="pill pill-info">฿ VAT 7%</span>
-        <span class="pill pill-success">✓ เครดิตผ่าน</span>
-        <span class="pill pill-route" id="recvPill">🔧 จัดส่ง+ติดตั้ง → เบิก + Service Order (SV-1)</span>
-        <span class="pill pill-promo">🏷️ โปร ลด 10%</span>
-        <span class="pill pill-warning">💰 หักมัดจำ 6,290</span>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
-        <span class="dc-lbl" style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
-        <a class="dc-node done" href="sl1-quotation-mockup.html" target="_blank">QT 0047 ✓</a><span class="dc-arrow">→</span>
-        <a class="dc-node done" href="sl2-reservation-mockup.html" target="_blank">SO 0021 ✓</a><span class="dc-arrow">→</span>
-        <a class="dc-node done" href="sl3-deposit-mockup.html" target="_blank">DP 0009 ✓</a><span class="dc-arrow">→</span>
-        <span class="dc-node current">INV 0221</span><span class="dc-arrow">→</span>
-        <a class="dc-node" href="fi1-ar-receive-mockup.html" target="_blank">รับชำระ RV</a>
-      </div>
-    </div>
+    <!-- ④a SC-12 Status (pills + maker-checker · ไม่มี doc-chain) -->
+    <div id="sl4Sc12" class="status-strip"></div>
+    <div id="sl4Gate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL -->
     <div class="row-2col">
@@ -257,7 +278,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="card compact">
         <div class="card-header"><div class="card-title"><span class="secno">SL-4.2</span><span class="ico">📋</span>ข้อมูลเอกสาร</div>
           <div class="card-spacer"></div>
-          <button class="card-btn" onclick="dfOpenRef()" title="อ้างอิงเอกสารตามลูกหนี้ · เลือกได้หลายใบ (จอง/ขาย/มัดจำ)">🔗 อ้างอิงเอกสาร</button>
+          <button class="card-btn" onclick="dfOpenRef({docType:'SL',partyName:'คุณ อดิเทพ ไชยเศรษฐ์'})" title="อ้างอิงเอกสารตามลูกหนี้ · เลือกได้หลายใบ (จอง/ขาย/มัดจำ)">🔗 อ้างอิงเอกสาร <span class="tpl-zone">SC-5</span></button>
         </div>
         <div class="field-grid-2">
           <div class="field"><div class="field-label">ประเภทการรับ</div>
@@ -271,7 +292,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           <div class="field"><div class="field-label">พนักงานขาย</div><div class="field-value">สัญญาลักษณ์ วังคะฮาต</div></div>
           <div class="field"><div class="field-label">เงื่อนไขชำระ</div><div class="field-value">เครดิต 7 วัน</div></div>
           <div class="field"><div class="field-label">อ้างอิงใบจอง <span style="color:#9CA3AF">(ถ้ามี)</span></div><div class="field-value"><a href="sl2-reservation-mockup.html" style="color:#2563EB;text-decoration:none">SO 0021 ↗</a></div></div>
-          <div class="field"><div class="field-label">อ้างอิงใบเสนอราคา</div><div class="field-value"><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 0047 ↗</a></div></div>
+          <div class="field"><div class="field-label">อ้างอิงใบเสนอราคา</div><div class="field-value"><a href="bc365/sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 0047 ↗</a></div></div>
         </div>
       </div>
     </div>
@@ -281,7 +302,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="card-header">
         <div class="card-title"><span class="secno">SL-4.3</span><span class="ico">📦</span>รายการสินค้า <span class="tpl-zone">SC-2 · SC-8 · SC-9</span></div>
         <div class="card-spacer"></div>
-        <div class="scan-box" title="ยิงได้ทั้ง Barcode และ S/N"><span>📷</span><input id="scanInput" placeholder="ยิงบาร์โค้ด / S/N…" onkeydown="tplScan(event)"></div>
+        <div class="scan-box" id="scanBox" title="ยิงได้ทั้ง Barcode และ S/N · กด F2 เพื่อกลับมาที่ช่องนี้"><span>📷</span><input id="scanInput" placeholder="ยิงบาร์โค้ด / S/N…" onkeydown="tplScan(event)"><span class="scan-hint">F2</span></div>
         <button class="card-btn primary" onclick="dfOpenProd()">🔍 เพิ่มสินค้า</button>
       </div>
       <div class="items-wrap">
@@ -370,13 +391,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           <button onclick="swTab(event,'t-ref')">อ้างอิง</button>
           <button onclick="swTab(event,'t-hist')">ประวัติ</button>
         </div>
-        <div class="tabset-pane on" id="t-pay">
-          <div class="pay-methods"><span class="m">เงินสด</span><span class="m on">โอน</span><span class="m">เช็ค</span><span class="m">บัตร</span><span class="m">QR</span><span class="m">เครดิต</span></div>
-          <div class="tab-grid">
-            <span class="k">อ้างอิงการชำระ</span><span class="v">โอน SCB*6239 · Slip 10:45</span>
-            <span class="k">Split Payment</span><span class="v ph">รับหลายวิธีต่อบิลได้</span>
-          </div>
-        </div>
+        <div class="tabset-pane on" id="t-pay"><!-- SC-3P compact · wire จาก swt-sc-wire.js --></div>
         <div class="tabset-pane" id="t-dep">
           <div class="tab-grid">
             <span class="k">มัดจำที่หักอัตโนมัติ (SC6)</span><span class="v" style="color:#EF4444">-6,290.00 (จาก DP-0009)</span>
@@ -387,7 +402,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           <div class="tab-grid">
             <span class="k">ที่อยู่จัดส่ง</span><span class="v">86/1 ม.4 ต.นาแก อ.นาแก จ.นครพนม</span>
             <span class="k">วัน-เวลาส่ง</span><span class="v">13 มิ.ย. 26 · 13:00–16:00</span>
-            <span class="k">ติดตั้ง</span><span class="v">→ Auto-create Service Order (SV-1) หลัง Post</span>
+            <span class="k">ติดตั้ง</span><span class="v">→ Auto-create <a href="bc365/service-intake-mockup.html" style="color:#2563EB;text-decoration:none">งานติดตั้ง · SV-Intake ประเภท=ติดตั้ง ↗</a> หลัง Post</span>
           </div>
         </div>
         <div class="tabset-pane" id="t-tax">
@@ -413,15 +428,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
         </div>
       </div>
       <div class="card">
-        <div class="card-header"><div class="card-title"><span class="secno">SL-4.5</span><span class="ico">💰</span>สรุปยอด (Summary) <span class="tpl-zone">SC3 · SC6</span></div></div>
-        <div class="summary-row"><span class="lbl">รวมจำนวนเงิน</span><span class="val">17,489.00</span></div>
-        <div class="summary-row"><span class="lbl">ส่วนลด (โปร+ของแถม)</span>
-          <span class="disc-input"><input value="1,199.00"><select><option>฿</option><option>%</option></select></span></div>
-        <div class="summary-row"><span class="lbl">ยอดก่อนภาษี <span style="color:#8B5CF6;font-size:9px">⚖</span></span><span class="val">16,290.00</span></div>
-        <div class="summary-row"><span class="lbl">ภาษีมูลค่าเพิ่ม <select class="vat-sel"><option>7%</option><option>ไม่รวม</option></select></span><span class="val">1,140.30</span></div>
-        <div class="summary-row"><span class="lbl">รวมทั้งสิ้น</span><span class="val">17,430.30</span></div>
-        <div class="summary-row deduct"><span class="lbl">หักมัดจำ (DP-0009)</span><span class="val">-6,290.00</span></div>
-        <div class="summary-total"><span>ยอดชำระสุทธิ</span><span class="val">11,140.30</span></div>
+        <div class="card-header"><div class="card-title"><span class="secno">SL-4.5</span><span class="ico">💰</span>สรุปยอด (Summary) <span class="tpl-zone">SC-11</span></div></div>
+        <div id="sl4Sc11"></div>
         <div class="baht-text">( หนึ่งหมื่นหนึ่งพันหนึ่งร้อยสี่สิบบาทสามสิบสตางค์ )</div>
       </div>
     </div>
@@ -433,6 +441,9 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     </div>
 
   </div><!-- /content -->
+
+  <!-- ⑤ DOC-CHAIN แถบล่าง -->
+  <div id="sl4DcStrip" class="dc-strip"></div>
 
 </div><!-- /main -->
 </div><!-- /layout -->
@@ -452,6 +463,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
   </div>
 </div>
 
+<script src="swt-patterns.js"></script>
 <script>
 function swTab(e,id){
   var nav=e.currentTarget.parentElement;
@@ -464,20 +476,187 @@ function swTab(e,id){
 function tplCopyDoc(){ alert('ทำสำเนาบิลขาย (mock) · เลขใหม่ · สถานะ ร่าง'); }
 function tplOpenPrint(){ document.getElementById('printModal').classList.add('on'); }
 function tplClosePrint(){ document.getElementById('printModal').classList.remove('on'); }
-function tplScan(e){
-  if(e.key!=='Enter')return; var v=e.currentTarget.value.trim(); if(!v)return;
-  var isSN=/^SN|^S\/N|\-SN/i.test(v)||v.length>=10;
-  alert((isSN?'อ่านเป็น S/N: ':'อ่านเป็น Barcode: ')+v); e.currentTarget.value='';
+/* ===== ⚡ ยิงเปิดบิลเร็ว — scan + keyboard engine ===== */
+/* catalog จำลอง (barcode → สินค้า) */
+var SCAN_CAT={
+  '824x82xx824':{name:'เครื่องปรับอากาศ MITSUBISHI MSY/U-KA13V',price:13990,unit:'ชุด'},
+  '8851234567019':{name:'พัดลมตั้งพื้น HATARI HC-S18M1 18 นิ้ว',price:890,unit:'ตัว'},
+  '8852000123456':{name:'ตู้เย็น TOSHIBA GR-B22KP 6.4 คิว',price:8990,unit:'เครื่อง'},
+  '8859000777012':{name:'หม้อหุงข้าว SHARP KS-COM18 1.8 ลิตร',price:1290,unit:'ใบ'},
+  '8853333000099':{name:'เครื่องซักผ้า LG T2310VS2M 10.5 กก.',price:7990,unit:'เครื่อง'}
+};
+function sl4Fmt(n){return (Number(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function sl4Num(s){return parseFloat(String(s||'').replace(/,/g,''))||0;}
+
+/* รวมยอดทั้งบิล → re-render SC-11 สรุปยอด */
+function sl4Recalc(){
+  var gross=0,disc=0;
+  document.querySelectorAll('table.items tbody tr:not(.empty-row)').forEach(function(tr){
+    var nums=tr.querySelectorAll('.line-num'); if(nums.length<2)return;
+    var q=sl4Num((tr.querySelector('.item-qty-input')||{}).value);
+    var p=sl4Num(nums[0].value);
+    var dRaw=String(nums[1].value||'').trim();
+    var d=dRaw.indexOf('%')>-1 ? p*q*(parseFloat(dRaw)||0)/100 : sl4Num(dRaw);
+    gross+=p*q; disc+=d;
+  });
+  if(window.swtRenderSummary){
+    swtRenderSummary('#sl4Sc11',{
+      template:'sales-invoice',interactive:true,
+      calc:{subtotal:gross,lineDiscount:disc,depositRefs:[{no:'DP-08DP-2606-0009',amount:6290,href:'sl3-deposit-mockup.html'}]},
+      discountInput:0,vatMode:'exclusive',vatRate:7
+    });
+  }
 }
-document.querySelectorAll('.pay-methods .m').forEach(function(m){m.onclick=function(){document.querySelectorAll('.pay-methods .m').forEach(x=>x.classList.remove('on'));m.classList.add('on');};});
+/* คำนวณยอดบรรทัดเดียว */
+function sl4RecalcRow(tr){
+  var nums=tr.querySelectorAll('.line-num'); if(nums.length<2)return;
+  var q=sl4Num((tr.querySelector('.item-qty-input')||{}).value);
+  var p=sl4Num(nums[0].value);
+  var dRaw=String(nums[1].value||'').trim();
+  var d=dRaw.indexOf('%')>-1 ? p*q*(parseFloat(dRaw)||0)/100 : sl4Num(dRaw);
+  var cell=tr.querySelector('.item-total'); if(cell)cell.textContent=sl4Fmt(q*p-d);
+  sl4Recalc();
+}
+function sl4Flash(tr){tr.classList.remove('row-flash');void tr.offsetWidth;tr.classList.add('row-flash');}
+function sl4Toast(msg,kind){
+  var t=document.getElementById('sl4Toast');
+  if(!t){t=document.createElement('div');t.id='sl4Toast';t.className='sl4-toast';document.body.appendChild(t);}
+  t.className='sl4-toast '+(kind||'');t.textContent=msg;
+  void t.offsetWidth;t.classList.add('show');
+  clearTimeout(t._tm);t._tm=setTimeout(function(){t.classList.remove('show');},1500);
+}
+function sl4FocusScan(){
+  var s=document.getElementById('scanInput'),b=document.getElementById('scanBox');
+  if(!s)return; s.focus();s.select();
+  if(b){b.classList.add('scan-focus');setTimeout(function(){b.classList.remove('scan-focus');},700);}
+}
+/* แปลงแถวว่างแถวแรกเป็นรายการสินค้า */
+function sl4AddRow(code,item,isSN){
+  var empty=document.querySelector('table.items tbody tr.empty-row');
+  if(!empty){sl4Toast('ตารางเต็ม — กด F4 เพิ่มสินค้า',' warn');return;}
+  var n=empty.children[0].textContent;
+  empty.classList.remove('empty-row');
+  empty.innerHTML=
+    '<td>'+n+'</td>'+
+    '<td><div class="item-code">'+code+'</div></td>'+
+    '<td><div class="item-name">'+item.name+' <span class="type-chip good">สินค้า</span></div>'+
+      (isSN?'<div><span class="chip sn">S/N: '+code+'</span></div>':'<div><span class="chip stock">📦 กันสต็อก 1</span> <span class="chip sn">S/N: รอคลังกรอกตอนเบิก</span></div>')+'</td>'+
+    '<td><select class="line-wh"><option>SWE-HaierShop</option><option>คลังกลาง</option></select></td>'+
+    '<td style="text-align:center"><input class="item-qty-input" value="1"></td>'+
+    '<td>'+(item.unit||'ชิ้น')+'</td>'+
+    '<td style="text-align:right"><input class="line-num" value="'+sl4Fmt(item.price)+'"></td>'+
+    '<td style="text-align:right"><input class="line-num" value="0"></td>'+
+    '<td><select class="line-sales"><option>สัญญาลักษณ์</option></select></td>'+
+    '<td class="item-total">'+sl4Fmt(item.price)+'</td>'+
+    '<td><span class="chip promo" style="font-size:10px">⚡ ยิงสด</span></td>'+
+    '<td><button onclick="sl4DelRow(this)" style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>';
+  sl4Flash(empty);sl4RecalcRow(empty);
+  return empty;
+}
+function sl4DelRow(btn){
+  var tr=btn.closest('tr');if(!tr)return;
+  var n=tr.children[0].textContent;
+  tr.className='empty-row';
+  tr.innerHTML='<td>'+n+'</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>';
+  sl4Recalc();
+}
+/* ⏎ ยิง = หาแถวเดิม +จำนวน · ไม่เจอ = แถวใหม่ */
+function tplScan(e){
+  if(e.key!=='Enter')return;
+  var v=e.currentTarget.value.trim();e.currentTarget.value='';if(!v)return;
+  var isSN=/^SN|^S\/N|\-SN/i.test(v)||(v.length>=12 && !SCAN_CAT[v]);
+  var rows=document.querySelectorAll('table.items tbody tr:not(.empty-row)');
+  for(var i=0;i<rows.length;i++){
+    var c=rows[i].querySelector('.item-code');
+    if(c && c.textContent.trim()===v){
+      var qi=rows[i].querySelector('.item-qty-input');
+      qi.value=(sl4Num(qi.value)+1);sl4RecalcRow(rows[i]);sl4Flash(rows[i]);
+      sl4Toast('➕ '+v+' → จำนวน '+qi.value,'ok');return;
+    }
+  }
+  var item=SCAN_CAT[v]||{name:'สินค้าจากบาร์โค้ด '+v+' (รอผูก master)',price:0,unit:'ชิ้น'};
+  var r=sl4AddRow(v,item,isSN);
+  if(r)sl4Toast((isSN?'🔖 S/N ':'✅ เพิ่ม: ')+item.name,'ok');
+}
+/* คีย์ลัด global */
+function sl4GotoPay(){
+  var btn=document.querySelector('.tabset-nav button');
+  if(btn){btn.click();btn.scrollIntoView({block:'nearest'});}
+  sl4Toast('💳 ไปแท็บชำระเงิน (SC-3P)');
+}
+function sl4Post(){
+  var b=document.querySelector('.mh-btn-accent');
+  if(b){b.classList.remove('pulse');void b.offsetWidth;b.classList.add('pulse');}
+  sl4Toast('📥 Post Invoice (mock) · ตัดสต็อก + VAT Output + AR','ok');
+}
+document.addEventListener('keydown',function(e){
+  var k=e.key;
+  if(k==='F2'){e.preventDefault();sl4FocusScan();}
+  else if(k==='F4'){e.preventDefault();dfOpenProd&&dfOpenProd();}
+  else if(k==='F6'){e.preventDefault();dfOpenCust&&dfOpenCust();}
+  else if(k==='F7'){e.preventDefault();dfOpenRef&&dfOpenRef({docType:'SL',partyName:'คุณ อดิเทพ ไชยเศรษฐ์'});}
+  else if(k==='F8'){e.preventDefault();sl4GotoPay();}
+  else if(k==='F9'||(e.ctrlKey&&k==='Enter')){e.preventDefault();sl4Post();}
+  else if(k==='Escape'){var s=document.getElementById('scanInput');if(s)s.value='';if(window.tplClosePrint)tplClosePrint();}
+});
+/* live recalc เมื่อแก้ qty/ราคา/ส่วนลด */
+function sl4WireInputs(){
+  var tb=document.querySelector('table.items tbody');if(!tb)return;
+  tb.addEventListener('input',function(e){
+    if(e.target.classList.contains('item-qty-input')||e.target.classList.contains('line-num')){
+      var tr=e.target.closest('tr');if(tr)sl4RecalcRow(tr);
+    }
+  });
+}
 /* ประเภทการรับ → routing เบิก/จัดส่ง/ติดตั้ง */
 function recvRoute(){
   var t=document.getElementById('recvType').value, p=document.getElementById('recvPill');
+  if(!p) return;
   if(t==='self') p.textContent='🏪 รับเอง → เบิกสินค้าทันที (WH-3 · ตัดสต๊อก + ส่งมอบเคาน์เตอร์)';
   else if(t==='ship') p.textContent='🚚 จัดส่ง → เบิก + เข้าคิวจัดส่ง (WH-3)';
-  else p.textContent='🔧 จัดส่ง+ติดตั้ง → เบิก + จัดส่ง + Service Order (SV-1)';
+  else p.textContent='🔧 จัดส่ง+ติดตั้ง → เบิก + จัดส่ง + งานติดตั้ง (SV-Intake ประเภท=ติดตั้ง)';
 }
-recvRoute();
+function sl4InitPatterns(){
+  var chain=[
+    {label:'ร่าง',state:'done'},
+    {label:'Post VAT-AR',state:'wait'},
+    {label:'QT 0047 ✓',href:'bc365/sl1-quotation-mockup.html',state:'done'},
+    {label:'SO 0021 ✓',href:'sl2-reservation-mockup.html',state:'done'},
+    {label:'DP 0009 ✓',href:'sl3-deposit-mockup.html',state:'done'},
+    {label:'INV 0221',state:'current'},
+    {label:'FI-1 รับชำระลูกหนี้',href:'fi1-ar-receive-mockup.html'}
+  ];
+  swtRenderStatusStrip('#sl4Sc12',{
+    pills:[
+      {text:'฿ VAT 7%',type:'info'},
+      {text:'🔧 จัดส่ง+ติดตั้ง → เบิก + งานติดตั้ง (SV-Intake ประเภท=ติดตั้ง)',type:'route',id:'recvPill'},
+      {text:'🏷️ โปร ลด 10%',type:'promo'},
+      {text:'💰 หักมัดจำ 6,290',type:'warning'}
+    ],
+    makerChecker:{nodes:[
+      {role:'ขาย ✓',step:'คีย์บิล',state:'ok'},
+      {role:'Post ⏱',step:'VAT+AR',state:'wait'}
+    ]}
+  });
+  swtRenderDocChain('#sl4DcStrip',{label:'Doc Chain',nodes:chain});
+  swtRenderGateAlert('#sl4Gate',{
+    type:'ok',
+    compactOk:true,
+    text:'✅ เครดิตผ่าน · หักมัดจำ DP-0009 ฿6,290 · ยอดเก็บปลายทาง ฿11,140.30'
+  });
+  swtRenderSummary('#sl4Sc11',{
+    template:'sales-invoice',
+    interactive:true,
+    calc:{subtotal:17489,lineDiscount:1199,depositRefs:[{no:'DP-08DP-2606-0009',amount:6290,href:'sl3-deposit-mockup.html'}]},
+    discountInput:0,
+    vatMode:'exclusive',
+    vatRate:7
+  });
+  recvRoute();
+  sl4WireInputs();
+  setTimeout(sl4FocusScan,150);
+}
+document.addEventListener('DOMContentLoaded',sl4InitPatterns);
 function swtSbFilter(v){
   v=(v||'').toLowerCase();
   document.querySelectorAll('#swtSb .swt-sb-links a').forEach(function(a){
@@ -486,5 +665,8 @@ function swtSbFilter(v){
 }
 </script>
 <script src="swt-doc-finder.js"></script>
+<script src="swt-sc-modals.js"></script>
+<script src="swt-panels.js"></script>
+<script src="swt-sc-wire.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>

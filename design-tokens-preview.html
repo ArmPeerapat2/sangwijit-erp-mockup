@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWT Design Tokens — Live Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- ★ token จริงมาจากไฟล์นี้ — ทุกสี/ขนาดข้างล่างดึงจาก var() ในไฟล์นี้ -->
+<link rel="stylesheet" href="design-tokens.css">
+<style>
+/* หน้านี้ใช้ token จาก design-tokens.css ล้วน — แก้สีในไฟล์ css → หน้านี้เปลี่ยนตาม */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-ui);background:var(--page);color:var(--ink);font-size:var(--fs-base);line-height:1.5}
+
+.pg-head{background:var(--grad-brand);color:#fff;padding:26px 40px;box-shadow:var(--shadow)}
+.pg-head h1{font-size:var(--fs-xl);font-weight:700;display:flex;align-items:center;gap:12px}
+.pg-head .ico{width:38px;height:38px;border-radius:var(--r-lg);background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+.pg-head p{font-size:var(--fs-sm);color:rgba(255,255,255,.8);margin-top:6px;max-width:760px}
+.pg-head .src{display:inline-block;margin-top:8px;font-family:var(--font-num);font-size:var(--fs-xs);background:rgba(255,255,255,.15);padding:3px 10px;border-radius:var(--r-sm)}
+
+.wrap{max-width:1100px;margin:0 auto;padding:26px 40px 80px}
+.sec{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px 24px;margin-bottom:18px;box-shadow:var(--shadow-soft)}
+.sec-head{display:flex;align-items:baseline;gap:10px;padding-bottom:6px;margin-bottom:16px;border-bottom:1px solid var(--border-soft)}
+.sec-head h2{font-size:var(--fs-lg);font-weight:700;color:var(--ink-2)}
+.sec-head .note{margin-left:auto;font-size:var(--fs-xs);color:var(--faint)}
+.sub{font-size:var(--fs-xs);font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:18px 0 10px}
+.sub:first-child{margin-top:0}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.sw{border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;background:var(--surface)}
+.sw .chip{height:54px}
+.sw .meta{padding:7px 10px}
+.sw .name{font-size:var(--fs-xs);font-weight:700;color:var(--ink-2)}
+.sw .tok{font-size:var(--fs-2xs);color:var(--accent);font-family:var(--font-num);margin-top:1px}
+.sw .role{font-size:var(--fs-2xs);color:var(--faint);margin-top:2px}
+
+.pair-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:12px}
+.pair{border-radius:var(--r-md);padding:12px 14px;border:1px solid}
+.pair .h{font-size:var(--fs-sm);font-weight:700}
+.pair .d{font-size:var(--fs-2xs);margin-top:4px;font-family:var(--font-num);opacity:.85}
+.pair.s{background:var(--success-bg);border-color:var(--success-line);color:var(--success-ink)}
+.pair.w{background:var(--warning-bg);border-color:var(--warning-line);color:var(--warning-ink)}
+.pair.d{background:var(--danger-bg);border-color:var(--danger-line);color:var(--danger-ink)}
+.pair.i{background:var(--info-bg);border-color:var(--info-line);color:var(--info-ink)}
+.pair.p{background:var(--purple-bg);border-color:var(--purple);color:var(--purple-ink)}
+
+.type-row{display:flex;align-items:baseline;gap:16px;padding:7px 0;border-bottom:1px solid var(--border-soft)}
+.type-row:last-child{border:none}
+.type-row .tk{width:96px;font-family:var(--font-num);font-size:var(--fs-2xs);color:var(--accent);font-weight:600}
+.type-row .demo{color:var(--ink)}
+
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-strong)}
+.btn-success{background:var(--success);color:#fff}.btn-success:hover{background:var(--success-hover)}
+.btn-accent{background:var(--purple);color:#fff}.btn-accent:hover{background:var(--purple-strong)}
+.btn-outline{background:#fff;color:var(--ink-2);border:1px solid var(--border)}.btn-outline:hover{background:var(--surface-2);color:var(--accent);border-color:var(--info-line)}
+.btn-ghost{background:transparent;color:var(--muted)}.btn-ghost:hover{background:var(--surface-3)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+.r-demo{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}
+.r-box{background:var(--accent);width:80px;height:60px;display:flex;align-items:flex-end;justify-content:center;color:#fff;font-family:var(--font-num);font-size:var(--fs-2xs);padding-bottom:4px}
+
+.summary{max-width:340px}
+.summary-row{display:flex;justify-content:space-between;padding:5px 0;font-size:var(--fs-sm)}
+.summary-row .lbl{color:var(--muted)}
+.summary-row .val{color:var(--ink);font-weight:600;font-family:var(--font-num)}
+.summary-total{margin-top:8px;padding:10px 12px;background:var(--grad-brand);border-radius:var(--r-md);color:#fff;display:flex;justify-content:space-between;font-size:var(--fs-md);font-weight:700}
+.summary-total .val{font-family:var(--font-num)}
+
+.foot{text-align:center;font-size:var(--fs-xs);color:var(--faint);margin-top:22px}
+.tip{background:var(--info-bg);border:1px solid var(--info-line);color:var(--info-ink);border-radius:var(--r-md);padding:10px 14px;font-size:var(--fs-sm);margin-bottom:18px}
+.tip b{font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="pg-head">
+  <h1><span class="ico">🎨</span> SWT Design Tokens — Live</h1>
+  <p>ทุกสี · ขนาด · รัศมี ในหน้านี้อ่านจาก <span class="src">design-tokens.css</span> ผ่าน <span class="src">var()</span> — เปิด browser แล้วเห็นจริงว่า token ทำงาน</p>
+</div>
+
+<div class="wrap">
+
+  <div class="tip">💡 <b>ลองดู:</b> เปิด <b>design-tokens.css</b> แก้ <span style="font-family:var(--font-num)">--accent</span> เป็นสีอื่น (เช่น <span style="font-family:var(--font-num)">#DC2626</span>) แล้ว refresh หน้านี้ — ปุ่ม · token · ยอดรวม จะเปลี่ยนสีตามทันทีทั้งหน้า เพราะมาจากจุดเดียว</div>
+
+  <!-- COLORS -->
+  <div class="sec">
+    <div class="sec-head"><h2>สี (Color Tokens)</h2><span class="note">ช่องสี = var() จาก css</span></div>
+    <div class="sub">Brand · Accent</div>
+    <div class="grid">
+      <div class="sw"><div class="chip" style="background:var(--brand-deep)"></div><div class="meta"><div class="name">Brand Deep</div><div class="tok">--brand-deep</div><div class="role">sidebar · header</div></div></div>
+      <div class="sw"><div class="chip" style="background:var(--accent)"></div><div class="meta"><div class="name">Accent</div><div class="tok">--accent</div><div class="role">ปุ่ม · ลิงก์</div></div></div>
+      <div class="sw"><div class="chip" style="background:var(--accent-strong)"></div><div class="meta"><div class="name">Accent Strong</div><div class="tok">--accent-strong</div><div class="role">ตัวเลขเด่น</div></div></div>
+      <div class="sw"><div class="chip" style="background:var(--grad-brand)"></div><div class="meta"><div class="name">Gradient</div><div class="tok">--grad-brand</div><div class="role">header · ยอดรวม</div></div></div>
+    </div>
+    <div class="sub">Semantic</div>
+    <div class="grid">
+      <div class="sw"><div class="chip" style="background:var(--success)"></div><div class="meta"><div class="name">Success</div><div class="tok">--success</div><div class="role">ยืนยัน</div></div></div>
+      <div class="sw"><div class="chip" style="background:var(--warning)"></div><div class="meta"><div class="name">Warning</div><div class="tok">--warning</div><div class="role">รออนุมัติ</div></div></div>
+      <div class="sw"><div class="chip" style="background:var(--danger)"></div><div class="meta"><div class="name">Danger</div><div class="tok">--danger</div><div class="role">ลบ · ยอดหัก</div></div></div>
+      <div class="sw"><div class="chip" style="background:var(--purple)"></div><div class="meta"><div class="name">Purple</div><div class="tok">--purple</div><div class="role">action เด่น</div></div></div>
+    </div>
+    <div class="sub">Neutrals</div>
+    <div class="grid">
+      <div class="sw"><div class="chip" style="background:var(--ink)"></div><div class="meta"><div class="name">Ink</div><div class="tok">--ink</div></div></div>
+      <div class="sw"><div class="chip" style="background:var(--muted)"></div><div class="meta"><div class="name">Muted</div><div class="tok">--muted</div></div></div>
+      <div class="sw"><div class="chip" style="background:var(--faint)"></div><div class="meta"><div class="name">Faint</div><div class="tok">--faint</div></div></div>
+      <div class="sw"><div class="chip" style="background:var(--border)"></div><div class="meta"><div class="name">Border</div><div class="tok">--border</div></div></div>
+      <div class="sw"><div class="chip" style="background:var(--surface-2);border-bottom:1px solid var(--border)"></div><div class="meta"><div class="name">Surface 2</div><div class="tok">--surface-2</div></div></div>
+    </div>
+    <div class="sub">คู่สี Semantic (bg + text)</div>
+    <div class="pair-grid">
+      <div class="pair s"><div class="h">✓ Success</div><div class="d">--success-bg / -ink</div></div>
+      <div class="pair w"><div class="h">⏳ Warning</div><div class="d">--warning-bg / -ink</div></div>
+      <div class="pair d"><div class="h">✕ Danger</div><div class="d">--danger-bg / -ink</div></div>
+      <div class="pair i"><div class="h">ℹ Info</div><div class="d">--info-bg / -ink</div></div>
+      <div class="pair p"><div class="h">⚖ Purple</div><div class="d">--purple-bg / -ink</div></div>
+    </div>
+  </div>
+
+  <!-- TYPE -->
+  <div class="sec">
+    <div class="sec-head"><h2>ตัวอักษร (Type Scale)</h2><span class="note">font-size = var()</span></div>
+    <div class="type-row"><span class="tk">--fs-xl</span><span class="demo" style="font-size:var(--fs-xl);font-weight:700">หัวเรื่องเอกสาร · ใบเสนอราคา</span></div>
+    <div class="type-row"><span class="tk">--fs-lg</span><span class="demo" style="font-size:var(--fs-lg);font-weight:700">หัวข้อ section</span></div>
+    <div class="type-row"><span class="tk">--fs-md</span><span class="demo" style="font-size:var(--fs-md);font-weight:600">ยอดรวมเงิน · 103,439.00</span></div>
+    <div class="type-row"><span class="tk">--fs-base</span><span class="demo" style="font-size:var(--fs-base)">เนื้อความหลัก / ฐานระบบ</span></div>
+    <div class="type-row"><span class="tk">--fs-sm</span><span class="demo" style="font-size:var(--fs-sm)">ข้อความในฟอร์ม · ปุ่ม</span></div>
+    <div class="type-row"><span class="tk">--fs-xs</span><span class="demo" style="font-size:var(--fs-xs)">caption · sub-label</span></div>
+    <div class="type-row"><span class="tk">--fs-2xs</span><span class="demo" style="font-size:var(--fs-2xs);text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600">FIELD LABEL</span></div>
+    <div class="sub" style="margin-top:18px">ตัวเลข = --font-num (mono)</div>
+    <div style="font-family:var(--font-num);font-size:var(--fs-md);color:var(--accent-strong);font-weight:700">08QT-2604-0015 · 1,234,567.00 บาท</div>
+  </div>
+
+  <!-- BUTTONS + RADIUS -->
+  <div class="sec">
+    <div class="sec-head"><h2>ปุ่ม · รัศมี (Buttons · Radius)</h2></div>
+    <div class="row">
+      <button class="btn btn-primary">✔ Primary</button>
+      <button class="btn btn-success">✔ บันทึก</button>
+      <button class="btn btn-accent">📤 Action</button>
+      <button class="btn btn-outline">📂 เปิดเอกสาร</button>
+      <button class="btn btn-ghost">⋯ เพิ่มเติม</button>
+    </div>
+    <div class="sub">Radius scale</div>
+    <div class="r-demo">
+      <div class="r-box" style="border-radius:var(--r-xs)">--r-xs</div>
+      <div class="r-box" style="border-radius:var(--r-sm)">--r-sm</div>
+      <div class="r-box" style="border-radius:var(--r-md)">--r-md</div>
+      <div class="r-box" style="border-radius:var(--r-lg)">--r-lg</div>
+      <div class="r-box" style="border-radius:var(--r-pill);width:110px">--r-pill</div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="sec">
+    <div class="sec-head"><h2>สรุปยอด (Summary)</h2><span class="note">gradient + mono จาก token</span></div>
+    <div class="summary">
+      <div class="summary-row"><span class="lbl">รวมจำนวนเงิน</span><span class="val">101,723.00</span></div>
+      <div class="summary-row"><span class="lbl">ส่วนลด</span><span class="val" style="color:var(--danger)">-5,100.00</span></div>
+      <div class="summary-row"><span class="lbl">ยอดก่อนภาษี ⚖</span><span class="val">96,623.00</span></div>
+      <div class="summary-row"><span class="lbl">VAT 7%</span><span class="val">6,816.00</span></div>
+      <div class="summary-total"><span>รวมเงินทั้งสิ้น</span><span class="val">103,439.00</span></div>
+    </div>
+  </div>
+
+  <div class="foot">Live preview · token ทั้งหมดจาก design-tokens.css · standalone</div>
+</div>
+</body></html>

@@ -69,7 +69,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 .pill-route{background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE}
 .items-card{padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
 .items-card .card-header{padding:12px 14px;margin:0;border-bottom:1px solid #E5E7EB}
-.items-wrap{overflow-y:auto;flex:1;min-height:60px}
+.items-wrap{overflow-y:auto;flex:1}
 table.items{width:100%;border-collapse:collapse;background:#fff}
 table.items thead{position:sticky;top:0;background:#F8FAFC;z-index:5}
 table.items thead th{padding:9px 12px;font-size:10.5px;font-weight:600;color:#6B7280;text-align:left;border-bottom:2px solid #E5E7EB;text-transform:uppercase;white-space:nowrap}
@@ -121,12 +121,6 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .disc-input{display:flex;gap:4px;align-items:center}
 .disc-input input{width:80px;padding:3px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;text-align:right;font-family:'Inter',monospace}
 .disc-input select,.vat-sel{padding:3px 4px;border:1px solid #E5E7EB;border-radius:4px;font-size:11px;font-family:inherit}
-.dc-strip{position:relative;flex:none;background:#fff;border-top:1px solid #E5E7EB;padding:7px 24px;display:flex;align-items:center;gap:8px;font-size:11px;z-index:20;box-shadow:0 -2px 8px rgba(0,0,0,0.04)}
-.dc-strip .dc-lbl{font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px}
-.dc-node{padding:3px 10px;border-radius:5px;background:#F3F4F6;color:#6B7280;font-weight:600}
-.dc-node.done{background:#ECFDF5;color:#065F46}
-.dc-node.current{background:#EFF6FF;color:#1D4ED8;border:1px solid #93C5FD}
-.dc-arrow{color:#CBD5E1}
 a.dc-node{text-decoration:none;cursor:pointer}
 a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
@@ -138,7 +132,6 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .row-2col .field{margin-bottom:3px}
 .row-2col .field-grid-2{gap:3px 14px}
 .row-2col .credit-line{margin-top:5px;padding:4px 8px}
-.content>.items-card{flex:1 1 0;min-height:120px}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
 .row-bottom{font-size:12px;height:158px}
 .row-bottom .tabset,.row-bottom>.card{overflow:auto}
@@ -158,74 +151,67 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 
 /* marker หน้าใหม่ (rebuild บนเทมเพลตแล้ว) */
 </style>
+  <link rel="stylesheet" href="swt-patterns.css">
 </head>
-<body>
+<body data-swt-sc="sl2">
 <div class="layout">
 <div class="main">
 
-  <!-- ① TOPBAR -->
-  <div class="topbar">
-    <div class="topbar-breadcrumb">งานขาย <span class="sep">›</span> ใบจอง <span class="sep">›</span> <span class="current">08SO-2606-0021</span></div>
-    <div class="topbar-spacer"></div>
-    <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
-    <div class="topbar-icon">🔔</div>
-    <select class="branch-sel"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option></select>
-    <select class="branch-sel"><option>แผนกขายปลีก</option><option>ขายโครงการ</option></select>
-    <div class="topbar-avatar">สว</div>
-  </div>
-
-  <!-- ② MAIN HEADER -->
-  <header class="main-header">
-    <div class="mh-left">
-      <div class="mh-title">
-        <div class="ico">📑</div>
-        <div><h1>ใบจอง</h1><p>Sales Order (SL-2)</p></div>
-      </div>
-      <div class="mh-divider"></div>
-      <div class="mh-meta">
-        <div class="mh-meta-item"><div class="lbl">เลขที่จอง</div><div class="val">08SO-2606-0021</div></div>
-        <div class="mh-meta-item"><div class="lbl">วันที่จอง</div><div class="val">06 มิ.ย. 26</div></div>
-        <div class="mh-meta-item"><div class="lbl">วันที่ส่งสินค้า</div><div class="val">13 มิ.ย. 26</div></div>
+  <!-- ①② UNIFIED HEADER — Topbar + Main Header รวม -->
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">งานขาย <span class="sep">›</span> ใบจอง <span class="sep">›</span> <span class="current">08SO-2606-0021</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+        <div class="topbar-icon">🔔</div>
+        <select class="branch-sel"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option></select>
+        <select class="branch-sel"><option>แผนกขายปลีก</option><option>ขายโครงการ</option></select>
+        <div class="topbar-avatar">สว</div>
       </div>
     </div>
-    <div class="mh-right">
-      <span class="mh-badge">✓ Confirmed</span>
-      <button class="mh-btn mh-btn-ghost">📋 คิวงาน</button>
-      <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
-      <button class="mh-btn mh-btn-accent">📤 แปลงเป็นบิล</button>
+    <div class="uh-main">
+      <div class="mh-left">
+        <div class="mh-title">
+          <div class="ico">📑</div>
+          <div><h1>ใบจอง</h1><p>Sales Order (SL-2)</p></div>
+        </div>
+        <div class="mh-divider"></div>
+        <div class="mh-meta">
+          <div class="mh-meta-item"><div class="lbl">เลขที่จอง</div><div class="val">08SO-2606-0021</div></div>
+          <div class="mh-meta-item"><div class="lbl">วันที่จอง</div><div class="val">06 มิ.ย. 26</div></div>
+          <div class="mh-meta-item"><div class="lbl">วันที่ส่งสินค้า</div><div class="val">13 มิ.ย. 26</div></div>
+        </div>
+      </div>
+      <div class="mh-right">
+        <span class="mh-badge">✓ Confirmed</span>
+        <button class="mh-btn mh-btn-ghost">📋 คิวงาน</button>
+        <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
+        <button class="mh-btn mh-btn-accent">📤 แปลงเป็นบิล</button>
+      </div>
     </div>
   </header>
 
-  <!-- ③ SUB-ACTION BAR -->
-  <div class="saab">
+  <!-- ③ SAAB ย่อ — ปุ่มหลัก + ⋯ -->
+  <div class="saab saab-compact">
     <button class="btn btn-outline" onclick="dfOpen()">📂 เปิดเอกสารเก่า</button>
-    <button class="btn btn-outline">💾 Save</button>
-    <button class="btn btn-outline" onclick="tplCopyDoc()">📋 Copy / ทำสำเนา</button>
-    <button class="btn btn-outline" onclick="alert('เปิดใบมัดจำ (SL-3) — รับเงินมัดจำแยกเอกสาร · ผูกกับใบจองนี้')" title="รับมัดจำ → ต้องเปิดใบมัดจำ SL-3 แยก">💰 รับมัดจำ (เปิดใบ SL-3)</button>
+    <button class="btn btn-outline" onclick="tplCopyDoc()">📋 Copy</button>
     <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบจอง</button>
-    <button class="btn btn-success">↪ แปลงเป็นบิล (INV)</button>
-    <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก (คืนสต็อก)</button>
-    <span class="saab-status"><span class="dot"></span>สถานะ: <strong>Confirmed</strong> · จองสต็อกแล้ว</span>
+    <div class="saab-more-wrap">
+      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
+      <div class="saab-more-menu">
+        <button type="button" class="btn btn-outline btn-menu">💾 Save</button>
+        <button type="button" class="btn btn-outline btn-menu" onclick="alert('เปิดใบมัดจำ (SL-3) — รับเงินมัดจำแยกเอกสาร · ผูกกับใบจองนี้')">💰 รับมัดจำ (SL-3)</button>
+        <button type="button" class="btn btn-ghost btn-menu" style="color:#EF4444">❌ ยกเลิก (คืนสต็อก)</button>
+      </div>
+    </div>
+    <div class="saab-spacer"></div>
   </div>
 
   <div class="content">
 
-    <!-- ④a STATUS + DOC-CHAIN รวมแถวเดียว -->
-    <div class="status-strip" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div class="sc11-pills">
-        <span class="pill pill-success">✓ Confirmed</span>
-        <span class="pill pill-info">฿ VAT 7%</span>
-        <span class="pill pill-route" id="resvPill">🔒 จองกันสต๊อก → รอเบิก (WH-3)</span>
-        <span class="pill pill-warning">💰 มัดจำ 6,290 · คงค้าง 11,140.30</span>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
-        <span class="dc-lbl" style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
-        <a class="dc-node done" href="sl1-quotation-mockup.html" target="_blank">QT 0047 ✓</a><span class="dc-arrow">→</span>
-        <span class="dc-node current">SO 0021</span><span class="dc-arrow">→</span>
-        <a class="dc-node" href="sl3-deposit-mockup.html" target="_blank">มัดจำ DP</a><span class="dc-arrow">→</span>
-        <a class="dc-node" href="sl4-invoice-mockup.html" target="_blank">บิลขาย INV</a>
-      </div>
-    </div>
+    <!-- ④a SC-12 Status (pills + maker-checker · ไม่มี doc-chain) -->
+    <div id="sl2Sc12" class="status-strip"></div>
+    <div id="sl2Gate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL -->
     <div class="row-2col">
@@ -262,7 +248,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           <div class="field"><div class="field-label">พนักงานขาย</div><div class="field-value">สัญญาลักษณ์ วังคะฮาต</div></div>
           <div class="field"><div class="field-label">วันที่ส่งสินค้า <span style="color:#EF4444">*</span></div><div class="field-value">13 มิ.ย. 26</div></div>
           <div class="field"><div class="field-label">เงื่อนไขชำระ</div><div class="field-value">เครดิต 7 วัน</div></div>
-          <div class="field"><div class="field-label">อ้างอิงใบเสนอราคา</div><div class="field-value"><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 08QT-2606-0047 ↗</a></div></div>
+          <div class="field"><div class="field-label">อ้างอิงใบเสนอราคา</div><div class="field-value"><a href="bc365/sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 08QT-2606-0047 ↗</a></div></div>
         </div>
       </div>
     </div>
@@ -291,7 +277,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
               <td style="text-align:right"><input class="line-num" value="0"></td>
               <td><select class="line-sales"><option>สัญญาลักษณ์</option></select></td>
               <td class="item-total">12,590.00</td>
-              <td><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none;font-size:11px">QT-0047</a></td>
+              <td><a href="bc365/sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none;font-size:11px">QT-0047</a></td>
               <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
             </tr>
             <tr>
@@ -305,7 +291,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
               <td style="text-align:right"><input class="line-num" value="0"></td>
               <td><select class="line-sales"><option>สัญญาลักษณ์</option></select></td>
               <td class="item-total">3,000.00</td>
-              <td><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none;font-size:11px">QT-0047</a></td>
+              <td><a href="bc365/sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none;font-size:11px">QT-0047</a></td>
               <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
             </tr>
             <tr>
@@ -319,7 +305,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
               <td style="text-align:right"><input class="line-num" value="799.00"></td>
               <td><select class="line-sales"><option>สัญญาลักษณ์</option></select></td>
               <td class="item-total">0.00</td>
-              <td><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none;font-size:11px">QT-0047</a></td>
+              <td><a href="bc365/sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none;font-size:11px">QT-0047</a></td>
               <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
             </tr>
             <tr>
@@ -332,7 +318,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
               <td style="text-align:right"><input class="line-num" value="0"></td>
               <td><select class="line-sales"><option>สัญญาลักษณ์</option></select></td>
               <td class="item-total">700.00</td>
-              <td><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none;font-size:11px">QT-0047</a></td>
+              <td><a href="bc365/sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none;font-size:11px">QT-0047</a></td>
               <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
             </tr>
             <tr class="empty-row"><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
@@ -375,7 +361,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
         </div>
         <div class="tabset-pane" id="t-ref">
           <div class="tab-grid">
-            <span class="k">ใบเสนอราคาต้นทาง</span><span class="v"><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 08QT-2606-0047 ↗</a></span>
+            <span class="k">ใบเสนอราคาต้นทาง</span><span class="v"><a href="bc365/sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 08QT-2606-0047 ↗</a></span>
             <span class="k">หมายเลขอ้างอิง</span><span class="v">REF20260606-001</span>
           </div>
         </div>
@@ -409,6 +395,9 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     </div>
 
   </div><!-- /content -->
+
+  <!-- ⑤ DOC-CHAIN แถบล่าง main -->
+  <div id="sl2DcStrip" class="dc-strip"></div>
 
 </div><!-- /main -->
 </div><!-- /layout -->
@@ -447,10 +436,20 @@ function tplScan(e){
 /* ประเภทการจอง (per-document) → เปลี่ยน routing pill */
 function resvRoute(){
   var t=document.getElementById('resvType').value;
-  var p=document.getElementById('resvPill');
+  var p=document.getElementById('resvPill')||document.querySelector('#sl2Sc12 .pill-route');
+  if(!p)return;
   if(t==='po'){ p.textContent='🛒 จองสั่งซื้อล่วงหน้า → รอสั่งซื้อ (จัดซื้อ · PO-Q)'; }
   else { p.textContent='🔒 จองกันสต๊อก → รอเบิก (คลัง · WH-3)'; }
 }
+document.addEventListener('sc:wired',function(e){
+  if(!e.detail||e.detail.page!=='sl2')return;
+  var pills=document.querySelector('#sl2Sc12 .sc11-pills');
+  if(pills&&!document.getElementById('resvPill')){
+    var s=document.createElement('span');s.className='pill pill-route';s.id='resvPill';
+    s.textContent='🔒 จองกันสต๊อก → รอเบิก (คลัง · WH-3)';
+    pills.appendChild(s);
+  }
+});
 function swtSbFilter(v){
   v=(v||'').toLowerCase();
   document.querySelectorAll('#swtSb .swt-sb-links a').forEach(function(a){
@@ -459,5 +458,9 @@ function swtSbFilter(v){
 }
 </script>
 <script src="swt-doc-finder.js"></script>
+<script src="swt-patterns.js"></script>
+<script src="swt-sc-modals.js"></script>
+<script src="swt-panels.js"></script>
+<script src="swt-sc-wire.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>

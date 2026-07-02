@@ -33,8 +33,17 @@
 - 🟢 1 (Timeline) · 🟡 2 (Customer/Item partial) · 🔴 6 (Payment/Delivery/DocReference/Deposit/Serial/PromoPrice ขาด)
 - swt-link.js ทำได้บางส่วนแบบ attribute-wire · **ยังไม่เป็น component ตาม contract (Props/Events/mode)**
 
-## ลำดับสร้างที่เสนอ
-1. **CustomerSearch + ItemSearch** (ใช้ทุกที่ · มีฐานแล้ว · ทำให้ครบ contract + wire ทุกหน้า)
-2. **DocReference** (หัวใจ chain — pull ต้นทาง · ทำให้ flow ต่อกัน)
-3. **PromoPrice** (ราคา/โปร — แต่ผูก Price List MD-6 ที่ defer → ทำ skeleton + manual ก่อน)
-4. Payment · Deposit · Delivery · Serial (ตามที่ flow ต้องใช้)
+## SC ที่เพิ่มนอก spec เดิม (mockup 2026-06)
+
+| รหัส | ไฟล์ | หน้าที่ | wire |
+|---|---|---|---|
+| **SC-3 Vendor** | `sc3-vendor-search-mockup.html` | ค้นหา/เลือกเจ้าหนี้ (คู่ SC-1) | `dfOpenVend()` · ✦ DONE |
+
+> **ชื่อชน:** ใน SL blueprint "SC-3" = Payment panel · ใน PO/FI "SC-3" = Vendor — ดู `shared-components-status.md`
+
+## ลำดับสร้างที่เสนอ (อัปเดต 2026-06-11)
+1. **CustomerSearch + ItemSearch + VendorSearch** — wire ทุกฟอร์ม rebuild + หน้าเก่าที่เหลือ
+2. **DocReference** — localize สายซื้อใน `dfOpenRef`
+3. **PromoPrice** — skeleton ก่อน MD-6 Price List
+4. Payment · Deposit · Delivery · Serial (ตาม flow)
+5. ดูรายการ SC เสนอเพิ่ม → `shared-components-status.md` §4

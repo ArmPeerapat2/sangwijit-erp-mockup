@@ -66,6 +66,17 @@ Trigger: ลูกค้านำสินค้ามาซ่อม หรื�
 Output:  Service Order + นัดหมายช่าง
 ```
 
+> ### 🔄 Design Note — Claim Decompose + Job-Type Model (locked 2026-07-01)
+> **CL-1 Claims ไม่เป็น module แยก · claim = "ประเภทงาน" ตัวหนึ่งใน Service Intake.** service form เป็น skeleton · แต่ละ job type toggle extension inline (`.jx` slot). full spec: **`.agents/svc-claim-jobtype-spec.md`** (grill Q1-Q15).
+> - **5 job types:** ซ่อม (core) · **เคลม** (extension: menu A-E · vendor settlement V1-V5 · cost coverage) · ติดตั้ง (pull SL · จุด/วัสดุ/ประกัน) · ตรวจเช็ค (diagnostic checklist) · ล้าง (batch checklist + MA). ~~จัดส่ง~~ ตัด (→WH / ยุบเข้าติดตั้ง).
+> - **เคลม sub-type (auto จาก warranty):** Warranty / Goodwill / Pre-sale.
+> - **Cost = BINARY** (Vendor 100% in-condition · หรือ SWT รับภาระ out) · **ลูกค้าไม่จ่าย** · Refund ≤ sale price · ไม่แบ่ง %.
+> - **Vendor settlement:** V1 ส่งใหม่/ซ่อมกลับ · V2 pay-in · V3 CN · V4 refuses→VRA(doc ใหม่) · V5 goodwill.
+> - **Approval 2-tier:** ผจก.ศูนย์ (INT-APPR · รับเข้าคลัง) + จนท.เซล/บริการ (EXT-APPR · ส่ง vendor).
+> - **คลังเคลม:** WH-SVC-CTR + 6 bins · reuse ✦ WH-1/WH-3/PO-CN/SL-CN/FI-1.
+> - **UI:** ยึด density guideline `knowledge-base/portal/06-density-hierarchy.md` (`.dz-*` · ยุบ vs เด่น).
+> - Mockup: `bc365/service-intake-mockup.html` (job-type bar + `.jx` slot · built ครบ 5).
+
 ### ERP Form 7 Sections
 
 **Section 1 — Page Header**
@@ -77,7 +88,7 @@ ActionBar: [Save] [นัดหมายช่าง] [พิมพ์ใบร�
 **Section 2 — Doc Header**
 ```
 เลขที่รับซ่อม : Auto | วันที่รับ    : Today
-ประเภทงาน    : ซ่อม / ติดตั้ง / ตรวจสภาพ / เคลม
+ประเภทงาน    : ซ่อม / เคลม / ติดตั้ง / ตรวจเช็ค / ล้าง   (claim = job type · ดู Design Note ↓)
 อ้างอิงบิล   : SC5 (บิลขายต้นทาง — ถ้ามี)
 วันนัดช่าง   : Required (ระบุทันที)
 ช่างที่รับผิดชอบ: Assign จาก Technician List

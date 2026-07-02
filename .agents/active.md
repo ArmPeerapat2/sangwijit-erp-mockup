@@ -1,430 +1,141 @@
 ---
-updated_at: "2026-06-03T00:00:00+07:00"
+updated_at: "2026-07-02T03:00:00+07:00"
 status: "active"
-current_focus: "🏁 SL กลุ่มงานขายปิดครบ 6 หน้า: SL-Q(คิว·จัดกลุ่ม QT/SO/INV/DP/CN) · SL-1 · SL-2 · SL-3 · SL-4 · SL-CN(ใบลดหนี้ 3 โหมด) — build บนเทมเพลตเดียวกัน · doc-chain เชื่อม · sc1/sc2 shared · routing ชัด (sl-post-save-routing.md) · SL-Q เน้นเอกสารขาย / ปลายทาง(เบิก/ส่ง/สั่งซื้อ)=แยกเมนู cross-link · ถัดไป: WH(รอเบิก)/PO(รอสั่งซื้อ) ตาม Form Build Pattern · [เดิม SL-1→4]" (ใบเสนอราคา/ใบจอง/ใบมัดจำ/บิลขาย · doc-chain เชื่อมกัน · status+chain รวมแถวบน · เลขที่อ้างอิงต่อไลน์ · per-doc reservation routing · หักมัดจำ) · **Component หลัก: sc1-customer-search + sc2-item-search = canonical** (Customer Search 9 คอลัมน์+ประวัติ 4 แท็บ · Product Search) เรียกผ่าน swt-doc-finder dfOpenCust/dfOpenProd (iframe modal) · + Reference Picker dfOpenRef (multi-select ตามลูกหนี้) · guideline: .agents/topics/form-template-guideline.md + queue-dashboard-matrix.md · ถัดไป: SL-CN ใบลดหนี้ (flow 07) หรือ propagate sc1/sc2 ไปหน้าเก่า"
+current_focus: "🏭 **Service Job-Type Model + Claim Decompose (grill locked 1 ก.ค.)** — ดู **`.agents/svc-claim-jobtype-spec.md`** (design record ครบ Q1-Q15). หัวใจ: **CL-1 ไม่เป็น module แยก · claim = job type ใน service-intake** · service form = skeleton · 5 job types (ซ่อม·เคลม·ติดตั้ง·ตรวจเช็ค·ล้าง · ตัดจัดส่ง) แต่ละอัน toggle extension. **BUILT:** เคลม popup ใน `bc365/service-intake-mockup.html` (trigger=ประเภทงาน=เคลม · 5 sections · cost BINARY vendor/SWT). **TO-BUILD:** ติดตั้ง inline section · shared checklist section (ตรวจเช็ค+ล้าง) · job-type toggle · SL-4 repoint SV-1. Phase 2 done ก่อนหน้า: CF-2.6·CF-2.7·CL-1 v2·PM-1. **ก่อนหน้า:** Phase 1 ✦ 56 หน้าปิด. ⚠️ no-localhost-build · ห้าม bash sed OneDrive (PowerShell+negative lookbehind) · Archive on Rebuild · Feature Parity Audit · claim=job type ไม่ใช่ source · cost=binary ไม่ใช่ % · อ้างของเก่า/ใหม่ระบุ path"
 branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
 
-## 🌙 HANDOFF — ต่อพรุ่งนี้ (บันทึก 2026-06-08)
+## 🌙 HANDOFF — ล่าสุด (2026-06-11)
 
-**วันนี้ทำเสร็จ (committed · ahead origin):** procure-to-pay + AP Reduction chain เกือบครบ
-- **Shared sidebar `swt-sidebar.js`** (refactor 73 ไฟล์ · แก้เมนู/ติดดาว ✦ ที่ DONE[] ที่เดียว · เลิก inline sidebar · กัน drift)
-- **Forms rebuild บน `_form-template`:** PO-1 ใบขอสั่งซื้อ · PO-4 ใบสั่งซื้อ · WH-1 ใบรับสินค้า (โหมดรับ segmented) · PO-6 ใบตั้งหนี้ (ย้ายเข้าเมนู FI · maker≠checker · 3-Way drill · ดึงส่งเสริม/ลดหนี้) · PO-7 ส่งเสริมการขาย (สรุปได้จริง→ตั้งหนี้)
-- **หน้าใหม่:** SC-3 ค้นหาเจ้าหนี้ · PO-CN ใบลดหนี้เจ้าหนี้ (Purchase Credit Note · ปิด gap APCN)
-- **เชื่อม:** CLM → ออกใบลดหนี้ PO-CN → "รอหักหนี้" → PO-6 ดึงไปตัด
-- **picker fixes:** sc2/sc7 ถอด sidebar · sc2 parent-doc + popup โปร่งใส · กรอบ iframe ไร้ขอบ (swt-doc-finder df-frame-x)
-- **lock ไว้ 2 section ล่าง:** PO↔WH Receiving Boundary + AP Reduction Concept
+**chain ปิดแล้ว (procure-to-pay):**
+```
+PO-1 ใบขอสั่งซื้อ (PR) → PO-4 ใบสั่งซื้อ (PO) → WH-1 ใบรับสินค้า (GRN) → PO-3 ใบวางบิล Vendor (VBL) → PO-6 ใบตั้งหนี้เจ้าหนี้ (AP) → FI-2 จ่ายชำระเจ้าหนี้ (AP) → FI-Q คิวงานการเงิน (แผง AP)
+```
++ PO-7 สรุปงบจัดซื้อ · PO-CN ใบลดหนี้เจ้าหนี้ · PO-8 บิลฝาก (Deposit Pool) · AP reduction ผ่าน PO-6 ใบตั้งหนี้เจ้าหนี้ picker
 
-**chain ที่ build แล้ว:** PO-1 → PO-4 → WH-1 → PO-6 → (FI-2) · + PO-7/PO-CN/CLM (AP reduction)
-**✦ DONE:** SL-Q/1~4/CN · PO-1 · PO-4 · PO-6 · PO-7 · PO-CN · WH-1 · SC-3
+**✦ DONE (`swt-sidebar.js`):** SL-Q/1~4/CN · PO-1/**2**/**3**/4/6/7/8/CN · WH-1 · SC-3 · **FI-1/2** — ทุกหน้าอัปเดตเทมเพลตหลักแล้ว (ยกเว้น SC-3 = picker) · PO-2 Trade Agreement ติด ✦ 2026-06-14 · **PO-3 ใบวางบิล Vendor** ติด ✦ 2026-06-14
 
-**⏭️ ต่อ (ลำดับ):**
-1. ~~**"รอหักหนี้" queue ใน PO-6**~~ ✅ 2026-06-08 — **ยุบเป็น picker เดียว "🔗 ดึงรายการอ้างอิง" 2 แท็บ**: (A) 🧾 ใบแจ้งหนี้ Vendor (+) เลือกหลายใบ · อ้างรับครบ · Inbox+คีย์มือ+แนบสแกน · เทียบยอด+3-Way · **ประเภทรับ (📥 รับทั้งหมด / 🟣 บิลฝาก) เลือกรายบิล** (เอา mode-bar รวมทั้งใบออก · gate/pill สรุปอัตโนมัติ) · (B) ↩️ ดึงลดหนี้/หัก (−) 4 หมวด: มัดจำ/บิลฝาก/ใบลดหนี้(PO-CN คืน/ราคาผิด/เคลม)/ส่งเสริม(PO-7) · ดึงเข้า PO-6.3 ตารางเดียว net · **PO-6.5 คำนวณสดจาก data-kind** · PO-6.2 เลิกปุ่มซ้ำ→badge · กันดึงซ้ำ+renumber · archive `_archive/po6-ap-invoice-mockup-2026-06-08.html`
-2. ~~**✂️ ตัด PO-5 (Finance GRN)**~~ ✅ 2026-06-08 — `git mv po5-finance-grn-mockup.html → _archive/` · ลบ entry PO-5 จาก swt-sidebar.js · **redirect GRN→WH-1** ใน po1(chain)/po4(5จุด)/po8(2)/wh-r(8)/architecture(2)/cf1-rbac(list) · ไม่แตะ _archive/* + sangwijit-bc-mockup/ (sub-project แยก)
-3. **PO-8 บิลฝาก (Deposit Pool)** — กองฝากเรียกออกหลายปลายทาง (เคสคุยละเอียด · 100→เรียก40→เหลือ60)
-4. **FI-2 จ่ายชำระ AP** — ปิด chain procure-to-pay
+**ทำเสร็จล่าสุด (2026-06-13):**
+- **SL-4 บิลขาย — โหมดยิงเปิดบิลเร็ว (scan/คีย์ลัด)** — `sl4-invoice-mockup.html` (archive `_archive/sl4-invoice-mockup-2026-06-13.html`) · เพิ่ม **hotbar คีย์ลัด** ใต้ SAAB · `tplScan()` ทำงานจริง (ยิงตัวเดิม=+qty · ตัวใหม่=เติมแถวว่าง · toast + row-flash) · catalog จำลอง `SCAN_CAT` · **คีย์ลัด global** F2 กลับช่องยิง / F4 SC-2 เพิ่มสินค้า / F6 SC-1 ลูกค้า / F7 SC-5+ อ้างอิง / F8 SC-3P ชำระเงิน / F9·Ctrl+Enter Post / Esc · auto-focus ช่องยิงตอนโหลด · live recalc → re-render SC-11 สรุปยอด · แตะไฟล์เดียว ไม่ยุ่ง shared → ไม่ต้อง chain regression
 
-**🔖 Backlog:** SC-2 tab ประวัติการซื้อ · PO-2 redo (Vendor Commitment · Sell-in/Rebate/Co-op) · dfOpenRef localize สายซื้อ (PR/RFQ/Reorder) · SL-4 เติมบริหารเครดิต+วงเงินลูกค้า+drop-ship
-**⚠️ เคลม (CLM) = ย้ายไปอยู่ศูนย์บริการ SV** (งานเคลมเป็น domain SV) → defer · เชื่อม CLM→PO-CN ไว้แล้ว
+**ทำเสร็จล่าสุด (2026-06-10~11):**
+- **✦ Batch เทมเพลตหลัก (2026-06-11)** — ทุกหน้า ✦ ใน `swt-sidebar.js` DONE[] ยกเว้น SC-3 picker: unified-header · saab-compact · SC-12/Gate แยก · dc-strip ⑤ · split docChain JS · `swt-sc-wire.js` wireStandardMounts + compact payment SL-1/2/3
+- **Header ย่อ (SL-4 + template)** — `unified-header` รวม topbar+main-header · SAAB `saab-compact` · SC-3P `compact:true` ชำระเงิน fit row-bottom · Doc Chain ⑤
+- **100vh overflow fix** — `swt-patterns.css` §④c: เอา `min-height:340/300px` ออก · ใช้ `flex:1 1 0` + `min-height:0` · `row-bottom` 136px · `gap` 8px · scroll ใน `items-wrap` เท่านั้น · ทด 1440×900/768 ผ่าน FI-1/SL-4/FI-2/PO-4/SL-3
+- **FI-1 รับชำระลูกหนี้** rebuild บนเทมเพลต · mirror FI-2 · archive `_archive/fi1-ar-receive-mockup-2026-06-11.html`
+- **FI-2 จ่ายชำระเจ้าหนี้** rebuild บน `_form-template` · chain ไป FI-Q · archive `_archive/fi2-ap-payment-mockup-2026-06-10.html`
+- **FI-Q** sync AP panel · แถว AP-2606-0088 · modal chain · ปุ่ม→FI-2
+- **SC-11 (สรุปยอด) + SC-12 (สถานะ)** ✅ `swt-patterns.js` · wire SL-4 · PO-4 · WH-1 · FI-2 · PO-6 · `#*Sc11`=summary · `#*Sc12`=status
+- **SC-5+** ✅ `dfOpenRef({docType})` โปรไฟล์ SL/PO/WH/FI · wire SL-4 · PO-4 · WH-1 · `dfRefPull()`
+- **SC-14** ✅ `swt-ap-reduce.js` · wire PO-6
+- **SC Sprint Build ปิด** ✅ `swt-sc-modals.js` (10/13/15/16/18) · `swt-panels.js` (3P/4/6/8/17) · `swtBcTooltip` · `sc-shared-catalog-mockup.html`
+- **Docs:** ตัดประวัติยาว · `chain-regression-checklist.md` + `shared-components-status.md` · Blueprint Step 0
+- **Menu IA:** เพิ่ม `menu-grouping-old-new-mapping.md` (mapping เมนูเก่า/ใหม่ + ไฟล์ปลายทางสำหรับ sidebar final)
+- **Sidebar Final IA:** ปรับ `swt-sidebar.js` ตามกรุปใหม่ (รายงานอยู่ใต้แต่ละสายงาน) + badge `เก่า/ใหม่` + ย้ายกลุ่มศูนย์กลางระบบ
+- **Sidebar Toggle:** เพิ่มปุ่ม `ซ่อนไม่มี✦` (done-only) ใน `swt-sidebar.js` + จำสถานะด้วย `localStorage`
+- **PO-2/PO-7 alignment:** เน้น `PO-2` เอกสารแนบหลักฐาน (ไม่อ้างอิงบิล) + `PO-7` ดึงรายการ+หลักฐานจาก PO-2 ก่อน Realize
+- **PO-2 layout tune:** รวม `PO-2.2/2.4` เป็นกลุ่มเดียว + `PO-2.3` เป็นตารางสไตล์ลิสต์แบบ `SL-4.3` (คงเนื้อหาเดิมตาม type)
+- **PO-2 wording cleanup (2026-06-12):** ตัดคำ `VC` ออกจาก UI ของ **PO-2 Trade Agreement / Vendor** → ใช้คำ `ข้อตกลง` + เลขเอกสาร `AG-*` ให้ตรงเทมเพลทกลาง
+- **PO-2 + PO-7 flow refine (2026-06-12):** `PO-2` ปรับ line list ตาม type (MOU/Sell-in/Sell-out = กรอบยอดซื้อแบบ filter ประเภท/ยี่ห้อ/หมวด/สินค้า, Co-op = บันทึกความเข้าใจ) + อัปโหลดหลักฐานภาพ/PDF/DOC + เซ็นยืนยันแบบพิมพ์แนบไฟล์หรือส่งลิงก์เซ็นในระบบ; `PO-7` ปรับเป็นดึง `PO-2` ทีละ 1 ข้อตกลง + ช่อง `Adj` กรอกมือ + สรุปยอดส่ง `PO-6` ตามยอดหลังปรับ
+- **PO-2 popup standard + PO-7 two-pull list (2026-06-12):** `PO-2` เปลี่ยนปุ่มเอกสารหลังอัปโหลด/หลักฐานเซ็นให้เปิด popup มาตรฐาน (`modal-overlay`) เพื่อดูไฟล์ในหน้าต่างเดียว; `PO-7` บังคับดึงข้อมูล 2 ชั้น (① ดึง PO-2 ② ดึงยอดจริงซื้อ/ขายตามช่วง+สินค้า) และแสดงลิสต์แบบสินค้าเมื่อเป็น MOU/Sell-in/Sell-out ส่วน Co-op แสดงลิสต์บันทึกความเข้าใจ
+- **PO-2 template layout alignment (2026-06-12):** ปรับโครงหัวฟอร์มของ `PO-2 Trade Agreement / Vendor` เป็น `unified-header` + `saab-compact` ตามเทมเพลทกลาง และย้ายหน้าจอเป็น fixed shell (`height:100vh`) โดยให้ scroll ภายใน content wrapper
+- **PO-2 screen-fit fix (2026-06-12):** ปรับขนาด shell/spacing ของ `PO-2 Trade Agreement / Vendor` ให้พอดีจอมากขึ้น (ลด `min-width` เป็น 1280, ปรับ `saab` ให้ไม่ยุบ, ลด padding content, และให้ status strip wrap ได้) เพื่อแก้ปัญหาหน้าไม่พอดีจอคอม
+- **PO-2 de-duplicate sections (2026-06-12):** ลบ `PO-2.6` และ `PO-2.7` ออกจากหน้าเพราะข้อมูลซ้ำกับการ์ด `ข้อมูลสัญญา & ผู้รับผิดชอบ` เพื่อให้หน้าเบาและพอดีจอมากขึ้น
+- **PO-2 compact layout pass (2026-06-12):** ย่อการ์ด `Vendor (คู่สัญญา)` และ `ข้อมูลสัญญา & ผู้รับผิดชอบ` ให้เหลือสรุปไม่เกิน 3 บรรทัด, ตัดแถบ `SC11` ออก, ย่อ `PO-2.2/PO-2.4` เป็น compact 2 บรรทัด และลด `PO-2.5` เป็นขั้น flow เอกสารแบบย่อ
+- **PO-2 full rebuild บนเทมเพลต (2026-06-12):** สร้าง `po2-rfq-mockup.html` ใหม่แทนตัวเดิม (archive `_archive/po2-rfq-mockup-2026-06-12.html`) — โครง `_form-template` เต็ม (unified-header · saab-compact · SC-12 strip · items-card 100vh · row-bottom tabs+สรุป · dc-strip) · **PO-2.1** Vendor ใช้ SC-3 `dfOpenVend()` · **PO-2.3** เปลี่ยนเป็น line สินค้าจริง (SC-2 `dfOpenProd()` + ⚡ Filter Scope modal แตกรายสินค้า) · **ส่วนลด 3 แบบเลือกรายบรรทัด** (①ลดบาท/ตัว ②ลด% — แถวจาก scope ③ลด+โควต้า บังคับกรอก · หน่วยโควต้าเลือก ตัว/บาท) · ฟิลด์รายบรรทัด: รายละเอียดบิล/เลขอ้างอิง/วันที่/โควต้า/ลด฿/ลด%/ราคาหลังลด · Co-op สลับเป็นตารางบันทึกความเข้าใจ · PO-2.4 หลักฐาน (ภาพ/ประกาศโปรโมชัน) + PO-2.5 เซ็นยืนยัน ย้ายลง row-bottom tabs · popup มาตรฐานคงเดิม · dc-strip "ใช้อ้างอิงโดย" → PO-7 สรุปงบจัดซื้อ → PO-6 ใบตั้งหนี้เจ้าหนี้ (AP) · ไม่แตะ `swt-sidebar.js`/`swt-doc-finder.js` (ไม่ต้อง chain regression)
+- **Header audit + fix ทุกหน้า (2026-06-12):** สแกน 88 ไฟล์ root — พบบั๊ก `uh-utility` ไม่ปิด (`</div>` หาย 1 หลัง topbar-avatar ทำให้ uh-main ซ้อนผิดชั้น) ใน **8 หน้า unified-header**: SL-Q คิวงานขาย · SL-CN ใบลดหนี้ · PO-1 ใบขอสั่งซื้อ (PR) · PO-6 ใบตั้งหนี้เจ้าหนี้ (AP) · PO-CN ใบลดหนี้เจ้าหนี้ · WH-1 ใบรับสินค้า (GRN) · FI-1 รับชำระลูกหนี้ · FI-2 จ่ายชำระเจ้าหนี้ (+ PO-7 แก้ไปก่อนแล้ว) → **แก้ครบ 8 หน้า ตรวจซ้ำ div บาลานซ์ผ่านหมด** · ⚠️ ตกค้าง: `poq-purchase-queue` div ปิดเกิน 2 · `wh-queue` เปิดค้าง 1 (นอก header) · `po8-deposit-bill` ไม่มีแถวว่าง ④c (0 แถว — ผิดกติกา ≥10) · ④b ยังเป็น field-grid-2 ทุกหน้า ยกเว้น FI-1 → ไล่ปรับ mini-line ทีละหน้า
+- **PO-7 layout fit pass (2026-06-12):** ซ่อม `unified-header` ที่ div ไม่ปิด (`uh-utility` ค้าง → uh-main ซ้อนผิดชั้น) · PO-7.1 ย่อเล็ก (0.75fr) / PO-7.2 ขยาย (1.55fr) — การ์ดละ 3 บรรทัดแบบ `mini-line` ตามกติกา party card · PO-7.3 เติมแถวว่างขั้นต่ำ 10 บรรทัด (`po7PadRows`)
+- **PO-7 sync PO-2 ใหม่ + บิลอ้างอิงยอดจริง (2026-06-12):** ปรับ `po7-rebate-dashboard.html` (archive `_archive/po7-rebate-dashboard-2026-06-12.html`) — data ข้อตกลง sync line PO-2 ใหม่ (AG-SI = 5 รายการ: RF-1001/RF-1005 แบบ① · TV-3002 แบบ③ โควต้า 50 ตัว · AC-2001/AC-2008 แบบ② ⚡scope) · เพิ่มคอลัมน์ **แบบส่วนลด (PO-2)** + **โควต้า ใช้/ทั้งหมด** (เกินโควต้า = เตือนแดง ตัดสิทธิ์) · **สิทธิ์ส่วนลดคำนวณอัตโนมัติ** ตามแบบ (①③=฿×จำนวนจริง ③cap โควต้า · ②=%×ยอดจริง) แทนเป้า fix · **แหล่งยอดจริง auto ตามประเภท**: MOU/Sell-in = ยอดซื้อ (WH-1 ใบรับสินค้า / PO-8 บิลฝาก) · Sell-out = SL-4 บิลขาย · ปุ่ม **📄 N บิล ต่อแถว → popup มาตรฐาน** ลิสต์บิลอ้างอิง (เลขที่คลิกเปิดเอกสารต้นทาง) · ตัด dropdown แหล่งยอดจริงเดิม · คง 2-step pull + ยอดบริษัทจ่ายจริง + Co-op memo + Sanction
+- **PO-7 doc parity + company confirm docs (2026-06-12):** คงหลักว่าเอกสาร PO-7 เทียบเท่า PO-2 และเพิ่มเอกสารยืนยันยอดจริงของบริษัท, เปลี่ยนช่องกรอกมือเป็น `ยอดบริษัทจ่ายจริง`, และยืนยันยอดส่ง PO-6 ตามยอดยืนยันจริง
+- **PO-3 ใบวางบิล Vendor rebuild (2026-06-14):** เปลี่ยน PO-3 จาก Vendor Onboarding → **รับวางบิล AP (VBL)** · โหมดเลือก **ทั้งบิล (GRN/PO)** + **รายการ (SKU)** · ฟิลเตอร์บิล (PO/GRN/สถานะ/วันที่) · Onboarding ย้ายไป **MD-3 ทะเบียน Vendor** · sync `swt-link.js` VBL/VINV → po3 · chain WH-1 → PO-3 → PO-6 → FI-2 · `module-flow-overview.html` อัปเดต
+
+**✅ SC Wire phase ปิด (2026-06-11):** `swt-sc-wire.js` ผูก runtime เข้า chain ทั้งหมด (SL-1~4/CN · PO-1/4/6/8/CN · WH-1 · FI-2)
+
+| ลำดับ | SC | Build | Wire | แนวทางกลาง | หมายเหตุ |
+|---|---|---|---|---|---|
+| — | SC-1/2/3/7 | ✅ | ✅ chain | ✅ | picker + timeline |
+| — | SC-11/12 | ✅ | ✅ chain | ✅ | migrate หน้าเก่า + mount หน้า rebuild |
+| 2 | SC-5+ | ✅ | ✅ chain | ⬜ | dfOpenRef ทุกหน้า rebuild |
+| 3 | SC-14 | ✅ | ✅ PO-6 | ⬜ | `swt-ap-reduce.js` |
+| 4~10 | SC-15…19 | ✅ | ✅ chain | ⬜ | print/3way/bank/panels/serial/tracking |
+| — | SC-9 | — | 🟡 inline | ⬜ | รอ promo panel แยก |
+
+**ถัดไป:** WH-3 · Chain C regression (FI-1 ✅ 2026-06-11 · PO-2 rebuild ✅ 2026-06-12)
+
+**แนวทางพัฒนากลาง (locked):** ฟอร์ม rebuild ใหม่ → ใช้ SC runtime ก่อนเขียน inline ซ้ำ · คุย SC ทีละตัว → อ่าน `shared-components-status.md` **§0.1** (คำอธิบาย+ฟิลด์)
+
+**🔖 เคลม (CLM):** domain SV · defer · เชื่อม CLM→PO-CN ไว้แล้ว
+
+## กฎชื่อเต็ม (locked 2026-06-11)
+
+**ทุกครั้งที่อ้างรหัสโมดูล/เอกสาร — ต้องมีชื่อเต็มคู่กันเสมอ** (Catalog · sidebar · doc-chain · regression · คำตอบ agent · checklist)
+
+| ห้าม | ต้องเป็น |
+|---|---|
+| SL-4 | **SL-4 บิลขาย** |
+| PO-6 | **PO-6 ใบตั้งหนี้เจ้าหนี้ (AP)** |
+| FI-2 | **FI-2 จ่ายชำระเจ้าหนี้ (AP)** |
+| WH-1 | **WH-1 ใบรับสินค้า (GRN)** |
+| SC | **SC (Shared Components · ส่วนกลาง UI)** |
+
+ยกเว้น: เลขเอกสารล้วน (AP-0088 · GR-0210) ไม่ต้องซ้ำชื่อโมดูล
 
 ## Working Rules (locked 2026-05-29)
 
-- **Flow-first, always.** ทุกงานปรับดีไซน์หลังจากนี้: (1) ทำ/แสดง flow ให้เห็นก่อนว่าเข้าใจตรงกัน → (2) confirm → (3) ค่อยเริ่มปรับ mockup. ห้ามกระโดดไปแก้ดีไซน์ก่อน confirm flow. (ต่อยอดจาก memory feedback_edit_workflow: explain → confirm → edit, ห้าม batch หลายหน้า)
-- **Canonical source = Flow Design + module spec** (ADR-0001 `docs/adr/0001-flow-and-spec-are-canonical.md`). รหัส/ขอบเขตหน้าใดเพี้ยนจาก flow/spec = แก้ที่ mockup. หน้าไม่มี flow = excess (ต้องเพิ่ม flow ก่อน หรือตัด). flow ไม่มีหน้า = gap จริง.
-- **Glossary** อยู่ที่ `CONTEXT.md` (root) — เป็น glossary ล้วน ไม่ใส่ implementation.
+- **Flow-first, always.** ทุกงานปรับดีไซน์: (1) แสดง flow → (2) confirm → (3) แก้ mockup. ห้าม batch หลายหน้า
+- **Canonical source = Flow Design + module spec** (ADR-0001). รหัสเพี้ยน = แก้ที่ mockup
+- **Glossary** อยู่ที่ `CONTEXT.md` (root)
 
 ### Working Rules เพิ่ม (locked 2026-05-30)
-- **Docs-first:** ยึดเอกสารอ้างอิงเป็นหลัก (DD docx `_reference/docs/` + Flow PDF + spec md) · **ไม่ยึด HTML เป็นตัวตั้ง** (HTML = reference). component framework canonical = `_reference/docs/1 component_fw_clean.docx` (6 layers · 9 shared · doc-mode create/edit/view/approve/post).
-- **ทำทีละ flow ให้เสร็จ** ตาม flow อ้างอิงที่ลิสต์ไว้ · **ยังไม่เน้นหน้า dashboard**.
-- **ทุกข้อเสนอเปลี่ยน/ปรับ = ตารางเทียบ "ของเก่า ↔ ข้อเสนอใหม่"** ให้ user ตัดสิน (ในแชท หรือ canvas ตามที่ดูง่าย) ก่อนลงมือเสมอ.
-- **เวลาคุยแต่ละเมนู** ดึงเอกสารอ้างอิง (DD + Flow + spec) มาประกอบทุกครั้ง + แนบลิงก์เปิดหน้าเดิม.
-- **Obsidian save standard:** ทุก flow/decision ที่ปิด → save เป็นโน้ตเข้า vault `C:\Users\arm99\OneDrive\claude\ArmWiki\ArmWiki\Projects\Sangwijit-ERP-Portal\` (knowledge/searchable copy · คู่กับ `.agents/topics/` working copy). ใช้ `/claude-obsidian:save`. ทีหลังทำ `.base` รวม flow เป็นตาราง.
-- **🔑 Scope = SWT single-entity** (ระบบกลาง · ตัดสิน 2026-05-31): ทำเพื่อ SWT บริษัทเดียว · ตัด multi-entity · **FI-13 Dual-Book / CF-2.8 Entity Tag = defer (นอก scope)** · FI-7 VAT selector → SWT only.
+- **Docs-first:** ยึด DD + Flow PDF + spec · HTML = reference เท่านั้น
+- **ทำทีละ flow ให้เสร็จ** · ยังไม่เน้น dashboard
+- **ทุกข้อเสนอเปลี่ยน = ตารางเทียบ ของเก่า ↔ ใหม่** ก่อนลงมือ
+- **Obsidian save:** vault `C:\Users\arm99\OneDrive\claude\ArmWiki\ArmWiki\Projects\Sangwijit-ERP-Portal\`
+- **🔑 Scope = SWT single-entity** · FI-13 Dual-Book / CF-2.8 Entity Tag = defer
 
-### Working Rules เพิ่ม (locked 2026-06-06)
-- **🔑 Form Build Pattern (ใช้ทุกครั้ง ทุก module):** memory `feedback_form_build_pattern` — (1) ดึง Flow+Document+spec → Blueprint → confirm · (2) build บน `_form-template.html` (fit จอ 100vh · status+doc-chain รวมแถวบน · ตาราง 15 บรรทัด+grid · เลขที่อ้างอิงเป็นคอลัมน์ · sidebar+✦marker) · (3) shared: ลูกค้า=sc1 · สินค้า=sc2 (dfOpenCust/dfOpenProd) · อ้างอิง=dfOpenRef (multi-select) · ปุ่มค้นหาลูกค้าต้องมีเสมอ · (4) **ระบุ action หลัง Save/Post = สถานะ+routing ปลายทางทุกฟอร์ม** (ref: `.agents/topics/sl-post-save-routing.md`) · (5) archive+เทียบ full path+mirror Obsidian
-- **Form Blueprint ก่อนสร้างทุกฟอร์ม:** ก่อนสร้าง/refactor mockup ฟอร์มใดๆ ต้องวาง Blueprint 5 ส่วนให้ confirm ก่อนเขียนโค้ดเสมอ — (1) โครงสร้าง section จาก Flow PDF + Document DD + spec · (2) shared component ต่อ section · (3) field list + อธิบายรายฟิลด์ · (4) **ข้อเสนอ (แนะนำ + เหตุผล) ต่อ section** · (5) จุดต่างเฉพาะฟอร์ม. ห้าม batch หลายฟอร์ม. (memory: `feedback_form_blueprint_standard`)
+### Working Rules เพิ่ม (locked 2026-06-06 / 11)
+- **🔑 Form Build Pattern:** (1) Flow+spec → Blueprint → confirm · (2) build บน `_form-template.html` (100vh · status+doc-chain · ตาราง+grid · sidebar+✦) · (3) shared: sc1/sc2/sc3/dfOpenRef · (4) Post routing ทุกฟอร์ม (`sl-post-save-routing.md`) · (5) archive + full path
+- **Form Blueprint — Step 0 Gate (locked 2026-06-11):** ก่อน Blueprint ①–⑤ — อ่าน `form-template-guideline.md` · เช็ค `swt-doc-finder.js` API · เปิด `_form-template` + reference chain · ยืนยัน Post routing · *บทเรียน PO-8: ข้าม Step 0 = พลาด fit/picker* → แล้ว Blueprint 5 ส่วน → user confirm → เขียนโค้ด
+- **Chain regression:** หลังแก้ `swt-sidebar.js` / `swt-doc-finder.js` → `.agents/topics/chain-regression-checklist.md`
+- **🗺️ Flow overview sync (locked 2026-06-14):** ทุกครั้งที่เพิ่มหน้า · แก้ flow/สถานะ · rebuild (ติด ✦) → ต้องอัปเดต `module-flow-overview.html` (node/สถานะ/ลิงก์/มาร์ก ✦↔เก่า) ให้ตรงเสมอ
 
 ## 🔒 PO↔WH Receiving Boundary (locked 2026-06-07)
 
-**หลักการ: "รับสินค้า = งานคลัง (WH)" ทั้งหมด** (ปกติ + ทยอยรับ + บิลฝาก) · จัดซื้อ (PO) เก็บแค่ สั่ง + ตั้งหนี้
+**หลักการ: "รับสินค้า = งานคลัง (WH)" ทั้งหมด** · จัดซื้อ (PO) เก็บแค่ สั่ง + ตั้งหนี้
 ```
 PO-4 ใบสั่งซื้อ (สั่ง Vendor)
- ├ ปกติ:    → WH-1 ใบรับสินค้า (รับ·ทยอยรับ·serial/bin) ─รับครบ flag→ PO-6 ใบตั้งหนี้
- └ บิลฝาก:  → PO-6 ใบตั้งหนี้ (โหมดบิลฝาก·ตั้งก่อน+ดิวชำระ) → PO-8 บิลฝาก (Deposit Pool·เรียกออกหลายปลายทาง)
-              ├ เข้าคลัง → WH-1 ใบรับสินค้า    └ ส่งลูกค้าตรง → SL-4 ใบขาย (drop-ship)
+ ├ ปกติ:    → WH-1 ใบรับสินค้า ─รับครบ flag→ PO-6
+ └ บิลฝาก:  → PO-6 (โหมดบิลฝาก) → PO-8 Deposit Pool
+              ├ เข้าคลัง → WH-1    └ ส่งลูกค้าตรง → SL-4 (drop-ship)
 ```
-- **✂️ ตัด PO-5 (Finance GRN)** — ซ้ำ WH-1 (รับ) + PO-6 (ตั้งหนี้) · archive + เอาออกจาก swt-sidebar.js
-- **WH-1 = ศูนย์รับ** · โหมดการรับ (ทยอยรับ/รับทั้งบิล) ระบุในหัวบิล · **"รับครบ" จริง = รับสะสม=สั่ง ทุกไลน์ (qty-based)** ไม่ใช่ดูจากโหมด (กันของขาดหลุดไปตั้งหนี้)
-- **PO-8 บิลฝาก = Deposit Pool** (กองฝากที่ Vendor · ทยอยเรียกออกหลายปลายทาง 100→เรียก 40→เหลือ 60) · soft alert เงินจม (คนตัดสิน) · งานเรียก/รับ = ฝั่ง WH
-- คนกดตั้งหนี้ = บัญชีการเงิน/จัดซื้อ
-- **Backlog:** SC-2 tab ประวัติการซื้อ · PO-2 redo (Vendor Commitment) · dfOpenRef localize สายซื้อ · **SL-4 เติมบริหารเครดิต+วงเงินลูกค้า+drop-ship** · PO-6 refine โหมดบิลฝาก · ยุบ/ตัด PO-5
+- **✂️ PO-5 ตัดแล้ว** — archive · redirect GRN→WH-1
+- **WH-1 = ศูนย์รับ** · "รับครบ" = qty-based ทุกไลน์
+- **PO-8 = Deposit Pool** · งานเรียก/รับ = ฝั่ง WH
 
 ## 🔒 AP Reduction / Trade Support Concept (locked 2026-06-08)
 
-**หลักการ: ยอดหนี้เจ้าหนี้ (AP) ลดได้ 2 จังหวะ** — บนบิล (หักใน PO-6) vs หลังบิล (ออกใบลดหนี้ PO-CN)
+**ยอดหนี้เจ้าหนี้ (AP) ลดได้ 2 จังหวะ** — บนบิล (PO-6) vs หลังบิล (PO-CN)
 ```
-PO-2 ข้อตกลงงบ (commit ส่งเสริมการขาย) ──ดึง──►
-[1] PO-7 ฟอร์มส่งเสริมการขาย — สรุป "ได้จริงเท่าไร" + เปลี่ยนสถานะ commit→realized → ส่งตั้งหนี้ ─┐
-WH-1 ใบรับสินค้า (รับจริง +) ─────────────────────────────────────────────────────────────────┤
-[2] PO-CN ใบลดหนี้ (คืนสินค้า / ราคาผิด / เคลม) ──────────────────────────────────────────────┼─► [3] PO-6 ใบตั้งหนี้ (ดึงรวม net)
-[4] CLM ใบเคลม → บันทึก process → "รอหักหนี้" ──spawn──► PO-CN ──────────────────────────────┘
+PO-2 ข้อตกลงงบ ──► PO-7 สรุปได้จริง ──► PO-6 net
+WH-1 (+) ────────────────────────────────┤
+PO-CN ลดหนี้ ────────────────────────────┼─► PO-6
+CLM → รอหักหนี้ → PO-CN ─────────────────┘
 ```
-- **"เหตุผล" ≠ "เอกสาร":** ส่งเสริมการขาย/คืนสินค้า/ลดราคา/เคลม = เหตุผล · PO-6/PO-CN/PO-2/CLM = เอกสาร
-- **[1] PO-7** = refine จาก Rebate Dashboard → **ฟอร์มสรุปยอดได้จริง + เปลี่ยนสถานะ + ส่งตั้งหนี้** (ดึงข้อตกลงจาก PO-2)
-- **[2] PO-CN** ✅ build แล้ว = ใบลดหนี้ตัวเดียวครอบ คืน/ราคาผิด/เคลม (หลังบิล) → ตัด AP
-- **[3] PO-6** ✅ build แล้ว · PO-6.3 ดึงบิลรวม (รับ + ใบลดหนี้ + ส่งเสริมได้จริง) net
-- **[4] CLM** (กลุ่มบริการ) → เพิ่มสถานะ **"รอหักหนี้"** → spawn PO-CN (โหมดเคลม · อ้างอิง CLM)
-- **"รอหักหนี้" = คิว/สถานะกลาง** เชื่อม PO-CN + CLM → โผล่ตอน PO-6 ดึงมาหัก
-- **Sell-in = บนบิล** (หักใน PO-6 ตรง) · **Rebate/MOU = หลังบิล** (ผ่าน PO-7 สรุป → PO-6)
+- **PO-6** ✅ picker 2 แท็บ: ใบแจ้งหนี้ (+) · ดึงลดหนี้/หัก (−)
+- **PO-CN** ✅ · **PO-7** ✅ · **PO-2** = redo ถัดไป
 
-## Session Summary 2026-06-01 (ERP BC2 Part 2)
+## 📚 Docs & archive (2026-06-11 cleanup)
 
-### ✅ งานที่เสร็จ
-- **PromoPrice v1/v2/v3** — ยืนยัน v2 (`sc-promoprice-proposal.html`) เป็น current · side panel 1:1 per item
-- **SL Sales Module** — map ครบ 10 หน้า + วัตถุประสงค์ + shared components + flow · บันทึก Obsidian `SL Sales Module.md` ✅
-- **SL-1 Flow** — วิเคราะห์จาก DD + Flow PDF + spec · ได้ field list + status flow ครบ
-- **Credit Memo 3 กรณี** — Sales Return / ยกเลิกบิล / ลดหนี้ → แต่ละกรณีใช้เอกสารต่างกัน
-- **CF Setup ทั้งหมด** — review ทุกหน้า · สรุปสถานะ Portal-owned / cut-to-BC
-- **ADR-0004 + CF-2.2** — Format `[BranchCode][DocCode]-[YYMM]-[###]` · CF-2.2 เปลี่ยนจาก cut-to-BC → **Portal-managed** · บันทึก Obsidian ✅
-- **CF-1 RBAC prototype** — `_proposal/cf1-position-rbac-proposal.html` · 5 tabs · approve แล้ว
-  - Tab 4 กลุ่มเอกสาร: **แก้แล้ว** → กรองตาม Tab 2 สิทธิ์เมนูที่ติ๊กไว้ (DOC_MENU_MAP)
-- **CF-2.2 prototype** — `_proposal/cf2-2-number-series-proposal.html` · 3 panels: Matrix / Format Editor / Audit
-- **Obsidian** — `CF Setup Module.md` สร้างใหม่ · `Foundation & Decisions.md` อัปเดต · ADR-0004.md ✅
+ประวัติ session 2026-04–06 ย้ายออกจากไฟล์นี้แล้ว:
+- `.agents/sessions/archive/active-history-2026-04-06.md`
+- `.agents/sessions/archive/session-handoff-2026-06-01.md` — **obsolete**
+- `.agents/sessions/archive/2026-04-16.md` — BC365 audit (ยัง valid · สรุปใน lock แล้ว)
+- `.agents/sessions/archive/sl-design-structure-2026-04-21.md` — obsolete
 
-### ⏳ Next Actions (ลำดับ)
-1. ~~**CF-2.6 Approval Matrix**~~ ✅ 2026-06-03 — `_proposal/cf26-approval-matrix-proposal.html` (Position-based · SWT · +SL-RQ/RT/CN/DN · Simulator)
-2. ~~**CF-2.7 Doc Template**~~ ✅ 2026-06-05 — ทับ deployed ด้วย proposal design (`cf2-7-doc-template-mockup.html` 1061→567 บรรทัด) · ตัด Running/Format (ย้าย CF-2.2) · 5 tabs→3 panels · SWT single-entity · 13 doc types sync CF-2.2 · archive เก่า `_archive/cf2-7-doc-template-mockup-2026-06-04.html`
-3. ~~**CF-2 Config Hub**~~ ✅ 2026-06-06 — ทับ deployed ด้วย proposal design (`cf2-config-hub-mockup.html` 932→353 บรรทัด) · 9→8 card (ซ่อน CF-2.8/CF-9 Entity Tag) · CF-2.2 🔴→🟢 Portal-managed · href→deployed mockup ทุกอัน · card render จาก JS array · สรุป Portal 4/BC 4 · archive `_archive/cf2-config-hub-mockup-2026-06-06.html` · **CF module ปิดสมบูรณ์**
-4. **SL-1 ใบเสนอราคา** — ลงรายละเอียด mockup ตาม flow + DD
-5. **fi4→FI-5 / fi5→FI-6 recode** (Finance ค้าง)
+**ห้ามอ้าง PO-5 / PO-8 โมเดลเก่า / WH-1 แบบ queue-only** ใน archive
 
-### 💡 วิธีเปิด session ใหม่
-```
-"อ่าน .agents/active.md แล้วต่องาน CF-2.6"
-```
-
----
-
-## Reconciliation Audit (2026-05-29) — mockup vs Flow Design
-
-8-module cross-ref. อันดับความรก: Service+Claims (14 หน้า/6 flow, P2) > Finance (เลข fi3/4/5 เพี้ยน → Bank Recon + JV หาย, P1) > Sales (sl5=CRM แย่งช่อง Credit Memo; sl6 promo วางผิด, P1) > Master (sm1/2/3 วางผิด; ขาด Price List masters) > Promotion (กระจาย pm/sl/po/cm) > Purchase (ดี · แค่ rename po2/po7) > Warehouse (สะอาด · แค่ retitle wh1) > Utility (สะอาด).
-- **Excess (ไม่มี flow):** sl5-crm, fi5-ar-audit, sir, sqt, sm1, sm2, cm1
-- **Misplaced (ผิด module):** sl6-promotion-setup → PM · sm3-vendor-report → (P2 Vendor Portal)
-- **Duplicate:** sv7↔sv4 (ปิดงาน) · cl1↔clm (เคลม) · po5-grn vs wh1-grn (boundary ต้องชัด)
-- **Merge fragment:** sv6-1-booking-modal + sv6-print-templates → เข้า sv6
-- **P1 Gaps:** Sales Credit Memo (flow 07) · Bank Reconciliation · General Journal/JV · Purchase/Sales Price List masters
-- หลักฐานเต็ม: workflow reconcile-mockups-vs-flows (2026-05-29).
-
-## Finance — flow confirmed (2026-05-29) → เริ่มจัดระเบียบ
-
-flow-understanding: `.agents/topics/finance-flow-understanding.md` (user confirm แล้ว). Decisions ที่เคาะ:
-- **FI-4 JV (General Journal) = cut-to-BC** (ไม่ทำหน้า Portal · เหมือน CF-2.3 Posting & GL · ต่อยอด BC365 audit)
-- **FI-7 VAT report = P1** (ยึด flow · spec เขียน P3 ผิด → ต้องแก้ spec) · ยื่น ภ.พ.30 ทุกวันที่ 15
-- **แยก VAT/WHT:** FI-7 = รายงาน VAT (ภ.พ.30) · FI-12 = WHT List (ภ.ง.ด.3/53) · เลิกรวมหน้าเดียว
-- **Account flows ไม่ใช่ FI:** AR→SL-4, AP→PO-6+ap1, ARCN→SL-CN (ใหม่), APCN→PO-CN (ใหม่)
-- ลำดับลงมือ Finance: (1) สร้าง FI-3 Bank Recon [กำลังทำ] → (2) re-code fi3→FI-7 + fi4→FI-5 → (3) รวม FI-12 WHT → (4) FI-2 โชว์ Approval → (5) fi5-ar-audit re-scope → (6) FI-13 transfer engine. ทำทีละหน้า (no batch).
-
-> **อัปเดต 2026-05-30 (ADR-0002):** ✅ FI-3 Bank Recon ยืนยันเสร็จ (ไม่ใช่ gap) · ✅ recode fi3-tax→**FI-7** (สร้าง `fi7-vat-report-mockup.html` = VAT register ตาม flow Account/06, ไม่ใช่หน้ากระทบยอด) · ✅ แยก WHT → **FI-12** (`fi12-wht-mockup.html`) · ✅ archive `fi3-tax` · ✅ sidebar rollout 73 ไฟล์ + index · ✅ ปิดงวด=cut-to-BC · แก้ spec FI_finance.md + CONTEXT.md + ADR-0002. **ค้าง:** fi4→FI-5, fi5→FI-6 recode · FI-2 Approval gate · ตรวจ FI-7.N section label/render. ดู `.agents/topics/reconcile-mockup-vs-flow-matrix.md`.
-
-## Phase 1 Closeout (2026-04-27 / 28)
-
-- **FI-Q Refactor ✅ NEW 2026-04-28** — apply Q-rule (drill modal) · FI module wrap-up · 5/5 main modules ปิด queue pattern
-  - **Keep:** Sum bar (5 KPI: total/AR/AP/Tax/Close) · Action summary hero · 6 queue cards (AR/AP/Tax/WHT/JV/Close · ทำหน้าที่เหมือน sub-type chips อยู่แล้ว) · Mini calendar of deadlines (4 events) · Detail panel filter
-  - **Add:** drill modal (SL-4 pattern · 6-step status pills · customer + credit info · invoice details + 4 payment channels: QR/Bank/Card/Cash · footer drill → FI-1)
-  - **Convert:** 8 detail panel rows → q-row class + onclick="openWqDetail()" · all action buttons in tbody → event.stopPropagation() · so click row = open modal · click button = button action without bubbling
-  - **Q-page rule applied:** row buttons → modal · header + modal footer + card-level "💳 รับชำระ" link = navigate OK
-  - **Sidebar relabel 74 ไฟล์:** "Finance Queue" → "คิวงานการเงิน"
-  - **index.html:** sidebar nav + FI-Q card description updated
-- **SV-Q Refactor ✅ NEW 2026-04-28** — apply queue pattern · SV module wrap-up
-  - **Keep:** KPI 5 cards (งานวันนี้/รอมอบหมาย/กำลังดำเนินการ/เสร็จวันนี้/เกิน SLA) · **Technician Board** (4 tech cards · valuable visualization · งานวันนี้ + skill + status)
-  - **Replace:** filter dropdown + jobs table (12 rows) + slide-in panel pattern → 14 rows + 8 sub-filter chips:
-    - 🆕 New Intake (รับเรื่องใหม่ SV-1 · 2) · 🔍 Site Inspection (SIR · 1) · 💵 Quote Pending (SQT · 1)
-    - 👷 Pending Assignment (รอมอบหมาย SV-2 · 3) · 🛠️ In Progress (SV-5 · 3) · 🔧 Awaiting Parts (SV-3/SV-O · 2)
-    - ✅ Ready Delivery (SV-7 · 1) · 🎫 Vendor Claim (CLM · 1)
-  - **Click row → centered modal** (replace slide panel · SL-4 pattern · 6-step status pills · customer + product card · อาการ + การประเมิน + SIR escalation hint · footer drill → SV-1)
-  - **Q-page rule applied:** row buttons → openWqDetail() · header + modal footer = navigate OK
-  - **index.html:** SV-Q card description updated (8 sub-types listed)
-- **SL-Q Refactor ✅ NEW 2026-04-28** — apply queue pattern · SL module wrap-up
-  - **Keep:** Header quick actions (4 buttons + ใบเสนอ/จอง/มัดจำ/บิล) · KPI 6 cards · Sales Pipeline Summary (5 bars · valuable visualization)
-  - **Replace:** Recent Documents filter dropdown + table → 15 rows + 8 sub-filter chips:
-    - 📋 New Quote (รอติดตาม · 3) · 📌 Pending Reservation (จอง · 2) · 💰 Awaiting Deposit (รอลูกค้าจ่าย · 2)
-    - 🧾 Pending Invoice (พร้อมออกบิล · 3) · ⚠️ Credit Hold (รออนุมัติวงเงิน · 2) · ↩️ Return Request (ลูกค้าขอคืน · 1)
-    - 🎁 Promo Validation (ตรวจ promo · 1) · 📞 Follow-up Required (CRM · 1)
-  - **Click row → Detail modal** (SL-4 pattern · 6-step status pills · customer card 2-col with credit info + ratings · line items 4 SKU sample · footer drill → SL-1)
-  - **Q-page rule applied:** row "ดำเนินการ" buttons → openWqDetail() · header + modal footer = OK navigate
-  - **Sidebar relabel 74 ไฟล์:** "Sales Queue" → "คิวงานขาย"
-  - **index.html:** sidebar nav + WH cards descriptions อัพเดต
-- **PO-Q Refactor ✅ NEW 2026-04-27 (late evening)** — apply queue pattern เหมือน WH (Phase 1 PO module wrap-up)
-  - **Keep advanced features:** Panel 0 (MOS Critical · 3 SKU · ต้องสั่งด่วน rule A5) + Panel F (CN Outstanding · Sanction Flow Day 0/7/15/30 + Stop New PO rule A3)
-  - **Replace:** 3 tabs (Queue/Create-PR/Summary) + tab JS · ลบทั้ง Tab 2 Create-PR และ Tab 3 Summary (ใช้ + ปุ่มสร้าง PR ที่ link → po1 แทน · summary report ย้ายไป RP-1)
-  - **New queue:** 13 rows + 8 sub-filter chips:
-    - 📋 PR Pending (รอสร้าง PO · 7) · ✉️ RFQ Open (รอราคา · 3) · 📦 PO Pending (รอส่ง Vendor · 4)
-    - 🚚 Awaiting Receive (รอ GRN · 5) · ⚠️ Overdue (เกินกำหนด · 3) · 💰 Deposit Pending (PO-8 · 2)
-    - 📄 AP Pending (พร้อมตั้งหนี้ · 1) · 🎯 Rebate Tracking (PO-7 · 1)
-  - **Click row → Detail modal** (SL-4 pattern · gradient + 6-step status pills · line items + MOS chip + Vendor info + Trade Type + CN status · footer → สร้าง PO ที่ PO-4)
-  - **Cross-links:** PO-4 (สร้าง PO) · PO-8 (Deposit) · PO-6 (AP Invoice) · PO-7 (Rebate) · WH-1 (GRN) · WH-R (Stock Card)
-- **WH-2 + WH-4 Refactor ✅ NEW 2026-04-27 (evening)** — apply queue pattern เหมือน WH-1/3 (consistency · Phase 1 closeout)
-  - **WH-2 (Transfer Queue · คิวโอนย้ายสต็อก):** ลบ tabs เดิม (รายการโอน/สร้างใบโอน/ประวัติ) + form sections + side panel · เป็น queue page เต็มตัว · 12 rows + 8 sub-filter chips (TR-Out · TR-In · Transit · Inter-Branch · Internal-Bin · Service-Stock · Promo-Stock · Return-Flow) · click row → Detail modal (SL-4 pattern · gradient + status pills 6 ขั้น · From→To route card · line items + Stock Card link)
-  - **WH-4 (Count Queue · คิวนับสต็อก):** ลบ tabs เดิม (แผนการนับ/กำลังนับ/ประวัติ) · 11 rows + 8 sub-filter chips (Cycle · Annual · Spot · Recount · Branch · Bin · NewItem · PreAudit) · variance tracking · click row → Detail modal (status pills 6 ขั้น · 24 SKU sample table + count input + Variance auto-calc · ขั้นตอนการนับ 6 steps)
-  - **Sidebar relabel 75 ไฟล์:** WH-2 "โอนย้ายสต็อก" → "คิวโอนย้ายสต็อก" · WH-4 "นับสต็อก" → "คิวนับสต็อก"
-  - **index.html:** sidebar nav 2 entries + WH cards 2 entries (descriptions อัพเดต) · WH module ปิดสมบูรณ์: 7 หน้าทั้งหมดเป็น queue pattern เดียวกัน
-- **Tier-C polish ✅ DONE 2026-04-27 (evening)**:
-  - **BC Direct banner** added to 3 cut-to-BC pages: CF-2.1 Tax Setup · CF-2.2 Number Series · CF-2.9 General Parameter — banner สีแดงระบุชัดว่าใช้ BC365 ตรง · mockup เก็บเป็น reference เท่านั้น · ระบุ BC path
-  - **Deprecate portal-mockup-index.html** = ไฟล์หายแล้ว (rename/merge เป็น index.html ตั้งแต่ก่อนหน้า) · skip
-  - Sidebar edge cases (modal/login/print/sc10/sv7/sv6 — 5-6 ไฟล์ที่ rollout ไม่ครบ): ปกติเป็นหน้าที่ no/cut-down sidebar · pre-existing pattern · ไม่ใช่ scope แก้
-
-## Phase 2 Plan: Brand CI Rollout (SWE-only)
-
-- **Decision 2026-04-27:** ใช้ Sangwijit Design CI (skill at `~/OneDrive/claude/ArmWiki/sangwijit-design/`) กับ **งานใหม่หลังจากนี้ทุกชิ้น**
-- **Scope correction:** CI ครอบคลุม **SWE (แสงวิจิตรการไฟฟ้า · ค้าปลีก) เท่านั้น** · SWT/VMN/WPS ยังไม่มี logo · ต้องถามก่อนใช้
-- **Locked specs (SWE):**
-  - 🔵 Brand Blue: `#184898` (RGB 24/72/152)
-  - 🟠 Brand Orange: `#F37721`
-  - Font: **Sukhumvit** (TH+EN single font · fallback `Sukhumvit Set, IBM Plex Sans Thai, Sarabun`)
-  - Tagline: "เพื่อนแท้ ไว้ใจได้"
-- **Existing 80+ mockups:** leave as-is (Tailwind `#2563EB` + Inter+Noto Sans Thai · sidebar `#1E3A5F`) — ห้าม batch refactor unless requested
-- **Multi-entity caveat:** ERP mockups ส่วนใหญ่เป็น multi-entity (Dual-Book Tag 1/2/3/novat) ไม่ใช่ SWE-only · การ apply CI SWE กับ ERP ทั้งระบบจะไม่เหมาะ · รอ master brand CI
-
-# Active Context
-
-## Objective
-ออกแบบ Frontend ERP Web Portal (Sangwijit Group) เหนือ Dynamics 365 Business Central — สร้าง HTML mockup ครบทุกหน้า, เตรียม handoff ให้ทีม dev
-
-## Current State (2026-04-27 — latest)
-
-- **SV Phase 3 SIR/SQT/CLM expansion ✅ NEW 2026-04-27** — ขยาย flow ให้รองรับงานที่ต้องประเมินหน้างาน + งานเคลม Vendor
-  - **3 หน้าใหม่:**
-    - `sir-site-inspection-mockup.html` — ใบประเมินหน้างาน (Site Inspection Report) · 5-section: ข้อมูลลูกค้า · งานที่ต้องประเมิน · รายการประเมิน + รูป + ประมาณค่า · ข้อจำกัดหน้างาน · Hand-off → SQT
-    - `sqt-service-quotation-mockup.html` — ใบเสนอราคางานบริการ · ผู้จัดการ markup · ส่งลูกค้า · รอยืนยัน → SV-2
-    - `clm-vendor-claim-mockup.html` — ใบเคลม Vendor (post-warranty) · ส่งเคลมแบรนด์ · ติดตามผล · รับเงิน/ของแทน → ตั้ง APCN ตัด ARI ของ SV-4 · 6-step status pills
-  - **Flow เพิ่ม:** SV-1 → **(ถ้าต้องประเมินหน้างาน) → SIR → SQT → ลูกค้ายืนยัน** → SV-2 → SV-5 → SV-3/SV-O → SV-4 → SV-7 · ส่วน CLM แยก loop จาก SV-4 (post-close) → APCN
-  - **Branch optional ใน SV-1:** เพิ่มปุ่ม `🔍 ขอประเมินหน้างาน (SIR)` (secondary) คู่กับ `→ ส่งต่อ SV-2` (primary) · Timeline แทรก step "ประเมินหน้างาน (ถ้าจำเป็น)"
-  - **Sidebar rollout:** 75 ไฟล์ (Python regex block replace · count 9 → 12) · เพิ่ม SIR/SQT/CLM · reorder ตาม flow (SV-5 ก่อน SV-3) · 5 ไฟล์ตกหล่น (modal/login/print/sc10 — ไม่มี sidebar SV)
-  - **index.html:** Service section 8 → 11 cards · sidebar nav 8 → 11 entries · KPI hero 66 → 80 pages · subtitle อัพเดต
-  - **CLM footer fix:** แก้ copy-paste leftover (ปุ่ม "ส่งต่อ SQT" → "ตั้ง APCN + ปิดเคลม")
-  - **Pending:**
-    - Verify SIR/SQT vs `ui_design_pattern_guideline.md` (7-section ERP form, status hex, bilingual)
-    - Wire reverse links: SV-4 → CLM (button "🎫 เปิดเคลม Vendor" สำหรับงานในประกัน), SQT → SV-2 (auto-spawn)
-    - ทบทวน BC365 mapping ของ SIR/SQT/CLM (Portal-owned 100% ตาม pattern SV)
-- **AP Invoice chain audit ✅ DONE 2026-04-27** — PO-6/PO-5/PO-8 audit pass · features ครบ
-  - PO-6 (AP Invoice · ใบวางบิล Vendor): gate "รับครบก่อนตั้งหนี้" + 2-mode toggle (Normal 3-Way / Deposit 2-Way) + auto-switch via `#mode=deposit` deep-link
-  - PO-5 (Finance GRN · ใบรับสินค้าตั้งหนี้): partial receive + cumulative tracking + full-receive detector + forward CTA "→ PO-6" (เพิ่งเพิ่ม) · text-link → PO-8 (ครบ Credit Term)
-  - PO-8 (Deposit Bill · บิลฝาก): "⏭ Settle (ของครบ)" deep-link → PO-6#mode=deposit
-  - Per-line ref refactor: PO-4 "ชื่อสินค้า · PR ref · VC" → "ชื่อสินค้า" + column dedicated "เลขที่อ้างอิง" ขวาสุด · ย้าย ref จาก PR (po1) → SL-4 (INV-26-0042 drop-ship pattern)
-  - SL-4 ก็ refactor ตาม pattern เดียวกัน (column "เลขที่อ้างอิง" ขวาสุด · ย้าย ref จาก inline)
-  - PO-4 References section "📎 เอกสารอ้างอิง": inline body section → popup modal pattern (เหมือน SL-4 mDocRef) · trigger card + summary stats + ปุ่ม "🔗 ดูรายละเอียด" → modal มี PSI Report + PO-8 Deposit เนื้อหาเดิมครบ
-- **WH-Q/WH-1/WH-3 Refactor ✅ NEW 2026-04-27 (later)** — split queue role per page · Q1=a (ลบจาก WH-Q) + Q2=b (ลบ form WH-1)
-  - **WH-1 (Warehouse Receive Queue · คิวรอรับสินค้า):** ลบ form (S2-S7: doc-header + vendor-info + line items + tabs + summary + sticky-action) ออก · เป็น list page เต็มตัว · KPI 4 cards + 8 sub-filter chips (PO · PO-8 · TR-In · RT-Good · RT-Defective · RT-SV · RT-V · ADJ-In) + queue table 8 rows · click row → Detail modal (SL-4 pattern · gradient main-header + status pills + party card + line items + footer)
-  - **WH-3 (Warehouse Issue Queue · คิวเบิกสินค้า):** ลบ queue table เก่า (6 rows) · ใส่ใหม่ 9 rows + 8 sub-filter chips (SL-4 · SV-6 · TR-Out · SV-3 · SV-O · Promo · ADJ-Out · RT-V Out) · เก็บ Tab 2 (Pick & Pack) + Tab 3 (History) ไว้ · click row → Detail modal เดียวกับ WH-1
-  - **WH-Q (Warehouse Dashboard):** ลบ 2 sections (Receive + Issue queues) ออก · เก็บ KPI summary + filter bar · เพิ่ม CTA cards 2 ใบ (gradient blue → WH-1 รับ · gradient pink → WH-3 เบิก) + Quick links bar (WH-2/WH-4/WH-R/WH-NM) · ลบ JS chip + modal (ไม่ใช้แล้ว)
-  - **Sidebar relabel 75 ไฟล์:** WH-Q "คิวรับสินค้า" → "Dashboard" · WH-1 "ใบรับสินค้า (GRN)" → "คิวรอรับสินค้า" · WH-3 "เบิกสินค้า" → "คิวเบิกสินค้า"
-  - **index.html:** sidebar nav labels + WH cards (3 cards updated content) + 1 card descriptions
-- **WH Module Reports ✅ NEW 2026-04-27 (earlier)** — ปิด WH module
-  - WH-NM (Warehouse Non-Movement Report · รายงานสินค้าไม่เคลื่อนไหว): audit pass · features ครบ (threshold settings · category override · filter · ledger · branch breakdown · auto-alert) · ไม่ต้องแก้
-  - WH-R (Warehouse Stock Card · รายงานสต็อกการ์ด): **NEW** — 7 sections ใหม่
-    - WH-R-1 ตัวกรอง (SKU + สาขา + ช่วงเวลา + brand)
-    - WH-R-2 Item Info card (SKU header + cost layers + sell price + stock)
-    - WH-R-3 KPI strip 5 cards (Open · In · Out · Closing · MOS)
-    - WH-R-4 Movement Ledger (16 transactions · GRN/Sales/TR-In/TR-Out/SVC/ADJ + cumulative balance + Moving Average cost)
-    - WH-R-5 Branch Breakdown (4 สาขา + MOS + status)
-    - WH-R-6 FIFO Cost Layers (4 lots · weighted avg cross-check)
-    - WH-R-7 Sales Velocity Comparison (30/60/90 วัน + MOS recommendation)
-  - **Sidebar rollout 73 ไฟล์** (WH count 5 → 7) · 6 edge cases (modal/login/print/sc10/sv7/sv6 — handle แยก)
-  - **index.html:** WH section 5 → 7 cards · sidebar nav 5 → 7 entries · KPI hero 80 → 81 pages
-- **Feedback rule new:** [Expand abbreviations](feedback_abbreviation_expansion.md) — ทุกครั้งที่พิมพ์ตัวย่อในข้อความตอบ user ต้องใส่ชื่อเต็มในวงเล็บประกอบ
-- **Phase 1 mockup status:** 81 pages ทั้งหมด · AP Invoice chain ปิด · WH module ปิด · เหลือ low-priority polish (sidebar edge cases · spec docs)
-
-- **PIVOT 2026-04-23 22:00 — Path 2 scope simplified + focus shift → AP Invoice (PO-6)**
-  - **User clarifications ยืนยัน:**
-    - **PO-3 Vendor Onboarding** = สร้าง Vendor ใหม่ (กรอกข้อมูล) · **ไม่ใช้ KYC** · create-only — การแก้ไขต้องใช้สิทธิ์ (ไม่อยู่ใน scope หน้านี้) · ไม่ซีเรียส · สร้างได้เลย
-    - **PO-5 Finance GRN** = รับสินค้า โดย user = คลัง หรือ แคชเชียร์สาขา (ขึ้นกับมอบหมาย/สิทธิ์) · **ทยอยรับได้** (order 10 · รับก่อน 2 ตัว OK) · **เงื่อนไขตั้งหนี้: ต้องรับครบบิลก่อน** ถึงจะตั้งหนี้ได้ (ยกเว้นเข้าเงื่อนไข PO-8 บิลฝาก)
-    - **PO-8 Deposit Bill** = **ข้ามขั้น PO-5** · รับการวางบิล/จ่ายชำระก่อน · สินค้ายังอยู่กับบริษัท (ฝากของ) · ทยอยรับสินค้าผ่าน PO-5 · ต้อง**ไล่ตาม flow เอกสาร**
-    - **WH-R + WH-NM** = กลุ่ม**รายงาน** (ไม่เร่ง) · ดึงจากประวัติรับเข้า + ประวัติสินค้า + คงเหลือ + ประวัติขาย เปรียบเทียบ
-  - **NEW FOCUS:** กระบวนการตั้งหนี้ (AP Invoice · PO-6) — ลำดับสำคัญกว่า Path 2 เดิม
-    - flow: PO-5 (รับครบ) → PO-6 AP Invoice | PO-8 (บิลฝาก) → PO-5 ทยอยรับ → settle
-    - PO-6 mockup มีอยู่แล้ว — ต้อง audit ว่า UX ตรง flow นี้ไหม (gate "รับครบ" · link PO-8 advance · 3-Way Match)
-  - **Pending decision:** `/plan-mockup` skill setup — user ถามแนวทาง 3 option (skill / memory / ทั้งคู่) ยังไม่ตัดสินใจ — คาดเริ่ม conversation หน้า
-  - **Build order ใหม่ (revise):** audit PO-6 flow ก่อน → PO-5 (รับสินค้า + gate) → PO-8 (ฝากของ + advance) → PO-3 (simple form) → WH-R/WH-NM (reports · low priority)
-
-- **SV Module Phase 2 Refinement ✅ NEW 2026-04-23 (evening)** — ปรับโครงตาม user workflow จริง (4 ขั้น + SV-Order)
-  - **User's 4-step workflow:** (1) ใบรับงานซ่อม · (2) ใบมอบหมายงาน · (3) ใบรับจากงานซ่อม (admin pricing) · (4) ส่งงานลูกค้า + ปิดงาน
-  - **NEW builds (3 pages):**
-    - `sv2-service-assignment-mockup.html` — ใบมอบหมายงาน (เดิมรวมอยู่ใน SV-1) · 6 tabs: เลือกช่าง/นัด/เบิก-สั่งอะไหล่ล่วงหน้า/แจ้งลูกค้า+ช่าง/อ้างอิง/timeline · 3 tech cards
-    - `sv-order-parts-request-mockup.html` — สั่งอะไหล่ (ใหม่ทั้งหมด) · state chain 5 ขั้น: สั่ง → จ่ายเงิน → รอรับอะไหล่ → นัดหมาย → รอส่งอะไหล่เก่าคืน · ผูก Job+Customer+Serial · spawn PO-4
-    - `sv7-service-delivery-mockup.html` — ส่งงานลูกค้า + ปิดงาน (แยกจาก SV-4) · customer signature + Rating + QR PromptPay + Invoice preview · ปิดงานระหว่างเรา-ลูกค้า
-  - **Refactor (3 pages):**
-    - `sv1-service-intake-mockup.html` — ตัดส่วน "นัดหมายช่าง" ออก (ย้าย SV-2) · Tab "ความสะดวกลูกค้า" (preferences only) · action → ส่งต่อ SV-2
-    - `sv3-spare-part-issue-mockup.html` — Redesign ตาม `ui_design_pattern_guideline.md` · 7-section ERP form · status hex (`#BFBFBF`/`#C55A11`/`#4472C4`/`#375623`) · bilingual TH/EN labels · 4 tabs
-    - `sv4-service-close-mockup.html` — เปลี่ยนเป็น "ใบรับจากงานซ่อม" (admin pricing+warranty adj) · **Tab Vendor Billing (Q2=A)** · Customer side เป็น preview · action → ส่งต่อ SV-7
-  - **Light touch:** `sv5-job-card-mockup.html` — เพิ่ม state link ไป SV-3/SV-Order + state flow alert · action → SV-4
-  - **SV-Order vs อื่น:** ไม่ซ้ำ · SV-3 = เบิกจาก**สต็อก** · SV-Order = **สั่งใหม่** (spawn PO-4 · รับผ่าน WH-1 GRN)
-  - **Sidebar rollout:** 67 files (Python regex block replacement · idempotent) · 9 SV entries: SV-Q/1/2/5/3/O/4/7/6
-  - **index.html:** Service section 5→8 cards · meta + sidebar updated
-  - **Commit prior:** `ddc4d8b` feat(sv): Phase 1 SV loop closure
-- **SV Module Loop Closure ✅ 2026-04-23 (morning) — superseded by evening refinement above**
-  - **Rename + Archive:**
-    - `sv1-service-queue-mockup.html` → `sv-q-service-queue-mockup.html` (เนื้อหาจริง = Queue Dashboard)
-    - `sv2-service-invoice-mockup.html` → `_archive/` (Service Invoice logic ย้ายเข้า SV-4 ตาม Q3=B)
-    - `sv4-warranty-check-mockup.html` → `_archive/` (**ไม่ใช้** — ทีมเช็คประกัน manual กับ Vendor · Q2 decision)
-  - **NEW 2 pages built:**
-    - `sv1-service-intake-mockup.html` — ERP Form 7 sections: Doc header · Customer · Product+Serial · Warranty toggle (3 options) · Appointment/Photo/Ref/Timeline tabs · ประมาณค่า · **ไม่มี auto warranty check** (manual field)
-    - `sv4-service-close-mockup.html` — Close/QA + Invoice merged: Job ref · QA Checklist 6 ข้อ · Before/After photos · Digital signature 2 เซ็น + Rating · **Billing mode dual** (🏢 Vendor / 👤 ลูกค้า split summary) · BC Sync post
-  - **Spec ambiguity resolved (Q1=A):** SV-2 Mobile Job Card ตัดออก — sv5 Desktop Job Card cover ทั้งหมด
-  - **Sidebar rollout:** 69 ไฟล์ updated (2-pass Python script) · 6 SV entries ใน group บริการ: SV-Q · SV-1 (NEW) · SV-3 · SV-4 (NEW) · SV-5 · SV-6
-  - **index.html:** Service section (5 cards · count 5 pages) + sidebar nav updated
-  - **dev-handoff-spec.html:** SV table + file list updated
-- **PO/WH Rename Cleanup ✅ 2026-04-21** — ปรับเลข mockup ให้ตรง `sangwijit-portal-skill` spec
-  - `po3-vendor-invoice-mockup.html` → `po6-ap-invoice-mockup.html` (เดิมผิดแมป — จริงๆ คือ PO-6 AP Invoice)
-  - `po-rebate-dashboard.html` → `po7-rebate-dashboard.html`
-  - `whr-goods-issue-mockup.html` → `wh3-sales-issue-mockup.html` (spec: WH-3 = Sales Issue)
-  - `wh3-stock-count-mockup.html` → `wh4-stock-count-mockup.html` (spec: WH-4 = Physical Count)
-  - Updated: 73 .html files + swt-link.js + 3 .md docs (filename refs + sidebar code labels + titles + breadcrumbs + stale `PO-Rebate` → `PO-7`)
-  - _archive/ ไม่แตะ
-- **Gap + KPI Matrix ✅ NEW 2026-04-21** — `.agents/topics/po-wh-gap-kpi-matrix.md` เทียบ spec vs mockup (PO 9 + WH 7), map 27 KPI, Priority P0-P3
-- **Next (revised 2026-04-23 22:00 — focus = ตั้งหนี้ flow):**
-  1. Audit PO-6 AP Invoice (มีอยู่แล้ว) ว่า gate "รับครบก่อนตั้งหนี้" + link PO-8 มีหรือยัง
-  2. Build PO-5 Finance GRN (ทยอยรับ + full-receive detector)
-  3. Build PO-8 Deposit Bill (ข้าม PO-5 · bill first · flow เอกสารไล่ตาม Flow Design PDF)
-  4. Build PO-3 Vendor Onboarding (simple form · no KYC · create-only)
-  5. (Low priority) WH-R Stock Card + WH-NM Non-Move Report — รายงาน · ดึงข้อมูลรวม
-
-## SV Module — Final Structure (post 2026-04-23 Phase 2 refinement)
-| รหัส | ไฟล์ | บทบาท | State หลัก |
-|---|---|---|---|
-| SV-Q | `sv-q-service-queue-mockup.html` | Queue dashboard (ทุกสถานะ) | filter ตาม state |
-| **SV-1** | `sv1-service-intake-mockup.html` | ใบรับงานซ่อม (รับเรื่อง · ประมาณการ) | `รอมอบหมาย` |
-| **SV-2** 🆕 | `sv2-service-assignment-mockup.html` | ใบมอบหมายงาน (Admin เลือกช่าง+นัด) | `รอมอบหมาย → มอบหมายแล้ว` |
-| SV-5 | `sv5-job-card-mockup.html` | Job Card ช่าง (กรอกอาการ+แก้ไข) | `งานช่าง → ส่งงาน/รออะไหล่/รอสั่งอะไหล่` |
-| SV-3 | `sv3-spare-part-issue-mockup.html` | เบิกอะไหล่จาก**สต็อก** | `PendingApproval → Issued` |
-| **SV-Order** 🆕 | `sv-order-parts-request-mockup.html` | **สั่งอะไหล่** (ไม่มีในสต็อก · spawn PO-4) | `สั่ง → จ่าย → รอรับ → นัด → คืนของเก่า` |
-| **SV-4** (refactored) | `sv4-service-close-mockup.html` | ใบรับสินค้าจากงานซ่อม (admin pricing + Vendor billing) | `รอส่งคืนลูกค้า` |
-| **SV-7** 🆕 | `sv7-service-delivery-mockup.html` | ส่งงานลูกค้า (เซ็น+QR+Invoice+ปิดงาน) | `ปิดงาน (เรา-ลูกค้า)` |
-| SV-6 | `sv6-delivery-install-mockup.html` + 2 sub | Delivery & Install (งานติดตั้งสินค้าใหม่ · แยก loop) | — |
-| CL-1/2/3 | `cl1-claims-mockup.html` (CL-2/3 ยังไม่มี) | ⏳ Phase 2 deferred (BC365 audit) | — |
-
-### Design guide compliance (2026-04-23)
-- ใหม่ทั้ง 3 ไฟล์ + SV-3 redesign: 7-section ERP form pattern · status-badge hex `#BFBFBF/#C55A11/#4472C4/#375623/#C00000/#00B050` · bilingual `label + .en` · sticky `.footer-actions` · SC5 doc-chain · SC7 timeline tab · numeric `.num` class
-- Reference: `ui_design_pattern_guideline.md` (ผู้ใช้สั่ง Q1 · 402 บรรทัด)
-
-## Previous Focus (2026-04-19)
-- **Payment QR 2 ชั้น ✅ NEW 2026-04-19** — Tier-A 5 ใน `swt-link.js` (~260 บรรทัดเพิ่ม)
-  - **ชั้น 1 — Customer QR (modal)** — ปุ่มม่วง `📱 QR` auto-inject ข้างทุก `[data-customer-search]` (9 หน้า: SL-1/2/3/4, SV-2/3, WHR + MD-2 combo)
-    - Modal: picker · Biller ID (099-4-12345-6) · Ref1 = รหัสลูกค้า · Ref2 = YYMM · amount mode (ว่าง/ค้างรวม/ระบุ) · PNG / Copy / ส่ง LINE
-  - **ชั้น 2 — Invoice QR (inline card)** — helper `swtRenderInvoiceQR()` · ฝังใน SL-3 (มัดจำ ฿30,000) + SL-4 (ยอดคงเหลือ ฿24,385)
-    - Ref1 = เลขที่บิล · Ref2 = CustCode · ยอด fix
-    - `@media print` — เก็บ QR พิมพ์บนกระดาษได้ clean (hide ปุ่ม, border ดำ)
-  - Payload mockup = URL (`pay.sangwijit.co.th/c/...` หรือ `/d/...`); prod → EMVCo PromptPay ผ่าน BC API
-  - Sidebar rollout FI-1Q entry ✅ — 65 ไฟล์ได้ entry ใหม่ (Python script idempotent)
-- **FI-1Q Apply Queue ✅ NEW 2026-04-19** — หน้าใหม่ `fi1q-apply-queue-mockup.html` (+หน้าใหม่ที่ 66)
-  - 3 categories: 🟢 Auto-ready (Ref1+ยอดตรงเป๊ะ 1-click) · 🟡 Partial (FIFO/เกินยอด/ปิดหลายบิล) · 🔴 Unmatched (Ref1 ผิด/ไม่มี/advance ก่อนบิล)
-  - Link จาก FI-Q (AR card: "📥 23 รอจัดสรร") + FI-1 topbar ("📥 Apply Queue 23")
-  - DOC_MAP `URC` / `UAR` → fi1q · doc-chain: QR → URC → RV → INV
-  - Flow: ลูกค้าสแกน QR → เงินเข้าบัญชี → IA-Q sync bank statement → สร้าง URC → เข้าคิวนี้ → Auto-apply หรือจัดสรรเอง → BC post RV ปิด AR
-- **Tier-A 1+2+3+4 ✅** — `swt-link.js` shared component (~430 บรรทัด)
-  - **Universal Doc Linker** — ทุกข้อความที่ตรง pattern `PREFIX-YYYY-####` (QT/SO/INV/PO/GRN/RV/JOB/RFQ/CRD/...) จะกลายเป็นลิงก์อัตโนมัติ
-  - **Embedded SC-7 Timeline + Breadcrumb** — ฝังใน **16 หน้า transaction**:
-    - งานขาย: SL-1, SL-2, SL-3, SL-4, SL-F1
-    - จัดซื้อ: PO-1, PO-2, PO-3, PO-4
-    - คลัง: WH-1, WH-2, WHR
-    - บริการ: SV-1, SV-2
-    - การเงิน: FI-1, FI-2
-  - **Cross-module Doc-Chain Breadcrumb** — bar ใต้ topbar, current/pending/jump states
-  - **Global Search palette** — hotkey `/` หรือ `Ctrl+K` · ค้น Doc No. + เมนู + mock customers/items · arrow keys
-  - **Rolled out 65 หน้า** ✅ NEW 2026-04-17 — ทุก HTML root file มี `<script src="swt-link.js">` แล้ว (Python loop, idempotent)
-- **Add-Item Standardization ✅ 2026-04-17 + ขยาย 2026-04-18** — Pattern: ถ้าหน้าใดเพิ่มสินค้าได้ ใช้ icon 🔍 + attribute `data-item-search` → auto-wire ของ SC-2 modal ผูก `openItemSearch()` ให้อัตโนมัติ
-  - เปลี่ยน `+`/`➕` → 🔍 ใน 5 ไฟล์ (sl4 add-row, sl6 promo, wh2 transfer, poq queue, sv3 spare-part)
-  - **เพิ่ม `<tr class="swt-add-line">` ใต้ tbody ใน 8 ตารางใหม่** ✅ 2026-04-18: sl1, sl2, po1, po4, wh1, whr (1 ตาราง each) · sv2 (2 ตาราง). PO-1 ใช้ header "SKU/PSI/ขอสั่ง" — audit รอบแรกเลยไม่จับ, แก้แล้ว
-  - **รวม 13 หน้าที่กด 🔍 เปิด SC-2 modal ได้** — sl1, sl2, sl4, sl6, po1, po4, poq, wh1, wh2, whr, sv2, sv3 และอื่นๆ ที่มี data-item-search
-- **Line-editable + Search-Combo Pattern ✅ NEW 2026-04-18** — ทุก transaction page ที่มี line item:
-  - **Header:** ลูกค้า/Vendor field แรก เป็น `<div class="swt-search-combo">` (textbox + ปุ่ม 🔍) · attr `data-customer-search` / `data-vendor-search` → เปิด global palette
-  - **Line items:** จำนวน (input number class=line-input qty), หน่วย (select class=line-select), ราคา (input text class=line-input price), คลัง (select class=line-select) — editable ได้ทุก row
-  - **Add-row:** `<tr class="swt-add-line">` เปลี่ยนเป็น swt-search-combo (textbox + ปุ่ม 🔍 ค้นหาสินค้า · Enter key ก็เปิด modal)
-  - **Shared CSS + JS:** ย้ายเข้า `swt-link.js` แล้ว (ไม่ต้อง inline ในแต่ละไฟล์)
-  - **หน้าที่ rollout:** SL-1/2/3/4, PO-1/3/4, WH-1/2, WHR, SV-2/3 (11 หน้า) · โอนย้าย (WH-2) ไม่มีราคา, มี FROM/TO คลังอยู่แล้ว
-- **Tier-B ✅ NEW 2026-04-17**
-  - **PO-2 RFQ / Vendor Compare** — เปรียบ 3 vendor side-by-side (ราคา/lead time/payment/QC/rebate), score 0-100, line-item compare, award → สร้าง PO + route ผ่าน CF-2.6
-  - **SL-F1 Credit Approval** — แยกจาก AP-1; queue เฉพาะ SL ที่เกินวงเงิน/ลูกค้าค้าง · credit gauge + AR aging + workflow tier 1→2→3 · enforce Maker ≠ Checker
-  - sidebar nav อัปเดตทุกไฟล์: SL group 11→12 entries, PO group 5→6 entries
-  - DOC_MAP เพิ่ม `RFQ`, `CRD`, `CRA`
-- **index.html** (master index v2.0) — sidebar collapse 13 groups · live search · BC365 matrix · 64 pages
-- **Unified sidebar rolled out** → ทุกหน้า mockup ใช้ sidebar เดียวกัน (auto-inject ด้วย Python script, idempotent)
-- **Tier-1 new mockups (2026-04-17)** — 4 หน้าใหม่ปิด gap critical:
-  - **FI-13 Dual-Book / Entity Tag** ✅ NEW — Tag 1/2/3/novat allocation · ห้องหลัก+ห้องภาษี · ภพ.30 แยกบริษัท
-  - **IA-Q BC Sync Monitor** ✅ NEW — Entity sync grid · Live feed · Error queue · Batch schedule
-  - **PM-5 VAT Simulator** ✅ NEW — Golden Rule sandbox · ถูก vs ผิด side-by-side · Discount vs Rebate
-  - **FI-Q Finance Queue** ✅ NEW — 6 queue cards (AR/AP/Tax/WHT/JV/Close) · Aging · SLA
-- Portal Index v1.5 (ก่อนหน้า) → 60 หน้า + ของรอบนี้ 4 = 64 หน้า + FI-1Q (2026-04-19) = **66 หน้า**
-- **CF-2.5 Tech Template** — 5 tabs (Job Type / Checklist / อุปกรณ์ / เวลา&ทักษะ / Safety) ✅
-- **MD-2 Customer v3** — 6 details + split layout + sub-tabs ✅
-- **MD-3 Vendor v3** — 6 details + Trade Agreement 4 sub-tabs ✅
-- **MD-4 Employee v3** — 6 details + leave sub-tabs + KPI ✅
-- **MD-5 Warehouse v3** — branch cards + 6 details + bin layout ✅
-- **BC365 Audit** — ตรวจครบ 39 หน้า จัด 4 กลุ่ม ✅
-- MD-1 v3 / CF-2 Hub / CF-2.6 / CF-2.7 / etc. — ✅ เสร็จก่อนหน้า
-
-## Decisions Confirmed
-- **CF-2 Structure**: Option C = Hub + sub-pages (ปรับหลัง audit)
-- **CF-2.4 Bin Policy** → อยู่ CF-2 (เพราะเป็น config ไม่ใช่ transaction)
-- **CF-2.5 Tech Template** → อยู่ CF-2 (🟢 BC ไม่มี — ทำเอง)
-- **CF-2.7 Doc Template** → ทำเองใน Portal 100% (🟢 BC ไม่มี)
-- **CF-2.9 General System Parameter** → เพิ่มเป็นข้อที่ 9 (global)
-- **Date format** → ใช้ ค.ศ. (YY = 26) ไม่ใช่ พ.ศ.
-- **Running reset** → ทุกเดือน (YYMM เปลี่ยน → running กลับ 0001)
-- **หลักการ**: แยก Config (admin-only) ออกจาก Transaction (staff)
-
-### BC365 Audit Decision (2026-04-16)
-- 🔴 **ตัด 5 หน้า (ใช้ BC ตรง)**: CF-2.1 Tax, CF-2.2 Number Series, CF-2.3 Posting & GL, CF-2.4 Bin Policy, CF-2.9 General Parameter
-  - เหตุผล: BC มี built-in ครบ, ทำ Portal ซ้ำ = double maintenance + sync risk
-  - mockup ที่ทำแล้วเก็บเป็น reference "ตั้งค่าที่ BC หน้าไหน"
-- 🟡 **18 หน้า Portal เป็น UI layer**: เรียก BC API, ไม่ duplicate logic
-- 🟢 **21 หน้า Portal ทำเอง 100%**: BC ไม่มีฟังก์ชันนี้
-- ⚠️ **เลื่อน Phase 2**: CL-1 Claims, SM-3 Vendor Portal, CF-2.8 Entity Tag
-
-### BC365 Mapping — SV Phase 3 expansion (2026-04-27)
-- 🟢 **SIR ใบประเมินหน้างาน** = Portal-owned 100% — BC ไม่มี Site Inspection Report concept · เป็น process ภายในของศูนย์บริการก่อน quote
-- 🟢 **SQT ใบเสนอราคางานบริการ** = Portal-owned 100% — BC Service Quote มี (Service Module) แต่ Portal ทำเองเพราะ markup logic + customer confirmation flow ของ Sangwijit เป็น custom (มัดจำ 50% + Apply Queue + LINE delivery)
-- 🟡 **CLM ใบเคลม Vendor** = UI layer + BC posting hybrid — Portal track Vendor claim status (async 7 days) + ตั้ง APCN ผ่าน BC API · APCN posting + GL effect = BC owns · CLM ≠ CL-1 (ลูกค้าเคลมเข้ามา · Phase 2 deferred) — CLM = post-warranty service ที่ Sangwijit เคลมต่อแบรนด์
-- **ผลรวม:** Portal-owned 21 → 23 (+ SIR + SQT) · UI layer 18 → 19 (+ CLM)
-
-## Blockers
-- ❌ ไม่มี blocker ปัจจุบัน
-
-## Next Action (Priority Order — หลัง Tier-1 build)
-1. ~~CF-2.5 Tech Template~~ ✅
-2. ~~MD-2/3/4/5 v3~~ ✅
-3. ~~index.html + unified sidebar~~ ✅
-4. ~~Tier-1 mockups (FI-13 / IA-Q / PM-5 / FI-Q)~~ ✅
-5. ~~Tier-A 1+2 (Universal Doc Linker + Embedded Timeline 6 หน้า)~~ ✅ 2026-04-17
-6. ~~Tier-A 3 (Cross-module Doc-Chain Breadcrumb)~~ ✅ 2026-04-17
-7. ~~Tier-A 4 (Global Search palette + hotkey)~~ ✅ 2026-04-17
-8. ~~Tier-A rollout — `swt-link.js` 65 หน้า~~ ✅ 2026-04-17
-9. ~~Tier-B PO-2 RFQ + SL-F1 Credit Approval~~ ✅ 2026-04-17
-10. ~~Customer QR + FI-1Q Apply Queue~~ ✅ 2026-04-19
-11. ~~Sidebar rollout FI-1Q entry~~ ✅ 2026-04-19 (65 ไฟล์)
-12. ~~Invoice QR ชั้น 2 (SL-3/SL-4)~~ ✅ 2026-04-19
-13. **ขยาย Invoice QR** — ฝังบน SV-2 (บริการ), PO-3 (vendor invoice reverse? — optional)
-14. **Tier-A rollout เพิ่ม** — ขยาย `swt-link.js` ไปอีก ~30 หน้า (แค่ใส่ `<script src>` 1 บรรทัด)
-15. **Tier-B remaining**: FI-9 Fixed Asset (เฉพาะถ้า SWT มี FA — รอ confirm)
-11. **Tier-C (polish/cleanup)**:
-   - Deprecate / redirect portal-mockup-index.html → index.html
-   - Banner "BC Direct" บน CF-2.1/2/9
-   - Update 01-module-list.md ให้ SV-3/4/5 scope ตรงกับ mockup จริง
-10. **Dev handoff prep** — สรุป spec, API contract, component list
-11. ~~CF-2.1 Tax~~ / ~~CF-2.2 Number Series~~ / ~~CF-2.3 Posting~~ / ~~CF-2.4 Bin~~ / ~~CF-2.9 General~~ → ใช้ BC ตรง
-12. ~~CF-2.8 Entity Tag~~ → เลื่อน Phase 2
-
-## Reference Files
-- `sangwijit-portal-skill/SKILL.md` v2.1 — knowledge base (Rule 1: อ่าน Flowchart ก่อน)
-- `sangwijit-portal-skill/modules/CF_config.md` — spec CF-1 ถึง CF-9
-- `md1-item-master-mockup-v3.html` — pattern อ้างอิงสำหรับ detail/tab
-- `cf2-config-hub-mockup.html` — pattern landing Hub
-- `cf2-7-doc-template-mockup.html` — pattern sub-page + multi-tab + split layout
-- `swt-link.js` — universal doc-linker + `swtAppendTimeline()` API (Tier-A shared component)
-
-## Design Standards (Locked)
-- Min width 1440px · Inter font · Sidebar #1E3A5F (240px fixed) · Accent #2563EB · BG #F8FAFC
-- Collapse: `<details class="collapse">` + `▼` rotation
-- Sub-tabs: JavaScript `switchSubTab()` scoped per section
-- Status badges: green=ยืนยัน / amber=พิจารณา / gray=ไม่แน่ใจ
+## 🔜 NEXT — WH Renumber (locked 2026-06-14 · ยังไม่ execute)
+**ก่อนทำงานคลังทุกครั้ง อ่าน `.agents/topics/wh-renumber-plan.md` ก่อน** — จะเรียงเลข+rename ไฟล์คลังใหม่ทั้งชุด (Q=ดู · เลข=เอกสาร · R=ขอ/เตรียม · โอนไม่มีคิว)
+- ใหม่: WH-1 ใบรับ · WH-2 ใบเบิก(+2R) · WH-3 ใบโอน(+3R) · WH-4 ใบนับ(+4R) · WH-Q/Q1/Q2 · WH-R
+- ⚠️ เลข�

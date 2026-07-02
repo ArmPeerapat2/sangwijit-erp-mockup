@@ -114,11 +114,11 @@ Azure / SQL (BC Database)
 | Warehouse | WH | P1 | GRN, Issue, Transfer, Adjust, Stock Card, Serial |
 | Purchase | PO | P1 | PR, PO, GRN, AP Invoice, Credit Memo, Vendor Return, **Sale-In Accrual (PO-7)**, **PO บิลฝาก (PO-8)** |
 | Finance | FI | P1+P2+P3 | AR Receive, AP Payment, Expense Voucher (P2), Bank Recon, Credit Control (P2), Period Close, **Fixed Asset (FI-9/10/11)**, **WHT (FI-12)**, **Dual-Book (FI-13)** |
-| Service & Delivery | SV | P2 | Service Queue, Job Card, QA Close, Delivery & Installation (4.x), Mobile (Group A) |
+| Service & Delivery | SV | P2 | Service Queue, Job Card, QA Close, Delivery & Installation, Mobile · **Intake รับ 5 ประเภทงาน: ซ่อม/เคลม/ติดตั้ง/ตรวจเช็ค/ล้าง** (claim decompose เข้าที่นี่) |
 | Promotion/Pricing | PM | P1+P3 | Price List, Step Discount, Bundle, Promotion Scheme, Quota, Simulator |
 | Master Data | MD | P1 | Item, Customer, Vendor, Employee (ใหม่), Branch & Warehouse (ใหม่) |
 | System Config | CF | P1 | Tax Setup, Number Series, Customer/Vendor Config, Bin Policy, Item Config |
-| Claims | CL | P2 | Claims List, CN, AP CM, Approval |
+| ~~Claims (CL)~~ → **decompose เข้า SV** | — | P2 | **claim = "ประเภทงาน" ใน Service Intake (ไม่ใช่ module แยก)** · locked 2026-07-01 · ดู `modules/SV_service.md` Design Note + `.agents/svc-claim-jobtype-spec.md` |
 | Integration/API | IA | P2+P3 | API Monitor, Webhook, BC Sync Status, Error Log |
 | e-Tax Invoice | TX | P2 | XML Generator, Digital Signature, RD API, WHT |
 | Marketplace | MK | P3 | Order Inbox, SKU Map, Stock Sync, Tab ออนไลน์ใน Sales |

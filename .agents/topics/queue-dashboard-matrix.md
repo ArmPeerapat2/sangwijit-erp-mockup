@@ -34,7 +34,12 @@
 | รอรับ GRN | PO-4 | |
 
 ## การเงิน (FI-Q) / บริการ (SV-Q)
-- มีอยู่แล้ว (refactor queue pattern ปิดงานแล้ว) — review ให้ตรง flow ใหม่ภายหลัง
+| คิว | ดึงจาก | action หลัง row click |
+|---|---|---|
+| AR รอรับชำระ | SL-4 Posted | → FI-1 รับชำระ |
+| **AP รอจ่าย** | **PO-6 Posted** | → **FI-2 จ่ายชำระ** (sync 2026-06-10 · sample AP-2606-0088 Daikin chain PO-0042→GR-0210) |
+| WHT รอคำนวณ | FI-2 Post (บริการ) | → FI-12 |
+- SV-Q: มีอยู่แล้ว — review ให้ตรง flow ใหม่ภายหลัง
 
 ## Cross-flow routing ที่ผูกกับ SL-2 (ใบจอง)
 - **จองกันสต๊อก** → line/ใบ วิ่งเข้า **WH-Q รอเบิก** (WH-3)

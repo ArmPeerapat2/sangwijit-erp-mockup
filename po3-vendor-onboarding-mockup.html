@@ -1,300 +1,273 @@
 <!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>PO-3 Vendor Onboarding (Simple Form) — Sangwijit ERP</title>
+<html lang="th"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PO-3 ใบวางบิล Vendor — Sangwijit ERP</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="swt-patterns.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
-.app-container{display:flex;min-height:100vh}
-.main-content{flex:1;margin-left:240px;padding:0;background:#F8FAFC}
-.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.breadcrumb{font-size:13px;color:#6B7280}
-.breadcrumb strong{color:#111827}
-.topbar-right{display:flex;align-items:center;gap:16px}
-.search-box{width:320px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;background:#F9FAFB}
-.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
-.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
-.content-wrapper{padding:24px}
-.btn{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
-.btn-primary{background:#2563EB;color:#fff}
-.btn-secondary{background:#fff;color:#374151;border:1px solid #D1D5DB}
-.btn-success{background:#10B981;color:#fff}
-
-.section-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:20px;margin-bottom:16px}
-.section-title{font-size:15px;font-weight:600;color:#111827;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.section-title .num{font-size:12px;font-weight:700;background:#F3F4F6;color:#6B7280;padding:2px 8px;border-radius:4px;font-family:monospace}
-.section-title .en{font-size:12px;font-weight:500;color:#9CA3AF;margin-left:auto}
-.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 16px}
-.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
-.form-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 16px}
-.field{display:flex;flex-direction:column;gap:4px}
-.field label{font-size:12px;color:#6B7280;font-weight:500;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
-.field label .req{color:#DC2626;margin-left:2px}
-.field label .en{font-size:10.5px;color:#9CA3AF;font-weight:400}
-.field input,.field select,.field textarea{padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;font-family:inherit;background:#fff;color:#111827;outline:none;width:100%}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:#2563EB}
-.field textarea{min-height:60px;resize:vertical}
-
-.alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
-.alert-info{background:#DBEAFE;color:#1E40AF;border:1px solid #93C5FD}
-.alert-warn{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
-
-/* sl-4 main-header */
-.main-header{background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 2px 8px rgba(0,0,0,0.08);flex-wrap:wrap;row-gap:10px}
-.mh-left{display:flex;align-items:center;gap:18px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#111827;min-width:1280px;font-size:13px;line-height:1.45;height:100vh;overflow:hidden}
+.layout{display:flex;height:100vh;overflow:hidden}
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;margin-left:240px}
+/* unified-header mh-main (inline — ตาม PO-4/WH-1) */
+.mh-left{display:flex;align-items:center;gap:18px;flex:1;min-width:0}
 .mh-title{display:flex;align-items:center;gap:10px}
 .mh-title .ico{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px}
 .mh-title h1{font-size:16px;font-weight:700;letter-spacing:-0.01em;line-height:1.15;margin:0;color:#fff}
 .mh-title p{font-size:11px;color:rgba(255,255,255,0.7);margin:1px 0 0}
-.mh-divider{width:1px;height:32px;background:rgba(255,255,255,0.2)}
-.mh-meta{display:flex;gap:20px}
+.mh-divider{width:1px;height:32px;background:rgba(255,255,255,0.2);flex-shrink:0}
+.mh-meta{display:flex;gap:20px;flex-wrap:wrap}
 .mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em}
-.mh-meta-item .val{font-size:12px;font-weight:600;margin-top:1px;font-family:'Inter',monospace;white-space:nowrap;color:#fff}
-.mh-right{display:flex;align-items:center;gap:8px}
+.mh-meta-item .val{font-size:12px;font-weight:600;margin-top:1px;font-family:'Inter',monospace;color:#fff}
+.mh-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(251,191,36,0.2);color:#FCD34D;border:1px solid rgba(251,191,36,0.3)}
-.mh-badge.active{background:rgba(16,185,129,0.25);color:#A7F3D0;border-color:rgba(16,185,129,0.35)}
-.mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid transparent;font-family:inherit;text-decoration:none}
+.mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid transparent;font-family:inherit}
 .mh-btn-ghost{background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.2)}
 .mh-btn-ghost:hover{background:rgba(255,255,255,0.22)}
 .mh-btn-primary{background:#10B981;color:#fff}
 .mh-btn-primary:hover{background:#059669}
-
-/* SAAB */
-.saab-wrap{background:transparent;margin-bottom:14px}
-.saab-trigger{height:5px;cursor:pointer;position:relative;background:linear-gradient(90deg,transparent 0%,rgba(37,99,235,0.35) 20%,rgba(37,99,235,0.55) 50%,rgba(37,99,235,0.35) 80%,transparent 100%);transition:background 0.15s}
-.saab-trigger:hover{background:linear-gradient(90deg,transparent 0%,#2563EB 20%,#1D4ED8 50%,#2563EB 80%,transparent 100%)}
-.saab-trigger::after{content:'⌄ action bar ⌄';letter-spacing:1px;position:absolute;top:4px;left:50%;transform:translateX(-50%) translateY(-4px);padding:1px 12px;border-radius:0 0 8px 8px;background:#2563EB;color:#fff;font-size:9px;font-weight:700;white-space:nowrap;opacity:0;transition:opacity 0.15s,transform 0.15s;pointer-events:none}
-.saab-wrap:hover .saab-trigger::after{opacity:1;transform:translateX(-50%) translateY(0)}
-.saab{background:#fff;border-bottom:2px solid #2563EB;padding:0 24px;display:flex;align-items:center;gap:10px;max-height:0;overflow:hidden;transition:max-height 0.25s ease,padding 0.25s ease;box-shadow:0 4px 12px rgba(37,99,235,0.12)}
-.saab-wrap:hover .saab,.saab-wrap.pinned .saab{max-height:70px;padding:10px 24px}
-.saab-wrap.pinned .saab-trigger{display:none}
-.saab .btn{padding:6px 12px;font-size:12px}
-.saab-status{font-size:11.5px;color:#6B7280}
-.saab-status strong{color:#111827}
-.saab-status .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#10B981;margin-right:4px;vertical-align:middle}
-.pin-btn{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid transparent;cursor:pointer;font-size:14px;color:#9CA3AF;transition:all 0.15s;font-family:inherit}
-.pin-btn:hover{background:#F3F4F6;color:#6B7280}
-.pin-btn.pinned{background:#FEF3C7;border-color:#FCD34D;color:#92400E;transform:rotate(-30deg)}
+.mh-btn-accent{background:#8B5CF6;color:#fff}
+.mh-btn-accent:hover{background:#7C3AED}
+/* SAAB buttons */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
+.btn-outline{background:#fff;color:#374151;border-color:#E5E7EB}
+.btn-ghost{background:transparent;color:#6B7280}
+.saab{flex:none}
+.content{flex:1;padding:12px 24px;display:flex;flex-direction:column;gap:10px;overflow:hidden;min-height:0}
+.card{background:#fff;border-radius:8px;border:1px solid #E5E7EB;padding:14px;overflow:hidden}
+.card.compact{padding:10px 12px}
+.card-header{display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid #F3F4F6;margin-bottom:8px}
+.card-title{font-size:12px;font-weight:600;color:#374151;display:flex;align-items:center;gap:6px}
+.card-spacer{flex:1}
+.card-btn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;background:transparent;border:1px solid #E5E7EB;color:#6B7280;cursor:pointer;font-family:inherit}
+.card-btn.primary{background:#EFF6FF;border-color:#BFDBFE;color:#2563EB}
+.row-2col{display:grid;grid-template-columns:0.9fr 1.1fr;gap:12px}
+.row-party{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 12px}
+.party-mini .lbl{font-size:9px;font-weight:700;color:#9CA3AF;text-transform:uppercase}
+.party-mini .val{font-size:12px;font-weight:600;color:#111827}
+.party-mini .val.hl{color:#2563EB;font-family:'Inter',monospace}
+.field{display:flex;flex-direction:column;gap:2px}
+.field-label{font-size:10px;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.03em}
+.field-value{font-size:12.5px;color:#111827;font-weight:500}
+.field input,.field select{padding:6px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:12px;font-family:inherit;width:100%}
+.field-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}
+.items-card{padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
+.items-card .card-header{padding:10px 14px;margin:0;border-bottom:1px solid #E5E7EB}
+.items-wrap{overflow-y:auto;flex:1;min-height:0}
+table.items{width:100%;border-collapse:collapse;background:#fff}
+table.items thead{position:sticky;top:0;background:#F8FAFC;z-index:5}
+table.items thead th{padding:8px 10px;font-size:10px;font-weight:600;color:#6B7280;text-align:left;border-bottom:1px solid #E5E7EB;text-transform:uppercase;white-space:nowrap}
+table.items tbody td{padding:8px 10px;font-size:12px;color:#111827;border-bottom:1px solid #F3F4F6;vertical-align:middle}
+table.items tbody tr:hover{background:#FAFBFC}
+table.items tbody tr.empty-row td{height:28px}
+table.items tbody tr.sel-row{background:#EFF6FF}
+table.items th,table.items td{border-right:1px solid #EDEFF2}
+table.items th:last-child,table.items td:last-child{border-right:none}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.item-code{font-size:10.5px;color:#2563EB;font-family:'Inter',monospace;font-weight:600;text-decoration:none}
+.item-code:hover{text-decoration:underline}
+.mode-bar{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:8px 12px;flex-wrap:wrap}
+.mode-bar .lbl{font-size:10px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.04em}
+.mode-seg{display:inline-flex;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden}
+.mode-opt{padding:6px 14px;font-size:11.5px;font-weight:600;border:none;background:#fff;color:#6B7280;cursor:pointer;font-family:inherit}
+.mode-opt.active{background:#2563EB;color:#fff}
+.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;background:#F8FAFC;border-bottom:1px solid #E5E7EB}
+.filter-bar label{font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase}
+.filter-bar input,.filter-bar select{padding:5px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:11.5px;font-family:inherit;min-width:110px}
+.filter-bar .sp{flex:1}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+.chip-ok{background:#ECFDF5;color:#065F46}
+.chip-warn{background:#FEF3C7;color:#92400E}
+.chip-gray{background:#F3F4F6;color:#6B7280}
+.row-bottom{display:grid;grid-template-columns:1.15fr 0.85fr;gap:12px;flex:none;min-height:136px;max-height:160px}
+.row-bottom .card{display:flex;flex-direction:column;min-height:0}
+.row-bottom .card-header{padding-bottom:5px;margin-bottom:5px}
+.attach-zone{border:1px dashed #CBD5E1;border-radius:6px;padding:12px;text-align:center;font-size:11.5px;color:#6B7280;background:#FAFBFC}
+.secno{font-size:9px;font-weight:700;color:#2563EB;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:4px;padding:1px 5px;margin-right:4px}
+.tpl-zone{font-size:9px;font-weight:700;color:#2563EB;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:4px;padding:1px 6px;margin-left:6px}
+.chk{width:15px;height:15px;cursor:pointer;accent-color:#2563EB}
 </style>
 </head>
-<body>
+<body data-swt-sc="po3">
+<div class="layout"><div class="main">
 
-
-<div class="app-container"><div class="main-content"><div class="topbar">
-<div class="breadcrumb">หน้าแรก › จัดซื้อ › <strong>PO-3 Vendor Onboarding</strong></div>
-<div class="topbar-right">
-<input class="search-box" placeholder="ค้นหา... (Ctrl+K)">
-<span>🔔</span>
-<span class="branch-tag">HQ · SWT</span>
-<div class="avatar">P</div>
-</div>
-</div>
-
-<!-- MAIN HEADER (sl-4) -->
-<header class="main-header">
-  <div class="mh-left">
-    <div class="mh-title">
-      <div class="ico">🏭</div>
-      <div>
-        <h1>Vendor Onboarding</h1>
-        <p>Simple Form (PO-3) · Create-only · No KYC heavy</p>
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">จัดซื้อ <span class="sep">›</span> ใบวางบิล Vendor <span class="sep">›</span> <span class="current">VBL-2606-0042</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+        <div class="topbar-icon">🔔</div>
+        <select class="branch-sel" title="สาขา"><option>🏢 HQ สนง.ใหญ่</option></select>
+        <select class="branch-sel" title="แผนก"><option>จัดซื้อ</option><option>บัญชี</option></select>
+        <div class="topbar-avatar">จซ</div>
       </div>
     </div>
-    <div class="mh-divider"></div>
-    <div class="mh-meta">
-      <div class="mh-meta-item"><div class="lbl">รหัส Vendor</div><div class="val">V-00146 (auto)</div></div>
-      <div class="mh-meta-item"><div class="lbl">วันที่สร้าง</div><div class="val">26 เม.ย. 26</div></div>
-      <div class="mh-meta-item"><div class="lbl">ผู้สร้าง</div><div class="val">วิไลพร · จัดซื้อ</div></div>
+    <div class="uh-main">
+      <div class="mh-left">
+        <div class="mh-title"><div class="ico">📥</div><div><h1>ใบวางบิล Vendor</h1><p>รับวางบิล AP (PO-3) · Vendor ส่งใบแจ้งหนี้ → รับเข้าระบบรอตั้งหนี้</p></div></div>
+        <div class="mh-divider"></div>
+        <div class="mh-meta">
+          <div class="mh-meta-item"><div class="lbl">เลข VBL</div><div class="val">VBL-2606-0042</div></div>
+          <div class="mh-meta-item"><div class="lbl">วันที่รับวางบิล</div><div class="val">14 มิ.ย. 26</div></div>
+          <div class="mh-meta-item"><div class="lbl">Vendor Invoice</div><div class="val" id="po3ViHdr">DKN-INV-25088</div></div>
+        </div>
+      </div>
+      <div class="mh-right">
+        <span class="mh-badge">📝 ร่าง · รอรับวางบิล</span>
+        <button class="mh-btn mh-btn-ghost" onclick="location.href='poq-purchase-queue-mockup.html'">📋 คิวรอวางบิล</button>
+        <button class="mh-btn mh-btn-primary" onclick="po3SaveDraft()">✔ บันทึก</button>
+        <button class="mh-btn mh-btn-accent" onclick="po3ReceiveBill()">✓ รับวางบิล</button>
+      </div>
     </div>
-  </div>
-  <div class="mh-right">
-    <span class="mh-badge">📝 Draft</span>
-    <button class="mh-btn mh-btn-primary">✓ บันทึก + Active ทันที</button>
-    <span style="font-size:10px;color:rgba(255,255,255,0.55);margin-left:6px">⌄ hover</span>
-  </div>
-</header>
+  </header>
 
-<!-- SAAB -->
-<div class="saab-wrap" id="saabWrap">
-  <div class="saab-trigger" title="hover / กด 📌 ปักหมุด"></div>
-  <div class="saab">
-    <button class="btn btn-secondary">💾 Save Draft</button>
-    <button class="btn btn-secondary">📋 Copy จาก Vendor เก่า</button>
-    <button class="btn btn-secondary">🖨️ พิมพ์</button>
-    <button class="btn btn-secondary" style="color:#EF4444">↩ ยกเลิก</button>
-    <div style="flex:1"></div>
-    <span class="saab-status"><span class="dot"></span>สถานะ: <strong>Draft</strong> · บันทึกแล้ว Active ทันที (ไม่มี Finance Approval per pivot 2026-04-23)</span>
-    <button class="pin-btn" id="pinBtn" onclick="po3TogglePin()" title="ปักหมุดแถบเครื่องมือ">📌</button>
-  </div>
-</div>
-
-<div class="content-wrapper">
-
-<!-- per-pivot disclaimer -->
-<div class="alert alert-info">💡 <b>Simple Form (per pivot 2026-04-23):</b> ตัด KYC heavy ออก · ไม่ต้องอัพโหลดเอกสาร 5 ใบ · ไม่ต้องผ่าน Finance Approval · กรอกข้อมูลพื้นฐาน + เงื่อนไขการค้า → Active ใช้งานได้ทันที · การแก้ไขข้อมูลทีหลัง ใช้สิทธิ์แยก (ไม่อยู่ใน scope หน้านี้)</div>
-
-<!-- Section 1: ข้อมูลพื้นฐาน -->
-<div class="section-card">
-  <div class="section-title">
-    <span class="num">PO-3.1</span>🏭 ข้อมูลพื้นฐาน
-    <span class="en">Basic Information</span>
-  </div>
-  <div class="form-grid">
-    <div class="field"><label>รหัส Vendor <span class="en">Vendor Code (auto)</span></label><input type="text" value="V-00146" readonly style="background:#F9FAFB;color:#6B7280"></div>
-    <div class="field"><label>ชื่อบริษัท (ไทย) <span class="req">*</span></label><input type="text" placeholder="เช่น บจก.ตัวอย่าง"></div>
-    <div class="field"><label>ชื่อบริษัท (English) <span class="en">Company Name EN</span></label><input type="text" placeholder="e.g. Example Co., Ltd."></div>
-
-    <div class="field"><label>ประเภท <span class="en">Type</span> <span class="req">*</span></label>
-      <select>
-        <option>นิติบุคคล (บริษัท)</option>
-        <option>ห้างหุ้นส่วน (หจก.)</option>
-        <option>บุคคลธรรมดา</option>
-      </select>
+  <div class="saab saab-compact">
+    <button class="btn btn-outline" onclick="dfOpen()" title="ค้นหา/เปิด VBL เก่า">📂 เปิดเอกสารเก่า</button>
+    <button class="btn btn-outline">📋 Copy</button>
+    <button class="btn btn-outline">🖨️ พิมพ์</button>
+    <div class="saab-more-wrap">
+      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
+      <div class="saab-more-menu">
+        <button type="button" class="btn btn-menu btn-outline">💾 Save Draft</button>
+        <button type="button" class="btn btn-menu btn-outline" onclick="location.href='po6-ap-invoice-mockup.html'">→ ไปตั้งหนี้ PO-6</button>
+        <button type="button" class="btn btn-menu btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
+      </div>
     </div>
-    <div class="field"><label>เลขผู้เสียภาษี <span class="en">Tax ID (13 digits)</span> <span class="req">*</span></label><input type="text" placeholder="0-1055-12345-67-8" maxlength="13"></div>
-    <div class="field"><label>สาขา <span class="en">Branch</span></label><input type="text" placeholder="00000 = สำนักงานใหญ่" value="00000"></div>
+    <div class="saab-spacer"></div>
   </div>
 
-  <div style="font-size:11px;font-weight:700;color:#6B7280;margin:18px 0 8px;text-transform:uppercase;letter-spacing:0.04em">📞 ติดต่อ</div>
-  <div class="form-grid">
-    <div class="field"><label>เบอร์โทร <span class="req">*</span></label><input type="text" placeholder="02-XXX-XXXX"></div>
-    <div class="field"><label>Email <span class="req">*</span></label><input type="email" placeholder="contact@vendor.com"></div>
-    <div class="field"><label>Sales Contact</label><input type="text" placeholder="ชื่อพนักงานขาย"></div>
-  </div>
+  <div class="content">
+    <div id="po3Sc12" class="status-strip"></div>
+    <div id="po3Gate" class="gate-alert"></div>
 
-  <div style="font-size:11px;font-weight:700;color:#6B7280;margin:18px 0 8px;text-transform:uppercase;letter-spacing:0.04em">🏢 ที่อยู่</div>
-  <div class="form-grid-2">
-    <div class="field"><label>ที่อยู่ใบกำกับ <span class="en">Billing Address</span> <span class="req">*</span></label><textarea placeholder="เลขที่ · ถนน · ตำบล · อำเภอ · จังหวัด · รหัสไปรษณีย์"></textarea></div>
-    <div class="field"><label>ที่อยู่จัดส่ง <span class="en">Pickup Address</span></label><textarea placeholder="ถ้าต่างจาก Billing · ใส่ที่อยู่รับของ"></textarea></div>
-  </div>
-</div>
+    <div class="row-2col">
+      <div class="card compact">
+        <div class="card-header">
+          <div class="card-title"><span class="secno">PO-3.1</span><span class="ico">🏭</span>เจ้าหนี้ (Vendor) <span class="tpl-zone">SC-3</span></div>
+          <button class="card-btn primary" onclick="dfOpenVend()">🔍 เลือก/เปลี่ยน</button>
+        </div>
+        <div class="row-party party-mini">
+          <div><div class="lbl">รหัส · ชื่อ</div><div class="val hl">V-00045 · Daikin (TH)</div></div>
+          <div><div class="lbl">เงื่อนไขชำระ</div><div class="val">NET 60 วัน</div></div>
+          <div><div class="lbl">AP ค้างเดิม</div><div class="val" style="color:#B45309">1,250,000</div></div>
+        </div>
+      </div>
+      <div class="card compact">
+        <div class="card-header"><div class="card-title"><span class="secno">PO-3.2</span><span class="ico">🧾</span>ข้อมูลใบแจ้งหนี้ Vendor</div></div>
+        <div class="field-grid-2">
+          <div class="field"><div class="field-label">เลขใบแจ้งหนี้ Vendor *</div><input type="text" id="po3ViNo" value="DKN-INV-25088" oninput="po3SyncViHdr()"></div>
+          <div class="field"><div class="field-label">วันที่ใบแจ้งหนี้</div><input type="text" value="12 มิ.ย. 26"></div>
+          <div class="field"><div class="field-label">กำหนดชำระ (auto)</div><div class="field-value">เครดิต 60 วัน · 11 ส.ค. 26</div></div>
+          <div class="field"><div class="field-label">ผู้รับวางบิล</div><div class="field-value">สมศรี · จัดซื้อ</div></div>
+        </div>
+      </div>
+    </div>
 
-<!-- Section 2: เงื่อนไขการค้า -->
-<div class="section-card">
-  <div class="section-title">
-    <span class="num">PO-3.2</span>💳 เงื่อนไขการค้า
-    <span class="en">Trade &amp; Payment Terms</span>
-  </div>
-  <div class="form-grid-4">
-    <div class="field"><label>เงื่อนไขชำระ <span class="en">Credit Term</span> <span class="req">*</span></label>
-      <select>
-        <option>NET 30 วัน</option>
-        <option>NET 45 วัน</option>
-        <option selected>NET 60 วัน</option>
-        <option>NET 90 วัน</option>
-        <option>Cash on Delivery</option>
-        <option>Prepayment</option>
-      </select>
+    <div class="mode-bar">
+      <span class="lbl">โหมดเลือก</span>
+      <div class="mode-seg" id="po3ModeSeg">
+        <button type="button" class="mode-opt active" data-mode="bill" onclick="po3SetMode('bill')">📄 ทั้งบิล (GRN/PO)</button>
+        <button type="button" class="mode-opt" data-mode="line" onclick="po3SetMode('line')">📦 รายการ (SKU)</button>
+      </div>
+      <span style="font-size:11px;color:#6B7280" id="po3ModeHint">เลือกใบรับสินค้า (GRN) หรือใบสั่งซื้อ (PO) ทั้งใบ — 1 VBL อ้างได้หลายบิล</span>
     </div>
-    <div class="field"><label>สกุลเงิน <span class="en">Currency</span></label>
-      <select><option selected>THB · บาท</option><option>USD</option><option>JPY</option></select>
-    </div>
-    <div class="field"><label>วงเงินเครดิต (ขีดสูงสุด AP)</label><input type="text" placeholder="2,000,000" value="2,000,000" style="text-align:right"></div>
-    <div class="field"><label>Cash Discount</label><input type="text" placeholder="2/10 net 60 (optional)"></div>
-  </div>
 
-  <div style="font-size:11px;font-weight:700;color:#6B7280;margin:18px 0 8px;text-transform:uppercase;letter-spacing:0.04em">🏦 บัญชีธนาคาร (สำหรับโอนชำระ)</div>
-  <div class="form-grid-4">
-    <div class="field"><label>ธนาคาร <span class="req">*</span></label>
-      <select>
-        <option>BBL · กรุงเทพ</option>
-        <option>KBANK · กสิกรไทย</option>
-        <option>SCB · ไทยพาณิชย์</option>
-        <option>KTB · กรุงไทย</option>
-        <option>BAY · กรุงศรี</option>
-      </select>
+    <div class="card items-card">
+      <div class="card-header">
+        <div class="card-title"><span class="secno">PO-3.3</span><span class="ico">🔗</span><span id="po3ListTitle">รายการอ้างอิง — ทั้งบิล</span> <span class="tpl-zone">SC-5+</span></div>
+        <button class="card-btn primary" onclick="po3PullRef()">🔗 ดึงรายการอ้างอิง</button>
+      </div>
+      <div class="filter-bar" id="po3FilterBar">
+        <label>ฟิลเตอร์บิล</label>
+        <input type="text" id="fPo" placeholder="เลข PO" oninput="po3ApplyFilter()">
+        <input type="text" id="fGrn" placeholder="เลข GRN" oninput="po3ApplyFilter()">
+        <select id="fStatus" onchange="po3ApplyFilter()">
+          <option value="">สถานะรับ — ทั้งหมด</option>
+          <option value="full">รับครบ</option>
+          <option value="partial">รับบางส่วน</option>
+          <option value="pending">ยังไม่วางบิล</option>
+        </select>
+        <input type="text" id="fDate" placeholder="วันที่รับ" oninput="po3ApplyFilter()">
+        <div class="sp"></div>
+        <span style="font-size:11px;color:#6B7280" id="po3SelCount">เลือก 2 บิล · 2,260,000 ฿</span>
+      </div>
+      <div class="items-wrap">
+        <table class="items" id="po3Table">
+          <thead id="po3Thead">
+            <tr><th style="width:32px"></th><th>#</th><th>เลข GRN</th><th>อ้างอิง PO</th><th>วันที่รับ</th><th>คลัง</th><th class="num">มูลค่ารับ</th><th>สถานะ</th><th></th></tr>
+          </thead>
+          <tbody id="po3Tbody"></tbody>
+        </table>
+      </div>
     </div>
-    <div class="field"><label>ชื่อบัญชี <span class="req">*</span></label><input type="text" placeholder="ตามชื่อบริษัท"></div>
-    <div class="field"><label>เลขบัญชี <span class="req">*</span></label><input type="text" placeholder="234-5-67890-1"></div>
-    <div class="field"><label>สาขา</label><input type="text" placeholder="สาขาธนาคาร"></div>
-  </div>
 
-  <div style="font-size:11px;font-weight:700;color:#6B7280;margin:18px 0 8px;text-transform:uppercase;letter-spacing:0.04em">📋 ภาษี &amp; WHT</div>
-  <div class="form-grid">
-    <div class="field"><label>WHT Category <span class="en">Withholding Tax</span> <span class="req">*</span></label>
-      <select>
-        <option>ภ.ง.ด.3 · บุคคลธรรมดา (1-5%)</option>
-        <option selected>ภ.ง.ด.53 · นิติบุคคล (1-5%)</option>
-        <option>ไม่หัก ณ ที่จ่าย</option>
-      </select>
+    <div class="row-bottom">
+      <div class="card compact">
+        <div class="card-header"><div class="card-title"><span class="secno">PO-3.4</span><span class="ico">📎</span>เอกสารแนบ (ใบแจ้งหนี้ Vendor)</div>
+          <button class="card-btn" onclick="po3Attach()">➕ แนบไฟล์</button>
+        </div>
+        <div class="attach-zone" id="po3AttachZone">ลากไฟล์ PDF / ภาพใบแจ้งหนี้ · หรือกดแนบไฟล์<br><span style="font-size:10px;color:#9CA3AF">DKN-INV-25088.pdf · 1.2 MB · อัปโหลด 14 มิ.ย. 26</span></div>
+      </div>
+      <div class="card compact"><div id="po3Sc11"></div></div>
     </div>
-    <div class="field"><label>VAT Status</label>
-      <select><option selected>จดทะเบียน VAT (มี ภ.พ.20)</option><option>ไม่จดทะเบียน VAT</option></select>
-    </div>
-    <div class="field"><label>R Flag (Risk)</label>
-      <select><option selected>✓ ผ่าน · Trusted</option><option>⚠ Watch list</option><option>🔴 Blocked</option></select>
-    </div>
-  </div>
-</div>
 
-<!-- Section 3: Default Trade Agreement (optional) -->
-<div class="section-card">
-  <div class="section-title">
-    <span class="num">PO-3.3</span>🤝 Default Trade Agreement <span style="font-size:11px;font-weight:500;color:#6B7280;margin-left:6px">(Optional · สร้างต่อใน PO-2)</span>
-    <span class="en">Quick Setup VC</span>
-  </div>
-  <div class="alert alert-warn" style="margin-bottom:12px">⚠ <b>Optional:</b> ถ้า Vendor มีข้อตกลงเริ่มต้น (เช่น MOU Q1 = 2%) สามารถบันทึกที่นี่เลย หรือไม่กรอกก็ได้ · ค่อยไปสร้าง <a href="po2-rfq-mockup.html" style="color:#92400E;font-weight:600">Vendor Commitment ที่ PO-2 ↗</a> ทีหลัง</div>
-  <div class="form-grid-4">
-    <div class="field"><label>มี Default VC ไหม</label>
-      <select onchange="po3ToggleVC(this)">
-        <option value="no" selected>ไม่มี · ค่อยสร้างที่ PO-2</option>
-        <option value="yes">มี · กรอกพื้นฐานเลย</option>
-      </select>
-    </div>
-    <div class="field" id="vcType" style="display:none"><label>ประเภท</label>
-      <select><option>🟢 MOU · ซื้อถึงเป้า Rebate</option><option>🔵 Sell-in · ลดบนบิล</option></select>
-    </div>
-    <div class="field" id="vcRebate" style="display:none"><label>Rebate %</label><input type="text" placeholder="2.0" style="text-align:right"></div>
-    <div class="field" id="vcTarget" style="display:none"><label>เป้าหมาย/Period</label><input type="text" placeholder="2,000,000 / Q"></div>
-  </div>
-</div>
+  </div><!-- /content -->
 
-<!-- Action Bar -->
-<div class="section-card">
-  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
-    <div style="font-size:12px;color:#6B7280">
-      💡 <b>Workflow:</b> Create → <b style="color:#10B981">Active ทันที</b> (per pivot 2026-04-23 · ไม่มี Finance Approval) · ใช้งานได้กับทุก Module ทันทีหลัง Save
-    </div>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-secondary">💾 Save Draft</button>
-      <button class="btn btn-secondary">↩ Cancel</button>
-      <button class="btn btn-success">✓ บันทึก + Active</button>
-    </div>
-  </div>
-</div>
-
-</div></div></div>
-
-<script>
-/* PO-3 saab pin */
-(function(){
-  var saved=false;
-  try{ saved=localStorage.getItem('po3_saab_pinned')==='1'; }catch(e){}
-  if(saved){
-    var w=document.getElementById('saabWrap'),p=document.getElementById('pinBtn');
-    if(w) w.classList.add('pinned'); if(p) p.classList.add('pinned');
-  }
-  window.po3TogglePin=function(){
-    var w=document.getElementById('saabWrap'),p=document.getElementById('pinBtn');
-    var on=w.classList.toggle('pinned'); p.classList.toggle('pinned',on);
-    try{ localStorage.setItem('po3_saab_pinned',on?'1':'0'); }catch(e){}
-  };
-})();
-
-/* VC default toggle */
-function po3ToggleVC(sel){
-  var show=sel.value==='yes';
-  ['vcType','vcRebate','vcTarget'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(el)el.style.display=show?'':'none';
-  });
-}
-</script>
+  <div id="po3DcStrip" class="dc-strip"></div>
+</div></div>
 
 <script src="swt-sidebar.js"></script>
-</body>
-</html>
+<script src="swt-patterns.js"></script>
+<script src="swt-doc-finder.js"></script>
+<script>
+var PO3_BILLS=[
+  {id:1,grn:'GR-2606-0210',po:'PO-0042',date:'10 มิ.ย. 26',wh:'WH-01 บางนา',amt:2260000,status:'full',billed:false},
+  {id:2,grn:'GR-2606-0188',po:'PO-0038',date:'08 มิ.ย. 26',wh:'WH-02 รังสิต',amt:840000,status:'partial',billed:false},
+  {id:3,grn:'GR-2606-0155',po:'PO-0031',date:'05 มิ.ย. 26',wh:'WH-01 บางนา',amt:412000,status:'full',billed:true}
+];
+var PO3_LINES=[
+  {id:1,grn:'GR-2606-0210',po:'PO-0042',sku:'DAI-FTKM24',name:'แอร์ Daikin FTKM 24,000 BTU',qty:80,recv:80,unit:'เครื่อง',price:18500,amt:1480000,status:'full'},
+  {id:2,grn:'GR-2606-0210',po:'PO-0042',sku:'DAI-FTKM18',name:'แอร์ Daikin FTKM 18,000 BTU',qty:40,recv:40,unit:'เครื่อง',price:16500,amt:660000,status:'full'},
+  {id:3,grn:'GR-2606-0210',po:'PO-0042',sku:'DAI-FTKM12',name:'แอร์ Daikin FTKM 12,000 BTU',qty:60,recv:60,unit:'เครื่อง',price:12000,amt:720000,status:'full'},
+  {id:4,grn:'GR-2606-0188',po:'PO-0038',sku:'DAI-FTKM09',name:'แอร์ Daikin FTKM 9,000 BTU',qty:30,recv:18,unit:'เครื่อง',price:9800,amt:176400,status:'partial'},
+  {id:5,grn:'GR-2606-0188',po:'PO-0038',sku:'DAI-FTKM12',name:'แอร์ Daikin FTKM 12,000 BTU',qty:50,recv:50,unit:'เครื่อง',price:12000,amt:600000,status:'full'}
+];
+var po3Mode='bill';
+var po3Selected=new Set([1,2]);
+
+function po3Fmt(n){return Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function po3StatusChip(s,billed){
+  if(billed) return '<span class="chip chip-gray">วางบิลแล้ว</span>';
+  if(s==='full') return '<span class="chip chip-ok">รับครบ · รอวางบิล</span>';
+  return '<span class="chip chip-warn">รับบางส่วน</span>';
+}
+function po3LineStatusChip(s){
+  if(s==='full') return '<span class="chip chip-ok">รับครบ</span>';
+  return '<span class="chip chip-warn">รับบางส่วน</span>';
+}
+
+function po3SetMode(mode){
+  po3Mode=mode;
+  document.querySelectorAll('#po3ModeSeg .mode-opt').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-mode')===mode);});
+  var hint=document.getElementById('po3ModeHint'),title=document.getElementById('po3ListTitle'),thead=document.getElementById('po3Thead');
+  if(mode==='bill'){
+    hint.textContent='เลือกใบรับสินค้า (GRN) หรือใบสั่งซื้อ (PO) ทั้งใบ — 1 VBL อ้างได้หลายบิล';
+    title.textContent='รายการอ้างอิง — ทั้งบิล';
+    thead.innerHTML='<tr><th style="width:32px"></th><th>#</th><th>เลข GRN</th><th>อ้างอิง PO</th><th>วันที่รับ</th><th>คลัง</th><th class="num">มูลค่ารับ</th><th>สถานะ</th><th></th></tr>';
+    po3Selected=new Set([1,2]);
+  } else {
+    hint.textContent='เลือกรายการ SKU ทีละแถว — ฟิลเตอร์บิล (PO/GRN) จำกัดขอบเขตก่อนเลือก';
+    title.textContent='รายการอ้างอิง — รายการสินค้า';
+    thead.innerHTML='<tr><th style="width:32px"></th><th>#</th><th>GRN · PO</th><th>รหัส</th><th>รายการ</th><th class="num">รับ</th><th>หน่วย</th><th class="num">มูลค่า</th><th>สถานะ</th></tr>';
+    po3Selected=new Set([1,2,3]);
+  }
+  po3RenderTable();
+}
+
+function po3ApplyFilter(){
+  po3RenderTable();
+}
+
+function po3PassesFilter(row){
+  var po=(document.getElementById('fPo').value||'').trim().toLowerCase();
+  var grn=(document.getElementById('fGrn').value||

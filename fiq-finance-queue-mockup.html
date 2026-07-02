@@ -238,7 +238,7 @@ tr.q-row:hover{background:#EFF6FF !important}
     <div class="action-summary">
       <div>
         <h4>🎯 งานเร่งด่วนวันนี้</h4>
-        <p>มี <b>3 รายการ</b> เกิน SLA · <b>12 รายการ</b> Amber ใกล้ครบ · ขอแนะนำดูคิว <b>AP</b> ก่อน (3 ใบเกิน 30 วัน) แล้วตามด้วย <b>Tax Reconciliation</b> (ปิด pห่ง 20 เม.ย.)</p>
+        <p>มี <b>3 รายการ</b> เกิน SLA · <b>12 รายการ</b> Amber ใกล้ครบ · คิว <b>AP</b>: <b>AP-2606-0088</b> (Daikin · ฿2,339,836 · จาก PO-6 Posted) รอจ่ายที่ <b>FI-2</b> · แล้วตามด้วย Tax Reconciliation</p>
       </div>
       <div class="big-num">15</div>
     </div>
@@ -246,7 +246,7 @@ tr.q-row:hover{background:#EFF6FF !important}
     <!-- QUEUE CARDS -->
     <div class="queue-grid">
 
-      <div class="q-card active c-ar">
+      <div class="q-card active c-ar" data-queue="ar" onclick="fiqSelectQueue('ar',this)">
         <div class="q-head">
           <div class="q-ico">💰</div>
           <div class="q-body">
@@ -274,7 +274,7 @@ tr.q-row:hover{background:#EFF6FF !important}
         </div>
       </div>
 
-      <div class="q-card c-ap">
+      <div class="q-card c-ap" data-queue="ap" onclick="fiqSelectQueue('ap',this)">
         <div class="q-head">
           <div class="q-ico">💳</div>
           <div class="q-body">
@@ -295,10 +295,10 @@ tr.q-row:hover{background:#EFF6FF !important}
           </div>
           <div class="num">OK 70 · A 14 · R 3</div>
         </div>
-        <div class="q-stat">เก่าสุด <b style="color:#B91C1C">34 วัน</b> · SLA 30 วัน</div>
+        <div class="q-stat">ใหม่จาก chain <b>PO-6→FI-2</b> · <b>AP-0088</b> ฿2.34M · ครบ 24 ส.ค. 26</div>
         <div class="q-actions">
-          <button class="btn btn-ghost btn-sm">ดู 87</button>
-          <button class="btn btn-primary btn-sm">จ่าย (14)</button>
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();fiqSelectQueue('ap',this.closest('.q-card'))">ดู 87</button>
+          <a class="btn btn-primary btn-sm" href="fi2-ap-payment-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">💳 จ่าย FI-2</a>
         </div>
       </div>
 
@@ -435,8 +435,8 @@ tr.q-row:hover{background:#EFF6FF !important}
       </div>
     </div>
 
-    <!-- DETAIL: AR Queue (active) -->
-    <div class="sep">
+    <!-- DETAIL: AR Queue -->
+    <div class="sep" id="panel-ar">
       <div class="sep-title">🔍 Detail List — AR Pending Receipt (คลิก card เพื่อเปลี่ยน)</div>
       <div class="filter-bar">
         <label>สถานะ:</label>
@@ -468,7 +468,7 @@ tr.q-row:hover{background:#EFF6FF !important}
         <table>
           <thead><tr>
             <th style="width:32px"><input type="checkbox"></th>
-            <th style="width:130px">Inv No</th>
+            <th style="width:130px">เลขบิล (SL-4)</th>
             <th style="width:85px">วันที่</th>
             <th>ลูกค้า</th>
             <th style="width:100px">Entity</th>
@@ -490,7 +490,7 @@ tr.q-row:hover{background:#EFF6FF !important}
               <td><span class="aging ag-r">⚠️ 30 วัน</span></td>
               <td class="mono" style="color:#B91C1C">02/04/26</td>
               <td><span class="status st-over">🔴 Overdue</span></td>
-              <td><button class="btn btn-danger btn-sm" onclick="event.stopPropagation()">📞 ติดตาม</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
+              <td><button class="btn btn-danger btn-sm" onclick="event.stopPropagation()">📞 ติดตาม</button><a class="btn btn-success btn-sm" href="fi1-ar-receive-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">💳 รับชำระ (FI-1)</a></td>
             </tr>
 
             <tr style="background:#FEF2F2" class="q-row" onclick="openWqDetail(\'INV-2603-0815\',\'ar-overdue\')">
@@ -503,7 +503,7 @@ tr.q-row:hover{background:#EFF6FF !important}
               <td><span class="aging ag-r">⚠️ 33 วัน</span></td>
               <td class="mono" style="color:#B91C1C">14/04/26</td>
               <td><span class="status st-over">🔴 Overdue</span></td>
-              <td><button class="btn btn-danger btn-sm" onclick="event.stopPropagation()">📞 ติดตาม</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
+              <td><button class="btn btn-danger btn-sm" onclick="event.stopPropagation()">📞 ติดตาม</button><a class="btn btn-success btn-sm" href="fi1-ar-receive-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">💳 รับชำระ (FI-1)</a></td>
             </tr>
 
             <tr style="background:#FEF2F2" class="q-row" onclick="openWqDetail(\'INV-2604-0012\',\'ar-overdue\')">
@@ -516,7 +516,7 @@ tr.q-row:hover{background:#EFF6FF !important}
               <td><span class="aging ag-r">⚠️ 16 วัน</span></td>
               <td class="mono" style="color:#B91C1C">16/04/26</td>
               <td><span class="status st-over">🔴 Overdue</span></td>
-              <td><button class="btn btn-danger btn-sm" onclick="event.stopPropagation()">📞 ติดตาม</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
+              <td><button class="btn btn-danger btn-sm" onclick="event.stopPropagation()">📞 ติดตาม</button><a class="btn btn-success btn-sm" href="fi1-ar-receive-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">💳 รับชำระ (FI-1)</a></td>
             </tr>
 
             <tr style="background:#FFFBEB" class="q-row" onclick="openWqDetail(\'INV-2604-0045\',\'ar-amber\')">
@@ -529,7 +529,7 @@ tr.q-row:hover{background:#EFF6FF !important}
               <td><span class="aging ag-a">12 วัน</span></td>
               <td class="mono" style="color:#B45309">05/05/26</td>
               <td><span class="status st-due">🟡 ใกล้ครบ</span></td>
-              <td><button class="btn btn-warn btn-sm" onclick="event.stopPropagation()">📧 Reminder</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
+              <td><button class="btn btn-warn btn-sm" onclick="event.stopPropagation()">📧 Reminder</button><a class="btn btn-success btn-sm" href="fi1-ar-receive-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">💳 รับชำระ (FI-1)</a></td>
             </tr>
 
             <tr style="background:#FFFBEB" class="q-row" onclick="openWqDetail(\'INV-2604-0062\',\'ar-amber\')">
@@ -542,7 +542,7 @@ tr.q-row:hover{background:#EFF6FF !important}
               <td><span class="aging ag-a">9 วัน</span></td>
               <td class="mono" style="color:#B45309">23/04/26</td>
               <td><span class="status st-due">🟡 ใกล้ครบ</span></td>
-              <td><button class="btn btn-warn btn-sm" onclick="event.stopPropagation()">📧 Reminder</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
+              <td><button class="btn btn-warn btn-sm" onclick="event.stopPropagation()">📧 Reminder</button><a class="btn btn-success btn-sm" href="fi1-ar-receive-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">💳 รับชำระ (FI-1)</a></td>
             </tr>
 
             <tr class="q-row" onclick="openWqDetail(\'INV-2604-0098\',\'ar-ontime\')">
@@ -555,7 +555,7 @@ tr.q-row:hover{background:#EFF6FF !important}
               <td><span class="aging ag-g">5 วัน</span></td>
               <td class="mono">12/05/26</td>
               <td><span class="status st-ok">✓ On-time</span></td>
-              <td><button class="btn btn-success btn-sm" onclick="event.stopPropagation()">💳 รับชำระ</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
+              <td><a class="btn btn-success btn-sm" href="fi1-ar-receive-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">💳 รับชำระ (FI-1)</a><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
             </tr>
 
             <tr class="q-row" onclick="openWqDetail(\'INV-2604-0105\',\'ar-ontime\')">
@@ -568,7 +568,7 @@ tr.q-row:hover{background:#EFF6FF !important}
               <td><span class="aging ag-g">3 วัน</span></td>
               <td class="mono">13/06/26</td>
               <td><span class="status st-ok">✓ On-time</span></td>
-              <td><button class="btn btn-success btn-sm" onclick="event.stopPropagation()">💳 รับชำระ</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
+              <td><a class="btn btn-success btn-sm" href="fi1-ar-receive-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">💳 รับชำระ (FI-1)</a><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
             </tr>
 
             <tr class="q-row" onclick="openWqDetail(\'INV-2604-0128\',\'ar-ontime\')">
@@ -581,9 +581,119 @@ tr.q-row:hover{background:#EFF6FF !important}
               <td><span class="aging ag-g">1 วัน</span></td>
               <td class="mono">16/05/26</td>
               <td><span class="status st-ok">✓ On-time</span></td>
-              <td><button class="btn btn-success btn-sm" onclick="event.stopPropagation()">💳 รับชำระ</button><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
+              <td><a class="btn btn-success btn-sm" href="fi1-ar-receive-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">💳 รับชำระ (FI-1)</a><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
             </tr>
 
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DETAIL: AP Queue (sync FI-2 · procure-to-pay chain) -->
+    <div class="sep" id="panel-ap" style="display:none">
+      <div class="sep-title">🔍 Detail List — AP Pending Payment (FI-2 · จาก PO-6 Posted)</div>
+      <div class="filter-bar">
+        <label>สถานะ:</label>
+        <select><option>ทั้งหมด</option><option>Posted ค้างจ่าย</option><option>ใกล้ครบ</option><option>เกินกำหนด</option></select>
+        <label>เจ้าหนี้:</label>
+        <select><option>ทั้งหมด</option><option selected>Daikin (V-00045)</option><option>Mitsubishi</option><option>LG</option></select>
+        <label>Chain:</label>
+        <select><option>ทั้งหมด</option><option selected>PO-4→WH-1→PO-6</option><option>บิลฝาก PO-8</option><option>อื่นๆ</option></select>
+        <div class="search-inp"><input placeholder="ค้นหา AP No / Vendor / PO / GR…" value="AP-2606-0088"></div>
+        <div class="tab-scope" style="margin-left:auto">
+          <span class="active">Table</span>
+          <span>Batch จ่าย</span>
+        </div>
+      </div>
+      <div class="detail-panel">
+        <div class="detail-head">
+          <h3><span class="c-ico c-ap">💳</span>AP Pending Payment</h3>
+          <span class="cnt">แสดง 6 จาก 87 ใบ · chain sample 1 ใบ</span>
+          <div class="act">
+            <button class="btn btn-ghost btn-sm">☑ เลือกทั้งหมด</button>
+            <button class="btn btn-ghost btn-sm">📤 Export</button>
+            <a class="btn btn-primary btn-sm" href="fi2-ap-payment-mockup.html" style="text-decoration:none">💳 จ่ายชำระ (FI-2)</a>
+          </div>
+        </div>
+        <table>
+          <thead><tr>
+            <th style="width:32px"><input type="checkbox"></th>
+            <th style="width:130px">AP No</th>
+            <th style="width:85px">วันที่</th>
+            <th>เจ้าหนี้</th>
+            <th style="width:120px">Chain</th>
+            <th style="width:130px" class="amt">ยอดค้าง</th>
+            <th style="width:100px">ครบกำหนด</th>
+            <th style="width:110px">สถานะ</th>
+            <th style="width:180px"></th>
+          </tr></thead>
+          <tbody>
+            <tr style="background:#EFF6FF" class="q-row" onclick="openApDetail('AP-2606-0088')">
+              <td><input type="checkbox" checked onclick="event.stopPropagation()"></td>
+              <td><span class="doc-no">AP-2606-0088</span></td>
+              <td class="mono">25/06/26</td>
+              <td>Daikin Industries (TH)<div style="font-size:10px;color:#94A3B8">V-00045 · DKN-INV-25088 · เครดิต 60 วัน</div></td>
+              <td class="mono" style="font-size:10px">PO-0042→GR-0210→PO-6</td>
+              <td class="amt"><b>฿2,339,836.00</b></td>
+              <td class="mono">24/08/26</td>
+              <td><span class="status st-ok">✓ Posted ค้างจ่าย</span></td>
+              <td><a class="btn btn-primary btn-sm" href="fi2-ap-payment-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">💳 จ่าย FI-2</a><a class="btn btn-ghost btn-sm" href="po6-ap-invoice-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">ดู PO-6</a></td>
+            </tr>
+            <tr style="background:#FFFBEB" class="q-row" onclick="openApDetail('AP-2606-0091')">
+              <td><input type="checkbox" onclick="event.stopPropagation()"></td>
+              <td><span class="doc-no">AP-2606-0091</span></td>
+              <td class="mono">28/06/26</td>
+              <td>Daikin Industries (TH)<div style="font-size:10px;color:#94A3B8">V-00045 · DKN-INV-25092</div></td>
+              <td class="mono" style="font-size:10px">PO-0048→GR-0215</td>
+              <td class="amt"><b>฿578,340.00</b></td>
+              <td class="mono" style="color:#B45309">05/09/26</td>
+              <td><span class="status st-due">🟡 ใกล้ครบ</span></td>
+              <td><a class="btn btn-primary btn-sm" href="fi2-ap-payment-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">จ่าย</a><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
+            </tr>
+            <tr style="background:#FEF2F2" class="q-row" onclick="openApDetail('AP-2605-0156')">
+              <td><input type="checkbox" onclick="event.stopPropagation()"></td>
+              <td><span class="doc-no">AP-2605-0156</span></td>
+              <td class="mono">12/05/26</td>
+              <td>Mitsubishi Electric<div style="font-size:10px;color:#94A3B8">V-00012 · MHI-INV-8821</div></td>
+              <td class="mono" style="font-size:10px">PO-0031→GR-0188</td>
+              <td class="amt"><b>฿125,000.00</b></td>
+              <td class="mono" style="color:#B91C1C">01/06/26</td>
+              <td><span class="status st-over">🔴 เกินกำหนด</span></td>
+              <td><a class="btn btn-danger btn-sm" href="fi2-ap-payment-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">จ่ายด่วน</a><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
+            </tr>
+            <tr class="q-row" onclick="openApDetail('AP-2606-0072')">
+              <td><input type="checkbox" onclick="event.stopPropagation()"></td>
+              <td><span class="doc-no">AP-2606-0072</span></td>
+              <td class="mono">20/06/26</td>
+              <td>LG Electronics<div style="font-size:10px;color:#94A3B8">V-00088 · LG-INV-4421</div></td>
+              <td class="mono" style="font-size:10px">PO-0039→GR-0201</td>
+              <td class="amt"><b>฿892,150.00</b></td>
+              <td class="mono">20/08/26</td>
+              <td><span class="status st-ok">✓ On-time</span></td>
+              <td><a class="btn btn-primary btn-sm" href="fi2-ap-payment-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">จ่าย</a><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
+            </tr>
+            <tr class="q-row" onclick="openApDetail('AP-2606-0065')">
+              <td><input type="checkbox" onclick="event.stopPropagation()"></td>
+              <td><span class="doc-no">AP-2606-0065</span></td>
+              <td class="mono">18/06/26</td>
+              <td>Carrier Thailand<div style="font-size:10px;color:#94A3B8">V-00102 · บริการติดตั้ง</div></td>
+              <td class="mono" style="font-size:10px">PO-6 บริการ</td>
+              <td class="amt"><b>฿48,600.00</b></td>
+              <td class="mono">18/07/26</td>
+              <td><span class="status st-ok">WHT 3%</span></td>
+              <td><a class="btn btn-primary btn-sm" href="fi2-ap-payment-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">จ่าย+WHT</a><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
+            </tr>
+            <tr class="q-row" onclick="openApDetail('AP-2606-0050')">
+              <td><input type="checkbox" onclick="event.stopPropagation()"></td>
+              <td><span class="doc-no">AP-2606-0050</span></td>
+              <td class="mono">15/06/26</td>
+              <td>สยามทรานสปอร์ต<div style="font-size:10px;color:#94A3B8">V-00201 · ขนส่ง</div></td>
+              <td class="mono" style="font-size:10px">PO-6 freight</td>
+              <td class="amt"><b>฿12,800.00</b></td>
+              <td class="mono">15/07/26</td>
+              <td><span class="status st-ok">✓ On-time</span></td>
+              <td><a class="btn btn-primary btn-sm" href="fi2-ap-payment-mockup.html" onclick="event.stopPropagation()" style="text-decoration:none">จ่าย</a><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">ดู</button></td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -593,12 +703,14 @@ tr.q-row:hover{background:#EFF6FF !important}
 </main>
 
 <script>
-document.querySelectorAll('.q-card').forEach(c=>{
-  c.addEventListener('click',()=>{
+function fiqSelectQueue(id, card){
+  if(card){
     document.querySelectorAll('.q-card').forEach(x=>x.classList.remove('active'));
-    c.classList.add('active');
-  });
-});
+    card.classList.add('active');
+  }
+  document.getElementById('panel-ar').style.display=(id==='ar')?'':'none';
+  document.getElementById('panel-ap').style.display=(id==='ap')?'':'none';
+}
 </script>
 
 <!-- FI-Q Detail Modal (SL-4 pattern) -->
@@ -693,8 +805,75 @@ function openWqDetail(docNo, type){
 }
 function closeWqDetail(){ document.getElementById('mWqDetail').classList.remove('open'); }
 document.addEventListener('keydown', e => {
-  if(e.key==='Escape'){const m=document.getElementById('mWqDetail');if(m&&m.classList.contains('open'))closeWqDetail();}
+  if(e.key==='Escape'){
+    const m=document.getElementById('mWqDetail');if(m&&m.classList.contains('open'))closeWqDetail();
+    const a=document.getElementById('mApDetail');if(a&&a.classList.contains('open'))closeApDetail();
+  }
 });
+</script>
+
+<!-- FI-Q AP Detail Modal (chain PO-4→WH-1→PO-6→FI-2) -->
+<div class="wq-overlay" id="mApDetail" onclick="closeApDetail()">
+  <div class="wq-modal" onclick="event.stopPropagation()">
+    <div class="wq-mh" style="background:linear-gradient(90deg,#92400E 0%,#F59E0B 100%)">
+      <button class="wq-modal-close" onclick="closeApDetail()">✕</button>
+      <div class="wq-mh-top">
+        <div class="wq-mh-ico">💳</div>
+        <div class="wq-mh-title">
+          <h2 id="apDocNo">AP-2606-0088</h2>
+          <p>งานการเงิน · AP รอจ่าย (FI-2)</p>
+        </div>
+        <span class="wq-mh-badge">🟢 Posted · ค้างจ่าย</span>
+      </div>
+      <div class="wq-mh-meta">
+        <div class="wq-mh-meta-item"><div class="lbl">วันที่ตั้งหนี้</div><div class="val">25 มิ.ย. 26</div></div>
+        <div class="wq-mh-meta-item"><div class="lbl">ครบกำหนดจ่าย</div><div class="val">24 ส.ค. 26 (60 วัน)</div></div>
+        <div class="wq-mh-meta-item"><div class="lbl">เจ้าหนี้</div><div class="val">Daikin · V-00045</div></div>
+        <div class="wq-mh-meta-item"><div class="lbl">ใบแจ้งหนี้ Vendor</div><div class="val">DKN-INV-25088</div></div>
+        <div class="wq-mh-meta-item"><div class="lbl">ยอดค้างจ่าย</div><div class="val">฿2,339,836.00</div></div>
+      </div>
+    </div>
+    <div class="wq-body">
+      <div class="wq-status-pills">
+        <span class="wq-pill done"><a href="po4-purchase-order-mockup.html" style="color:inherit;text-decoration:none">PO-4 ✓</a></span>
+        <span class="wq-pill done"><a href="wh1-receive-mockup.html" style="color:inherit;text-decoration:none">WH-1 GR-0210 ✓</a></span>
+        <span class="wq-pill done"><a href="po6-ap-invoice-mockup.html" style="color:inherit;text-decoration:none">PO-6 Post ✓</a></span>
+        <span class="wq-pill active">FI-2 จ่ายชำระ (ปัจจุบัน)</span>
+        <span class="wq-pill">FI-12 WHT (ถ้ามี)</span>
+      </div>
+      <div class="wq-card">
+        <div class="wq-card-title">🏭 เจ้าหนี้ + เงื่อนไขจ่าย</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12.5px">
+          <div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">ชื่อ</span><span style="font-weight:600">Daikin Industries (TH) Ltd.</span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">รหัส</span><span style="font-family:monospace"><a href="sc3-vendor-search-mockup.html" style="color:#2563EB">V-00045 ↗</a></span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">WHT</span><span style="font-weight:600">สินค้า 0%</span></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">3-Way Match</span><span style="font-weight:600;color:#10B981">✓ ครบ PO=GR=Invoice</span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">อนุมัติจ่าย</span><span style="font-weight:600">Maker ≠ Checker</span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#6B7280">วิธีจ่ายแนะนำ</span><span style="font-weight:600">โอนธนาคาร</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wq-foot">
+      <div class="hint">🔒 กด "→ FI-2 จ่ายชำระ" = เปิด <a href="fi2-ap-payment-mockup.html" style="color:#2563EB">FI-2</a> · Apply AP · Post → ปิด AP + Bank ออก</div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost btn-sm" onclick="closeApDetail()">ปิด</button>
+      <a class="btn btn-ghost btn-sm" href="po6-ap-invoice-mockup.html" style="text-decoration:none">ดู PO-6</a>
+      <a class="btn btn-primary btn-sm" href="fi2-ap-payment-mockup.html" style="text-decoration:none">→ FI-2 จ่ายชำระ</a>
+    </div>
+  </div>
+</div>
+<script>
+function openApDetail(docNo){
+  const m=document.getElementById('mApDetail');
+  if(!m) return;
+  document.getElementById('apDocNo').textContent=docNo;
+  m.classList.add('open');
+}
+function closeApDetail(){ document.getElementById('mApDetail').classList.remove('open'); }
 </script>
 
 <!-- SWT_ITEM_SEARCH_START -->

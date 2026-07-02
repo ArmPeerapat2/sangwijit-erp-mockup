@@ -1,1528 +1,739 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ทะเบียนลูกค้า (Customer Master) - Sangwijit ERP Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            font-family: 'Inter', sans-serif;
-            background: #F8FAFC;
-            color: #1F2937;
-            min-height: 100vh;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 240px;
-            height: 100vh;
-            background: #1E3A5F;
-            color: white;
-            overflow-y: auto;
-            padding: 20px 0;
-            z-index: 1000;
-        }
-
-        .sidebar-header {
-            padding: 0 16px 24px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .nav-item {
-            padding: 12px 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: background 0.2s;
-            font-size: 14px;
-        }
-
-        .nav-item:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .nav-item.active {
-            background: #2563EB;
-            font-weight: 600;
-        }
-
-        .nav-icon {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-        }
-
-        /* Topbar */
-        .topbar {
-            position: sticky;
-            top: 0;
-            height: 56px;
-            background: white;
-            border-bottom: 1px solid #E5E7EB;
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            margin-left: 240px;
-            z-index: 900;
-            gap: 24px;
-        }
-
-        .breadcrumb {
-            font-size: 13px;
-            color: #6B7280;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .breadcrumb-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .breadcrumb-item.active {
-            color: #1F2937;
-            font-weight: 600;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: 240px;
-            padding: 24px;
-            min-height: calc(100vh - 56px);
-        }
-
-        .page-header {
-            margin-bottom: 24px;
-        }
-
-        .page-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #1F2937;
-            margin-bottom: 8px;
-        }
-
-        .split-layout {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 24px;
-            margin-bottom: 100px;
-        }
-
-        /* Customer List Panel */
-        .customer-list-panel {
-            background: white;
-            border-radius: 8px;
-            border: 1px solid #E5E7EB;
-            display: flex;
-            flex-direction: column;
-            height: fit-content;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .list-header {
-            padding: 16px;
-            border-bottom: 1px solid #E5E7EB;
-        }
-
-        .search-box {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #D1D5DB;
-            border-radius: 6px;
-            font-size: 13px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .customer-item {
-            padding: 12px 16px;
-            border-bottom: 1px solid #F3F4F6;
-            cursor: pointer;
-            transition: background 0.15s;
-            font-size: 13px;
-        }
-
-        .customer-item:hover {
-            background: #F9FAFB;
-        }
-
-        .customer-item.selected {
-            background: #EFF6FF;
-            border-left: 3px solid #2563EB;
-            padding-left: 13px;
-        }
-
-        .customer-code {
-            font-weight: 600;
-            color: #1F2937;
-            margin-bottom: 2px;
-        }
-
-        .customer-name {
-            font-size: 12px;
-            color: #6B7280;
-        }
-
-        /* Customer Detail Panel */
-        .customer-detail-panel {
-            background: white;
-            border-radius: 8px;
-            border: 1px solid #E5E7EB;
-            padding: 24px;
-        }
-
-        .detail-header {
-            display: flex;
-            align-items: baseline;
-            gap: 16px;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #E5E7EB;
-        }
-
-        .detail-code {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1F2937;
-            min-width: 120px;
-        }
-
-        .detail-name {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1F2937;
-            flex: 1;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .badge-b2c {
-            background: #DBEAFE;
-            color: #0C4A6E;
-        }
-
-        .badge-b2b {
-            background: #FEE2E2;
-            color: #7C2D12;
-        }
-
-        .badge-gov {
-            background: #F0FDF4;
-            color: #15803D;
-        }
-
-        .badge-normal {
-            background: #DCFCE7;
-            color: #15803D;
-        }
-
-        .badge-warning {
-            background: #FEF3C7;
-            color: #92400E;
-        }
-
-        .badge-danger {
-            background: #FEE2E2;
-            color: #991B1B;
-        }
-
-        .badge-gray {
-            background: #F3F4F6;
-            color: #4B5563;
-        }
-
-        .sync-indicator {
-            font-size: 12px;
-            color: #10B981;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-left: auto;
-        }
-
-        /* Collapsible Sections */
-        .collapse {
-            width: 100%;
-            margin-bottom: 16px;
-            border: 1px solid #E5E7EB;
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        .collapse-summary {
-            padding: 16px;
-            background: #F9FAFB;
-            cursor: pointer;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-            font-size: 14px;
-            color: #1F2937;
-            transition: background 0.15s;
-        }
-
-        .collapse-summary:hover {
-            background: #F3F4F6;
-        }
-
-        .collapse-toggle {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transform: rotate(-90deg);
-            transition: transform 0.3s;
-            font-size: 12px;
-            color: #6B7280;
-        }
-
-        .collapse[open] .collapse-toggle {
-            transform: rotate(0deg);
-        }
-
-        .collapse-content {
-            padding: 16px;
-            border-top: 1px solid #E5E7EB;
-            background: white;
-        }
-
-        /* Form Fields */
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        .form-row.full {
-            grid-template-columns: 1fr;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 6px;
-        }
-
-        .form-value {
-            font-size: 14px;
-            color: #1F2937;
-            padding: 8px 0;
-        }
-
-        /* Sub-tabs */
-        .sub-tabs {
-            display: flex;
-            gap: 0;
-            border-bottom: 2px solid #E5E7EB;
-            margin-bottom: 16px;
-        }
-
-        .sub-tab-btn {
-            padding: 12px 16px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            color: #6B7280;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-            transition: all 0.2s;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .sub-tab-btn:hover {
-            color: #1F2937;
-        }
-
-        .sub-tab-btn.active {
-            color: #2563EB;
-            border-bottom-color: #2563EB;
-        }
-
-        .sub-tab-content {
-            display: none;
-        }
-
-        .sub-tab-content.active {
-            display: block;
-        }
-
-        /* Table */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        .data-table thead {
-            background: #F9FAFB;
-        }
-
-        .data-table th {
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            color: #374151;
-            border-bottom: 1px solid #E5E7EB;
-        }
-
-        .data-table td {
-            padding: 12px;
-            border-bottom: 1px solid #F3F4F6;
-        }
-
-        .data-table tbody tr:hover {
-            background: #FAFAFA;
-        }
-
-        /* Mini Bar Chart */
-        .mini-chart {
-            display: flex;
-            align-items: flex-end;
-            gap: 6px;
-            height: 100px;
-            margin: 16px 0;
-        }
-
-        .bar {
-            flex: 1;
-            background: #2563EB;
-            border-radius: 2px 2px 0 0;
-            position: relative;
-            min-height: 8px;
-        }
-
-        .bar-label {
-            position: absolute;
-            bottom: -20px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 10px;
-            color: #6B7280;
-        }
-
-        /* Action Bar */
-        .action-bar {
-            position: fixed;
-            bottom: 0;
-            left: 240px;
-            right: 0;
-            height: 72px;
-            background: white;
-            border-top: 1px solid #E5E7EB;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 12px;
-            padding: 16px 24px;
-            z-index: 800;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.2s;
-        }
-
-        .btn-cancel {
-            background: white;
-            color: #6B7280;
-            border: 1px solid #D1D5DB;
-        }
-
-        .btn-cancel:hover {
-            background: #F9FAFB;
-            color: #1F2937;
-        }
-
-        .btn-primary {
-            background: #2563EB;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #1D4ED8;
-        }
-
-        .btn-sync {
-            background: #10B981;
-            color: white;
-        }
-
-        .btn-sync:hover {
-            background: #059669;
-        }
-
-        /* Timeline */
-        .activity-timeline {
-            position: relative;
-            padding-left: 24px;
-        }
-
-        .activity-item {
-            position: relative;
-            padding-bottom: 16px;
-            margin-bottom: 16px;
-        }
-
-        .activity-item:before {
-            content: '';
-            position: absolute;
-            left: -24px;
-            top: 2px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #2563EB;
-            border: 2px solid white;
-            box-shadow: 0 0 0 1px #D1D5DB;
-        }
-
-        .activity-time {
-            font-size: 12px;
-            color: #6B7280;
-            margin-bottom: 4px;
-        }
-
-        .activity-text {
-            font-size: 13px;
-            color: #1F2937;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #D1D5DB;
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #9CA3AF;
-        }
-    </style>
-  <link rel="stylesheet" href="swt-patterns.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MD-2 ทะเบียนลูกค้า — BC365 Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1E3A5F; --blue:#2563EB; --blue-d:#1D4ED8; --green:#10B981; --amber:#F59E0B;
+    --red:#EF4444; --violet:#8B5CF6; --ink:#0F172A; --muted:#6B7280; --line:#E5E7EB;
+    --bg:#F1F5F9; --card:#fff; --soft:#F8FAFC;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Noto Sans Thai','Inter',system-ui,sans-serif;font-size:13px}
+  .mono{font-family:'Inter',monospace}
+  .app{height:100vh;display:flex;flex-direction:column;margin-left:240px;background:var(--card);box-shadow:0 0 0 1px var(--line);min-width:1200px}
+
+  /* ① unified-header */
+  .unified-header{flex:none;background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);z-index:30}
+  .uh-utility{display:flex;align-items:center;gap:12px;padding:4px 20px;min-height:28px;border-bottom:1px solid rgba(255,255,255,.12)}
+  .uh-breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.72)}
+  .uh-breadcrumb .sep{color:rgba(255,255,255,.35)} .uh-breadcrumb .current{color:#FCD34D;font-weight:600}
+  .uh-tools{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .branch-sel{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:20px}
+  .avatar{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+  .uh-main{display:flex;align-items:center;gap:14px;padding:7px 20px 8px}
+  .uh-main .no{font-size:15px;font-weight:700;font-family:'Inter',monospace}
+  .uh-main .nm{font-size:11px;color:rgba(255,255,255,.9)}
+  .uh-main .roles{display:flex;gap:5px;margin-left:6px}
+  .role-badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:1px 8px;font-size:9.5px;font-weight:600}
+  .uh-main .right{margin-left:auto;display:flex;gap:7px;align-items:center}
+  .hbtn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;font-family:inherit}
+  .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:5px;font-size:10.5px;font-weight:600}
+  .pill-success{background:#ECFDF5;color:#065F46} .pill-danger{background:#FEF2F2;color:#991B1B}
+  .pill-info{background:#EFF6FF;color:#0C4A6E} .pill-warning{background:#FEF3C7;color:#92400E} .pill-neutral{background:#F3F4F6;color:#374151}
+
+  /* ③ saab + field-layer legend */
+  .saab{flex:none;display:flex;gap:6px;align-items:center;padding:5px 20px;background:var(--soft);border-bottom:1px solid var(--line)}
+  .b{border:1px solid var(--line);background:#fff;border-radius:6px;padding:4px 11px;cursor:pointer;font-size:11.5px;font-family:inherit;color:#374151}
+  .b.pri{background:var(--blue);color:#fff;border-color:var(--blue)} .saab .sp{flex:1}
+  .legend{display:flex;gap:9px;align-items:center;font-size:9.5px;color:var(--muted)}
+  .legend .lyr{cursor:default}
+
+  /* field-layer markers */
+  .lyr{font-size:9.5px;padding:1px 5px;border-radius:7px;font-weight:700;vertical-align:middle;margin-left:3px;white-space:nowrap}
+  .lyr.api{background:#ECFDF5;color:#047857}
+  .lyr.tbl{background:#EFF6FF;color:#1D4ED8}
+  .lyr.cust{background:#FEF3C7;color:#92400E}
+
+  /* grp/grid/field */
+  .grp{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#FCFDFE;margin-bottom:7px}
+  .grp-h{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--blue-d);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .grp-h .lnk{margin-left:auto;color:var(--blue);cursor:pointer;font-weight:600}
+  .grid{display:grid;gap:7px 14px}
+  .g4{grid-template-columns:repeat(4,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:repeat(2,1fr)} .g1{grid-template-columns:1fr}
+  .f{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .f.wide{grid-column:span 2}
+  .f label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .f label .req{color:var(--red)}
+  .f input,.f select{padding:5px 8px;border:1px solid var(--line);border-radius:6px;font-size:13px;background:#fff;width:100%;font-family:inherit;color:var(--ink)}
+  .f input:focus,.f select:focus{outline:0;border-color:#93C5FD;box-shadow:0 0 0 3px #2563eb22}
+  .f .val{font-size:13px;color:var(--ink);padding:3px 0;font-weight:500}
+  .inline-btn{border:1px solid #93C5FD;background:#EFF6FF;color:var(--blue-d);border-radius:6px;cursor:pointer;font-size:10.5px;padding:3px 8px;font-family:inherit;white-space:nowrap}
+  .inline-btn:hover{background:var(--blue);color:#fff}
+  .chk{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--ink)}
+
+  /* ② tabgroup */
+  .tabgroup{flex:1 1 0;min-height:0;display:flex;flex-direction:column}
+  .tabnav{flex:none;display:flex;gap:4px;padding:5px 14px 0;background:#E2E8F0;border-bottom:2px solid var(--blue);overflow-x:auto}
+  .tab{padding:8px 16px;cursor:pointer;font-size:12px;font-weight:600;color:#64748B;border-radius:7px 7px 0 0;border:1px solid transparent;border-bottom:none;white-space:nowrap}
+  .tab:hover{background:#F1F5F9;color:var(--blue-d)}
+  .tab.act{color:#fff;background:var(--blue);box-shadow:0 -1px 6px rgba(37,99,235,.3)}
+  .tabbody{flex:1 1 0;min-height:0;overflow:auto;padding:13px 20px}
+  .pane{display:none} .pane.on{display:block}
+  .sec-title{font-size:12px;color:var(--navy);font-weight:700;margin:2px 0 8px;text-transform:uppercase;letter-spacing:.03em;border-left:3px solid var(--blue);padding-left:8px;display:flex;align-items:center;gap:10px}
+  .sec-title .tools{margin-left:auto;display:flex;gap:6px;align-items:center}
+  .hint{font-size:10px;color:var(--blue);margin-top:6px}
+  .note-box{background:#EFF6FF;border-left:3px solid var(--blue);border-radius:0 6px 6px 0;padding:9px 12px;font-size:11px;color:#1E40AF;margin:8px 0}
+  .warn-box{background:#FEF3C7;border-left:3px solid var(--amber);border-radius:0 6px 6px 0;padding:9px 12px;font-size:11px;color:#78350F;margin:8px 0}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+  th{background:var(--soft);color:var(--muted);font-weight:600;font-size:10.5px;text-transform:uppercase}
+  .ok{color:#047857;font-weight:600} .bad{color:#B91C1C;font-weight:600} .over{color:#B45309;font-weight:600}
+  .mini{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:3px 9px;cursor:pointer;font-size:11px;font-family:inherit;color:#374151}
+  .mini.pri{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  /* lifecycle flow */
+  .flow{display:flex;align-items:flex-start;margin-bottom:12px}
+  .flow-node{flex:1;text-align:center}
+  .flow-node .dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:15px;background:#D1FAE5;border:2px solid var(--green);color:#065F46}
+  .flow-node .t{font-size:11px;font-weight:700;color:#065F46;margin-top:6px} .flow-node .s{font-size:10px;color:#9CA3AF;margin-top:2px}
+  .flow-line{flex:0 0 36px;height:2px;background:var(--green);margin-top:17px}
+
+  /* ⑤ dc-strip */
+  .dc-strip{flex:none;background:#fff;border-top:1px solid var(--line);padding:5px 20px;display:flex;align-items:center;gap:8px;font-size:11px;box-shadow:0 -2px 8px rgba(0,0,0,.04)}
+  .dc-lbl{font-weight:700;color:var(--muted);text-transform:uppercase;font-size:9px}
+  .dc-node{padding:3px 9px;border-radius:5px;background:#F3F4F6;color:var(--muted);font-weight:600}
+  .dc-node.current{background:#EFF6FF;color:var(--blue-d);border:1px solid #93C5FD} .dc-arrow{color:#CBD5E1}
+
+  /* 🆕 master-head — ส่วนข้อมูลหลัก (อยู่นอก tab) */
+  .master-head{flex:none;max-height:55vh;overflow-y:auto;background:#FAFBFC;border-bottom:2px solid var(--blue);padding:10px 20px 8px}
+  .mh-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--navy);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .mh-title .badge-master{background:var(--navy);color:#fff;padding:2px 8px;border-radius:5px;font-size:10px}
+
+  /* 🆕 Customer Profile Card — compact identity header */
+  .profile-card{background:linear-gradient(135deg,#F0F9FF 0%,#EFF6FF 100%);border:1px solid #BFDBFE;border-radius:10px;padding:11px 14px;margin-bottom:8px;position:relative}
+  .pc-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .pc-logo{width:46px;height:46px;border-radius:10px;background:#fff;border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+  .pc-name{font-size:18px;font-weight:700;color:var(--navy);line-height:1.2}
+  .pc-name-input{font-size:18px;font-weight:700;color:var(--navy);background:transparent;border:1px dashed transparent;border-radius:6px;padding:1px 6px;font-family:inherit;width:100%;line-height:1.2}
+  .pc-name-input:hover{border-color:#BFDBFE;background:rgba(255,255,255,.5)}
+  .pc-name-input:focus{outline:0;border-color:var(--blue);background:#fff;border-style:solid}
+  .pc-meta{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .pc-meta .mono{color:#374151;font-weight:600}
+  .pc-status{margin-left:auto;display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .pc-channels{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .pc-chip{background:#fff;border:1px solid #BFDBFE;border-radius:18px;padding:4px 10px;font-size:11.5px;color:#1E40AF;display:inline-flex;align-items:center;gap:5px}
+  .pc-chip.cust{background:#FEF3C7;border-color:#FCD34D;color:#92400E}
+  .pc-chip.role{background:#ECFDF5;border-color:#A7F3D0;color:#065F46}
+  .pc-owner{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
+  .pc-owner-card{background:#fff;border:1px solid #BFDBFE;border-radius:8px;padding:8px 12px;font-size:12px;display:flex;align-items:center;gap:10px;flex:1;min-width:260px}
+  .pc-owner-card .ico{font-size:22px}
+  .pc-owner-card .who{font-weight:600;color:var(--ink);font-size:12.5px}
+  .pc-owner-card .ch{color:var(--muted);font-size:11px;margin-top:1px}
+  .pc-owner-card select{font-size:12.5px;padding:3px 6px;border:1px solid var(--line);border-radius:5px;background:#fff;font-family:inherit;color:var(--ink);font-weight:600}
+
+  /* expiry chip */
+  .exp-chip{padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600}
+  .exp-ok{background:#ECFDF5;color:#047857}
+  .exp-warn{background:#FEF3C7;color:#92400E}
+  .exp-danger{background:#FEF2F2;color:#991B1B}
+</style>
 </head>
 <body>
+<div class="app">
+  <!-- ① unified-header -->
+  <div class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">หน้าหลัก <span class="sep">›</span> ข้อมูลหลัก <span class="sep">›</span> <span class="current">ทะเบียนลูกค้า (MD-2)</span></div>
+      <div class="uh-tools"><span class="branch-sel">🏢 SWT ▾</span><span class="avatar">AD</span></div>
+    </div>
+    <div class="uh-main">
+      <div class="no mono">C-00045</div>
+      <div class="nm" id="hNm">บริษัท ก.ก่อสร้าง 88 จำกัด (มหาชน)</div>
+      <div class="roles">
+        <span class="role-badge">🏢 ค้าส่ง</span>
+        <span class="role-badge">⭐ Key Account</span>
+      </div>
+      <div class="right">
+        <span id="pill" class="pill pill-success">● Active</span>
+        <button class="hbtn" onclick="cycleBlock()">Block ↔ Active</button>
+      </div>
+    </div>
+  </div>
 
+  <!-- ③ saab + field-layer legend -->
+  <div class="saab">
+    <button class="b pri" onclick="m('บันทึก (mockup)')">💾 บันทึก</button>
+    <button class="b" onclick="m('mockup')">✏️ แก้ไข</button>
+    <button class="b" onclick="m('mockup')">🖨️ พิมพ์</button>
+    <button class="b" onclick="m('mockup')">⟵ ก่อนหน้า</button>
+    <button class="b" onclick="m('mockup')">ถัดไป ⟶</button>
+    <span class="sp"></span>
+    <div class="legend">
+      <span>BC field:</span>
+      <span class="lyr api">🟢 API v2.0</span>
+      <span class="lyr tbl">🔵 table-only</span>
+      <span class="lyr cust">🟠 custom SWT</span>
+    </div>
+  </div>
 
-<!-- Main Content -->
-    <div class="main-content">
-        <div class="page-header">
-            <h1 class="page-title">MD-2 ทะเบียนลูกค้า</h1>
-        </div>
+  <!-- 🆕 ส่วน "ข้อมูลหลัก" (อยู่นอก tab — โชว์ตลอด) -->
+  <div class="master-head">
+    <div class="mh-title"><span class="badge-master">📋 ข้อมูลหลัก</span> Master Identity — โชว์ตลอดเหนือ tab รายละเอียด · แก้ที่นี่ที่เดียว</div>
 
-        <div class="split-layout">
-            <!-- Customer List -->
-            <div class="customer-list-panel">
-                <div class="list-header">
-                    <input type="text" class="search-box" placeholder="ค้นหาลูกค้า..." id="searchInput">
-                </div>
-                <div id="customerList">
-                    <div class="customer-item selected" onclick="selectCustomer(this, 'C000124', 'คุณสมชาย ทดสอบ')">
-                        <div class="customer-code">C000124</div>
-                        <div class="customer-name">คุณสมชาย ทดสอบ</div>
-                    </div>
-                    <div class="customer-item" onclick="selectCustomer(this, 'C000125', 'บริษัท ทดสอบ จำกัด')">
-                        <div class="customer-code">C000125</div>
-                        <div class="customer-name">บริษัท ทดสอบ จำกัด</div>
-                    </div>
-                    <div class="customer-item" onclick="selectCustomer(this, 'C000126', 'องค์การบริหาร จังหวัด')">
-                        <div class="customer-code">C000126</div>
-                        <div class="customer-name">องค์การบริหาร จังหวัด</div>
-                    </div>
-                    <div class="customer-item" onclick="selectCustomer(this, 'C000127', 'ร้านค้า ทั่วไป')">
-                        <div class="customer-code">C000127</div>
-                        <div class="customer-name">ร้านค้า ทั่วไป</div>
-                    </div>
-                    <div class="customer-item" onclick="selectCustomer(this, 'C000128', 'หจก. ตัวแทนจำหน่าย')">
-                        <div class="customer-code">C000128</div>
-                        <div class="customer-name">หจก. ตัวแทนจำหน่าย</div>
-                    </div>
-                </div>
+        <!-- 🆕 Customer Profile Card (compact — ชื่อแก้ได้ที่นี่เลย = SoT) -->
+        <div class="profile-card">
+          <div class="pc-row">
+            <div class="pc-logo">🏢</div>
+            <div style="flex:1;min-width:280px">
+              <input class="pc-name-input" id="pcName" value="บริษัท ก.ก่อสร้าง 88 จำกัด (มหาชน)" oninput="syncName(this.value)">
+              <div class="pc-meta"><span class="mono">C-00045</span> · 📊 YTD ฿8.45M · 52 บิล · 📍 3 ที่อยู่ · 🏦 2 บัญชี · 👥 8 ผู้ติดต่อ</div>
             </div>
-
-            <!-- Customer Detail -->
-            <div class="customer-detail-panel">
-                <div class="detail-header">
-                    <div class="detail-code">C000124</div>
-                    <div class="detail-name">คุณสมชาย ทดสอบ</div>
-                    <span class="badge badge-b2c">B2C</span>
-                    <span class="badge badge-normal">ปกติ</span>
-                    <div class="sync-indicator">✓ BC365 Synced</div>
-                </div>
-
-                <!-- ข้อมูลทั่วไป -->
-                <details class="collapse" open>
-                    <summary class="collapse-summary">
-                        <span class="collapse-toggle">▼</span>
-                        ข้อมูลทั่วไป (General)
-                    </summary>
-                    <div class="collapse-content">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">ชื่อลูกค้า</label>
-                                <div class="form-value">คุณสมชาย ทดสอบ</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">ชื่อผู้ติดต่อ</label>
-                                <div class="form-value">สมชาย เอกการหลวง</div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">ที่อยู่</label>
-                                <div class="form-value">123 ถนนสุขุมวิท อ. เมือง จ. นครราชสีมา 30000</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">เบอร์โทรศัพท์</label>
-                                <div class="form-value">0884-123456</div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Email</label>
-                                <div class="form-value">somchai@example.com</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">เลขผู้เสียภาษี (Tax ID)</label>
-                                <div class="form-value">1234567890123</div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">ประเภทลูกค้า</label>
-                                <div class="form-value"><span class="badge badge-b2c">B2C - ลูกค้ารายย่อย</span></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">กลุ่มลูกค้า</label>
-                                <div class="form-value"><span class="badge badge-gray">ทั่วไป</span></div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">สาขาที่สร้าง</label>
-                                <div class="form-value">SWT - โคราช</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">วันที่สร้าง</label>
-                                <div class="form-value">2024-06-15</div>
-                            </div>
-                        </div>
-                    </div>
-                </details>
-
-                <!-- KYC / ยืนยันตัวตน (v4) -->
-                <details class="collapse">
-                    <summary class="collapse-summary">
-                        <span class="collapse-toggle">▼</span>
-                        KYC / ยืนยันตัวตน
-                        <span class="badge badge-normal" style="margin-left:8px;background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;">✓ ผ่านแล้ว</span>
-                    </summary>
-                    <div class="collapse-content">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">ประเภทนิติบุคคล</label>
-                                <div class="form-value">บุคคลธรรมดา</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">เลขประจำตัวผู้เสียภาษี (13 หลัก)</label>
-                                <div class="form-value">1234567890123 <span style="color:#10B981;font-size:11px;">✓ ตรวจสอบกับกรมสรรพากรแล้ว</span></div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">สาขา (กรณีนิติบุคคล)</label>
-                                <div class="form-value" style="color:#9CA3AF;">— (ไม่ใช่นิติบุคคล)</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">ช่องทางยืนยัน</label>
-                                <div class="form-value">Walk-in ที่สาขา SWT-โคราช</div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">วันที่ยืนยัน KYC</label>
-                                <div class="form-value">2024-06-15 โดย สมชาย วงศ์มงคล</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">กำหนดทบทวน (Re-KYC)</label>
-                                <div class="form-value">2026-06-15 <span style="color:#F59E0B;font-size:11px;">(เหลือ 62 วัน)</span></div>
-                            </div>
-                        </div>
-                        <div class="form-row full">
-                            <div class="form-group">
-                                <label class="form-label">เอกสารแนบ</label>
-                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                                    <div style="padding:10px 12px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:6px;font-size:12px;">
-                                        <strong>📄 สำเนาบัตรประชาชน</strong><br>
-                                        <span style="color:#6B7280;">id_card_somchai.pdf · 245 KB</span>
-                                    </div>
-                                    <div style="padding:10px 12px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:6px;font-size:12px;">
-                                        <strong>📄 สำเนาทะเบียนบ้าน</strong><br>
-                                        <span style="color:#6B7280;">house_reg_somchai.pdf · 189 KB</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </details>
-
-                <!-- เครดิต & การชำระเงิน -->
-                <details class="collapse">
-                    <summary class="collapse-summary">
-                        <span class="collapse-toggle">▼</span>
-                        เครดิต & การชำระเงิน (Credit & Payment)
-                    </summary>
-                    <div class="collapse-content">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">วงเงินเครดิต</label>
-                                <div class="form-value">฿100,000</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">เครดิตคงเหลือ</label>
-                                <div class="form-value">฿75,200</div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Credit Term</label>
-                                <div class="form-value">30 วัน</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">วิธีชำระเงิน</label>
-                                <div class="form-value">เครดิต / โอนเงิน</div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">สถานะ</label>
-                                <div class="form-value"><span class="badge badge-normal">ปกติ</span></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">ยอดค้างชำระ</label>
-                                <div class="form-value">฿24,800</div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">หนี้เกินกำหนด (>30 วัน)</label>
-                                <div class="form-value">฿0</div>
-                            </div>
-                        </div>
-                    </div>
-                </details>
-
-                <!-- ราคาพิเศษ -->
-                <details class="collapse">
-                    <summary class="collapse-summary">
-                        <span class="collapse-toggle">▼</span>
-                        ราคาพิเศษ (Special Pricing)
-                    </summary>
-                    <div class="collapse-content">
-                        <div class="sub-tabs">
-                            <button class="sub-tab-btn active" onclick="switchSubTab('pricingTabs', 'tab-group-discount')">ส่วนลดตามกลุ่ม</button>
-                            <button class="sub-tab-btn" onclick="switchSubTab('pricingTabs', 'tab-cust-price')">ราคาเฉพาะลูกค้า</button>
-                            <button class="sub-tab-btn" onclick="switchSubTab('pricingTabs', 'tab-promo')">โปรโมชั่น</button>
-                        </div>
-
-                        <div id="tab-group-discount" class="sub-tab-content active">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>หมวดสินค้า</th>
-                                        <th>ส่วนลด %</th>
-                                        <th>ทำให้สิ้นสุด</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>สินค้าทั่วไป</td>
-                                        <td>5%</td>
-                                        <td>2025-12-31</td>
-                                    </tr>
-                                    <tr>
-                                        <td>อุปกรณ์เสริม</td>
-                                        <td>10%</td>
-                                        <td>2025-12-31</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div id="tab-cust-price" class="sub-tab-content">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>รหัสสินค้า</th>
-                                        <th>ชื่อสินค้า</th>
-                                        <th>ราคาพิเศษ</th>
-                                        <th>ทำให้สิ้นสุด</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>P001</td>
-                                        <td>สินค้า A</td>
-                                        <td>฿450</td>
-                                        <td>2025-12-31</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div id="tab-promo" class="sub-tab-content">
-                            <p style="color: #6B7280; padding: 16px 0;">ไม่มีโปรโมชั่นที่ใช้ได้</p>
-                        </div>
-                    </div>
-                </details>
-
-                <!-- ประวัติการซื้อ -->
-                <details class="collapse">
-                    <summary class="collapse-summary">
-                        <span class="collapse-toggle">▼</span>
-                        ประวัติการซื้อ (Purchase History)
-                    </summary>
-                    <div class="collapse-content">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">ยอดซื้อสะสม (12 เดือนล่าสุด)</label>
-                                <div class="form-value">฿245,800</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">จำนวนบิล</label>
-                                <div class="form-value">18 บิล</div>
-                            </div>
-                        </div>
-                        <p style="font-size: 12px; color: #6B7280; margin-bottom: 12px;">ยอดซื้อรายเดือน (12 เดือนล่าสุด)</p>
-                        <div class="mini-chart">
-                            <div class="bar" style="height: 45%;"><span class="bar-label">เม.ย.</span></div>
-                            <div class="bar" style="height: 65%;"><span class="bar-label">พ.ค.</span></div>
-                            <div class="bar" style="height: 80%;"><span class="bar-label">มิ.ย.</span></div>
-                            <div class="bar" style="height: 55%;"><span class="bar-label">ก.ค.</span></div>
-                            <div class="bar" style="height: 70%;"><span class="bar-label">ส.ค.</span></div>
-                            <div class="bar" style="height: 60%;"><span class="bar-label">ก.ย.</span></div>
-                            <div class="bar" style="height: 75%;"><span class="bar-label">ต.ค.</span></div>
-                            <div class="bar" style="height: 68%;"><span class="bar-label">พ.ย.</span></div>
-                            <div class="bar" style="height: 72%;"><span class="bar-label">ธ.ค.</span></div>
-                            <div class="bar" style="height: 50%;"><span class="bar-label">ม.ค.</span></div>
-                            <div class="bar" style="height: 58%;"><span class="bar-label">ก.พ.</span></div>
-                            <div class="bar" style="height: 62%;"><span class="bar-label">มี.ค.</span></div>
-                        </div>
-                        <p style="font-size: 12px; color: #6B7280; margin-bottom: 12px; margin-top: 16px;">10 รายการล่าสุด</p>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>วันที่</th>
-                                    <th>เลขบิล</th>
-                                    <th>สินค้าหลัก</th>
-                                    <th>ยอดเงิน</th>
-                                    <th>สถานะ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2025-03-15</td>
-                                    <td>INV-2025-0124</td>
-                                    <td>สินค้า A</td>
-                                    <td>฿28,500</td>
-                                    <td><span class="badge badge-normal">ชำระแล้ว</span></td>
-                                </tr>
-                                <tr>
-                                    <td>2025-02-28</td>
-                                    <td>INV-2025-0098</td>
-                                    <td>สินค้า B</td>
-                                    <td>฿35,200</td>
-                                    <td><span class="badge badge-normal">ชำระแล้ว</span></td>
-                                </tr>
-                                <tr>
-                                    <td>2025-02-10</td>
-                                    <td>INV-2025-0067</td>
-                                    <td>สินค้า A, B</td>
-                                    <td>฿42,800</td>
-                                    <td><span class="badge badge-warning">ค้างชำระ</span></td>
-                                </tr>
-                                <tr>
-                                    <td>2025-01-20</td>
-                                    <td>INV-2024-0789</td>
-                                    <td>สินค้า C</td>
-                                    <td>฿15,900</td>
-                                    <td><span class="badge badge-normal">ชำระแล้ว</span></td>
-                                </tr>
-                                <tr>
-                                    <td>2024-12-15</td>
-                                    <td>INV-2024-0650</td>
-                                    <td>สินค้า A</td>
-                                    <td>฿32,100</td>
-                                    <td><span class="badge badge-normal">ชำระแล้ว</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </details>
-
-                <!-- ที่อยู่ 3 ชุด (v4) -->
-                <details class="collapse">
-                    <summary class="collapse-summary">
-                        <span class="collapse-toggle">▼</span>
-                        ที่อยู่ (Addresses) — 3 ชุด
-                    </summary>
-                    <div class="collapse-content">
-                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
-                            <!-- 1. ที่อยู่ตามเอกสาร -->
-                            <div style="border:1px solid #E5E7EB;border-radius:8px;padding:14px;background:#F9FAFB;">
-                                <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-                                    <span style="background:#1E3A5F;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;">A1</span>
-                                    <strong style="font-size:13px;">ที่อยู่ตามเอกสาร</strong>
-                                </div>
-                                <div style="font-size:12px;color:#6B7280;margin-bottom:6px;">Legal / Billing — ตามทะเบียน</div>
-                                <div style="font-size:12px;line-height:1.6;">
-                                    <strong>สมชาย ทดสอบ</strong><br>
-                                    123 ถนนสุขุมวิท<br>
-                                    ต.ในเมือง อ.เมือง<br>
-                                    จ.นครราชสีมา 30000
-                                </div>
-                            </div>
-                            <!-- 2. ที่อยู่จัดส่ง -->
-                            <div style="border:2px solid #2563EB;border-radius:8px;padding:14px;background:#EFF6FF;position:relative;">
-                                <div style="position:absolute;top:-8px;right:10px;background:#2563EB;color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;">Default</div>
-                                <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-                                    <span style="background:#2563EB;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;">A2</span>
-                                    <strong style="font-size:13px;">ที่อยู่จัดส่ง</strong>
-                                </div>
-                                <div style="font-size:12px;color:#1E40AF;margin-bottom:6px;">Shipping — สำหรับจัดส่งสินค้า</div>
-                                <div style="font-size:12px;line-height:1.6;">
-                                    <strong>คุณสมชาย (หน้างาน)</strong><br>
-                                    99/5 ม.6 โครงการแสงทอง<br>
-                                    ต.ปากช่อง อ.ปากช่อง<br>
-                                    จ.นครราชสีมา 30130<br>
-                                    <span style="color:#2563EB;">☎ 0884-123456</span>
-                                </div>
-                            </div>
-                            <!-- 3. ที่อยู่ออกใบกำกับภาษี -->
-                            <div style="border:1px solid #E5E7EB;border-radius:8px;padding:14px;background:#F9FAFB;">
-                                <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-                                    <span style="background:#059669;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;">A3</span>
-                                    <strong style="font-size:13px;">ที่อยู่ใบกำกับภาษี</strong>
-                                </div>
-                                <div style="font-size:12px;color:#6B7280;margin-bottom:6px;">Tax Invoice — ↑ ใช้ที่อยู่ A1</div>
-                                <div style="font-size:12px;line-height:1.6;color:#9CA3AF;font-style:italic;">
-                                    (เหมือน A1 ที่อยู่ตามเอกสาร)<br>
-                                    <small>หากต้องการแยก ให้ยกเลิก "ใช้ A1" แล้วกรอกใหม่</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="height:160px;background:#F3F4F6;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#9CA3AF;margin-top:12px;">
-                            📍 แผนที่ (แสดงตำแหน่ง A2 ที่อยู่จัดส่ง)
-                        </div>
-                        <div style="margin-top:12px;padding:10px 12px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;font-size:12px;color:#92400E;">
-                            ⚠ หากแก้ไข A1 (ที่อยู่ตามเอกสาร) จะต้องส่ง Sync ไป BC365 และต้องยื่น ภ.พ.09 กับสรรพากรภายใน 15 วัน
-                        </div>
-                    </div>
-                </details>
-
-                <!-- PDPA Consent (v4) -->
-                <details class="collapse">
-                    <summary class="collapse-summary">
-                        <span class="collapse-toggle">▼</span>
-                        ความยินยอม PDPA (Consent)
-                        <span class="badge badge-normal" style="margin-left:8px;background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;">✓ ยินยอม 2/3</span>
-                    </summary>
-                    <div class="collapse-content">
-                        <div style="display:grid;gap:10px;">
-                            <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:6px;">
-                                <div style="width:22px;height:22px;background:#10B981;color:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">✓</div>
-                                <div style="flex:1;">
-                                    <strong style="font-size:13px;">ยินยอมให้จัดเก็บและใช้ข้อมูลเพื่อการทำธุรกรรม</strong>
-                                    <div style="font-size:11px;color:#6B7280;margin-top:2px;">จำเป็นสำหรับการออกใบกำกับภาษี / จัดส่ง / เก็บเครดิต — ไม่สามารถยกเลิกได้หากยังมีธุรกรรมค้าง</div>
-                                </div>
-                                <span style="font-size:11px;color:#6B7280;white-space:nowrap;">ยินยอม 2024-06-15</span>
-                            </div>
-                            <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:6px;">
-                                <div style="width:22px;height:22px;background:#10B981;color:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">✓</div>
-                                <div style="flex:1;">
-                                    <strong style="font-size:13px;">ยินยอมรับข่าวสาร / โปรโมชั่นทาง SMS, Email, LINE</strong>
-                                    <div style="font-size:11px;color:#6B7280;margin-top:2px;">สำหรับแจ้งโปรโมชั่น โปรดักซ์ใหม่ และบริการหลังการขาย</div>
-                                </div>
-                                <span style="font-size:11px;color:#6B7280;white-space:nowrap;">ยินยอม 2024-06-15</span>
-                            </div>
-                            <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;">
-                                <div style="width:22px;height:22px;background:#EF4444;color:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">✗</div>
-                                <div style="flex:1;">
-                                    <strong style="font-size:13px;color:#991B1B;">ยินยอมให้แชร์ข้อมูลกับพาร์ทเนอร์ทางการตลาด</strong>
-                                    <div style="font-size:11px;color:#991B1B;margin-top:2px;">ลูกค้าปฏิเสธการแชร์ข้อมูลกับบุคคลภายนอก — ระบบจะไม่ส่งข้อมูลนี้ให้กับพาร์ทเนอร์</div>
-                                </div>
-                                <span style="font-size:11px;color:#991B1B;white-space:nowrap;">ปฏิเสธ 2024-06-15</span>
-                            </div>
-                        </div>
-                        <div style="margin-top:12px;padding:10px 12px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;font-size:12px;color:#1E40AF;">
-                            ℹ ลูกค้ามีสิทธิ์ขอดู แก้ไข หรือลบข้อมูลได้ตลอดเวลา — กด <a href="#" style="color:#2563EB;font-weight:600;">ขอถอนความยินยอม</a> หรือติดต่อ DPO ที่ dpo@sangwijit.co.th
-                        </div>
-                    </div>
-                </details>
-
-                <!-- Blocked Flag (v4) -->
-                <details class="collapse">
-                    <summary class="collapse-summary">
-                        <span class="collapse-toggle">▼</span>
-                        การระงับการขาย (Block Flag)
-                        <span class="badge badge-normal" style="margin-left:8px;background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;">● ไม่ระงับ</span>
-                    </summary>
-                    <div class="collapse-content">
-                        <div style="padding:16px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:8px;display:flex;align-items:center;gap:12px;">
-                            <div style="width:40px;height:40px;background:#10B981;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;">✓</div>
-                            <div style="flex:1;">
-                                <strong style="font-size:14px;color:#065F46;">สถานะปกติ — สามารถทำรายการขายได้</strong>
-                                <div style="font-size:12px;color:#047857;margin-top:2px;">ลูกค้าไม่อยู่ในรายการระงับ สามารถสร้าง QT / RSV / INV ได้ตามปกติ</div>
-                            </div>
-                            <button class="btn" style="background:#FEF2F2;color:#991B1B;border:1px solid #FECACA;padding:8px 14px;font-size:12px;">🚫 ระงับการขาย...</button>
-                        </div>
-                        <div style="margin-top:12px;">
-                            <p style="font-size:12px;color:#6B7280;margin-bottom:8px;">ประวัติการระงับ / ปลดระงับ</p>
-                            <div style="font-size:12px;color:#9CA3AF;padding:12px;background:#F9FAFB;border-radius:6px;text-align:center;">
-                                ไม่มีประวัติการระงับ
-                            </div>
-                        </div>
-                        <div style="margin-top:12px;padding:10px 12px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;font-size:12px;color:#92400E;">
-                            ℹ เหตุผลที่อาจทำให้ถูกระงับ: หนี้เกินกำหนด > 60 วัน · ถูกร้องเรียน · พิรุธคดี · ลูกค้าขอระงับเอง
-                        </div>
-                    </div>
-                </details>
-
-                <!-- บันทึก & เอกสาร -->
-                <details class="collapse">
-                    <summary class="collapse-summary">
-                        <span class="collapse-toggle">▼</span>
-                        บันทึก & เอกสาร (Notes & Documents)
-                    </summary>
-                    <div class="collapse-content">
-                        <p style="font-size: 12px; color: #6B7280; margin-bottom: 12px;">ประวัติการเปลี่ยนแปลง</p>
-                        <div class="activity-timeline">
-                            <div class="activity-item">
-                                <div class="activity-time">2025-03-10 14:30</div>
-                                <div class="activity-text">บันทึก: ยอดซื้อเพิ่มขึ้นอย่างมีนัยสำคัญ - ลูกค้าใหญ่</div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-time">2025-02-28 10:15</div>
-                                <div class="activity-text">อัปเดต: เปลี่ยนหมายเลขโทรศัพท์ติดต่อ</div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-time">2025-02-01 09:00</div>
-                                <div class="activity-text">สร้างลูกค้าใหม่ จาก BC365</div>
-                            </div>
-                        </div>
-                        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #E5E7EB;">
-                            <p style="font-size: 12px; color: #6B7280; margin-bottom: 12px;">เอกสารแนบ</p>
-                            <div style="padding: 12px; background: #F9FAFB; border-radius: 6px; text-align: center; color: #9CA3AF;">
-                                📎 ไม่มีเอกสาร
-                            </div>
-                        </div>
-                    </div>
-                </details>
+            <div class="pc-status">
+              <span class="pill pill-success">● Active</span>
+              <span class="pill pill-info">เครดิต ฿2,000,000</span>
             </div>
-        </div>
-    </div>
-
-    <!-- Action Bar -->
-    <div class="action-bar">
-        <button class="btn btn-cancel">ยกเลิก</button>
-        <button class="btn btn-primary">บันทึก</button>
-        <button class="btn btn-sync">Sync to BC365</button>
-    </div>
-
-    <script>
-        function selectCustomer(element, code, name) {
-            document.querySelectorAll('.customer-item').forEach(e => e.classList.remove('selected'));
-            element.classList.add('selected');
-
-            document.querySelector('.detail-code').textContent = code;
-            document.querySelector('.detail-name').textContent = name;
-        }
-
-        function switchSubTab(tabGroupId, tabId) {
-            // Hide all sub-tabs in this group
-            const tabGroup = document.querySelector(`#${tabGroupId}`)?.parentElement || document.body;
-            const contents = tabGroup.querySelectorAll('.sub-tab-content');
-            contents.forEach(c => c.classList.remove('active'));
-
-            // Remove active class from all buttons
-            const buttons = tabGroup.querySelectorAll('.sub-tab-btn');
-            buttons.forEach(b => b.classList.remove('active'));
-
-            // Show selected tab
-            const selectedTab = document.getElementById(tabId);
-            if (selectedTab) {
-                selectedTab.classList.add('active');
-                event.target.classList.add('active');
-            }
-        }
-
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase();
-            document.querySelectorAll('.customer-item').forEach(item => {
-                const code = item.querySelector('.customer-code').textContent.toLowerCase();
-                const name = item.querySelector('.customer-name').textContent.toLowerCase();
-                if (code.includes(query) || name.includes(query)) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-    </script>
-<!-- SWT_ITEM_SEARCH_START -->
-<style>
-/* ---- SC-2 shared item-search modal (prefix swt-is-*) ---- */
-#swtIsRoot{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.45);z-index:1000;align-items:flex-start;justify-content:center;padding:40px 20px 30px;overflow-y:auto;font-family:'Inter','Noto Sans Thai',sans-serif;font-size:12.5px;line-height:1.45;color:#1F2937}
-#swtIsRoot.swt-is-open{display:flex}
-#swtIsTestBtn{position:fixed;bottom:22px;right:22px;z-index:900;background:#1E3A5F;color:#fff;border:none;padding:10px 16px;border-radius:24px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 6px 18px rgba(15,23,42,0.25);font-family:'Inter','Noto Sans Thai',sans-serif;display:inline-flex;align-items:center;gap:6px}
-#swtIsTestBtn:hover{background:#2563EB}
-.swt-is-dlg,.swt-is-dlg *{box-sizing:border-box}
-.swt-is-dlg{background:#fff;border-radius:10px;box-shadow:0 20px 60px rgba(15,23,42,0.3);width:1140px;max-width:calc(100vw - 40px);overflow:hidden;border:1px solid #E2E8F0}
-.swt-is-title{background:linear-gradient(180deg,#1E3A5F 0%,#172A47 100%);color:#fff;padding:9px 14px;display:flex;align-items:center;gap:10px}
-.swt-is-title .ico{font-size:15px}
-.swt-is-title h1{font-size:13px;font-weight:600;flex:1;margin:0}
-.swt-is-title .winbtn{width:24px;height:22px;display:flex;align-items:center;justify-content:center;font-size:13px;opacity:0.75;cursor:pointer;border-radius:3px}
-.swt-is-title .winbtn:hover{background:rgba(255,255,255,0.12);opacity:1}
-.swt-is-title .winbtn.close:hover{background:#DC2626}
-.swt-is-tb{background:linear-gradient(180deg,#F8FAFC 0%,#E2E8F0 100%);border-bottom:1px solid #CBD5E1;padding:6px 10px;display:flex;align-items:center;gap:3px;flex-wrap:wrap}
-.swt-is-tbbtn{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:transparent;border:1px solid transparent;border-radius:4px;font-size:11.5px;color:#334155;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap}
-.swt-is-tbbtn:hover{background:#fff;border-color:#CBD5E1}
-.swt-is-tbbtn.nav{padding:5px 7px;color:#64748B}
-.swt-is-tbbtn.histon{background:#FCD34D;border-color:#F59E0B;color:#78350F;font-weight:700}
-.swt-is-tbbtn.cbtn{background:#FEE2E2;border-color:#FCA5A5;color:#B91C1C;margin-left:auto}
-.swt-is-tbbtn.cbtn:hover{background:#DC2626;color:#fff;border-color:#DC2626}
-.swt-is-tbbtn.act{background:#FEF9E7;border-color:#FCD34D;color:#92400E}
-.swt-is-tbsep{width:1px;height:22px;background:#CBD5E1;margin:0 4px}
-.swt-is-sr{background:#F8FAFC;border-bottom:1px solid #CBD5E1;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.swt-is-sr label{font-size:12px;color:#475569;font-weight:600}
-.swt-is-sbox{display:flex;align-items:center;gap:0;flex:0 0 320px}
-.swt-is-sbox input{flex:1;padding:7px 10px;border:1.5px solid #CBD5E1;border-right:none;border-radius:5px 0 0 5px;font-size:13px;font-family:inherit;outline:none;background:#fff}
-.swt-is-sbox input:focus{border-color:#2563EB}
-.swt-is-sbox button{padding:7px 12px;background:#2563EB;color:#fff;border:1.5px solid #2563EB;border-radius:0 5px 5px 0;font-size:13px;cursor:pointer}
-.swt-is-hint{font-size:11.5px;color:#94A3B8;font-style:italic}
-.swt-is-hint b{color:#64748B;font-style:normal;font-weight:500}
-.swt-is-kbd{display:inline-flex;padding:1px 6px;background:#fff;border:1px solid #CBD5E1;border-bottom-width:2px;border-radius:3px;font-size:10px;color:#64748B;font-family:monospace;font-weight:600;margin-left:6px}
-.swt-is-ckb{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:#475569;cursor:pointer}
-.swt-is-ckb input{cursor:pointer}
-.swt-is-rcount{padding:6px 14px;background:#F8FAFC;border-bottom:1px solid #CBD5E1;font-size:11px;color:#64748B;display:flex;align-items:center;gap:12px}
-.swt-is-rcount b{color:#1E3A5F}
-.swt-is-rwrap{background:#fff;max-height:220px;overflow:auto;border-bottom:1px solid #CBD5E1}
-.swt-is-rtbl{width:100%;border-collapse:collapse;font-size:11.5px}
-.swt-is-rtbl thead th{background:linear-gradient(180deg,#EFF6FF 0%,#DBEAFE 100%);color:#1E3A5F;font-weight:700;padding:7px 10px;text-align:left;border-bottom:2px solid #93C5FD;border-right:1px solid #BFDBFE;position:sticky;top:0;white-space:nowrap;cursor:pointer}
-.swt-is-rtbl thead th .arrow{font-size:9px;color:#60A5FA;margin-left:2px}
-.swt-is-rtbl tbody td{padding:6px 10px;border-bottom:1px solid #F1F5F9;border-right:1px solid #F8FAFC;font-feature-settings:"tnum";color:#1F2937;height:28px;white-space:nowrap}
-.swt-is-rtbl tbody tr:nth-child(even){background:#FAFBFC}
-.swt-is-rtbl tbody tr.sel,.swt-is-rtbl tbody tr.sel:nth-child(even){background:#FEF3C7 !important}
-.swt-is-rtbl tbody tr.sel td{border-right-color:#FCD34D;font-weight:500}
-.swt-is-rtbl tbody tr:hover{background:#EFF6FF;cursor:pointer}
-.swt-is-rtbl tbody tr.sel:hover{background:#FDE68A}
-.swt-is-code{font-family:monospace;color:#1D4ED8;font-weight:700}
-.swt-is-name{font-weight:500;color:#0F172A}
-.swt-is-n{text-align:right;font-weight:600}
-.swt-is-n.pos{color:#047857}.swt-is-n.low{color:#B45309}.swt-is-n.alert{color:#B91C1C;font-weight:700}
-.swt-is-bgS{background:#FEF3C7}.swt-is-bgSO{background:#FECACA}.swt-is-bgNE{background:#CFFAFE}
-.swt-is-bgPO{background:#DDD6FE}.swt-is-bgOU{background:#FED7AA}.swt-is-bgTF{background:#BBF7D0}
-.swt-is-rtbl tr.sel td.swt-is-bgS,.swt-is-rtbl tr.sel td.swt-is-bgSO,.swt-is-rtbl tr.sel td.swt-is-bgNE,.swt-is-rtbl tr.sel td.swt-is-bgPO,.swt-is-rtbl tr.sel td.swt-is-bgOU,.swt-is-rtbl tr.sel td.swt-is-bgTF{background:transparent}
-.swt-is-db{background:linear-gradient(180deg,#1E3A5F 0%,#1D4ED8 100%);color:#fff;padding:8px 14px;display:flex;align-items:center;gap:12px}
-.swt-is-db h2{font-size:13px;font-weight:700;margin:0}
-.swt-is-db .meta{margin-left:auto;display:flex;gap:8px;font-size:10.5px;opacity:0.88}
-.swt-is-db .pill{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:10px}
-.swt-is-dt{background:#F1F5F9;border-bottom:1px solid #CBD5E1;display:flex;overflow-x:auto}
-.swt-is-tab{padding:9px 14px;font-size:11.5px;font-weight:600;color:#64748B;cursor:pointer;border-right:1px solid #CBD5E1;white-space:nowrap;border-top:2px solid transparent;position:relative;top:1px;background:transparent}
-.swt-is-tab:hover{background:#E2E8F0;color:#1E3A5F}
-.swt-is-tab.act{background:#fff;color:#1D4ED8;border-top-color:#2563EB;box-shadow:0 -2px 4px rgba(37,99,235,0.08)}
-.swt-is-body{background:#fff}
-.swt-is-pane{display:none}
-.swt-is-pane.act{display:block}
-.swt-is-pb{padding:8px 12px;background:#F8FAFC;border-bottom:1px solid #E2E8F0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.swt-is-pb label{font-size:11px;color:#64748B;font-weight:500}
-.swt-is-pb input,.swt-is-pb select{padding:4px 8px;border:1px solid #CBD5E1;border-radius:4px;font-size:11px;font-family:inherit;background:#fff;outline:none}
-.swt-is-refbtn{padding:5px 12px;background:#fff;border:1px solid #CBD5E1;border-radius:4px;font-size:11px;color:#1E3A5F;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
-.swt-is-refbtn:hover{background:#DBEAFE;border-color:#93C5FD}
-.swt-is-pbody{max-height:320px;overflow:auto}
-.swt-is-stbl{width:100%;border-collapse:collapse;font-size:11.5px}
-.swt-is-stbl thead th{background:linear-gradient(180deg,#EFF6FF 0%,#DBEAFE 100%);color:#1E3A5F;font-weight:700;padding:6px 10px;text-align:left;border-bottom:1px solid #93C5FD;border-right:1px solid #BFDBFE;white-space:nowrap}
-.swt-is-stbl tbody td{padding:5px 10px;border-bottom:1px solid #F1F5F9;border-right:1px solid #F8FAFC;font-feature-settings:"tnum";color:#334155}
-.swt-is-stbl tbody tr:nth-child(even){background:#FAFBFC}
-.swt-is-stbl tbody tr:hover{background:#EFF6FF}
-.swt-is-stbl tbody tr.empty td{color:#CBD5E1;font-style:italic;text-align:center;height:24px}
-.swt-is-tp{display:inline-flex;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700}
-.swt-is-tp.sw{background:#DBEAFE;color:#1D4ED8}
-.swt-is-tp.swe{background:#D1FAE5;color:#047857}
-.swt-is-tp.vm{background:#FEF3C7;color:#92400E}
-.swt-is-ft{background:linear-gradient(180deg,#F8FAFC 0%,#E2E8F0 100%);border-top:1px solid #CBD5E1;padding:7px 14px;display:flex;align-items:center;gap:10px;font-size:11px;color:#64748B}
-.swt-is-ft .d{width:8px;height:8px;border-radius:50%;background:#10B981;display:inline-block}
-.swt-is-ft b{color:#1E3A5F}
-.swt-is-ft .sp{flex:1}
-.swt-is-ft .kh{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#fff;border:1px solid #CBD5E1;border-radius:4px;color:#475569}
-.swt-is-imgpane{display:grid;grid-template-columns:280px 1fr;gap:18px;padding:18px}
-.swt-is-thumb{background:#F1F5F9;border:1px solid #CBD5E1;border-radius:8px;padding:18px;text-align:center;font-size:56px;color:#94A3B8;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
-.swt-is-info{font-size:12px;line-height:1.6}
-.swt-is-info .grp{display:grid;grid-template-columns:120px 1fr;gap:5px 14px;margin-bottom:10px}
-.swt-is-info .grp label{color:#64748B;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.03em}
-.swt-is-info .grp span{color:#0F172A;font-weight:500}
-</style>
-
-<button id="swtIsTestBtn" type="button" onclick="window.openItemSearch()">🔍 ค้นหาสินค้า <span style="opacity:0.6;font-size:10px">Alt+I</span></button>
-
-<div id="swtIsRoot" role="dialog" aria-modal="true" aria-label="ค้นหาสินค้า">
-  <div class="swt-is-dlg" onclick="event.stopPropagation()">
-    <div class="swt-is-title">
-      <span class="ico">🔍</span>
-      <h1>Product Search — SC-2 (Shared Component)</h1>
-      <span class="winbtn">─</span><span class="winbtn">▢</span>
-      <span class="winbtn close" onclick="window.closeItemSearch()">✕</span>
-    </div>
-    <div class="swt-is-tb">
-      <button class="swt-is-tbbtn act">📦 สินค้า</button>
-      <button class="swt-is-tbbtn">🛠️ บริการ</button>
-      <button class="swt-is-tbbtn">📚 สินค้าชุด</button>
-      <div class="swt-is-tbsep"></div>
-      <button class="swt-is-tbbtn nav">⏮</button>
-      <button class="swt-is-tbbtn nav">⏭</button>
-      <div class="swt-is-tbsep"></div>
-      <button class="swt-is-tbbtn">📂 ค้นตามกลุ่ม</button>
-      <button class="swt-is-tbbtn histon" onclick="swtIsToggleHist(this)">ℹ️ แสดงประวัติ</button>
-      <button class="swt-is-tbbtn">📝 Memo</button>
-      <button class="swt-is-tbbtn">📋 Multi ใส่ปริมาณ</button>
-      <button class="swt-is-tbbtn" style="color:#2563EB">❓</button>
-      <button class="swt-is-tbbtn cbtn" onclick="window.closeItemSearch()">✕ ปิด</button>
-    </div>
-    <div class="swt-is-sr">
-      <label>ค้นหา:</label>
-      <div class="swt-is-sbox">
-        <input type="text" value="tt10" id="swtIsQ">
-        <button>🔍</button>
-      </div>
-      <span class="swt-is-hint">ตัวอย่างเช่น: <b>ไขควง ซันโต แบน</b></span>
-      <span class="swt-is-kbd">F3</span>
-      <label class="swt-is-ckb"><input type="checkbox"> Only Cust Product</label>
-    </div>
-    <div class="swt-is-rcount">
-      <span>พบ <b>3</b> รายการ · keyword "tt10"</span>
-      <span>·</span><span>Branch: <b>HO · สนง.ใหญ่</b></span>
-      <span>·</span><span>BC365 sync: <b>2 นาทีที่แล้ว</b></span>
-      <span style="margin-left:auto">Click row เพื่อดูประวัติ</span>
-    </div>
-    <div class="swt-is-rwrap">
-      <table class="swt-is-rtbl">
-        <thead><tr>
-          <th style="width:110px">รหัสสินค้า <span class="arrow">▲</span></th>
-          <th style="width:340px">ชื่อสินค้า <span class="arrow">▼</span></th>
-          <th style="width:60px">หน่วย</th>
-          <th style="width:72px" class="swt-is-bgS">สต็อก</th>
-          <th style="width:72px" class="swt-is-bgSO">สั่งขาย</th>
-          <th style="width:72px" class="swt-is-bgNE">สุทธิ</th>
-          <th style="width:72px" class="swt-is-bgPO">สั่งซื้อ</th>
-          <th style="width:72px" class="swt-is-bgOU">ขอจ่าย</th>
-          <th style="width:72px" class="swt-is-bgTF">ขอโอน</th>
-          <th>หมายเหตุ</th>
-        </tr></thead>
-        <tbody>
-          <tr class="sel" onclick="swtIsSelRow(this)">
-            <td class="swt-is-code">7XXX71XX…</td>
-            <td class="swt-is-name">เครื่องซักผ้า 2 ถัง LG TT10NARG (10 kg.)</td>
-            <td style="text-align:center;color:#64748B">เครื่อง</td>
-            <td class="swt-is-n swt-is-bgS">145</td>
-            <td class="swt-is-n swt-is-bgSO">2</td>
-            <td class="swt-is-n swt-is-bgNE pos"><b>143</b></td>
-            <td class="swt-is-n swt-is-bgPO">19</td>
-            <td class="swt-is-n swt-is-bgOU">103</td>
-            <td class="swt-is-n swt-is-bgTF">15</td>
-            <td style="color:#64748B">2-Tub Washing machine LG Thinq</td>
-          </tr>
-          <tr onclick="swtIsSelRow(this)">
-            <td class="swt-is-code">7XXX71XY…</td>
-            <td class="swt-is-name">เครื่องซักผ้า 2 ถัง LG TT10NBRG (10 kg.) รุ่นใหม่</td>
-            <td style="text-align:center;color:#64748B">เครื่อง</td>
-            <td class="swt-is-n swt-is-bgS">62</td>
-            <td class="swt-is-n swt-is-bgSO">—</td>
-            <td class="swt-is-n swt-is-bgNE pos"><b>62</b></td>
-            <td class="swt-is-n swt-is-bgPO">10</td>
-            <td class="swt-is-n swt-is-bgOU">—</td>
-            <td class="swt-is-n swt-is-bgTF">—</td>
-            <td style="color:#64748B">Successor model TT10N</td>
-          </tr>
-          <tr onclick="swtIsSelRow(this)">
-            <td class="swt-is-code">8XXX71ZZ…</td>
-            <td class="swt-is-name">Drum Belt สำหรับ TT10NARG (อะไหล่)</td>
-            <td style="text-align:center;color:#64748B">เส้น</td>
-            <td class="swt-is-n swt-is-bgS low">3</td>
-            <td class="swt-is-n swt-is-bgSO">1</td>
-            <td class="swt-is-n swt-is-bgNE low"><b>2</b></td>
-            <td class="swt-is-n swt-is-bgPO alert">0</td>
-            <td class="swt-is-n swt-is-bgOU">—</td>
-            <td class="swt-is-n swt-is-bgTF">—</td>
-            <td style="color:#B45309">⚠ Low-stock · BC reorder needed</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div id="swtIsDetail">
-      <div class="swt-is-db">
-        <span style="font-size:14px">📦</span>
-        <h2>เครื่องซักผ้า 2 ถัง LG TT10NARG (10 kg.)</h2>
-        <div class="meta">
-          <span class="pill">SKU <b>7XXX71XX</b></span>
-          <span class="pill">📊 Sale Rank #47</span>
-          <span class="pill">✓ BC synced</span>
-        </div>
-      </div>
-      <div class="swt-is-dt">
-        <div class="swt-is-tab act" onclick="swtIsSwTab(event,'p1')">สต็อกแต่ละคลัง</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p2')">ราคาขาย</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p3')">รายการสั่งซื้อ</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p4')">ค้างส่ง</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p5')">รูปสินค้า</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p6')">ยอดขายตามช่วงวันที่</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p7')">ยอดขายแต่ละคลัง</div>
-        <div class="swt-is-tab" onclick="swtIsSwTab(event,'p8')">Rebate</div>
-      </div>
-      <div class="swt-is-body">
-
-        <div class="swt-is-pane act" id="p1">
-          <div class="swt-is-pb">
-            <button class="swt-is-refbtn">🔄 Refresh</button>
-            <label>Entity:</label>
-            <select><option>ทั้งหมด</option><option>Tag 1 · SWT</option><option>Tag 2 · SWE</option><option>Tag 3 · VMN</option></select>
-            <span style="margin-left:auto;font-size:11px;color:#64748B">รวม <b style="color:#1E3A5F">145 เครื่อง</b> กระจาย 12 คลัง · BC live</span>
           </div>
-          <div class="swt-is-pbody">
-            <table class="swt-is-stbl">
-              <thead><tr>
-                <th style="width:32px">#</th><th style="width:90px">รหัสคลัง</th><th>คลังสินค้า</th>
-                <th style="width:120px">ที่เก็บ</th><th style="width:70px">หน่วย</th>
-                <th style="width:70px;text-align:right">สต็อก</th><th style="width:70px;text-align:right">สั่งขาย</th>
-                <th style="width:70px;text-align:right">สุทธิ</th><th style="width:70px;text-align:right">สั่งซื้อ</th>
-                <th style="width:70px;text-align:right">ขอจ่าย</th><th style="width:70px;text-align:right">ขอโอน</th>
-                <th style="width:80px;text-align:right">จุดต่ำสุด</th><th style="width:80px">Entity</th>
-              </tr></thead>
-              <tbody>
-                <tr><td>1</td><td class="swt-is-code">AK</td><td>คลังสาขาอากาศ…</td><td>อากาศ</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700">5</td><td style="text-align:right">—</td><td style="text-align:right">17</td><td style="text-align:right">7</td><td style="text-align:right;color:#94A3B8">5</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
-                <tr><td>2</td><td class="swt-is-code">HO</td><td>สนง.ใหญ่</td><td>HO</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857"><b>119</b></td><td style="text-align:right">2</td><td style="text-align:right;font-weight:700;color:#047857"><b>117</b></td><td style="text-align:right">19</td><td style="text-align:right">2</td><td style="text-align:right">1</td><td style="text-align:right;color:#94A3B8">30</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
-                <tr><td>3</td><td class="swt-is-code">OIR</td><td>ทวีศักดิ์ธาดา…</td><td>OIR</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="swt-is-tp vm">VMN</span></td></tr>
-                <tr><td>4</td><td class="swt-is-code">S08</td><td>เซกา</td><td>S08</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700">5</td><td style="text-align:right">11</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">3</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
-                <tr><td>5</td><td class="swt-is-code">SD</td><td>สว่างฯ</td><td>SD</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">8</td><td style="text-align:right">4</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
-                <tr><td>6</td><td class="swt-is-code">SHO</td><td>ปลีกโกดัง</td><td>SHO</td><td>เครื่อง[1]</td><td style="text-align:right;color:#047857">1</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700">1</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">2</td><td><span class="swt-is-tp sw">SWT</span></td></tr>
-                <tr class="empty"><td colspan="13">— ย่อ 6 คลังที่ไม่มีสต็อก — คลิก Refresh เพื่อดูทั้งหมด —</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
 
-        <div class="swt-is-pane" id="p2">
-          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><span style="margin-left:10px;font-size:11px;color:#64748B">⚖ VAT Golden Rule — ราคา ex-VAT · <b style="color:#2563EB">PM-5</b></span></div>
-          <div class="swt-is-pbody"><table class="swt-is-stbl">
-            <thead><tr><th>#</th><th>หน่วย</th><th style="text-align:right">ราคาปลีก</th><th style="text-align:right">Disc1</th><th style="text-align:right">ราคาส่ง</th><th style="text-align:right">Disc2</th><th style="text-align:right">ต้นทุน INV</th><th style="text-align:right">ต้นทุน ผปย</th><th style="text-align:right">Price5</th></tr></thead>
-            <tbody><tr><td>1</td><td>เครื่อง</td><td style="text-align:right;font-weight:700">5,990.00</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600">5,450.00</td><td style="text-align:right">—</td><td style="text-align:right">5,636.76</td><td style="text-align:right">5,268.00</td><td style="text-align:right;color:#94A3B8">—</td></tr></tbody>
-          </table></div>
-        </div>
-
-        <div class="swt-is-pane" id="p3">
-          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><label>ช่วง:</label><select><option>6 เดือนล่าสุด</option><option>1 ปีล่าสุด</option></select><span style="margin-left:auto;font-size:11px;color:#64748B">1 ใบสั่งซื้อ · 42 เครื่อง · คงค้าง 19</span></div>
-          <div class="swt-is-pbody"><table class="swt-is-stbl">
-            <thead><tr><th>#</th><th>วันที่สั่งซื้อ</th><th>ใบสั่งซื้อ</th><th>กลุ่มเอกสาร</th><th>คลัง</th><th>หน่วย</th><th style="text-align:right">Qty</th><th style="text-align:right">Remain</th><th>กำหนดรับ</th><th>$</th><th style="text-align:right">Rate</th></tr></thead>
-            <tbody><tr><td>1</td><td>24/03/69</td><td class="swt-is-code">TVPO690324…</td><td>ใบสั่งซื้อเทร…</td><td>HO</td><td>เครื่อง</td><td style="text-align:right">42</td><td style="text-align:right;font-weight:700;color:#B45309">19</td><td>24/03/69</td><td>฿</td><td style="text-align:right">1.00000</td></tr></tbody>
-          </table></div>
-        </div>
-
-        <div class="swt-is-pane" id="p4">
-          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><span style="margin-left:auto;font-size:11px;color:#64748B">ค้างส่ง <b style="color:#B91C1C">11 ใบ · 19 เครื่อง</b></span></div>
-          <div class="swt-is-pbody"><table class="swt-is-stbl">
-            <thead><tr><th>#</th><th>วันที่สั่ง</th><th>ใบสั่งขาย</th><th>กลุ่มเอกสาร</th><th>คลัง</th><th>หน่วย</th><th style="text-align:right">Qty</th><th style="text-align:right">Remain</th><th>หมายเหตุ</th></tr></thead>
-            <tbody>
-              <tr><td>1</td><td>24/06/63</td><td class="swt-is-code">TSRT6306…</td><td>ใบขอโอนสิ…</td><td>AK</td><td>เครื่อง</td><td style="text-align:right">1</td><td style="text-align:right;color:#B45309">1</td><td></td></tr>
-              <tr><td>2</td><td>31/12/63</td><td class="swt-is-code">SWEPO631…</td><td>SWEPO</td><td>SL</td><td>เครื่อง</td><td style="text-align:right">2</td><td style="text-align:right;color:#B45309">2</td><td style="color:#94A3B8">ร้าน อุดมทร…</td></tr>
-              <tr><td>3</td><td>16/06/65</td><td class="swt-is-code">SWEPO650…</td><td>SWEPO</td><td>HO</td><td>เครื่อง</td><td style="text-align:right">30</td><td style="text-align:right;color:#B45309">30</td><td style="color:#94A3B8">ร้าน ก.เจริญ…</td></tr>
-              <tr class="empty"><td colspan="9">— ย่อ 8 รายการ —</td></tr>
-            </tbody>
-          </table></div>
-        </div>
-
-        <div class="swt-is-pane" id="p5">
-          <div class="swt-is-imgpane">
-            <div class="swt-is-thumb">🧺</div>
-            <div class="swt-is-info">
-              <div class="grp">
-                <label>ชื่อเต็ม</label><span>เครื่องซักผ้า 2 ถัง LG รุ่น TT10NARG 10 กก.</span>
-                <label>Brand</label><span>LG Thinq</span>
-                <label>รุ่น</label><span>TT10NARG</span>
-                <label>Barcode</label><span>8801234567890</span>
-                <label>UOM</label><span>เครื่อง</span>
-                <label>Warranty</label><span>12 เดือน · บริษัท</span>
+          <div class="pc-owner">
+            <div class="pc-owner-card">
+              <span class="ico">👤</span>
+              <div style="flex:1">
+                <div class="who">เซลที่ดูแล <span class="lyr api">🟢 salespersonCode</span></div>
+                <select onchange="syncOwnerCard()" id="selSp" style="margin-top:3px">
+                  <option value="NIDA">คุณนิดา สังวิจิตร (NIDA)</option>
+                  <option value="ARTHIT">คุณอาทิตย์ ขายดี (ARTHIT)</option>
+                  <option value="SUDA">คุณสุดา รุ่งโรจน์ (SUDA)</option>
+                </select>
+                <div class="ch" id="spInfo">📞 ต่อ 2431 · ✉️ nida@sangwijit.co.th · ตำแหน่ง: Senior Sales</div>
               </div>
-              <div class="grp">
-                <label>หมวด</label><span>WH-LG-01 Washer</span>
-                <label>Dimension</label><span>960×540×880 mm · 38 kg</span>
-                <label>Country</label><span>ไทย</span>
-                <label>VAT</label><span>V07 — 7% Output</span>
-                <label>Status</label><span style="color:#047857;font-weight:600">Active</span>
-                <label>BC Sync</label><span style="color:#047857">✓ last 2 นาที</span>
+            </div>
+            <div class="pc-owner-card">
+              <span class="ico">👔</span>
+              <div style="flex:1">
+                <div class="who">ผจก.ที่ดูแล <span class="lyr cust">🟠 salesManagerCode</span></div>
+                <select onchange="syncOwnerCard()" id="selMg" style="margin-top:3px">
+                  <option value="WEERA">คุณวีระ ผู้จัดการ (WEERA)</option>
+                  <option value="MANEE">คุณมณี หัวหน้าทีม (MANEE)</option>
+                </select>
+                <div class="ch" id="mgInfo">📞 ต่อ 2400 · ✉️ weera@sangwijit.co.th · ตำแหน่ง: Regional Sales Manager</div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="swt-is-pane" id="p6">
-          <div class="swt-is-pb" style="background:#1E3A5F;color:#fff">
-            <span style="color:#fff;font-weight:700;margin-right:10px">หจก.สกลนครศรีเจริญ</span>
-            <label style="color:#CBD5E1">จาก:</label><input type="text" value="01/01/2569" style="width:100px">
-            <label style="color:#CBD5E1">ถึง:</label><input type="text" value="16/04/2569" style="width:100px">
-            <label style="color:#CBD5E1">Group:</label><select><option>No</option><option>Document</option></select>
-            <button class="swt-is-refbtn">…</button>
-            <span style="margin-left:auto;font-size:11px;color:#FCA5A5">⚠ เคสนี้เมนูยังไม่ได้ระบุร้าน</span>
+        <!-- ─── 🏢 ข้อมูลหลัก (ชื่อ → แก้ที่ profile card ด้านบน) ─── -->
+        <div class="grp">
+          <div class="grp-h">📋 ข้อมูลหลัก · ติดต่อ · ภาษี <span style="margin-left:auto;font-size:10px;font-weight:500;color:var(--muted);text-transform:none">📌 ชื่อ/สถานะ → การ์ดด้านบน · เซล/ผจก. → owner card · ที่อยู่/บัญชี → tab รายละเอียด</span></div>
+          <div class="grid g4">
+            <div class="f"><label>ประเภท <span class="lyr api">🟢 type</span></label><select><option>Company</option><option>Person</option></select></div>
+            <div class="f"><label>ประเทศ <span class="lyr api">🟢 country</span></label><select><option>TH</option><option>JP</option><option>CN</option></select></div>
+            <div class="f"><label>ภาษาเอกสาร <span class="lyr tbl">🔵</span></label><select><option>ไทย</option><option>EN</option></select></div>
+            <div class="f"><label>ลูกค้าตั้งแต่</label><div class="val mono">2023-08-12</div></div>
           </div>
-          <div class="swt-is-pbody"><table class="swt-is-stbl">
-            <thead><tr><th>#</th><th>DocDate</th><th>DocNo</th><th>DocName</th><th>Unit</th><th style="text-align:right">Qty</th><th style="text-align:right">UnitPrice</th><th>DiscWord</th><th>Customer</th><th>TaxType</th></tr></thead>
-            <tbody><tr class="empty"><td colspan="10">— กรุณาเลือกลูกค้าเพื่อดูยอดขาย —</td></tr><tr class="empty"><td colspan="10"></td></tr><tr class="empty"><td colspan="10"></td></tr><tr class="empty"><td colspan="10"></td></tr></tbody>
-          </table></div>
+          <div class="grid g4" style="margin-top:7px">
+            <div class="f"><label>โทรศัพท์ <span class="lyr api">🟢</span></label><input value="+66-2-555-8800"></div>
+            <div class="f"><label>โทรมือถือ <span class="lyr cust">🟠</span></label><input value="+66-81-234-5678"></div>
+            <div class="f"><label>อีเมล <span class="lyr api">🟢</span></label><input value="ar@kor88.co.th"></div>
+            <div class="f"><label>เว็บไซต์ <span class="lyr api">🟢</span></label><input value="www.kor88.co.th"></div>
+          </div>
+          <div class="grid g4" style="margin-top:7px">
+            <div class="f wide"><label>เลขผู้เสียภาษี / VAT <span class="lyr api">🟢 taxRegistrationNumber</span></label>
+              <div style="display:flex;gap:5px"><input class="mono" id="vat" value="0105556012345"><button class="inline-btn" onclick="checkVatDuplicate()">🔍 ตรวจซ้ำ</button></div>
+              <div id="vatResult" style="font-size:11px;color:#047857;margin-top:2px">✓ ไม่พบซ้ำในระบบ</div></div>
+          </div>
         </div>
 
-        <div class="swt-is-pane" id="p7">
-          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><span style="margin-left:auto;font-size:11px;color:#64748B">YTD: 1 ม.ค. 26 → 17 เม.ย. 26</span></div>
-          <div class="swt-is-pbody"><table class="swt-is-stbl">
-            <thead><tr><th>#</th><th>คลังสินค้า</th><th>หน่วย</th><th style="text-align:right">จุดต่ำสุด</th><th style="text-align:right">สต็อก</th><th style="text-align:right">YTD</th><th style="text-align:right">WTD</th><th style="text-align:right">Today</th><th style="text-align:right">เฉลี่ย 60 วัน</th></tr></thead>
-            <tbody>
-              <tr><td>1</td><td>SL</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:700;color:#047857"><b>213</b></td><td style="text-align:right;font-weight:600">26</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600">2</td></tr>
-              <tr><td>2</td><td>SM</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">2</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">1</td><td style="text-align:right">—</td><td style="text-align:right">0</td></tr>
-              <tr><td>3</td><td>S08</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">5</td><td style="text-align:right;color:#047857">5</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">0</td></tr>
-              <tr><td>4</td><td>ST</td><td>เครื่อง[1]</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">3</td><td style="text-align:right;color:#047857">2</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">0</td></tr>
-              <tr class="empty"><td colspan="9">— ย่อ 7 คลัง —</td></tr>
-            </tbody>
-          </table></div>
+        <!-- ─── 👥 ผู้ติดต่อ (ฝั่งลูกค้า) ─── -->
+        <div class="grp">
+          <div class="grp-h">👥 ผู้ติดต่อ (ฝั่งลูกค้า) <span class="lyr tbl">🔵 BC Contact (table 5050) · หลายคน</span></div>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+            <button class="inline-btn" onclick="openSCpicker()">📋 เปิด SC Picker (ดู/จัดการผู้ติดต่อ 8 คน)</button>
+            <button class="inline-btn" onclick="m('mockup: add contact')">➕ เพิ่มผู้ติดต่อ</button>
+            <span style="color:var(--muted);font-size:10.5px;margin-left:auto">แสดง 3 คนแรก · กดปุ่มเพื่อดูทั้งหมด</span>
+          </div>
+          <div class="grid g3">
+            <div class="pc-owner-card">
+              <span class="ico">👨‍💼</span>
+              <div style="flex:1"><div class="who">คุณสมชาย ฝ่ายจัดซื้อ</div><div class="ch">📞 081-111-1111 · ✉️ somchai@kor88.co.th · ผู้มีอำนาจสั่งซื้อ</div></div>
+            </div>
+            <div class="pc-owner-card">
+              <span class="ico">👩‍💼</span>
+              <div style="flex:1"><div class="who">คุณสมหญิง ฝ่ายบัญชี</div><div class="ch">📞 081-222-2222 · ✉️ ar@kor88.co.th · ผู้ติดต่อบัญชี/ชำระเงิน</div></div>
+            </div>
+            <div class="pc-owner-card">
+              <span class="ico">👨‍🔧</span>
+              <div style="flex:1"><div class="who">คุณเก่ง หน้างาน</div><div class="ch">📞 081-333-3333 · ✉️ keng@kor88.co.th · ผู้รับสินค้าหน้างาน</div></div>
+            </div>
+          </div>
+          <div class="hint">BC Contact = standard table แยก · 1 ลูกค้ามีผู้ติดต่อได้หลายคน · แต่ละคนมี email/โทร/ตำแหน่ง/ที่อยู่รายคน → ไม่ต้อง custom · ใช้ navigation `contactsInformation` ใน API v2.0</div>
         </div>
 
-        <div class="swt-is-pane" id="p8">
-          <div class="swt-is-pb"><button class="swt-is-refbtn">🔄 Refresh</button><label>Year:</label><select><option>2026 Q1-Q2</option></select><span style="margin-left:auto;font-size:11px;color:#64748B">⚖ Rebate ≠ Discount · ดู <b style="color:#2563EB">PM-5</b> · <b style="color:#2563EB">PO-7</b></span></div>
-          <div class="swt-is-pbody"><table class="swt-is-stbl">
-            <thead><tr><th>#</th><th>Program</th><th>Period</th><th style="text-align:right">Target</th><th style="text-align:right">Sold</th><th style="text-align:right">Progress</th><th style="text-align:right">Rebate %</th><th style="text-align:right">Rebate THB</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td>1</td><td>LG Washer Q2 2026 Sell-In</td><td>Apr-Jun 26</td><td style="text-align:right">100</td><td style="text-align:right;color:#047857">68</td><td style="text-align:right;font-weight:700;color:#B45309">68%</td><td style="text-align:right">3.00%</td><td style="text-align:right;font-weight:700">฿122,236</td><td><span style="color:#B45309;font-weight:600">🟡 กำลังทำ</span></td></tr>
-              <tr><td>2</td><td>LG Q1 2026 (ปิด)</td><td>Jan-Mar 26</td><td style="text-align:right">80</td><td style="text-align:right;color:#047857"><b>87</b></td><td style="text-align:right;font-weight:700;color:#047857">109%</td><td style="text-align:right">2.50%</td><td style="text-align:right;font-weight:700;color:#047857">฿130,282</td><td><span style="color:#047857;font-weight:600">✓ Achieved</span></td></tr>
-            </tbody>
-          </table></div>
+        <!-- ─── 🏷️ กลุ่ม/มิติ (BC Dimensions) ─── -->
+        <div class="grp">
+          <div class="grp-h">🏷️ กลุ่ม/มิติ (BC Dimensions) <span class="lyr tbl">🔵 Shortcut Dimensions มาตรฐาน</span></div>
+          <div class="grid g4">
+            <div class="f"><label>โซนขาย (Sales Zone)</label><select><option>BKK (กรุงเทพฯ)</option><option>UPC (อัพคันทรี)</option><option>EAST (ภาคตะวันออก)</option></select></div>
+            <div class="f"><label>กลุ่มเซล (Sales Team)</label><select><option>Team A — Construction</option><option>Team B — Residential</option></select></div>
+            <div class="f"><label>กลุ่มลูกค้า (Customer Tier)</label><select><option>⭐ ทอง (VIP)</option><option>🥈 เงิน</option><option>🥉 ทองแดง</option></select></div>
+            <div class="f"><label>ที่มา (Acquisition)</label><select><option>Walk-in</option><option>Referral</option><option>Online</option><option>Sales Outreach</option></select></div>
+          </div>
+          <div class="hint">ใช้ BC Dimensions มาตรฐาน (Global/Shortcut Dimension 1-8) — ไม่ต้องสร้าง custom · ค่าตั้งใน <b>Dimension Values</b> page · ทำ Cost Allocation/Reporting ได้ทันที</div>
         </div>
 
+        <!-- ─── 🆔 KYC custom (สร้างจากบัตรประชาชน) ─── -->
+        <div class="grp">
+          <div class="grp-h">🆔 KYC <span class="lyr cust">🟠 custom SWT (สร้างจากบัตรประชาชน)</span></div>
+          <div class="grid g4">
+            <div class="f"><label>เลขประจำตัวประชาชน (Person)</label><input class="mono" value="—"></div>
+            <div class="f"><label>วันเกิด</label><input type="date" value=""></div>
+            <div class="f wide"><label>หมายเหตุ KYC</label><input value="ลูกค้านิติบุคคล — ไม่ต้อง KYC บุคคล"></div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:6px">
+            <button class="inline-btn" onclick="m('mockup: scan ID card → auto-fill')">📱 สแกนบัตรประชาชน → กรอกอัตโนมัติ</button>
+            <button class="inline-btn" onclick="m('mockup: upload ID card photo')">📎 แนบรูปบัตรประชาชน</button>
+          </div>
+          <div class="hint">ใช้เฉพาะลูกค้า Person · นิติบุคคลข้ามได้ · ภาพบัตรเก็บใน Document Attachment 🔵 (tab "เอกสาร")</div>
+        </div>
+  </div>
+  <!-- /master-head -->
+
+  <!-- ② tabgroup — 5 tabs (รายละเอียด) -->
+  <div class="tabgroup">
+    <div class="tabnav">
+      <div class="tab act" onclick="showTab('t-addr',this)">ที่อยู่ (Address Book)</div>
+      <div class="tab" onclick="showTab('t-fin',this)">เครดิต · การค้า · ภาษี/PDPA</div>
+      <div class="tab" onclick="showTab('t-bank',this)">🏦 ธนาคาร</div>
+      <div class="tab" onclick="showTab('t-life',this)">สถานะ &amp; Block</div>
+      <div class="tab" onclick="showTab('t-bal',this)">ยอดค้าง · ประวัติ · เอกสาร</div>
+    </div>
+    <div class="tabbody">
+
+      <!-- ===== Tab 1: ที่อยู่ (Address Book) ===== -->
+      <div class="pane on" id="t-addr">
+        <div class="note-box">📍 BC Customer มีที่อยู่หลัก 1 ชุด (flat) + Ship-to หลายรายการ — Portal เสริมเป็น <b>Address Book</b> (Billing/Delivery/Tax-Invoice) จัด default ได้ในแต่ละประเภท</div>
+
+        <div class="warn-box" id="addrGate" style="display:none">
+          ⚠️ <b>เตือน:</b> ยังไม่มีที่อยู่ Tax-Invoice (จำเป็นสำหรับออกใบกำกับภาษี) — เพิ่มอย่างน้อย 1 รายการ · <span style="color:#9CA3AF">[ปลดได้ตามสิทธิ์]</span>
+        </div>
+
+        <div class="sec-title">📍 ที่อยู่ทั้งหมด <span class="tools"><button class="mini pri" onclick="m('mockup: add address')">➕ เพิ่มที่อยู่</button></span></div>
+        <table>
+          <thead><tr><th style="width:48px">ลำดับ</th><th>ประเภท</th><th>ชื่อผู้รับ</th><th>ที่อยู่</th><th>โทร</th><th style="width:80px">default</th><th style="width:60px">ลบ</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><span class="pill pill-info">🧾 Tax-Invoice</span></td>
+              <td>บริษัท ก.ก่อสร้าง 88 จำกัด (มหาชน)</td>
+              <td>88/1 ถ.รัชดาภิเษก แขวงดินแดง เขตดินแดง กรุงเทพฯ 10400</td>
+              <td>02-555-8800</td>
+              <td><input type="radio" name="defTax" checked> หลัก</td>
+              <td><button class="mini">🗑️</button></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><span class="pill pill-neutral">📮 Billing</span></td>
+              <td>ฝ่ายบัญชี · คุณสมหญิง</td>
+              <td>88/1 ถ.รัชดาภิเษก แขวงดินแดง เขตดินแดง กรุงเทพฯ 10400</td>
+              <td>02-555-8801</td>
+              <td><input type="radio" name="defBill" checked> หลัก</td>
+              <td><button class="mini">🗑️</button></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><span class="pill pill-success">🚚 Delivery</span></td>
+              <td>ไซต์ก่อสร้าง รัตนาธิเบศร์ · คุณเก่ง</td>
+              <td>123/4 หมู่ 5 ต.บางรักน้อย อ.เมือง นนทบุรี 11000</td>
+              <td>081-333-3333</td>
+              <td><input type="radio" name="defDel" checked> หลัก</td>
+              <td><button class="mini">🗑️</button></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><span class="pill pill-success">🚚 Delivery</span></td>
+              <td>โกดังกลาง · คุณบุญมี</td>
+              <td>567 หมู่ 8 ต.บางพลีใหญ่ อ.บางพลี สมุทรปราการ 10540</td>
+              <td>02-755-1234</td>
+              <td><input type="radio" name="defDel"> รอง</td>
+              <td><button class="mini">🗑️</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="hint" style="margin-top:10px">📌 <b>ที่อยู่หลัก BC</b> (addressLine1/2 · city · state · postalCode · country) = sync อัตโนมัติจาก row ที่ตั้งเป็น <b>default Tax-Invoice</b> ด้านบน · คลิกแถวเพื่อแก้ไข inline</div>
       </div>
-    </div>
 
-    <div class="swt-is-ft">
-      <span class="d"></span><b>Ready</b> · 3 รายการ · row 1/3
-      <div class="sp"></div>
-      <span class="kh">↑↓ เลือก row</span>
-      <span class="kh">Enter ใส่ลงเอกสาร</span>
-      <span class="kh">Tab สลับ</span>
-      <span class="kh">Esc ปิด</span>
+      <!-- ===== Tab 3: เครดิต · การค้า · ภาษี/PDPA ===== -->
+      <div class="pane" id="t-fin">
+
+        <div class="grp">
+          <div class="grp-h">💳 เครดิต (Credit) <span class="lyr api">🟢 creditLimit · balanceDue</span></div>
+          <div class="grid g4">
+            <div class="f"><label>🔒 เพดานเครดิต (Credit Limit)</label><input class="mono" value="2,000,000"></div>
+            <div class="f"><label>ยอดค้างปัจจุบัน (balanceDue)</label><div class="val mono ok">฿485,000</div></div>
+            <div class="f"><label>เครดิตคงเหลือ</label><div class="val mono">฿1,515,000</div></div>
+            <div class="f"><label>สถานะ COD?</label><div class="val">ไม่ (Credit Limit > 0)</div></div>
+          </div>
+          <div class="warn-box" style="margin-top:8px">
+            <b>กฎเครดิต:</b> Credit Limit = 0 → ลูกค้า COD (ชำระก่อนรับของ) · เพิ่มเครดิต > 10% ต้อง <b>Sales Manager อนุมัติ</b> (Maker ≠ Checker) · เกินเพดาน → SL-1 ใบเสนอราคาบล็อก
+          </div>
+        </div>
+
+        <div class="grp">
+          <div class="grp-h">📈 ประวัติปรับวงเงิน (Credit Limit History) <span class="lyr cust">🟠 custom SWT</span></div>
+          <table>
+            <thead><tr><th>วันที่</th><th>จาก (฿)</th><th>เป็น (฿)</th><th>เหตุผล</th><th>ผู้ขอ</th><th>ผู้อนุมัติ</th></tr></thead>
+            <tbody>
+              <tr><td>2026-04-15</td><td class="mono">1,500,000</td><td class="mono">2,000,000</td><td>ยอดซื้อโตต่อเนื่อง 3 ไตรมาส</td><td>คุณนิดา (เซล)</td><td>คุณวีระ (ผจก.)</td></tr>
+              <tr><td>2024-09-01</td><td class="mono">1,000,000</td><td class="mono">1,500,000</td><td>เพิ่มหลังประเมิน 1 ปี</td><td>คุณนิดา (เซล)</td><td>คุณวีระ (ผจก.)</td></tr>
+              <tr><td>2023-08-12</td><td class="mono">0</td><td class="mono">1,000,000</td><td>เปิดบัญชีลูกค้าใหม่</td><td>คุณนิดา (เซล)</td><td>คุณวีระ (ผจก.)</td></tr>
+            </tbody>
+          </table>
+          <div class="hint">BC ไม่เก็บประวัติ Credit Limit · ทำเป็น custom table (SWT Credit Limit History 50110) เก็บ audit trail · ดึงผ่าน custom API</div>
+        </div>
+
+        <div class="grp">
+          <div class="grp-h">💼 เงื่อนไขการค้า / ชำระเงิน <span class="lyr api">🟢</span></div>
+          <div class="grid g4">
+            <div class="f"><label>เงื่อนไขชำระเงิน (paymentTermsId)</label><select><option>Net 30</option><option>Net 60</option><option>Net 90</option><option>เงินสด (COD)</option></select></div>
+            <div class="f"><label>วิธีชำระเงิน (paymentMethodId)</label><select><option>โอน</option><option>เช็ค</option><option>เงินสด</option><option>บัตรเครดิต</option></select></div>
+            <div class="f"><label>วิธีส่งของ (shipmentMethodId)</label><select><option>FOB Bangkok</option><option>Door-to-Door</option><option>EXW (รับเอง)</option></select></div>
+            <div class="f"><label>สกุลเงิน (currencyCode)</label><select><option>THB (ฐาน)</option><option>USD</option></select></div>
+            <div class="f"><label>Customer Price Group <span class="lyr tbl">🔵</span></label><select><option>WHOLESALE-A</option><option>WHOLESALE-B</option><option>RETAIL</option></select></div>
+            <div class="f"><label>Customer Posting Group <span class="lyr tbl">🔵</span></label><select><option>DOMESTIC</option><option>EXPORT</option></select></div>
+            <div class="f"><label>Gen. Bus. Posting Group <span class="lyr tbl">🔵</span></label><select><option>DOMESTIC</option></select></div>
+            <div class="f"><label>VAT Bus. Posting Group <span class="lyr tbl">🔵</span></label><select><option>DOMESTIC (VAT7)</option><option>NONVAT</option></select></div>
+          </div>
+          <div class="hint">Price Group → เชื่อม MD-6 รายการราคา (10-tier · ดู MD-1) · Posting Group บังคับตอน BC post — ตั้งผ่าน page/custom API (API v2.0 ไม่ expose)</div>
+        </div>
+
+        <div class="grp">
+          <div class="grp-h">🧾 ภาษี (Tax) <span class="lyr api">🟢 taxLiable · taxAreaId</span></div>
+          <div class="grid g4">
+            <div class="f"><label>มีภาระภาษี (taxLiable)</label><select><option>ใช่ (VAT 7%)</option><option>ไม่ (Non-VAT)</option></select></div>
+            <div class="f"><label>กลุ่มภาษี (taxAreaId)</label><select><option>DOMESTIC-VAT7</option><option>EXPORT-0</option></select></div>
+            <div class="f"><label>%หัก ณ ที่จ่าย (WHT) <span class="lyr cust">🟠 Thai loc</span></label><input class="mono" value="0"></div>
+            <div class="f"><label>ออกใบกำกับภาษีแบบ</label><select><option>เต็มรูป (Full)</option><option>ย่อ (Abbreviated)</option></select></div>
+          </div>
+          <div class="hint">WHT ลูกค้า = ปกติ 0% (ลูกค้าหัก ภงด.3/53 ฝั่งจ่ายเงินมาให้เราตอนชำระ — เก็บเป็น default ลูกค้าหักกี่ %) · Thai localization ต้อง verify localization app</div>
+        </div>
+
+        <div class="grp">
+          <div class="grp-h">🛡️ PDPA / Consent <span class="lyr cust">🟠 custom SWT (Thai PDPA)</span></div>
+          <div class="grid g4">
+            <label class="chk"><input type="checkbox" checked> ✓ Marketing Consent (รับข้อมูลโปรโมชั่น)</label>
+            <label class="chk"><input type="checkbox" checked> ✓ Data Processing (เก็บใช้ข้อมูลตาม PDPA)</label>
+            <label class="chk"><input type="checkbox"> ☐ Third-party Share (แชร์กับพันธมิตร)</label>
+            <label class="chk"><input type="checkbox" checked> ✓ E-Document (ส่งเอกสารทางอีเมล)</label>
+          </div>
+          <div class="grid g4" style="margin-top:6px">
+            <div class="f"><label>วันให้ Consent</label><div class="val">2023-08-12</div></div>
+            <div class="f"><label>CRM ID (ภายนอก)</label><input class="mono" value="CRM-2023-088045"></div>
+            <div class="f wide"><label>หมายเหตุ PDPA</label><input value="ขอลบข้อมูลภายใน 30 วันหลังเลิกใช้บริการ"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Tab 4: 🏦 ธนาคาร (Customer Bank Account) ===== -->
+      <div class="pane" id="t-bank">
+        <div class="note-box">🏦 BC <b>Customer Bank Account</b> (table 287) — ขนานกับ Vendor Bank Account · ใช้สำหรับ <b>refund คืนเงิน · direct debit · เช็คล่วงหน้า · ตรวจ reconcile โอนเข้า</b> · 1 ลูกค้ามีหลายบัญชี · API v2.0 ไม่ expose โดยตรง → ดึงผ่าน custom API page</div>
+
+        <div class="sec-title">บัญชีธนาคารของลูกค้า <span class="tools"><button class="mini pri" onclick="m('mockup: add bank account')">➕ เพิ่มบัญชี</button></span></div>
+        <table>
+          <thead><tr><th style="width:42px">#</th><th>ธนาคาร · สาขา</th><th>เลขบัญชี</th><th>ชื่อบัญชี</th><th>ประเภท</th><th>SWIFT/IBAN</th><th style="width:75px">default</th><th style="width:50px">ลบ</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>ธนาคารกสิกรไทย · สาขาดินแดง</td>
+              <td class="mono">123-4-56789-0</td>
+              <td>บริษัท ก.ก่อสร้าง 88 จำกัด (มหาชน)</td>
+              <td>กระแสรายวัน</td>
+              <td class="mono">KASITHBK</td>
+              <td><input type="radio" name="defBank" checked> หลัก</td>
+              <td><button class="mini">🗑️</button></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>ธนาคารกรุงเทพ · สาขารัชดาภิเษก</td>
+              <td class="mono">234-2-56789-0</td>
+              <td>บริษัท ก.ก่อสร้าง 88 จำกัด (มหาชน)</td>
+              <td>ออมทรัพย์</td>
+              <td class="mono">BKKBTHBK</td>
+              <td><input type="radio" name="defBank"> รอง</td>
+              <td><button class="mini">🗑️</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="hint" style="margin-top:6px">📌 คลิกแถวเพื่อแก้ไข inline (Code · SWIFT · IBAN · สกุลเงิน · ใช้สำหรับ: Refund/รับโอน/Direct Debit/เช็คล่วงหน้า · สถานะ Active/Blocked)</div>
+
+        <div class="grp" style="margin-top:10px">
+          <div class="grp-h">📜 เช็คล่วงหน้า (Post-dated Cheque) <span class="lyr cust">🟠 custom SWT</span></div>
+          <table>
+            <thead><tr><th>เลขเช็ค</th><th>ธนาคาร</th><th>วันที่ในเช็ค</th><th>จำนวน (฿)</th><th>อ้างอิงบิล</th><th>สถานะ</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">0000234</td><td>KBANK</td><td>2026-07-15</td><td class="mono">125,000</td><td class="mono">SL-2606-1234</td><td><span class="exp-chip exp-warn">รอเรียกเก็บ</span></td></tr>
+              <tr><td class="mono">0000235</td><td>KBANK</td><td>2026-08-15</td><td class="mono">125,000</td><td class="mono">SL-2606-1234</td><td><span class="exp-chip exp-ok">เรียกเก็บได้</span></td></tr>
+            </tbody>
+          </table>
+          <div class="hint">BC มี standard Bank Account Reconciliation แต่ไม่มี post-dated cheque tracking ที่ผูก customer → custom · ผูกกับ FI-1 รับชำระลูกหนี้</div>
+        </div>
+      </div>
+
+      <!-- ===== Tab 5: สถานะ & Block ===== -->
+      <div class="pane" id="t-life">
+        <div class="sec-title">🚀 Onboarding &amp; Lifecycle</div>
+        <div class="flow">
+          <div class="flow-node"><div class="dot">✓</div><div class="t">1. สร้างลูกค้า</div><div class="s">Status: Blocked (All)</div><div class="s">2023-08-12</div></div>
+          <div class="flow-line"></div>
+          <div class="flow-node"><div class="dot">✓</div><div class="t">2. กรอกข้อมูลหลัก</div><div class="s">VAT · Address · Credit Limit · Terms</div><div class="s">2023-08-12</div></div>
+          <div class="flow-line"></div>
+          <div class="flow-node"><div class="dot">✓</div><div class="t">3. Sales Mgr อนุมัติเครดิต</div><div class="s">Credit Limit ฿1M (Maker≠Checker)</div><div class="s">2023-08-12</div></div>
+          <div class="flow-line"></div>
+          <div class="flow-node"><div class="dot">✓</div><div class="t">4. ปลด Block = Active</div><div class="s">พร้อมทำ SL / AR</div><div class="s">2023-08-12</div></div>
+        </div>
+
+        <div class="grp">
+          <div class="grp-h">🔒 สถานะ Block <span class="lyr api">🟢 blocked enum (4 ค่า)</span></div>
+          <div class="grid g2">
+            <div class="f"><label>สถานะปัจจุบัน (blocked)</label>
+              <select id="blkSel" onchange="syncBlock()">
+                <option value="">( ) ว่าง = Active (ทำได้ทุกอย่าง)</option>
+                <option value="Ship">Ship (ห้ามส่งของ · ออกใบกำกับได้)</option>
+                <option value="Invoice">Invoice (ห้ามออกใบกำกับ · ส่งของได้)</option>
+                <option value="All">All (ห้ามทุก transaction)</option>
+              </select></div>
+            <div class="f"><label>ปลด Block ล่าสุดโดย</label><div class="val">คุณวีระ ผู้จัดการ · 2023-08-12</div></div>
+          </div>
+          <div class="hint">⚠️ BC Customer `blocked` มี <b>4 ค่า</b> = ( ) / <b>Ship</b> / <b>Invoice</b> / All — ละเอียดกว่า Vendor ที่มีแค่ Payment/All · ใช้แยก "บล็อกส่งของ" กับ "บล็อกออกใบกำกับ" เป็นคนละจังหวะ</div>
+        </div>
+
+        <div class="warn-box">
+          <b>ข้อมูลสำคัญ (required ก่อนปลด Block):</b><br>
+          ✓ Tax ID/VAT: 0105556012345 · ✓ ที่อยู่ Tax-Invoice ≥1 · ✓ Credit Limit (≥0 หรือ COD) · ✓ Payment Terms · ✓ Posting Group<br>
+          📌 <b>Sales Mgr ต้องอนุมัติเครดิต</b> ถ้า > 0 (Maker ≠ Checker — เซลที่กรอกข้อมูลห้ามอนุมัติเอง)
+        </div>
+
+        <div class="grp">
+          <div class="grp-h">🔐 Field Masking (ตามสิทธิ์) <span class="lyr cust">🟠 custom SWT</span></div>
+          <div class="grid g4">
+            <div class="f"><label>👤 Salesperson เห็น</label><div class="val">ชื่อ · ที่อยู่ · โทร · ผู้ติดต่อ</div></div>
+            <div class="f"><label>🔒 Salesperson <b>ซ่อน</b></label><div class="val bad">Tax ID · Credit Limit · Bank · เลขบัตร ปชช.</div></div>
+            <div class="f"><label>👔 Sales Manager เห็น</label><div class="val">ทุกอย่าง + Credit Limit</div></div>
+            <div class="f"><label>🔑 Finance / Admin เห็น</label><div class="val">ทุกอย่าง (full)</div></div>
+          </div>
+          <div class="hint">บังคับด้วย AL field-level security + page extension permission set — ไม่ใช่ JS ฝั่ง portal</div>
+        </div>
+      </div>
+
+      <!-- ===== Tab 6: ยอดค้าง · ประวัติ · เอกสาร ===== -->
+      <div class="pane" id="t-bal">
+
+        <div class="sec-title">💰 ยอดค้างชำระ (AR) — Aged + สรุป <span class="lyr api" style="margin-left:6px">🟢 balanceDue · agedAccountsReceivable (calc)</span></div>
+        <table>
+          <thead>
+            <tr>
+              <th>ช่วงอายุ</th>
+              <th>ยอด (฿)</th>
+              <th>%</th>
+              <th>จำนวนบิล</th>
+              <th>หมายเหตุ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><b>ยังไม่ครบกำหนด</b></td><td class="mono ok"><b>485,000</b></td><td>100%</td><td>3</td><td>ค้างปกติในเครดิต</td></tr>
+            <tr><td>1–30 วัน</td><td class="mono">0</td><td>0%</td><td>0</td><td>—</td></tr>
+            <tr><td>31–60 วัน</td><td class="mono">0</td><td>0%</td><td>0</td><td>—</td></tr>
+            <tr><td>เกิน 60 วัน</td><td class="mono">0</td><td>0%</td><td>0</td><td>—</td></tr>
+            <tr style="background:#F1F5F9;font-weight:600">
+              <td>รวมยอดค้าง / เกินกำหนด</td>
+              <td class="mono ok">485,000</td>
+              <td>—</td>
+              <td>3</td>
+              <td><b>Overdue ฿0</b> · เครดิตคงเหลือ <span class="mono">฿1,515,000</span> / ฿2,000,000 · DSO 28 วัน</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button class="mini pri" onclick="m('mockup: go FI-1')">→ ไป FI-1 รับชำระลูกหนี้</button>
+          <button class="mini" onclick="m('mockup: AR aging report')">📊 รายงาน Aged AR (FI-6)</button>
+          <button class="mini" onclick="m('mockup: send statement')">✉️ ส่งใบแจ้งหนี้ทางอีเมล</button>
+        </div>
+
+        <div class="sec-title" style="margin-top:14px">📈 ประวัติซื้อ (12 เดือน) <span class="lyr api" style="margin-left:6px">🟢 customerSales (calc)</span></div>
+        <div class="grid g4" style="margin-bottom:6px">
+          <div class="f"><label>ยอดซื้อ YTD</label><div class="val mono">฿8,450,000</div></div>
+          <div class="f"><label>จำนวนบิล</label><div class="val">52 ใบ</div></div>
+          <div class="f"><label>ยอดเฉลี่ย/บิล</label><div class="val mono">฿162,500</div></div>
+          <div class="f"><label>ความถี่</label><div class="val">~4 บิล/เดือน</div></div>
+        </div>
+        <table>
+          <thead><tr><th>เลขที่บิล</th><th>วันที่</th><th>มูลค่า (฿)</th><th>สินค้าหลัก</th><th>สถานะชำระ</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">SL-2606-1234</td><td>15 มิ.ย. 26</td><td class="mono">250,000</td><td>กระเบื้อง 500 ตร.ม.</td><td><span class="exp-chip exp-warn">รอชำระ</span></td></tr>
+            <tr><td class="mono">SL-2606-1198</td><td>05 มิ.ย. 26</td><td class="mono">135,000</td><td>ปูน 30 ตัน</td><td><span class="exp-chip exp-warn">รอชำระ</span></td></tr>
+            <tr><td class="mono">SL-2606-1167</td><td>28 พ.ค. 26</td><td class="mono">100,000</td><td>เหล็กเส้น 5 ตัน</td><td><span class="exp-chip exp-warn">รอชำระ</span></td></tr>
+            <tr><td class="mono">SL-2605-1098</td><td>20 พ.ค. 26</td><td class="mono">320,000</td><td>วัสดุก่อสร้างผสม</td><td><span class="exp-chip exp-ok">ชำระแล้ว</span></td></tr>
+          </tbody>
+        </table>
+
+        <div class="sec-title" style="margin-top:14px">📎 เอกสารลูกค้า <span class="lyr tbl" style="margin-left:6px">🔵 BC Document Attachment (table 1173)</span></div>
+        <div style="display:flex;gap:6px;margin-bottom:6px">
+          <button class="mini pri" onclick="m('mockup: upload doc')">➕ แนบเอกสาร</button>
+          <span style="margin-left:auto;color:var(--muted);font-size:10.5px">ใกล้หมดอายุ (≤30 วัน) = <span class="exp-chip exp-warn">เหลือ N วัน</span> · หมดอายุแล้ว = <span class="exp-chip exp-danger">หมดอายุ</span></span>
+        </div>
+        <table>
+          <thead><tr><th style="width:42px">#</th><th>ประเภท</th><th>แบรนด์ (ถ้ามี)</th><th>ชื่อไฟล์</th><th>วันที่</th><th>วันหมดอายุ</th><th>หมายเหตุ</th><th style="width:60px">ดู/ลบ</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><span class="pill pill-info">📝 เปิดหน้าบัญชี</span></td>
+              <td>—</td>
+              <td>account-opening-2023.pdf</td>
+              <td>2023-08-12</td>
+              <td>—</td>
+              <td>เปิดบัญชีลูกค้าใหม่ + เอกสารบริษัท</td>
+              <td><button class="mini">👁️</button></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><span class="pill pill-info">📝 เปิดหน้าบัญชี</span></td>
+              <td>—</td>
+              <td>kor88-pp20.pdf</td>
+              <td>2023-08-12</td>
+              <td>—</td>
+              <td>ภพ.20 ของลูกค้า</td>
+              <td><button class="mini">👁️</button></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><span class="pill pill-success">👤 แต่งตั้งเซล</span></td>
+              <td>—</td>
+              <td>sales-assignment-nida.pdf</td>
+              <td>2023-08-12</td>
+              <td>—</td>
+              <td>มอบหมายคุณนิดา เป็นเซลผู้ดูแล</td>
+              <td><button class="mini">👁️</button></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><span class="pill pill-warning">🏗️ เข้าพื้นที่ PC</span></td>
+              <td>Daikin</td>
+              <td>pc-site-entry-daikin-2025.pdf</td>
+              <td>2025-12-01</td>
+              <td>2026-11-30 <span class="exp-chip exp-ok">เหลือ 154 วัน</span></td>
+              <td>อนุญาตให้ PC ของ Daikin เข้าพื้นที่ไซต์รัตนาธิเบศร์</td>
+              <td><button class="mini">👁️</button></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><span class="pill pill-warning">🏗️ เข้าพื้นที่ PC</span></td>
+              <td>Mitsubishi</td>
+              <td>pc-site-entry-mitsu-2025.pdf</td>
+              <td>2025-07-15</td>
+              <td>2026-07-15 <span class="exp-chip exp-warn">เหลือ 16 วัน</span></td>
+              <td>อนุญาตให้ PC ของ Mitsubishi · ใกล้หมดอายุ ต่ออายุ!</td>
+              <td><button class="mini">👁️</button></td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><span class="pill pill-warning">🏗️ เข้าพื้นที่ PC</span></td>
+              <td>Saijo Denki</td>
+              <td>pc-site-entry-saijo-2024.pdf</td>
+              <td>2024-06-01</td>
+              <td>2026-05-31 <span class="exp-chip exp-danger">หมดอายุ 29 วัน</span></td>
+              <td>⚠️ เอกสารหมดอายุแล้ว — ต่ออายุด่วน</td>
+              <td><button class="mini">👁️</button></td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><span class="pill pill-neutral">📄 อื่นๆ</span></td>
+              <td>—</td>
+              <td>kor88-company-cert.pdf</td>
+              <td>2023-08-12</td>
+              <td>—</td>
+              <td>หนังสือรับรองบริษัท</td>
+              <td><button class="mini">👁️</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="hint">
+          <b>ที่เก็บเอกสารปฏิบัติการของลูกค้า</b> — ใช้ BC Document Attachment มาตรฐาน (ไม่ต้อง custom) · ประเภท dropdown: <i>เปิดหน้าบัญชี · แต่งตั้งเซล · เข้าพื้นที่ PC · อื่นๆ</i> · วันหมดอายุ <b>optional</b> · ระบบเตือนใกล้หมดอายุ (≤30 วัน = เหลือง · หมดอายุ = แดง) · 📌 <b>MOU/ข้อตกลงเป้า/รีเบต อยู่ฝั่ง PO-2 RFQ/PO-7 ส่งเสริมการขาย ไม่ใช่ที่นี่</b>
+        </div>
+
+        <div class="sec-title" style="margin-top:14px">🕓 Audit Timeline <span class="lyr tbl" style="margin-left:6px">🔵 SC-7 timeline</span></div>
+        <table>
+          <thead><tr><th>เวลา</th><th>การกระทำ</th><th>โดย</th><th>ก่อนหน้า → หลัง</th></tr></thead>
+          <tbody>
+            <tr><td>2026-04-15 14:32</td><td>เพิ่มเครดิต</td><td>คุณวีระ (ผจก.)</td><td>1,500,000 → 2,000,000</td></tr>
+            <tr><td>2026-04-15 14:30</td><td>ขอเพิ่มเครดิต</td><td>คุณนิดา (เซล)</td><td>เหตุผล: ยอดซื้อโต 3 ไตรมาส</td></tr>
+            <tr><td>2026-04-10 09:15</td><td>เพิ่มที่อยู่ Delivery</td><td>คุณนิดา</td><td>+ โกดังกลาง บางพลี</td></tr>
+            <tr><td>2024-09-01 10:20</td><td>เพิ่มเครดิต</td><td>คุณวีระ (ผจก.)</td><td>1,000,000 → 1,500,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
     </div>
+  </div>
+
+  <!-- ⑤ dc-strip -->
+  <div class="dc-strip">
+    <span class="dc-lbl">ใช้อ้างอิงโดย</span>
+    <span class="dc-node current">MD-2 ทะเบียนลูกค้า</span><span class="dc-arrow">→</span>
+    <span class="dc-node">SL-1 ใบเสนอราคา</span><span class="dc-arrow">·</span>
+    <span class="dc-node">SL-3 ใบจอง</span><span class="dc-arrow">·</span>
+    <span class="dc-node">SL-4 บิลขาย</span><span class="dc-arrow">·</span>
+    <span class="dc-node">FI-1 รับชำระลูกหนี้</span>
   </div>
 </div>
 
-<script>
-(function(){
-  var root=document.getElementById('swtIsRoot');
-  window.openItemSearch=function(){root.classList.add('swt-is-open');setTimeout(function(){var q=document.getElementById('swtIsQ');if(q)q.focus();},50);};
-  window.closeItemSearch=function(){root.classList.remove('swt-is-open');};
-  // click outside → close
-  root.addEventListener('click',function(e){if(e.target===root)window.closeItemSearch();});
-  // keyboard
-  document.addEventListener('keydown',function(e){
-    if(e.altKey && !e.ctrlKey && e.key && e.key.toLowerCase()==='i'){e.preventDefault();window.openItemSearch();}
-    if(e.key==='Escape' && root.classList.contains('swt-is-open')){window.closeItemSearch();}
-  });
-  // tab switch
-  window.swtIsSwTab=function(e,id){
-    root.querySelectorAll('.swt-is-tab').forEach(function(t){t.classList.remove('act');});
-    root.querySelectorAll('.swt-is-pane').forEach(function(p){p.classList.remove('act');});
-    e.currentTarget.classList.add('act');
-    document.getElementById(id).classList.add('act');
-  };
-  window.swtIsSelRow=function(r){
-    root.querySelectorAll('.swt-is-rtbl tbody tr').forEach(function(x){x.classList.remove('sel');});
-    r.classList.add('sel');
-  };
-  window.swtIsToggleHist=function(btn){
-    btn.classList.toggle('histon');
-    var d=document.getElementById('swtIsDetail');
-    d.style.display=btn.classList.contains('histon')?'':'none';
-  };
-  // auto-wire triggers
-  function wire(){
-    var sel='button,a,[role="button"]';
-    document.querySelectorAll(sel).forEach(function(el){
-      if(el.id==='swtIsTestBtn'||el.closest('#swtIsRoot'))return;
-      var txt=(el.textContent||'').trim().toLowerCase();
-      var ds=el.getAttribute('data-item-search');
-      if(ds!==null||txt==='ค้นหาสินค้า'||txt==='search item'||txt==='item search'||/🔍\s*ค้นหาสินค้า/.test(el.textContent||'')){
-        if(el.dataset.swtIsBound)return;
-        el.dataset.swtIsBound='1';
-        el.addEventListener('click',function(e){e.preventDefault();window.openItemSearch();});
-      }
-    });
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
-})();
-</script>
-<!-- SWT_ITEM_SEARCH_END -->
-
-<!-- SWT_LINK_START -->
-<script src="swt-link.js" defer></script>
-<!-- SWT_LINK_END -->
-
 <script src="swt-sidebar.js"></script>
+<script>
+function m(t){alert(t)}
+
+function showTab(id,el){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('act'));el.classList.add('act');
+}
+
+function syncName(v){
+  document.getElementById('hNm').textContent = v;
+  const pc = document.getElementById('pcName');
+  if(pc.tagName === 'INPUT'){ if(pc.value !== v) pc.value = v; } else { pc.textContent = v; }
+}
+
+const spDict = {
+  NIDA:    'nida@sangwijit.co.th · ต่อ 2431',
+  ARTHIT:  'arthit@sangwijit.co.th · ต่อ 2435',
+  SUDA:    'suda@sangwijit.co.th · ต่อ 2438'
+};
+const mgDict = {
+  WEERA:   'weera@sangwijit.co.th · ต่อ 2400',
+  MANEE:   'manee@sangwijit.co.th · ต่อ 2405'
+};
+function syncOwnerCard(){
+  document.getElementById('spInfo').textContent = spDict[document.getElementById('selSp').value] || '—';
+  document.getElementById('mgInfo').textContent = mgDict[document.getElementById('selMg').value] || '—';
+}
+
+const blkCycle = ['','Ship','Invoice','All'];
+function cycleBlock(){
+  const sel=document.getElementById('blkSel');
+  const i = blkCycle.indexOf(sel.value);
+  sel.value = blkCycle[(i+1) % blkCycle.length];
+  syncBlock();
+}
+function syncBlock(){
+  const v=document.getElementById('blkSel').value, pill=document.getElementById('pill');
+  if(v===''){pill.className='pill pill-success';pill.textContent='● Active';}
+  else if(v==='Ship'){pill.className='pill pill-warning';pill.textContent='● Blocked: Ship';}
+  else if(v==='Invoice'){pill.className='pill pill-warning';pill.textContent='● Blocked: Invoice';}
+  else {pill.className='pill pill-danger';pill.textContent='● Blocked: All';}
+}
+
+function checkVatDuplicate(){
+  const r=document.getElementById('vatResult'), v=document.getElementById('vat').value;
+  r.style.color='#6B7280';r.textContent='⏳ กำลังตรวจ...';
+  setTimeout(()=>{r.style.color='#047857';r.textContent='✓ Tax ID '+v+' — ไม่พบซ้ำในระบบ';},600);
+}
+
+function openSCpicker(){ m('mockup: เปิด SC Picker → BC Contact list (8 คน)\nรองรับเพิ่ม/แก้/ลบ ผู้ติดต่อรายลูกค้า'); }
+</script>
 </body>
 </html>

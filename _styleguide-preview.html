@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWT Design Language — ตัวอย่างดีไซน์ (standalone)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   SWT DESIGN LANGUAGE — STANDALONE PREVIEW
+   ไฟล์โชว์ภาษาดีไซน์อย่างเดียว · ไม่เกี่ยวกับ mockup หลัก · ไม่ใช้ swt-patterns.css/js
+   token ทั้งหมดยกขึ้น :root (โชว์ตัวอย่าง refactor token layer)
+   ═══════════════════════════════════════════════════════════════ */
+
+:root{
+  /* — brand — */
+  --brand-deep:#1E3A5F;
+  --accent:#2563EB;
+  --accent-strong:#1D4ED8;
+  --accent-dark:#1E40AF;
+  --grad-brand:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);
+
+  /* — semantic (bg อ่อน / text เข้ม คู่กัน) — */
+  --success:#10B981; --success-bg:#ECFDF5; --success-ink:#065F46; --success-line:#A7F3D0;
+  --warning:#F59E0B; --warning-bg:#FEF3C7; --warning-ink:#92400E; --warning-line:#FDE68A;
+  --danger:#EF4444;  --danger-bg:#FEF2F2;  --danger-ink:#991B1B;  --danger-line:#FECACA;
+  --info-bg:#EFF6FF; --info-ink:#0C4A6E; --info-line:#BFDBFE;
+  --purple:#8B5CF6; --purple-strong:#7C3AED; --purple-bg:#F3E8FF; --purple-ink:#6D28D9;
+
+  /* — neutrals — */
+  --ink:#111827; --ink-2:#374151; --muted:#6B7280; --faint:#9CA3AF;
+  --border:#E5E7EB; --border-soft:#F3F4F6; --line-cool:#CBD5E1;
+  --surface:#FFFFFF; --surface-2:#F8FAFC; --surface-3:#F3F4F6; --page:#F3F4F6;
+
+  /* — type scale (รวบจาก ~11 ค่าให้เหลือ 7 ขั้น) — */
+  --fs-2xs:10px; --fs-xs:11px; --fs-sm:12px; --fs-base:13px;
+  --fs-md:14px; --fs-lg:16px; --fs-xl:18px;
+
+  /* — radius / shadow — */
+  --r-sm:4px; --r-md:6px; --r-lg:8px; --r-pill:20px;
+  --shadow:0 2px 8px rgba(0,0,0,.08);
+  --shadow-soft:0 1px 3px rgba(0,0,0,.06);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:var(--page);color:var(--ink);font-size:var(--fs-base);line-height:1.5}
+.mono{font-family:'Inter',monospace}
+
+/* ─ page header (signature gradient) ─ */
+.pg-head{background:var(--grad-brand);color:#fff;padding:28px 40px;box-shadow:var(--shadow)}
+.pg-head h1{font-size:22px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:12px}
+.pg-head .ico{width:40px;height:40px;border-radius:var(--r-lg);background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:20px}
+.pg-head p{font-size:var(--fs-sm);color:rgba(255,255,255,.78);margin-top:6px;max-width:760px}
+
+.wrap{max-width:1120px;margin:0 auto;padding:28px 40px 80px}
+
+/* ─ section ─ */
+.sec{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px 24px;margin-bottom:20px;box-shadow:var(--shadow-soft)}
+.sec-head{display:flex;align-items:baseline;gap:10px;padding-bottom:6px;margin-bottom:16px;border-bottom:1px solid var(--border-soft)}
+.sec-head h2{font-size:var(--fs-lg);font-weight:700;color:var(--ink-2)}
+.sec-head .tag{font-size:var(--fs-2xs);font-weight:700;color:var(--accent);background:var(--info-bg);border:1px solid var(--info-line);padding:2px 7px;border-radius:var(--r-sm);text-transform:uppercase;letter-spacing:.04em}
+.sec-head .note{margin-left:auto;font-size:var(--fs-xs);color:var(--faint)}
+.sub{font-size:var(--fs-xs);font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:18px 0 10px}
+.sub:first-child{margin-top:0}
+
+/* ─ color swatches ─ */
+.swatch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.sw{border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;background:var(--surface)}
+.sw .chip{height:56px}
+.sw .meta{padding:8px 10px}
+.sw .name{font-size:var(--fs-xs);font-weight:700;color:var(--ink-2)}
+.sw .hex{font-size:var(--fs-2xs);color:var(--muted);font-family:'Inter',monospace;margin-top:1px}
+.sw .role{font-size:var(--fs-2xs);color:var(--faint);margin-top:2px}
+
+/* semantic pair demo */
+.pair-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.pair{border-radius:var(--r-md);padding:12px 14px;border:1px solid}
+.pair .h{font-size:var(--fs-sm);font-weight:700;display:flex;align-items:center;gap:6px}
+.pair .d{font-size:var(--fs-xs);margin-top:4px;opacity:.85}
+.pair.s{background:var(--success-bg);border-color:var(--success-line);color:var(--success-ink)}
+.pair.w{background:var(--warning-bg);border-color:var(--warning-line);color:var(--warning-ink)}
+.pair.d{background:var(--danger-bg);border-color:var(--danger-line);color:var(--danger-ink)}
+.pair.i{background:var(--info-bg);border-color:var(--info-line);color:var(--info-ink)}
+.pair.p{background:var(--purple-bg);border-color:var(--purple);color:var(--purple-ink)}
+
+/* ─ type scale ─ */
+.type-row{display:flex;align-items:baseline;gap:16px;padding:8px 0;border-bottom:1px solid var(--border-soft)}
+.type-row:last-child{border:none}
+.type-row .tk{width:90px;font-family:'Inter',monospace;font-size:var(--fs-2xs);color:var(--muted);font-weight:600}
+.type-row .px{width:48px;font-family:'Inter',monospace;font-size:var(--fs-2xs);color:var(--faint)}
+.type-row .demo{color:var(--ink)}
+
+/* ─ buttons ─ */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-strong)}
+.btn-success{background:var(--success);color:#fff}.btn-success:hover{background:#059669}
+.btn-accent{background:var(--purple);color:#fff}.btn-accent:hover{background:var(--purple-strong)}
+.btn-outline{background:#fff;color:var(--ink-2);border-color:var(--border)}.btn-outline:hover{background:var(--surface-2);color:var(--accent);border-color:var(--info-line)}
+.btn-ghost{background:transparent;color:var(--muted)}.btn-ghost:hover{background:var(--surface-3)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ─ pills / chips ─ */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:var(--r-sm);font-size:10.5px;font-weight:600}
+.pill-success{background:var(--success-bg);color:var(--success-ink)}
+.pill-warning{background:var(--warning-bg);color:var(--warning-ink)}
+.pill-danger{background:var(--danger-bg);color:var(--danger-ink)}
+.pill-info{background:var(--info-bg);color:var(--info-ink)}
+.pill-neutral{background:var(--surface-3);color:var(--ink-2)}
+.wh-badge{display:inline-block;padding:2px 7px;border-radius:3px;font-size:var(--fs-2xs);font-weight:600;background:var(--info-bg);color:var(--accent-strong)}
+
+/* ─ flow / doc-chain ─ */
+.qt-flow{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.flow-node{border:1px solid var(--border);border-radius:var(--r-sm);padding:3px 10px;background:var(--surface-2);font-size:var(--fs-2xs)}
+.flow-node.done{background:var(--success-bg);border-color:var(--success-line);color:var(--success-ink)}
+.flow-node.current{background:var(--info-bg);border-color:#93C5FD;color:var(--accent-strong);font-weight:700}
+.flow-node.pending{color:var(--faint)}
+.flow-arrow{color:var(--line-cool);font-weight:700}
+
+/* ─ field ─ */
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;max-width:520px}
+.field{display:flex;flex-direction:column;gap:2px}
+.field-label{font-size:var(--fs-2xs);font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.03em}
+.field-value{font-size:12.5px;color:var(--ink);font-weight:500}
+.field-value .highlight{font-weight:700;color:var(--accent);font-family:'Inter',monospace}
+.inp{padding:5px 8px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:var(--fs-sm);font-family:inherit;width:100%}
+.inp:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+
+/* ─ table ─ */
+table.items{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+table.items thead th{padding:9px 12px;font-size:10.5px;font-weight:600;color:var(--muted);text-align:left;background:var(--surface-2);border-bottom:2px solid var(--border);text-transform:uppercase;white-space:nowrap}
+table.items tbody td{padding:10px 12px;font-size:12.5px;border-bottom:1px solid var(--border-soft);vertical-align:top}
+table.items tbody tr:hover{background:#FAFBFC}
+table.items th,table.items td{border-right:1px solid #EDEFF2}
+table.items th:last-child,table.items td:last-child{border-right:none}
+.item-code{font-size:10.5px;color:var(--muted);font-family:'Inter',monospace;font-weight:600}
+.item-model{font-size:10.5px;color:var(--faint)}
+.item-total{text-align:right;font-weight:700;font-family:'Inter',monospace}
+.item-price{text-align:right;font-family:'Inter',monospace}
+.stock-chip{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:3px;font-size:var(--fs-2xs);font-weight:600}
+.stock-chip.ok{background:var(--success-bg);color:var(--success-ink)}
+.stock-chip.low{background:var(--warning-bg);color:var(--warning-ink)}
+
+/* ─ summary ─ */
+.summary{max-width:360px}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:var(--fs-sm)}
+.summary-row .lbl{color:var(--muted)}
+.summary-row .val{color:var(--ink);font-weight:600;font-family:'Inter',monospace}
+.summary-total{margin-top:8px;padding:10px 12px;background:var(--grad-brand);border-radius:var(--r-md);color:#fff;display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-md);font-weight:700}
+.summary-total .val{font-family:'Inter',monospace}
+
+/* ─ toggle cards ─ */
+.toggle-group{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.toggle-card{display:block;padding:12px 14px;border:2px solid var(--border);border-radius:var(--r-lg);background:#fff;cursor:pointer;transition:all .15s}
+.toggle-card:hover{border-color:#93C5FD;background:var(--surface-2)}
+.toggle-card .h{display:flex;align-items:center;gap:6px;font-size:var(--fs-md);font-weight:700;color:var(--ink-2)}
+.toggle-card .d{font-size:var(--fs-xs);color:var(--muted);margin-top:3px;padding-left:22px}
+.toggle-card.primary{border-color:var(--accent);background:var(--info-bg)}
+.toggle-card.primary .h{color:var(--accent-dark)}
+.toggle-card.success{border-color:var(--success);background:var(--success-bg)}
+.toggle-card.success .h{color:var(--success-ink)}
+.toggle-card.warn{border-color:var(--warning);background:var(--warning-bg)}
+.toggle-card.warn .h{color:var(--warning-ink)}
+
+/* ─ card sample ─ */
+.demo-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:14px;max-width:360px}
+.demo-card .ch{display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--border-soft);margin-bottom:10px}
+.demo-card .ct{font-size:var(--fs-sm);font-weight:600;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.demo-card .cb{margin-left:auto;padding:4px 10px;border-radius:5px;font-size:var(--fs-xs);font-weight:600;background:var(--info-bg);border:1px solid var(--info-line);color:var(--accent);cursor:pointer}
+
+.foot{text-align:center;font-size:var(--fs-xs);color:var(--faint);margin-top:24px}
+</style>
+</head>
+<body>
+
+<div class="pg-head">
+  <h1><span class="ico">🎨</span> SWT Design Language</h1>
+  <p>ตัวอย่างภาษาดีไซน์ทั้งระบบในหน้าเดียว — สี · ตัวอักษร · ปุ่ม · สถานะ · ตาราง · สรุปยอด. ไฟล์ standalone ไม่เกี่ยวกับ mockup หลัก · token ทั้งหมดยกขึ้น <span class="mono">:root</span> (ตัวอย่างการ refactor token layer)</p>
+</div>
+
+<div class="wrap">
+
+  <!-- COLORS -->
+  <div class="sec">
+    <div class="sec-head"><h2>1 · สี (Color Tokens)</h2><span class="tag">tokens</span><span class="note">ใช้ซ้ำสม่ำเสมอทั้งระบบ</span></div>
+
+    <div class="sub">Brand · Accent</div>
+    <div class="swatch-grid">
+      <div class="sw"><div class="chip" style="background:#1E3A5F"></div><div class="meta"><div class="name">Brand Deep</div><div class="hex">#1E3A5F</div><div class="role">sidebar · header เข้ม</div></div></div>
+      <div class="sw"><div class="chip" style="background:#2563EB"></div><div class="meta"><div class="name">Accent</div><div class="hex">#2563EB</div><div class="role">ปุ่ม · ลิงก์ · highlight</div></div></div>
+      <div class="sw"><div class="chip" style="background:#1D4ED8"></div><div class="meta"><div class="name">Accent Strong</div><div class="hex">#1D4ED8</div><div class="role">hover · ตัวเลขเด่น</div></div></div>
+      <div class="sw"><div class="chip" style="background:linear-gradient(90deg,#1E3A5F,#2563EB)"></div><div class="meta"><div class="name">Gradient</div><div class="hex">brand → accent</div><div class="role">header · ยอดรวม (signature)</div></div></div>
+    </div>
+
+    <div class="sub">Semantic</div>
+    <div class="swatch-grid">
+      <div class="sw"><div class="chip" style="background:#10B981"></div><div class="meta"><div class="name">Success</div><div class="hex">#10B981</div><div class="role">ยืนยัน · done</div></div></div>
+      <div class="sw"><div class="chip" style="background:#F59E0B"></div><div class="meta"><div class="name">Warning</div><div class="hex">#F59E0B</div><div class="role">พิจารณา · รออนุมัติ</div></div></div>
+      <div class="sw"><div class="chip" style="background:#EF4444"></div><div class="meta"><div class="name">Danger</div><div class="hex">#EF4444</div><div class="role">ลบ · ยอดหัก</div></div></div>
+      <div class="sw"><div class="chip" style="background:#8B5CF6"></div><div class="meta"><div class="name">Purple Accent</div><div class="hex">#8B5CF6</div><div class="role">action เด่น · VAT</div></div></div>
+    </div>
+
+    <div class="sub">Neutrals</div>
+    <div class="swatch-grid">
+      <div class="sw"><div class="chip" style="background:#111827"></div><div class="meta"><div class="name">Ink</div><div class="hex">#111827</div><div class="role">ข้อความหลัก</div></div></div>
+      <div class="sw"><div class="chip" style="background:#6B7280"></div><div class="meta"><div class="name">Muted</div><div class="hex">#6B7280</div><div class="role">label · caption</div></div></div>
+      <div class="sw"><div class="chip" style="background:#9CA3AF"></div><div class="meta"><div class="name">Faint</div><div class="hex">#9CA3AF</div><div class="role">placeholder</div></div></div>
+      <div class="sw"><div class="chip" style="background:#E5E7EB"></div><div class="meta"><div class="name">Border</div><div class="hex">#E5E7EB</div><div class="role">เส้นขอบมาตรฐาน</div></div></div>
+      <div class="sw"><div class="chip" style="background:#F8FAFC;border-bottom:1px solid #E5E7EB"></div><div class="meta"><div class="name">Surface 2</div><div class="hex">#F8FAFC</div><div class="role">พื้น thead · card อ่อน</div></div></div>
+    </div>
+
+    <div class="sub">คู่สี Semantic (bg อ่อน + text เข้ม) — pattern เดียวกันทั้ง pill / badge / node</div>
+    <div class="pair-grid">
+      <div class="pair s"><div class="h">✓ Success</div><div class="d">#ECFDF5 · #065F46</div></div>
+      <div class="pair w"><div class="h">⏳ Warning</div><div class="d">#FEF3C7 · #92400E</div></div>
+      <div class="pair d"><div class="h">✕ Danger</div><div class="d">#FEF2F2 · #991B1B</div></div>
+      <div class="pair i"><div class="h">ℹ Info</div><div class="d">#EFF6FF · #0C4A6E</div></div>
+      <div class="pair p"><div class="h">⚖ Purple</div><div class="d">#F3E8FF · #6D28D9</div></div>
+    </div>
+  </div>
+
+  <!-- TYPE -->
+  <div class="sec">
+    <div class="sec-head"><h2>2 · ตัวอักษร (Typography)</h2><span class="tag">scale</span><span class="note">Inter + Noto Sans Thai · ตัวเลข = Inter/mono</span></div>
+    <div class="type-row"><span class="tk">--fs-xl</span><span class="px">18px</span><span class="demo" style="font-size:18px;font-weight:700">หัวเรื่องเอกสาร · ใบเสนอราคา</span></div>
+    <div class="type-row"><span class="tk">--fs-lg</span><span class="px">16px</span><span class="demo" style="font-size:16px;font-weight:700">หัวข้อ section</span></div>
+    <div class="type-row"><span class="tk">--fs-md</span><span class="px">14px</span><span class="demo" style="font-size:14px;font-weight:600">ยอดรวมเงิน · 103,439.00</span></div>
+    <div class="type-row"><span class="tk">--fs-base</span><span class="px">13px</span><span class="demo" style="font-size:13px">เนื้อความหลัก / ฐานของระบบ</span></div>
+    <div class="type-row"><span class="tk">--fs-sm</span><span class="px">12px</span><span class="demo" style="font-size:12px">ข้อความในฟอร์ม · ปุ่ม · field</span></div>
+    <div class="type-row"><span class="tk">--fs-xs</span><span class="px">11px</span><span class="demo" style="font-size:11px">caption · sub-label</span></div>
+    <div class="type-row"><span class="tk">--fs-2xs</span><span class="px">10px</span><span class="demo" style="font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:#6B7280;font-weight:600">FIELD LABEL · UPPERCASE</span></div>
+    <div class="sub" style="margin-top:18px">ตัวเลขเงิน / รหัสเอกสาร = monospace เสมอ</div>
+    <div class="mono" style="font-size:14px;color:#1D4ED8;font-weight:700">08QT-2604-0015 &nbsp; · &nbsp; 1,234,567.00 บาท</div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="sec">
+    <div class="sec-head"><h2>3 · ปุ่ม (Buttons)</h2><span class="tag">component</span></div>
+    <div class="btn-row">
+      <button class="btn btn-primary">✔ Primary</button>
+      <button class="btn btn-success">✔ บันทึก</button>
+      <button class="btn btn-accent">📤 Action เด่น</button>
+      <button class="btn btn-outline">📂 เปิดเอกสารเก่า</button>
+      <button class="btn btn-ghost">⋯ เพิ่มเติม</button>
+    </div>
+  </div>
+
+  <!-- STATUS -->
+  <div class="sec">
+    <div class="sec-head"><h2>4 · สถานะ (Pills · Flow · Doc-chain)</h2><span class="tag">component</span></div>
+    <div class="sub">Pills / Badges</div>
+    <div class="btn-row">
+      <span class="pill pill-success">✓ ยืนยันแล้ว</span>
+      <span class="pill pill-warning">⏳ รออนุมัติ</span>
+      <span class="pill pill-danger">⚠ เกินวงเงิน</span>
+      <span class="pill pill-info">฿ VAT 7%</span>
+      <span class="pill pill-neutral">ร่าง</span>
+      <span class="wh-badge">HQ สนง.ใหญ่</span>
+    </div>
+    <div class="sub">Maker–Checker / Status flow</div>
+    <div class="qt-flow">
+      <span class="flow-node done">Maker ✓ สร้าง</span><span class="flow-arrow">→</span>
+      <span class="flow-node current">Checker ⏱ อนุมัติ</span><span class="flow-arrow">→</span>
+      <span class="flow-node pending">โพสต์ BC365</span>
+    </div>
+    <div class="sub">Doc-chain (แถบล่างทุกหน้า)</div>
+    <div class="qt-flow">
+      <span class="flow-node done">QT ✓</span><span class="flow-arrow">→</span>
+      <span class="flow-node current">SO (ปัจจุบัน)</span><span class="flow-arrow">→</span>
+      <span class="flow-node pending">DO</span><span class="flow-arrow">→</span>
+      <span class="flow-node pending">INV</span>
+    </div>
+  </div>
+
+  <!-- CARD + FIELDS -->
+  <div class="sec">
+    <div class="sec-head"><h2>5 · การ์ด · ฟอร์ม (Card · Fields)</h2><span class="tag">component</span></div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap">
+      <div class="demo-card">
+        <div class="ch"><div class="ct"><span>👤</span> ลูกค้า (Customer)</div><button class="cb">🔍 เลือก/เปลี่ยน</button></div>
+        <div class="field-grid" style="max-width:none">
+          <div class="field"><div class="field-label">รหัส · ชื่อ</div><div class="field-value"><span class="highlight">C-00142</span> · บ.ตัวอย่าง</div></div>
+          <div class="field"><div class="field-label">เลขภาษี</div><div class="field-value">0-1055-xxxxx</div></div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:280px">
+        <div class="sub" style="margin-top:0">Input states</div>
+        <div class="field-grid">
+          <div class="field"><div class="field-label">ปกติ</div><input class="inp" value="พิมพ์ข้อความ…"></div>
+          <div class="field"><div class="field-label">โฟกัส (คลิกดู)</div><input class="inp" placeholder="คลิกที่ช่องนี้"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="sec">
+    <div class="sec-head"><h2>6 · ตารางรายการ (Items Table)</h2><span class="tag">component</span><span class="note">เส้น grid ทุกช่อง · thead sticky</span></div>
+    <table class="items">
+      <thead><tr><th>#</th><th>SKU</th><th>ชื่อสินค้า · Stock</th><th>คลัง</th><th>จำนวน</th><th style="text-align:right">ราคา/หน่วย</th><th style="text-align:right">รวม</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td><td><span class="item-code">AC-09-INV</span></td>
+          <td><div style="font-weight:500">แอร์ Inverter 9,000 BTU</div><div class="item-model">รุ่น ABC-9K</div><div style="margin-top:3px"><span class="stock-chip ok">✓ Stock: 145</span></div></td>
+          <td><span class="wh-badge">HQ</span></td>
+          <td style="text-align:center">2</td><td class="item-price">29,900.00</td><td class="item-total">56,810.00</td>
+        </tr>
+        <tr>
+          <td>2</td><td><span class="item-code">FN-16-STD</span></td>
+          <td><div style="font-weight:500">พัดลมตั้งพื้น 16"</div><div class="item-model">รุ่น F-16</div><div style="margin-top:3px"><span class="stock-chip low">⚠ Stock: 4</span></div></td>
+          <td><span class="wh-badge">สาขา 08</span></td>
+          <td style="text-align:center">10</td><td class="item-price">890.00</td><td class="item-total">8,900.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SUMMARY + TOGGLE -->
+  <div class="sec">
+    <div class="sec-head"><h2>7 · สรุปยอด · การ์ดเลือก (Summary · Toggle)</h2><span class="tag">component</span></div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start">
+      <div class="summary">
+        <div class="sub" style="margin-top:0">Summary (VAT Golden Rule — หักส่วนลดก่อน VAT)</div>
+        <div class="summary-row"><span class="lbl">รวมจำนวนเงิน</span><span class="val">101,723.00</span></div>
+        <div class="summary-row"><span class="lbl">ส่วนลด</span><span class="val" style="color:#EF4444">-5,100.00</span></div>
+        <div class="summary-row"><span class="lbl">ยอดก่อนภาษี ⚖</span><span class="val">96,623.00</span></div>
+        <div class="summary-row"><span class="lbl">ภาษีมูลค่าเพิ่ม 7%</span><span class="val">6,816.00</span></div>
+        <div class="summary-total"><span>รวมเงินทั้งสิ้น</span><span class="val">103,439.00</span></div>
+      </div>
+      <div style="flex:1;min-width:300px">
+        <div class="sub" style="margin-top:0">Toggle cards (radio แบบมีไอคอน + คำอธิบาย)</div>
+        <div class="toggle-group">
+          <label class="toggle-card primary"><div class="h">⚡ Run-ASAP</div><div class="d">เปิดใช้ทันที · Phase 1</div></label>
+          <label class="toggle-card success"><div class="h">✓ ยืนยันแล้ว</div><div class="d">ผ่านอนุมัติครบ</div></label>
+          <label class="toggle-card warn"><div class="h">⏳ พิจารณา</div><div class="d">รอ Checker</div></label>
+          <label class="toggle-card"><div class="h">○ ปกติ</div><div class="d">ยังไม่เลือก</div></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">SWT Design Language Preview · standalone · ไม่กระทบ mockup หลัก หรือ swt-patterns.css/js</div>
+
+</div>
+</body></html>

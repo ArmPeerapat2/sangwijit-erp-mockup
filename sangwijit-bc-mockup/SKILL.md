@@ -31,7 +31,7 @@ Format: `{module-code}{n}-{slug}-mockup[-v<N>].html`
 ตัวอย่าง:
 - `sl1-quotation-mockup.html`
 - `po4-purchase-order-mockup.html`
-- `wh1-grn-mockup.html`
+- `wh1-receive-mockup.html`
 - `md1-item-master-mockup-v3.html`
 - `cf2-5-tech-template-mockup.html`
 

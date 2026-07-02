@@ -35,11 +35,11 @@
 
 | ไฟล์ | Module | วัตถุประสงค์ | ฟิลด์หลัก |
 |-----|--------|-------------|----------|
-| `wh-queue-mockup.html` | WH-Q | Queue คลังทั้งระบบ (receive/transfer/issue/count) | SLA, priority, aging |
-| `wh1-grn-mockup.html` | WH-1 | รับสินค้า GRN จาก PO | PO ref, expected vs received, serial/lot |
-| `wh2-stock-transfer-mockup.html` | WH-2 | โอนย้ายระหว่างคลัง/สาขา | From-To location, transit, receive status |
-| `wh4-stock-count-mockup.html` | WH-3 | นับสต็อก + ปรับยอด | Count sheet, variance, adjustment reason |
-| `wh3-sales-issue-mockup.html` | WH-R | เบิกสินค้า / Goods Issue | Issue type (sales/service), stock card |
+| `wh-q-dashboard-mockup.html` | WH-Q | Queue คลังทั้งระบบ (receive/transfer/issue/count) | SLA, priority, aging |
+| `wh1-receive-mockup.html` | WH-1 | รับสินค้า GRN จาก PO | PO ref, expected vs received, serial/lot |
+| `wh3-transfer-mockup.html` | WH-2 | โอนย้ายระหว่างคลัง/สาขา | From-To location, transit, receive status |
+| `wh4-count-mockup.html` | WH-3 | นับสต็อก + ปรับยอด | Count sheet, variance, adjustment reason |
+| `wh-q2-issue-queue-mockup.html` | WH-R | เบิกสินค้า / Goods Issue | Issue type (sales/service), stock card |
 
 ---
 

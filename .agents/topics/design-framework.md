@@ -52,7 +52,7 @@
 อยู่ใน `swt-link.js` `var DOC_MAP`. เพิ่ม prefix ใหม่ต้องชี้หน้าจริงเสมอ.
 
 - **Sales:** QT/QUO→sl1 · RES→sl2 · DPS/DEP→sl3 · SO/INV/BIL→sl4 · CRM→sl5 · PROMO→sl6 · CRD/CRA→slf1
-- **Purchase:** PR→po1 · RFQ→po2 · PO→po4 · VBL/VINV→po6 · REB→po7
+- **Purchase:** PR→po1 · RFQ→po2 · PO→po4 · VBL/VINV→po3 · AP→po6 · REB→po7
 - **Warehouse:** GRN/REC→wh1 · TRN/TRF→wh2 · STK/CNT→wh4 · GIS/ISS→wh3
 - **Service:** SVC/SVQ→sv-q · SIR→sir · SQT→sqt · SIN→sv4-close · SPR→sv3 · WAR→sv1-intake · JOB→sv5
 - **Finance:** RV→fi1 · PAY/PV→fi2 · **TAX/VAT→fi7** · **BR→fi3-bank** · EXP→fi4 · **WHT→fi12** · JV→fi13 · URC/UAR→fi1q
@@ -71,4 +71,4 @@
 - ✅ DOC_MAP ซ่อมแล้ว (swt-link.js)
 - ✅ swt-patterns.css ครบ **78/78 ไฟล์** (rollout 2026-05-30 · verified โหลด + layout ไม่ overflow)
 - ⏳ page shell เก่า (page-title) 31 ไฟล์ รอ migrate (ทำตอน redesign กลุ่ม)
-- ⏳ data-customer-search under-wired (3 ไฟล์ · เติมตอน redesign กลุ่ม)
+- ⏳ data-customer-search under-wired (3 ไฟล์ · เติมตอน redesign ก�

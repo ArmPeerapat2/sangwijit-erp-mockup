@@ -1,413 +1,602 @@
 <!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=1440">
-<title>SL-F1 Credit Approval — อนุมัติวงเงิน | Sangwijit ERP Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<html lang="th"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SL-F1 อนุมัติวงเงินขาย — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:'Inter','Noto Sans Thai',sans-serif; background:#F3F4F6; color:#111827; min-width:1440px; }
-.layout { display:flex; min-height:100vh; }
-.main { flex:1; display:flex; flex-direction:column; }
-
-.topbar { height:56px; background:#fff; border-bottom:1px solid #E5E7EB; display:flex; align-items:center; padding:0 24px; gap:16px; }
-.topbar-breadcrumb { display:flex; align-items:center; gap:6px; font-size:12px; color:#6B7280; }
-.topbar-breadcrumb .current { color:#2563EB; font-weight:600; }
-.topbar-breadcrumb .sep { color:#D1D5DB; }
-.topbar-spacer { flex:1; }
-.topbar-search { display:flex; align-items:center; gap:8px; background:#F3F4F6; border-radius:8px; padding:6px 12px; font-size:13px; color:#9CA3AF; width:220px; cursor:pointer; }
-.topbar-icon { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#F3F4F6; cursor:pointer; font-size:16px; position:relative; }
-.topbar-dot { position:absolute; top:6px; right:6px; width:8px; height:8px; background:#EF4444; border-radius:50%; border:2px solid #fff; }
-.topbar-avatar { width:32px; height:32px; border-radius:50%; background:#2563EB; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; }
-.branch-tag { background:#EFF6FF; border:1px solid #BFDBFE; color:#1D4ED8; font-size:11px; font-weight:600; padding:4px 10px; border-radius:20px; }
-
-.page { flex:1; overflow-y:auto; padding:28px 32px; display:flex; flex-direction:column; gap:22px; }
-.page-head { display:flex; align-items:flex-start; gap:14px; }
-.page-title { font-size:22px; font-weight:700; color:#111827; }
-.page-sub { font-size:13px; color:#6B7280; margin-top:4px; }
-.code-badge { background:rgba(124,58,237,0.1); color:#7C3AED; font-size:12px; font-weight:700; padding:4px 12px; border-radius:20px; border:1px solid rgba(124,58,237,0.2); }
-
-/* KPI cards */
-.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
-.kpi { background:#fff; border:1px solid #E5E7EB; border-radius:12px; padding:16px 18px; }
-.kpi-lbl { font-size:11px; color:#6B7280; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; }
-.kpi-val { font-size:24px; font-weight:700; color:#111827; margin-top:6px; }
-.kpi-sub { font-size:11px; color:#94A3B8; margin-top:3px; }
-.kpi.urgent { border-left:3px solid #EF4444; }
-.kpi.warn { border-left:3px solid #F59E0B; }
-.kpi.ok { border-left:3px solid #10B981; }
-
-/* layout 2 cols */
-.split { display:grid; grid-template-columns: 1.2fr 1fr; gap:20px; }
-.card { background:#fff; border:1px solid #E5E7EB; border-radius:12px; overflow:hidden; }
-.card-head { padding:14px 22px; border-bottom:1px solid #F1F5F9; display:flex; align-items:center; gap:10px; background:#FAFBFC; }
-.card-title { font-size:14px; font-weight:600; color:#374151; flex:1; }
-.card-tag { font-size:10px; font-weight:600; padding:2px 8px; border-radius:10px; background:rgba(124,58,237,0.1); color:#7C3AED; }
-.card-body { padding:18px 22px; }
-
-/* queue */
-.queue-row { display:grid; grid-template-columns:36px 1.2fr 1fr 1fr auto; gap:14px; padding:14px 22px; border-bottom:1px solid #F3F4F6; align-items:center; cursor:pointer; transition:background .12s; }
-.queue-row:last-child { border-bottom:none; }
-.queue-row:hover { background:#F8FAFC; }
-.queue-row.active { background:#EFF6FF; border-left:3px solid #2563EB; padding-left:19px; }
-.q-num { background:#F1F5F9; color:#475569; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; }
-.q-doc { font-size:13px; font-weight:600; color:#2563EB; }
-.q-cust { font-size:12px; color:#374151; margin-top:2px; }
-.q-amt { font-size:14px; font-weight:700; color:#111827; font-variant-numeric:tabular-nums; }
-.q-amt-sub { font-size:11px; color:#6B7280; margin-top:2px; }
-.q-flag { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:10px; font-size:10.5px; font-weight:700; }
-.q-flag.over { background:#FEE2E2; color:#991B1B; }
-.q-flag.aging { background:#FEF3C7; color:#92400E; }
-.q-flag.tier { background:#EDE9FE; color:#5B21B6; }
-.q-age { font-size:11px; color:#6B7280; }
-
-/* credit detail card */
-.gauge { position:relative; height:14px; background:#F1F5F9; border-radius:7px; overflow:hidden; margin-top:10px; }
-.gauge-fill { height:100%; transition:width .4s; border-radius:7px; }
-.gauge-fill.ok { background:linear-gradient(90deg,#10B981,#059669); }
-.gauge-fill.warn { background:linear-gradient(90deg,#F59E0B,#D97706); }
-.gauge-fill.over { background:linear-gradient(90deg,#EF4444,#DC2626); }
-.gauge-marks { display:flex; justify-content:space-between; margin-top:6px; font-size:10px; color:#94A3B8; }
-.metric-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed #E5E7EB; font-size:13px; }
-.metric-row:last-child { border-bottom:none; }
-.metric-row .l { color:#6B7280; }
-.metric-row .v { font-weight:600; color:#111827; font-variant-numeric:tabular-nums; }
-.metric-row .v.bad { color:#DC2626; }
-
-.aging-bar { display:flex; height:36px; border-radius:8px; overflow:hidden; margin-top:14px; border:1px solid #E5E7EB; }
-.aging-seg { display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; padding:0 8px; }
-.aging-seg.b1 { background:#10B981; }
-.aging-seg.b2 { background:#84CC16; }
-.aging-seg.b3 { background:#F59E0B; }
-.aging-seg.b4 { background:#EF4444; }
-.aging-legend { display:flex; gap:14px; margin-top:8px; font-size:11px; color:#475569; }
-.aging-legend span::before { content:""; display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:-1px; }
-.aging-legend .l1::before { background:#10B981; }
-.aging-legend .l2::before { background:#84CC16; }
-.aging-legend .l3::before { background:#F59E0B; }
-.aging-legend .l4::before { background:#EF4444; }
-
-/* approval workflow */
-.flow { display:flex; align-items:center; gap:0; padding:8px 0; }
-.flow-step { flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; }
-.flow-circle { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; border:3px solid; }
-.flow-circle.done { background:#10B981; border-color:#10B981; color:#fff; }
-.flow-circle.current { background:#EFF6FF; border-color:#2563EB; color:#2563EB; }
-.flow-circle.next { background:#F8FAFC; border-color:#E5E7EB; color:#9CA3AF; }
-.flow-line { flex:1; height:3px; margin-bottom:34px; }
-.flow-line.done { background:#10B981; }
-.flow-line.pending { background:#E5E7EB; }
-.flow-label { font-size:11px; font-weight:600; color:#374151; text-align:center; }
-.flow-meta { font-size:10px; color:#6B7280; text-align:center; }
-
-/* action bar */
-.act-bar { padding:18px 22px; background:#FAFBFC; border-top:1px solid #F1F5F9; display:flex; align-items:center; gap:10px; }
-.btn { padding:9px 18px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; border:1px solid transparent; transition:all .12s; display:inline-flex; align-items:center; gap:6px; }
-.btn-approve { background:#10B981; color:#fff; }
-.btn-approve:hover { background:#059669; }
-.btn-reject { background:#fff; color:#DC2626; border-color:#FECACA; }
-.btn-reject:hover { background:#FEF2F2; }
-.btn-ghost { background:#fff; color:#374151; border-color:#E5E7EB; }
-.btn-ghost:hover { background:#F8FAFC; }
-.btn-warn { background:#F59E0B; color:#fff; }
-.btn-warn:hover { background:#D97706; }
-
-.alert { display:flex; gap:12px; padding:12px 16px; border-radius:10px; font-size:12.5px; line-height:1.5; }
-.alert.danger { background:#FEF2F2; border:1px solid #FECACA; color:#7F1D1D; }
-.alert.warn { background:#FFFBEB; border:1px solid #FDE68A; color:#78350F; }
-.alert.info { background:#EFF6FF; border:1px solid #BFDBFE; color:#1E3A8A; }
-
-.checker-warn { background:#FEF2F2; border:2px dashed #FCA5A5; padding:14px 18px; border-radius:10px; font-size:13px; color:#7F1D1D; display:flex; align-items:center; gap:12px; }
+/* ═══ SL-F1 อนุมัติวงเงินขาย — q-page · 2 เหตุผล (เครดิต + ราคาต่ำกว่า floor) · CF-2.6 Approval Matrix · Maker≠Checker ═══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#111827;min-width:1440px;font-size:13px;line-height:1.45;height:100vh;overflow:hidden}
+.layout{display:flex;height:100vh;overflow:hidden}
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;margin-left:240px}
+.topbar-search{display:flex;align-items:center;gap:8px;background:#F3F4F6;border-radius:8px;padding:6px 12px;font-size:13px;color:#9CA3AF;width:220px}
+.topbar-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#F3F4F6;cursor:pointer;font-size:16px}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:#7C3AED;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.branch-sel{background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;font-size:11px;font-weight:600;padding:4px 8px;border-radius:20px;font-family:inherit;cursor:pointer}
+.mh-title{display:flex;align-items:center;gap:10px}
+.mh-title .ico{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+.mh-title h1{font-size:16px;font-weight:700}
+.mh-title p{font-size:11px;color:rgba(255,255,255,0.7);margin-top:1px}
+.mh-right{display:flex;gap:8px}
+.mh-btn{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:6px 12px;border-radius:6px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.mh-btn:hover{background:rgba(255,255,255,0.22)}
+.content{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi .c{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:12px 14px;cursor:pointer}
+.kpi .c:hover{border-color:#7C3AED;box-shadow:0 2px 8px rgba(124,58,237,0.08)}
+.kpi .c.warn{border-left:3px solid #F59E0B}
+.kpi .c.urgent{border-left:3px solid #EF4444}
+.kpi .c.ok{border-left:3px solid #10B981}
+.kpi .l{font-size:11px;color:#6B7280;font-weight:600;margin-bottom:4px}
+.kpi .v{font-size:22px;font-weight:700;color:#111827;font-feature-settings:"tnum"}
+.kpi .s{font-size:11px;color:#9CA3AF;margin-top:2px}
+.xlink{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:10px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.xlink .lbl{font-size:11px;color:#9CA3AF;font-weight:600}
+.xlink a{font-size:12px;color:#7C3AED;font-weight:600;text-decoration:none;padding:3px 8px;border-radius:5px;border:1px solid #EDE9FE;background:#F5F3FF}
+.xlink a:hover{background:#EDE9FE}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;background:#fff;border:1px solid #E5E7EB;color:#6B7280;display:inline-flex;align-items:center;gap:5px}
+.chip.on{background:#7C3AED;border-color:#7C3AED;color:#fff}
+.chip .n{background:rgba(0,0,0,0.08);border-radius:10px;padding:0 6px;font-size:10px}
+.chip.on .n{background:rgba(255,255,255,0.2)}
+.tbl-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;flex:1;display:flex;flex-direction:column;min-height:0}
+.tbl-wrap{overflow:auto;flex:1}
+table.q{width:100%;border-collapse:collapse;font-size:12.5px}
+table.q th{padding:9px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB;text-align:left;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.03em;white-space:nowrap}
+table.q td{padding:9px 12px;border-bottom:1px solid #F3F4F6;vertical-align:middle}
+table.q tr.grp td{background:#F5F3FF;font-size:11px;font-weight:700;color:#5B21B6;padding:6px 12px}
+table.q tr.grp .n{font-weight:400;color:#7C3AED;margin-left:8px}
+table.q tr[data-bk]:hover td{background:#F5F3FF;cursor:pointer}
+.dno{font-family:monospace;font-weight:700;color:#7C3AED;font-size:12px}
+.src-ref{font-size:11px;color:#9CA3AF}
+.dtype{background:#EDE9FE;color:#5B21B6;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;font-family:monospace}
+.amt{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.over-amt{color:#DC2626;font-weight:700;font-size:11px}
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700}
+.b-sla{background:#FEF3C7;color:#92400E}
+.b-limit{background:#FEE2E2;color:#B91C1C}
+.b-aging{background:#DBEAFE;color:#1D4ED8}
+.b-price{background:#FCE7F3;color:#9D174D}
+.b-ok{background:#D1FAE5;color:#047857}
+.tier-1{background:#ECFDF5;color:#047857;border:1px solid #A7F3D0}
+.tier-2{background:#DBEAFE;color:#1D4ED8;border:1px solid #93C5FD}
+.tier-3{background:#FEE2E2;color:#B91C1C;border:1px solid #FCA5A5}
+.tier-badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700}
+.age-ok{color:#6B7280}
+.age-warn{color:#B45309;font-weight:700}
+.age-over{color:#DC2626;font-weight:700}
+.row-btn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #7C3AED;background:#F5F3FF;color:#7C3AED;font-family:inherit}
+.row-btn:hover{background:#7C3AED;color:#fff}
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto}
+.mbg.on{display:flex}
+.mdl{background:#fff;border-radius:10px;width:720px;max-width:96vw;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
+.mdl-hd{background:linear-gradient(90deg,#4C1D95,#7C3AED);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.mdl-hd h3{font-size:14px;font-weight:700;flex:1}
+.mdl-hd .x{cursor:pointer;opacity:.8}
+.mdl-bd{padding:16px;max-height:64vh;overflow-y:auto}
+.mdl-ft{padding:12px 16px;border-top:1px solid #E5E7EB;display:flex;gap:8px;justify-content:flex-end;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
+.btn-outline{background:#fff;color:#374151;border-color:#E5E7EB}
+.btn-approve{background:#10B981;color:#fff}
+.btn-reject{background:#DC2626;color:#fff}
+.btn-cond{background:#F59E0B;color:#fff}
+.mgrid{display:grid;grid-template-columns:auto 1fr auto 1fr;gap:7px 14px;font-size:12.5px;margin-bottom:12px}
+.mgrid label{color:#9CA3AF;font-weight:600;font-size:11px}
+.mgrid span{font-weight:500}
+.sec{border:1px solid #E5E7EB;border-radius:8px;padding:12px;margin-top:10px}
+.sec-h{font-size:12px;font-weight:700;color:#374151;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ro-badge{font-size:9.5px;font-weight:700;background:#F3F4F6;color:#6B7280;border:1px solid #E5E7EB;border-radius:4px;padding:1px 6px;margin-left:auto}
+.gauge-wrap{margin:6px 0}
+.gauge-lbl{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
+.gauge{height:8px;background:#F1F5F9;border-radius:4px;overflow:hidden}
+.gauge-fill{height:100%;border-radius:4px;background:#10B981}
+.gauge-fill.over{background:#DC2626}
+.creditline{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;font-size:11.5px}
+.creditline .cl{background:#F9FAFB;border:1px solid #F3F4F6;border-radius:6px;padding:7px 9px}
+.creditline .cl .cl-l{font-size:10px;color:#9CA3AF;font-weight:600}
+.creditline .cl .cl-v{font-weight:700;font-variant-numeric:tabular-nums}
+.creditline .cl.red .cl-v{color:#DC2626}
+.mini-tbl{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:4px}
+.mini-tbl th{background:#F9FAFB;color:#6B7280;font-weight:700;font-size:10px;text-transform:uppercase;padding:5px 8px;text-align:left;border-bottom:1px solid #E5E7EB}
+.mini-tbl td{padding:5px 8px;border-bottom:1px solid #F3F4F6;font-variant-numeric:tabular-nums}
+.mini-tbl td.r,.mini-tbl th.r{text-align:right}
+.mini-tbl .neg{color:#DC2626;font-weight:700}
+.sg-grid{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:12px}
+.sg-grid label{color:#9CA3AF;font-weight:600;font-size:11px}
+.flow-pills{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px}
+.fpill{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;border:1px solid #E5E7EB;background:#F9FAFB;color:#6B7280}
+.fpill.done{background:#D1FAE5;color:#065F46;border-color:#A7F3D0}
+.fpill.active{background:#7C3AED;color:#fff;border-color:#7C3AED}
+.alert-policy{background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:10px 12px;font-size:11.5px;color:#92400E;margin-top:10px}
+.audit-note{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:8px 12px;font-size:11px;color:#1D4ED8;margin-top:8px}
+.reject-box{margin-top:10px;display:none}
+.reject-box textarea{width:100%;min-height:70px;border:1px solid #E5E7EB;border-radius:6px;padding:8px 10px;font-size:12px;font-family:inherit;resize:vertical}
+.tabs{margin-top:12px;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden}
+.tab-nav{display:flex;background:#F9FAFB;border-bottom:1px solid #E5E7EB;flex-wrap:wrap}
+.tab-btn{flex:1;padding:8px 10px;font-size:11.5px;font-weight:600;color:#6B7280;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;white-space:nowrap}
+.tab-btn:hover{background:#F3F4F6;color:#374151}
+.tab-btn.on{color:#7C3AED;border-bottom-color:#7C3AED;background:#fff}
+.tab-pane{display:none;padding:12px}
+.tab-pane.on{display:block}
+.tab-empty{font-size:11.5px;color:#9CA3AF;text-align:center;padding:14px}
+.mini-tbl tr.low td{background:#FEF2F2}
+.pay-ok{color:#047857;font-weight:700}
+.pay-late{color:#DC2626;font-weight:700}
+.res-ok{color:#047857;font-weight:700}
+.res-no{color:#DC2626;font-weight:700}
+.trd-row{cursor:pointer}
+.trd-row:hover td{background:#F5F3FF}
+.trd-cv{display:inline-block;width:12px;color:#7C3AED;font-weight:700}
+.trd-det>td{background:#FAFAFE!important;padding:8px 10px}
+.trd-sub{font-size:11px;font-weight:700;color:#5B21B6;margin-bottom:4px}
+.trd-pay{font-size:11px;color:#065F46;margin-top:6px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:5px;padding:5px 8px}
+.cond-box{margin-top:10px;display:none;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:10px 12px}
+.cond-box .cb-h{font-size:12px;font-weight:700;color:#92400E;margin-bottom:6px}
+.cond-box .cb-l{display:block;font-size:11px;font-weight:600;color:#6B7280;margin:6px 0 3px}
+.cond-box .cb-date{border:1px solid #E5E7EB;border-radius:6px;padding:6px 10px;font-size:12px;font-family:inherit}
+.cond-box textarea{width:100%;min-height:56px;border:1px solid #E5E7EB;border-radius:6px;padding:8px 10px;font-size:12px;font-family:inherit;resize:vertical}
+.btn-cond.on{background:#B45309}
 </style>
   <link rel="stylesheet" href="swt-patterns.css">
 </head>
 <body>
-
 <div class="layout">
-  <div class="main">
-    <div class="topbar">
-      <div class="topbar-breadcrumb">
-        <span>งานขาย</span><span class="sep">›</span>
-        <span class="current">SL-F1 อนุมัติวงเงินเครดิต</span>
+<div class="main">
+
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">งานขาย <span class="sep">›</span> <span class="current">อนุมัติวงเงินขาย (SL-F1)</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+        <div class="topbar-icon">🔔</div>
+        <select class="branch-sel"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option></select>
+        <div class="topbar-avatar">สว</div>
       </div>
-      <span class="branch-tag">SWT · บจก.สังวิจิตร</span>
-      <div class="topbar-spacer"></div>
-      <div class="topbar-search" onclick="if(window.swtOpenSearch)swtOpenSearch()">🔍 ค้นหา (กด /)</div>
-      <div class="topbar-icon">🔔<div class="topbar-dot"></div></div>
-      <div class="topbar-avatar">วช</div>
+    </div>
+    <div class="uh-main">
+      <div class="mh-title"><div class="ico">🔐</div><div><h1>อนุมัติวงเงินขาย (Credit Approval)</h1><p>ด่านอนุมัติฝั่งขาย 2 เหตุผล: เกินวงเงิน/ค้างเกิน term · ราคาต่ำกว่าขั้นต่ำ (floor) · CF-2.6 Approval Matrix · Maker ≠ Checker</p></div></div>
+      <div class="mh-right">
+        <button class="mh-btn" onclick="location.href='slq-sales-queue-mockup.html'">📋 คิวงานขาย (SL-Q)</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="kpi">
+      <div class="c urgent"><div class="l">⏳ รอ Approve</div><div class="v">8</div><div class="s">คำขอที่เซลส์รออยู่</div></div>
+      <div class="c warn"><div class="l">⚠️ ใกล้เกิน SLA (&gt;4 ชม.)</div><div class="v">2</div><div class="s">ต้องอนุมัติก่อน 17:00</div></div>
+      <div class="c ok"><div class="l">✅ อนุมัติวันนี้</div><div class="v">12</div><div class="s">เกินวงเงิน 9 · ราคา 3</div></div>
+      <div class="c"><div class="l">✕ ปฏิเสธวันนี้</div><div class="v">1</div><div class="s">ตีกลับให้เซลส์แก้</div></div>
     </div>
 
-    <div class="page">
-      <div class="page-head">
-        <div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <span class="page-title">อนุมัติวงเงินเครดิต (SL Credit Approval)</span>
-            <span class="code-badge">SL-F1</span>
-          </div>
-          <div class="page-sub">เฉพาะ SL — ใบเสนอราคา/ใบสั่งขายที่ <b>เกินวงเงิน</b> หรือ <b>ลูกค้าค้างชำระเกิน term</b> · ผ่าน CF-2.6 Approval Matrix · Maker ≠ Checker</div>
+    <div class="xlink">
+      <span class="lbl">เชื่อมโยง:</span>
+      <a href="slq-sales-queue-mockup.html">📋 SL-Q คิวงานขาย</a>
+      <a href="bc365/sl1-quotation-mockup.html">📄 SL-1 ใบเสนอราคา</a>
+      <a href="sl2-reservation-mockup.html">📑 SL-2 ใบจอง</a>
+      <a href="sl4-invoice-mockup.html">🧾 SL-4 บิลขาย</a>
+      <a href="slcn-credit-memo-mockup.html">↩️ SL-CN ใบลดหนี้</a>
+      <a href="bc365/cf2-6-approval-matrix-mockup.html">⚖️ CF-2.6 เมทริกซ์อนุมัติ</a>
+    </div>
+
+    <div class="chips" id="chips">
+      <span class="chip on" data-k="all" onclick="filterChip('all',this)">ทั้งหมด<span class="n">8</span></span>
+      <span class="chip" data-k="limit" onclick="filterChip('limit',this)">💳 เกินวงเงินเครดิต<span class="n">4</span></span>
+      <span class="chip" data-k="aging" onclick="filterChip('aging',this)">⏰ ค้างชำระเกิน term<span class="n">2</span></span>
+      <span class="chip" data-k="price" onclick="filterChip('price',this)">💲 ราคาต่ำกว่าขั้นต่ำ (floor)<span class="n">2</span></span>
+    </div>
+
+    <div class="tbl-card">
+      <div class="tbl-wrap">
+        <table class="q">
+          <thead><tr><th>เลขคำขอ</th><th>ต้นทาง</th><th>ลูกค้า + ผู้ขอ</th><th style="text-align:right">ยอด</th><th style="text-align:right">ส่วนเกิน/ต่ำกว่า</th><th>เหตุผล</th><th>Tier (CF-2.6)</th><th>อายุ SLA</th><th></th></tr></thead>
+          <tbody id="qRows"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<!-- APPROVAL DETAIL MODAL (q-page rule: row→modal) -->
+<div class="mbg" id="slf1Modal">
+  <div class="mdl">
+    <div class="mdl-hd"><span>🔐</span><h3 id="slf1No">—</h3><span class="x" onclick="closeSlf1()">✕</span></div>
+    <div class="mdl-bd">
+      <div class="flow-pills">
+        <span class="fpill done">1. เซลส์สร้างเอกสาร</span>
+        <span class="fpill done">2. ระบบตรวจวงเงิน/ราคา</span>
+        <span class="fpill active">3. SL-F1 อนุมัติ (ปัจจุบัน)</span>
+        <span class="fpill">4. เอกสารกลับ Approved</span>
+        <span class="fpill">5. ดำเนินการต่อ</span>
+      </div>
+      <div class="mgrid">
+        <label>ต้นทาง</label><span id="slf1Src">—</span>
+        <label>ลูกค้า</label><span id="slf1Cust">—</span>
+        <label>ยอดเอกสาร</label><span id="slf1Amt">—</span>
+        <label>ส่วนเกิน/ต่ำกว่า</label><span id="slf1Over" style="color:#DC2626;font-weight:700">—</span>
+        <label>เหตุผล</label><span id="slf1Reason">—</span>
+        <label>ผู้ขอ (เซลส์)</label><span id="slf1Sales">—</span>
+        <label>Tier (CF-2.6)</label><span id="slf1Tier">—</span>
+        <label>อายุ SLA</label><span id="slf1Age">—</span>
+      </div>
+
+      <!-- SECTION: เครดิต (เกินวงเงิน / ค้างเกิน term) -->
+      <div class="sec" id="secCredit" style="display:none">
+        <div class="sec-h">💳 โปรไฟล์เครดิตลูกค้า</div>
+        <div class="gauge-wrap">
+          <div class="gauge-lbl"><span style="color:#6B7280">การใช้วงเงิน (วงเงินอนุมัติ + คำขอนี้)</span><span id="slf1GaugeLbl" style="font-weight:700;color:#DC2626">—</span></div>
+          <div class="gauge"><div class="gauge-fill over" id="slf1Gauge" style="width:0%"></div></div>
+        </div>
+        <div class="creditline">
+          <div class="cl"><div class="cl-l">วงเงินอนุมัติ</div><div class="cl-v" id="clLimit">—</div></div>
+          <div class="cl"><div class="cl-l">ใช้ไป (open SO+AR)</div><div class="cl-v" id="clUsed">—</div></div>
+          <div class="cl"><div class="cl-l">คงเหลือ</div><div class="cl-v" id="clRemain">—</div></div>
+          <div class="cl red"><div class="cl-l">ส่วนเกินคำขอนี้</div><div class="cl-v" id="clOver">—</div></div>
+        </div>
+        <div class="sec-h" style="margin-top:12px">📊 AR Aging ลูกค้า</div>
+        <table class="mini-tbl">
+          <thead><tr><th>Current</th><th class="r">30 วัน</th><th class="r">60 วัน</th><th class="r">90+ วัน</th></tr></thead>
+          <tbody><tr>
+            <td class="r" id="agCur">—</td><td class="r" id="ag30">—</td><td class="r" id="ag60">—</td><td class="r neg" id="ag90">—</td>
+          </tr></tbody>
+        </table>
+        <div class="sec-h" style="margin-top:12px">👥 กลุ่มการขาย (Sales Group)<span class="ro-badge">READ-ONLY · แก้ที่ MD/CF</span></div>
+        <div class="sg-grid">
+          <label>กลุ่ม</label><span id="sgName">—</span>
+          <label>วงเงินรวมกลุ่ม</label><span id="sgLimit">—</span>
+          <label>เงื่อนไข term</label><span id="sgTerm">—</span>
+          <label>ผู้อนุมัติกลุ่ม</label><span id="sgApprover">—</span>
         </div>
       </div>
 
-      <!-- KPI -->
-      <div class="kpi-grid">
-        <div class="kpi urgent">
-          <div class="kpi-lbl">รอ Approve</div>
-          <div class="kpi-val">8</div>
-          <div class="kpi-sub" style="color:#DC2626">↑ 3 จากเมื่อวาน</div>
-        </div>
-        <div class="kpi warn">
-          <div class="kpi-lbl">เกิน SLA (>4 ชม.)</div>
-          <div class="kpi-val">2</div>
-          <div class="kpi-sub">ต้องอนุมัติก่อน 17:00</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-lbl">ยอดรวมรอ</div>
-          <div class="kpi-val">฿ 4.2M</div>
-          <div class="kpi-sub">8 ใบ · เฉลี่ย ฿ 525K</div>
-        </div>
-        <div class="kpi ok">
-          <div class="kpi-lbl">วันนี้อนุมัติแล้ว</div>
-          <div class="kpi-val">12</div>
-          <div class="kpi-sub">ผ่าน 11 · ปฏิเสธ 1</div>
-        </div>
+      <!-- SECTION: ราคาต่ำกว่าขั้นต่ำ (floor) -->
+      <div class="sec" id="secPrice" style="display:none">
+        <div class="sec-h">💲 รายการที่ราคาต่ำกว่าขั้นต่ำ (floor)</div>
+        <table class="mini-tbl">
+          <thead><tr><th>SKU / รายการ</th><th class="r">ราคาขาย</th><th>ฐาน floor</th><th>สาขา</th><th class="r">floor สาขา</th><th class="r">% ต่ำกว่า</th><th class="r">margin หลังลด</th></tr></thead>
+          <tbody id="priceRows"></tbody>
+        </table>
+        <div class="audit-note">ℹ️ การเงินดู margin เป็น <b>รายงาน audit แยก</b> (ไม่ block การออกบิล) · การอนุมัติราคาต่ำกว่าขั้นต่ำใช้สิทธิ์ฝ่ายขายตาม CF-2.6</div>
       </div>
 
-      <!-- SPLIT -->
-      <div class="split">
-        <!-- LEFT: queue -->
-        <div class="card">
-          <div class="card-head">
-            <span class="card-title">คิวรออนุมัติ</span>
-            <span class="card-tag">8 รายการ</span>
-            <select style="font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid #E5E7EB">
-              <option>ทั้งหมด</option><option>เกิน SLA</option><option>Tier 3 ขึ้นไป</option>
-            </select>
-          </div>
-
-          <div class="queue-row active">
-            <div class="q-num">1</div>
-            <div>
-              <div class="q-doc">SO-2604-0042 · บจก.สยามอุตสาหกรรม</div>
-              <div class="q-cust">เซลส์: K.มานพ · QT-2604-0098</div>
-            </div>
-            <div>
-              <div class="q-amt">฿ 1,850,000</div>
-              <div class="q-amt-sub">เกินวงเงิน ฿ 350,000</div>
-            </div>
-            <div>
-              <span class="q-flag over">⚠️ เกินวงเงิน</span><br>
-              <span class="q-flag tier" style="margin-top:4px;display:inline-flex">Tier 3</span>
-            </div>
-            <div class="q-age" style="color:#DC2626;font-weight:600">3h 42m</div>
-          </div>
-
-          <div class="queue-row">
-            <div class="q-num">2</div>
-            <div>
-              <div class="q-doc">SO-2604-0041 · บจก.รุ่งเรืองพาณิชย์</div>
-              <div class="q-cust">เซลส์: K.สมชาย · QT-2604-0095</div>
-            </div>
-            <div>
-              <div class="q-amt">฿ 620,000</div>
-              <div class="q-amt-sub">วงเงินคงเหลือ ฿ 0</div>
-            </div>
-            <div>
-              <span class="q-flag aging">📆 ค้าง 35 วัน</span><br>
-              <span class="q-flag tier" style="margin-top:4px;display:inline-flex">Tier 2</span>
-            </div>
-            <div class="q-age">2h 15m</div>
-          </div>
-
-          <div class="queue-row">
-            <div class="q-num">3</div>
-            <div>
-              <div class="q-doc">SO-2604-0040 · บจก.มหาชัยกรุ๊ป</div>
-              <div class="q-cust">เซลส์: K.ปอย · QT-2604-0091</div>
-            </div>
-            <div>
-              <div class="q-amt">฿ 2,400,000</div>
-              <div class="q-amt-sub">เกินวงเงิน ฿ 400,000</div>
-            </div>
-            <div>
-              <span class="q-flag over">⚠️ เกินวงเงิน</span><br>
-              <span class="q-flag tier" style="margin-top:4px;display:inline-flex">Tier 3</span>
-            </div>
-            <div class="q-age">1h 50m</div>
-          </div>
-
-          <div class="queue-row">
-            <div class="q-num">4</div>
-            <div>
-              <div class="q-doc">SO-2604-0039 · หจก.เจริญทรัพย์</div>
-              <div class="q-cust">เซลส์: K.วิทยา · QT-2604-0089</div>
-            </div>
-            <div>
-              <div class="q-amt">฿ 280,000</div>
-              <div class="q-amt-sub">เกินวงเงิน ฿ 80,000</div>
-            </div>
-            <div>
-              <span class="q-flag over">⚠️ เกินวงเงิน</span><br>
-              <span class="q-flag tier" style="margin-top:4px;display:inline-flex">Tier 1</span>
-            </div>
-            <div class="q-age">1h 12m</div>
-          </div>
-
-          <div class="queue-row">
-            <div class="q-num">5</div>
-            <div>
-              <div class="q-doc">SO-2604-0038 · บจก.ไทยเทคโนโลยี</div>
-              <div class="q-cust">เซลส์: K.อร · QT-2604-0085</div>
-            </div>
-            <div>
-              <div class="q-amt">฿ 950,000</div>
-              <div class="q-amt-sub">วงเงินคงเหลือ ฿ 150,000</div>
-            </div>
-            <div>
-              <span class="q-flag aging">📆 ค้าง 42 วัน</span><br>
-              <span class="q-flag tier" style="margin-top:4px;display:inline-flex">Tier 2</span>
-            </div>
-            <div class="q-age">52m</div>
-          </div>
+      <div class="tabs">
+        <div class="tab-nav">
+          <button class="tab-btn on" data-t="bill" onclick="switchTab('bill',this)">🧾 รายการสินค้าในบิล</button>
+          <button class="tab-btn" data-t="trade" onclick="switchTab('trade',this)">🛒💵 ประวัติการซื้อ-ชำระ</button>
+          <button class="tab-btn" data-t="appr" onclick="switchTab('appr',this)">⚖️ ประวัติการอนุมัติวงเงิน</button>
         </div>
-
-        <!-- RIGHT: detail -->
-        <div class="card">
-          <div class="card-head">
-            <span class="card-title">รายละเอียด — SO-2604-0042</span>
-            <span class="card-tag" style="background:rgba(220,38,38,0.1);color:#DC2626">Tier 3 · เกินวงเงิน</span>
-          </div>
-          <div class="card-body">
-            <div style="display:flex;gap:14px;align-items:center;margin-bottom:14px">
-              <div style="width:48px;height:48px;border-radius:10px;background:#EDE9FE;color:#5B21B6;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700">สอ</div>
-              <div style="flex:1">
-                <div style="font-size:15px;font-weight:700;color:#111827">บจก.สยามอุตสาหกรรม</div>
-                <div style="font-size:12px;color:#6B7280">C-00088 · Tier Platinum · Sales: K.มานพ</div>
-              </div>
-              <div style="text-align:right">
-                <div style="font-size:11px;color:#6B7280">ยอด SO ที่ขออนุมัติ</div>
-                <div style="font-size:18px;font-weight:700;color:#DC2626">฿ 1,850,000</div>
-              </div>
-            </div>
-
-            <!-- Credit gauge -->
-            <div style="margin-top:18px">
-              <div style="display:flex;justify-content:space-between;font-size:12px">
-                <span style="color:#6B7280">การใช้วงเงิน</span>
-                <span style="font-weight:700;color:#DC2626">115% (เกิน ฿ 350,000)</span>
-              </div>
-              <div class="gauge"><div class="gauge-fill over" style="width:100%"></div></div>
-              <div class="gauge-marks"><span>0</span><span>วงเงิน ฿ 2,000,000</span></div>
-            </div>
-
-            <div style="margin-top:18px">
-              <div class="metric-row"><span class="l">วงเงินอนุมัติ (CF-2.6)</span><span class="v">฿ 2,000,000</span></div>
-              <div class="metric-row"><span class="l">ใช้ปัจจุบัน (AR คงค้าง)</span><span class="v">฿ 1,500,000</span></div>
-              <div class="metric-row"><span class="l">SO รอออกบิล</span><span class="v">฿ 0</span></div>
-              <div class="metric-row"><span class="l">SO ใหม่ที่ขออนุมัติ</span><span class="v bad">+ ฿ 1,850,000</span></div>
-              <div class="metric-row" style="background:#FEF2F2;margin:0 -22px;padding:10px 22px"><span class="l" style="color:#7F1D1D;font-weight:600">เกินวงเงิน</span><span class="v bad">฿ 350,000 (17.5%)</span></div>
-            </div>
-
-            <!-- Aging -->
-            <div style="margin-top:22px">
-              <div style="font-size:12px;color:#374151;font-weight:600;margin-bottom:6px">AR Aging ลูกค้า (FI-5)</div>
-              <div class="aging-bar">
-                <div class="aging-seg b1" style="width:60%">฿ 900K</div>
-                <div class="aging-seg b2" style="width:25%">฿ 375K</div>
-                <div class="aging-seg b3" style="width:15%">฿ 225K</div>
-              </div>
-              <div class="aging-legend">
-                <span class="l1">0-30d</span><span class="l2">31-60d</span><span class="l3">61-90d</span><span class="l4">90d+</span>
-              </div>
-            </div>
-
-            <!-- Approval workflow -->
-            <div style="margin-top:24px">
-              <div style="font-size:12px;color:#374151;font-weight:600;margin-bottom:8px">เส้นทางอนุมัติ (CF-2.6 Tier 3)</div>
-              <div class="flow">
-                <div class="flow-step">
-                  <div class="flow-circle done">✓</div>
-                  <div class="flow-label">เซลส์ขอ</div>
-                  <div class="flow-meta">K.มานพ · 14:22</div>
-                </div>
-                <div class="flow-line done"></div>
-                <div class="flow-step">
-                  <div class="flow-circle done">✓</div>
-                  <div class="flow-label">หัวหน้าเซลส์</div>
-                  <div class="flow-meta">K.วิทยา · 14:35</div>
-                </div>
-                <div class="flow-line pending"></div>
-                <div class="flow-step">
-                  <div class="flow-circle current">⏳</div>
-                  <div class="flow-label">ผจก.ขาย <b>(คุณ)</b></div>
-                  <div class="flow-meta" style="color:#2563EB;font-weight:600">รอตัดสินใจ</div>
-                </div>
-                <div class="flow-line pending"></div>
-                <div class="flow-step">
-                  <div class="flow-circle next">CFO</div>
-                  <div class="flow-label">CFO</div>
-                  <div class="flow-meta">ถัดไป</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Maker = Checker warning (won't show because OK) -->
-            <div class="alert info" style="margin-top:14px">
-              <span style="font-size:18px">ℹ️</span>
-              <div>Maker (K.มานพ) ≠ Checker (คุณ) — ผ่าน policy. ครั้งสุดท้ายลูกค้าค้างเกินกำหนด 8 วัน (RV-2603-0019)</div>
-            </div>
-          </div>
-
-          <div class="act-bar">
-            <button class="btn btn-ghost">📝 บันทึกหมายเหตุ</button>
-            <button class="btn btn-warn">⚠️ อนุมัติแบบมีเงื่อนไข</button>
-            <div style="flex:1"></div>
-            <button class="btn btn-reject">✕ ปฏิเสธ</button>
-            <button class="btn btn-approve">✓ อนุมัติ</button>
-          </div>
-        </div>
+        <div class="tab-pane on" id="tab-bill"></div>
+        <div class="tab-pane" id="tab-trade"></div>
+        <div class="tab-pane" id="tab-appr"></div>
       </div>
 
-      <!-- POLICY REMINDER -->
-      <div class="alert warn">
-        <span style="font-size:18px">⚖️</span>
-        <div><b>Maker ≠ Checker</b> — ผู้อนุมัติต้องไม่ใช่ผู้สร้างเอกสาร · <b>Tier ดูที่ CF-2.6 Approval Matrix</b> · ปฏิเสธต้องบันทึกเหตุผลเสมอ · เกิน SLA 4 ชม. = แจ้ง escalate ผู้บริหาร</div>
+      <div class="alert-policy">
+        <b>⚖️ Maker ≠ Checker</b> — ผู้อนุมัติต้องไม่ใช่ผู้สร้างเอกสาร · Tier ตาม CF-2.6 เมทริกซ์อนุมัติ · ปฏิเสธต้องบันทึกเหตุผลเสมอ · เกิน SLA 4 ชม. = escalate ผู้บริหาร
       </div>
-
+      <div class="reject-box" id="rejectBox">
+        <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:6px">📝 เหตุผลการปฏิเสธ (บังคับ) — ตีกลับเป็น Open + บันทึกใน SC-7 Timeline</div>
+        <textarea id="rejectReason" placeholder="ระบุเหตุผลที่ปฏิเสธ เพื่อส่งกลับให้เซลส์แก้ไข…"></textarea>
+      </div>
+      <div class="cond-box" id="condBox">
+        <div class="cb-h">⚠️ อนุมัติแบบมีเงื่อนไข <span style="font-weight:400;color:#B45309">(ใส่หรือไม่ก็ได้)</span></div>
+        <label class="cb-l">⏳ อายุการอนุมัติชั่วคราว — เปิดบิลภายในวันที่</label>
+        <input type="date" id="condDate" class="cb-date">
+        <label class="cb-l">📝 เหตุผล/เงื่อนไข</label>
+        <textarea id="condReason" placeholder="เช่น ลูกค้าตั้งโอนเงินแล้ว แต่ต้องส่งสินค้าก่อน · อนุมัติชั่วคราวรอสลิป…"></textarea>
+      </div>
+    </div>
+    <div class="mdl-ft">
+      <button class="btn btn-outline" onclick="closeSlf1()">ปิด</button>
+      <button class="btn btn-cond" id="slf1CondBtn" onclick="toggleCond()">⚠️ มีเงื่อนไข</button>
+      <button class="btn btn-reject" onclick="toggleReject()">✕ ปฏิเสธ</button>
+      <button class="btn btn-approve" id="slf1ApproveBtn" onclick="doApprove()">✓ อนุมัติ → เอกสาร Approved</button>
     </div>
   </div>
 </div>
 
-<!-- SWT_LINK_START -->
-<script src="swt-link.js" defer></script>
 <script>
-window.addEventListener('DOMContentLoaded', function () {
-  if (typeof swtRenderBreadcrumb === 'function') {
-    swtRenderBreadcrumb([
-      { type: 'QT',  no: 'QT-2604-0098',  label: 'ใบเสนอราคา' },
-      { type: 'SO',  no: 'SO-2604-0042',  label: 'ใบสั่งขาย' },
-      { type: 'CRD', no: 'SL-F1',         label: 'อนุมัติวงเงิน', current: true },
-      { type: 'INV', label: 'รอออกบิล', pending: true },
-      { type: 'RV',  label: 'รอรับชำระ', pending: true }
-    ]);
-  }
-  if (typeof swtAppendTimeline !== 'function') return;
-  swtAppendTimeline('Activity Timeline — SO-2604-0042 (Credit Approval)', [
-    { action: 'เซลส์สร้าง QT-2604-0098', time: '2026-04-16 09:30',
-      sub: 'K.มานพ · ลูกค้า: บจก.สยามอุตสาหกรรม', color: 'green' },
-    { action: 'ลูกค้ายืนยัน → สร้าง SO-2604-0042', time: '2026-04-17 14:22',
-      sub: 'ระบบเช็ค credit → เกินวงเงิน ฿ 350,000 → ส่งเข้า SL-F1', color: 'amber' },
-    { action: 'หัวหน้าเซลส์อนุมัติ (Tier 1)', time: '2026-04-17 14:35',
-      sub: 'K.วิทยา · เห็นชอบ', color: 'blue' },
-    { action: 'รอ ผจก.ขาย อนุมัติ (Tier 2)', time: 'ตอนนี้ · 3h 42m',
-      sub: 'เกิน SLA 4 ชม. ในอีก 18 นาที — ต้องเร่ง', color: 'amber' },
-    { action: 'หลังผ่าน Tier 2 → ส่งต่อ CFO (Tier 3)', time: 'ถัดไป',
-      sub: 'เพราะยอด > ฿ 1.5M และมีประวัติค้าง 60+ วัน', color: 'gray' }
-  ], { meta: 'QT → SO → Credit Approval (SL-F1) → Invoice → AR' });
-});
-</script>
-<!-- SWT_LINK_END -->
+/* ── Data model (SLF1) ─────────────────────────────────────────
+   reason: 'limit' เกินวงเงิน · 'aging' ค้างเกิน term · 'price' ราคาต่ำกว่า floor
+   src: เอกสารต้นทาง { type:'SL-1|SL-2|SL-4|SL-CN', label, no }
+*/
+var TIER_MAP={tier1:'Tier 1 (ผจก.สาขา)',tier2:'Tier 2 (ผจก.ขาย)',tier3:'Tier 3 (CFO)'};
+var SLF1=[
+  { ca:'CA-2606-0042', reason:'limit', sla:'3h 42m', slaWarn:true, tier:'tier3',
+    src:{type:'SL-2', label:'ใบจอง (SO)', no:'SO-2604-0042'},
+    cust:'บจก.สยามอุตสาหกรรม', sales:'K.มานพ', amt:1850000, over:350000,
+    limit:2000000, used:1500000, aging:{cur:1100000,d30:400000,d60:0,d90:0},
+    sg:{name:'กลุ่มอุตสาหกรรม-ภาคกลาง', limit:'฿ 12.0M', term:'45 วัน', approver:'ผจก.ขายภาค (Tier 3 ขึ้น CFO)'} },
 
+  { ca:'CA-2606-0041', reason:'aging', sla:'2h 15m', slaWarn:true, tier:'tier2',
+    src:{type:'SL-2', label:'ใบจอง (SO)', no:'SO-2604-0041'},
+    cust:'บจก.รุ่งเรืองพาณิชย์', sales:'K.สมชาย', amt:620000, over:0, overText:'ค้างชำระ 35 วัน',
+    limit:1000000, used:600000, aging:{cur:200000,d30:180000,d60:220000,d90:0},
+    sg:{name:'กลุ่มค้าส่ง-ภาคกลาง', limit:'฿ 8.0M', term:'30 วัน', approver:'ผจก.ขาย (Tier 2)'} },
+
+  { ca:'CA-2606-0040', reason:'limit', sla:'1h 50m', slaWarn:false, tier:'tier3',
+    src:{type:'SL-2', label:'ใบจอง (SO)', no:'SO-2604-0040'},
+    cust:'บจก.มหาชัยกรุ๊ป', sales:'K.ปอย', amt:2400000, over:400000,
+    limit:3000000, used:2600000, aging:{cur:2200000,d30:400000,d60:0,d90:0},
+    sg:{name:'กลุ่มโครงการ-ภาคกลาง', limit:'฿ 20.0M', term:'60 วัน', approver:'CFO (Tier 3)'} },
+
+  { ca:'CA-2606-0039', reason:'limit', sla:'1h 12m', slaWarn:false, tier:'tier1',
+    src:{type:'SL-2', label:'ใบจอง (SO)', no:'SO-2604-0039'},
+    cust:'หจก.เจริญทรัพย์', sales:'K.วิทยา', amt:280000, over:80000,
+    limit:300000, used:100000, aging:{cur:90000,d30:0,d60:0,d90:0},
+    sg:{name:'กลุ่มร้านค้าปลีก', limit:'฿ 2.0M', term:'15 วัน', approver:'ผจก.สาขา (Tier 1)'} },
+
+  { ca:'CA-2606-0038', reason:'price', sla:'58m', slaWarn:false, tier:'tier2',
+    src:{type:'SL-1', label:'ใบเสนอราคา (QT)', no:'QT-2604-0101'},
+    cust:'ร้านศรีไทยอิเล็คทริค', sales:'K.วีระชัย', amt:185000, over:0, overText:'ต่ำกว่า floor 3.6%',
+    items:[
+      {sku:'AC-18000-INV', name:'แอร์ Inverter 18000 BTU', price:18500, base:'ทุน', branch:'สาขา 08', floor:19200, pct:-3.6, margin:'-3.6%'},
+      {sku:'AC-INST-STD', name:'ชุดติดตั้งมาตรฐาน', price:1500, base:'กำหนด', branch:'สาขา 08', floor:1600, pct:-6.3, margin:'+2.1%'}
+    ] },
+
+  { ca:'CA-2606-0037', reason:'price', sla:'41m', slaWarn:false, tier:'tier1',
+    src:{type:'SL-4', label:'บิลขาย (INV)', no:'INV-2604-0212'},
+    cust:'หจก.พงษ์เจริญการช่าง', sales:'K.อนุชา', amt:96000, over:0, overText:'ต่ำกว่า floor 2.1%',
+    items:[
+      {sku:'WIRE-THW-2.5', name:'สายไฟ THW 2.5 sq.mm (ม้วน)', price:2850, base:'ทุน', branch:'HQ สนง.ใหญ่', floor:2910, pct:-2.1, margin:'-2.1%'}
+    ] },
+
+  { ca:'CA-2606-0036', reason:'limit', sla:'22m', slaWarn:false, tier:'tier1',
+    src:{type:'SL-1', label:'ใบเสนอราคา (QT)', no:'QT-2604-0044'},
+    cust:'ร้านสมชายการไฟฟ้า', sales:'K.วีระชัย', amt:52000, over:12000,
+    limit:60000, used:20000, aging:{cur:18000,d30:0,d60:0,d90:0},
+    sg:{name:'กลุ่มร้านค้าปลีก', limit:'฿ 2.0M', term:'15 วัน', approver:'ผจก.สาขา (Tier 1)'} },
+
+  { ca:'CA-2606-0035', reason:'aging', sla:'12m', slaWarn:false, tier:'tier2',
+    src:{type:'SL-CN', label:'ใบลดหนี้ (CN)', no:'CN-2604-0009'},
+    cust:'บจก.ไทยเทคโนโลยี', sales:'K.อร', amt:140000, over:0, overText:'ค้างชำระ 42 วัน',
+    limit:1500000, used:980000, aging:{cur:500000,d30:160000,d60:0,d90:320000},
+    sg:{name:'กลุ่มอุตสาหกรรม-ภาคกลาง', limit:'฿ 12.0M', term:'45 วัน', approver:'ผจก.ขายภาค (Tier 2)'} }
+];
+
+/* ── ข้อมูลประกอบ popup: รายการสินค้าในบิล + 3 ประวัติ (key ตามเลขคำขอ CA-*) ── */
+var EXTRA={
+ 'CA-2606-0042':{
+   bill:[{sku:'PUMP-CENT-5HP',name:'ปั๊มน้ำหอยโข่ง 5HP',qty:6,price:185000,amt:1110000},{sku:'PIPE-PVC-6',name:'ท่อ PVC 6 นิ้ว (ชุด)',qty:20,price:37000,amt:740000}],
+   trade:[
+     {date:'2026-05-12',doc:'INV-2605-0188',amt:980000,status:'ชำระแล้ว',pay:{date:'2026-05-30',rcpt:'RV-2605-0205',ch:'โอน',onTime:true},items:[{sku:'PUMP-CENT-5HP',name:'ปั๊มน้ำหอยโข่ง 5HP',qty:4,price:185000,amt:740000},{sku:'VALVE-GATE-6',name:'ประตูน้ำ 6 นิ้ว',qty:8,price:30000,amt:240000}]},
+     {date:'2026-04-28',doc:'INV-2604-0102',amt:1450000,status:'ชำระแล้ว',pay:{date:'2026-05-02',rcpt:'RV-2605-0044',ch:'เช็ค',onTime:false},items:[{sku:'PIPE-PVC-6',name:'ท่อ PVC 6 นิ้ว (ชุด)',qty:30,price:37000,amt:1110000},{sku:'FITTING-SET',name:'ข้อต่อชุด',qty:10,price:34000,amt:340000}]}],
+   apprHist:[{date:'2026-03-15',ca:'CA-2603-0021',reason:'เกินวงเงิน',amt:300000,approver:'K.ประเสริฐ (Tier 3)',result:'อนุมัติ',cond:'เปิดบิลภายใน 31/3/26'}]},
+ 'CA-2606-0041':{
+   bill:[{sku:'BRK-3P-100A',name:'เบรกเกอร์ 3P 100A',qty:10,price:27000,amt:270000},{sku:'MDB-CABINET',name:'ตู้ไฟ MDB',qty:1,price:350000,amt:350000}],
+   trade:[
+     {date:'2026-05-05',doc:'INV-2605-0140',amt:430000,status:'ค้างชำระ',pay:null,items:[{sku:'BRK-3P-100A',name:'เบรกเกอร์ 3P 100A',qty:10,price:27000,amt:270000},{sku:'WIRE-THW-6',name:'สายไฟ THW 6 (ม้วน)',qty:8,price:20000,amt:160000}]},
+     {date:'2026-04-10',doc:'INV-2604-0033',amt:520000,status:'ชำระแล้ว',pay:{date:'2026-04-25',rcpt:'RV-2604-0190',ch:'โอน',onTime:false},items:[{sku:'MDB-CABINET',name:'ตู้ไฟ MDB',qty:1,price:350000,amt:350000},{sku:'METER-3P',name:'มิเตอร์ 3 เฟส',qty:10,price:17000,amt:170000}]}],
+   apprHist:[{date:'2026-02-18',ca:'CA-2602-0014',reason:'ค้างเกิน term',amt:0,approver:'K.วราภรณ์ (Tier 2)',result:'อนุมัติ',cond:'—'}]},
+ 'CA-2606-0040':{
+   bill:[{sku:'TRF-1000KVA',name:'หม้อแปลงไฟฟ้า 1000kVA',qty:1,price:1800000,amt:1800000},{sku:'CABLE-CV-240',name:'สาย CV 240 sq.mm (ม.)',qty:200,price:3000,amt:600000}],
+   trade:[
+     {date:'2026-05-20',doc:'INV-2605-0210',amt:2100000,status:'ชำระแล้ว',pay:{date:'2026-06-10',rcpt:'RV-2606-0030',ch:'โอน',onTime:true},items:[{sku:'TRF-1000KVA',name:'หม้อแปลง 1000kVA',qty:1,price:1800000,amt:1800000},{sku:'CABLE-CV-240',name:'สาย CV 240 (ม.)',qty:100,price:3000,amt:300000}]},
+     {date:'2026-03-30',doc:'INV-2603-0099',amt:1750000,status:'ชำระแล้ว',pay:{date:'2026-04-15',rcpt:'RV-2604-0120',ch:'โอน',onTime:true},items:[{sku:'PANEL-MDB-L',name:'ตู้ MDB ใหญ่',qty:1,price:1200000,amt:1200000},{sku:'BREAKER-ACB',name:'ACB 1600A',qty:2,price:275000,amt:550000}]}],
+   apprHist:[{date:'2026-04-01',ca:'CA-2604-0030',reason:'เกินวงเงิน',amt:500000,approver:'K.ประเสริฐ (Tier 3)',result:'อนุมัติ',cond:'เปิดบิลภายใน 15/4/26'}]},
+ 'CA-2606-0039':{
+   bill:[{sku:'LED-PANEL-36W',name:'โคมไฟ LED Panel 36W',qty:200,price:900,amt:180000},{sku:'SW-2WAY',name:'สวิตช์ 2 ทาง',qty:500,price:200,amt:100000}],
+   trade:[
+     {date:'2026-05-08',doc:'INV-2605-0155',amt:120000,status:'ชำระแล้ว',pay:{date:'2026-05-22',rcpt:'RV-2605-0170',ch:'เงินสด',onTime:true},items:[{sku:'LED-PANEL-36W',name:'โคมไฟ LED 36W',qty:100,price:900,amt:90000},{sku:'SW-2WAY',name:'สวิตช์ 2 ทาง',qty:150,price:200,amt:30000}]}],
+   apprHist:[]},
+ 'CA-2606-0038':{
+   bill:[{sku:'AC-18000-INV',name:'แอร์ Inverter 18000 BTU',qty:8,price:18500,amt:148000,low:true},{sku:'AC-INST-STD',name:'ชุดติดตั้ง + สายแอร์',qty:1,price:37000,amt:37000}],
+   trade:[
+     {date:'2026-04-18',doc:'INV-2604-0066',amt:74000,status:'ชำระแล้ว',pay:{date:'2026-05-01',rcpt:'RV-2605-0010',ch:'โอน',onTime:true},items:[{sku:'AC-12000-INV',name:'แอร์ Inverter 12000 BTU',qty:4,price:15500,amt:62000},{sku:'AC-INST-STD',name:'ชุดติดตั้ง',qty:8,price:1500,amt:12000}]},
+     {date:'2026-02-25',doc:'INV-2602-0021',amt:55000,status:'ชำระแล้ว',pay:{date:'2026-03-10',rcpt:'RV-2603-0033',ch:'โอน',onTime:true},items:[{sku:'AC-9000-INV',name:'แอร์ Inverter 9000 BTU',qty:4,price:12500,amt:50000},{sku:'AC-INST-STD',name:'ชุดติดตั้ง',qty:5,price:1000,amt:5000}]}],
+   apprHist:[{date:'2026-01-22',ca:'CA-2601-0008',reason:'ราคาต่ำกว่า floor',amt:0,approver:'K.สุดา (Tier 2)',result:'ปฏิเสธ',cond:'—'}]},
+ 'CA-2606-0037':{
+   bill:[{sku:'WIRE-THW-2.5',name:'สายไฟ THW 2.5 sq.mm (ม้วน)',qty:30,price:2850,amt:85500,low:true},{sku:'ACC-CONDUIT',name:'อุปกรณ์ร้อยสาย',qty:1,price:10500,amt:10500}],
+   trade:[
+     {date:'2026-05-14',doc:'INV-2605-0160',amt:62000,status:'ชำระแล้ว',pay:{date:'2026-05-28',rcpt:'RV-2605-0188',ch:'โอน',onTime:true},items:[{sku:'WIRE-THW-2.5',name:'สายไฟ THW 2.5 (ม้วน)',qty:20,price:2850,amt:57000},{sku:'ACC-CONDUIT',name:'อุปกรณ์ร้อยสาย',qty:1,price:5000,amt:5000}]}],
+   apprHist:[]},
+ 'CA-2606-0036':{
+   bill:[{sku:'CU-BOARD-4',name:'ตู้คอนซูมเมอร์ 4 ช่อง',qty:4,price:8000,amt:32000},{sku:'MCB-SUB',name:'เบรกเกอร์ลูกย่อย',qty:40,price:500,amt:20000}],
+   trade:[
+     {date:'2026-04-30',doc:'INV-2604-0118',amt:40000,status:'ชำระแล้ว',pay:{date:'2026-05-14',rcpt:'RV-2605-0090',ch:'เงินสด',onTime:true},items:[{sku:'CU-BOARD-4',name:'ตู้คอนซูมเมอร์ 4 ช่อง',qty:3,price:8000,amt:24000},{sku:'MCB-SUB',name:'เบรกเกอร์ลูกย่อย',qty:32,price:500,amt:16000}]}],
+   apprHist:[]},
+ 'CA-2606-0035':{
+   bill:[{sku:'MOTOR-3PH-10HP',name:'มอเตอร์ 3 เฟส 10HP (คืนของ)',qty:2,price:70000,amt:140000}],
+   trade:[
+     {date:'2026-05-02',doc:'INV-2605-0120',amt:280000,status:'ชำระบางส่วน',pay:{date:'2026-05-25',rcpt:'RV-2605-0180',ch:'เช็ค',onTime:false},items:[{sku:'MOTOR-3PH-10HP',name:'มอเตอร์ 3 เฟส 10HP',qty:3,price:70000,amt:210000},{sku:'STARTER-DOL',name:'สตาร์ทเตอร์ DOL',qty:5,price:14000,amt:70000}]},
+     {date:'2026-03-18',doc:'INV-2603-0070',amt:190000,status:'ค้างชำระ',pay:null,items:[{sku:'INVERTER-VFD',name:'อินเวอร์เตอร์ VFD 7.5kW',qty:2,price:95000,amt:190000}]}],
+   apprHist:[{date:'2026-03-20',ca:'CA-2603-0025',reason:'ค้างเกิน term',amt:0,approver:'K.วราภรณ์ (Tier 2)',result:'อนุมัติ',cond:'ลูกค้าโอนก่อนส่ง · เปิดบิลภายใน 25/3/26'}]}
+};
+SLF1.forEach(function(it){var e=EXTRA[it.ca]||{};it.bill=e.bill||[];it.trade=e.trade||[];it.apprHist=e.apprHist||[];});
+
+var REASON_GROUPS=[
+  {k:'limit', icon:'💳', title:'เกินวงเงินเครดิต — รออนุมัติตาม CF-2.6'},
+  {k:'aging', icon:'⏰', title:'ค้างชำระเกิน term — รออนุมัติพิเศษ'},
+  {k:'price', icon:'💲', title:'ราคาต่ำกว่าขั้นต่ำ (floor) — สิทธิ์ฝ่ายขายตาม CF-2.6'}
+];
+var REASON_BADGE={limit:'<span class="badge b-limit">💳 เกินวงเงิน</span>',aging:'<span class="badge b-aging">⏰ ค้างเกิน term</span>',price:'<span class="badge b-price">💲 ต่ำกว่า floor</span>'};
+
+function fmt(n){return n.toLocaleString('en-US');}
+function overText(it){
+  if(it.reason==='price'||it.reason==='aging') return '<span style="color:#6B7280;font-size:11px">'+(it.overText||'—')+'</span>';
+  return '<span class="over-amt">+'+fmt(it.over)+'</span>';
+}
+function ageCls(it){return it.slaWarn?'age-over':( /h/.test(it.sla)?'age-warn':'age-ok');}
+
+function render(){
+  var html='';
+  REASON_GROUPS.forEach(function(g){
+    var rows=SLF1.filter(function(x){return x.reason===g.k;});
+    if(!rows.length) return;
+    html+='<tr class="grp" data-bk="'+g.k+'"><td colspan="9">'+g.icon+' '+g.title+'<span class="n">'+rows.length+' รายการ</span></td></tr>';
+    rows.forEach(function(it){
+      var idx=SLF1.indexOf(it);
+      html+='<tr data-bk="'+it.reason+(it.slaWarn?' sla':'')+'" onclick="openSlf1('+idx+')">'
+        +'<td class="dno">'+it.ca+'</td>'
+        +'<td><span class="dtype">'+it.src.type+'</span><div class="src-ref">'+it.src.no+'</div></td>'
+        +'<td>'+it.cust+'<br><span class="src-ref">'+it.sales+'</span></td>'
+        +'<td class="amt">'+fmt(it.amt)+'</td>'
+        +'<td class="amt">'+overText(it)+'</td>'
+        +'<td>'+REASON_BADGE[it.reason]+'</td>'
+        +'<td><span class="tier-badge '+it.tier.replace('tier','tier-')+'">'+(TIER_MAP[it.tier].split(' ')[0]+' '+TIER_MAP[it.tier].split(' ')[1])+'</span></td>'
+        +'<td class="'+ageCls(it)+'">'+it.sla+(it.slaWarn?' ⚠️':'')+'</td>'
+        +'<td><button class="row-btn" onclick="event.stopPropagation();openSlf1('+idx+')">ตรวจสอบ</button></td>'
+        +'</tr>';
+    });
+  });
+  document.getElementById('qRows').innerHTML=html;
+}
+
+function filterChip(k,el){
+  document.querySelectorAll('#chips .chip').forEach(function(c){
+    c.classList.toggle('on', el ? c===el : c.getAttribute('data-k')===k);
+  });
+  document.querySelectorAll('#qRows tr[data-bk]').forEach(function(tr){
+    var bk=tr.getAttribute('data-bk')||'';
+    tr.style.display=(k==='all'||bk.indexOf(k)>-1)?'':'none';
+  });
+  document.querySelectorAll('#qRows tr.grp').forEach(function(tr){
+    var nb=tr.nextElementSibling,vis=false;
+    while(nb&&!nb.classList.contains('grp')){if(nb.style.display!=='none')vis=true;nb=nb.nextElementSibling;}
+    tr.style.display=vis?'':'none';
+  });
+}
+
+function openSlf1(idx){
+  var it=SLF1[idx];
+  document.getElementById('slf1No').textContent=it.ca;
+  document.getElementById('slf1Src').textContent=it.src.label+' · '+it.src.no;
+  document.getElementById('slf1Cust').textContent=it.cust;
+  document.getElementById('slf1Amt').textContent='฿ '+fmt(it.amt);
+  document.getElementById('slf1Over').textContent=(it.reason==='limit')?('฿ '+fmt(it.over)+' เกิน'):(it.overText||'—');
+  document.getElementById('slf1Reason').textContent={limit:'เกินวงเงินเครดิต',aging:'ค้างชำระเกิน term',price:'ราคาต่ำกว่าขั้นต่ำ (floor)'}[it.reason];
+  document.getElementById('slf1Sales').textContent=it.sales;
+  document.getElementById('slf1Tier').textContent=TIER_MAP[it.tier];
+  document.getElementById('slf1Age').textContent=it.sla+(it.slaWarn?' ⚠️ ใกล้เกิน SLA':'');
+
+  var isCredit=(it.reason==='limit'||it.reason==='aging');
+  document.getElementById('secCredit').style.display=isCredit?'':'none';
+  document.getElementById('secPrice').style.display=(it.reason==='price')?'':'none';
+
+  if(isCredit){
+    var pct=Math.min(100,Math.round((it.used+it.amt)/it.limit*100));
+    var gf=document.getElementById('slf1Gauge');
+    gf.style.width=pct+'%';
+    gf.classList.toggle('over', (it.used+it.amt)>it.limit);
+    document.getElementById('slf1GaugeLbl').textContent=pct+'% ของวงเงิน';
+    document.getElementById('clLimit').textContent='฿ '+fmt(it.limit);
+    document.getElementById('clUsed').textContent='฿ '+fmt(it.used);
+    document.getElementById('clRemain').textContent='฿ '+fmt(it.limit-it.used);
+    document.getElementById('clOver').textContent=it.over>0?('฿ '+fmt(it.over)):'—';
+    document.getElementById('agCur').textContent=fmt(it.aging.cur);
+    document.getElementById('ag30').textContent=fmt(it.aging.d30);
+    document.getElementById('ag60').textContent=fmt(it.aging.d60);
+    document.getElementById('ag90').textContent=fmt(it.aging.d90);
+    document.getElementById('sgName').textContent=it.sg.name;
+    document.getElementById('sgLimit').textContent=it.sg.limit;
+    document.getElementById('sgTerm').textContent=it.sg.term;
+    document.getElementById('sgApprover').textContent=it.sg.approver;
+  }
+  if(it.reason==='price'){
+    var ph='';
+    it.items.forEach(function(p){
+      ph+='<tr><td>'+p.name+'<br><span class="src-ref">'+p.sku+'</span></td>'
+        +'<td class="r">'+fmt(p.price)+'</td>'
+        +'<td>'+p.base+'</td><td>'+p.branch+'</td>'
+        +'<td class="r">'+fmt(p.floor)+'</td>'
+        +'<td class="r neg">'+p.pct+'%</td>'
+        +'<td class="r'+(p.margin.indexOf('-')>-1?' neg':'')+'">'+p.margin+'</td></tr>';
+    });
+    document.getElementById('priceRows').innerHTML=ph;
+  }
+
+  renderTabs(it);
+
+  document.getElementById('rejectBox').style.display='none';
+  document.getElementById('rejectReason').value='';
+  document.getElementById('slf1ApproveBtn').style.display='';
+  document.getElementById('slf1Modal').classList.add('on');
+}
+function switchTab(t,el){
+  el.parentNode.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('on',b===el);});
+  ['bill','trade','appr'].forEach(function(k){document.getElementById('tab-'+k).classList.toggle('on',k===t);});
+}
+function renderTabs(it){
+  /* 🧾 รายการสินค้าในบิล */
+  var bh='',tot=0;
+  (it.bill||[]).forEach(function(b){tot+=b.amt;
+    bh+='<tr'+(b.low?' class="low"':'')+'><td>'+b.name+'<br><span class="src-ref">'+b.sku+(b.low?' · ⚠️ ต่ำกว่า floor':'')+'</span></td>'
+      +'<td class="r">'+b.qty+'</td><td class="r">'+fmt(b.price)+'</td><td class="r">'+fmt(b.amt)+'</td></tr>';
+  });
+  bh+='<tr><td colspan="3" class="r" style="font-weight:700">รวม</td><td class="r" style="font-weight:700">฿ '+fmt(tot)+'</td></tr>';
+  document.getElementById('tab-bill').innerHTML=(it.bill&&it.bill.length)
+    ?'<table class="mini-tbl"><thead><tr><th>รายการ / SKU</th><th class="r">จำนวน</th><th class="r">ราคา/หน่วย</th><th class="r">รวม</th></tr></thead><tbody>'+bh+'</tbody></table>'
+    :'<div class="tab-empty">— ไม่มีรายการสินค้า —</div>';
+  /* 🛒💵 ประวัติการซื้อ-ชำระ (คลิกแถว → ขยายดูรายการสินค้า + การชำระ) */
+  var th='';
+  (it.trade||[]).forEach(function(t,i){
+    var payTxt=t.pay?(t.pay.onTime?'<span class="pay-ok">✓ ตรง term</span>':'<span class="pay-late">⚠ เกิน term</span>'):'<span class="pay-late">ยังไม่ชำระ</span>';
+    th+='<tr class="trd-row" onclick="toggleTrade('+i+')"><td><span class="trd-cv" id="trd-cv-'+i+'">▸</span> '+t.date+'</td><td class="dno">'+t.doc+'</td><td class="r">'+fmt(t.amt)+'</td><td>'+t.status+'</td><td>'+payTxt+'</td></tr>';
+    var ih='',itot=0;
+    (t.items||[]).forEach(function(p){itot+=p.amt;ih+='<tr><td>'+p.name+'<br><span class="src-ref">'+p.sku+'</span></td><td class="r">'+p.qty+'</td><td class="r">'+fmt(p.price)+'</td><td class="r">'+fmt(p.amt)+'</td></tr>';});
+    var payD=t.pay?('ชำระ '+t.pay.date+' · '+t.pay.rcpt+' · '+t.pay.ch+' · '+(t.pay.onTime?'ตรง term':'เกิน term')):'ยังไม่ชำระ (ค้างอยู่)';
+    th+='<tr class="trd-det" id="trd-'+i+'" style="display:none"><td colspan="5">'
+      +'<div class="trd-sub">🧾 รายการสินค้าในเอกสาร '+t.doc+'</div>'
+      +'<table class="mini-tbl"><thead><tr><th>รายการ / SKU</th><th class="r">จำนวน</th><th class="r">ราคา/หน่วย</th><th class="r">รวม</th></tr></thead><tbody>'+ih
+      +'<tr><td colspan="3" class="r" style="font-weight:700">รวม</td><td class="r" style="font-weight:700">฿ '+fmt(itot)+'</td></tr></tbody></table>'
+      +'<div class="trd-pay">💵 การชำระ: '+payD+'</div></td></tr>';
+  });
+  document.getElementById('tab-trade').innerHTML=(it.trade&&it.trade.length)
+    ?'<div style="font-size:10.5px;color:#9CA3AF;margin-bottom:6px">▸ คลิกแถวเพื่อดูรายการสินค้า + การชำระของเอกสารนั้น</div><table class="mini-tbl"><thead><tr><th>วันที่</th><th>เลขเอกสาร</th><th class="r">ยอด</th><th>สถานะ</th><th>การชำระ</th></tr></thead><tbody>'+th+'</tbody></table>'
+    :'<div class="tab-empty">— ไม่มีประวัติการซื้อ-ชำระ —</div>';
+  /* ⚖️ ประวัติการอนุมัติวงเงิน */
+  var ah='';
+  (it.apprHist||[]).forEach(function(h){ah+='<tr><td>'+h.date+'</td><td class="dno">'+h.ca+'</td><td>'+h.reason+'</td><td class="r">'+(h.amt?fmt(h.amt):'—')+'</td><td>'+h.approver+'</td>'
+    +'<td class="'+(h.result==='อนุมัติ'?'res-ok':'res-no')+'">'+h.result+'</td><td>'+(h.cond||'—')+'</td></tr>';});
+  document.getElementById('tab-appr').innerHTML=(it.apprHist&&it.apprHist.length)
+    ?'<table class="mini-tbl"><thead><tr><th>วันที่</th><th>เลข CA</th><th>เหตุผล</th><th class="r">ส่วนเกิน</th><th>ผู้อนุมัติ</th><th>ผล</th><th>เงื่อนไข</th></tr></thead><tbody>'+ah+'</tbody></table>'
+    :'<div class="tab-empty">— ไม่มีประวัติการอนุมัติ —</div>';
+  /* reset เปิดแท็ปแรก + ปิดกล่องเงื่อนไข */
+  var nav=document.querySelector('#slf1Modal .tab-nav');
+  if(nav)nav.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('on',i===0);});
+  ['bill','trade','appr'].forEach(function(k,i){document.getElementById('tab-'+k).classList.toggle('on',i===0);});
+  var cb=document.getElementById('condBox');if(cb){cb.style.display='none';document.getElementById('condDate').value='';document.getElementById('condReason').value='';}
+}
+function closeSlf1(){document.getElementById('slf1Modal').classList.remove('on');}
+document.getElementById('slf1Modal').addEventListener('click',function(e){if(e.target===this)closeSlf1();});
+function toggleReject(){
+  var box=document.getElementById('rejectBox');
+  var visible=box.style.display==='block';
+  box.style.display=visible?'none':'block';
+  document.getElementById('slf1ApproveBtn').style.display=visible?'':'none';
+  if(!visible)document.getElementById('rejectReason').focus();
+}
+function toggleTrade(i){
+  var d=document.getElementById('trd-'+i);if(!d)return;
+  var open=d.style.display!=='none';
+  d.style.display=open?'none':'';
+  var cv=document.getElementById('trd-cv-'+i);if(cv)cv.textContent=open?'▸':'▾';
+}
+function toggleCond(){
+  var b=document.getElementById('condBox');var v=b.style.display==='block';
+  b.style.display=v?'none':'block';
+  document.getElementById('slf1CondBtn').classList.toggle('on',!v);
+  if(!v)document.getElementById('condReason').focus();
+}
+function doApprove(){
+  var no=document.getElementById('slf1No').textContent;
+  var d=document.getElementById('condDate').value, r=document.getElementById('condReason').value.trim();
+  var msg='✓ อนุมัติ '+no+' → เอกสารต้นทางกลับสถานะ Approved · เซลส์ดำเนินการต่อได้';
+  if(d||r){
+    msg+='\n\n⚠️ อนุมัติแบบมีเงื่อนไข:';
+    if(d)msg+='\n• เปิดบิลภายในวันที่ '+d+' (อนุมัติชั่วคราว)';
+    if(r)msg+='\n• เหตุผล: '+r;
+  } else {
+    msg+=' (ราคาต่ำกว่าทุน → ปลดล็อกออกบิล SL-4)';
+  }
+  alert(msg);
+  closeSlf1();
+}
+function swtSbFilter(v){v=(v||'').toLowerCase();document.querySelectorAll('#swtSb .swt-sb-links a').forEach(function(a){a.style.display=a.textContent.toLowerCase().indexOf(v)>-1?'':'none';});}
+render();
+</script>
+<script src="swt-link.js" defer></script>
 <script src="swt-sidebar.js"></script>
-</body>
-</html>
+</body></html>

@@ -1,0 +1,102 @@
+/* ═══════════════════════════════════════════════════════════════
+   SWT DESIGN TOKENS  ·  design-tokens.css
+   ---
+   Token layer กลางของทั้งระบบ — ยกค่า hex/ขนาด/รัศมี ที่เคย hardcode
+   ขึ้นมาเป็น CSS custom properties ที่เดียว
+   เปลี่ยน accent/border ทั้งระบบ = แก้บรรทัดเดียวที่นี่
+
+   วิธีใช้ (opt-in · ไม่ override อะไรเดิม):
+     <link rel="stylesheet" href="design-tokens.css">   ← วางก่อน swt-patterns.css
+   แล้วในไฟล์ค่อย ๆ แทน hex ดิบด้วย var()  เช่น
+     color:#2563EB        →  color:var(--accent)
+     border:1px solid #E5E7EB → border:1px solid var(--border)
+
+   ที่มา: scan _form-template.html + swt-patterns.css (2026-06-13)
+   ═══════════════════════════════════════════════════════════════ */
+
+:root{
+  /* ─── BRAND ─────────────────────────────────────────────── */
+  --brand-deep:#1E3A5F;        /* sidebar · header เข้ม */
+  --accent:#2563EB;            /* สีหลัก: ปุ่ม · ลิงก์ · highlight (มากสุด 33×) */
+  --accent-strong:#1D4ED8;     /* ตัวเลขเด่น · hover accent อ่อน */
+  --accent-dark:#1E40AF;       /* หัวข้อบนพื้น info */
+  --grad-brand:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%); /* header · summary-total (signature) */
+
+  /* ─── SEMANTIC (base / bg อ่อน / text เข้ม / เส้น) ────────── */
+  --success:#10B981;  --success-bg:#ECFDF5;  --success-ink:#065F46;  --success-line:#A7F3D0;
+  --warning:#F59E0B;  --warning-bg:#FEF3C7;  --warning-ink:#92400E;  --warning-line:#FDE68A;
+  --danger:#EF4444;   --danger-bg:#FEF2F2;   --danger-ink:#991B1B;   --danger-line:#FECACA;
+  --info-bg:#EFF6FF;  --info-ink:#0C4A6E;    --info-line:#BFDBFE;
+  --purple:#8B5CF6;   --purple-strong:#7C3AED; --purple-bg:#F3E8FF;  --purple-ink:#6D28D9;
+  /* hover เข้มของ success/danger ที่ใช้บนปุ่ม */
+  --success-hover:#059669;
+
+  /* ─── NEUTRALS · TEXT ───────────────────────────────────── */
+  --ink:#111827;       /* ข้อความหลัก */
+  --ink-2:#374151;     /* หัวข้อรอง · card-title */
+  --muted:#6B7280;     /* label · caption (27×) */
+  --faint:#9CA3AF;     /* placeholder · field-label */
+
+  /* ─── NEUTRALS · SURFACE / LINE ─────────────────────────── */
+  --surface:#FFFFFF;       /* การ์ด · พื้นฟอร์ม */
+  --surface-2:#F8FAFC;     /* thead · card อ่อน · scan-box */
+  --surface-3:#F3F4F6;     /* pill neutral · topbar-search · พื้นหน้า */
+  --page:#F3F4F6;          /* background body */
+  --border:#E5E7EB;        /* เส้นขอบมาตรฐาน (มากสุด 38×) */
+  --border-soft:#F3F4F6;   /* เส้นคั่นบาง · card-header */
+  --border-grid:#EDEFF2;   /* เส้น grid ในตารางสินค้า */
+  --line-cool:#CBD5E1;     /* flow-arrow · เส้นเย็น */
+
+  /* ─── TYPE SCALE (รวบจาก ~11 ค่า → 7 ขั้น) ──────────────── */
+  --fs-2xs:10px;   /* field-label uppercase */
+  --fs-xs:11px;    /* caption · sub-label */
+  --fs-sm:12px;    /* ฟอร์ม · ปุ่ม · field */
+  --fs-base:13px;  /* ฐานของระบบ (body) */
+  --fs-md:14px;    /* ยอดรวม · summary-total */
+  --fs-lg:16px;    /* หัวข้อ section · mh-title */
+  --fs-xl:18px;    /* หัวเรื่องเอกสาร */
+  /* ค่าครึ่ง (10.5/12.5) ที่ยังจำเป็นในตาราง — เก็บแยกไว้ไม่ให้หลุด scale หลัก */
+  --fs-cell:12.5px;   /* ค่าในตาราง · field-value */
+  --fs-cell-sm:10.5px;/* item-code · thead · stock-chip */
+
+  /* ─── FONT FAMILY ───────────────────────────────────────── */
+  --font-ui:'Inter','Noto Sans Thai',sans-serif;
+  --font-num:'Inter',monospace;   /* ตัวเลขเงิน · รหัสเอกสาร — เรียงตรงคอลัมน์ */
+
+  /* ─── RADIUS ────────────────────────────────────────────── */
+  --r-xs:3px;    /* chip · wh-badge */
+  --r-sm:4px;    /* input · pill · flow-node */
+  --r-md:6px;    /* ปุ่ม · summary-total */
+  --r-lg:8px;    /* การ์ด · section · topbar-search */
+  --r-pill:20px; /* branch-tag · branch-sel */
+
+  /* ─── ELEVATION ─────────────────────────────────────────── */
+  --shadow:0 2px 8px rgba(0,0,0,.08);        /* main-header */
+  --shadow-soft:0 1px 3px rgba(0,0,0,.06);   /* การ์ดทั่วไป */
+  --shadow-up:0 -2px 8px rgba(0,0,0,.04);    /* doc-chain แถบล่าง */
+  --focus-ring:0 0 0 3px rgba(37,99,235,.12);/* input :focus */
+
+  /* ─── LAYOUT CONSTANTS ──────────────────────────────────── */
+  --sidebar-w:240px;
+  --topbar-h:56px;
+  --min-app-w:1440px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   OPTIONAL · token-based helpers  (ใช้ก็ได้ ไม่ใช้ก็ได้)
+   ชื่อขึ้นต้น .tk- กันชนกับ class เดิมทุกไฟล์
+   ═══════════════════════════════════════════════════════════════ */
+.tk-num{font-family:var(--font-num)}
+.tk-accent{color:var(--accent)}
+.tk-muted{color:var(--muted)}
+.tk-faint{color:var(--faint)}
+.tk-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-soft)}
+.tk-grad{background:var(--grad-brand);color:#fff}
+
+/* pill semantic (ถ้าหน้าไหนยังไม่มี .pill ของตัวเอง) */
+.tk-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:var(--r-sm);font-size:var(--fs-cell-sm);font-weight:600}
+.tk-pill.is-success{background:var(--success-bg);color:var(--success-ink)}
+.tk-pill.is-warning{background:var(--warning-bg);color:var(--warning-ink)}
+.tk-pill.is-danger{background:var(--danger-bg);color:var(--danger-ink)}
+.tk-pill.is-info{background:var(--info-bg);color:var(--info-ink)}
+.tk-pill.is-neutral{background:var(--surface-3);color:var(--ink-2)}

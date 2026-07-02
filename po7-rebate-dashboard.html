@@ -7,7 +7,9 @@
 /* ═══════════════════════════════════════════════════════════════
    PO-7 ส่งเสริมการขาย (Trade Support Realization) — build บน _form-template.html
    ⚠️ refine 2026-06-08: จาก Rebate Dashboard → ฟอร์มสรุป "ได้จริงเท่าไร" + เปลี่ยนสถานะ + ส่งตั้งหนี้
-   concept [1]: ดึงข้อตกลงจาก PO-2 → สรุป realized → forward เข้า PO-6 (ส่งเสริมได้จริง)
+   ⚠️ sync 2026-06-12: รับโครง PO-2 ใหม่ — ส่วนลด 3 แบบรายบรรทัด (①฿/ตัว ②% ③฿+โควต้า) + สิทธิ์คำนวณอัตโนมัติ ·
+   ยอดจริง: MOU/Sell-in = ยอดซื้อ (WH-1 ใบรับสินค้า / PO-8 บิลฝาก) · Sell-out = SL-4 บิลขาย · 📄 popup บิลอ้างอิงต่อแถว
+   concept [1]: ดึงข้อตกลง + เอกสารหลักฐานจาก PO-2 → สรุป realized → forward เข้า PO-6 (ส่งเสริมได้จริง)
    4 ประเภทงบ (A2): MOU · Sell-in · Sell-out · Co-op · status: Accrued→Doc Received→Realized
    ไม่มี Flow PDF เฉพาะ (custom process · ยึด spec A2 + concept lock) · sidebar = swt-sidebar.js
    ═══════════════════════════════════════════════════════════════ */
@@ -86,9 +88,14 @@ table.items tbody td{padding:10px 10px;font-size:12.5px;color:#111827;border-bot
 table.items tbody tr.empty-row td{height:30px;color:#9CA3AF}
 table.items th,table.items td{border-right:1px solid #EDEFF2}
 table.items th:last-child,table.items td:last-child{border-right:none}
-.vc-code{font-size:10.5px;color:#2563EB;font-family:'Inter',monospace;font-weight:700;text-decoration:none}
+.ag-code{font-size:10.5px;color:#2563EB;font-family:'Inter',monospace;font-weight:700;text-decoration:none}
 .num{text-align:right;font-family:'Inter',monospace}
-.got-input{width:90px;padding:3px 6px;border:1.5px solid #6EE7B7;border-radius:4px;font-size:12px;text-align:right;font-family:'Inter',monospace;background:#F0FDF4;font-weight:600}
+.got-input{width:110px;padding:3px 6px;border:1.5px solid #6EE7B7;border-radius:4px;font-size:12px;text-align:right;font-family:'Inter',monospace;background:#F0FDF4;font-weight:600}
+.adj-input{width:100px;padding:3px 6px;border:1.5px solid #93C5FD;border-radius:4px;font-size:12px;text-align:right;font-family:'Inter',monospace;background:#EFF6FF;font-weight:600}
+.adj-help{font-size:10px;color:#6B7280;line-height:1.4}
+.pull-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+.pull-chip.wait{background:#F3F4F6;color:#6B7280}
+.pull-chip.ok{background:#DCFCE7;color:#166534}
 .tp-chip{display:inline-block;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:700}
 .tp-chip.mou{background:#DBEAFE;color:#1D4ED8}.tp-chip.si{background:#FEF3C7;color:#92400E}.tp-chip.so{background:#F3E8FF;color:#6D28D9}.tp-chip.coop{background:#FCE7F3;color:#9D174D}
 .rec{font-weight:700}.rec.ok{color:#065F46}.rec.low{color:#B45309}
@@ -125,6 +132,32 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .row-bottom .summary-row{padding:2px 0;font-size:11px}.row-bottom .summary-total{font-size:12px;padding:6px 10px;margin-top:4px}
 .row-bottom .card-header{padding-bottom:5px;margin-bottom:5px}
 .ph{color:#9CA3AF;font-style:italic}
+/* ── sync PO-2 2026-06-12: แบบส่วนลด · โควต้า · บิลอ้างอิง ── */
+/* ④b: PO-7.1 เล็ก / PO-7.2 กว้าง · การ์ดละ 3 บรรทัด (mini-line) */
+.row-2col{grid-template-columns:0.75fr 1.55fr;gap:10px}
+.mini-line{display:flex;align-items:center;gap:6px;padding:3px 8px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:5px;font-size:11.5px;line-height:1.35;margin-bottom:3px;overflow:hidden;white-space:nowrap}
+.mini-line:last-child{margin-bottom:0}
+.mini-k{font-size:9.5px;font-weight:700;color:#6B7280;text-transform:uppercase;min-width:62px;flex:none}
+.mini-input{padding:2px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:11.5px;font-family:inherit;background:#fff}
+.mode-chip{display:inline-block;padding:2px 7px;border-radius:9px;font-size:10px;font-weight:700}
+.mode-chip.m1{background:#DBEAFE;color:#1D4ED8}.mode-chip.m2{background:#FEF3C7;color:#92400E}.mode-chip.m3{background:#F3E8FF;color:#6D28D9}
+.cond-txt{font-size:10.5px;color:#6B7280;margin-top:2px}
+.quota-ok{font-weight:700;color:#065F46;font-family:'Inter',monospace}.quota-over{font-weight:700;color:#DC2626;font-family:'Inter',monospace}
+.quota-warn{display:inline-block;padding:1px 6px;border-radius:3px;font-size:9.5px;font-weight:700;background:#FEF2F2;color:#991B1B;margin-top:2px}
+.bill-btn{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;cursor:pointer;font-family:inherit;margin-top:3px}
+.bill-btn:hover{background:#DBEAFE}
+.src-chip{display:inline-block;padding:2px 8px;border-radius:9px;font-size:10px;font-weight:700;background:#ECFDF5;color:#065F46}
+/* standard popup (เหมือน PO-2) */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.55);display:none;align-items:center;justify-content:center;z-index:1100;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{width:min(860px,96vw);max-height:88vh;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #E5E7EB;box-shadow:0 24px 48px rgba(15,23,42,.35);display:flex;flex-direction:column}
+.modal-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(90deg,#065F46 0%,#10B981 100%);color:#fff}
+.modal-head .ttl{font-size:13px;font-weight:700;flex:1}
+.modal-head .sub{font-size:10.5px;color:rgba(255,255,255,.85)}
+.modal-close-x{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.16);color:#fff;border-radius:6px;padding:3px 9px;cursor:pointer;font-size:12px;font-family:inherit}
+.modal-close-x:hover{background:rgba(255,255,255,.25)}
+.modal-body{padding:14px;overflow:auto;background:#F8FAFC;flex:1}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:10px 14px;border-top:1px solid #E5E7EB;background:#fff}
 .tpl-zone{font-size:9px;font-weight:700;color:#065F46;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:4px;padding:1px 6px;margin-left:6px;text-transform:uppercase;letter-spacing:0.04em}
 </style>
   <link rel="stylesheet" href="swt-patterns.css">
@@ -133,135 +166,103 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 <div class="layout">
 <div class="main">
 
-  <div class="topbar">
-    <div class="topbar-breadcrumb">จัดซื้อ <span class="sep">›</span> ส่งเสริมการขาย <span class="sep">›</span> <span class="current">ACR-2606-0015</span></div>
-    <div class="topbar-spacer"></div>
-    <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
-    <div class="topbar-icon">🔔</div>
-    <select class="branch-sel" title="สาขา"><option>🏢 HQ สนง.ใหญ่</option></select>
-    <select class="branch-sel" title="แผนก"><option>แผนกจัดซื้อ</option><option>บัญชี</option></select>
-    <div class="topbar-avatar">สศ</div>
-  </div>
-
-  <header class="main-header">
-    <div class="mh-left">
-      <div class="mh-title">
-        <div class="ico">🎁</div>
-        <div><h1>ส่งเสริมการขาย</h1><p>Trade Support Realization (PO-7) · สรุปได้จริง → ตั้งหนี้</p></div>
-      </div>
-      <div class="mh-divider"></div>
-      <div class="mh-meta">
-        <div class="mh-meta-item"><div class="lbl">เลขที่ Accrual</div><div class="val">ACR-2606-0015</div></div>
-        <div class="mh-meta-item"><div class="lbl">งวด Claim</div><div class="val">Q2/2026</div></div>
-        <div class="mh-meta-item"><div class="lbl">อ้างอิงข้อตกลง</div><div class="val">PO-2 (Daikin)</div></div>
+    <!-- ①② UNIFIED HEADER — Topbar + Main Header รวม -->
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">จัดซื้อ <span class="sep">›</span> ส่งเสริมการขาย <span class="sep">›</span> <span class="current">PO-7 สรุปงบจัดซื้อ · ACR-2606-0015</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+        <div class="topbar-icon">🔔</div>
+        <select class="branch-sel" title="สาขา"><option>🏢 HQ สนง.ใหญ่</option></select>
+        <select class="branch-sel" title="แผนก"><option>แผนกจัดซื้อ</option><option>บัญชี</option></select>
+        <div class="topbar-avatar">สศ</div>
       </div>
     </div>
-    <div class="mh-right">
-      <span class="mh-badge">🕓 Accrued</span>
-      <button class="mh-btn mh-btn-ghost" onclick="location.href='po2-rfq-mockup.html'">📑 ข้อตกลง PO-2</button>
-      <button class="mh-btn mh-btn-primary" onclick="po7Realize()">✅ Confirm & Realize → ตั้งหนี้</button>
+    <div class="uh-main">
+      <div class="mh-left">
+        <div class="mh-title">
+          <div class="ico">🎁</div>
+          <div><h1>ส่งเสริมการขาย</h1><p>Trade Support Realization (PO-7) · สรุปได้จริง → ตั้งหนี้</p></div>
+        </div>
+        <div class="mh-divider"></div>
+        <div class="mh-meta">
+          <div class="mh-meta-item"><div class="lbl">เลขที่ Accrual</div><div class="val">ACR-2606-0015</div></div>
+          <div class="mh-meta-item"><div class="lbl">งวด Claim</div><div class="val">Q2/2026</div></div>
+          <div class="mh-meta-item"><div class="lbl">อ้างอิงข้อตกลง</div><div class="val">PO-2 (Daikin)</div></div>
+        </div>
+      </div>
+      <div class="mh-right">
+        <span class="mh-badge">🕓 Accrued</span>
+        <button class="mh-btn mh-btn-ghost" onclick="location.href='po2-rfq-mockup.html'">📑 ข้อตกลง+หลักฐาน PO-2</button>
+        <button class="mh-btn mh-btn-primary" onclick="po7Realize()">✅ Confirm & Realize → ตั้งหนี้</button>
+      </div>
     </div>
   </header>
 
-  <div class="saab">
+    <!-- ③ SAAB ย่อ — ปุ่มหลัก + ⋯ (action เด่นอยู่ main-header เท่านั้น) -->
+  <div class="saab saab-compact">
     <button class="btn btn-outline" onclick="dfOpen()">📂 เปิดเอกสารเก่า</button>
     <button class="btn btn-outline">💾 Save Draft</button>
     <button class="btn btn-outline">📎 แนบ CN/เอกสารจากห้าง</button>
-    <button class="btn btn-outline" onclick="window.print()">🖨️ พิมพ์</button>
-    <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
-    <span class="saab-status"><span class="dot"></span>สถานะ: <strong>Accrued</strong> · รอ Doc/Realize · Vendor Daikin · งวด Q2/2026</span>
+    <div class="saab-more-wrap">
+      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
+      <div class="saab-more-menu">
+        <button type="button" class="btn btn-menu btn-outline" onclick="window.print()">🖨️ พิมพ์</button>
+        <button type="button" class="btn btn-menu btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
+      </div>
+    </div>
+    <div class="saab-spacer"></div>
   </div>
 
   <div class="content">
 
-    <!-- ④a STATUS STEPPER + DOC-CHAIN -->
-    <div class="status-strip">
-      <div class="stepper">
-        <span class="step done">✓ Draft</span><span class="step-arrow">→</span>
-        <span class="step current">● Accrued (commit·รับรู้)</span><span class="step-arrow">→</span>
-        <span class="step">Doc Received</span><span class="step-arrow">→</span>
-        <span class="step">Realized (ได้จริง)</span>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
-        <span style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
-        <a class="dc-node done" href="po2-rfq-mockup.html" target="_blank">PO-2 ข้อตกลง</a><span class="dc-arrow">→</span>
-        <span class="dc-node current">PO-7 ได้จริง</span><span class="dc-arrow">→</span>
-        <a class="dc-node" href="po6-ap-invoice-mockup.html" target="_blank">ตัด PO-6 ตั้งหนี้</a>
-      </div>
-    </div>
+    <!-- ④a SC-12 Status (pills + maker-checker · ไม่มี doc-chain) -->
+    <div id="po7Sc12" class="status-strip"></div>
+    <div id="po7Gate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL: PO-7.1 เจ้าหนี้ + PO-7.2 ข้อมูล -->
+    <!-- ④b PO-7.1 ย่อเล็ก (0.75fr) · PO-7.2 ขยาย (1.55fr) · การ์ดละ 3 บรรทัด -->
     <div class="row-2col">
       <div class="card compact">
         <div class="card-header">
-          <div class="card-title"><span class="secno">PO-7.1</span><span class="ico">🏭</span>เจ้าหนี้ (Vendor) <span class="tpl-zone">SC-3</span></div>
+          <div class="card-title"><span class="secno">PO-7.1</span><span class="ico">🏭</span>Vendor <span class="tpl-zone">SC-3</span></div>
           <div class="card-spacer"></div>
-          <button class="card-btn primary" onclick="dfOpenVend()">🔍 เลือก/เปลี่ยน</button>
+          <button class="card-btn primary" onclick="dfOpenVend()">🔍 เปลี่ยน</button>
         </div>
-        <div class="field-grid-2">
-          <div class="field"><div class="field-label">รหัส · ชื่อ</div><div class="field-value"><span class="highlight">V-00045</span> · Daikin Industries (TH) Ltd.</div></div>
-          <div class="field"><div class="field-label">Buyer ผู้ดูแล</div><div class="field-value">สมศรี วงศ์ทอง</div></div>
-          <div class="field"><div class="field-label">Tier · เกรด</div><div class="field-value">T2 · Recovery รวม 90.5%</div></div>
-          <div class="field"><div class="field-label">ยอดซื้อ 12 เดือน</div><div class="field-value">8,420,000</div></div>
-        </div>
+        <div class="mini-line"><span class="mini-k">คู่สัญญา</span><span class="mono" style="color:#065F46;font-weight:700">V-00045</span> · Daikin Industries (TH) Ltd.</div>
+        <div class="mini-line"><span class="mini-k">Buyer·Tier</span>สมศรี วงศ์ทอง · T2 · Recovery 90.5%</div>
+        <div class="mini-line"><span class="mini-k">ซื้อ 12 ด.</span><span class="mono">8,420,000</span></div>
       </div>
       <div class="card compact">
-        <div class="card-header"><div class="card-title"><span class="secno">PO-7.2</span><span class="ico">📋</span>ข้อมูลสรุปงบ</div>
+        <div class="card-header"><div class="card-title"><span class="secno">PO-7.2</span><span class="ico">📋</span>ข้อมูลสรุปงบ (2-step pull + เอกสารบริษัท)</div>
           <div class="card-spacer"></div>
-          <button class="card-btn" onclick="dfOpenRef()" title="ดึงข้อตกลงงบจาก PO-2 (Vendor Commitment) ของ Vendor นี้ตามงวด">🔗 ดึงข้อตกลง PO-2</button>
+          <button class="card-btn" onclick="po7PullPo2()" title="Step 1: ดึงข้อตกลง + เงื่อนไขส่วนลด + ไฟล์หลักฐานจาก PO-2">① ดึงจาก PO-2</button>
+          <button class="card-btn primary" onclick="po7PullActual()" title="Step 2: ดึงยอดจริง — MOU/Sell-in = ยอดซื้อ (WH-1/PO-8) · Sell-out = SL-4 บิลขาย">② ดึงยอดจริง</button>
+          <button class="card-btn" onclick="po7OpenCompanyDocs()">📎 เอกสารยืนยันยอด</button>
         </div>
-        <div class="field-grid-2">
-          <div class="field"><div class="field-label">เลขที่ Accrual</div><div class="field-value highlight">ACR-2606-0015</div></div>
-          <div class="field"><div class="field-label">งวด Claim</div><div class="field-value">ไตรมาส Q2/2026 (เม.ย.–มิ.ย.)</div></div>
-          <div class="field"><div class="field-label">จำนวนข้อตกลง (VC)</div><div class="field-value">3 รายการ (MOU · Sell-in · Co-op)</div></div>
-          <div class="field"><div class="field-label">ส่งตั้งหนี้ที่</div><div class="field-value">PO-6 (เมื่อ Realized)</div></div>
-        </div>
+        <div class="mini-line"><span class="mini-k">Accrual</span><span class="mono" style="font-weight:700;color:#065F46">ACR-2606-0015</span> · งวด Q2/2026 (เม.ย.–มิ.ย.) · ส่งตั้งหนี้: PO-6 เมื่อ Realized</div>
+        <div class="mini-line"><span class="mini-k">ข้อตกลง</span><select id="po7AgreementSelect" onchange="po7ChangeAgreement(this.value)" class="mini-input" style="flex:1;max-width:300px"><option value="AG-MOU-2604-001">AG-MOU-2604-001 · MOU</option><option value="AG-SI-2604-005" selected>AG-SI-2604-005 · Sell-in</option><option value="AG-SO-2604-008">AG-SO-2604-008 · Sell-out</option><option value="AG-CO-2604-012">AG-CO-2604-012 · Co-op</option></select><span class="mini-k" style="min-width:auto">แหล่ง</span><span id="po7SourceLabel" class="src-chip">ยอดซื้อ — WH-1 ใบรับสินค้า / PO-8 บิลฝาก</span></div>
+        <div class="mini-line"><span class="mini-k">ช่วง/สถานะ</span><input id="po7Range" onblur="po7RenderRow(document.getElementById('po7AgreementSelect').value)" value="01/04/26 - 30/06/26" class="mini-input mono" style="width:140px"><input id="po7ItemFilter" onblur="po7RenderRow(document.getElementById('po7AgreementSelect').value)" value="ใช้รายการตาม PO-2 ที่เลือก" class="mini-input" style="flex:1;min-width:110px"><span style="flex:none">①<span id="po7Po2Pull" class="pull-chip wait">รอดึง</span> ②<span id="po7ActualPull" class="pull-chip wait">รอดึง</span></span></div>
       </div>
     </div>
 
     <!-- ④c PO-7.3 รายการส่งเสริมการขาย (ดึงจาก PO-2 · สรุปได้จริง) -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">PO-7.3</span><span class="ico">🎁</span>รายการส่งเสริมการขาย — เป้า vs ได้จริง <span class="tpl-zone">ดึงจาก PO-2 · 4 ประเภท</span></div>
+        <div class="card-title"><span class="secno">PO-7.3</span><span class="ico">🎁</span>รายการสรุป (ดึง PO-2 + ดึงยอดจริง) <span class="tpl-zone">MOU/Sell-in/Sell-out = ลิสต์สินค้า · Co-op = บันทึกความเข้าใจ</span></div>
         <div class="card-spacer"></div>
-        <span style="font-size:11px;color:#065F46;font-weight:600">Recovery รวม 90.5% (เป้า ≥90%)</span>
+        <span style="font-size:11px;color:#065F46;font-weight:600" id="po7HeadKpi">Recovery รายการนี้ 100.0%</span>
       </div>
       <div class="items-wrap">
         <table class="items">
-          <thead><tr><th>#</th><th>ประเภทงบ</th><th>อ้างอิง VC (PO-2)</th><th class="num">เป้า (Agreement)</th><th class="num">ได้รับจริง</th><th class="num">ผลต่าง</th><th class="num">Recovery%</th><th>สถานะ</th><th>เลข CN/Invoice</th></tr></thead>
-          <tbody>
-            <tr>
-              <td>1</td><td><span class="tp-chip mou">MOU (Rebate)</span></td><td><a class="vc-code" href="po2-rfq-mockup.html">VC-MOU-2601-001</a></td>
-              <td class="num">252,600.00</td><td class="num"><input class="got-input" value="242,500.00"></td><td class="num" style="color:#B45309">-10,100</td>
-              <td class="num rec ok">96%</td><td><span class="st-chip doc">Doc Received</span></td><td class="mono" style="font-size:11px">APCN-2606-0012</td>
-            </tr>
-            <tr>
-              <td>2</td><td><span class="tp-chip si">Sell-in</span></td><td><a class="vc-code" href="po2-rfq-mockup.html">VC-SI-2604-007</a></td>
-              <td class="num">45,200.00</td><td class="num"><input class="got-input" value="45,200.00"></td><td class="num bal-zero" style="color:#10B981">0</td>
-              <td class="num rec ok">100%</td><td><span class="st-chip real">Realized (บนบิล)</span></td><td class="mono" style="font-size:11px">— (หักบนบิล PO-6)</td>
-            </tr>
-            <tr>
-              <td>3</td><td><span class="tp-chip coop">Co-op</span></td><td><a class="vc-code" href="po2-rfq-mockup.html">VC-COOP-2605-003</a></td>
-              <td class="num">20,000.00</td><td class="num"><input class="got-input" value="0.00"></td><td class="num" style="color:#B91C1C">-20,000</td>
-              <td class="num rec low">0%</td><td><span class="st-chip acc">Accrued (รอเคลม)</span></td><td class="mono" style="font-size:11px">⚠ รอเอกสาร</td>
-            </tr>
-            <tr class="empty-row"><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>11</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>12</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>13</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>14</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td>15</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <thead id="po7ListHead"></thead>
+          <tbody id="po7Rows">
+            <tr class="empty-row"><td>1</td><td colspan="9">กำลังโหลดรายการข้อตกลงจาก PO-2...</td></tr>
           </tbody>
         </table>
       </div>
       <div style="padding:8px 14px;border-top:1px dashed #E5E7EB;background:#F0FDF4;font-size:11px;color:#6B7280">
-        💡 Sell-in = หักบนบิลแล้ว (Realized ตรงเข้า PO-6) · MOU/Sell-out/Co-op = หลังบิล (ได้ CN ก่อนถึง Realized) · กด "Confirm & Realize" → ยอด<b>ได้รับจริง</b>ส่งเข้า PO-6 ตั้งหนี้
+        💡 Flow บังคับ 2 ครั้ง: <b>① ดึง PO-2</b> (line สินค้า + เงื่อนไขส่วนลด + เอกสาร) → <b>② ดึงยอดจริง</b> — MOU/Sell-in = <b>ยอดซื้อ</b> (WH-1 ใบรับสินค้า / PO-8 บิลฝาก) · Sell-out = <b>SL-4 บิลขาย</b> · กด 📄 ดูบิลอ้างอิงต่อแถว · สิทธิ์คำนวณตามแบบ ①฿/ตัว ②% ③฿+โควต้า (เกินโควต้า = ตัดสิทธิ์) · กรอก <b>ยอดบริษัทจ่ายจริง</b> เพื่อส่ง PO-6
       </div>
     </div>
 
@@ -270,59 +271,92 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       <div class="tabset">
         <div class="tabset-nav">
           <button class="on" onclick="swTab(event,'t-agree')">ข้อตกลง (PO-2)</button>
-          <button onclick="swTab(event,'t-doc')">เอกสารจากห้าง</button>
+          <button onclick="swTab(event,'t-doc')">เอกสารอ้างอิงประกอบ</button>
           <button onclick="swTab(event,'t-sanction')">Sanction</button>
           <button onclick="swTab(event,'t-hist')">ประวัติ</button>
         </div>
         <div class="tabset-pane on" id="t-agree">
           <div class="tab-grid">
-            <span class="k">MOU (รายหมวด)</span><span class="v">เป้า 3% · ซื้อสะสม 8.4M → Rebate 252,600 (Recovery ≥95%)</span>
-            <span class="k">Sell-in (รายรุ่น)</span><span class="v">2% บนบิล (Case 4) · หักทันทีตอนเปิด PO</span>
-            <span class="k">Co-op (Event)</span><span class="v">งบจัด event 20,000 · ตามแคมเปญ</span>
+            <span class="k">รหัสข้อตกลงที่เลือก</span><span class="v"><span id="po7AgreeCode">AG-SI-2604-005</span> · ดึงทีละ 1 รายการจาก PO-2</span>
+            <span class="k">เงื่อนไข PO-2</span><span class="v" id="po7AgreeRule">Sell-in กรอบยอดซื้อ · scope ตามประเภท/ยี่ห้อ/หมวด/สินค้า</span>
+            <span class="k">ช่วงเวลา/สินค้าอ้างอิง</span><span class="v" id="po7AgreeScope">15 เม.ย. 26 - 30 มิ.ย. 26 · SKU-RF-1001, SKU-RF-1005, SKU-RF-1010</span>
           </div>
         </div>
         <div class="tabset-pane" id="t-doc">
-          <div class="tab-grid">
-            <span class="k">CN MOU (ได้แล้ว)</span><span class="v">APCN-2606-0012 · 242,500 · 20 มิ.ย. 26</span>
-            <span class="k">Co-op (ค้าง)</span><span class="v" style="color:#B91C1C">⚠ ยังไม่ได้เอกสาร event จากห้าง</span>
-          </div>
+          <table class="items">
+            <thead><tr><th>อ้างอิงข้อตกลง</th><th>เอกสารจาก PO-2</th><th>เอกสารยืนยันยอดจริงของบริษัท</th><th>สถานะเอกสาร</th><th>หมายเหตุ</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="mono" id="po7DocCode">AG-SI-2604-005</td>
+                <td id="po7DocSet">AG-SI-2604-005-main-agreement.pdf + scope-matrix.docx + signed-paper-scan.jpg</td>
+                <td id="po7CompanyDocSet">company-claim-confirm-2606.pdf + cn-confirmation-letter.docx</td>
+                <td><span class="st-chip doc" id="po7DocStatus">ครบ</span></td>
+                <td id="po7DocNote">เอกสารชุด PO-2 + เอกสารยืนยันยอดจริงของบริษัท ใช้ร่วมกันในการยืนยันรอบนี้</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin-top:8px;font-size:11px;color:#6B7280">💡 เอกสารของ PO-7 เหมือน PO-2 ทุกประการ และเพิ่มเฉพาะเอกสารบริษัทที่ยืนยันยอดเงินจริง</div>
         </div>
         <div class="tabset-pane" id="t-sanction">
           <div class="tab-grid">
-            <span class="k">Co-op VC-COOP-2605-003</span><span class="v">ครบกำหนดส่ง CN: เกิน 15 วัน</span>
+            <span class="k">Co-op AG-CO-2604-012</span><span class="v">ครบกำหนดส่ง CN: เกิน 15 วัน</span>
           </div>
           <div class="sanction">⚠ Sanction Day 15: Escalate ผจก.บัญชี + Formal Letter · ถ้าเกิน Day 30 → STOP NEW PO กับ Vendor</div>
         </div>
         <div class="tabset-pane" id="t-hist">
           <div class="tl">
-            <div class="tl-item"><span class="tl-dot"></span> ดึงข้อตกลงจาก PO-2 (3 VC) · งวด Q2 · สมศรี</div>
-            <div class="tl-item"><span class="tl-dot"></span> Sell-in Realized (หักบนบิล PO-6) · 100%</div>
-            <div class="tl-item"><span class="tl-dot"></span> MOU ได้ CN APCN-2606-0012 (Doc Received) · 96%</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> Co-op รอเอกสาร → Confirm & Realize ส่วนที่ได้จริง → PO-6</div>
+            <div class="tl-item"><span class="tl-dot"></span> ดึงข้อตกลงจาก PO-2 ทีละรายการ: <span class="mono" id="po7HistCode">AG-SI-2604-005</span></div>
+            <div class="tl-item"><span class="tl-dot"></span> ระบบดึงยอดจริงตามช่วงเวลา + รายการสินค้าจาก PO-2 อัตโนมัติ</div>
+            <div class="tl-item"><span class="tl-dot"></span> ผู้ใช้กรอกยอดบริษัทจ่ายจริงเพื่อยืนยันก่อน Realize</div>
+            <div class="tl-item"><span class="tl-dot pending"></span> Confirm & Realize → ส่งยอดยืนยันจริงไป PO-6</div>
           </div>
         </div>
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title"><span class="secno">PO-7.5</span><span class="ico">💰</span>สรุปยอดได้จริง</div></div>
-        <div class="summary-row"><span class="lbl">ยอดตามข้อตกลง (เป้า)</span><span class="val">317,800.00</span></div>
-        <div class="summary-row"><span class="lbl">ได้เอกสารแล้ว (Doc)</span><span class="val">287,700.00</span></div>
-        <div class="summary-row"><span class="lbl">รับจริง (Realized)</span><span class="val" style="color:#065F46">287,700.00</span></div>
-        <div class="summary-row open"><span class="lbl">⏳ ค้าง (Co-op)</span><span class="val">30,100.00</span></div>
-        <div class="summary-total"><span>ส่งตั้งหนี้ (ได้จริง → PO-6)</span><span class="val">287,700.00</span></div>
-        <div class="rr-box">Recovery Rate 90.5% · ผ่านเกณฑ์รวม (≥90%) · Co-op ยังต้องตาม</div>
+        <div class="summary-row"><span class="lbl">สิทธิ์ส่วนลดตาม PO-2 (คำนวณ)</span><span class="val" id="po7SumTarget">0.00</span></div>
+        <div class="summary-row"><span class="lbl">ยอดซื้อ/ขายจริงที่ดึงได้ (ฐาน)</span><span class="val" id="po7SumActual">0.00</span></div>
+        <div class="summary-row"><span class="lbl">ยอดบริษัทจ่ายจริง (กรอกมือ)</span><span class="val" id="po7SumAdj">0.00</span></div>
+        <div class="summary-row open"><span class="lbl">ผลต่างจากเป้า</span><span class="val" id="po7SumDiff">0.00</span></div>
+        <div class="summary-total"><span>ยอดส่งตั้งหนี้ (ใช้ยอดยืนยันจริง)</span><span class="val" id="po7SumFinal">45,200.00</span></div>
+        <div class="rr-box" id="po7SumRecovery">Recovery Rate 100.0% · ใช้ยอดบริษัทจ่ายจริงเป็นยอดยืนยัน</div>
       </div>
     </div>
 
     <!-- ④e NOTES -->
     <div class="card" style="padding:8px 12px;display:flex;align-items:center;gap:8px">
       <span style="font-size:12px;font-weight:600;color:#374151">🗒️ หมายเหตุ</span>
-      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="งวด Q2 · Sell-in+MOU Realized 287,700 ส่งตั้งหนี้ได้ · Co-op 20,000 รอเอกสาร event (Sanction Day 15)">
+      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="งวด Q2 · ดึง PO-2 + ดึงยอดจริงตามช่วง/สินค้า · กรอกยอดบริษัทจ่ายจริงแล้วส่ง PO-6">
     </div>
 
   </div><!-- /content -->
 
+
+  <!-- ⑤ DOC-CHAIN แถบล่าง main -->
+  <div id="po7DcStrip" class="dc-strip"></div>
 </div><!-- /main -->
 </div><!-- /layout -->
+
+<!-- POPUP: บิลอ้างอิงยอดจริงต่อแถว (WH-1 ใบรับสินค้า / PO-8 บิลฝาก / SL-4 บิลขาย) -->
+<div class="modal-overlay" id="mPo7Bills" onclick="po7CloseBills()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="ttl" id="po7BillTtl">📄 บิลอ้างอิงยอดจริง</div>
+      <div class="sub" id="po7BillSub">—</div>
+      <button class="modal-close-x" onclick="po7CloseBills()">✕</button>
+    </div>
+    <div class="modal-body">
+      <table class="items">
+        <thead><tr><th style="width:30px">#</th><th>เลขที่บิล</th><th>ประเภทเอกสาร</th><th style="width:80px">วันที่</th><th class="num" style="width:70px">จำนวน</th><th class="num" style="width:110px">ยอด (บาท)</th></tr></thead>
+        <tbody id="po7BillRows"></tbody>
+      </table>
+      <div style="margin-top:8px;font-size:11px;color:#6B7280">💡 คลิกเลขที่บิลเพื่อเปิดเอกสารต้นทาง — WH-1 ใบรับสินค้า (GRN) · PO-8 บิลฝาก (Deposit) · SL-4 บิลขาย</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="po7CloseBills()">ปิด</button>
+    </div>
+  </div>
+</div>
 
 <script>
 function swTab(e,id){
@@ -333,13 +367,309 @@ function swTab(e,id){
   set.querySelectorAll('.tabset-pane').forEach(p=>p.classList.remove('on'));
   set.querySelector('#'+id).classList.add('on');
 }
+/* ── sync PO-2 ใหม่ 2026-06-12: ส่วนลด 3 แบบรายบรรทัด + โควต้า + บิลอ้างอิงยอดจริง ──
+   mode: m1=ลดบาท/ตัว · m2=ลด % · m3=ลดบาท/ตัว+โควต้า (เกินโควต้า = ตัดสิทธิ์)
+   source: purchase = WH-1 ใบรับสินค้า (GRN) / PO-8 บิลฝาก · sales = SL-4 บิลขาย */
+var po7AgreementData={
+  'AG-MOU-2604-001':{
+    type:'mou',
+    typeLabel:'MOU (กรอบยอดซื้อ)',
+    source:'purchase',
+    scope:'01 เม.ย. 26 - 30 มิ.ย. 26 · ประเภท: เครื่องใช้ไฟฟ้า · ยี่ห้อ: Daikin',
+    rule:'MOU ดึง scope สินค้าจาก PO-2 · ยอดจริง = ยอดซื้อ (WH-1 ใบรับสินค้า / PO-8 บิลฝาก)',
+    docs:'AG-MOU-2604-001-main-agreement.pdf + meeting-note-scope.docx + signed-paper-scan.jpg',
+    companyDocs:'company-mou-settlement-2606.pdf + company-payment-approval.docx',
+    items:[
+      {sku:'RF-1001',name:'ตู้เย็น Daikin 1 ประตู 6.4Q',mode:'m2',pct:2,qty:118,amt:765820,bills:[
+        {no:'GR-2604-0102',doc:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html',date:'10/04/26',qty:40,amt:259600},
+        {no:'GR-2605-0142',doc:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html',date:'05/05/26',qty:48,amt:311520},
+        {no:'DEP-2605-0009',doc:'PO-8 บิลฝาก',href:'po8-deposit-bill-mockup.html',date:'18/05/26',qty:30,amt:194700}]},
+      {sku:'WM-2002',name:'เครื่องซักผ้า Daikin 12kg',mode:'m2',pct:2,qty:36,amt:421200,bills:[
+        {no:'GR-2605-0160',doc:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html',date:'12/05/26',qty:36,amt:421200}]}
+    ]
+  },
+  'AG-SI-2604-005':{
+    type:'si',
+    typeLabel:'Sell-in (กรอบยอดซื้อ)',
+    source:'purchase',
+    scope:'15 เม.ย. 26 - 30 มิ.ย. 26 · 5 รายการตาม line PO-2 (เลือกเอง 3 + ⚡scope 2)',
+    rule:'Sell-in ดึง line สินค้า + เงื่อนไขส่วนลดจาก PO-2 · ยอดจริง = ยอดซื้อ (WH-1 ใบรับสินค้า / PO-8 บิลฝาก)',
+    docs:'AG-SI-2604-005-main-agreement.pdf + promo-announcement-q2.jpg + sign-photo-01.jpg',
+    companyDocs:'company-sellin-payout-2606.pdf + payout-confirm-mail.eml',
+    items:[
+      {sku:'RF-1001',name:'ตู้เย็น Daikin 1 ประตู 6.4Q',mode:'m1',baht:300,qty:86,amt:558140,bills:[
+        {no:'GR-2604-0155',doc:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html',date:'22/04/26',qty:32,amt:207680},
+        {no:'GR-2605-0201',doc:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html',date:'15/05/26',qty:36,amt:233640},
+        {no:'DEP-2605-0012',doc:'PO-8 บิลฝาก',href:'po8-deposit-bill-mockup.html',date:'28/05/26',qty:18,amt:116820}]},
+      {sku:'RF-1005',name:'ตู้เย็น Daikin 2 ประตู 7.9Q',mode:'m1',baht:250,qty:54,amt:485460,bills:[
+        {no:'GR-2604-0155',doc:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html',date:'22/04/26',qty:24,amt:215760},
+        {no:'GR-2606-0233',doc:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html',date:'05/06/26',qty:30,amt:269700}]},
+      {sku:'TV-3002',name:'TV Daikin Smart 43"',mode:'m3',baht:500,quota:50,quotaUnit:'ตัว',qty:62,amt:799800,bills:[
+        {no:'GR-2605-0177',doc:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html',date:'08/05/26',qty:40,amt:516000},
+        {no:'GR-2606-0240',doc:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html',date:'09/06/26',qty:22,amt:283800}]},
+      {sku:'AC-2001',name:'แอร์ Daikin Inverter 12000 BTU',mode:'m2',pct:3,fromScope:true,qty:25,amt:397500,bills:[
+        {no:'GR-2605-0188',doc:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html',date:'11/05/26',qty:25,amt:397500}]},
+      {sku:'AC-2008',name:'แอร์ Daikin Inverter 18000 BTU',mode:'m2',pct:3,fromScope:true,qty:11,amt:240900,bills:[
+        {no:'GR-2606-0245',doc:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html',date:'10/06/26',qty:11,amt:240900}]}
+    ]
+  },
+  'AG-SO-2604-008':{
+    type:'so',
+    typeLabel:'Sell-out (ยอดขายออก)',
+    source:'sales',
+    scope:'18 เม.ย. 26 - 30 มิ.ย. 26 · หมวด: เครื่องปรับอากาศ · ยี่ห้อ: Daikin',
+    rule:'Sell-out ดึง line สินค้าจาก PO-2 · ยอดจริง = ยอดขายออก (SL-4 บิลขาย) ตามช่วงวันที่',
+    docs:'AG-SO-2604-008-main-agreement.pdf + sku-filter-list.xlsx + vendor-confirmation.pdf',
+    companyDocs:'company-sellout-settlement-2606.pdf + company-cn-confirmation.pdf',
+    items:[
+      {sku:'AC-2001',name:'แอร์ Daikin Inverter 12000 BTU',mode:'m2',pct:3,fromScope:true,qty:21,amt:351900,bills:[
+        {no:'08SI-2605-0884',doc:'SL-4 บิลขาย',href:'sl4-invoice-mockup.html',date:'22/05/26',qty:12,amt:201600},
+        {no:'08SI-2606-0917',doc:'SL-4 บิลขาย',href:'sl4-invoice-mockup.html',date:'08/06/26',qty:9,amt:150300}]},
+      {sku:'AC-2008',name:'แอร์ Daikin Inverter 18000 BTU',mode:'m2',pct:3,fromScope:true,qty:13,amt:284700,bills:[
+        {no:'08SI-2606-0921',doc:'SL-4 บิลขาย',href:'sl4-invoice-mockup.html',date:'09/06/26',qty:13,amt:284700}]},
+      {sku:'AC-2015',name:'แอร์ Daikin Inverter 24000 BTU',mode:'m1',baht:400,qty:9,amt:260100,bills:[
+        {no:'08SI-2606-0930',doc:'SL-4 บิลขาย',href:'sl4-invoice-mockup.html',date:'10/06/26',qty:9,amt:260100}]}
+    ]
+  },
+  'AG-CO-2604-012':{
+    type:'coop',
+    typeLabel:'Co-op (บันทึกความเข้าใจ)',
+    scope:'Q2/2026 · campaign launch + event support',
+    rule:'Co-op แสดงเป็นลิสต์บันทึกความเข้าใจ พร้อมดึงยอดจริงรายหัวข้อและกรอกยอดบริษัทจ่ายจริงได้',
+    docs:'AG-CO-2604-012-mou.docx + campaign-brief.pdf + event-photo-set.zip',
+    companyDocs:'company-coop-budget-approval.pdf + company-coop-payout-slip.jpg',
+    memos:[
+      {topic:'วัตถุประสงค์',detail:'สนับสนุนงบเปิดตัวสินค้า Daikin Q2',owner:'Buyer + Vendor Sales',target:12000.00,actualPurchase:9000.00,actualSales:7800.00,status:'รอเอกสารกิจกรรม'},
+      {topic:'ภารกิจร่วม',detail:'Vendor สนับสนุนงบป้าย+พื้นที่หน้าร้าน',owner:'Vendor',target:5000.00,actualPurchase:4000.00,actualSales:3800.00,status:'ส่งหลักฐานครบ'},
+      {topic:'ติดตามผล',detail:'สรุปผลแคมเปญและอนุมัติปิดงวด',owner:'บัญชี + จัดซื้อ',target:3000.00,actualPurchase:0.00,actualSales:0.00,status:'รอสรุปงวด'}
+    ]
+  }
+};
+var po7State={po2Loaded:false,actualLoaded:false};
+function po7Fmt(n){
+  return Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function po7ParseNum(v){
+  return Number(String(v||'0').replace(/,/g,''))||0;
+}
+function po7SetPullChip(id,ok,text){
+  var el=document.getElementById(id);
+  if(!el) return;
+  el.className='pull-chip '+(ok?'ok':'wait');
+  el.textContent=text;
+}
+function po7PullPo2(){
+  po7State.po2Loaded=true;
+  po7State.actualLoaded=false;
+  po7SetPullChip('po7Po2Pull',true,'ดึงแล้ว');
+  po7SetPullChip('po7ActualPull',false,'รอดึง');
+  po7RenderRow(document.getElementById('po7AgreementSelect').value);
+}
+function po7PullActual(){
+  if(!po7State.po2Loaded){
+    alert('กรุณากด Step 1: ดึงจาก PO-2 ก่อน');
+    return;
+  }
+  po7State.actualLoaded=true;
+  po7SetPullChip('po7ActualPull',true,'ดึงแล้ว');
+  po7RenderRow(document.getElementById('po7AgreementSelect').value);
+}
+/* แหล่งยอดจริงตามประเภท (auto): MOU/Sell-in = ยอดซื้อ · Sell-out = ยอดขาย SL-4 */
+function po7SrcLabel(cfg){
+  if(cfg.type==='coop')return 'งบ Co-op — เอกสารกิจกรรม + อนุมัติบริษัท';
+  return cfg.source==='sales' ? 'ยอดขายออก — SL-4 บิลขาย' : 'ยอดซื้อ — WH-1 ใบรับสินค้า / PO-8 บิลฝาก';
+}
+function po7SrcChip(cfg){
+  return cfg.source==='sales' ? 'SL-4 บิลขาย' : 'WH-1 / PO-8';
+}
+/* เงื่อนไขส่วนลดต่อแถว (ดึงจาก PO-2) */
+function po7ModeChip(it){
+  if(it.mode==='m1')return '<span class="mode-chip m1">① ลดบาท/ตัว</span><div class="cond-txt">ลด '+po7Fmt(it.baht).replace('.00','')+' ฿/ตัว</div>';
+  if(it.mode==='m2')return '<span class="mode-chip m2">② ลด %</span><div class="cond-txt">ลด '+it.pct+'% ของยอดจริง</div>';
+  return '<span class="mode-chip m3">③ ลด+โควต้า</span><div class="cond-txt">ลด '+po7Fmt(it.baht).replace('.00','')+' ฿/ตัว · โควต้า '+it.quota+' '+(it.quotaUnit||'ตัว')+'</div>';
+}
+/* สิทธิ์ส่วนลดคำนวณตามแบบ — ①③ = ฿×จำนวนจริง (③ cap โควต้า) · ② = %×ยอดจริง */
+function po7Entitle(it){
+  if(!po7State.actualLoaded)return 0;
+  if(it.mode==='m1')return po7ParseNum(it.baht)*po7ParseNum(it.qty);
+  if(it.mode==='m2')return po7ParseNum(it.amt)*po7ParseNum(it.pct)/100;
+  return po7ParseNum(it.baht)*Math.min(po7ParseNum(it.qty),po7ParseNum(it.quota));
+}
+function po7QuotaCell(it){
+  if(it.mode!=='m3')return '<span style="color:#9CA3AF">—</span>';
+  if(!po7State.actualLoaded)return '<span class="quota-ok">-/'+it.quota+' '+(it.quotaUnit||'ตัว')+'</span>';
+  var over=it.qty>it.quota;
+  var html='<span class="'+(over?'quota-over':'quota-ok')+'">'+it.qty+'/'+it.quota+' '+(it.quotaUnit||'ตัว')+'</span>';
+  if(over)html+='<div class="quota-warn">⚠ เกิน '+(it.qty-it.quota)+' ตัว — ตัดสิทธิ์</div>';
+  return html;
+}
+/* เติมแถวว่างให้ตาราง PO-7.3 แสดงอย่างน้อย 10 บรรทัด (เทมเพลต ④c ≥10 แถว) */
+function po7PadRows(rowsEl,minRows,cols){
+  if(!rowsEl)return;
+  var have=rowsEl.querySelectorAll('tr').length;
+  for(var i=have;i<minRows;i++){
+    var tds='<td>'+(i+1)+'</td>';
+    for(var c=1;c<cols;c++)tds+='<td></td>';
+    rowsEl.insertAdjacentHTML('beforeend','<tr class="empty-row">'+tds+'</tr>');
+  }
+}
+function po7SetHeaders(type){
+  var head=document.getElementById('po7ListHead');
+  if(!head) return;
+  if(type==='coop'){
+    head.innerHTML='<tr><th>#</th><th>หัวข้อบันทึกความเข้าใจ</th><th>รายละเอียด</th><th>ผู้รับผิดชอบ</th><th class="num">เป้าตาม PO-2</th><th class="num">ยอดจริงที่ดึงได้</th><th class="num">ยอดบริษัทจ่ายจริง</th><th class="num">ผลต่าง</th><th>สถานะ</th><th>เอกสาร</th></tr>';
+  }else{
+    head.innerHTML='<tr><th>#</th><th>SKU</th><th>สินค้า</th><th>แบบส่วนลด (PO-2)</th><th>โควต้า ใช้/ทั้งหมด</th><th>ยอดจริงที่ดึงได้</th><th class="num">สิทธิ์ส่วนลดคำนวณ</th><th class="num">ยอดบริษัทจ่ายจริง</th><th class="num">ผลต่าง</th><th>แหล่งข้อมูล</th></tr>';
+  }
+}
+function po7RenderRow(code){
+  var cfg=po7AgreementData[code]||po7AgreementData['AG-SI-2604-005'];
+  var rangeVal=(document.getElementById('po7Range')||{value:'-'}).value;
+  var itemFilterVal=(document.getElementById('po7ItemFilter')||{value:'-'}).value;
+  var scopedText=cfg.scope+' · ช่วงดึง: '+rangeVal+' · ตัวกรอง: '+itemFilterVal;
+  po7SetHeaders(cfg.type);
+  var rows=document.getElementById('po7Rows');
+  if(rows){
+    if(!po7State.po2Loaded){
+      rows.innerHTML='<tr class="empty-row"><td>1</td><td colspan="9">กด Step 1 "ดึงจาก PO-2" เพื่อโหลดข้อตกลงและชุดเอกสารก่อน</td></tr>';
+    }else if(cfg.type==='coop'){
+      rows.innerHTML=cfg.memos.map(function(m,i){
+        var actual=po7State.actualLoaded?po7ParseNum(m.actualPurchase):0;
+        return '<tr data-po7-row="1" data-entitle="'+po7ParseNum(m.target)+'" data-base="'+actual+'">'
+          +'<td>'+(i+1)+'</td>'
+          +'<td><span class="tp-chip coop">Co-op</span> '+m.topic+'<br><a class="ag-code" href="po2-rfq-mockup.html">'+code+'</a></td>'
+          +'<td>'+m.detail+'</td>'
+          +'<td>'+m.owner+'</td>'
+          +'<td class="num">'+po7Fmt(m.target)+'</td>'
+          +'<td class="num">'+po7Fmt(actual)+'</td>'
+          +'<td class="num"><input class="adj-input" data-po7-pay="'+i+'" value="'+po7Fmt(actual)+'" oninput="po7Recalc()"><div class="adj-help">กรอกยอดที่บริษัทจ่ายจริง</div></td>'
+          +'<td class="num" id="po7DiffCell-'+i+'">'+po7Fmt(actual-po7ParseNum(m.target))+'</td>'
+          +'<td><span class="st-chip '+(po7State.actualLoaded?'doc':'acc')+'">'+m.status+'</span></td>'
+          +'<td class="mono" style="font-size:11px">PO-2 + เอกสารบริษัท</td>'
+          +'</tr>';
+      }).join('');
+    }else{
+      rows.innerHTML=cfg.items.map(function(item,i){
+        var entitle=po7Entitle(item);
+        var actualCell=po7State.actualLoaded
+          ?(item.qty+' ตัว · ฿'+po7Fmt(item.amt)+'<br><button class="bill-btn" onclick="po7ShowBills(\''+code+'\','+i+')">📄 '+item.bills.length+' บิล</button>')
+          :'<span style="color:#9CA3AF">รอดึงยอดจริง (Step ②)</span>';
+        return '<tr data-po7-row="1" data-entitle="'+entitle+'" data-base="'+(po7State.actualLoaded?po7ParseNum(item.amt):0)+'">'
+          +'<td>'+(i+1)+'</td>'
+          +'<td class="mono">'+item.sku+'</td>'
+          +'<td>'+item.name+(item.fromScope?'<br><span class="tp-chip si">⚡ จาก scope</span>':'')+'<br><a class="ag-code" href="po2-rfq-mockup.html">'+code+'</a></td>'
+          +'<td>'+po7ModeChip(item)+'</td>'
+          +'<td>'+po7QuotaCell(item)+'</td>'
+          +'<td>'+actualCell+'</td>'
+          +'<td class="num" style="font-weight:700;color:#065F46">'+po7Fmt(entitle)+'</td>'
+          +'<td class="num"><input class="adj-input" data-po7-pay="'+i+'" value="'+po7Fmt(entitle)+'" oninput="po7Recalc()"><div class="adj-help">กรอกยอดที่บริษัทจ่ายจริง</div></td>'
+          +'<td class="num" id="po7DiffCell-'+i+'">0.00</td>'
+          +'<td><span class="src-chip">'+(po7State.actualLoaded?po7SrcChip(cfg):'รอดึง')+'</span></td>'
+          +'</tr>';
+      }).join('');
+    }
+    po7PadRows(rows,10,10);
+  }
+  var srcLbl=document.getElementById('po7SourceLabel'); if(srcLbl) srcLbl.textContent=po7SrcLabel(cfg);
+  var codeEl=document.getElementById('po7AgreeCode'); if(codeEl) codeEl.textContent=code;
+  var ruleEl=document.getElementById('po7AgreeRule'); if(ruleEl) ruleEl.textContent=cfg.rule;
+  var scopeEl=document.getElementById('po7AgreeScope'); if(scopeEl) scopeEl.textContent=scopedText;
+  var dCode=document.getElementById('po7DocCode'); if(dCode) dCode.textContent=code;
+  var dSet=document.getElementById('po7DocSet'); if(dSet) dSet.textContent=cfg.docs;
+  var cSet=document.getElementById('po7CompanyDocSet'); if(cSet) cSet.textContent=cfg.companyDocs;
+  var dStatus=document.getElementById('po7DocStatus'); if(dStatus) dStatus.textContent=po7State.actualLoaded?'ครบ + ดึงยอดจริงแล้ว':(po7State.po2Loaded?'ครบ':'รอดึง');
+  var dNote=document.getElementById('po7DocNote'); if(dNote) dNote.textContent='เอกสาร PO-2 และเอกสารบริษัทของ '+code+' ถูกใช้ร่วมกับยอดจริงที่ดึงตามช่วง/สินค้า';
+  var hCode=document.getElementById('po7HistCode'); if(hCode) hCode.textContent=code;
+  po7Recalc();
+}
+function po7Recalc(){
+  var rows=document.querySelectorAll('#po7Rows tr[data-po7-row="1"]');
+  var totalEntitle=0,totalBase=0,totalPaid=0;
+  rows.forEach(function(row,idx){
+    var entitle=po7ParseNum(row.getAttribute('data-entitle'));
+    var base=po7ParseNum(row.getAttribute('data-base'));
+    var payInput=row.querySelector('[data-po7-pay="'+idx+'"]');
+    var paid=po7ParseNum(payInput?payInput.value:po7Fmt(entitle));
+    var diff=paid-entitle;
+    totalEntitle+=entitle; totalBase+=base; totalPaid+=paid;
+    var diffEl=document.getElementById('po7DiffCell-'+idx); if(diffEl){ diffEl.textContent=po7Fmt(diff); diffEl.style.color=diff>=0?'#10B981':'#B45309'; }
+  });
+  var totalDiff=totalPaid-totalEntitle;
+  var rec=totalEntitle?((totalPaid/totalEntitle)*100):0;
+  var kpi=document.getElementById('po7HeadKpi'); if(kpi) kpi.textContent='Recovery รายการนี้ '+po7Fmt(rec)+'%';
+  var sumTarget=document.getElementById('po7SumTarget'); if(sumTarget) sumTarget.textContent=po7Fmt(totalEntitle);
+  var sumActual=document.getElementById('po7SumActual'); if(sumActual) sumActual.textContent=po7Fmt(totalBase);
+  var sumAdj=document.getElementById('po7SumAdj'); if(sumAdj) sumAdj.textContent=po7Fmt(totalPaid);
+  var sumDiff=document.getElementById('po7SumDiff'); if(sumDiff) sumDiff.textContent=po7Fmt(totalDiff);
+  var sumFinal=document.getElementById('po7SumFinal'); if(sumFinal) sumFinal.textContent=po7Fmt(totalPaid);
+  var sumRec=document.getElementById('po7SumRecovery'); if(sumRec) sumRec.textContent='Recovery Rate '+po7Fmt(rec)+'% · ใช้ยอดบริษัทจ่ายจริงเป็นยอดยืนยัน';
+}
+/* 📄 popup ลิสต์บิลอ้างอิงยอดจริงต่อแถว (WH-1 ใบรับสินค้า / PO-8 บิลฝาก / SL-4 บิลขาย) */
+function po7ShowBills(code,idx){
+  var cfg=po7AgreementData[code]; if(!cfg||!cfg.items||!cfg.items[idx])return;
+  var it=cfg.items[idx];
+  var ttl=document.getElementById('po7BillTtl'); if(ttl) ttl.textContent='📄 บิลอ้างอิงยอดจริง — '+it.sku+' '+it.name;
+  var sub=document.getElementById('po7BillSub'); if(sub) sub.textContent=code+' · แหล่ง: '+po7SrcLabel(cfg)+' · ช่วง: '+(document.getElementById('po7Range')||{value:'-'}).value;
+  var sumQty=0,sumAmt=0;
+  var body=document.getElementById('po7BillRows');
+  if(body){
+    body.innerHTML=it.bills.map(function(b,i){
+      sumQty+=b.qty; sumAmt+=b.amt;
+      return '<tr><td>'+(i+1)+'</td><td class="mono"><a class="ag-code" href="'+b.href+'" target="_blank">'+b.no+' ↗</a></td><td>'+b.doc+'</td><td class="mono">'+b.date+'</td><td class="num">'+b.qty+'</td><td class="num">'+po7Fmt(b.amt)+'</td></tr>';
+    }).join('')
+    +'<tr style="background:#F0FDF4;font-weight:700"><td colspan="4">รวม</td><td class="num">'+sumQty+'</td><td class="num">'+po7Fmt(sumAmt)+'</td></tr>';
+  }
+  document.getElementById('mPo7Bills').classList.add('open');
+}
+function po7CloseBills(){document.getElementById('mPo7Bills').classList.remove('open');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')po7CloseBills();});
+function po7ChangeAgreement(code){
+  po7State.po2Loaded=false;
+  po7State.actualLoaded=false;
+  po7SetPullChip('po7Po2Pull',false,'รอดึง');
+  po7SetPullChip('po7ActualPull',false,'รอดึง');
+  po7RenderRow(code);
+}
 /* ✅ Confirm & Realize → เปลี่ยนสถานะ Accrued→Realized + ส่งยอดได้จริงเข้า PO-6 ตั้งหนี้ */
 function po7Realize(){
-  if(confirm('Confirm & Realize ส่งเสริมการขาย ACR-2606-0015 (mock):\n\n• เปลี่ยนสถานะ Accrued → Realized (เฉพาะที่ได้ CN จริง)\n• ส่งยอด "ได้รับจริง" 287,700 → PO-6 ใบตั้งหนี้ (ดึงเป็น "ส่งเสริมได้จริง" ตัด AP)\n• Co-op 20,000 ยังค้าง → คงสถานะ Accrued + ตาม Sanction\n• GL impact เกิดตอน Realized (forward เข้า AP offset)')){
+  if(!po7State.po2Loaded || !po7State.actualLoaded){
+    alert('ต้องดึงข้อมูลให้ครบ 2 ขั้นก่อน (ดึงจาก PO-2 และดึงยอดจริง)');
+    return;
+  }
+  var sel=document.getElementById('po7AgreementSelect');
+  var code=sel?sel.value:'AG-SI-2604-005';
+  var finalTxt=(document.getElementById('po7SumFinal')||{textContent:'0.00'}).textContent;
+  if(confirm('Confirm & Realize ส่งเสริมการขาย ACR-2606-0015 (mock):\n\n• ดึง PO-2: '+code+' (ทีละ 1 รายการ)\n• ยอดที่บริษัทยืนยันจ่ายจริง: '+finalTxt+'\n• ส่งยอดยืนยันจริงเข้า PO-6 ใบตั้งหนี้ (ส่งเสริมได้จริง)\n• GL impact เกิดตอน Realized (forward เข้า AP offset)')){
     location.href='po6-ap-invoice-mockup.html';
   }
 }
+function po7OpenCompanyDocs(){
+  alert('แนบเอกสารยืนยันยอดจริงของบริษัท (mock):\n- หนังสือยืนยันยอดจากบริษัท\n- ใบแจ้งยอดส่งเสริมการขาย\n- เอกสารอนุมัติจ่ายจริงภายใน');
+}
+function po7InitPatterns(){
+  swtRenderStatusStrip('#po7Sc12',{
+    pills:[
+      {text:'✓ Draft',type:'success'},
+      {text:'● Accrued (commit·รับรู้)',type:'info'},
+      {text:'Doc Received',type:'neutral'},
+      {text:'Realized (ได้จริง)',type:'neutral'}
+    ]
+  });
+  swtRenderDocChain('#po7DcStrip',{label:'Doc Chain',nodes:[
+    {label:'PO-2 ข้อตกลง',href:'po2-rfq-mockup.html',state:'done'},
+    {label:'PO-7 ได้จริง',state:'current'},
+    {label:'ตัด PO-6 ตั้งหนี้',href:'po6-ap-invoice-mockup.html'}
+  ]});
+  swtRenderGateAlert('#po7Gate',{type:'warn',text:'⏳ Accrued · รอ Doc/Realize · Co-op ค้าง 30,100'});
+}
+document.addEventListener('DOMContentLoaded',function(){
+  po7InitPatterns();
+  po7SetPullChip('po7Po2Pull',false,'รอดึง');
+  po7SetPullChip('po7ActualPull',false,'รอดึง');
+  po7RenderRow('AG-SI-2604-005');
+});
 </script>
+<script src="swt-patterns.js"></script>
 <script src="swt-doc-finder.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>

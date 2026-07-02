@@ -102,7 +102,7 @@ a.dc-node{text-decoration:none;cursor:pointer}a.dc-node:hover{filter:brightness(
 /* ITEMS TABLE (3-Way Match) */
 .items-card{padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
 .items-card .card-header{padding:12px 14px;margin:0;border-bottom:1px solid #E5E7EB}
-.items-wrap{overflow-y:auto;flex:1;min-height:60px}
+.items-wrap{overflow-y:auto;flex:1}
 table.items{width:100%;border-collapse:collapse;background:#fff}
 table.items thead{position:sticky;top:0;background:#F8FAFC;z-index:5}
 table.items thead th{padding:9px 10px;font-size:10.5px;font-weight:600;color:#6B7280;text-align:left;border-bottom:2px solid #E5E7EB;text-transform:uppercase;white-space:nowrap}
@@ -180,7 +180,6 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .row-2col .card.compact{padding:7px 10px}
 .row-2col .card-header{padding-bottom:5px;margin-bottom:5px}
 .row-2col .field{margin-bottom:3px}.row-2col .field-grid-2{gap:3px 14px}
-.content>.items-card{flex:1 1 0;min-height:110px}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col,.mode-bar,.gate-alert{flex:none}
 .row-bottom{font-size:12px;height:158px}
 .row-bottom .tabset,.row-bottom>.card{overflow:auto}
@@ -194,24 +193,24 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 </style>
   <link rel="stylesheet" href="swt-patterns.css">
 </head>
-<body>
+<body data-swt-sc="po6">
 <div class="layout">
 <div class="main">
 
-  <!-- ① TOPBAR -->
-  <div class="topbar">
-    <div class="topbar-breadcrumb">บัญชี/การเงิน <span class="sep">›</span> ใบตั้งหนี้เจ้าหนี้ <span class="sep">›</span> <span class="current">AP-2606-0088</span></div>
-    <div class="topbar-spacer"></div>
-    <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+  <!-- ①② UNIFIED HEADER — Topbar + Main Header รวม -->
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">บัญชี/การเงิน <span class="sep">›</span> ใบตั้งหนี้เจ้าหนี้ <span class="sep">›</span> <span class="current">AP-2606-0088</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
     <div class="topbar-icon">🔔</div>
     <select class="branch-sel" title="สาขา"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option></select>
     <select class="branch-sel" title="แผนก"><option>แผนกบัญชี</option><option>การเงิน</option><option>จัดซื้อ</option></select>
     <div class="topbar-avatar">บช</div>
-  </div>
-
-  <!-- ② MAIN HEADER -->
-  <header class="main-header">
-    <div class="mh-left">
+      </div>
+    </div>
+    <div class="uh-main">
+      <div class="mh-left">
       <div class="mh-title">
         <div class="ico">🧾</div>
         <div><h1>ใบตั้งหนี้เจ้าหนี้</h1><p>AP Invoice (PO-6) · งานบัญชี</p></div>
@@ -229,44 +228,29 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
       <button class="mh-btn mh-btn-accent" onclick="po6Post()">🧾 Post ตั้งหนี้</button>
     </div>
+    </div>
   </header>
 
-  <!-- ③ SAAB -->
-  <div class="saab">
+  <!-- ③ SAAB ย่อ — ปุ่มหลัก + ⋯ (action เด่นอยู่ main-header เท่านั้น) -->
+  <div class="saab saab-compact">
     <button class="btn btn-outline" onclick="dfOpen()" title="ค้นหา/เปิดเอกสารเก่า">📂 เปิดเอกสารเก่า</button>
     <button class="btn btn-outline">💾 Save Draft</button>
-    <button class="btn btn-outline" onclick="window.print()">🖨️ พิมพ์</button>
-    <button class="btn btn-outline" title="AP 1 ใบ อ้างอิงหลายใบรับได้ (Vendor รวมใบ)">➕ เพิ่มใบรับ (รวมบิล)</button>
-    <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
-    <span class="saab-status"><span class="dot"></span>สถานะ: <strong>รอ Post</strong> · จัดซื้อ Match แล้ว → รอบัญชี Post · Maker ≠ Checker</span>
+    <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์</button>
+    <div class="saab-more-wrap">
+      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
+      <div class="saab-more-menu">
+        <button type="button" class="btn btn-menu btn-outline" title="AP 1 ใบ อ้างอิงหลายใบรับได้ (Vendor รวมใบ)">➕ เพิ่มใบรับ (รวมบิล)</button>
+        <button type="button" class="btn btn-menu btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
+      </div>
+    </div>
+    <div class="saab-spacer"></div>
   </div>
 
   <div class="content">
 
     <!-- ④a STATUS + maker/checker + DOC-CHAIN -->
-    <div class="status-strip">
-      <div class="sc11-pills">
-        <span class="pill pill-neutral">📄 Draft</span>
-        <span class="pill pill-success" id="modePill">📥 รับครบทุกใบ (3-Way)</span>
-        <span class="pill pill-info">฿ VAT ซื้อ 7%</span>
-        <span class="pill pill-neutral">WHT: สินค้า (ไม่หัก)</span>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
-        <div class="mc-chain" title="Maker ≠ Checker · CF-2.6 Approval Matrix">
-          <div class="mc-node ok"><span class="r">จัดซื้อ ✓</span><span class="w">Match+คีย์</span></div>
-          <span class="mc-arrow">→</span>
-          <div class="mc-node wait"><span class="r">บัญชี ⏱</span><span class="w">Post GL</span></div>
-        </div>
-        <span class="dc-arrow">│</span>
-        <a class="dc-node done" href="po4-purchase-order-mockup.html" target="_blank">PO 0042</a><span class="dc-arrow">→</span>
-        <a class="dc-node done" href="wh1-grn-mockup.html" target="_blank">รับ GR-0210</a><span class="dc-arrow">→</span>
-        <span class="dc-node current">ตั้งหนี้ AP</span><span class="dc-arrow">→</span>
-        <a class="dc-node" href="fi2-ap-payment-mockup.html" target="_blank">จ่าย FI-2</a>
-      </div>
-    </div>
-
-    <!-- ④a3 GATE — สรุปประเภทรับเข้าอัตโนมัติจากบิลที่ดึงในรายการ 6.3 (ไม่มีโหมดรวมทั้งใบ) -->
-    <div class="gate-alert ok" id="gateAlert">✅ รับครบทุกบิล → ตั้งหนี้ได้ (เลือกประเภทรับทั้งหมด/บิลฝาก รายบิลที่รายการ PO-6.3)</div>
+    <div id="po6Sc12" class="status-strip"></div>
+    <div class="gate-alert ok" id="po6Gate"></div>
 
     <!-- ④b ROW-2COL: PO-6.1 เจ้าหนี้ + PO-6.2 ข้อมูลใบตั้งหนี้ -->
     <div class="row-2col">
@@ -299,14 +283,14 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       <div class="card-header">
         <div class="card-title"><span class="secno">PO-6.3</span><span class="ico">🧾</span>รายการเจ้าหนี้ — ดึงบิลมาตั้งหนี้/หักลบ <span class="tpl-zone">ตามเลขที่บิล · โหมดคุมประเภท</span></div>
         <div class="card-spacer"></div>
-        <button class="card-btn primary" onclick="openRefPick('inv')">🔗 ดึงรายการอ้างอิง</button>
+        <button class="card-btn primary" onclick="openRefPick('inv')">🔗 ดึงรายการอ้างอิง <span class="tpl-zone">SC-14</span></button>
       </div>
       <div class="items-wrap">
         <table class="items">
           <thead><tr><th>#</th><th>ประเภทบิล</th><th>เลขที่บิล</th><th>วันที่</th><th class="num">มูลค่า</th><th>สถานะ</th><th></th></tr></thead>
           <tbody>
             <tr data-kind="inv" data-recv="full" data-amt="2260000"><td>1</td><td><span class="btype grn">🧾 ใบแจ้งหนี้ Vendor</span></td><td class="item-code"><a href="#" onclick="openRefPick('inv');return false">DKN-INV-25088</a></td><td>25 มิ.ย. 26</td><td class="num amt-pos">+2,260,000.00</td><td><span class="match-chip ok">📥 รับทั้งหมด · 3-Way ✓ GR-0210</span></td><td><button class="drill-btn" onclick="openMatch()">🔍 3-Way</button></td></tr>
-            <tr data-kind="billdisc" data-amt="-45200"><td>2</td><td><span class="btype promo">🎁 ส่งเสริม Sell-in (บนบิล)</span></td><td class="item-code">VC-SI-2604-007</td><td>—</td><td class="num amt-neg">-45,200.00</td><td>หักบนบิล (ก่อน VAT)</td><td></td></tr>
+            <tr data-kind="billdisc" data-amt="-45200"><td>2</td><td><span class="btype promo">🎁 ส่งเสริม Sell-in (บนบิล)</span></td><td class="item-code">AG-SI-2604-007</td><td>—</td><td class="num amt-neg">-45,200.00</td><td>หักบนบิล (ก่อน VAT)</td><td></td></tr>
             <tr data-kind="deduct" data-amt="-30000"><td>3</td><td><span class="btype cn">↩️ ใบลดหนี้ (PO-CN)</span></td><td class="item-code">APCN-2606-0012</td><td>20 มิ.ย. 26</td><td class="num amt-neg">-30,000.00</td><td>หักหลังบิล (ตัดหนี้)</td><td></td></tr>
             <tr class="empty-row"><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
             <tr class="empty-row"><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
@@ -352,10 +336,11 @@ table.items th:last-child,table.items td:last-child{border-right:none}
         </div>
         <div class="tabset-pane" id="t-promo">
           <div class="tab-grid">
-            <span class="k">🎁 Sell-in บนบิล (VC-SI-2604-007)</span><span class="v">2% บนบิล → ลดยอดก่อน VAT <b>-45,200</b> (Case 4)</span>
-            <span class="k">↩️ Rebate/CN ตัดหนี้ (APCN-2606-0012)</span><span class="v">ใบลดหนี้เจ้าหนี้จาก Vendor → หัก AP <b style="color:#059669">-30,000</b></span>
-            <span class="k">🎪 Co-op (VC-COOP-2605-003)</span><span class="v ph">งบ event 20,000 · รอเคลม (ยังไม่ออกใบลดหนี้)</span>
-            <span class="k">ที่มา</span><span class="v">ดึงจากข้อตกลงงบ Vendor — <a href="po2-rfq-mockup.html" style="color:#2563EB;font-weight:600">PO-2 บันทึกข้อตกลงงบ (Vendor Commitment)</a></span>
+            <span class="k">🎁 Sell-in บนบิล (AG-SI-2604-007)</span><span class="v">2% บนบิล → ลดยอดก่อน VAT <b>-45,200</b> (Case 4 · หักทันทีบนบิล)</span>
+            <span class="k">✅ ส่งเสริมได้จริง (PO-7)</span><span class="v">ยอดบริษัทจ่ายจริงที่ PO-7 ยืนยันแล้ว → ส่งเข้า PO-6 เป็นรายการหัก · <a href="po7-rebate-dashboard.html" style="color:#2563EB;font-weight:600">เปิด PO-7 ส่งเสริมได้จริง ↗</a></span>
+            <span class="k">↩️ Rebate/CN ตัดหนี้ (APCN-2606-0012)</span><span class="v">ใบลดหนี้เจ้าหนี้ (จาก PO-7 realize หลังบิล) → หัก AP <b style="color:#059669">-30,000</b></span>
+            <span class="k">🎪 Co-op (AG-CO-2605-003)</span><span class="v ph">งบ event 20,000 · รอ PO-7 ยืนยันยอดจริง → ออกใบลดหนี้</span>
+            <span class="k">ที่มา (2 จังหวะ)</span><span class="v"><a href="po2-rfq-mockup.html" style="color:#2563EB;font-weight:600">PO-2 ข้อตกลง</a> → <a href="po7-rebate-dashboard.html" style="color:#2563EB;font-weight:600">PO-7 ได้จริง</a> → <b>PO-6 net</b></span>
           </div>
         </div>
         <div class="tabset-pane" id="t-ref">
@@ -375,14 +360,8 @@ table.items th:last-child,table.items td:last-child{border-right:none}
         </div>
       </div>
       <div class="card">
-        <div class="card-header"><div class="card-title"><span class="secno">PO-6.5</span><span class="ico">💰</span>สรุปยอดตั้งหนี้</div></div>
-        <div class="summary-row" id="sumInv"><span class="lbl">ยอดตามใบแจ้งหนี้ (ก่อนภาษี)</span><span class="val">2,260,000.00</span></div>
-        <div class="summary-row disc" id="sumBillDisc"><span class="lbl">🎁 ส่วนลดบนบิล (Sell-in)</span><span class="val">-45,200.00</span></div>
-        <div class="summary-row base" id="sumBase"><span class="lbl">หลังหักส่วนลด (ฐาน VAT)</span><span class="val">2,214,800.00</span></div>
-        <div class="summary-row" id="sumVat"><span class="lbl">VAT ซื้อ 7%</span><span class="val">155,036.00</span></div>
-        <div class="summary-row disc" id="sumDeduct"><span class="lbl">↩️ หักหลังบิล (มัดจำ/บิลฝาก/ลดหนี้/ส่งเสริม)</span><span class="val">-30,000.00</span></div>
-        <div class="summary-row wht"><span class="lbl">หัก ณ ที่จ่าย (WHT · สินค้าไม่หัก)</span><span class="val">-0.00</span></div>
-        <div class="summary-total"><span>ตั้งหนี้สุทธิ (ค้างจ่าย Vendor)</span><span class="val" id="sumNet">2,339,836.00</span></div>
+        <div class="card-header"><div class="card-title"><span class="secno">PO-6.5</span><span class="ico">💰</span>สรุปยอดตั้งหนี้ <span class="tpl-zone">SC-11</span></div></div>
+        <div id="po6Sc11"></div>
       </div>
     </div>
 
@@ -394,238 +373,38 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 
   </div><!-- /content -->
 
+
+  <!-- ⑤ DOC-CHAIN แถบล่าง main -->
+  <div id="po6DcStrip" class="dc-strip"></div>
 </div><!-- /main -->
 </div><!-- /layout -->
 
-<!-- DRILL: 3-Way Match detail (รายสินค้าของใบรับ GR-2606-0210) -->
-<div class="tpl-modal-bg" id="matchModal">
-  <div class="tpl-modal" style="width:820px;max-width:94vw">
-    <h3>🔍 3-Way Match รายสินค้า — <span class="mono">GR-2606-0210</span> ↔ <span class="mono">PO-2606-0042</span> ↔ <span class="mono">DKN-INV-25088</span></h3>
-    <table class="m-tbl">
-      <thead><tr><th>รหัส</th><th>รายการ</th><th class="num">PO</th><th class="num">รับ (WH-1)</th><th class="num">Invoice</th><th class="num">ราคา PO</th><th class="num">ราคา Inv</th><th>Match</th></tr></thead>
-      <tbody>
-        <tr><td>DAI-FTKM24</td><td>แอร์ Daikin FTKM 24,000 BTU</td><td class="num">80</td><td class="num">80</td><td class="num">80</td><td class="num">14,500.00</td><td class="num">14,500.00</td><td><span class="m-chip">✓ ตรง</span></td></tr>
-        <tr><td>DAI-FTKM18</td><td>แอร์ Daikin FTKM 18,000 BTU</td><td class="num">40</td><td class="num">40</td><td class="num">40</td><td class="num">12,800.00</td><td class="num">12,800.00</td><td><span class="m-chip">✓ ตรง</span></td></tr>
-        <tr><td>DAI-FTKM12</td><td>แอร์ Daikin FTKM 12,000 BTU</td><td class="num">60</td><td class="num">60</td><td class="num">60</td><td class="num">9,800.00</td><td class="num">9,800.00</td><td><span class="m-chip">✓ ตรง</span></td></tr>
-      </tbody>
-    </table>
-    <div style="margin-top:10px;font-size:11px;color:#6B7280">💡 จับคู่ 3 ทาง: PO Qty (สั่ง) = รับ WH-1 (รับจริง) = Invoice Qty · ราคาต่างจาก PO เกิน 5% → ⚠ ต้องอนุมัติพิเศษ</div>
-    <div class="m-actions"><button class="btn btn-primary" onclick="closeMatch()">ปิด</button></div>
-  </div>
-</div>
-
-<!-- PICKER รวม: ดึงรายการอ้างอิง — แท็บ A ใบแจ้งหนี้(+) · แท็บ B ดึงลดหนี้/หัก(−) · multi-select ทั้งคู่ -->
-<div class="tpl-modal-bg" id="refPickModal">
-  <div class="tpl-modal" style="width:920px;max-width:96vw">
-    <h3 style="display:flex;align-items:center;gap:8px">🔗 ดึงรายการอ้างอิง — เจ้าหนี้: <span class="mono" style="color:#2563EB">Daikin (DKN)</span>
-      <span style="margin-left:auto;font-size:11px;color:#6B7280">จับคู่ <span class="mono">PO-2606-0042</span> · รับครบ <span class="mono">GR-2606-0210</span></span></h3>
-    <div class="apr-tabs">
-      <button class="on" onclick="rpTab(this,'rp-inv')">🧾 ใบแจ้งหนี้ (ตั้งหนี้ +)</button>
-      <button onclick="rpTab(this,'rp-deduct')">↩️ ดึงลดหนี้/หัก (−)</button>
-    </div>
-
-    <!-- ── TAB A: ใบแจ้งหนี้ Vendor (+) ── -->
-    <div id="rp-inv" class="vi-pane on">
-      <div style="display:flex;align-items:center;margin-bottom:8px">
-        <span style="font-size:11px;color:#6B7280">เลือกได้หลายใบ (1 ใบตั้งหนี้รวมหลายบิล) · อ้างอิงใบรับครบ</span>
-        <button class="card-btn" style="margin-left:auto" onclick="rpKeyToggle()">✍️ คีย์เอง + แนบสแกน</button>
-      </div>
-      <div id="rpKeyForm" style="display:none;border:1px solid #E5E7EB;border-radius:8px;padding:10px 12px;margin-bottom:10px;background:#F8FAFC">
-        <div class="vi-form">
-          <label>เลขที่ใบแจ้งหนี้ Vendor <span style="color:#EF4444">*</span></label><input id="rpKeyNo" placeholder="เช่น DKN-INV-25099">
-          <label>วันที่ใบแจ้งหนี้</label><input id="rpKeyDate" placeholder="วว/ดด/ปป (ค.ศ. 26)">
-          <label>อ้างอิงใบรับครบ (GRN)</label><input id="rpKeyGrn" placeholder="เช่น GR-2606-0220">
-          <label>ยอดก่อน VAT</label><input id="rpKeyBase" class="num" placeholder="0.00">
-          <label>แนบไฟล์สแกน</label><div class="vi-file">📎 <span>ลากไฟล์ / เลือกไฟล์ใบกำกับภาษี (PDF/JPG)</span></div>
-        </div>
-        <div style="display:flex;justify-content:flex-end;margin-top:8px"><button class="btn btn-outline" onclick="rpKeyAdd()">➕ เพิ่มใบนี้เข้ารายการเลือก</button></div>
-      </div>
-      <div class="apr-tabs" style="margin:0 0 8px">
-        <button class="on" onclick="rpFilterInv(this,'all')">ทั้งหมด</button>
-        <button onclick="rpFilterInv(this,'full')">📥 รับทั้งหมด (รับครบ)</button>
-        <button onclick="rpFilterInv(this,'deposit')">🟣 บิลฝาก</button>
-      </div>
-      <div style="max-height:240px;overflow:auto;border:1px solid #E5E7EB;border-radius:8px">
-      <table class="m-tbl" style="font-size:12.5px">
-        <thead><tr><th style="width:32px"><input type="checkbox" onchange="rpAll(this,'rp-inv')"></th>
-          <th>เลขที่ใบแจ้งหนี้</th><th>ประเภทรับ</th><th>วันที่</th><th>อ้างรับ/บิลฝาก</th><th class="num">ยอด (+)</th><th>เทียบ</th><th></th></tr></thead>
-        <tbody id="rpInvRows">
-          <tr data-kind="inv" data-recv="full" data-recvlabel="📥 รับทั้งหมด" data-type="🧾 ใบแจ้งหนี้ Vendor" data-no="DKN-INV-25088" data-date="25 มิ.ย. 26" data-amt="2260000">
-            <td><input type="checkbox" checked disabled></td>
-            <td class="mono" style="font-weight:700;color:#2563EB">DKN-INV-25088</td>
-            <td><span class="m-chip" style="background:#ECFDF5;color:#065F46">📥 รับทั้งหมด</span></td>
-            <td>25 มิ.ย. 26</td><td class="mono">GR-0210</td>
-            <td class="num" style="color:#111827;font-weight:700">+2,260,000.00</td>
-            <td><span class="m-chip">✓ ตรง</span></td>
-            <td><span style="font-size:10px;color:#9CA3AF">ดึงแล้ว</span></td></tr>
-          <tr data-kind="inv" data-recv="full" data-recvlabel="📥 รับทั้งหมด" data-type="🧾 ใบแจ้งหนี้ Vendor" data-no="DKN-INV-25092" data-date="27 มิ.ย. 26" data-amt="540000">
-            <td><input type="checkbox" onchange="rpCount()"></td>
-            <td class="mono" style="font-weight:700;color:#2563EB">DKN-INV-25092</td>
-            <td><span class="m-chip" style="background:#ECFDF5;color:#065F46">📥 รับทั้งหมด</span></td>
-            <td>27 มิ.ย. 26</td><td class="mono">GR-0215</td>
-            <td class="num" style="color:#111827;font-weight:700">+540,000.00</td>
-            <td><span class="m-chip">✓ ตรง</span></td>
-            <td><button class="drill-btn" onclick="openMatch()">3-Way</button></td></tr>
-          <tr data-kind="inv" data-recv="full" data-recvlabel="📥 รับทั้งหมด" data-type="🧾 ใบแจ้งหนี้ Vendor" data-no="DKN-INV-25090" data-date="26 มิ.ย. 26" data-amt="2418200">
-            <td><input type="checkbox" onchange="rpCount()"></td>
-            <td class="mono" style="font-weight:700;color:#2563EB">DKN-INV-25090</td>
-            <td><span class="m-chip" style="background:#ECFDF5;color:#065F46">📥 รับทั้งหมด</span></td>
-            <td>26 มิ.ย. 26</td><td class="mono">GR-0210</td>
-            <td class="num" style="color:#111827;font-weight:700">+2,418,200.00</td>
-            <td><span class="m-chip" style="background:#FEF3C7;color:#92400E">⚠ ต่าง</span></td>
-            <td><button class="drill-btn" onclick="openMatch()">3-Way</button></td></tr>
-          <tr data-kind="inv" data-recv="deposit" data-recvlabel="🟣 บิลฝาก" data-type="🧾 ใบแจ้งหนี้ Vendor" data-no="DKN-INV-25095" data-date="28 มิ.ย. 26" data-amt="320000">
-            <td><input type="checkbox" onchange="rpCount()"></td>
-            <td class="mono" style="font-weight:700;color:#2563EB">DKN-INV-25095</td>
-            <td><span class="m-chip" style="background:#F3E8FF;color:#6D28D9">🟣 บิลฝาก</span></td>
-            <td>28 มิ.ย. 26</td><td class="mono">PO8-2606-0007</td>
-            <td class="num" style="color:#111827;font-weight:700">+320,000.00</td>
-            <td><span class="m-chip" style="background:#EFF6FF;color:#1D4ED8">2-Way</span></td>
-            <td><span style="font-size:10px;color:#6D28D9">ตั้งก่อนรับ</span></td></tr>
-        </tbody>
-      </table>
-      </div>
-      <div style="margin-top:8px;font-size:11px;color:#6B7280">💡 เลือกประเภทรายบิล — <b>📥 รับทั้งหมด</b> = รับครบแล้ว (3-Way) · <b>🟣 บิลฝาก</b> = ตั้งก่อนรับครบ (2-Way · จับคู่ PO-8 · ทยอยรับที่ WH-1) · 1 ใบตั้งหนี้มีปนกันได้ · <b>⚠ ต่าง</b> = Vendor ไม่หักส่วนลด → ตรวจ 3-Way ก่อน Post</div>
-    </div>
-
-    <!-- ── TAB B: ดึงลดหนี้/หัก (−) ── -->
-    <div id="rp-deduct" class="vi-pane">
-      <div class="apr-tabs" style="margin-top:0">
-        <button class="on" onclick="rpFilter(this,'all')">ทั้งหมด</button>
-        <button onclick="rpFilter(this,'adv')">💰 มัดจำจ่ายล่วงหน้า</button>
-        <button onclick="rpFilter(this,'dep')">🟣 บิลฝาก (PO-8)</button>
-        <button onclick="rpFilter(this,'cn')">↩️ ใบลดหนี้</button>
-        <button onclick="rpFilter(this,'promo')">🎁 ส่งเสริมได้จริง</button>
-      </div>
-      <div style="max-height:280px;overflow:auto;border:1px solid #E5E7EB;border-radius:8px">
-      <table class="m-tbl" style="font-size:12.5px">
-        <thead><tr><th style="width:32px"><input type="checkbox" onchange="rpAll(this,'rp-deduct')"></th>
-          <th>ประเภท</th><th>เลขที่</th><th>วันที่</th><th>เหตุผล</th><th class="num">ยอด (−)</th><th>สถานะ</th></tr></thead>
-        <tbody id="rpDeductRows">
-          <tr data-kind="deduct" data-g="adv" data-type="💰 มัดจำจ่ายล่วงหน้า" data-no="DP-PAY-2605-003" data-date="20 พ.ค. 26" data-amt="200000">
-            <td><input type="checkbox" onchange="rpCount()"></td>
-            <td><span class="btype" style="background:#FEF9C3;color:#854D0E">💰 มัดจำ</span></td>
-            <td class="mono">DP-PAY-2605-003</td><td>20 พ.ค. 26</td><td>จ่ายมัดจำ 30% ตอนสั่ง</td>
-            <td class="num amt-neg">-200,000.00</td><td><span class="pill pill-info">จ่ายแล้ว</span></td></tr>
-          <tr data-kind="deduct" data-g="dep" data-type="🟣 บิลฝาก (PO-8)" data-no="PO8-2605-0012" data-date="22 พ.ค. 26" data-amt="150000">
-            <td><input type="checkbox" onchange="rpCount()"></td>
-            <td><span class="btype" style="background:#F3E8FF;color:#6D28D9">🟣 บิลฝาก</span></td>
-            <td class="mono">PO8-2605-0012</td><td>22 พ.ค. 26</td><td>บิลฝากเรียกออกบางส่วน</td>
-            <td class="num amt-neg">-150,000.00</td><td><span class="pill pill-violet">ฝากอยู่</span></td></tr>
-          <tr data-kind="deduct" data-g="cn" data-type="↩️ ใบลดหนี้ (PO-CN)" data-no="APCN-2606-0015" data-date="26 มิ.ย. 26" data-amt="29000">
-            <td><input type="checkbox" onchange="rpCount()"></td>
-            <td><span class="btype cn">↩️ ใบลดหนี้</span></td>
-            <td class="mono"><a href="po-cn-credit-note-mockup.html" style="color:#2563EB;font-weight:700;text-decoration:none">APCN-2606-0015</a></td>
-            <td>26 มิ.ย. 26</td><td>คืนสินค้า — แอร์ชำรุด 2 ตัว</td>
-            <td class="num amt-neg">-29,000.00</td><td><span class="pill pill-warning">⏳ รอหักหนี้</span></td></tr>
-          <tr data-kind="deduct" data-g="cn" data-type="↩️ ใบลดหนี้ (PO-CN)" data-no="APCN-2606-0018" data-date="27 มิ.ย. 26" data-amt="8500">
-            <td><input type="checkbox" onchange="rpCount()"></td>
-            <td><span class="btype cn">↩️ ใบลดหนี้</span></td>
-            <td class="mono"><a href="po-cn-credit-note-mockup.html" style="color:#2563EB;font-weight:700;text-decoration:none">APCN-2606-0018</a></td>
-            <td>27 มิ.ย. 26</td><td>ราคาผิด — ปรับลดรุ่น FTKM18</td>
-            <td class="num amt-neg">-8,500.00</td><td><span class="pill pill-warning">⏳ รอหักหนี้</span></td></tr>
-          <tr data-kind="deduct" data-g="cn" data-type="🎫 เคลม→ใบลดหนี้" data-no="APCN-2606-0021" data-date="28 มิ.ย. 26" data-amt="15000">
-            <td><input type="checkbox" onchange="rpCount()"></td>
-            <td><span class="btype ret" style="background:#FEF2F2;color:#991B1B">🎫 เคลม</span></td>
-            <td class="mono"><a href="clm-vendor-claim-mockup.html" style="color:#2563EB;font-weight:700;text-decoration:none">APCN-2606-0021</a></td>
-            <td>28 มิ.ย. 26</td><td>เคลมคอมเพรสเซอร์ (CLM-2606-0007)</td>
-            <td class="num amt-neg">-15,000.00</td><td><span class="pill pill-warning">⏳ รอหักหนี้</span></td></tr>
-          <tr data-kind="deduct" data-g="promo" data-type="🎁 ส่งเสริมได้จริง (PO-7)" data-no="VC-RB-2604-002" data-date="30 มิ.ย. 26" data-amt="52000">
-            <td><input type="checkbox" onchange="rpCount()"></td>
-            <td><span class="btype promo">🎁 ส่งเสริม</span></td>
-            <td class="mono"><a href="po7-rebate-dashboard.html" style="color:#2563EB;font-weight:700;text-decoration:none">VC-RB-2604-002</a></td>
-            <td>30 มิ.ย. 26</td><td>Rebate ได้จริง Q2 — ยืนยันจาก PO-7</td>
-            <td class="num amt-neg">-52,000.00</td><td><span class="pill pill-success">✅ ได้จริง</span></td></tr>
-        </tbody>
-      </table>
-      </div>
-      <div style="margin-top:8px;font-size:11px;color:#6B7280">💡 ทุกหมวดหักยอด AP หลังบิล · <b>มัดจำ/บิลฝาก</b> = จ่าย/วางไว้ก่อน · <b>ใบลดหนี้/เคลม</b> = PO-CN · <b>ส่งเสริม</b> = PO-7 ยืนยันได้จริง · เคลมที่ "รอหักหนี้" spawn PO-CN ก่อนตัด</div>
-    </div>
-
-    <div class="m-actions" style="justify-content:space-between">
-      <span id="rpSummary" style="font-size:12px;color:#6B7280;align-self:center">เลือก 0 · ตั้งหนี้ <b class="mono" style="color:#111827">+0.00</b> · หัก <b class="mono" style="color:#059669">-0.00</b></span>
-      <span style="display:flex;gap:8px">
-        <button class="btn btn-outline" onclick="closeRefPick()">ยกเลิก</button>
-        <button class="btn btn-success" onclick="rpPull()">↩ ดึงเข้าใบตั้งหนี้</button>
-      </span>
-    </div>
-  </div>
-</div>
+<!-- SC-13 3-Way → dfOpen3Way (swt-sc-wire.js) · SC-14 → swt-ap-reduce.js -->
 
 
+<script src="swt-patterns.js"></script>
+<script src="swt-ap-reduce.js"></script>
 <script>
-function openMatch(){ document.getElementById('matchModal').classList.add('on'); }
-function closeMatch(){ document.getElementById('matchModal').classList.remove('on'); }
-
-/* ── PICKER รวม: ดึงรายการอ้างอิง (ใบแจ้งหนี้ + · ดึงลดหนี้ −) · multi-select ── */
+/* ── SC-14: ดึงรายการอ้างอิง (+ invoice / − deduct) via swt-ap-reduce.js ── */
 function openRefPick(tab){
-  document.getElementById('refPickModal').classList.add('on');
-  var btns=document.querySelectorAll('#refPickModal > .tpl-modal > .apr-tabs > button');
-  if(tab==='deduct') rpTab(btns[1],'rp-deduct'); else rpTab(btns[0],'rp-inv');
-  rpCount();
-}
-function closeRefPick(){ document.getElementById('refPickModal').classList.remove('on'); }
-function rpTab(btn,id){
-  var tabs=btn.parentElement; tabs.querySelectorAll('button').forEach(function(b){b.classList.remove('on');}); btn.classList.add('on');
-  document.getElementById('refPickModal').querySelectorAll('.vi-pane').forEach(function(p){p.classList.remove('on');});
-  document.getElementById(id).classList.add('on');
-}
-function rpKeyToggle(){ var f=document.getElementById('rpKeyForm'); f.style.display=(f.style.display==='none'?'block':'none'); }
-function rpFilter(btn,g){
-  btn.parentElement.querySelectorAll('button').forEach(function(b){b.classList.remove('on');}); btn.classList.add('on');
-  document.querySelectorAll('#rpDeductRows tr').forEach(function(tr){ tr.style.display=(g==='all'||tr.getAttribute('data-g')===g)?'':'none'; });
-}
-function rpSelected(){
-  return [].slice.call(document.querySelectorAll('#refPickModal tbody tr')).filter(function(tr){
-    var c=tr.querySelector('input[type=checkbox]'); return c&&c.checked&&!c.disabled;
+  dfOpenApReduce({
+    vendorName:'Daikin (DKN)',
+    poRef:'PO-2606-0042',
+    grnRef:'GR-2606-0210',
+    mode: tab==='deduct'?'deduct':'inv',
+    onPull: po6ApReducePull
   });
 }
-function rpAll(master,pane){
-  [].slice.call(document.querySelectorAll('#'+pane+' tbody tr')).forEach(function(tr){
-    if(tr.style.display==='none') return;
-    var c=tr.querySelector('input[type=checkbox]'); if(c&&!c.disabled) c.checked=master.checked;
-  });
-  rpCount();
-}
-function rpCount(){
-  var pos=0,neg=0,n=0;
-  rpSelected().forEach(function(tr){
-    n++; var amt=Number(tr.getAttribute('data-amt')||0);
-    if(tr.getAttribute('data-kind')==='inv') pos+=amt; else neg+=amt;
-  });
-  document.getElementById('rpSummary').innerHTML='เลือก '+n+' · ตั้งหนี้ <b class="mono" style="color:#111827">+'+pos.toLocaleString('en-US',{minimumFractionDigits:2})+'</b> · หัก <b class="mono" style="color:#059669">-'+neg.toLocaleString('en-US',{minimumFractionDigits:2})+'</b>';
-}
-function rpKeyAdd(){
-  var no=document.getElementById('rpKeyNo').value.trim();
-  if(!no){ alert('กรอกเลขที่ใบแจ้งหนี้ Vendor ก่อน'); return; }
-  var base=parseFloat((document.getElementById('rpKeyBase').value||'').replace(/,/g,''))||0;
-  var date=document.getElementById('rpKeyDate').value.trim()||'—';
-  var grn=document.getElementById('rpKeyGrn').value.trim()||'—';
-  var tb=document.querySelector('#rp-inv tbody');
-  var tr=document.createElement('tr');
-  tr.setAttribute('data-kind','inv'); tr.setAttribute('data-type','🧾 ใบแจ้งหนี้ Vendor');
-  tr.setAttribute('data-no',no); tr.setAttribute('data-date',date); tr.setAttribute('data-amt',base);
-  tr.innerHTML='<td><input type="checkbox" checked onchange="rpCount()"></td>'+
-    '<td class="mono" style="font-weight:700;color:#2563EB">'+no+'</td><td>'+date+'</td><td class="mono">'+grn+'</td>'+
-    '<td class="num" style="color:#111827;font-weight:700">+'+base.toLocaleString('en-US',{minimumFractionDigits:2})+'</td>'+
-    '<td><span class="m-chip" style="background:#EFF6FF;color:#1D4ED8">คีย์มือ</span></td>'+
-    '<td><span style="font-size:10px;color:#9CA3AF">แนบแล้ว</span></td>';
-  tb.appendChild(tr);
-  document.getElementById('rpKeyNo').value=''; document.getElementById('rpKeyBase').value='';
-  document.getElementById('rpKeyDate').value=''; document.getElementById('rpKeyGrn').value='';
-  rpKeyToggle(); rpCount();
-}
-function rpPull(){
-  var picked=rpSelected();
-  if(!picked.length){ alert('ยังไม่ได้เลือกรายการ'); return; }
+function po6ApReducePull(detail){
+  var picked=detail.rows||[];
+  if(!picked.length) return;
   var tbody=document.querySelector('table.items tbody');
   var existing=[].slice.call(tbody.querySelectorAll('tr:not(.empty-row) td.item-code')).map(function(td){return td.textContent.trim();});
   var empties=[].slice.call(tbody.querySelectorAll('tr.empty-row'));
   picked.forEach(function(src){
-    var no=src.getAttribute('data-no');
-    if(existing.indexOf(no)>=0) return; /* กันซ้ำ */
-    var kind=src.getAttribute('data-kind'), type=src.getAttribute('data-type');
-    var date=src.getAttribute('data-date'), amt=Number(src.getAttribute('data-amt'));
+    var no=src.no;
+    if(existing.indexOf(no)>=0) return;
+    var kind=src.kind, type=src.type, date=src.date, amt=Number(src.amt||0);
     var btypeHtml;
     if(kind==='inv') btypeHtml='<span class="btype grn">'+type+'</span>';
     else if(/มัดจำ/.test(type)) btypeHtml='<span class="btype" style="background:#FEF9C3;color:#854D0E">'+type+'</span>';
@@ -633,7 +412,7 @@ function rpPull(){
     else if(/เคลม/.test(type)) btypeHtml='<span class="btype ret">'+type+'</span>';
     else if(/ส่งเสริม/.test(type)) btypeHtml='<span class="btype promo">'+type+'</span>';
     else btypeHtml='<span class="btype cn">'+type+'</span>';
-    var recv=src.getAttribute('data-recv')||'full', recvlabel=src.getAttribute('data-recvlabel')||'📥 รับทั้งหมด';
+    var recv=src.recv||'full', recvlabel=src.recvlabel||'📥 รับทั้งหมด';
     var amtCls=(kind==='inv')?'amt-pos':'amt-neg';
     var amtStr=((kind==='inv')?'+':'-')+amt.toLocaleString('en-US',{minimumFractionDigits:2});
     var status;
@@ -647,41 +426,59 @@ function rpPull(){
     if(row){ row.className=''; row.setAttribute('data-kind',kind); if(kind==='inv') row.setAttribute('data-recv',recv); row.setAttribute('data-amt',(kind==='inv'?amt:-amt)); row.innerHTML=cells; }
     else { var tr=document.createElement('tr'); tr.setAttribute('data-kind',kind); if(kind==='inv') tr.setAttribute('data-recv',recv); tr.setAttribute('data-amt',(kind==='inv'?amt:-amt)); tr.innerHTML=cells; tbody.appendChild(tr); }
     existing.push(no);
-    var c=src.querySelector('input[type=checkbox]'); c.checked=false; c.disabled=true;
-    src.style.opacity='.45'; src.style.display='none';
   });
-  renumberItems(); recomputeSummary(); updateViBadge(); closeRefPick();
+  renumberItems(); recomputeSummary(); updateViBadge();
 }
 /* renumber คอลัมน์ # ของตาราง PO-6.3 */
 function renumberItems(){
   var i=0;
   document.querySelectorAll('table.items tbody tr:not(.empty-row)').forEach(function(tr){ i++; tr.querySelector('td').textContent=i; });
 }
-/* คำนวณ PO-6.5 จาก data-kind/data-amt ของแถวจริง */
+function po6InitPatterns(){
+  swtRenderStatusStrip('#po6Sc12',{
+    pills:[
+      {text:'📄 Draft',type:'neutral'},
+      {text:'📥 รับครบทุกใบ (3-Way)',type:'success',id:'modePill'},
+      {text:'฿ VAT ซื้อ 7%',type:'info'},
+      {text:'WHT: สินค้า (ไม่หัก)',type:'neutral'}
+    ],
+    makerChecker:{title:'Maker ≠ Checker · CF-2.6 Approval Matrix',nodes:[
+      {role:'จัดซื้อ ✓',step:'Match+คีย์',state:'ok'},
+      {role:'บัญชี ⏱',step:'Post GL',state:'wait'}
+    ]}});
+  if(typeof swtRenderDocChain==='function')swtRenderDocChain('#po6DcStrip',{label:'Doc Chain',nodes:[
+      {label:'PO 0042',href:'po4-purchase-order-mockup.html',state:'done'},
+      {label:'GR-0210',href:'wh1-receive-mockup.html',state:'done'},
+      {label:'VBL-0042',href:'po3-vendor-onboarding-mockup.html',state:'done'},
+      {label:'PO-6 ใบตั้งหนี้เจ้าหนี้',state:'current'},
+      {label:'FI-2 จ่ายชำระเจ้าหนี้',href:'fi2-ap-payment-mockup.html'}
+    ]});
+  po6InitSc11(); renumberItems(); recomputeSummary(); updateViBadge();
+}
+/* คำนวณ PO-6.5 จาก data-kind/data-amt — SC-11 + VAT Golden Rule */
 function recomputeSummary(){
-  var inv=0, billdisc=0, deduct=0;
-  document.querySelectorAll('table.items tbody tr:not(.empty-row)').forEach(function(tr){
-    var k=tr.getAttribute('data-kind'); var amt=Number(tr.getAttribute('data-amt')||0);
-    if(k==='inv') inv+=amt; else if(k==='billdisc') billdisc+=Math.abs(amt); else if(k==='deduct') deduct+=Math.abs(amt);
-  });
-  var base=inv-billdisc, vat=base*0.07, net=base+vat-deduct;
-  setSum('sumInv',inv); setSum('sumBillDisc',-billdisc); setSum('sumBase',base); setSum('sumVat',vat); setSum('sumDeduct',-deduct);
-  var nt=document.getElementById('sumNet'); if(nt) nt.textContent=net.toLocaleString('en-US',{minimumFractionDigits:2});
+  swtRecalcApInvoiceSummary('table.items tbody tr:not(.empty-row)','#po6Sc11');
   updateModeSummary();
 }
-function setSum(id,v){
-  var e=document.getElementById(id); if(!e) return;
-  var s=(v<0?'-':'')+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2});
-  e.querySelector('.val').textContent=s;
+function po6InitSc11(){
+  var rowCalc=swtCalcFromItemRows('table.items tbody tr:not(.empty-row)');
+  swtRenderSummary('#po6Sc11',{
+    template:'ap-invoice',
+    interactive:true,
+    calc:{subtotal:rowCalc.inv,lineDiscount:rowCalc.billDiscount,postDeduct:rowCalc.deduct},
+    discountInput:0,
+    vatMode:'exclusive',
+    vatRate:7
+  });
 }
 /* badge ใบแจ้งหนี้ที่ PO-6.2 */
 function updateViBadge(){
   var invs=[].slice.call(document.querySelectorAll('table.items tbody tr:not(.empty-row)')).filter(function(tr){return tr.getAttribute('data-kind')==='inv';});
   var el=document.getElementById('viNo'); if(!el) return;
-  var first=invs.length?invs[0].getAttribute('data-no'):'—';
+  var first=invs.length?(invs[0].querySelector('.item-code')||{}).textContent.trim():'—';
   el.textContent=first+' · '+invs.length+' ใบ';
 }
-document.addEventListener('DOMContentLoaded',function(){ renumberItems(); recomputeSummary(); updateViBadge(); });
+document.addEventListener('DOMContentLoaded',po6InitPatterns);
 function swTab(e,id){
   var nav=e.currentTarget.parentElement;
   nav.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
@@ -690,11 +487,6 @@ function swTab(e,id){
   set.querySelectorAll('.tabset-pane').forEach(p=>p.classList.remove('on'));
   set.querySelector('#'+id).classList.add('on');
 }
-/* chip กรองประเภทรับใน picker แท็บใบแจ้งหนี้ (รับทั้งหมด/บิลฝาก) */
-function rpFilterInv(btn,g){
-  btn.parentElement.querySelectorAll('button').forEach(function(b){b.classList.remove('on');}); btn.classList.add('on');
-  document.querySelectorAll('#rpInvRows tr').forEach(function(tr){ tr.style.display=(g==='all'||tr.getAttribute('data-recv')===g)?'':'none'; });
-}
 /* สรุปประเภทรับเข้าอัตโนมัติจากใบแจ้งหนี้ในรายการ PO-6.3 (ไม่มีโหมดรวมทั้งใบแล้ว) */
 function updateModeSummary(){
   var full=0,dep=0;
@@ -702,7 +494,7 @@ function updateModeSummary(){
     if(tr.getAttribute('data-kind')!=='inv') return;
     if(tr.getAttribute('data-recv')==='deposit') dep++; else full++;
   });
-  var pill=document.getElementById('modePill'), gate=document.getElementById('gateAlert');
+  var pill=document.getElementById('modePill'), gate=document.getElementById('po6Gate');
   if(!pill||!gate) return;
   if(dep>0 && full>0){
     pill.className='pill pill-violet'; pill.textContent='🟣 ผสม: รับครบ '+full+' · บิลฝาก '+dep;
@@ -717,11 +509,4 @@ function updateModeSummary(){
 }
 /* 🧾 Post ตั้งหนี้ — บัญชี post ลง GL · Maker ≠ Checker · gate: Normal ต้องรับครบ */
 function po6Post(){
-  if(confirm('Post ตั้งหนี้เจ้าหนี้ AP-2606-0088 (mock · งานบัญชี):\n\n• Maker ≠ Checker — จัดซื้อ Match แล้ว · บัญชีเป็นคน Post\n• ลง GL: Dr สินค้า + ภาษีซื้อ / Cr เจ้าหนี้การค้า\n• 3-Way Match ครบ (PO=รับ WH-1=Invoice)\n• สถานะ → ค้างชำระ → ไปจ่ายที่ FI-2')){
-    location.href='fi2-ap-payment-mockup.html';
-  }
-}
-</script>
-<script src="swt-doc-finder.js"></script>
-<script src="swt-sidebar.js"></script>
-</body></html>
+  if(confirm('Post ตั้งหนี้เจ้าหนี้ AP-2606-0088 (mock · งานบัญชี):\n\n• Maker ≠ 

@@ -374,6 +374,121 @@
 .swt-type-badge.service  { background: #F3E8FF; color: #6D28D9; }
 .swt-type-badge.other    { background: #F3F4F6; color: #4B5563; }
 
+/* ─── ①② Unified Header — Topbar + Main Header รวม (locked 2026-06-11) ─── */
+.unified-header {
+  flex: none;
+  background: linear-gradient(90deg, #1E3A5F 0%, #2563EB 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 30;
+}
+.uh-utility {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 24px;
+  min-height: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.uh-breadcrumb,
+.unified-header .topbar-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.72);
+  flex-shrink: 0;
+}
+.uh-breadcrumb .current,
+.unified-header .topbar-breadcrumb .current {
+  color: #FCD34D;
+  font-weight: 600;
+}
+.uh-breadcrumb .sep,
+.unified-header .topbar-breadcrumb .sep {
+  color: rgba(255, 255, 255, 0.35);
+}
+.uh-tools {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.unified-header .topbar-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+  width: 180px;
+}
+.unified-header .topbar-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  font-size: 14px;
+}
+.unified-header .branch-sel {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.unified-header .topbar-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+}
+.uh-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 24px 10px;
+}
+.unified-header .mh-left,
+.unified-header .swt-mh-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+.unified-header .mh-title h1,
+.unified-header .swt-mh-title h1 {
+  font-size: 15px;
+}
+.unified-header .mh-meta,
+.unified-header .swt-mh-meta {
+  gap: 16px;
+}
+.unified-header .mh-meta-item .val,
+.unified-header .swt-mh-meta-item .val {
+  font-size: 11.5px;
+}
+
 /* ─── SL-4 Main Header pattern (doc ID bar) ─────────────────
    ใช้บน transaction pages ทุกหน้า — gradient banner แสดง
    เลขที่เอกสาร + วันที่ + สาขา + status + ปุ่ม action
@@ -655,3 +770,331 @@ details.swt-addr[open] > summary::before { transform: rotate(90deg); }
   background: #EDE9FE; border-color: #C4B5FD; color: #7C3AED;
   transform: translateY(-50%) rotate(-30deg);
 }
+
+/* ─── 9) SC-11 Summary + SC-12 Status Strip (extracted FI-2/PO-6 · 2026-06-11)
+   API: swt-patterns.js — swtRenderStatusStrip · swtRenderGateAlert · swtRenderSummary
+   Legacy aliases (.status-strip etc.) รองรับหน้า rebuild ที่มีอยู่
+   ───────────────────────────────────────────────────────── */
+.swt-status-strip,
+.status-strip {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: #fff; border: 1px solid #E5E7EB; border-radius: 8px;
+  padding: 4px 12px; flex: none;
+}
+.swt-sc11-pills,
+.sc11-pills { display: flex; gap: 5px; flex-wrap: wrap; }
+
+.swt-pill,
+.pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 5px; font-size: 10.5px; font-weight: 600;
+}
+.swt-pill-success, .pill-success { background: #ECFDF5; color: #065F46; }
+.swt-pill-warning, .pill-warning { background: #FEF3C7; color: #92400E; }
+.swt-pill-danger,  .pill-danger  { background: #FEF2F2; color: #991B1B; }
+.swt-pill-info,    .pill-info    { background: #EFF6FF; color: #0C4A6E; }
+.swt-pill-neutral, .pill-neutral { background: #F3F4F6; color: #374151; }
+.swt-pill-violet,  .pill-violet  { background: #F3E8FF; color: #6D28D9; }
+.swt-pill-route,   .pill-route   { background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE; }
+.swt-pill-promo,   .pill-promo   { background: #FCE7F3; color: #9D174D; }
+
+.swt-mc-chain,
+.mc-chain { display: flex; align-items: center; gap: 5px; }
+.swt-mc-node,
+.mc-node {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 2px 9px; border-radius: 5px;
+  background: #F8FAFC; border: 1px solid #E5E7EB; font-size: 9px;
+}
+.swt-mc-node .r, .mc-node .r { font-weight: 700; color: #374151; }
+.swt-mc-node .w, .mc-node .w { color: #9CA3AF; }
+.swt-mc-node.ok, .mc-node.ok { background: #ECFDF5; border-color: #A7F3D0; }
+.swt-mc-node.ok .r, .mc-node.ok .r { color: #065F46; }
+.swt-mc-node.wait, .mc-node.wait { background: #FEF3C7; border-color: #FDE68A; }
+.swt-mc-node.wait .r, .mc-node.wait .r { color: #92400E; }
+.swt-mc-arrow, .mc-arrow { color: #CBD5E1; font-size: 11px; }
+
+.swt-dc-node, .dc-node {
+  padding: 3px 10px; border-radius: 5px; background: #F3F4F6;
+  color: #6B7280; font-weight: 600; text-decoration: none;
+}
+.swt-dc-node.done, .dc-node.done { background: #ECFDF5; color: #065F46; }
+.swt-dc-node.current, .dc-node.current {
+  background: #EFF6FF; color: #1D4ED8; border: 1px solid #93C5FD;
+}
+a.swt-dc-node:hover, a.dc-node:hover { filter: brightness(.96); text-decoration: underline; }
+.swt-dc-arrow, .dc-arrow { color: #CBD5E1; }
+
+.swt-gate-alert,
+.gate-alert {
+  flex: none; display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+}
+.swt-gate-alert.ok,  .gate-alert.ok  { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+.swt-gate-alert.warn,.gate-alert.warn{ background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+.swt-gate-alert.block,.gate-alert.block{ background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+/* Gate .ok ผ่านแล้ว → ซ่อน (ข้อมูลซ้ำ badge/pills) · แสดงเต็มเฉพาะ warn/block */
+.gate-alert.ok.is-compact {
+  display: none !important;
+}
+
+/* ③ SAAB ย่อ — ปุ่มหลัก + เมนู ⋯ (ลบ Post ซ้ำ · ไม่มี saab-status) */
+.saab-compact {
+  padding: 5px 24px;
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+.saab-compact .saab-status { display: none; }
+.saab-spacer { flex: 1; min-width: 8px; }
+.saab-more-wrap { position: relative; flex: none; }
+.saab-more-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 60;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+  min-width: 210px;
+  flex-direction: column;
+  gap: 4px;
+}
+.saab-more-wrap.open .saab-more-menu { display: flex; }
+.saab-more-menu .btn-menu {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 7px 12px;
+  font-size: 12px;
+}
+
+/* ⑤ Doc Chain — แถบล่าง main (แยกจาก SC-12) */
+.main > .dc-strip {
+  flex: none;
+  background: #fff;
+  border-top: 1px solid #E5E7EB;
+  padding: 5px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
+  overflow-x: auto;
+  min-height: 0;
+}
+.main > .dc-strip .dc-lbl {
+  font-weight: 700;
+  color: #6B7280;
+  text-transform: uppercase;
+  font-size: 9px;
+  flex: none;
+}
+.main > .dc-strip .dc-chain {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.swt-summary-row,
+.summary-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 5px 0; font-size: 12px;
+}
+.swt-summary-row .lbl, .summary-row .lbl { color: #6B7280; }
+.swt-summary-row .val, .summary-row .val {
+  color: #111827; font-weight: 600; font-family: 'Inter', monospace;
+}
+.swt-summary-row.wht .val, .summary-row.wht .val { color: #EF4444; }
+.swt-summary-row.disc .val, .summary-row.disc .val { color: #059669; }
+.swt-summary-row.deduct .val, .summary-row.deduct .val { color: #EF4444; }
+.swt-summary-row.recv, .summary-row.recv { color: #065F46; }
+.swt-summary-row.recv .val, .summary-row.recv .val { color: #065F46; }
+.swt-summary-row.open .val, .summary-row.open .val { color: #B45309; }
+.swt-summary-row.base, .summary-row.base {
+  border-top: 1px dashed #E5E7EB; padding-top: 4px;
+}
+.swt-summary-total,
+.summary-total {
+  margin-top: 8px; padding: 10px 12px;
+  background: linear-gradient(90deg, #1E3A5F 0%, #2563EB 100%);
+  border-radius: 6px; color: #fff;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; font-weight: 700;
+}
+.swt-summary-total .val, .summary-total .val {
+  color: #fff; font-family: 'Inter', monospace;
+}
+.row-bottom .swt-summary-row,
+.row-bottom .summary-row { padding: 2px 0; font-size: 11px; }
+.row-bottom .swt-summary-total,
+.row-bottom .summary-total { font-size: 12px; padding: 6px 10px; margin-top: 4px; }
+
+/* ─── SC-11 interactive inline (กรอกในแถวสรุปยอด) ─── */
+.sc11-interactive.sc11-inline-ui { display: flex; flex-direction: column; gap: 0; }
+.sc11-inline .summary-row { align-items: center; min-height: 28px; }
+.sc11-inline .summary-row.sc11-edit-row .lbl { flex: 1; min-width: 0; }
+.sc11-edit {
+  display: inline-flex; align-items: center; gap: 4px; justify-content: flex-end;
+  flex: 0 0 auto;
+}
+.sc11-in {
+  padding: 3px 6px; border: 1px solid #CBD5E1; border-radius: 4px;
+  background: #fff; font-size: 11.5px; font-family: 'Inter', monospace;
+  text-align: right; color: #111827;
+}
+.sc11-in:focus { border-color: #2563EB; outline: none; box-shadow: 0 0 0 2px rgba(37,99,235,.15); }
+.sc11-in.pct { width: 52px; min-width: 48px; }
+.sc11-in.amt { width: 96px; min-width: 80px; }
+.sc11-in.val-r { width: 108px; min-width: 88px; margin-left: auto; }
+.sc11-unit { font-size: 10.5px; color: #6B7280; font-weight: 600; }
+.sc11-sel {
+  margin-left: 4px; padding: 1px 4px; border: 1px solid #E5E7EB; border-radius: 4px;
+  font-size: 9.5px; font-family: inherit; color: #2563EB; background: #fff; vertical-align: middle;
+}
+.sc11-ro { font-weight: 600; }
+.row-bottom .sc11-in { font-size: 10.5px; padding: 2px 5px; }
+.row-bottom .sc11-in.pct { width: 44px; }
+.row-bottom .sc11-in.amt { width: 82px; }
+.row-bottom .sc11-in.val-r { width: 90px; }
+.row-bottom .sc11-unit { font-size: 9.5px; }
+.sc11-dep-val { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.sc11-dep-amt { font-weight: 600; }
+.sc11-dep-refs { font-size: 9.5px; font-weight: 500; line-height: 1.3; }
+.sc11-dep-ref { color: #2563EB; text-decoration: none; }
+.sc11-dep-ref:hover { text-decoration: underline; }
+
+/* ─── ④c Form layout — fit 100vh (locked 2026-06-11 · items ≥15 แถว 2026-07-02) ───
+   items-card = พื้นที่ใหญ่สุดของจอ (flex:1 ดูดพื้นที่ที่เหลือ) — เป็นที่ "เช็ครายการ" หลัก
+   มาตรฐาน: **tbody อย่างน้อย 15 แถว** (floor min-height ~500px) · เกินแล้ว scroll ใน items-wrap
+   จอเตี้ยเกิน → content scroll (auto) กันตัดตกแทนการ clip */
+html {
+  height: 100%;
+  overflow: hidden;
+}
+.main > .content {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  gap: 8px;
+}
+.content > .row-party,
+.content > .row-2col,
+.content > .status-strip,
+.content > .gate-alert,
+.content > .row-bottom,
+.content > .card:not(.items-card) {
+  flex: none;
+}
+.content > .gate-alert {
+  padding: 5px 10px;
+  font-size: 11px;
+  line-height: 1.35;
+}
+.content > .row-bottom {
+  height: 148px;
+  max-height: 148px;
+  min-height: 0;
+  overflow: hidden;
+}
+.content > .row-bottom .tabset-pane .swt-panel.swt-pay-compact {
+  overflow: hidden;
+  max-height: 100%;
+}
+.content > .row-bottom .tabset,
+.content > .row-bottom > .card {
+  min-height: 0;
+  overflow: auto;
+}
+.content > .items-card {
+  flex: 1 1 0 !important;
+  min-height: 500px !important;   /* floor ≥15 แถว (15×30px + header/bar) · พื้นที่ใหญ่สุด */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.content > .items-card > .card-header,
+.content > .items-card > .add-row-bar,
+.content > .items-card > div:not(.card-header):not(.items-wrap) {
+  flex: none;
+}
+.content > .items-card .items-wrap {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+table.items thead th {
+  padding: 6px 8px !important;
+  font-size: 10px !important;
+}
+table.items tbody td {
+  padding: 6px 8px !important;
+  font-size: 12px !important;
+  vertical-align: middle;
+}
+table.items tbody tr.empty-row td {
+  height: 30px !important;
+  min-height: 30px;
+}
+
+/* ─── 10) DENSITY & HIERARCHY (.dz-*) — แก้ "ตัวเล็ก·ข้อมูลเยอะ·ซ้ำ" ──
+   guideline: knowledge-base/portal/06-density-hierarchy.md
+   หลัก: hero ใหญ่ (identity) + status pills (single source) + <details> ยุบ reference
+   "ยุบ vs เด่น": work-now/action/selector = เด่น · reference/history = ยุบ (แต่เก็บครบ · 0 data loss)
+   ────────────────────────────────────────────────────────────── */
+.dz-hero { padding: 1px 0 7px; }
+.dz-name { font-size: 17px; font-weight: 700; color: #111827; letter-spacing: -.01em; line-height: 1.2; }
+.dz-sn   { font-size: 12px; color: #64748B; margin-top: 2px; }
+.dz-sn b { font-family: 'Inter', monospace; color: #334155; font-weight: 600; }
+
+.dz-war   { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 8px; }
+.dz-wchip { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; border: 1px solid; }
+.dz-wchip.su { background: #ECFDF5; color: #065F46; border-color: #A7F3D0; }  /* ในประกัน / ok */
+.dz-wchip.da { background: #FEF2F2; color: #991B1B; border-color: #FECACA; }  /* หมด / เตือน */
+
+.dz-ref { border: 1px solid #E5E7EB; border-radius: 8px; background: #F8FAFC; overflow: hidden; }
+.dz-ref > summary { list-style: none; cursor: pointer; padding: 7px 11px; font-size: 11.5px; color: #475569; font-weight: 600; display: flex; align-items: center; gap: 7px; }
+.dz-ref > summary::-webkit-details-marker { display: none; }
+.dz-ref .chev { transition: transform .2s; color: #94A3B8; }
+.dz-ref[open] .chev { transform: rotate(90deg); }
+.dz-refgrid { padding: 2px 11px 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+/* ─── 11) PAGE CHROME — header actions · overflow · collapsible zone · meta line ──
+   มาตรฐานโครงหัวหน้า (locked 2026-07-01): ลด band ซ้อน
+   แนะนำ ≤ 3 top bands: [Header (utility+main+meta+actions)] → [Mode/selector bar] → [Stepper]
+   - actions อยู่ header ขวา (primary เด่น 1 + .uh-more overflow) · ไม่มี SAAB band แยก
+   - meta (doc#/date/ผู้รับ ฯลฯ) = .uh-meta line บางใน header · ไม่ใช่ strip band
+   - selector หลายตัว (ประเภทงาน + รูปแบบงาน) รวม bar เดียว
+   - zone ที่ทำเสร็จ = .dz-zone (<details>) ยุบเหลือสรุป
+   ────────────────────────────────────────────────────────────── */
+
+/* header action button (บน gradient header) */
+.uh-act { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.28); color: #fff; font-family: inherit; font-size: 11.5px; font-weight: 600; padding: 5px 11px; border-radius: 6px; cursor: pointer; }
+.uh-act:hover { background: rgba(255,255,255,.26); }
+.uh-act.pri { background: #10B981; border-color: #10B981; }   /* primary CTA เด่น */
+.uh-act.pri:hover { background: #059669; }
+
+/* overflow menu (⋯ เพิ่มเติม) — JS: toggle .on + click-outside ปิด */
+.uh-more { position: relative; display: inline-block; }
+.uh-more-menu { position: absolute; right: 0; top: calc(100% + 6px); background: #fff; border: 1px solid #E5E7EB; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.18); min-width: 185px; display: none; z-index: 50; overflow: hidden; }
+.uh-more-menu.on { display: block; }
+.uh-more-menu a, .uh-more-menu button { display: block; width: 100%; text-align: left; padding: 9px 14px; font-size: 12.5px; color: #374151; background: none; border: none; cursor: pointer; font-family: inherit; text-decoration: none; }
+.uh-more-menu a:hover, .uh-more-menu button:hover { background: #F3F4F6; color: #2563EB; }
+
+/* meta line ใน header (fold strip) — วางบน gradient · ตัวจาง */
+.uh-meta { display: flex; gap: 20px; flex-wrap: wrap; padding: 0 20px 8px; font-size: 11px; color: rgba(255,255,255,.8); }
+.uh-meta b { color: #fff; }
+.uh-meta b.dyn { color: #FCD34D; }   /* ค่าที่เปลี่ยนได้ (เช่น ผู้ชำระ) เน้นเหลือง */
+
+/* collapsible zone: <details class="dz-zone" open><summary>▸ Title <span class="dz-sum">สรุป</span></summary>…</details> */
+.dz-zone > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+.dz-zone > summary::-webkit-details-marker { display: none; }
+.dz-zone .dz-chev { display: inline-block; transition: transform .2s; color: #94A3B8; font-size: 11px; }
+.dz-zone[open] > summary .dz-chev { transform: rotate(90deg); }
+.dz-zone .dz-sum { font-size: 10.5px; font-weight: 400; color: #94A3B8; margin-left: 8px; }   /* สรุปตอนยุบ */
+.dz-zone[open] .dz-sum { display: none; }

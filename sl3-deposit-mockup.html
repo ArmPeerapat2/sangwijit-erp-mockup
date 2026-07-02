@@ -68,7 +68,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 .pill-route{background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE}
 .items-card{padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
 .items-card .card-header{padding:12px 14px;margin:0;border-bottom:1px solid #E5E7EB}
-.items-wrap{overflow-y:auto;flex:1;min-height:60px}
+.items-wrap{overflow-y:auto;flex:1}
 table.items{width:100%;border-collapse:collapse;background:#fff}
 table.items thead{position:sticky;top:0;background:#F8FAFC;z-index:5}
 table.items thead th{padding:9px 12px;font-size:10.5px;font-weight:600;color:#6B7280;text-align:left;border-bottom:2px solid #E5E7EB;text-transform:uppercase;white-space:nowrap}
@@ -114,8 +114,6 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .dep-box .l{font-size:9px;color:#9CA3AF;font-weight:700;text-transform:uppercase}
 .dep-box .v{font-size:13px;font-weight:700;font-family:'Inter',monospace}
 .dep-box .v.g{color:#10B981}.dep-box .v.r{color:#EF4444}
-.dc-strip{position:relative;flex:none;background:#fff;border-top:1px solid #E5E7EB;padding:7px 24px;display:flex;align-items:center;gap:8px;font-size:11px;z-index:20;box-shadow:0 -2px 8px rgba(0,0,0,0.04)}
-.dc-strip .dc-lbl{font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px}
 .dc-node{padding:3px 10px;border-radius:5px;background:#F3F4F6;color:#6B7280;font-weight:600}
 .dc-node.done{background:#ECFDF5;color:#065F46}
 .dc-node.current{background:#EFF6FF;color:#1D4ED8;border:1px solid #93C5FD}
@@ -131,7 +129,6 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .row-2col .field{margin-bottom:3px}
 .row-2col .field-grid-2{gap:3px 14px}
 .row-2col .credit-line{margin-top:5px;padding:4px 8px}
-.content>.items-card{flex:1 1 0;min-height:120px}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
 .row-bottom{font-size:12px;height:178px}
 .row-bottom .tabset,.row-bottom>.card{overflow:auto}
@@ -149,25 +146,26 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .tpl-zone{font-size:9px;font-weight:700;color:#2563EB;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:4px;padding:1px 6px;margin-left:6px;text-transform:uppercase}
 
 </style>
+  <link rel="stylesheet" href="swt-patterns.css">
 </head>
-<body>
+<body data-swt-sc="sl3">
 <div class="layout">
 <div class="main">
 
-  <!-- ① TOPBAR -->
-  <div class="topbar">
-    <div class="topbar-breadcrumb">งานขาย <span class="sep">›</span> ใบมัดจำ <span class="sep">›</span> <span class="current">08DP-2606-0009</span></div>
-    <div class="topbar-spacer"></div>
-    <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
-    <div class="topbar-icon">🔔</div>
-    <select class="branch-sel"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option></select>
-    <select class="branch-sel"><option>แผนกขายปลีก</option></select>
-    <div class="topbar-avatar">สว</div>
-  </div>
-
-  <!-- ② MAIN HEADER -->
-  <header class="main-header">
-    <div class="mh-left">
+  <!-- ①② UNIFIED HEADER — Topbar + Main Header รวม -->
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">งานขาย <span class="sep">›</span> ใบมัดจำ <span class="sep">›</span> <span class="current">08DP-2606-0009</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+        <div class="topbar-icon">🔔</div>
+        <select class="branch-sel"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option></select>
+        <select class="branch-sel"><option>แผนกขายปลีก</option></select>
+        <div class="topbar-avatar">สว</div>
+      </div>
+    </div>
+    <div class="uh-main">
+      <div class="mh-left">
       <div class="mh-title">
         <div class="ico">💵</div>
         <div><h1>ใบมัดจำ</h1><p>Deposit Receipt (SL-3)</p></div>
@@ -185,37 +183,31 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
       <button class="mh-btn mh-btn-accent">📥 Post (ลงบัญชี)</button>
     </div>
+    </div>
   </header>
 
-  <!-- ③ SUB-ACTION BAR -->
-  <div class="saab">
+  <!-- ③ SAAB ย่อ — ปุ่มหลัก + ⋯ (action เด่นอยู่ main-header เท่านั้น) -->
+  <div class="saab saab-compact">
     <button class="btn btn-outline" onclick="dfOpen()">📂 เปิดเอกสารเก่า</button>
-    <button class="btn btn-outline">💾 Save</button>
     <button class="btn btn-outline" onclick="tplCopyDoc()">📋 Copy</button>
     <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบมัดจำ</button>
-    <button class="btn btn-success">📥 Post (ลงบัญชี → Customer Ledger)</button>
-    <button class="btn btn-outline" title="ดูรายการบัญชีหลัง Post">📊 View GL</button>
-    <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
-    <span class="saab-status"><span class="dot"></span>สถานะ: <strong>ร่าง</strong> · รอ Post</span>
+    <div class="saab-more-wrap">
+      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
+      <div class="saab-more-menu">
+        <button type="button" class="btn btn-outline btn-menu">💾 Save</button>
+        <button type="button" class="btn btn-menu btn-success">📥 Post (ลงบัญชี → Customer Ledger)</button>
+        <button type="button" class="btn btn-menu btn-outline" title="ดูรายการบัญชีหลัง Post">📊 View GL</button>
+        <button type="button" class="btn btn-menu btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
+      </div>
+    </div>
+    <div class="saab-spacer"></div>
   </div>
 
   <div class="content">
 
-    <!-- ④a STATUS + DOC-CHAIN รวมแถวเดียว -->
-    <div class="status-strip" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div class="sc11-pills">
-        <span class="pill pill-neutral">📄 ร่าง (รอ Post)</span>
-        <span class="pill pill-info">฿ มัดจำรวม VAT</span>
-        <span class="pill pill-warning">💡 หักจากบิลขายอัตโนมัติ (SC6)</span>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
-        <span class="dc-lbl" style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
-        <a class="dc-node done" href="sl1-quotation-mockup.html" target="_blank">QT 0047 ✓</a><span class="dc-arrow">→</span>
-        <a class="dc-node done" href="sl2-reservation-mockup.html" target="_blank">SO 0021 ✓</a><span class="dc-arrow">→</span>
-        <span class="dc-node current">DP 0009</span><span class="dc-arrow">→</span>
-        <a class="dc-node" href="sl4-invoice-mockup.html" target="_blank">บิลขาย INV</a>
-      </div>
-    </div>
+    <!-- ④a SC-12 Status (pills + maker-checker · ไม่มี doc-chain) -->
+    <div id="sl3Sc12" class="status-strip"></div>
+    <div id="sl3Gate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL -->
     <div class="row-2col">
@@ -316,7 +308,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
         <div class="tabset-pane" id="t-ref">
           <div class="tab-grid">
             <span class="k">ใบจองต้นทาง</span><span class="v"><a href="sl2-reservation-mockup.html" style="color:#2563EB;text-decoration:none">SO 08SO-2606-0021 ↗</a></span>
-            <span class="k">ใบเสนอราคา</span><span class="v"><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 08QT-2606-0047 ↗</a></span>
+            <span class="k">ใบเสนอราคา</span><span class="v"><a href="bc365/sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 08QT-2606-0047 ↗</a></span>
           </div>
         </div>
         <div class="tabset-pane" id="t-hist">
@@ -347,6 +339,9 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 
   </div><!-- /content -->
 
+
+  <!-- ⑤ DOC-CHAIN แถบล่าง main -->
+  <div id="sl3DcStrip" class="dc-strip"></div>
 </div><!-- /main -->
 </div><!-- /layout -->
 
@@ -385,5 +380,9 @@ function swtSbFilter(v){
 }
 </script>
 <script src="swt-doc-finder.js"></script>
+<script src="swt-patterns.js"></script>
+<script src="swt-sc-modals.js"></script>
+<script src="swt-panels.js"></script>
+<script src="swt-sc-wire.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>

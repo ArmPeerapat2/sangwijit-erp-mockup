@@ -36,11 +36,11 @@ source_spec:
 
 | Skill ID | ชื่อในสป็ค | ไฟล์ mockup ปัจจุบัน | สถานะ | ปัญหา |
 |---|---|---|---|---|
-| WH-Q | Queue Dashboard | `wh-queue-mockup.html` | ✅ ครบ | — |
-| WH-1 | GRN + Transfer Receipt | `wh1-grn-mockup.html` | ✅ ครบ | — |
-| WH-2 | Stock Transfer | `wh2-stock-transfer-mockup.html` | ✅ ครบ | — |
-| WH-3 | Sales Issue (เบิกขาย) | `wh3-sales-issue-mockup.html` | ⚠️ เลขไฟล์เพี้ยน | ใช้ชื่อ `whr-` แทน `wh3-` |
-| WH-4 | Physical Inventory Count | `wh4-stock-count-mockup.html` | ⚠️ เลขไฟล์เพี้ยน | ใช้ `wh3-` แทน `wh4-` (ชนกับ WH-3!) |
+| WH-Q | Queue Dashboard | `wh-q-dashboard-mockup.html` | ✅ ครบ | — |
+| WH-1 | GRN + Transfer Receipt | `wh1-receive-mockup.html` | ✅ ครบ | — |
+| WH-2 | Stock Transfer | `wh3-transfer-mockup.html` | ✅ ครบ | — |
+| WH-3 | Sales Issue (เบิกขาย) | `wh-q2-issue-queue-mockup.html` | ⚠️ เลขไฟล์เพี้ยน | ใช้ชื่อ `whr-` แทน `wh3-` |
+| WH-4 | Physical Inventory Count | `wh4-count-mockup.html` | ⚠️ เลขไฟล์เพี้ยน | ใช้ `wh3-` แทน `wh4-` (ชนกับ WH-3!) |
 | **WH-R** | **Stock Card / รายงานสต็อก** | ❌ | 🔴 **ขาด** | ไม่มี mockup |
 | **WH-NM** | **Non-Move Report** | ❌ | 🔴 **ขาด** | spec ละเอียดครบ (Threshold 🟡🔴⚫, Tab เทียบสาขา, บันทึก Action) แต่ยังไม่ render |
 

@@ -68,5 +68,43 @@ Already decided, do not re-litigate:
 ## Response style
 
 - Reply in Thai by default (match the user's language). Be concise and informal.
+- **กฎชื่อเต็ม (locked):** ทุกครั้งที่อ้างรหัสโมดูล — ต้องมีชื่อเต็มคู่กันเสมอ (เช่น **PO-6 ใบตั้งหนี้เจ้าหนี้** ไม่เขียนแค่ PO-6) · ดูตารางใน `.agents/active.md` §กฎชื่อเต็ม
 - When unsure, ask rather than guess. The knowledge base is large and decisions move fast — check `.agents/active.md` for what's current.
 - Output files go under `/Design Ai/` or `/Design Ai/knowledge-base/` as appropriate.
+
+### เมื่อทำ mockup / rebuild เสร็จ — ส่งมอบให้ user ก๊อปไปดู (locked)
+
+ทุกครั้งที่ปิดงาน mockup (สร้างใหม่ · rebuild · archive) **ต้องแสดงบล็อกส่งมอบ** ให้ user ก๊อปได้ทันที ห้ามสรุปอย่างเดียว:
+
+1. **ไฟล์หลัก** — full path แบบ Windows (เช่น `C:\Users\...\Design Ai\sl1-quotation-mockup.html`)
+2. **คำสั่งเปิด browser** — `start "…full path…"` (PowerShell / cmd บน Windows)
+3. **Archive** — full path ของ `_archive/…-YYYY-MM-DD.html` (ถ้ามีการ archive)
+4. **Chain ทดสอบ** — หน้าต้นทาง + ปุ่ม/action ที่พาไปหน้าที่เพิ่งทำ (ถ้าเชื่อม doc-chain)
+5. **ไฟล์แก้ร่วม** — เช่น `swt-sidebar.js`, `.agents/active.md` (ถ้าแตะ)
+6. **อัปเดต `module-flow-overview.html`** — ทุกครั้งที่ **เพิ่มหน้า · แก้ flow/สถานะ · rebuild (ติด ✦)** ต้องไปปรับ node/สถานะ/ลิงก์/มาร์ก ✦↔เก่า ในหน้านี้ให้ตรงเสมอ (locked 2026-06-14)
+
+รูปแบบตัวอย่าง:
+
+```
+ไฟล์หลัก:
+C:\Users\Thinkpad\OneDrive\claude\ArmWiki\Design Ai\fi2-ap-payment-mockup.html
+
+เปิดดู:
+start "C:\Users\Thinkpad\OneDrive\claude\ArmWiki\Design Ai\fi2-ap-payment-mockup.html"
+```
+
+### การทำงานร่วมกัน (สรุป — รายละเอียดใน `.agents/active.md`)
+
+- **Flow-first:** แสดง flow → user confirm → ค่อยแก้ mockup (ห้าม batch หลายหน้า)
+- **Form Build Pattern:** **Step 0 Gate** → Blueprint ①–⑤ → confirm → build บน `_form-template.html` → archive + full path
+- **Chain regression:** หลังแก้ `swt-sidebar.js` / `swt-doc-finder.js` → `.agents/topics/chain-regression-checklist.md`
+- **Shared components:** `.agents/topics/shared-components-status.md` (§0 แนวทางกลาง · master checklist)
+- **SC sprint (locked 2026-06-11):** ทำ SC ที่เหลือให้ครบก่อน · FI-1/WH-3/PO-2 รอหลัง sprint · ฟอร์มใหม่ใช้ `swt-patterns.js` + `swt-doc-finder.js` ไม่ copy inline
+- **ตัวย่อ:** ใส่ชื่อเต็มในวงเล็บเมื่อตอบ user (เช่น AP = ใบตั้งหนี้เจ้าหนี้)
+
+### Blueprint Step 0 — Pre-build Gate (บังคับ · locked 2026-06-11)
+
+ก่อน Blueprint ①–⑤ และก่อนเขียนโค้ด ต้องผ่าน:
+
+1. อ่าน `.agents/topics/form-template-guideline.md` (§🖥️ fit 100vh · party · ตาราง)
+2. เปิด `swt-doc-finder.js` — มี 

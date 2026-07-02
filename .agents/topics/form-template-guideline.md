@@ -10,53 +10,40 @@
 ## โครง 5 โซน
 
 ```
-① topbar → ② main-header → ③ SAAB → ④ content(a status · b party · c line items · d tabs+summary · e notes) → ⑤ doc-chain
+①② unified-header → ③ SAAB → ④ content(a status · b party · c line items · d tabs+summary · e notes) → ⑤ doc-chain
 ```
 
 ---
 
-## ① TOPBAR
+## ①② UNIFIED HEADER — Topbar + Main Header รวม (locked 2026-06-11)
 
-| element | แสดง / พฤติกรรม | คงที่ ↔ เปลี่ยน |
+| แถว | class | แสดง |
 |---|---|---|
-| Breadcrumb | `หน้าหลัก › กลุ่ม › ‹ชื่อหน้า›` (current สีน้ำเงิน) | เปลี่ยน (ชื่อหน้า) |
-| ช่องค้นหา | คลิก/`Ctrl+K` → global search palette (swt-link.js) | คงที่ |
-| 🔔 แจ้งเตือน | → notification center | คงที่ |
-| Branch tag | `🏢 ‹สาขา›` | เปลี่ยน (ตาม login) |
-| Avatar | อักษรย่อ user + เมนู profile | คงที่ |
+| **บน** `.uh-utility` | breadcrumb ซ้าย · ค้นหา/🔔/สาขา/avatar ขวา (`.uh-tools`) |
+| **ล่าง** `.uh-main` | ไอคอน+ชื่อฟอร์ม · meta (เลขที่/วันที่/ยอด) · badge+ปุ่ม action |
 
-## ② MAIN-HEADER (gradient · sticky)
+> ประหยัด ~1 แถวเต็ม vs แยก topbar ขาว + main-header · style ใน `swt-patterns.css` `.unified-header`
 
-| element | แสดง / พฤติกรรม | คงที่ ↔ เปลี่ยน |
+## ③ SUB-ACTION BAR (SAAB) — แบบย่อ `saab-compact` (locked 2026-06-11)
+
+| แสดงตลอด | ในเมนู ⋯ เพิ่มเติม | ห้ามซ้ำ |
 |---|---|---|
-| ไอคอน + ชื่อหน้า + subtitle | `‹icon› ‹ชื่อฟอร์ม›` | เปลี่ยน |
-| Meta items | เลขที่เอกสาร · วันที่ · ‹2-3 ค่าเด่นของฟอร์ม› | เปลี่ยน |
-| Badge สถานะ | amber=ร่าง/พิจารณา · green=ยืนยัน | เปลี่ยน (ค่า) · สีคงที่ |
-| ปุ่มขวา | ghost(รอง) · primary เขียว(action หลัก) · accent ม่วง(พิเศษ) | เปลี่ยน |
+| 📂 เปิดเอกสารเก่า · 📋 Copy · 🖨️ พิมพ์ | 💾 Save Draft · ↪ แปลงถัดไป · ❌ ยกเลิก · ลิงก์ข้ามโมดูล | **Post / action หลัก** อยู่ **main-header เท่านั้น** |
+| — | `swtSaabMoreToggle()` · `.saab-more-wrap` | **saab-status** (ซ้ำ mh-badge) → **ลบ** |
 
-## ③ SUB-ACTION BAR (SAAB)
-
-| ปุ่ม | พฤติกรรม (มาตรฐานทุกหน้า) | คงที่ ↔ เปลี่ยน |
-|---|---|---|
-| 📂 **เปิดเอกสารเก่า** | → modal ค้นหา **3 แท็บ** (ดูด้านล่าง) → โหลดเอกสารเก่ามาดู/แก้ | คงที่ |
-| 💾 Save Draft | บันทึกร่าง | คงที่ |
-| 📋 **Copy / ทำสำเนา** | **ไม่ล้างหน้าจอ** — clone ข้อมูลทั้งหมด (ลูกค้า + รายการครบ) เป็นเอกสารใหม่ · ออกเลขใหม่ · **reset 3 อย่าง: เลขที่/วันที่(=วันนี้)/ลายเซ็น-อนุมัติ** · เริ่มสถานะ "ร่าง" · ทุกฟิลด์แก้ต่อได้ทันที | คงที่ |
-| 🖨️ พิมพ์ PDF | คลิก → **modal เลือกแบบฟอร์ม/ชุดสำเนาของใบนี้** (ต้นฉบับ/สำเนา) → render | คงที่ |
-| ↪ แปลงเป็นเอกสารถัดไป | สร้างเอกสารปลายทางตาม flow (QT→SO ฯลฯ) | เปลี่ยน (ปลายทาง) |
-| ❌ ยกเลิก | void เอกสาร | คงที่ |
-| saab-status | จุดสี + สถานะ + เวลาแก้ล่าสุด | เปลี่ยน (ค่า) |
-
-> **เคส Copy:** ขายชุดเดิม 10 รายการ ให้ลูกค้า 2 ราย → ทำใบแรกเสร็จ กด Copy → 10 รายการยังอยู่ครบ เลขใหม่ → เปลี่ยนชื่อลูกค้า → save ใบสอง
+> **เคส Copy:** clone ครบ → เลขใหม่ · reset วันที่/ลายเซ็น · สถานะร่าง (รายละเอียด modal ด้านล่าง)
 
 ---
 
-## ④a STATUS STRIP (SC-11) — *(ตัด "Flow" ออกแล้ว → ดู ⑤)*
+## ④a STATUS STRIP (SC-12) + Gate
 
 | element | แสดง / พฤติกรรม | คงที่ ↔ เปลี่ยน |
 |---|---|---|
-| SC-11 pills | ป้ายสถานะเด่น: `📄 ร่าง` · `฿ VAT 7%` · `✓ เครดิตผ่าน` · `⏳ ‹rule เฉพาะฟอร์ม›` | โครงคงที่ · เนื้อเปลี่ยน |
+| SC-12 pills | **เฉพาะกติกาเด่น** — ห้ามซ้ำ badge แถว 2 (ร่าง/เครดิต) · เช่น `฿ VAT 7%` · `⏳ rule` · โปร/มัดจำ | เนื้อเปลี่ยน |
+| Maker≠Checker | แถวขวาใน strip | เปลี่ยน |
+| Gate `.gate-alert` | **`.ok` + `compactOk` → ซ่อน** · แสดงเต็มเฉพาะ `warn`/`block` | `swtRenderGateAlert()` |
 
-> pill ตัวที่ 4 = ช่องใส่กติกาเด่นของหน้า: SL="เกินวงเงิน" · PO="รับครบแล้ว" · SV="ในประกัน"
+> **Doc Chain ไม่อยู่แถวนี้แล้ว** → ย้ายไป ⑤ · API: `swtRenderDocChain('#*DcStrip', {nodes})`
 
 ## ④b PARTY — ลูกค้า / คู่ค้า (SC-1)
 
@@ -75,6 +62,13 @@
 | ขาย (SL/SV/FI-รับ) | 👤 ลูกค้า | ✅ วงเงิน + AR ค้าง |
 | ซื้อ (PO/AP) | 🏢 Vendor | ❌ → เงื่อนไขชำระ Vendor + AP ค้าง |
 | โอน/เบิก (WH-2/3) | 🏬 สาขา/คลัง ต้นทาง→ปลายทาง | ❌ ไม่มี party |
+
+**สัดส่วน 2 การ์ด ④b ปรับได้ (locked 2026-06-12):**
+- ค่าเริ่มต้น `.row-2col` = `1fr 1fr` · **adjust ratio ได้ตามเนื้อหาฟอร์ม** — การ์ดไหนฟิลด์เยอะให้กว้างขึ้น เช่น `0.75fr 1.55fr`
+- ตัวอย่าง: **PO-7 สรุปงบจัดซื้อ** — PO-7.1 Vendor ย่อเล็ก / PO-7.2 ข้อมูลสรุปงบ ขยาย (select ข้อตกลง + ช่วง + สถานะดึง อยู่ในการ์ดเดียว)
+- เงื่อนไขคงเดิม: ทุกการ์ดไม่เกิน **3 บรรทัด** (`row-party` + `party-mini` / `mini-line`) · ปุ่ม action อยู่หัวการ์ด (`card-btn`)
+- **ผลลัพธ์อัตโนมัติ:** ④c เป็นตัวเดียวที่ `flex:1 1 0` → พื้นที่ที่ ④b คืนมาไหลเข้าตาราง line ทันที = **แถวสินค้าที่มองเห็นเพิ่มขึ้นทุกหน้า** โดยไม่ต้องแก้ตาราง
+- ⚠️ หน้าที่ rebuild ก่อน 2026-06-12 ยังใช้ ④b แบบ `field-grid-2` — ต้องไล่ปรับเป็น `mini-line` ทีละหน้า (flow-first · ห้าม batch) จึงจะได้แถวเพิ่ม
 
 ## ④c LINE ITEMS (SC-2 · SC-9) — หัวใจ
 
@@ -105,7 +99,7 @@
 **Layout + การแก้ไข (locked 2026-06-06):**
 - **ราคา/หน่วย + ส่วนลด** = editable input · จริงๆ จะแก้ได้/ไม่ได้ขึ้นกับ **สิทธิ์** → ตอนนี้เปิดให้แก้ได้ไปก่อน
 - **คลัง** = dropdown เลือก (HQ/สาขา/คลังกลาง)
-- **สัดส่วนหน้า:** รายการสินค้า = **ฟิก ~45vh** (เด่นสุด) · กลุ่มล่าง (ชำระเงิน-ประวัติ + สรุปยอด) ย่อให้เล็กลง
+- **สัดส่วนหน้า:** รายการสินค้า/รายการบรรทัด (④c) = **เด่นสุด · แสดงไม่น้อยกว่า 10 แถว** (`swt-patterns.css`) · กลุ่มล่าง (ชำระเงิน-ประวัติ + สรุปยอด) ย่อ ~150px
 
 **จุดต่างรายหน้า:** ซื้อ(PO)=+"ขอ vs สั่งจริง"+VC · บริการ(SV)=+serial · โอน(WH-2)=ไม่มีราคา/ส่วนลด มี FROM→TO
 
@@ -133,13 +127,13 @@
 ## ④e NOTES
 textarea หมายเหตุท้ายเอกสาร (Comment 1-5) — คงที่
 
-## ⑤ DOC-CHAIN (แถบล่างสุด) — *จุดเดียว*
+## ⑤ DOC-CHAIN (แถบล่าง main) — *จุดเดียว* (locked 2026-06-11)
 
 | element | แสดง / พฤติกรรม | คงที่ ↔ เปลี่ยน |
 |---|---|---|
-| Doc Chain strip | `QT-0015 → ปัจจุบัน → ถัดไป → ปลายทาง` (เลขจริง · node done/current/pending) · ใช้ `.dc-*` ใน swt-patterns.css | โครงคงที่ · chain data เปลี่ยน |
+| `.dc-strip` ใต้ `.content` | `ร่าง → Post → QT → … → ปลายทาง` · `swtRenderDocChain()` · scroll แนวนอนได้ | chain data เปลี่ยน |
 
-**ตัดสิน 2026-06-06:** "Flow" บน ④a ซ้ำกับ ⑤ → **เก็บ ⑤ จุดเดียว** · ลบ Flow ออกจาก ④a · **node คลิกได้ → เปิดเอกสารนั้นในแท็บใหม่** · lifecycle ใบตัวเองไม่หาย (อยู่แท็บประวัติ SC-7)
+**ตัดสิน 2026-06-11:** ย้าย chain ออกจาก SC-12 · **node คลิกได้ → แท็บใหม่** · lifecycle ใบตัวเองอยู่ใน chain + แท็บประวัติ SC-7
 
 ---
 
@@ -151,10 +145,11 @@ textarea หมายเหตุท้ายเอกสาร (Comment 1-5) �
 ## 🖥️ Layout — fit หน้าจอ ไม่มี scroll หน้า (locked 2026-06-06 · อ้างอิงระบบเดิม 3.2)
 
 - **โครง full-height flex:** `body/layout/main = height:100vh; overflow:hidden` → หน้าไม่เลื่อน
-- topbar · main-header · SAAB · party · สรุปยอด · doc-chain = **`flex:none` ตรึง**
-- **ตารางสินค้า = ตัวดูดพื้นที่เดียว** `flex:1` · scroll ภายในตารางเท่านั้น · แสดงแถวว่างพร้อมกรอก **~15 บรรทัด** (เหมือน 3.2)
-- **แถบล่าง (tabs ชำระเงิน-ประวัติ + สรุปยอด) ตรึงสูง ~150px** · เกินแล้ว scroll ในการ์ด
-- **party card (ลูกค้า/ข้อมูลเอกสาร) ย่อเตี้ย** เพื่อคืนพื้นที่ตาราง
+- unified-header · SAAB · party · สรุปยอด · doc-chain = **`flex:none` ตรึง**
+- **SC-3P ชำระเงินใน row-bottom** → `swtRenderPayment({ compact: true })` · fit แท็บ ~148px
+- **ตารางรายการ (④c) = ตัวดูดพื้นที่เดียว** `flex:1 1 0` + **`min-height:0`** (ห้ามบังคับ min-height px — จะล้น 100vh) · scroll ใน `items-wrap` เท่านั้น · tbody ≥10 แถวว่าง
+- **แถบล่าง (tabs + สรุปยอด) ตรึงสูง ~136px** (`swt-patterns.css`) · เกินแล้ว scroll ในการ์ด
+- **party card (④b / FI-1.1·1.2) ย่อไม่เกิน 3 บรรทัด/การ์ด** (`row-party` + `party-mini`) เพื่อคืนพื้นที่ตาราง
 - **หมายเหตุ** ย่อ 1 บรรทัด · WHT/มัดจำหัก ซ่อน default (class `show-extra` เพื่อโชว์)
 - ⚠️ บทเรียน: rule `.content>.card` อย่าเผลอครอบ `items-card` (ใช้ `:not(.items-card)`) ไม่งั้นตารางไม่ยืด → ตัวล่างโดน overflow ตัด
 
@@ -191,13 +186,36 @@ tabs: **สินค้า / บริการ / สินค้าชุด** 
 | SC5 | SharedDocRefPanel | ④c ref ต่อแถว + ④d แท็บอ้างอิง |
 | SC7 | Timeline | ④d แท็บประวัติ |
 | SC-9 | (line item helper) | ④c |
-| SC-11 | Status pills | ④a |
+| SC-11 | Summary สรุปยอดในบิล | ④d |
+| SC-12 | Status pills | ④a |
 
 ## TODO ที่ลงมือใน `_form-template.html` แล้ว (✅ 2026-06-06)
 - [x] เพิ่มปุ่ม 📋 Copy ใน SAAB (`tplCopyDoc()`)
 - [x] ปรับ 🖨️ พิมพ์ → modal เลือกแบบฟอร์ม (`#printModal` · ต้นฉบับ/สำเนา/2ชุด + QR)
 - [x] ④c เพิ่มคอลัมน์ พนักงานขาย (.line-sales) + ช่องยิงบาร์โค้ด (`#scanInput` `tplScan()`) + ref ต่อแถว (.ref-chip)
 - [x] SC-2 เพิ่ม "ชนิด" (add-row-bar: สินค้า/ค่าแรง/บริการ)
-- [x] ④a ลบ qt-flow (เหลือ SC-11 pills · grid → auto 1fr)
+- [x] ④a ลบ qt-flow (เหลือ SC-12 pills · grid → auto 1fr)
 - [x] ⑤ node = `<a target="_blank">` คลิกเปิดแท็บใหม่
 - [x] ④d summary: ส่วนลดท้ายบิล %/บาท (.disc-input) + VAT selector (.vat-sel) + บรรทัด WHT/มัดจำ (ph-row)
+
+---
+
+## Shared Components — บังคับใช้แนวทางกลาง (locked 2026-06-11)
+
+> รายละเอียด + master checklist: `.agents/topics/shared-components-status.md` §0
+
+ฟอร์ม transaction ใหม่/rebuild **ต้องเรียก SC ก่อน** — ห้าม copy HTML/CSS/JS ซ้ำในหน้า
+
+| โซน template | SC ที่ใช้ | API |
+|---|---|---|
+| ④a status strip | SC-12 | `swtRenderStatusStrip()` · `swtRenderGateAlert()` · mount `#pageSc12` |
+| ④d summary | SC-11 | `swtRenderSummary()` · `swtCalcVatGolden()` · mount `#pageSc11` |
+| ④b party ลูกค้า | SC-1 | `dfOpenCust()` |
+| ④b party เจ้าหนี้ | SC-3 | `dfOpenVend()` |
+| ④c line items | SC-2 | `dfOpenProd()` |
+| ดึงอ้างอิง | SC-5+ | `dfOpenRef()` |
+| ⑤ timeline/chain | SC-7 | `swt-link.js` |
+
+**Script load order:** `swt-patterns.css` → `swt-patterns.js` → `swt-doc-finder.js` → `swt-sidebar.js` → `swt-link.js`
+
+**Sprint ปัจจุบัน:** ทำ SC ที่เหลือให้ครบก่อน · FI-1/WH-3/PO-2 รอหลัง sprint (ดู `active.md`)

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SC (Shared Components ส่วนกลาง UI) — Catalog คู่มือทด API | Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+/* override form 100vh lock from swt-patterns.css */
+html{height:auto;overflow-y:auto;overflow-x:auto}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#111827;min-width:1440px;font-size:13px;line-height:1.45;min-height:100vh}
+.layout{display:flex;min-height:100vh}
+.main{flex:1;margin-left:240px;padding:20px 28px 40px}
+h1{font-size:20px;font-weight:800;color:#1E3A5F;margin-bottom:4px}
+.sub{font-size:12.5px;color:#6B7280;margin-bottom:20px;max-width:900px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:14px 16px}
+.card h2{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.sc-tag{font-size:9px;font-weight:800;color:#2563EB;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:4px;padding:2px 6px}
+.card p{font-size:11.5px;color:#6B7280;margin-bottom:10px;line-height:1.5}
+.card .api{font-family:monospace;font-size:10.5px;background:#F8FAFC;padding:6px 8px;border-radius:6px;color:#374151;margin-bottom:10px;word-break:break-all}
+.btns{display:flex;gap:6px;flex-wrap:wrap}
+.btn{padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #E5E7EB;background:#fff;font-family:inherit}
+.btn.pri{background:#2563EB;color:#fff;border-color:#2563EB}
+.btn.ok{background:#10B981;color:#fff;border-color:#10B981}
+.mount{min-height:40px;margin-top:10px;padding:10px;border:1px dashed #E5E7EB;border-radius:8px;background:#FAFBFC}
+.done{color:#059669;font-weight:700}
+.warn{color:#D97706}
+.log{margin-top:20px;padding:12px;background:#1F2937;color:#E5E7EB;border-radius:8px;font-family:monospace;font-size:11px;max-height:120px;overflow:auto}
+.section{margin-top:24px;font-size:11px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em}
+.guide{background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:14px 16px;margin-bottom:18px}
+.guide h2{font-size:13px;font-weight:700;color:#1E3A5F;margin-bottom:8px}
+.guide p{font-size:11.5px;color:#6B7280;line-height:1.55;margin-bottom:10px}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.pill{font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:99px;border:1px solid}
+.pill.sl{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.pill.po{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.pill.wh{background:#ECFDF5;color:#047857;border-color:#A7F3D0}
+.pill.fi{background:#FFFBEB;color:#B45309;border-color:#FDE68A}
+.pill.sv{background:#F0FDFA;color:#0F766E;border-color:#99F6E4}
+.pill.all{background:#F3F4F6;color:#374151;border-color:#E5E7EB}
+.use-row{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 8px}
+.use-row .lbl{font-size:9px;font-weight:700;color:#9CA3AF;align-self:center;margin-right:2px}
+.when{font-size:11px;color:#374151;background:#F8FAFC;border-left:3px solid #2563EB;padding:6px 9px;border-radius:0 6px 6px 0;margin-bottom:8px;line-height:1.5}
+.when strong{color:#1E3A5F;font-weight:600}
+.matrix{width:100%;border-collapse:collapse;font-size:10.5px;margin-top:6px}
+.matrix th,.matrix td{border:1px solid #E5E7EB;padding:5px 8px;text-align:left}
+.matrix th{background:#F8FAFC;color:#6B7280;font-weight:600}
+.matrix td .pill{display:inline-block;margin:1px 2px 1px 0}
+</style>
+</head>
+<body>
+<div class="layout"><div class="main">
+  <h1>📦 SC (Shared Components · ส่วนกลาง UI) — Catalog คู่มือทด API</h1>
+  <p class="sub">Build + Wire ครบ chain แล้ว (ผ่าน <code>swt-sc-wire.js</code>) · หน้านี้ทด API แต่ละตัว · <b>กฎชื่อ:</b> ทุกตัวย่อต้องมีคำอธิบาย — เช่น <b>SL-4 บิลขาย</b> ไม่เขียนแค่ SL-4</p>
+
+  <div class="guide">
+    <h2>🗂️ ใช้กับกลุ่มเอกสารไหน — อ่านก่อนทด</h2>
+    <p>แต่ละ SC (Shared Component) ไม่ได้ใช้ทุกเมนู · ป้ายสี = กลุ่มหลัก · รหัสเอกสาร = โค้ด + ชื่อไทยเสมอ</p>
+    <div class="legend">
+      <span class="pill sl">SL งานขาย (Sales)</span>
+      <span class="pill po">PO จัดซื้อ (Purchase)</span>
+      <span class="pill wh">WH คลังสินค้า (Warehouse)</span>
+      <span class="pill fi">FI การเงิน (Finance)</span>
+      <span class="pill sv">SV บริการ (Service)</span>
+      <span class="pill all">ทุกฟอร์ม rebuild</span>
+    </div>
+    <table class="matrix">
+      <thead><tr><th>กลุ่มธุรกิจ</th><th>เอกสารหลัก (โค้ด + ชื่อ)</th><th>SC ที่เน้น</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill sl">SL งานขาย</span></td><td>SL-1 ใบเสนอราคา · SL-2 ใบจอง · SL-3 รับมัดจำ · SL-4 บิลขาย · SL-CN ใบลดหนี้ขาย</td><td>SC-1 ค้นหาลูกค้า · SC-2 ค้นหาสินค้า · SC-5+ ดึงอ้างอิง · SC-6 หักมัดจำ · SC-3P รับชำระ · SC-4/10 จัดส่ง/แผนที่ · SC-11/12 สรุปยอด/สถานะ · SC-16 พิมพ์</td></tr>
+        <tr><td><span class="pill po">PO จัดซื้อ</span></td><td>PO-1 ใบขอสั่งซื้อ (PR) · PO-4 ใบสั่งซื้อ (PO) · PO-6 ใบตั้งหนี้เจ้าหนี้ (AP) · PO-8 บิลฝาก · PO-CN ใบลดหนี้เจ้าหนี้</td><td>SC-3V ค้นหาเจ้าหนี้ · SC-2 · SC-5+ · SC-13 3-Way Match · SC-14 ดึงลดหนี้/AP · SC-11/12 · SC-17 อนุมัติ · SC-16 พิมพ์</td></tr>
+        <tr><td><span class="pill wh">WH คลัง</span></td><td>WH-1 ใบรับสินค้า (GRN) · WH-3 เบิก/นับสต็อก</td><td>SC-3V · SC-5+ · SC-8 Serial · SC-11/12 · SC-4 จัดส่ง (drop-ship)</td></tr>
+        <tr><td><span class="pill fi">FI การเงิน</span></td><td>FI-1 รับชำระลูกหนี้ (AR) · FI-2 จ่ายชำระเจ้าหนี้ (AP) · FI-3 กระทบยอดธนาคาร</td><td><b>SC-15 บัญชีธนาคาร</b> · SC-3P · SC-3V · SC-11/12 · SC-14 · SC-17</td></tr>
+        <tr><td><span class="pill sv">SV บริการ</span></td><td>SV-1 รับงานบริการ · SV-6 จัดส่ง+ติดตั้ง</td><td>SC-10 แผนที่ · SC-4 จัดส่ง · SC-18 Tracking · SC-7 ประวัติ</td></tr>
+        <tr><td><span class="pill all">ข้ามกลุ่ม</span></td><td>ทุกฟอร์ม rebuild</td><td>SC-7 Timeline · SC-12 สถานะ · SC-16 พิมพ์ · SC-19 BC Tooltip</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">กลุ่ม A — Modal / Picker</div>
+  <div class="grid" style="margin-top:10px">
+    <div class="card"><h2><span class="sc-tag">SC-1</span> ค้นหาลูกค้า <span class="done">✅</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill sl">SL งานขาย</span><span class="pill fi">FI-1 รับ AR</span><span class="pill sv">SV บริการ</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> ก่อนสร้าง/แก้เอกสารฝั่งลูกหนี้ — กด 🔍 ที่การ์ดลูกค้า · ดูเครดิตก่อนเลือก</div>
+      <p>Modal iframe · หน้า reference</p><div class="api">dfOpenCust() · sc1-customer-search-mockup.html</div>
+      <div class="btns"><button class="btn" onclick="location.href='sc1-customer-search-mockup.html'">เปิด mockup</button></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-2</span> ค้นหาสินค้า <span class="done">✅</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill sl">SL งานขาย</span><span class="pill po">PO จัดซื้อ</span><span class="pill wh">WH คลัง</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> เพิ่มบรรทัดในตารางรายการ — ดูสต็อก/ราคาก่อนใส่บิล</div>
+      <p>Modal iframe</p><div class="api">dfOpenProd() · bc365/sc2-item-search-mockup.html</div>
+      <div class="btns"><button class="btn" onclick="location.href='bc365/sc2-item-search-mockup.html'">เปิด mockup</button></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-3V</span> ค้นหาเจ้าหนี้ <span class="done">✅</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill po">PO จัดซื้อ</span><span class="pill wh">WH-1 ใบรับสินค้า</span><span class="pill fi">FI-2 จ่ายชำระเจ้าหนี้</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> เอกสารฝั่งเจ้าหนี้ (PO-4 สั่งซื้อ · WH-1 รับของ · PO-6 ตั้งหนี้ · FI-2 จ่าย) — คู่กับ SC-1 ค้นหาลูกค้า ฝั่งขาย</div>
+      <p>Wire แล้ว PO-1 ใบขอสั่งซื้อ · PO-4 ใบสั่งซื้อ · PO-6 ตั้งหนี้ · PO-8 บิลฝาก · WH-1 ใบรับสินค้า · FI-2 จ่าย AP</p><div class="api">dfOpenVend() · sc3-vendor-search-mockup.html</div>
+      <div class="btns"><button class="btn pri" onclick="dfOpenVend()">ทด dfOpenVend</button></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-5+</span> ดึงเอกสารอ้างอิง <span class="done">✅</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill sl">SL งานขาย</span><span class="pill po">PO จัดซื้อ</span><span class="pill wh">WH คลัง</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> สร้างเอกสารปลายทางจากต้นทาง (SL-1 ใบเสนอราคา→SL-2 ใบจอง · PO-1 PR→PO-4 ใบสั่งซื้อ · PO-4→WH-1 ใบรับสินค้า · SL-3 มัดจำ→SL-4 บิลขาย) · ดึงหลายใบได้</div>
+      <p>Wire แล้ว SL-4 บิลขาย · PO-4 ใบสั่งซื้อ · WH-1 ใบรับสินค้า</p><div class="api">dfOpenRef({docType}) · swt-doc-finder.js</div>
+      <div class="btns"><button class="btn pri" onclick="dfOpenRef({docType:'PO'})">ทด PO จัดซื้อ</button><button class="btn" onclick="dfOpenRef({docType:'SL'})">ทด SL งานขาย</button></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-14</span> ดึงลดหนี้/AP <span class="done">✅</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill po">PO-6 ใบตั้งหนี้ AP</span><span class="pill fi">FI-2 จ่ายชำระ AP</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> PO-6 ใบตั้งหนี้เจ้าหนี้ — รวม (+) ใบแจ้งหนี้ Vendor และ (−) มัดจำ/บิลฝาก/ลดหนี้/ส่งเสริม</div>
+      <p>Wire แล้ว PO-6 ใบตั้งหนี้เจ้าหนี้</p><div class="api">dfOpenApReduce() · swt-ap-reduce.js</div>
+      <div class="btns"><button class="btn pri" onclick="dfOpenApReduce({vendorName:'Daikin',poRef:'PO-0042',grnRef:'GR-0210',mode:'inv'})">ทด picker</button>
+        <button class="btn" onclick="location.href='po6-ap-invoice-mockup.html'">เปิด PO-6 ใบตั้งหนี้</button></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-15</span> บัญชีธนาคาร <span class="done">✅ Build</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill fi">FI การเงิน</span><span class="pill sl">SL-3/4 ชำระโอน</span></div>
+      <div class="when">
+        <strong>ใช้ตอนไหน:</strong> เลือก<b>บัญชีธนาคารของบริษัท</b>เมื่อชำระด้วย<b>โอนเงิน</b>เท่านั้น — ไม่ใช้กับเงินสด/เช็ค (กรอกเลขเช็คเอง)<br>
+        · <code>direction:'in'</code> = บัญชี<b>รับเงิน</b> → FI-1 รับชำระลูกหนี้ (AR) · SL-3 รับมัดจำ / SL-4 บิลขาย แท็บชำระ · SC-3P รับชำระ กด「โอน」<br>
+        · <code>direction:'out'</code> = บัญชี<b>จ่ายเงิน</b> → FI-2 จ่ายชำระเจ้าหนี้ (AP) · TR-1 คลังเงิน · FI-3 กระทบยอดธนาคาร<br>
+        <strong>ไม่เน้น:</strong> PO-4 ใบสั่งซื้อ / WH-1 ใบรับสินค้า (ไม่มีการโอน) · เปิดจาก SC-3P อัตโนมัติเมื่อเลือกวิธีโอน
+      </div>
+      <p>Wire แล้ว FI-2 จ่ายชำระเจ้าหนี้ · รอ rebuild FI-1 รับ AR · event <code>bank:selected</code></p>
+      <div class="api">dfOpenBank({direction:'in'|'out'}) · swt-sc-modals.js</div>
+      <div class="btns"><button class="btn pri" onclick="dfOpenBank({direction:'out'})">ทด OUT (จ่าย)</button><button class="btn" onclick="dfOpenBank({direction:'in'})">IN (รับ)</button></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-13</span> 3-Way Match <span class="done">✅ Build</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill po">PO-6 ใบตั้งหนี้ AP</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> ก่อน Post PO-6 ใบตั้งหนี้เจ้าหนี้ — เทียบ PO-4 ใบสั่งซื้อ ↔ WH-1 ใบรับสินค้า (GRN) ↔ ใบแจ้งหนี้ Vendor (2-Way ถ้าโหมด PO-8 บิลฝาก)</div>
+      <p>Wire แล้ว PO-6 ใบตั้งหนี้เจ้าหนี้ · ปุ่ม 🔍 3-Way</p><div class="api">dfOpen3Way({poNo,grnNo,invNo}) · swt-sc-modals.js · swt-sc-wire.js</div>
+      <div class="btns"><button class="btn pri" onclick="dfOpen3Way({poNo:'PO-2606-0042',grnNo:'GR-0210',invNo:'DKN-25088'})">ทด 3-Way</button></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-16</span> เลือกแบบพิมพ์ <span class="done">✅ Build</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill all">ทุกฟอร์ม</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> กด 🖨 พิมพ์/ส่งออก — เลือกแบบพิมพ์จาก CF-2.7 Doc Template ก่อนพิมพ์หรือ PDF</div>
+      <p>Wire แล้ว chain งานขาย/จัดซื้อ/คลัง/การเงิน (swt-sc-wire.js)</p><div class="api">dfOpenPrint({docType,docNo}) · swt-sc-modals.js · tplOpenPrint()</div>
+      <div class="btns"><button class="btn pri" onclick="dfOpenPrint({docType:'AP',docNo:'AP-2606-0088'})">ทด Print</button></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-18</span> Tracking ขนส่ง <span class="done">✅ Build</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill sl">SL-4 บิลขาย</span><span class="pill wh">WH คลัง</span><span class="pill sv">SV บริการ</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> ต่อแถวสินค้าที่ส่งขนส่ง — ใส่เลขพัสดุ Kerry/Flash หลังจัดส่ง</div>
+      <p>ต่อไลน์สินค้า</p><div class="api">dfOpenTracking({lineId}) · swt-sc-modals.js</div>
+      <div class="btns"><button class="btn pri" onclick="dfOpenTracking({lineId:'DAI-FTKM24'})">ทด Tracking</button></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-10</span> ปักหมุดแผนที่ <span class="done">✅</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill sl">SL-4 บิลขาย</span><span class="pill sv">SV-6 จัดส่ง+ติดตั้ง</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> ยืนยันพิกัดจัดส่ง/นัดช่าง — เปิดจาก SC-4 จัดส่ง+ติดตั้ง ปุ่ม 📍</div>
+      <p>Runtime + mockup เดิม</p><div class="api">dfOpenMap() · sc10-map-picker-mockup.html</div>
+      <div class="btns"><button class="btn pri" onclick="dfOpenMap({address:'รามอินทรา'})">ทด Map</button>
+        <button class="btn" onclick="location.href='sc10-map-picker-mockup.html'">mockup</button></div></div>
+  </div>
+
+  <div class="section" style="margin-top:28px">กลุ่ม B — Embedded Panel</div>
+  <div class="grid" style="margin-top:10px">
+    <div class="card"><h2><span class="sc-tag">SC-11</span> สรุปยอดในบิล <span class="done">✅ Wire</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill sl">SL-4 บิลขาย</span><span class="pill po">PO-4 ใบสั่งซื้อ · PO-6 ใบตั้งหนี้เจ้าหนี้</span><span class="pill wh">WH-1 ใบรับสินค้า</span><span class="pill fi">FI-2 จ่ายชำระเจ้าหนี้</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> บล็อก④d สรุปยอดท้ายบิล — VAT/ส่วนลด/หักมัดจำ(ต้องมี DP อ้างอิง)</div>
+      <div class="api">swtRenderSummary() · #*Sc11</div>
+      <div class="mount" id="demoSc11"></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-12</span> สถานะ+Doc-chain <span class="done">✅ Wire</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill all">ฟอร์ม rebuild</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> แถบ④a ใต้ SAAB — สถานะ · maker≠checker · doc-chain · gate ก่อน Post</div>
+      <div class="api">swtRenderStatusStrip() · #*Sc12</div>
+      <div class="mount" id="demoSc12"></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-3P</span> รับชำระเงิน <span class="done">✅ Build</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill fi">FI-1 รับ AR</span><span class="pill sl">SL-3 มัดจำ · SL-4 บิลขาย</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> รับชำระหลายวิธีในบิลเดียว — แท็บ「โอน」จะเรียก <b>SC-15 บัญชีธนาคาร</b> ให้เลือกบัญชีรับ</div>
+      <p>amount-first · split · เชื่อม SC-15 โอน</p><div class="api">swtRenderPayment() · swt-panels.js</div>
+      <div class="mount" id="demoSc3p"></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-6</span> หักมัดจำ <span class="done">✅ Build</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill sl">SL-4 บิลขาย · SL-2 ใบจอง</span><span class="pill fi">FI-1 รับ AR</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> ตัด SL-3 ใบมัดจำ (DP) เข้า SL-4 บิลขาย/รับชำระ — ยอดไป SC-11 สรุปยอด ผ่าน <code>depositRefs</code></div>
+      <div class="api">swtRenderDeposit() · swt-panels.js</div>
+      <div class="mount" id="demoSc6"></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-4</span> จัดส่ง+ติดตั้ง <span class="done">✅ Build</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill sl">SL-4 บิลขาย · SL-2 ใบจอง</span><span class="pill wh">WH drop-ship ส่งตรง</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> แท็บจัดส่ง — ที่อยู่·วันนัด·วิธีส่ง · toggle ติดตั้ง → spawn SV-1 รับงานบริการ</div>
+      <div class="api">swtRenderDelivery() · ปุ่ม 📍 → SC-10 ปักหมุดแผนที่</div>
+      <div class="mount" id="demoSc4"></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-17</span> ขั้นตอนอนุมัติ <span class="done">✅ Build</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill po">PO-4 ใบสั่งซื้อ</span><span class="pill fi">FI-2 จ่ายชำระเจ้าหนี้</span><span class="pill sl">SL-F1 อนุมัติเครดิตขาย</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> เอกสารต้องผ่าน CF-2.6 Approval Matrix — ส่งอนุมัติ/อนุมัติ/ปฏิเสธ · Maker ≠ Checker</div>
+      <div class="api">swtRenderApproval() · swt-panels.js</div>
+      <div class="mount" id="demoSc17"></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-7</span> ประวัติ/Timeline <span class="done">✅</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill all">ทุกฟอร์ม</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> แท็บประวัติ/activity — ใครทำอะไรเมื่อไหร่ · คลิกข้าม chain</div>
+      <div class="api">swtRenderTimeline() · sc7-timeline-mockup.html</div>
+      <div class="btns"><button class="btn" onclick="location.href='sc7-timeline-mockup.html'">mockup</button></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-9</span> โปร/ราคา <span class="warn">Orchestrator</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill sl">SL-1~4 งานขาย</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> หลังเลือกสินค้า SC-2 ค้นหาสินค้า — ตรวจโปร/ราคาล็อค · เกินสิทธิ์ → SL-F1 อนุมัติเครดิตขาย</div>
+      <p>ไม่แยกไฟล์ — SC-2 emit → หน้างานขายตรวจโปร</p><div class="api">side panel optional · price:locked → SL-F1</div></div>
+  </div>
+
+  <div class="section" style="margin-top:28px">กลุ่ม C — Inline</div>
+  <div class="grid" style="margin-top:10px">
+    <div class="card"><h2><span class="sc-tag">SC-8</span> Serial Number <span class="done">✅ Build</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill wh">WH-1 รับสินค้า · WH-3 เบิก</span><span class="pill sl">SL-4 บิลขาย</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> สินค้ามี S/N — กรอก serial ต่อแถวตาม qty รับ/เบิก/ขาย</div>
+      <div class="api">swtSerialInline({qty:3}) · swt-panels.js</div>
+      <div class="mount" id="demoSc8"></div></div>
+    <div class="card"><h2><span class="sc-tag">SC-19</span> BC Field Tooltip <span class="done">✅ Build</span></h2>
+      <div class="use-row"><span class="lbl">หลัก</span><span class="pill all">ทุกฟอร์ม</span></div>
+      <div class="when"><strong>เมื่อไหร่:</strong> hover ฟิลด์ที่ sync กับ BC365 — แสดงชื่อฟิลด์/คำอธิบาย dev handoff</div>
+      <div class="api">swtBcTooltip(el, 'Customer No.') · swt-link.js</div>
+      <div class="mount"><label>ลูกค้า <input id="bcDemo" value="C-00123" style="margin-left:8px;padding:4px 8px;border:1px solid #E5E7EB;border-radius:4px"></label></div></div>
+  </div>
+
+  <div class="log" id="evlog">event log…</div>
+</div></div>
+
+<script src="swt-patterns.js"></script>
+<script src="swt-doc-finder.js"></script>
+<script src="swt-ap-reduce.js"></script>
+<script src="swt-sc-modals.js"></script>
+<script src="swt-panels.js"></script>
+<script src="swt-sc-wire.js"></script>
+<script src="swt-link.js"></script>
+<script src="swt-sidebar.js"></script>
+<script>
+function log(ev){var el=document.getElementById('evlog');el.textContent=(new Date()).toLocaleTimeString()+' '+ev.type+' '+JSON.stringify(ev.detail||{})+'\n'+el.textContent.slice(0,800);}
+['bank:selected','print:selected','tracking:added','map:confirmed','payment:changed','payment:complete','deposit:applied','workflow:submit','serial:added','apreduce:selected'].forEach(function(n){
+  document.addEventListener(n,function(e){log(e);});
+});
+swtRenderSummary('#demoSc11',{template:'sales-invoice',interactive:true,calc:{subtotal:485000,lineDiscount:12000,depositRefs:[{no:'DEP-2605-0002',amount:50000,href:'sl3-deposit-mockup.html'}]},discountInput:0,vatMode:'exclusive',vatRate:7});
+swtRenderStatusStrip('#demoSc12',{pills:[{text:'📄 ร่าง',type:'neutral'},{text:'SC Catalog คู่มือ',type:'info'}],makerChecker:{nodes:[{role:'Build ✓',step:'Sprint ปิด',state:'ok'},{role:'Wire ✓',step:'chain ครบ',state:'ok'}]}});
+swtRenderPayment('#demoSc3p',{total:485000,creditRemaining:20000});
+swtRenderDeposit('#demoSc6',{invoiceAmt:485000});
+swtRenderDelivery('#demoSc4',{});
+swtRenderApproval('#demoSc17',{});
+swtSerialInline('#demoSc8',{qty:3});
+swtBcTooltip(document.getElementById('bcDemo'),'Customer No.');
+</script>
+</body></html>

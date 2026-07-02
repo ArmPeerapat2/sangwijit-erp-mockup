@@ -10,7 +10,7 @@
    ⚠️ Flow note: BC PO status = Open/Approved · มาจาก PR (Approved) ผ่าน "Make To"
    ⚠️ Warranty date (Ending) = ตัดออก (user 2026-06-07 · flow บอกจำเป็นแต่ไม่ใช้จริง)
    ⚠️ VAT Case 4 = knowhow ต้นทุน (มีผลตอนออกรายงาน) ไม่ทำใน PO-4 · ส่วนลดก่อน VAT ตาม golden rule
-   ⚠️ ผลประโยชน์ Sell-in/Rebate/Co-op = บันทึกที่ PO-2 (Vendor Commitment/Agreement) · ยังไม่ทำ
+   ⚠️ ผลประโยชน์ Sell-in/Rebate/Co-op = บันทึกที่ PO-2 (Trade Agreement / ข้อตกลงส่งเสริมการขาย)
    ═══════════════════════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#111827;min-width:1440px;font-size:13px;line-height:1.45;height:100vh;overflow:hidden}
@@ -103,7 +103,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 /* ITEMS TABLE */
 .items-card{padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
 .items-card .card-header{padding:12px 14px;margin:0;border-bottom:1px solid #E5E7EB}
-.items-wrap{overflow-y:auto;flex:1;min-height:60px}
+.items-wrap{overflow-y:auto;flex:1}
 table.items{width:100%;border-collapse:collapse;background:#fff}
 table.items thead{position:sticky;top:0;background:#F8FAFC;z-index:5}
 table.items thead th{padding:9px 12px;font-size:10.5px;font-weight:600;color:#6B7280;text-align:left;border-bottom:2px solid #E5E7EB;text-transform:uppercase;white-space:nowrap}
@@ -173,7 +173,6 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .row-2col .field{margin-bottom:3px}
 .row-2col .field-grid-2{gap:3px 14px}
 .row-2col .credit-line{margin-top:5px;padding:4px 8px}
-.content>.items-card{flex:1 1 0;min-height:120px}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
 .row-bottom{font-size:12px;height:150px}
 .row-bottom .tabset,.row-bottom>.card{overflow:auto}
@@ -197,24 +196,24 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 </style>
   <link rel="stylesheet" href="swt-patterns.css">
 </head>
-<body>
+<body data-swt-sc="po4">
 <div class="layout">
 <div class="main">
 
-  <!-- ① TOPBAR -->
-  <div class="topbar">
-    <div class="topbar-breadcrumb">จัดซื้อ <span class="sep">›</span> ใบสั่งซื้อ <span class="sep">›</span> <span class="current">PO-2606-0042</span></div>
-    <div class="topbar-spacer"></div>
-    <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
-    <div class="topbar-icon">🔔</div>
-    <select class="branch-sel" title="เลือกสาขา (เฉพาะผู้มีสิทธิ์ข้ามสาขา)"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option><option>🏢 คลังกลาง</option></select>
-    <select class="branch-sel" title="เลือกแผนก (เฉพาะผู้มีสิทธิ์ข้ามแผนก)"><option>แผนกจัดซื้อ</option><option>คลัง</option></select>
-    <div class="topbar-avatar">สศ</div>
-  </div>
-
-  <!-- ② MAIN HEADER -->
-  <header class="main-header">
-    <div class="mh-left">
+  <!-- ①② UNIFIED HEADER — Topbar + Main Header รวม -->
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">จัดซื้อ <span class="sep">›</span> ใบสั่งซื้อ <span class="sep">›</span> <span class="current">PO-2606-0042</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+        <div class="topbar-icon">🔔</div>
+        <select class="branch-sel" title="เลือกสาขา (เฉพาะผู้มีสิทธิ์ข้ามสาขา)"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option><option>🏢 คลังกลาง</option></select>
+        <select class="branch-sel" title="เลือกแผนก (เฉพาะผู้มีสิทธิ์ข้ามแผนก)"><option>แผนกจัดซื้อ</option><option>คลัง</option></select>
+        <div class="topbar-avatar">สศ</div>
+      </div>
+    </div>
+    <div class="uh-main">
+      <div class="mh-left">
       <div class="mh-title">
         <div class="ico">🛒</div>
         <div><h1>ใบสั่งซื้อ</h1><p>Purchase Order (PO-4)</p></div>
@@ -232,37 +231,30 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
       <button class="mh-btn mh-btn-accent" onclick="po4Submit()">📤 ส่งขออนุมัติ</button>
     </div>
+    </div>
   </header>
 
-  <!-- ③ SUB-ACTION BAR -->
-  <div class="saab">
+  <!-- ③ SAAB ย่อ — ปุ่มหลัก + ⋯ (action เด่นอยู่ main-header เท่านั้น) -->
+  <div class="saab saab-compact">
     <button class="btn btn-outline" onclick="dfOpen()" title="ค้นหา/เปิดเอกสารเก่า — 3 แท็บ + ผลลัพธ์สีตามสถานะ">📂 เปิดเอกสารเก่า</button>
-    <button class="btn btn-outline">💾 Save Draft</button>
     <button class="btn btn-outline" onclick="tplCopyDoc()" title="clone ข้อมูลทั้งหมด → PO ใหม่ · เลขใหม่ · reset วันที่/ลายเซ็น">📋 Copy / ทำสำเนา</button>
-    <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบสั่งซื้อ</button>
-    <button class="btn btn-success" onclick="po4SendPO()" title="อนุมัติแล้ว → ส่ง PO ให้ Vendor → สถานะ 'ค้างรับ' รอรับของ (WH-1)">📤 Send PO → ค้างรับ</button>
-    <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก PO</button>
-    <span class="saab-status"><span class="dot"></span>สถานะ: <strong>รออนุมัติ</strong> · BC: Open · จาก PR-2606-0019 (Make To) · ผู้สั่ง สมศรี</span>
+    <button type="button" class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบสั่งซื้อ</button>
+    <div class="saab-more-wrap">
+      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
+      <div class="saab-more-menu">
+        <button type="button" class="btn btn-outline btn-menu">💾 Save Draft</button>
+        <button type="button" class="btn btn-menu btn-success" onclick="po4SendPO()" title="อนุมัติแล้ว → ส่ง PO ให้ Vendor → สถานะ 'ค้างรับ' รอรับของ (WH-1)">📤 Send PO → ค้างรับ</button>
+        <button type="button" class="btn btn-menu btn-ghost" style="color:#EF4444">❌ ยกเลิก PO</button>
+      </div>
+    </div>
+    <div class="saab-spacer"></div>
   </div>
 
   <div class="content">
 
-    <!-- ④a STATUS + DOC-CHAIN รวมแถวเดียว -->
-    <div class="status-strip" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div class="sc11-pills">
-        <span class="pill pill-neutral" title="BC PO status: Open">📄 รออนุมัติ (BC: Open)</span>
-        <span class="pill pill-info">฿ VAT 7% (ส่วนลดก่อน VAT)</span>
-        <span class="pill pill-success">✓ Vendor Daikin · CN ตรงเวลา</span>
-        <span class="pill pill-warning" title="ต้องผ่าน CF-2.6 Approval Matrix · Maker ≠ Checker">⏳ รอ ผจก.จัดซื้อ อนุมัติ</span>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
-        <span style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
-        <a class="dc-node done" href="po1-purchase-request-mockup.html" target="_blank">PR 0019 ✓</a><span class="dc-arrow">→</span>
-        <span class="dc-node current">PO 0042</span><span class="dc-arrow">→</span>
-        <a class="dc-node" href="wh1-grn-mockup.html" target="_blank">ค้างรับ / รับ (WH-1)</a><span class="dc-arrow">→</span>
-        <a class="dc-node" href="po6-ap-invoice-mockup.html" target="_blank">ตั้งหนี้ AP</a>
-      </div>
-    </div>
+    <!-- ④a SC-12 Status + Doc Chain -->
+    <div id="po4Sc12" class="status-strip"></div>
+    <div id="po4Gate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL: PO-4.1 เจ้าหนี้ (SC-3) + PO-4.2 ข้อมูลใบสั่งซื้อ -->
     <div class="row-2col">
@@ -286,7 +278,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="card compact">
         <div class="card-header"><div class="card-title"><span class="secno">PO-4.2</span><span class="ico">📋</span>ข้อมูลใบสั่งซื้อ</div>
           <div class="card-spacer"></div>
-          <button class="card-btn" onclick="dfOpenRef()" title="อ้างอิง PR / จุดสั่งซื้อ / ใบเสนอราคา Vendor / PO เดิม · เลือกได้หลายรายการ">🔗 อ้างอิงเอกสาร</button>
+          <button class="card-btn" onclick="dfOpenRef({docType:'PO',partyName:'Daikin Industries (TH) Ltd.'})" title="อ้างอิง PR / RFQ / PO เดิม · เลือกได้หลายรายการ">🔗 อ้างอิงเอกสาร <span class="tpl-zone">SC-5</span></button>
         </div>
         <div class="field-grid-2">
           <div class="field"><div class="field-label">อ้างอิง PR</div><div class="field-value"><span class="highlight">PR-2606-0019</span> (อนุมัติ)</div></div>
@@ -314,7 +306,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           <thead><tr><th>#</th><th>รหัส</th><th>รายการ · อ้างอิง PR</th><th>คลังรับ</th><th>จำนวน</th><th>หน่วย</th><th style="text-align:right">ราคา/หน่วย</th><th style="text-align:right">ส่วนลด</th><th style="text-align:right">จำนวนเงิน</th><th></th></tr></thead>
           <tbody>
             <tr>
-              <td>1</td><td><div class="item-code"><a href="md1-item-master-mockup-v3.html" title="ดูทุน · ประวัติราคา (MD-1)">DAI-FTKM24 💰↗</a></div></td>
+              <td>1</td><td><div class="item-code"><a href="bc365/item-master-mockup.html" title="ดูทุน · ประวัติราคา (MD-1)">DAI-FTKM24 💰↗</a></div></td>
               <td><div class="item-name">แอร์ Daikin FTKM 24,000 BTU</div><div><span class="ref-chip">↩ PR-2606-0019 บรรทัด 1 (ขอ 80)</span></div></td>
               <td><select class="line-wh"><option>WH-01 คลังกลาง</option><option>WH-02 คลังสำรอง</option></select></td>
               <td style="text-align:center"><input class="item-qty-input" value="80"></td>
@@ -325,7 +317,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
               <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
             </tr>
             <tr>
-              <td>2</td><td><div class="item-code"><a href="md1-item-master-mockup-v3.html" title="ดูทุน · ประวัติราคา (MD-1)">DAI-FTKM18 💰↗</a></div></td>
+              <td>2</td><td><div class="item-code"><a href="bc365/item-master-mockup.html" title="ดูทุน · ประวัติราคา (MD-1)">DAI-FTKM18 💰↗</a></div></td>
               <td><div class="item-name">แอร์ Daikin FTKM 18,000 BTU</div><div><span class="ref-chip">↩ PR-2606-0019 บรรทัด 2 (ขอ 40)</span></div></td>
               <td><select class="line-wh"><option>WH-01 คลังกลาง</option><option>WH-02 คลังสำรอง</option></select></td>
               <td style="text-align:center"><input class="item-qty-input" value="40"></td>
@@ -336,7 +328,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
               <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
             </tr>
             <tr>
-              <td>3</td><td><div class="item-code"><a href="md1-item-master-mockup-v3.html" title="ดูทุน · ประวัติราคา (MD-1)">DAI-FTKM12 💰↗</a></div></td>
+              <td>3</td><td><div class="item-code"><a href="bc365/item-master-mockup.html" title="ดูทุน · ประวัติราคา (MD-1)">DAI-FTKM12 💰↗</a></div></td>
               <td><div class="item-name">แอร์ Daikin FTKM 12,000 BTU</div><div><span class="ref-chip">↩ PR-2606-0019 บรรทัด 3 (ขอ 60)</span></div></td>
               <td><select class="line-wh"><option>WH-03 ภูมิภาค</option><option>WH-01 คลังกลาง</option></select></td>
               <td style="text-align:center"><input class="item-qty-input" value="60"></td>
@@ -378,12 +370,12 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
             <span class="k">เงื่อนไขชำระ</span><span class="v">เครดิต 60 วัน · หลัง Invoice</span>
             <span class="k">VAT</span><span class="v">7% บนบิล (ส่วนลดก่อน VAT · Golden Rule)</span>
           </div>
-          <div class="note-link">💡 ผลประโยชน์ Vendor (Sell-in / Rebate / Sell-out / Co-op) บันทึกที่ <a href="po2-rfq-mockup.html">PO-2 บันทึกข้อตกลงงบ (Vendor Commitment)</a> — เมื่อทำข้อตกลงแล้ว ราคา/ส่วนลด/ของแถม จะดึงเข้า PO อัตโนมัติ</div>
+          <div class="note-link">💡 ผลประโยชน์ Vendor (Sell-in / Rebate / Sell-out / Co-op) บันทึกที่ <a href="po2-rfq-mockup.html">PO-2 Trade Agreement (ข้อตกลงส่งเสริมการขาย)</a> — เมื่อทำข้อตกลงแล้ว ราคา/ส่วนลด/ของแถม จะดึงเข้า PO อัตโนมัติ</div>
         </div>
         <div class="tabset-pane" id="t-recv">
           <div class="tab-grid">
             <span class="k">สถานะการรับ</span><span class="v">ยังไม่รับ (0%) · ค้างรับ 180 เครื่อง</span>
-            <span class="k">รับที่</span><span class="v"><a href="wh1-grn-mockup.html" style="color:#2563EB;font-weight:600">WH-1 ใบรับสินค้า (GRN)</a> · ทยอยรับได้</span>
+            <span class="k">รับที่</span><span class="v"><a href="wh1-receive-mockup.html" style="color:#2563EB;font-weight:600">WH-1 ใบรับสินค้า (GRN)</a> · ทยอยรับได้</span>
             <span class="k">เงื่อนไขตั้งหนี้</span><span class="v">รับครบบิลก่อน → ตั้งหนี้ AP (PO-6) · ยกเว้นบิลฝาก (PO-8)</span>
           </div>
         </div>
@@ -404,14 +396,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
         </div>
       </div>
       <div class="card">
-        <div class="card-header"><div class="card-title"><span class="secno">PO-4.5</span><span class="ico">💰</span>สรุปยอด (Summary) <span class="tpl-zone">SC3</span></div></div>
-        <div class="summary-row"><span class="lbl">รวมจำนวนเงิน</span><span class="val">2,260,000.00</span></div>
-        <div class="summary-row"><span class="lbl">ส่วนลด</span>
-          <span class="disc-input"><input value="0.00"><select><option>฿</option><option>%</option></select></span></div>
-        <div class="summary-row"><span class="lbl">ยอดก่อนภาษี</span><span class="val">2,260,000.00</span></div>
-        <div class="summary-row"><span class="lbl">ภาษีมูลค่าเพิ่ม <select class="vat-sel"><option>7%</option><option>ไม่รวม</option></select></span><span class="val">158,200.00</span></div>
-        <div class="summary-row recv"><span class="lbl">รับแล้ว 0% · ค้างรับ</span><span class="val">2,418,200.00</span></div>
-        <div class="summary-total"><span>รวมเงินทั้งสิ้น</span><span class="val">2,418,200.00</span></div>
+        <div class="card-header"><div class="card-title"><span class="secno">PO-4.5</span><span class="ico">💰</span>สรุปยอด (Summary) <span class="tpl-zone">SC-11</span></div></div>
+        <div id="po4Sc11"></div>
         <div class="baht-text">( สองล้านสี่แสนหนึ่งหมื่นแปดพันสองร้อยบาทถ้วน )</div>
       </div>
     </div>
@@ -424,6 +410,9 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 
   </div><!-- /content -->
 
+
+  <!-- ⑤ DOC-CHAIN แถบล่าง main -->
+  <div id="po4DcStrip" class="dc-strip"></div>
 </div><!-- /main -->
 </div><!-- /layout -->
 
@@ -443,6 +432,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
   </div>
 </div>
 
+<script src="swt-sidebar.js"></script>
+<script src="swt-patterns.js"></script>
 <script>
 function swTab(e,id){
   var nav=e.currentTarget.parentElement;
@@ -468,9 +459,43 @@ function po4Submit(){
 /* 📤 Send PO — อนุมัติแล้ว ส่ง Vendor → สถานะ "ค้างรับ" รอรับของที่ WH-1 */
 function po4SendPO(){
   if(confirm('ส่งใบสั่งซื้อนี้ให้ Vendor?\n\n• สถานะ → Approved → ส่ง PO + Print ใบสั่งซื้อ\n• เปลี่ยนเป็น "ค้างรับ" (รอ Vendor ส่งของ)\n• ไปรับของที่ WH-1 (ใบรับสินค้า / GRN)')){
-    location.href='wh1-grn-mockup.html';
+    location.href='wh1-receive-mockup.html';
   }
 }
+function po4InitPatterns(){
+  swtRenderStatusStrip('#po4Sc12',{
+    pills:[
+      {text:'📄 รออนุมัติ (BC: Open)',type:'neutral'},
+      {text:'฿ VAT 7% (ส่วนลดก่อน VAT)',type:'info'},
+      {text:'✓ Vendor Daikin · CN ตรงเวลา',type:'success'},
+      {text:'⏳ รอ ผจก.จัดซื้อ อนุมัติ',type:'warning'}
+    ],
+    makerChecker:{nodes:[
+      {role:'จัดซื้อ ✓',step:'สร้าง PO',state:'ok'},
+      {role:'ผจก. ⏱',step:'อนุมัติ',state:'wait'}
+    ]}});
+  if(typeof swtRenderDocChain==='function')swtRenderDocChain('#po4DcStrip',{label:'Doc Chain',nodes:[
+      {label:'PR 0019 ✓',href:'po1-purchase-request-mockup.html',state:'done'},
+      {label:'PO 0042',state:'current'},
+      {label:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html'},
+      {label:'PO-3 ใบวางบิล Vendor',href:'po3-vendor-onboarding-mockup.html'},
+      {label:'PO-6 ใบตั้งหนี้เจ้าหนี้',href:'po6-ap-invoice-mockup.html'},
+      {label:'FI-2 จ่ายชำระเจ้าหนี้',href:'fi2-ap-payment-mockup.html'}
+    ]});
+  swtRenderGateAlert('#po4Gate',{
+    type:'warn',
+    text:'⏳ รออนุมัติ CF-2.6 · Maker ≠ Checker — ผู้สั่ง (สมศรี) อนุมัติเองไม่ได้'
+  });
+  swtRenderSummary('#po4Sc11',{
+    template:'purchase-order',
+    interactive:true,
+    calc:{subtotal:2260000,lineDiscount:0,recv:2418200},
+    discountInput:0,
+    vatMode:'exclusive',
+    vatRate:7
+  });
+}
+document.addEventListener('DOMContentLoaded',function(){ if(window.dfVendorMode) dfVendorMode(); po4InitPatterns(); });
 /* sidebar filter */
 function swtSbFilter(v){
   v=(v||'').toLowerCase();
@@ -480,5 +505,4 @@ function swtSbFilter(v){
 }
 </script>
 <script src="swt-doc-finder.js"></script>
-<script src="swt-sidebar.js"></script>
-</body></html>
+<script src="swt-sc-modals.js"></script
