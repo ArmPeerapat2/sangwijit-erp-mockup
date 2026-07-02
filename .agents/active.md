@@ -6,6 +6,16 @@ branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
 
+## 🔢 WH Renumber — 🔒 LOCKED grill Q1-Q4 (2026-07-02 · execute ตอน rebuild)
+
+plan เต็ม: `.agents/topics/wh-renumber-plan.md` · **execute ตอน rebuild แต่ละหน้า** (ไม่ทำตอนนี้ กันแก้ reference 2 รอบ)
+- **Q1 ✓** เรียงตามปริมาณงาน: รับ=WH-1 · **เบิก=WH-2** · **โอน=WH-3** · นับ=WH-4 (สลับ 2↔3) — ⚠️ กระทบ audit #13: เจ้าของใบโอน WH-2→**WH-3**
+- **Q2 ✓** R = "ขอ/เตรียม": WH-2R ขอเบิก · WH-3R ขอโอน · WH-4R เตรียมนับ → ออกเอกสารจริง
+- **Q3 ✓** WH-Q dashboard · WH-Q1 คิวรับ · WH-Q2 คิวเบิก · โอน/นับไม่มีคิว · **timing: จองกันสต๊อกก่อน (SL-2) → ขึ้นคิวเบิกเมื่อแพลนวัน** (เชื่อม audit #7)
+- **Q4 ✓** WH-R/WH-NM คงเดิม (report) · ชื่อไฟล์ code=เลข · execute ตอน rebuild
+- **ชื่อไฟล์ใหม่:** wh1-receive · wh2-issue · wh3-transfer · wh4-count · wh2r/3r/4r · wh-q/q1/q2
+- execute เมื่อ mapping ครบ + confirm → แก้ทุก reference (sidebar/DOC_MAP/breadcrumb/spec/catalog/cross-link)
+
 ## 🎨 wip Design-System Refactor + Hybrid Reconcile (2026-07-02)
 
 **สถานะ 2 ไลน์งานที่ reconcile:**
