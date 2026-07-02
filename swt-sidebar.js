@@ -28,7 +28,7 @@
       /* SL-5 CRM / SL-6 โปรโมชั่น / SL-7 รายงาน → _archive/ (grill 2026-07-02 Q10 — เกิน scope P1) */
       ['SL-F1','slf1-credit-approval-mockup.html','อนุมัติวงเงิน'],
       ['PM-5','pm5-vat-simulator-mockup.html','VAT Simulator'],['CM-1','cm1-commission-mockup.html','Commission'],
-      ['CL-1','cl1-claims-mockup.html','Claims']]},
+      /* CL-1 Claims → _archive/ (decomposed 2026-07-02 — เคลม = job type ใน SV-1 · ดู .agents/svc-claim-jobtype-spec.md) */]},
     {ico:'📦', label:'คลังสินค้า (WH)', links:[
       ['WH-Q','wh-queue-mockup.html','Dashboard'],['WH-1','wh1-grn-mockup.html','ใบรับสินค้า (GRN)'],
       ['WH-2','wh2-stock-transfer-mockup.html','คิวโอนย้ายสต็อก'],['WH-3','wh3-sales-issue-mockup.html','คิวเบิกสินค้า'],

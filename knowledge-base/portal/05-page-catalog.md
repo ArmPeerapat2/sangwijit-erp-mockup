@@ -98,7 +98,7 @@
 
 | ไฟล์ | Module | วัตถุประสงค์ | ฟิลด์หลัก |
 |-----|--------|-------------|----------|
-| `cl1-claims-mockup.html` | CL-1/2/3 | รับเคลม + ติดตาม + credit note | Claim type, status flow, refund |
+| `_archive/cl1-claims-mockup.html` | ~~CL-1/2/3~~ | 📦 archived 2026-07-02 — decomposed: เคลม = job type ใน SV-1 · ติดตาม vendor = CLM · ลดหนี้ = PO-CN/SL-CN | ดู `.agents/svc-claim-jobtype-spec.md` |
 
 ---
 

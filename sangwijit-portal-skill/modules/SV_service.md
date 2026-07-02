@@ -8,17 +8,20 @@
 
 ---
 
-## 📋 Menu List
+## 📋 Menu List (sync กับโครงจริง 2026-07-02 — mockup ชนะ spec เดิม)
 
-| รหัส | เมนู | Phase | ประเภท |
+| รหัส | เมนู | ไฟล์จริง | State หลัก |
 |---|---|---|---|
-| SV-Q | Service Queue Dashboard | P2 | คิวงานช่าง |
-| SV-1 | รับเรื่องซ่อม (Service Intake) | P2 | รับงาน |
-| SV-2 | ใบงานช่าง (Job Card) | P2 | ดำเนินงาน |
-| SV-3 | เบิกอะไหล่ (Parts Requisition) | P2 | เบิก |
-| SV-4 | ปิดงาน / QA (Service Close & QA) | P2 | ปิดงาน |
-| SV-5 | ใบงานช่าง / Job Card (งานซ่อม) | P2 | ดำเนินงาน |
-| SV-6 | จัดส่งและติดตั้ง (Delivery & Installation) | P2 | Sub-module ใหม่ (renamed from DL-1, 2026-04-22) |
+| SV-Q | Service Queue Dashboard (ทุกสถานะ) | `sv-q-service-queue-mockup.html` | filter ตาม state |
+| SV-1 | ใบรับงานซ่อม (รับเรื่อง · ประมาณการ · **job type selector**) | `sv1-service-intake-mockup.html` | `รอมอบหมาย` |
+| SV-2 | **ใบมอบหมายงาน** (Admin เลือกช่าง+นัด) — *ไม่ใช่ Job Card ตาม spec เดิม* | `sv2-service-assignment-mockup.html` | `รอมอบหมาย → มอบหมายแล้ว` |
+| SV-5 | Job Card ช่าง (กรอกอาการ+แก้ไข) | `sv5-job-card-mockup.html` | `งานช่าง → ส่งงาน/รออะไหล่` |
+| SV-3 | เบิกอะไหล่จาก**สต็อก** | `sv3-spare-part-issue-mockup.html` | `PendingApproval → Issued` |
+| SV-Order | **สั่งอะไหล่** (ไม่มีในสต็อก · spawn PO-4) | `sv-order-parts-request-mockup.html` | `สั่ง → จ่าย → รอรับ → นัด → คืนของเก่า` |
+| SV-4 | ใบรับสินค้าจากงานซ่อม (admin pricing + Vendor billing) | `sv4-service-close-mockup.html` | `รอส่งคืนลูกค้า` |
+| SV-7 | ส่งงานลูกค้า (เซ็น+QR+Invoice+ปิดงาน) | `sv7-service-delivery-mockup.html` | `ปิดงาน (เรา-ลูกค้า)` |
+| SV-6 | จัดส่งและติดตั้ง (Delivery & Installation · แยก loop) | `sv6-delivery-install-mockup.html` +2 sub | — |
+| CLM | ใบเคลม Vendor (ติดตาม + settlement) | `clm-vendor-claim-mockup.html` | `Draft → ส่งเคลม → รอ vendor → APCN` |
 | ~~CL-1~~ | ~~รับเรื่องเคลม Supplier~~ **decomposed** → เคลม = job type ใน SV-1 intake | — | เคลม |
 | ~~CL-2~~ | ~~ส่งเคลม & ติดตาม~~ **decomposed** → CLM ใบเคลม vendor (`clm-vendor-claim-mockup.html`) | — | เคลม |
 | ~~CL-3~~ | ~~ใบลดหนี้เคลม~~ **decomposed** → PO-CN ใบลดหนี้เจ้าหนี้ (ฝั่ง vendor) · SL-CN (ฝั่งลูกค้า ผ่านคำขอใน SL-Q) | — | เคลม |

@@ -134,7 +134,7 @@
 | SV-3 | Parts Requisition | ✅ | — |
 | SV-4 | QA Close | ✅ | — |
 | SV-6 | Delivery & Installation | ✅ | 📋 `sv6-delivery-install-mockup.html` |
-| CL-1 | Claim Intake | ✅ | 📋 `cl1-claims-mockup.html` |
+| ~~CL-1~~ | ~~Claim Intake~~ 📦 decomposed 2026-07-02 — เคลม = job type ใน SV-1 | — | `_archive/cl1-claims-mockup.html` |
 | CL-2 | Claim Tracking | ✅ | — |
 | CL-3 | Claim Credit Note | ✅ | — |
 | ⭐ Fleet/Vehicle Tracking | Phase ถัดไป |  | — |
