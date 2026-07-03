@@ -339,9 +339,11 @@ Output:  Commitment record ที่ถูกอ้างอิงจาก PR/P
 - **PO-2.1b Evidence Level (grill 2026-07-04 · รับปาก/verbal)** — ladder 3 ขั้นใน meta card: 🗣️ **รับปาก** (verbal · ยังไม่มีเอกสาร) → 📄 **มีเอกสาร** (สแกน/เมล ยังไม่เซ็น) → ✍️ **เซ็นแล้ว** (เซลล์ Vendor เซ็น → Active)
   - แต่ละขั้น **แนบสแกน/ภาพหลักฐาน** ที่ช่อง "เอกสารแนบ" (มีอยู่แล้ว): รับปาก=บันทึกการคุย · เอกสาร=สแกนไฟล์/เมล · เซ็น=สแกนสัญญาเซ็น
   - **รับปาก accrue ได้ แต่ flag 🟡 เสี่ยง** · PO-7 realize แสดง confidence ต่อ commitment (finance/FI-8 เห็นก่อน realize) · *ทุก accrual ต้องชี้กลับหลักฐานได้ กัน rebate ลอย/ทวงไม่ได้*
-- **PO-2.4 Recovery Tracking** — ใช้ใน N PO · ยอดสิทธิ์ · เก็บคืนได้ · Recovery Rate vs Target
-- **PO-2.5 Approval + เซลล์เซ็น Vendor** — Approval chain ภายใน + signature ของเซลล์ Vendor (ดู A6 · ไม่มีผลภาษี)
-- **PO-2.6 Linked Documents** — PR/PO/AP ที่ใช้ VC นี้
+- **Recovery Tracking** — ใช้ใน N PO · ยอดสิทธิ์ · เก็บคืนได้ · Recovery Rate vs Target (mockup: KPI chip ในแถว PO-2.2 · ไม่ใช่ section แยก)
+- **PO-2.4 หลักฐานอ้างอิง (tab)** — แนบสแกน/ภาพ/ประกาศส่งเสริมการขาย (main-agreement.pdf · meeting-note · sign-photo) · ผูก Evidence Level (§PO-2.1b)
+- **PO-2.5 Approval + เซลล์เซ็น Vendor (tab)** — Approval chain ภายใน + signature ของเซลล์ Vendor (ดู A6 · ไม่มีผลภาษี)
+- **PO-2.6 Linked Documents (tab)** — PR/PO/AP + งบ accrual (PO-7) ที่อ้าง VC นี้ · Commitment = master ถูกอ้างจาก transaction
+> ⚠️ **section numbering reconciled 2026-07-04** ให้ตรง `po2-rfq-mockup.html` จริง (mockup ชนะ): tab = 2.4 หลักฐาน · 2.5 Approval/เซ็น · 2.6 Linked · Recovery = KPI
 
 **PO-2.3 Detail (เปลี่ยนตาม type):**
 
