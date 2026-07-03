@@ -13,7 +13,54 @@ project_type: "frontend-mockup (HTML + docs)"
 - **WH-3 ใบโอนสินค้า** (`wh3-transfer-mockup.html`) — rebuild จาก queue เดิม (archive `_archive/wh3-transfer-queue-mockup-2026-07-03.html`) · form: ต้นทาง→ปลายทาง · **จำนวนขอ + จำนวนที่ได้จริง** · In-Transit
 - **WH-3R ใบขอโอน** (`wh3r-transfer-request-mockup.html`) — คู่แฝด WH-3 · **ตัดช่อง "จำนวนที่ได้จริง"** · สถานะคำขอ → ส่งคำขอ/สร้างใบโอน · section code WH-3R.1-4
 - Q5 decision: ใบคำขอ = หน้าจริง · direct/referenced ตามสิทธิ์ · R≈action ต่างที่ actual-qty · **เลขธรรมดา + section code (WH-3.1) ตาม memory [[section-code-labels-plain-numbers]]**
-**stub เหลือ (รอ build เต็ม):** WH-Q1 คิวรับ · WH-Q2 คิวเบิก · WH-2R ขอเบิก · WH-4R เตรียมนับ (build ตาม pattern เดียวกัน — R copy จาก action page)
+**✅ กลุ่มเบิก/คิว build ครบ 4 หน้า (2026-07-03):**
+- **WH-2R ใบขอเบิก** (`wh2r-issue-request-mockup.html`) — ลอก WH-3R ตัด flow 2 คลัง · คลังจ่ายเดียว + reserved badge · line: ขอเบิก + กันสต๊อก✓ + อ้างอิงใบขาย · ปุ่ม ส่งเข้าคิวเบิก(WH-Q2)/สร้างใบเบิก(WH-2)
+- **WH-2 ใบเบิก** (`wh2-issue-mockup.html`) — **rebuild ฟอร์มเดี่ยว แฝด WH-3** (archive เก่า `_archive/wh2-issue-pickingqueue-mockup-2026-07-03.html`) · เพิ่ม จำนวนที่เบิกจริง (ส้ม) + Serial input + Post Shipment · doc-chain SL-4→WH-2R→WH-Q2→WH-2
+- **WH-Q2 คิวเบิก** (`wh-q2-issue-queue-mockup.html`) — **kitchen rail** รวมตั๋ว ขอเบิก+ขอโอน+จอง · filter chip ตามประเภท · KPI · คลิกแถว→ฟอร์มทำจริง (recycle เนื้อ picking queue เดิม)
+- **WH-Q1 คิวรับ** (`wh-q1-receive-queue-mockup.html`) — twin ของ Q2 ฝั่งเข้า · รวม รับซื้อ+รับโอน+รับคืน · คลิกแถว→WH-1
+- **WH-4R ใบเตรียมนับ** (`wh4r-count-prep-mockup.html`) — ✅ form เดี่ยว · ขอบเขตนับ (คลัง/Bin + ประเภท Cycle/Annual/Spot/Recount) + freeze snapshot · line: Stock ระบบ (snapshot) ไม่มี "นับจริง/Variance" · ปุ่ม Freeze+ส่งเข้ารอบนับ/ออกใบนับ(WH-4) · doc-chain WH-4R→WH-4→Recount
+**stub WH ครบแล้ว ✅** — เหลือ WH-4 นับ (คิวนับเดิม ใช้ได้) · migrate design-system ค่อยทำ (hybrid)
+
+**🧹 Form UX sweep + Flow map sync ✅ (2026-07-03):**
+- **sweep 5 หน้า (WH-2/2R/3/3R/4R):** ย้าย note banner บนหัว → ยุบเข้าแท็บล่าง "เกี่ยวกับหน้านี้" (header โล่ง) · เพิ่ม line item เป็น ~16 แถว · กฎใหม่ memory [[form-header-open-note-in-tab]] + form-template-guideline §④a
+- **Flow map** (`flow-workflow-map.html`) อัพเดทเป็น **6 สาย**: fix เลข WH (เบิก=WH-2/โอน=WH-3) สาย 1+4 · เพิ่ม waterfall branch (สาย 1) · เพิ่มสาย 6 คลังปฏิบัติการ (kitchen rail WH-Q1/Q2 + R→action + นับ WH-4R/4) · callout ช่องว่าง
+- **Audit ตอบ:** ลดหนี้ซื้อ (po-cn) ✅ · รีเบท/ส่งเสริมการขายฝั่งซื้อ (po7) ✅ — มีแล้วอยู่สาย 2 · **โปรโมชั่นฝั่งขาย (PM) = ช่องว่างจริง** ยังไม่มีหน้า setup (sl6 archived · เหลือ pm5 vat-sim + sc-promoprice proposal)
+- **Flow map: node กดได้แล้ว** — เพิ่ม PGMAP script auto-wire รหัส node → เปิดหน้า mockup (มี 🔗 มุมขวา) · PO-2 = บ้านข้อตกลง Vendor Commitment (MOU/Sell-in/Sell-out/Co-op) · PO-7 = realize
+
+**📋 Pending grill list (2026-07-03):**
+1. **โปรโมชั่นฝั่งขาย (PM)** — ไม่มีหน้า setup/แคมเปญ (sl6 archived) → grill+build
+2. **รับปาก / verbal commitment (ฝั่งซื้อ)** — ยังไม่มี field แยก "รับปาก vs มีสัญญา MOU" · ตอนนี้ทับกับ status Accrued → grill: บันทึกคำมั่นปากเปล่ายังไง · confidence · แปลงเป็น type ทีหลัง
+3. **PO-7 Form view 5 types** — spec บอก "ขาด Form view 5 types" (มีแต่ dashboard · PO_purchase.md §PO-7) → grill/build ฟอร์ม create/edit commitment ที่ PO-2
+4. **SV claim/service** — build backlog B1-B10 + re-grill §10 (เมนู A-E · V1-V5 · 6 bins · SLA) — spec `.agents/svc-claim-jobtype-spec.md`
+5. (minor) `/plan-mockup` skill setup · CI logo scope (SWE only)
+
+**🔗 Sidebar audit + Flow map links ✅ (2026-07-03):**
+- **flow map** (`flow-workflow-map.html`): node + รหัสในกล่อง branch/rule **กดเปิดหน้าได้** (PGMAP script) · เพิ่มเข้า sidebar (Overview · FLOW)
+- **Sidebar dead links 28 จุด** — โฟลเดอร์ `bc365/` ไม่มีในโฟลเดอร์หลัก (design-system refactor หาย)
+  - **แก้แล้ว 14 (กลุ่ม A):** bc365/* → root ที่มีจริง (SL-1·CF2.1/2.6/2.7·SC-2·SQT·MD-1/4·CF-1·สาขา/คลัง·SV-IN→sv1·FIQ-AR/AP→fiq รวม) · fix ทั้ง GROUPS + DONE[]
+  - **ค้าง orphan (กลุ่ม B):** **SV group 9 จุด → user เลือก grill โครง SV ก่อน แล้วค่อยแก้ sidebar** · CL-1/CL1F/PM-1/CF-3/CF-5 → user จะเปิดตรวจ archived ก่อนลบ
+  - ไฟล์ archived เปิดได้: `_archive/cl1-claims-mockup.html` (07-02) · `_archive/sl6-promotion-setup-mockup.html` (สร้าง 2026-04-19 · 17 commits — ref โปรโมชั่นฝั่งขาย) · CL1F/CF-3/CF-5 = ไม่มีไฟล์เลย
+**🔧 Grill โครง SV ✅ (2026-07-03 · grilling skill Q1-Q4):**
+- **Q1** root = canonical · ไม่รื้อ SV ใหม่ (spec svc-claim-jobtype ตัดสินแล้ว · bc365 = aspirational หาย)
+- **Q2** sidebar SV group = **12 หน้า root**: SV-Q คิว → SV-1 intake → SV-2 มอบหมาย → SV-3 เบิกอะไหล่ → SV-Order สั่งนอกประกัน → SV-5 job card → SV-4 ปิดงาน/บิล → SV-6 ส่ง+ติดตั้ง(ขาย) → SV-7 ส่งคืน → SQT → SIR → CLM · ตัด sv6-1-booking-modal + sv6-print-templates (เป็น component) · **repoint sidebar + DONE[] แล้ว**
+- **Q3** bc365-only 3 ตัว → **backlog B12-B14 (ข้ามก่อน ต้องทำ):** MA contract · tech-mobile · posted-docs (อีก 5 ตัว board/dispatch/parts-claim/dashboard/setup = ครอบด้วย SV-Q/SV-2/SV-3/EX-1/CF แล้ว)
+- **Q4** flow map **เพิ่มสาย 7 Service Ops** (SV-Q→SV-1→SV-2→SV-3→SV-5→SV-4→SV-7 · branch เคลม①→CLM/PO-CN · เคลม②→ARI/SL-4 · rule per-component/3 รายได้/gate คืนอะไหล่) · header 6→7 สาย · PGMAP เพิ่มรหัส SV กดได้
+- **DONE ทั้งชุด:** sidebar SV group ใช้งานได้ · flow map สาย 7 + callout SV backlog · spec B12-14 · เหลือ orphan CL-1/PM-1/CF-3/CF-5/MD-6 รอ user ตัดสิน (จะเปิดตรวจ archived ก่อน)
+
+**📋 File audit regen ✅ (2026-07-03):** `file-status-audit.md` = master เดียว · fix WH renumber + WH-2R/3R/4R/Q + SV grill + orphan + **เพิ่ม layer skill/docs/flow-html** (3 กลุ่ม: current/ต้องอัพเดท/archive-candidate) · ยุบ `document-inventory.md` เข้ามา (พร้อม archive) · next actions ค้าง: (2) bulk archive sm-spec/_proposal(17)/backup-map · (3) update stale PM/README/plan/research/core-erp/master-flows
+
+**🔒 Auto-Generate ใบขอจากใบขาย — Waterfall Allocation ✅ (2026-07-03 · spec WH_warehouse.md §WH-2):**
+- trigger: ใบขายยืนยัน + ระบุคลังจ่าย → ต่อบรรทัด: **เบิก(คลังจ่าย) → โอน(คลังอื่น) → ซื้อ(PO)** ตามลำดับ · 1 บรรทัดแตกได้ 3 ใบขอ · อ้างอิงกลับใบขายเดียวกัน (SC-5)
+- **Q2=ก** กันสต๊อกตอนสร้างใบขอ (reserve ทันที) → ขึ้นคิวเบิกจริง WH-Q2 เมื่อแพลนวัน
+- **Q3=ข** แก้/ยกเลิกใบขายภายหลัง → admin ยืนยันก่อน sync (ไม่ auto)
+- test cases TC-1..TC-10 (เบิก/โอน/ซื้อ mix · TC-3b เบิก+ซื้อ · TC-3c โอน+ซื้อ) — spec มีตารางเต็ม · ใช้ตอน build WH-2R
+
+**🔒 โมเดลคิว = "รางครัว" (Kitchen Rail) ✅ (2026-07-03):**
+- **คิว = หน้ารวมหลายเอกสาร จัดตามทิศทาง** (ไม่ใช่ 1 คิว = 1 ประเภทเอกสาร) เหมือน order rail ในครัวร้านอาหาร — คลังกวาดสายตาเห็นงานทั้งหมด คลิกตั๋ว → เปิดฟอร์มทำจริง
+  - **WH-Q1 คิวรับ** = ทุกงาน "เข้า/รับ": รับซื้อ (PO→WH-1) · รับโอน · รับคืน/เคลม
+  - **WH-Q2 คิวเบิก** = ทุกงาน "จ่าย/ออก": ขอเบิก WH-2R · ขอโอน WH-3R · ใบจอง SL-2 (ที่ถึงคิว)
+- **โครง 5 หน้าฝั่ง WH (เบิก/โอน/รับ):** Q1 คิวรับ (ทำใหม่) · Q2 คิวเบิก (**recycle จาก wh2-issue เก่า** = เดิมเป็นหน้า picking/packing queue อยู่แล้ว · ขยายรวมขอโอน+จอง) · WH-2R ขอเบิก (ฟอร์มแฝด WH-3R) · WH-2 เบิก (**rebuild ฟอร์มเดี่ยวใหม่ แฝด WH-3** · archive เก่า) · WH-3/WH-3R ✅ ทำแล้ว
+- ลำดับ build: WH-2R (ตั๋ว·เร็ว) → WH-2 form (rebuild) → WH-Q2 rail (recycle+ขยาย) → WH-Q1 rail
 **ยังไม่ทำ:** portal-mapping.md warehouse (flag stale) · core-erp-flows/reconcile-matrix docs อ้างชื่อเก่า (ประวัติ low-pri)
 
 plan เต็ม: `.agents/topics/wh-renumber-plan.md`

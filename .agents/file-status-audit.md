@@ -1,179 +1,130 @@
-# File Status Audit — Sangwijit ERP Portal (2026-07-02)
+# File Status Audit — Sangwijit ERP Portal (2026-07-03 · master เดียว)
 
-> สรุปสถานะไฟล์ทั้งหมด: ตัวไหนเสร็จ / ตัวไหนต้องทำต่อ / ตัวไหนเก่าไม่ใช้แล้ว
-> แหล่ง: swt-sidebar.js (73 nav) + reconcile-mockup-vs-flow-matrix + active.md DONE + งาน session 2026-07-02 + BC scope audit
-> **นับ:** root .html = 79 · _archive = 32 · nav (sidebar+hub) = 73 · orphan(non-nav ที่ถูกต้อง) = 7
+> **inventory ไฟล์ทั้ง repo: mockup + skill + docs + flow-html** — อะไรใช้อยู่ / ต้องอัพเดท / ไม่ใช้
+> ยุบรวม `document-inventory.md` (branch-reconcile) เข้ามาที่ §D · แหล่ง: swt-sidebar.js + flow-workflow-map + active.md + งาน session 2026-07-03
+> อัพเดทล่าสุด: WH renumber (เบิก=WH-2 · โอน=WH-3) + WH-2R/3R/4R/Q + SV grill (root canonical) + sidebar reconcile
 
 ## Legend
-- ✅ **DONE** — build บน _form-template · current · ใช้งานได้
-- 🔧 **ต้องทำต่อ** — มีหน้าแล้ว แต่ต้อง rebuild/recode/polish
-- 📋 **Reference-only** — เก็บเป็น reference · cut-to-BC (ไม่ build เป็น Portal)
-- ⏸️ **Phase 2 / defer** — มีหน้าแล้วแต่ไม่ใช่ focus ตอนนี้
-- 🔴 **Gap** — flow มี แต่ยังไม่มีหน้า
-- 📦 **Archived** — ย้าย _archive แล้ว (เก่า/ไม่ใช้)
+✅ current ใช้งานได้ · 🔧 มีหน้าแต่ต้องทำต่อ (backlog) · 📋 reference/cut-to-BC · ⏸️ defer P2/P3 · 🔴 gap ยังไม่มีหน้า · 📦 archived · ⚠️ stale ต้องอัพเดท · 🕳️ orphan/dead link รอตัดสิน
 
 ---
 
-## 1. SL — งานขาย (7 หน้า · ✅ ครบ)
+# ส่วนที่ 1 — MOCKUP (หน้าจอ)
 
-| รหัส | ไฟล์ | สถานะ | หมายเหตุ |
-|---|---|---|---|
-| SL-Q | slq-sales-queue-mockup | ✅ | คิวขาย · session เพิ่มกลุ่ม CN "รอออกใบจากเคลม SV" |
-| SL-1 | sl1-quotation-mockup | ✅ | |
-| SL-2 | sl2-reservation-mockup | ✅ | session เพิ่ม auto-expire + guard double-reserve |
-| SL-3 | sl3-deposit-mockup | ✅ | session เพิ่ม badge "ขาย มัดจำ" |
-| SL-4 | sl4-invoice-mockup | ✅ | session แยก Bill-to/Ship-to |
-| SL-CN | slcn-credit-memo-mockup | ✅ | session refine 5 จุด (grill Q1-Q10) |
-| SL-F1 | slf1-credit-approval-mockup | ✅ | ผูก CF-2.6 |
+## SL — งานขาย (✅ ครบ 7)
+SL-Q · SL-1 · SL-2 · SL-3 · SL-4 · SL-CN · SL-F1 — ทั้งหมด ✅ (session: SL-CN grill · Bill/Ship-to · auto-expire · CN group)
 
-## 2. PO — จัดซื้อ (9 หน้า · ✅ ส่วนใหญ่ · 2 ต้องทำต่อ)
+## PO — จัดซื้อ (✅ 7 · 🔧 2)
+PO-Q/1/3/4/6/PO-CN ✅ · **PO-7** ✅ (single-payment) · **PO-2** 🔧 (redo Vendor Commitment MOU/Sell-in/out/Co-op · ดู grill pending) · **PO-8** 🔧 (Deposit Pool)
 
-| รหัส | ไฟล์ | สถานะ | หมายเหตุ |
-|---|---|---|---|
-| PO-Q | poq-purchase-queue-mockup | ✅ | |
-| PO-1 | po1-purchase-request-mockup | ✅ | |
-| PO-2 | po2-rfq-mockup | 🔧 | backlog: redo เป็น Vendor Commitment (Sell-in/Rebate/Co-op) |
-| PO-3 | po3-vendor-onboarding-mockup | ✅ | |
-| PO-4 | po4-purchase-order-mockup | ✅ | |
-| PO-6 | po6-ap-invoice-mockup | ✅ | อยู่เมนู FI · picker ดึงรายการอ้างอิง |
-| PO-7 | po7-rebate-dashboard | ✅ | session: single-payment point |
-| PO-8 | po8-deposit-bill-mockup | 🔧 | session rename "สั่งซื้อสินค้าฝาก" · ยังต้องทำ Deposit Pool (เรียกออกหลายปลายทาง) |
-| PO-CN | po-cn-credit-note-mockup | ✅ | ใบลดหนี้ซื้อ |
-
-## 3. WH — คลัง (7 หน้า · ✅ ครบ)
-
-| รหัส | ไฟล์ | สถานะ | หมายเหตุ |
-|---|---|---|---|
-| WH-Q | wh-q-dashboard-mockup | ✅ | |
-| WH-1 | wh1-receive-mockup | ✅ | session: กันรับซ้ำ (idempotent) + TR-In note |
-| WH-2 | wh3-transfer-mockup | ✅ | session: owner ใบโอน |
-| WH-3 | wh2-issue-mockup | ✅ | session: คอลัมน์สต๊อก(จองไว้) + ขอโอน→WH-2 |
-| WH-4 | wh4-count-mockup | ✅ | |
-| WH-R | wh-r-stock-card-mockup | ✅ | report |
-| WH-NM | wh-nm-non-move-report-mockup | ✅ | report |
-
-## 4. FI — การเงิน/บัญชี (ผสม)
-
-| รหัส | ไฟล์ | สถานะ | หมายเหตุ |
-|---|---|---|---|
-| FI-Q | fiq-finance-queue-mockup | ✅ | |
-| FI-1 | fi1-ar-receive-mockup | ✅ | รับชำระ AR |
-| FI-1Q | fi1q-apply-queue-mockup | ✅ | คิว apply เครดิต/QR |
-| **FI-2** | fi2-ap-payment-mockup | 🔧 **NEXT** | จ่าย AP — ต้อง rebuild บน _form-template · ปิด chain procure-to-pay · +approval gate +WHT link (FI-12) |
-| FI-3 | fi3-bank-reconciliation-mockup | ✅ | ~95% · เหลือ polish label |
-| FI-7 | fi7-vat-report-mockup | ✅ | ภ.พ.30 |
-| FI-12 | fi12-wht-mockup | ✅ | session: เรท dropdown + รวม pending |
-| FI-4 | fi4-expense-wht-mockup | 🔧 | ค่าใช้จ่าย+WHT · session ถอดปุ่ม cert · ยัง pending recode ชื่อ (matrix: fi4→FI-5) |
-| FI-5 | fi5-ar-audit-mockup | ⚠️ **candidate archive** | matrix ✂️ excess — ไม่มี flow · re-scope→FI-6 หรือยุบเข้า FI-Q |
-| FI-13 | fi13-dual-book-mockup | ⏸️ defer | นอก scope SWT single-entity |
-| TR-1 | tr1-treasury-mockup | ⏸️ | Treasury · ตรวจ scope P1/P2 |
-
-## 5. CF — ตั้งค่าระบบ (ผสม Portal/BC)
-
-| รหัส | ไฟล์ | สถานะ | หมายเหตุ |
-|---|---|---|---|
-| CF-1 | cf1-rbac-permission-mockup | ✅ | RBAC |
-| CF-2 | cf2-config-hub-mockup | ✅ | Config Hub · 8 card |
-| CF-2.2 | cf2-2-number-series-mockup | ✅ | Portal-managed (ADR-0004) |
-| CF-2.5 | cf2-5-tech-template-mockup | ✅ | Portal owns |
-| CF-2.6 | cf2-6-approval-matrix-mockup | ✅ | session: canonical (CF-7 = alias เก่า) |
-| CF-2.7 | cf2-7-doc-template-mockup | ✅ | Portal owns |
-| CF-2.1 | cf2-1-tax-setup-mockup | 📋 cut-to-BC | reference เท่านั้น |
-| CF-2.9 | cf2-9-general-parameter-mockup | 📋 cut-to-BC | reference เท่านั้น |
-
-## 6. MD — Master Data (5 หน้า · ✅ ครบ · +2 gap)
-
+## WH — คลัง (✅ ครบ 12 · 🔄 renumber+ใหม่วันนี้)
 | รหัส | ไฟล์ | สถานะ |
 |---|---|---|
-| MD-1..5 | md1-item / md2-customer / md3-vendor / md4-employee / md5-branch-warehouse (v3) | ✅ ครบ |
-| MD-6/7 | Sales/Purchase Price List | 🔴 gap — ยังไม่มีหน้า |
+| WH-Q | wh-q-dashboard | ✅ คิวรวมเดิม |
+| **WH-Q1** | wh-q1-receive-queue | ✅ 🆕 kitchen rail (รับ: ซื้อ+โอน+คืน) |
+| **WH-Q2** | wh-q2-issue-queue | ✅ 🆕 kitchen rail (จ่าย: เบิก+โอน+จอง) |
+| WH-1 | wh1-receive | ✅ รับ |
+| **WH-2** | wh2-issue | ✅ **เบิก** (rebuild วันนี้ · แฝด WH-3 · เบิกจริง+Serial+Post) |
+| **WH-2R** | wh2r-issue-request | ✅ 🆕 ขอเบิก (reserve) |
+| **WH-3** | wh3-transfer | ✅ **โอน** (owner · จำนวนที่ได้จริง) |
+| **WH-3R** | wh3r-transfer-request | ✅ 🆕 ขอโอน |
+| WH-4 | wh4-count | ✅ นับ (คิวนับเดิม) |
+| **WH-4R** | wh4r-count-prep | ✅ 🆕 เตรียมนับ (freeze snapshot) |
+| WH-R / WH-NM | wh-r-stock-card / wh-nm-non-move | ✅ report |
 
-## 7. SV — บริการ (12 หน้า · ⏸️ Phase 2 · ต้อง rebuild ตาม grill)
+> 🔒 waterfall (ขาย→เบิก/โอน/ซื้อ) + kitchen rail model = spec `WH_warehouse.md` §WH-2/WH-Q · test case TC-1..10
 
-> ทั้งกลุ่ม Phase 2 · **มีหน้าแล้วแต่ grill 2026-07-02 กำหนด rebuild B1-B10** (แยก job type 5 ตัว · resolution A-E · parts return · billing 2 บิล · ฯลฯ) — ดู `svc-claim-jobtype-spec.md §11`
+## FI — การเงิน (✅ ส่วนใหญ่)
+FI-Q/1/1Q/3/7/12 ✅ · **FI-2** 🔧 NEXT (จ่าย AP · ปิด chain procure-to-pay) · FI-4 🔧 (recode ชื่อ) · FI-5 🕳️ candidate archive · FI-13 ⏸️ · TR-1 ⏸️ · PO-6 ✅ (เมนู FI)
 
-| รหัส | ไฟล์ | สถานะ |
-|---|---|---|
-| SV-Q | sv-q-service-queue-mockup | ⏸️ P2 · +รายงานช่าง(B8) |
-| SV-1 | sv1-service-intake-mockup | ⏸️ P2 · rebuild B1/B2 (job type 5 + A-E) |
-| SV-2 | sv2-service-assignment-mockup | ⏸️ P2 |
-| SV-3 | sv3-spare-part-issue-mockup | ⏸️ P2 · เบิกอะไหล่สต็อก |
-| SV-O | sv-order-parts-request-mockup | ⏸️ P2 · สั่งอะไหล่นอกประกัน |
-| SV-4 | sv4-service-close-mockup | ⏸️ P2 · rebuild B4 (billing 2 บิล) |
-| SV-5 | sv5-job-card-mockup | ⏸️ P2 |
-| SV-7 | sv7-service-delivery-mockup | ⏸️ P2 |
-| SV-6 | sv6-delivery-install-mockup (+2 sub) | ⏸️ P2 · session: Ship-to note |
-| CLM | clm-vendor-claim-mockup | ⏸️ P2 · เคลมสินค้า ① → PO-CN |
-| SIR | sir-site-inspection-mockup | ⏸️ P2 · ตรวจ scope |
-| SQT | sqt-service-quotation-mockup | ⏸️ P2 · ตรวจ scope (matrix เคย ✂️ excess) |
+## CF — ตั้งค่า (✅ Portal · 📋 cut-to-BC บางตัว)
+CF-1/2/2.2/2.5/2.6/2.7 ✅ (Portal owns) · CF-2.1/2.9 📋 cut-to-BC (reference)
 
-## 8. SC — Shared Components (4 หน้า · ✅)
+## MD — Master (✅ 5 · 🔴 gap)
+MD-1..5 (v3) ✅ · **MD-6 service-item-master** 🕳️ (sidebar ชี้ bc365 ตาย · ไม่มี root · ทะเบียนเครื่องซ่อม) · MD-7 Price List 🔴 gap
 
-| รหัส | ไฟล์ | สถานะ |
-|---|---|---|
-| SC-1/2/3/7 | sc1-customer-search / sc2-item-search / sc3-vendor-search / sc7-timeline | ✅ ครบ |
+## SV — บริการ (✅ 12 · grill 2026-07-03 = root canonical)
+> **grill ตัดสิน: ยึด root (by-function) · ไม่รื้อใหม่** · sidebar repoint แล้ว · enhancement = backlog B1-B14 (svc-claim-jobtype-spec §11)
 
-## 9. Cross-module / Dashboard / อื่น ๆ
+SV-Q คิว · SV-1 intake · SV-2 มอบหมาย · SV-3 เบิกอะไหล่ · SV-Order สั่งนอกประกัน · SV-5 job card · SV-4 ปิดงาน/บิล · SV-6 ส่ง+ติดตั้ง · SV-7 ส่งคืน · SQT · SIR · CLM — ทั้งหมด ✅ current (🔧 backlog: B1 job type 5 · B4 billing 2 บิล · B5 parts return ฯลฯ)
+component (ไม่ใช่เมนู): sv6-1-booking-modal · sv6-print-templates
 
-| รหัส | ไฟล์ | สถานะ | หมายเหตุ |
+## SC — Shared (✅)
+SC-1/2/3/7 ✅ · **SC-10 map-picker** ✅ (component · ควรเพิ่มในกลุ่ม SC sidebar)
+
+## Cross / อื่น
+PM-5 ✅ · CM-1 ✅ · AP-1 ✅ · RP-1 ✅ · EX-1 ⏸️ · IA-Q ⏸️
+non-nav (ถูกต้อง): _form-template · login · notification-center · user-profile · index
+
+---
+
+# ส่วนที่ 2 — 🕳️ ORPHAN / DEAD LINKS (sidebar ชี้ bc365 ที่หาย · รอตัดสิน)
+
+> bc365/ folder หายทั้งชุด (design-system refactor ที่ revert) · sidebar group A แก้แล้ว 14 · เหลือ 6 orphan:
+
+| รหัส | ปัญหา | ไฟล์ inspect ได้ | ทางเลือก |
 |---|---|---|---|
-| PM-5 | pm5-vat-simulator-mockup | ✅ | VAT Golden Rule sandbox |
-| CM-1 | cm1-commission-mockup | ✅ | ค่าคอม · session ผูกรายงานช่าง SV |
-| AP-1 | ap1-approval-center-mockup | ✅ | ศูนย์อนุมัติ |
-| RP-1 | rp1-report-center-mockup | ✅ | Report Center |
-| EX-1 | ex1-executive-dashboard-mockup | ⏸️ | Exec dashboard (P2/P3) |
-| IA-Q | iaq-bc-sync-monitor-mockup | ⏸️ | Integration (P2/P3) |
+| CL-1 · CL1F | claim=job type แล้ว (archived) | `_archive/cl1-claims-mockup.html` (07-02) | ลบจาก sidebar |
+| PM-1 promotion | gap โปรโมชั่นฝั่งขาย | `_archive/sl6-promotion-setup-mockup.html` (สร้าง 04-19 · 17 commits) | grill+build |
+| CF-3 payment-hub · CF-5 bank | ไม่มี root | — | stub / ลบ |
+| MD-6 service-item | ไม่มี root | — | คู่กับ SV · build |
 
-## 10. Non-nav (ถูกต้อง · ไม่ใช่หน้าเมนู)
+---
 
-| ไฟล์ | บทบาท |
+# ส่วนที่ 3 — SKILL / DOCS / FLOW-HTML
+
+> **🗓️ Generation lens (user 2026-07-03): primary working set = มิย–กค · April (04-xx) = legacy ไม่ค่อยใช้**
+> April tier archive ชัด: `sm-module-spec` · `service-overview` (+ `ui_design_pattern` ถ้าซ้ำ design-framework) · เก็บ-mark-legacy: `IA_integration` · `PM_promotion` (รอ grill) · `README/plan/research` (CLAUDE ยังชี้) · `sv6-print-templates` (component ยังใช้ · ไม่ตาม date)
+
+## A. ✅ Current (ใช้อยู่ · อัพล่าสุด)
+- **skill:** SKILL.md (07-03) · modules SL/PO/WH (07-03) · CF/FI/MD/SV_service/SV_knowhow (07-02/03)
+- **state/spec:** active.md (07-03 · master) · svc-claim-jobtype-spec.md · WH_warehouse waterfall
+- **flow-html:** flow-workflow-map.html (07-03 · 7 สาย กดได้) · flow-redundancy-analysis.html (audit 17/17)
+- **topics:** design-framework · form-template-guideline · queue-dashboard-matrix · shared-components · sl-module-form-blueprints · wh-renumber-plan · po-wh-gap-kpi-matrix (07-02/03)
+- CLAUDE.md (07-02)
+
+## B. ⚠️ ต้องอัพเดท (relevant แต่ล้าสมัย)
+| ไฟล์ | วันที่ | ทำอะไร |
+|---|---|---|
+| `modules/PM_promotion.md` | 04-19 | โปรโมชั่น = gap · รอ grill+rewrite |
+| `README.md · plan.md · research.md` | 04-19 | foundational เก่า · phase/RBAC/API เปลี่ยน · CLAUDE.md ยังชี้ |
+| `CONTEXT.md` | 06-07 | domain context (อ้าง ×1) · verify ผู้ใช้ |
+| `ui_design_pattern_guideline.md` | 04-19 | ทับ design-framework/form-template-guideline · verify ยุบ |
+| topics: `reconcile-mockup-vs-flow-matrix.md` | 06-07 | ⚠️ stale (เลข+ชื่อไฟล์ WH เก่า บรรทัด 77/106/109) + **superseded โดย file-status-audit** → archive candidate (ไม่ fix) |
+| topics: `core-erp-flows · master-flows` | 06-07 | ✅ เช็คแล้ว **ไม่มีเลข WH เก่า** — เก็บได้ (อาจ sync SV grill ทีหลัง) |
+| `modules/IA_integration.md` | 04-19 | thin · low-pri |
+
+## C. 📦 ไม่ใช้ / archive
+| ไฟล์ | สถานะ |
 |---|---|
-| _form-template.html | เทมเพลตกลาง (build ทุกฟอร์มจากตัวนี้) |
-| login-mockup.html | หน้า login |
-| notification-center-mockup.html | ศูนย์แจ้งเตือน (ผ่าน bell) |
-| user-profile-mockup.html | โปรไฟล์ (ผ่าน avatar) |
-| sc10-map-picker-mockup.html | shared: ปักหมุดแผนที่ (SV-6 เรียก) |
-| sv6-1-booking-modal-mockup.html | SV-6 sub: booking modal |
-| sv6-print-templates-mockup.html | SV-6 sub: print templates |
-| index.html / portal-mockup-index.html | hub รวมลิงก์ |
-| sangwijit-portal-architecture.html / dev-handoff-spec.html | เอกสารสถาปัตย์/handoff |
+| `sm-module-spec.md` | ✅ **archived** 07-03 → `_archive/` |
+| `service-overview.md` (topic) | ✅ **archived** 07-03 → `_archive/service-overview-topic.md` |
+| `backup-storage-map.html` | ✅ **archived** 07-03 → `_archive/` |
+| `document-inventory.md` | ✅ **archived** 07-03 → `_archive/` (ยุบเข้าไฟล์นี้แล้ว) |
+| `_proposal/*.html` (17) | 📦 reference-only · **อยู่โฟลเดอร์แยกแล้ว (segregated)** · ปล่อยไว้ได้ |
+| `ui_design_pattern_guideline.md` | ⚠️ **เก็บ** (SKILL.md อ้าง) · เนื้อ pattern ละเอียด · ยุบเข้า design-framework ทีหลัง |
+
+## D. ไฟล์ซ้ำ (จาก document-inventory เดิม · ควรยุบ)
+- `shared-components.md` + `-comparison.md` + `-fielddesign.md` (3 ไฟล์) → ตรวจซ้ำ ยุบเหลือ 1
+- `file-status-audit.md` (นี้) ทับ `reconcile-mockup-vs-flow-matrix.md` (เก่า) → matrix = reference เก่า
+- `flow-redundancy-analysis` .md + .html คู่กัน (เก็บ .html อ่าน · .md source)
+- `document-inventory.md` → **ยุบเข้าไฟล์นี้แล้ว** (branch-reconcile ทำเสร็จ · ปลอดภัยบน GitHub ทุก branch)
 
 ---
 
-## 11. ⚠️ Candidates ต้องแยกเก็บเป็น "เก่า/ไม่ใช้" (รอ user ตัดสิน)
+# ส่วนที่ 4 — Archived (32+ ใน _archive/ · ยืนยันแล้ว)
+session 07-02/03: sl5/sl6/sl7 · cl1-claims · wh2-pickingqueue · wh3-transfer-queue
+ก่อนหน้า: po5 · fi3-tax-recon · sv2-invoice · sv4-warranty · sm1/2/3 · md old-versions · cf snapshots
 
-หน้าที่ยังอยู่ใน nav แต่ audit ชี้ว่าอาจตัด — **ยังไม่ archive · ต้อง confirm ก่อน:**
-
-| หน้า | เหตุผล | ทางเลือก |
-|---|---|---|
-| FI-5 fi5-ar-audit | matrix ✂️ excess (ไม่มี flow) | re-scope→FI-6 credit control / ยุบเข้า FI-Q / archive |
-| FI-13 fi13-dual-book | นอก scope SWT single-entity | keep เป็น reference / archive (defer P3) |
-| SQT sqt-service-quotation | matrix เคย ✂️ excess | ยืนยันตอน SV rebuild (P2) |
-| SIR sir-site-inspection | ตรวจ scope | ยืนยันตอน SV rebuild (P2) |
-| TR-1 tr1-treasury | ไม่มีใน matrix เดิม | ตรวจ scope P1/P2 |
-
-## 12. ✅ Archived แล้ว (32 ไฟล์ใน _archive/ — เก่า/ไม่ใช้ · ยืนยันแล้ว)
-
-session 2026-07-02 archive: sl5-crm · sl6-promotion · sl7-report · cl1-claims
-ก่อนหน้า: po5-finance-grn · fi3-tax-reconciliation · sv4-warranty-check · sv2-service-invoice + old version (`_archive/mockup-versions/`) + cf dated snapshots
+# ส่วนที่ 5 — 🔴 Gaps (ยังไม่มีหน้า)
+MD-7 Purchase Price List · PM promotion (ฝั่งขาย · setup/แคมเปญ) · SV backlog B12 MA contract · B13 tech-mobile · B14 posted-docs
 
 ---
 
-## 13. 🔴 Gaps (flow มี · ยังไม่มีหน้า — backlog สร้างใหม่)
-
-| หน้า | flow |
-|---|---|
-| MD-6 Sales Price List | Master |
-| MD-7 Purchase Price List | Master (ผูก Promotion/01) |
-| PM-Q / PM-1 Promotion dashboard/price | Promotion 00/01 (P2) |
-
----
-
-## สรุปตัวเลข
-
-- **✅ เสร็จ (current):** ~48 หน้า (SL 7 · PO 7 · WH 7 · FI 7 · CF 6 · MD 5 · SC 4 · cross 5)
-- **🔧 ต้องทำต่อ:** FI-2 (next · ปิด chain) · PO-2 redo · PO-8 Deposit Pool · FI-4 recode
-- **⏸️ Phase 2:** SV 12 หน้า (rebuild B1-B10) · EX-1 · IA-Q
-- **⚠️ รอตัดสิน archive:** FI-5 · FI-13 · SQT · SIR · TR-1 (5 หน้า)
-- **🔴 Gap:** MD-6/7 · PM dashboard (สร้างใหม่)
-- **📦 Archived แล้ว:** 32 ไฟล์
+## สรุปตัวเลข (2026-07-03)
+- **✅ current mockup:** ~60 หน้า (SL 7 · PO 7 · WH 12 · FI 6 · CF 6 · MD 5 · SV 12 · SC 5 · cross 4)
+- **🔧 ทำต่อ:** FI-2 (next) · PO-2 redo · PO-8 pool · SV backlog B1-B14
+- **🕳️ orphan รอตัดสิน:** CL-1/CL1F · PM-1 · CF-3/CF-5 · MD-6 (6 จุด)
+- **⚠️ docs ต้องอัพเดท:** PM_promotion · README/plan/research · core-erp/master-flows · CONTEXT · ui-guideline
+- **📦 archive candidate:** sm-module-spec · _proposal/ (17) · backup-storage-map
+- **📦 archived แล้ว:** 32+ ไฟล์
