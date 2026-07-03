@@ -9,7 +9,11 @@ project_type: "frontend-mockup (HTML + docs)"
 ## 🔢 WH Renumber — ✅ EXECUTED rename+refs (2026-07-03)
 
 **execute แล้ว:** rename 5 ไฟล์ (wh1-receive/wh2-issue/wh3-transfer/wh4-count/wh-q-dashboard) · flip code WH-2↔WH-3 ทุก reference (sidebar/DOC_MAP/index/spec×5/mockup 12 หน้า) · fix dead link wh-q2-issue-queue→wh2-issue · sidebar comment R/Q planned
-**สร้างหน้า R/Q แล้ว (stub · 2026-07-03):** WH-Q1 คิวรับ · WH-Q2 คิวเบิก · WH-2R ขอเบิก · WH-3R ขอโอน · WH-4R เตรียมนับ — โครงจาก grill + ลิ้งเชื่อม flow · sidebar เปิดครบ · **รอ build เต็มบน design-system**
+**✅ build เต็มแล้ว (2026-07-03 · Blueprint→confirm→build บน _form-template):**
+- **WH-3 ใบโอนสินค้า** (`wh3-transfer-mockup.html`) — rebuild จาก queue เดิม (archive `_archive/wh3-transfer-queue-mockup-2026-07-03.html`) · form: ต้นทาง→ปลายทาง · **จำนวนขอ + จำนวนที่ได้จริง** · In-Transit
+- **WH-3R ใบขอโอน** (`wh3r-transfer-request-mockup.html`) — คู่แฝด WH-3 · **ตัดช่อง "จำนวนที่ได้จริง"** · สถานะคำขอ → ส่งคำขอ/สร้างใบโอน · section code WH-3R.1-4
+- Q5 decision: ใบคำขอ = หน้าจริง · direct/referenced ตามสิทธิ์ · R≈action ต่างที่ actual-qty · **เลขธรรมดา + section code (WH-3.1) ตาม memory [[section-code-labels-plain-numbers]]**
+**stub เหลือ (รอ build เต็ม):** WH-Q1 คิวรับ · WH-Q2 คิวเบิก · WH-2R ขอเบิก · WH-4R เตรียมนับ (build ตาม pattern เดียวกัน — R copy จาก action page)
 **ยังไม่ทำ:** portal-mapping.md warehouse (flag stale) · core-erp-flows/reconcile-matrix docs อ้างชื่อเก่า (ประวัติ low-pri)
 
 plan เต็ม: `.agents/topics/wh-renumber-plan.md`

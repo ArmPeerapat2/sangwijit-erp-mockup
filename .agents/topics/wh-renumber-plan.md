@@ -36,6 +36,13 @@
 
 **🔒 grill ครบ Q1-Q4 · plan LOCKED · หยิบไป execute ได้ตอน rebuild WH บน design-system**
 
+## Q5 (2026-07-03) — R-variant = หน้าเอกสารจริง (ไม่ยุบ)
+- **ใบคำขอ (R) = หน้าจริง** — สร้าง "การอ้างอิง" ให้เอกสารดำเนินการ (flow-first gate เจอว่า flow ไม่มีขั้นขอ แต่ธุรกิจต้องมี)
+- **ดำเนินการ (โอน/เบิก/รับ) ทำได้ 2 ทาง:** (1) มีอ้างอิงจากใบคำขอ · (2) โดยตรงไม่มีอ้างอิง — **ขึ้นกับสิทธิ์ (permission)**
+- **R ≈ หน้าดำเนินการ** เมนู/ฟิลด์เหมือนเกือบหมด · **ต่างที่ใบดำเนินการมีช่อง "จำนวนที่ได้จริง" (บังคับกรอก)** · R = แผน/คำขอ (ไม่มี actual qty)
+  - WH-2R ขอเบิก ≈ WH-2 เบิก · WH-3R ขอโอน ≈ WH-3 โอน · WH-4R เตรียมนับ ≈ WH-4 นับ
+- **build strategy:** R = copy หน้าดำเนินการ ตัดช่อง actual qty + ปรับ header/สถานะเป็น "คำขอ" + เพิ่ม routing "→ สร้างใบดำเนินการอ้างอิงคำขอนี้"
+
 ## ✅ EXECUTED (rename + refs · 2026-07-03) — R/Q pages ยังไม่สร้าง
 - [x] rename 5 ไฟล์ html (git mv): wh1-grn→wh1-receive · wh3-sales-issue→wh2-issue · wh2-stock-transfer→wh3-transfer · wh4-stock-count→wh4-count · wh-queue→wh-q-dashboard
 - [x] swt-sidebar.js (href ตรง · ตัด 5 entry R/Q dead ออก → comment planned)
