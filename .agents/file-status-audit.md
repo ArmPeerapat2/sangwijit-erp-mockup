@@ -15,7 +15,7 @@
 SL-Q · SL-1 · SL-2 · SL-3 · SL-4 · SL-CN · SL-F1 — ทั้งหมด ✅ (session: SL-CN grill · Bill/Ship-to · auto-expire · CN group)
 
 ## PO — จัดซื้อ (✅ 7 · 🔧 2)
-PO-Q/1/3/4/6/PO-CN ✅ · **PO-7** ✅ (single-payment) · **PO-2** 🔧 (redo Vendor Commitment MOU/Sell-in/out/Co-op · ดู grill pending) · **PO-8** 🔧 (Deposit Pool)
+PO-Q/1/3/4/6/PO-CN ✅ · **PO-7** ✅ (single-payment + confidence) · **PO-2 ✅** (grill 2026-07-04: Vendor Commitment form มีอยู่แล้ว · เพิ่ม Evidence Level ladder รับปาก→เอกสาร→เซ็น · audit เดิม stale) · **PO-8** 🔧 (Deposit Pool)
 
 ## WH — คลัง (✅ ครบ 12 · 🔄 renumber+ใหม่วันนี้)
 | รหัส | ไฟล์ | สถานะ |
@@ -35,7 +35,7 @@ PO-Q/1/3/4/6/PO-CN ✅ · **PO-7** ✅ (single-payment) · **PO-2** 🔧 (redo V
 > 🔒 waterfall (ขาย→เบิก/โอน/ซื้อ) + kitchen rail model = spec `WH_warehouse.md` §WH-2/WH-Q · test case TC-1..10
 
 ## FI — การเงิน (✅ ส่วนใหญ่)
-FI-Q/1/1Q/3/7/12 ✅ · **FI-2** 🔧 NEXT (จ่าย AP · ปิด chain procure-to-pay) · FI-4 🔧 (recode ชื่อ) · FI-5 🕳️ candidate archive · FI-13 ⏸️ · TR-1 ⏸️ · PO-6 ✅ (เมนู FI)
+FI-Q/1/1Q/3/7/12 ✅ · **FI-2 ✅** (ตรวจ 2026-07-04: build บน design-system ครบแล้ว · apply AP หลายใบ + picker PO-6 + WHT→FI-12 + doc-chain ปิด chain · แก้ dead link fiq-ap→fiq · audit เดิม stale) · FI-4 🔧 (recode ชื่อ) · FI-5 🕳️ candidate archive · FI-13 ⏸️ · TR-1 ⏸️ · PO-6 ✅ (เมนู FI)
 
 ## CF — ตั้งค่า (✅ Portal · 📋 cut-to-BC บางตัว)
 CF-1/2/2.2/2.5/2.6/2.7 ✅ (Portal owns) · CF-2.1/2.9 📋 cut-to-BC (reference)

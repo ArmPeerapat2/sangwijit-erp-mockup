@@ -47,6 +47,20 @@ project_type: "frontend-mockup (HTML + docs)"
 - **Q4** flow map **เพิ่มสาย 7 Service Ops** (SV-Q→SV-1→SV-2→SV-3→SV-5→SV-4→SV-7 · branch เคลม①→CLM/PO-CN · เคลม②→ARI/SL-4 · rule per-component/3 รายได้/gate คืนอะไหล่) · header 6→7 สาย · PGMAP เพิ่มรหัส SV กดได้
 - **DONE ทั้งชุด:** sidebar SV group ใช้งานได้ · flow map สาย 7 + callout SV backlog · spec B12-14 · เหลือ orphan CL-1/PM-1/CF-3/CF-5/MD-6 รอ user ตัดสิน (จะเปิดตรวจ archived ก่อน)
 
+**⏸️ Grill ฝั่งขาย PM — parked P2 (2026-07-04):** grill ครั้งแรกที่เจาะ PM (เดิม parked P2 จาก SL-CN grill Q10) · **user เลือก C: ปิด grill · P2-defer ยังยืน · ไม่ build ตอนนี้**
+- **flow-grounded findings (จาก Flow Design/Promotion 3 PDF):** "โปรโมชั่น" ในโฟลว์ = จัดซื้อ vendor-funded loop · Flow 02 (ขาย→ผูก promo code รายบรรทัด→เคลม vendor→Sales Credit Memo) = **ซ้อนกับ PO-7 sell-out + SC-9 PromoPrice ที่ทำแล้ว** → "promotion" ส่วน loop = ครบแล้ว
+- **PM gap จริง = 2 หน้า setup:** PM-1 รายการราคา (Flow 01 · ราคา+วันโปรฯ→sync BC) · PM-2 โปรโมชั่น/แคมเปญ (rebuild sl6 · 5 types) · + PM-Q dashboard (Flow 00 เบา) · PM-5 sim ✅
+- **naming locked (สำหรับ P2 build):** PM-1 ราคา · PM-2 โปรฯ · PM-Q dash · PM-5 sim · Price List อยู่ PM (ไม่ใช่ MD) — ค้าง Q2 (build order) ยังไม่ปิด · resume ตอน P2
+- ref: `_archive/sl6-promotion-setup` (สร้าง 04-19 · 17 commits) · `PM_promotion.md` (spec เต็ม เม.ย.) · `Flow Design/Promotion/*.pdf`
+
+**🎁 Grill ฝั่งซื้อ (PO promotion/commitment) ✅ (2026-07-04):**
+- ตรวจพบ **PO-2 Vendor Commitment form + PO-7 realize = มีอยู่แล้ว** (audit "PO-2 redo/PO-7" = stale เหมือน FI-2) · PO-2 มี type selector MOU/Sell-in/Sell-out/Co-op + เอกสารแนบ(สแกน) + tabs หลักฐาน/เซ็น
+- **gap จริงข้อเดียว = รับปาก/verbal** → เพิ่ม **Evidence Level ladder** (🗣️รับปาก→📄มีเอกสาร→✍️เซ็นแล้ว) ใน po2 PO-2.1b · แต่ละขั้นแนบสแกนหลักฐาน · รับปาก accrue ได้แต่ flag 🟡 เสี่ยง
+- **po7:** เพิ่มบรรทัด "ระดับหลักฐาน (confidence)" → finance เห็นก่อน realize · spec PO_purchase PO-2.1b + active
+- **PO ฝั่งซื้อ = จบแล้ว** (ไม่มีหน้าใหม่ · แค่เติม field) → next = ฝั่งขาย PM
+
+**✅ FI-2 จ่าย AP verified done (2026-07-04):** ตรวจแล้วเสร็จบน design-system ครบ (apply AP หลายใบ + picker PO-6 + WHT→FI-12 + doc-chain ปิด procure-to-pay · Maker≠Checker) · audit เดิม 🔧 = stale · แก้แค่ dead link `fiq-ap→fiq-finance-queue` (fi2 ×2 · fi12 ×1) · optional polish ค้าง: default row เป็น WHT 0% (สินค้า) — โหลด service row ให้เห็น WHT flow · Entity Tag (P3 defer)
+
 **📋 File audit regen ✅ (2026-07-03):** `file-status-audit.md` = master เดียว · fix WH renumber + WH-2R/3R/4R/Q + SV grill + orphan + **เพิ่ม layer skill/docs/flow-html** (3 กลุ่ม: current/ต้องอัพเดท/archive-candidate) · ยุบ `document-inventory.md` เข้ามา (พร้อม archive) · next actions ค้าง: (2) bulk archive sm-spec/_proposal(17)/backup-map · (3) update stale PM/README/plan/research/core-erp/master-flows
 
 **🔒 Auto-Generate ใบขอจากใบขาย — Waterfall Allocation ✅ (2026-07-03 · spec WH_warehouse.md §WH-2):**
