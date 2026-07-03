@@ -38,13 +38,16 @@ body{font-family:Inter,'Noto Sans Thai',sans-serif;background:var(--bg);color:va
 .branch .b-lbl{font-size:9.5px;font-weight:800;color:#7C3AED;background:#F3E8FF;padding:2px 8px;border-radius:8px;white-space:nowrap;margin-top:5px}
 a.pg{color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent)}
 a.pg:hover{background:#DBEAFE;border-bottom-style:solid}
+.node[data-pg]{cursor:pointer}
+.node[data-pg]:hover{border-color:var(--accent);box-shadow:0 2px 10px rgba(37,99,235,.18)}
+.node[data-pg]::before{content:'🔗';position:absolute;top:4px;right:6px;font-size:9px;opacity:.45}
 .footer{text-align:center;font-size:11.5px;color:var(--muted);margin-top:28px}
 </style>
 </head>
 <body>
 <div class="header">
-  <h1>🗺️ Workflow Map — 5 สายหลักของระบบ</h1>
-  <p>Sangwijit ERP Portal · หลังปิด Flow Redundancy Audit 17/17 (2026-07-02) — ทุกสายติดกติกา ownership + gate ที่ล็อกแล้ว · คู่กับ <b>SKILL.md § Cross-Module Flow Rules</b></p>
+  <h1>🗺️ Workflow Map — 7 สายหลักของระบบ</h1>
+  <p>Sangwijit ERP Portal · อัพเดท 2026-07-03: WH renumber (เบิก=WH-2 · โอน=WH-3) + waterfall + kitchen rail + นับสต๊อก · เดิม audit 17/17 (2026-07-02) · คู่กับ <b>SKILL.md § Cross-Module Flow Rules</b></p>
 </div>
 <div class="container">
 
@@ -71,10 +74,11 @@ a.pg:hover{background:#DBEAFE;border-bottom-style:solid}
       <div class="arr">→</div>
       <div class="node" style="--mc:var(--sl)"><span class="code">SL-4</span><span class="name">บิลขาย</span><span class="note">Bill-to = ที่อยู่ใบกำกับ ≠ Ship-to = ที่อยู่ส่งของ</span></div>
       <div class="arr">→</div>
-      <div class="node" style="--mc:var(--wh)"><span class="code">WH-3</span><span class="name">เบิกออก</span><span class="note">Serial กรอกที่นี่ที่เดียว · เห็นคอลัมน์ สต๊อก (จองไว้)</span></div>
+      <div class="node" style="--mc:var(--wh)"><span class="code">WH-2</span><span class="name">เบิกออก</span><span class="note">ผ่านคำขอ WH-2R + คิว WH-Q2 · Serial กรอกที่นี่ที่เดียว</span></div>
       <div class="arr">→</div>
       <div class="node" style="--mc:var(--sv)"><span class="code">SV-6</span><span class="name">จัดส่ง+ติดตั้ง</span><span class="note">อ่านที่อยู่จาก Ship-to เท่านั้น</span></div>
     </div>
+    <div class="branch"><span class="b-lbl">⬇ WATERFALL</span><div>ยืนยันขาย + ระบุคลังจ่าย → auto สร้างใบขอต่อบรรทัดตามลำดับ: <b>เบิก (คลังจ่าย WH-2R) → โอน (คลังอื่น WH-3R) → ซื้อ (PO)</b> · กันสต๊อกทันที · ขึ้นคิวเบิก WH-Q2 เมื่อแพลนวัน (ดูสาย 6)</div></div>
     <div class="branch"><span class="b-lbl">↩ CN LOOP</span><div>บิล Post แล้วต้องแก้ → <b>SL-CN ใบลดหนี้</b> เท่านั้น (ดูสาย 3) — ห้ามแก้บิลตรง · Post ไปแล้ว Reverse+สร้างใหม่</div></div>
     <div class="rules">
       <span class="rule lock">🔒 สต๊อกไม่พอตอนจอง → แสดงลิสต์ใบจองที่ถือของ (เลขใบ+เซลล์+วันหมดอายุ) ไปคุยถอนจอง</span>
@@ -140,12 +144,12 @@ a.pg:hover{background:#DBEAFE;border-bottom-style:solid}
 
 <!-- ═══ 4. สายโอนคลัง ═══ -->
 <div class="lane">
-  <div class="lane-head"><span class="dot" style="background:var(--wh)"></span><h2>4. สายโอนคลัง (Transfer)</h2><span class="sub">3 คิว 1 ใบโอน 1 สถานะ</span></div>
+  <div class="lane-head"><span class="dot" style="background:var(--wh)"></span><h2>4. สายโอนคลัง (Transfer)</h2><span class="sub">WH-3R ขอโอน → WH-3 โอน (owner) → WH-1 รับ</span></div>
   <div class="lane-body">
     <div class="flow">
-      <div class="node" style="--mc:var(--wh)"><span class="code">WH-3</span><span class="name">ขอโอน (TR-Out)</span><span class="note">ส่งคำขอเท่านั้น — ไม่สร้างใบโอนเอง</span></div>
+      <div class="node" style="--mc:var(--wh)"><span class="code">WH-3R</span><span class="name">ขอโอน (Transfer Request)</span><span class="note">ฟอร์มคำขอ · ไม่มี "จำนวนที่ได้จริง" · ไม่สร้างใบโอนเอง</span></div>
       <div class="arr">→</div>
-      <div class="node owner" style="--mc:var(--wh)"><span class="code">WH-2</span><span class="name">โอนสินค้า</span><span class="note">จุดเดียวที่สร้าง Transfer Order · Draft→Shipped→In-Transit</span></div>
+      <div class="node owner" style="--mc:var(--wh)"><span class="code">WH-3</span><span class="name">โอนสินค้า</span><span class="note">จุดเดียวที่สร้าง TO · มี "จำนวนที่ได้จริง" · Draft→Shipped→In-Transit</span></div>
       <div class="gate"><span class="g">In-Transit ไม่นับสต๊อกทั้ง 2 คลัง</span></div>
       <div class="arr">→</div>
       <div class="node" style="--mc:var(--wh)"><span class="code">WH-1</span><span class="name">รับโอน (TR-In)</span><span class="note">match TO status=Shipped · ยืนยันรับได้ครั้งเดียว → Received</span></div>
@@ -172,9 +176,109 @@ a.pg:hover{background:#DBEAFE;border-bottom-style:solid}
   </div>
 </div>
 
+<!-- ═══ 6. สายคลังปฏิบัติการ ═══ -->
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--wh)"></span><h2>6. สายคลังปฏิบัติการ (WH Ops · Kitchen Rail + นับสต๊อก)</h2><span class="sub">คิว = รางรวมตามทิศ · R = ตั๋วขอ · action = ทำจริง</span></div>
+  <div class="lane-body">
+    <div class="flow">
+      <div class="node" style="--mc:var(--wh)"><span class="code">WH-Q1</span><span class="name">คิวรับ (Kitchen Rail)</span><span class="note">รวมตั๋วเข้า: รับซื้อ+รับโอน+รับคืน → คลิก→ WH-1</span></div>
+      <div class="arr">·</div>
+      <div class="node" style="--mc:var(--wh)"><span class="code">WH-Q2</span><span class="name">คิวเบิก (Kitchen Rail)</span><span class="note">รวมตั๋วออก: ขอเบิก+ขอโอน+จอง → คลิก→ WH-2/WH-3</span></div>
+    </div>
+    <div class="branch"><span class="b-lbl">R → ACTION</span><div>ทุกงานคลังมีคู่ <b>ใบขอ (R) → ใบทำจริง</b>: <b>WH-2R ขอเบิก→WH-2 เบิก</b> · <b>WH-3R ขอโอน→WH-3 โอน</b> · <b>WH-4R เตรียมนับ→WH-4 นับ</b> — R ต่างที่ตัดคอลัมน์ "จำนวนจริง/Variance" ออก</div></div>
+    <div class="flow" style="margin-top:12px">
+      <div class="node" style="--mc:var(--wh)"><span class="code">WH-4R</span><span class="name">เตรียมนับ</span><span class="note">เลือกคลัง/Bin/ประเภท (Cycle/Annual/Spot/Recount) + freeze snapshot</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--wh)"><span class="code">WH-4</span><span class="name">นับสต๊อก</span><span class="note">กรอกนับจริง → auto Variance</span></div>
+      <div class="gate"><span class="g">Variance ≠ 0 → auto Recount ให้ verify</span></div>
+    </div>
+    <div class="rules">
+      <span class="rule lock">🔒 คิว = รวมหลายเอกสารตามทิศ (ไม่ใช่ 1 คิว=1 ประเภท) · คลิกตั๋ว→เปิดฟอร์มทำจริง</span>
+      <span class="rule lock">🔒 กันสต๊อก (reserve) ตอนสร้างใบขอ · แก้ใบขายภายหลัง → admin ยืนยันก่อน sync</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 7. สายบริการ/ซ่อม ═══ -->
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--sv)"></span><h2>7. สายบริการ/ซ่อม (Service Ops)</h2><span class="sub">รับงาน → มอบหมาย → อะไหล่ → ปิดงาน/บิล → ส่งคืน</span></div>
+  <div class="lane-body">
+    <div class="flow">
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV-Q</span><span class="name">คิวงานซ่อม</span><span class="note">dashboard ช่าง · group by ช่าง → CM-1</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV-1</span><span class="name">รับงาน (intake)</span><span class="note">S/N-first · 5 job types · resolve A-E</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV-2</span><span class="name">มอบหมายช่าง</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV-3</span><span class="name">เบิกอะไหล่</span><span class="note">+ SV-Order สั่งนอกประกัน (spawn PO)</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV-5</span><span class="name">Job Card</span></div>
+      <div class="arr">→</div>
+      <div class="node owner" style="--mc:var(--sv)"><span class="code">SV-4</span><span class="name">ปิดงาน/บิล</span><span class="note">payer รายบรรทัด → ARI(แบรนด์)/SL-4(ลูกค้า)</span></div>
+      <div class="gate"><span class="g">GATE: ค้างคืนอะไหล่ในประกัน → ปิดไม่ได้</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV-7</span><span class="name">ส่งคืนลูกค้า</span></div>
+    </div>
+    <div class="branch"><span class="b-lbl">① เคลมสินค้า</span><div>ของเราซื้อมาเสีย → ส่งคืน vendor ทั้งชิ้น → <b>CLM → PO-CN</b> (S1-S4) · pre-sale (ไม่มีลูกค้า) เข้าทางนี้</div></div>
+    <div class="branch"><span class="b-lbl">② เคลมงานบริการ</span><div>ของอยู่กับลูกค้า ในประกันแบรนด์ → ซ่อม/เปลี่ยนอะไหล่ · payer split: <b>แบรนด์→ARI · ลูกค้า→SL-4</b> · goodwill = payer option ที่ 3</div></div>
+    <div class="rules">
+      <span class="rule lock">🔒 ประกัน per-component (แอร์ 1 ปี · คอมเพรสเซอร์ 5 ปี) → ตารางประกันรายชิ้น</span>
+      <span class="rule lock">🔒 รายได้ 3 อย่าง: ค่าแรง/อะไหล่/เดินทาง · คนจ่ายรายบรรทัด (default จากประกัน · admin override)</span>
+      <span class="rule warn">↩️ อะไหล่ในประกันต้องคืนของเก่าให้แบรนด์ (per-line gate) · นอกประกันซื้อขาดไม่คืน</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ⚠️ ช่องว่างที่ยังไม่มีหน้า ═══ -->
+<div class="lane" style="border-color:#FED7AA">
+  <div class="lane-head" style="background:#FFF7ED"><span class="dot" style="background:#F59E0B"></span><h2>⚠️ ช่องว่าง / ยังไม่มีหน้า (audit 2026-07-03)</h2></div>
+  <div class="lane-body" style="font-size:12px;color:#92400E;line-height:1.7">
+    <b>โปรโมชั่นฝั่งขาย (PM)</b> — sl6 promotion-setup ถูก archive · เหลือแค่ pm5 VAT-simulator + sc-promoprice (ยังเป็น proposal) · <b>ยังไม่มีหน้า setup แคมเปญ/โปรโมชั่น</b><br>
+    <b>SV backlog (ข้ามก่อน ต้องทำ):</b> MA contract สัญญาบำรุงรักษา · tech-mobile ช่างมือถือ · posted-docs เอกสารบริการที่โพสต์แล้ว<br>
+    <span style="color:#166534">✅ ลดหนี้ซื้อ (PO-CN) + รีเบท/ส่งเสริมการขายฝั่งซื้อ (PO-7 ⭐ จุดจ่ายเดียว) = มีแล้ว อยู่ในสาย 2 · SV ครบ 12 หน้า อยู่ในสาย 7</span>
+  </div>
+</div>
+
 <div class="footer">
   แหล่งอ้างอิง: <b>flow-redundancy-analysis.html</b> (audit 17/17) · <b>sangwijit-portal-skill/SKILL.md</b> § Cross-Module Flow Rules · decisions ทั้งหมดใน <b>.agents/active.md</b> — สร้าง 2026-07-02
 </div>
 
 </div>
+
+<script>
+// map รหัส → ไฟล์ mockup
+var PGMAP={
+ 'SL-1':'sl1-quotation-mockup.html','SL-2':'sl2-reservation-mockup.html','SL-3':'sl3-deposit-mockup.html','SL-4':'sl4-invoice-mockup.html','SL-CN':'slcn-credit-memo-mockup.html','SL-Q':'slq-sales-queue-mockup.html',
+ 'PO-1':'po1-purchase-request-mockup.html','PO-2':'po2-rfq-mockup.html','PO-4':'po4-purchase-order-mockup.html','PO-6':'po6-ap-invoice-mockup.html','PO-8':'po8-deposit-bill-mockup.html','PO-CN':'po-cn-credit-note-mockup.html','PO-7':'po7-rebate-dashboard.html',
+ 'WH-1':'wh1-receive-mockup.html','WH-2':'wh2-issue-mockup.html','WH-3':'wh3-transfer-mockup.html','WH-2R':'wh2r-issue-request-mockup.html','WH-3R':'wh3r-transfer-request-mockup.html','WH-4':'wh4-count-mockup.html','WH-4R':'wh4r-count-prep-mockup.html','WH-Q1':'wh-q1-receive-queue-mockup.html','WH-Q2':'wh-q2-issue-queue-mockup.html',
+ 'FI-1':'fi1-ar-receive-mockup.html','FI-2':'fi2-ap-payment-mockup.html','FI-12':'fi12-wht-mockup.html','FI-4':'fi4-expense-wht-mockup.html','FI-1Q':'fi1q-apply-queue-mockup.html',
+ 'SV':'sv1-service-intake-mockup.html','SV-1':'sv1-service-intake-mockup.html','SV-Q':'sv-q-service-queue-mockup.html','SV-2':'sv2-service-assignment-mockup.html','SV-3':'sv3-spare-part-issue-mockup.html','SV-Order':'sv-order-parts-request-mockup.html','SV-5':'sv5-job-card-mockup.html','SV-4':'sv4-service-close-mockup.html','SV-6':'sv6-delivery-install-mockup.html','SV-7':'sv7-service-delivery-mockup.html','SQT':'sqt-service-quotation-mockup.html','SIR':'sir-site-inspection-mockup.html','CLM':'clm-vendor-claim-mockup.html'
+};
+// 1) node กดได้
+document.querySelectorAll('.node').forEach(function(n){
+  var c=n.querySelector('.code'); if(!c) return;
+  var f=PGMAP[c.textContent.trim()]; if(!f) return;
+  n.setAttribute('data-pg',f); n.title='เปิด '+f;
+  n.addEventListener('click',function(){ location.href='../'+f; });
+});
+// 2) linkify รหัสในกล่อง branch/rule → คลิกเปิดหน้าได้เลย
+var CODES=Object.keys(PGMAP).sort(function(a,b){return b.length-a.length;});
+var RXSRC='(?:'+CODES.map(function(c){return c.replace(/-/g,'\\-');}).join('|')+')(?![0-9A-Za-z\\-])';
+document.querySelectorAll('.branch>div, .rule').forEach(function(el){
+  var w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,null,false),tn,list=[];
+  while(tn=w.nextNode()) list.push(tn);
+  list.forEach(function(t){
+    if(t.parentNode.tagName==='A') return;
+    var s=t.nodeValue, rx=new RegExp(RXSRC,'g'), m, last=0, frag=null;
+    while(m=rx.exec(s)){
+      var file=PGMAP[m[0]]; if(!file) continue;
+      if(!frag) frag=document.createDocumentFragment();
+      if(m.index>last) frag.appendChild(document.createTextNode(s.slice(last,m.index)));
+      var a=document.createElement('a'); a.className='pg'; a.href='../'+file; a.textContent=m[0];
+      frag.appendChild(a); last=m.index+m[0].length;
+    }
+    if(frag){ if(last<s.length) frag.appendChild(document.createTextNode(s.slice(last))); t.parentNode.replaceChild(frag,t); }
+  });
+});
+</script>
 </body></html>

@@ -220,6 +220,9 @@
 | B8 | รายงานสรุปงานช่าง → CM-1 (เรทจ่ายช่าง) | §8 |
 | B9 | checklist template ตรวจเช็ค/ล้าง (ราย product type · เพิ่มรายการได้) | §1 |
 | B10 | SLA config table ที่ CF + badge สีทุกขั้น | §9 |
+| B12 | **MA contract** สัญญาบำรุงรักษา (บริการเป็นรอบ · concept จาก bc365 by-role) — **ข้ามก่อน ต้องทำ** | grill SV struct 2026-07-03 |
+| B13 | **tech-mobile** หน้าช่างมือถือ (field technician) — **ข้ามก่อน ต้องทำ** (workspace desktop · แต่ user ยืนยันต้องมี) | grill SV struct 2026-07-03 |
+| B14 | **posted-docs** เอกสารบริการที่โพสต์แล้ว — **ข้ามก่อน ต้องทำ** | grill SV struct 2026-07-03 |
 
 ## ไฟล์เกี่ยวข้อง
 
