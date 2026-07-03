@@ -336,6 +336,9 @@ Output:  Commitment record ที่ถูกอ้างอิงจาก PR/P
 **Common (ทุก type):**
 - **Vendor Card | Agreement Meta Card** (sl-1 pattern · 2-col compact)
 - **PO-2.2 Type Selector** — segmented 4 buttons (MOU/Sell-in/Sell-out/Co-op) · เลือกประเภทตอน create
+- **PO-2.1b Evidence Level (grill 2026-07-04 · รับปาก/verbal)** — ladder 3 ขั้นใน meta card: 🗣️ **รับปาก** (verbal · ยังไม่มีเอกสาร) → 📄 **มีเอกสาร** (สแกน/เมล ยังไม่เซ็น) → ✍️ **เซ็นแล้ว** (เซลล์ Vendor เซ็น → Active)
+  - แต่ละขั้น **แนบสแกน/ภาพหลักฐาน** ที่ช่อง "เอกสารแนบ" (มีอยู่แล้ว): รับปาก=บันทึกการคุย · เอกสาร=สแกนไฟล์/เมล · เซ็น=สแกนสัญญาเซ็น
+  - **รับปาก accrue ได้ แต่ flag 🟡 เสี่ยง** · PO-7 realize แสดง confidence ต่อ commitment (finance/FI-8 เห็นก่อน realize) · *ทุก accrual ต้องชี้กลับหลักฐานได้ กัน rebate ลอย/ทวงไม่ได้*
 - **PO-2.4 Recovery Tracking** — ใช้ใน N PO · ยอดสิทธิ์ · เก็บคืนได้ · Recovery Rate vs Target
 - **PO-2.5 Approval + เซลล์เซ็น Vendor** — Approval chain ภายใน + signature ของเซลล์ Vendor (ดู A6 · ไม่มีผลภาษี)
 - **PO-2.6 Linked Documents** — PR/PO/AP ที่ใช้ VC นี้
