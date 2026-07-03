@@ -1,52 +1,216 @@
 <!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
+<html lang="th"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WH-Q1 คิวรับสินค้า — Sangwijit ERP</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="design-tokens.css">
-<link rel="stylesheet" href="swt-patterns.css">
+<title>WH-Q1 คิวรับสินค้า — Receive Queue</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;min-width:1440px;color:#1F2937}
-.main{margin-left:240px}
-.topbar{background:#fff;border-bottom:1px solid #E2E8F0;padding:14px 28px}
-.bc{font-size:12px;color:#64748B}
-.wrap{padding:24px 28px;max-width:1100px}
-h1{font-size:22px;color:#1E3A5F;margin-bottom:4px}
-.sub{font-size:13px;color:#64748B;margin-bottom:18px}
-.plan-badge{display:inline-block;background:#FEF3C7;color:#92400E;border:1px solid #FCD34D;border-radius:10px;font-size:11px;font-weight:700;padding:3px 10px;margin-bottom:14px}
-.card{background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:18px 20px;margin-bottom:14px}
-.card h3{font-size:14px;color:#1E3A5F;margin-bottom:8px}
-.card p,.card li{font-size:13px;line-height:1.75;color:#374151}
-.card ul{margin-left:18px}
-.links{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-.links a{font-size:12.5px;font-weight:600;color:#2563EB;text-decoration:none;border:1px solid #BFDBFE;background:#EFF6FF;border-radius:8px;padding:6px 12px}
-.links a:hover{background:#DBEAFE}
+/* WH-Q1 คิวรับ — "รางครัว" (Kitchen Rail) รวมตั๋วงานเข้า/รับ ทุกประเภท (รับซื้อ PO→WH-1 · รับโอน WH-3 ปลายทาง · รับคืน/เคลม) จัดตามทิศทาง · คลิกตั๋ว → เปิด WH-1 ใบรับสินค้า · twin ของ WH-Q2 2026-07-03 */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#111827;min-width:1440px;font-size:13px;line-height:1.45;height:100vh;overflow:hidden}
+.layout{display:flex;height:100vh;overflow:hidden}
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;margin-left:240px}
+.unified-header{flex:none;z-index:30}
+.uh-utility{height:44px;background:#fff;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;padding:0 24px;gap:12px}
+.uh-breadcrumb{font-size:12px;color:#6B7280}.uh-breadcrumb .current{color:#2563EB;font-weight:600}.uh-breadcrumb .sep{color:#D1D5DB;margin:0 4px}
+.uh-tools{margin-left:auto;display:flex;align-items:center;gap:10px}
+.topbar-search{background:#F3F4F6;border-radius:8px;padding:6px 12px;font-size:12px;color:#9CA3AF;width:200px}
+.topbar-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#F3F4F6;cursor:pointer}
+.branch-sel{font-size:11px;border:1px solid #E5E7EB;border-radius:8px;padding:5px 8px;font-family:inherit;color:#374151;background:#fff}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.uh-main{background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;padding:11px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.mh-left{display:flex;align-items:center;gap:18px}.mh-title{display:flex;align-items:center;gap:10px}
+.mh-title .ico{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+.mh-title h1{font-size:16px;font-weight:700;line-height:1.15}.mh-title p{font-size:11px;color:rgba(255,255,255,.7);margin-top:1px}
+.mh-divider{width:1px;height:32px;background:rgba(255,255,255,.2)}.mh-meta{display:flex;gap:20px}
+.mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.04em}
+.mh-meta-item .val{font-size:12px;font-weight:600;margin-top:1px}
+.mh-right{display:flex;align-items:center;gap:8px}
+.mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
+.mh-btn-ghost{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2)}.mh-btn-ghost:hover{background:rgba(255,255,255,.22)}
+.saab{display:flex;align-items:center;gap:8px;background:#fff;border-bottom:1px solid #E5E7EB;padding:8px 24px;flex:none;flex-wrap:wrap}
+.fchip{font-size:12px;font-weight:600;padding:5px 12px;border-radius:16px;border:1px solid #E5E7EB;background:#fff;color:#6B7280;cursor:pointer}
+.fchip.on{background:#1E3A5F;color:#fff;border-color:#1E3A5F}
+.fchip .n{opacity:.7;margin-left:3px}
+.saab-search{margin-left:auto;background:#F3F4F6;border-radius:8px;padding:6px 12px;font-size:12px;color:#9CA3AF;width:180px}
+.content{flex:1;padding:12px 24px;display:flex;flex-direction:column;gap:10px;overflow:hidden;min-height:0}
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;flex:none}
+.kpi{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:10px 14px}
+.kpi .lbl{font-size:11px;color:#6B7280}
+.kpi .val{font-size:22px;font-weight:700;color:#1E3A5F;margin-top:2px}
+.kpi .val.urgent{color:#DC2626}.kpi .val.warn{color:#EA580C}
+.rail-note{flex:none;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:6px;padding:6px 12px;font-size:11.5px;color:#5B21B6}
+.table-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
+.tc-head{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid #E5E7EB}
+.tc-head .t{font-size:13px;font-weight:700;color:#1E3A5F}
+.tc-head .spacer{flex:1}
+.tc-head .sortsel{font-size:11px;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;font-family:inherit;color:#374151;background:#fff}
+.q-wrap{overflow-y:auto;flex:1}
+table.q{width:100%;border-collapse:collapse;font-size:12px}
+table.q th{background:#F9FAFB;text-align:left;padding:9px 12px;font-size:10.5px;color:#6B7280;font-weight:600;border-bottom:1px solid #E5E7EB;position:sticky;top:0;z-index:1}
+table.q td{padding:9px 12px;border-bottom:1px solid #F3F4F6;vertical-align:middle}
+table.q tbody tr{cursor:pointer}
+table.q tbody tr:hover{background:#F8FAFC}
+.tno{font-family:monospace;font-weight:600;font-size:11.5px;color:#1E3A5F}
+.tchip{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:12px}
+.tchip.buy{background:#DCFCE7;color:#166534}
+.tchip.trin{background:#EDE9FE;color:#6D28D9}
+.tchip.ret{background:#FEF3C7;color:#92400E}
+.src{font-size:11px;color:#2563EB;font-weight:600}
+.who{font-weight:600}.who .s{font-size:10.5px;color:#6B7280;font-weight:400;display:block}
+.qty{font-weight:700;text-align:center}
+.due{font-weight:600}.due.soon{color:#DC2626}
+.st{font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:12px}
+.st.wait{background:#F3F4F6;color:#6B7280}
+.st.doing{background:#DBEAFE;color:#1E40AF}
+.st.hold{background:#FEF3C7;color:#92400E}
+.act-btn{font-size:11px;font-weight:600;padding:5px 11px;border-radius:6px;border:1px solid #2563EB;background:#2563EB;color:#fff;cursor:pointer;white-space:nowrap}
+.act-btn.ghost{background:#fff;color:#2563EB}
 </style>
 </head>
 <body>
+
+<div class="layout">
 <div class="main">
-  <div class="topbar"><div class="bc">คลังสินค้า (WH) &rsaquo; WH-Q1 คิวรับสินค้า</div></div>
-  <div class="wrap">
-    <div class="plan-badge">🔜 หน้าในแผน · โครงจาก grill 2026-07-02 · รอ build เต็มบน design-system</div>
-    <h1>WH-Q1 · คิวรับสินค้า (Receive Queue)</h1>
-    <div class="sub">คิวงานรับเข้าคลัง — จัดลำดับงานที่รอตรวจรับ</div>
-    <div class="card">
-      <h3>หน้านี้ทำอะไร</h3>
-      <p>รวมงานรับเข้าที่รอดำเนินการ 3 แหล่ง:</p><ul><li>📥 <b>PO รับเข้า</b> — ของจาก Vendor (PO-4 / สั่งซื้อสินค้าฝาก PO-8)</li><li>🔄 <b>โอนเข้า (TR-In)</b> — รับของโอนจากคลังอื่น</li><li>↩️ <b>คืนสินค้า</b> — รับคืนเข้าคลัง</li></ul><p>กดรายการ → เปิด <b>WH-1 ใบรับสินค้า</b> เพื่อตรวจรับ+ลง Serial/Bin</p>
+
+  <!-- 1. UNIFIED HEADER -->
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">คลังสินค้า (WH) <span class="sep">›</span> <span class="current">WH-Q1 คิวรับสินค้า</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+        <div class="topbar-icon">🔔</div>
+        <select class="branch-sel"><option>🏢 สาขา 08 นครพนม</option><option>🏢 ทุกคลัง</option></select>
+        <div class="topbar-avatar">SM</div>
+      </div>
     </div>
-    <div class="card">
-      <h3>เอกสาร/หน้าที่เกี่ยวข้อง</h3>
-      <div class="links"><a href="wh1-receive-mockup.html">WH-1 ใบรับสินค้า</a><a href="wh-q-dashboard-mockup.html">WH-Q Dashboard</a><a href="po4-purchase-order-mockup.html">PO-4 ใบสั่งซื้อ</a><a href="po8-deposit-bill-mockup.html">PO-8 สั่งซื้อสินค้าฝาก</a></div>
+    <div class="uh-main">
+      <div class="mh-left">
+        <div class="mh-title">
+          <div class="ico">📥</div>
+          <div><h1>คิวรับสินค้า</h1><p>Receive Queue · รางงานเข้า/รับ (WH-Q1)</p></div>
+        </div>
+        <div class="mh-divider"></div>
+        <div class="mh-meta">
+          <div class="mh-meta-item"><div class="lbl">คลัง</div><div class="val">สาขา 08 นครพนม</div></div>
+          <div class="mh-meta-item"><div class="lbl">วันที่</div><div class="val">05 ก.ค. 26</div></div>
+          <div class="mh-meta-item"><div class="lbl">ตั๋วรอรับ</div><div class="val">9 ใบ</div></div>
+        </div>
+      </div>
+      <div class="mh-right">
+        <button class="mh-btn mh-btn-ghost" onclick="location.href='wh-q-dashboard-mockup.html'">📊 คิวรวม (WH-Q)</button>
+        <button class="mh-btn mh-btn-ghost" onclick="location.reload()">🔄 รีเฟรช</button>
+      </div>
     </div>
-    <div class="card" style="background:#F8FAFC">
-      <p style="font-size:12px;color:#64748B">📋 โครงเต็ม: <code>.agents/topics/wh-renumber-plan.md</code> · spec: <code>sangwijit-portal-skill/modules/WH_warehouse.md</code></p>
-    </div>
+  </header>
+
+  <!-- 2. SAAB — filter by ประเภทตั๋ว -->
+  <div class="saab">
+    <button class="fchip on">ทั้งหมด <span class="n">9</span></button>
+    <button class="fchip">🟢 รับซื้อ (PO) <span class="n">5</span></button>
+    <button class="fchip">🟣 รับโอน <span class="n">2</span></button>
+    <button class="fchip">🟡 รับคืน/เคลม <span class="n">2</span></button>
+    <span style="width:1px;height:22px;background:#E5E7EB;margin:0 4px"></span>
+    <button class="fchip">⏰ ETA วันนี้ <span class="n">3</span></button>
+    <div class="saab-search">🔎 ค้นเลขที่ / Vendor / SKU</div>
   </div>
-</div>
+
+  <div class="content">
+
+    <div class="rail-note">🍳 <b>รางครัว (Kitchen Rail)</b> — รวมทุกงาน "เข้า/รับ" ที่คลังต้องทำ ไม่ว่ามาจากเอกสารไหน (รับซื้อ · รับโอน · รับคืน) เรียงตาม ETA · <b>คลิกแถว → เปิด WH-1 ใบรับสินค้า</b> เพื่อตรวจรับ + ลง Serial/Bin</div>
+
+    <!-- KPI -->
+    <div class="kpi-strip">
+      <div class="kpi"><div class="lbl">ตั๋วรอรับทั้งหมด</div><div class="val">9</div></div>
+      <div class="kpi"><div class="lbl">ETA ถึงวันนี้</div><div class="val urgent">3</div></div>
+      <div class="kpi"><div class="lbl">กำลังตรวจรับ</div><div class="val warn">1</div></div>
+      <div class="kpi"><div class="lbl">รอตรวจ QC</div><div class="val">2</div></div>
+    </div>
+
+    <!-- TABLE = รางตั๋ว -->
+    <div class="table-card">
+      <div class="tc-head">
+        <span class="t">🎫 ตั๋วงานรับ/เข้า</span>
+        <span class="spacer"></span>
+        <select class="sortsel"><option>เรียงตาม: ETA (ใกล้สุด)</option><option>เรียงตาม: ประเภท</option><option>เรียงตาม: เลขที่</option></select>
+      </div>
+      <div class="q-wrap">
+        <table class="q">
+          <thead><tr>
+            <th style="width:34px">#</th><th>เลขที่ตั๋ว</th><th>ประเภท</th><th>อ้างอิงต้นทาง</th><th>ผู้ส่ง / ต้นทาง</th><th>รายการ</th><th style="width:60px;text-align:center">จำนวน</th><th>ETA</th><th>สถานะ</th><th style="width:110px"></th>
+          </tr></thead>
+          <tbody>
+            <tr onclick="location.href='wh1-receive-mockup.html'">
+              <td>1</td><td><span class="tno">GRN-0071</span></td><td><span class="tchip buy">🟢 รับซื้อ</span></td>
+              <td><span class="src">PO-0245</span></td><td><span class="who">Daikin (Vendor)<span class="s">ขนส่ง Kerry</span></span></td>
+              <td>แอร์ Daikin 12K (ล็อต)</td><td class="qty">30</td><td class="due soon">วันนี้</td><td><span class="st doing">กำลังตรวจรับ</span></td>
+              <td><button class="act-btn">เปิดใบรับ →</button></td>
+            </tr>
+            <tr onclick="location.href='wh1-receive-mockup.html'">
+              <td>2</td><td><span class="tno">TRN-0031</span></td><td><span class="tchip trin">🟣 รับโอน</span></td>
+              <td><span class="src">WH-3 · TO-0031</span></td><td><span class="who">HQ สนง.ใหญ่<span class="s">In-Transit → สาขา 08</span></span></td>
+              <td>แอร์ Daikin 12K + ท่อทองแดง</td><td class="qty">38</td><td class="due soon">วันนี้</td><td><span class="st wait">รอรับปลายทาง</span></td>
+              <td><button class="act-btn">เปิดใบรับ →</button></td>
+            </tr>
+            <tr onclick="location.href='wh1-receive-mockup.html'">
+              <td>3</td><td><span class="tno">RTN-0015</span></td><td><span class="tchip ret">🟡 รับคืน</span></td>
+              <td><span class="src">SV · เคลม</span></td><td><span class="who">คุณวิภา (คืนของ)<span class="s">สินค้ามีตำหนิ</span></span></td>
+              <td>แอร์ Daikin 12K</td><td class="qty">1</td><td class="due soon">วันนี้</td><td><span class="st hold">รอตรวจ QC</span></td>
+              <td><button class="act-btn ghost">เปิดใบรับ →</button></td>
+            </tr>
+            <tr onclick="location.href='wh1-receive-mockup.html'">
+              <td>4</td><td><span class="tno">GRN-0072</span></td><td><span class="tchip buy">🟢 รับซื้อ</span></td>
+              <td><span class="src">PO-0248</span></td><td><span class="who">Mitsubishi (Vendor)<span class="s">รถบริษัท</span></span></td>
+              <td>แอร์ Mitsubishi 18K</td><td class="qty">12</td><td class="due">06 ก.ค.</td><td><span class="st wait">รอของถึง</span></td>
+              <td><button class="act-btn ghost">เปิดใบรับ →</button></td>
+            </tr>
+            <tr onclick="location.href='wh1-receive-mockup.html'">
+              <td>5</td><td><span class="tno">GRN-0073</span></td><td><span class="tchip buy">🟢 รับซื้อ</span></td>
+              <td><span class="src">PO-8 · ฝาก</span></td><td><span class="who">LG (สินค้าฝาก)<span class="s">Consignment</span></span></td>
+              <td>เครื่องซักผ้า LG 10 kg</td><td class="qty">8</td><td class="due">06 ก.ค.</td><td><span class="st wait">รอของถึง</span></td>
+              <td><button class="act-btn ghost">เปิดใบรับ →</button></td>
+            </tr>
+            <tr onclick="location.href='wh1-receive-mockup.html'">
+              <td>6</td><td><span class="tno">TRN-0033</span></td><td><span class="tchip trin">🟣 รับโอน</span></td>
+              <td><span class="src">WH-3 · TO-0033</span></td><td><span class="who">HQ สนง.ใหญ่<span class="s">Replenish</span></span></td>
+              <td>ท่อทองแดง 4 เมตร (ล็อต)</td><td class="qty">40</td><td class="due">07 ก.ค.</td><td><span class="st wait">รอของถึง</span></td>
+              <td><button class="act-btn ghost">เปิดใบรับ →</button></td>
+            </tr>
+            <tr onclick="location.href='wh1-receive-mockup.html'">
+              <td>7</td><td><span class="tno">GRN-0074</span></td><td><span class="tchip buy">🟢 รับซื้อ</span></td>
+              <td><span class="src">PO-0250</span></td><td><span class="who">Hatari (Vendor)<span class="s">ขนส่งเอกชน</span></span></td>
+              <td>พัดลม Hatari 18 นิ้ว (ล็อต)</td><td class="qty">50</td><td class="due">07 ก.ค.</td><td><span class="st wait">รอของถึง</span></td>
+              <td><button class="act-btn ghost">เปิดใบรับ →</button></td>
+            </tr>
+            <tr onclick="location.href='wh1-receive-mockup.html'">
+              <td>8</td><td><span class="tno">RTN-0016</span></td><td><span class="tchip ret">🟡 รับคืน</span></td>
+              <td><span class="src">SV · อะไหล่คืน</span></td><td><span class="who">งานซ่อม SVJ-0198<span class="s">อะไหล่เหลือคืนคลัง</span></span></td>
+              <td>แผงบอร์ด (ไม่ได้ใช้)</td><td class="qty">1</td><td class="due">08 ก.ค.</td><td><span class="st hold">รอตรวจ QC</span></td>
+              <td><button class="act-btn ghost">เปิดใบรับ →</button></td>
+            </tr>
+            <tr onclick="location.href='wh1-receive-mockup.html'">
+              <td>9</td><td><span class="tno">GRN-0075</span></td><td><span class="tchip buy">🟢 รับซื้อ</span></td>
+              <td><span class="src">PO-0252</span></td><td><span class="who">Toshiba (Vendor)<span class="s">รถบริษัท</span></span></td>
+              <td>ตู้เย็น Toshiba 2 ประตู</td><td class="qty">6</td><td class="due">09 ก.ค.</td><td><span class="st wait">รอของถึง</span></td>
+              <td><button class="act-btn ghost">เปิดใบรับ →</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+document.querySelectorAll('.fchip').forEach(function(c){
+  c.addEventListener('click',function(){
+    document.querySelectorAll('.fchip').forEach(function(x){x.classList.remove('on')});
+    c.classList.add('on');
+  });
+});
+</script>
 <script src="swt-link.js" defer></script>
 <script src="swt-sidebar.js"></script>
-</body>
-</html>
+</body></html>
