@@ -32,15 +32,11 @@
     'md1-item-master-mockup-v3.html','md4-employee-master-mockup-v3.html',
     'cf1-rbac-permission-mockup.html',
     'md5-branch-warehouse-mockup-v3.html','md5-branch-warehouse-mockup-v3.html',
-    'bc365/cf3-payment-hub-mockup.html',
-    'bc365/cf5-bank-master-mockup.html','cf2-1-tax-setup-mockup.html',
+    'cf2-1-tax-setup-mockup.html',
     'sqt-service-quotation-mockup.html',
     'sc2-item-search-mockup.html',
     'cf2-6-approval-matrix-mockup.html',
-    'cf2-7-doc-template-mockup.html',
-    'bc365/cl1-claims-mockup.html',
-    'bc365/cl1-claim-form-mockup.html',
-    'bc365/pm1-promotion-mockup.html'
+    'cf2-7-doc-template-mockup.html'
   ];
 
   /* nav data — canonical (เปลี่ยนเมนูที่นี่ที่เดียว)
@@ -60,12 +56,11 @@
       ['SL-4','sl4-invoice-mockup.html','SL-4 บิลขาย','old'],
       ['SLCN','slcn-credit-memo-mockup.html','SL-CN ใบลดหนี้','old'],
       ['SL-5','sl5-crm-followup-mockup.html','SL-5 CRM Follow-up','old'],
-      ['PM-1','bc365/pm1-promotion-mockup.html','PM-1 Promotion Engine (CA pattern · 8 types · reservation lock)','new'],
+      ['PM-1','pm1-price-list-mockup.html','PM-1 รายการราคา (Price List · stub P2)','new'],
+      ['PM-2','pm2-promotion-mockup.html','PM-2 โปรโมชั่น/แคมเปญ (stub P2)','new'],
       ['SLF1','slf1-credit-approval-mockup.html','SL-F1 อนุมัติวงเงินขาย','old'],
       ['PM-5','pm5-vat-simulator-mockup.html','PM-5 VAT Simulator','old'],
       ['CM-1','cm1-commission-mockup.html','CM-1 Commission','old'],
-      ['CL-1','bc365/cl1-claims-mockup.html','CL-1 Claims Dashboard (KPI · routing chart · list)','new'],
-      ['CL1F','bc365/cl1-claim-form-mockup.html','CL-1 Claim Form (full-page · 6 sections · photo grid)','new'],
       ['SL-R','sl7-sales-report-mockup.html','รายงานขาย (แม่)','old'],
       ['SLR1','sl7-sales-report-mockup.html','รายงานขาย > สรุปยอดขาย','new'],
       ['SLR2','sl7-sales-report-mockup.html','รายงานขาย > วิเคราะห์ตามช่วงเวลา','new'],
@@ -145,8 +140,8 @@
       ['IA-Q','iaq-bc-sync-monitor-mockup.html','IA-Q BC Sync Monitor','old']]},
     {ico:'⚙️', label:'ตั้งค่าระบบ (CF)', links:[
       ['CF-1','cf1-rbac-permission-mockup.html','CF-1 ทะเบียนตำแหน่ง (Position + RBAC)','new'],
-      ['CF-3','bc365/cf3-payment-hub-mockup.html','CF-3 Payment Hub (Terms·Methods·Shipment)','new'],
-      ['CF-5','bc365/cf5-bank-master-mockup.html','CF-5 Bank Master (รายชื่อธนาคาร)','new'],
+      ['CF-3','cf3-payment-hub-mockup.html','CF-3 Payment Hub (stub · Terms/Methods/Shipment)','new'],
+      ['CF-5','cf5-bank-master-mockup.html','CF-5 Bank Master (stub · ทะเบียนธนาคาร)','new'],
       ['CF-2','cf2-config-hub-mockup.html','CF-2 Config Hub','old'],
       ['CF21','cf2-1-tax-setup-mockup.html','CF-2.1 Tax Setup (VAT + WHT Thai loc)','new'],
       ['CF22','cf2-2-number-series-mockup.html','CF-2.2 Running No.','old'],
@@ -161,7 +156,7 @@
       ['MD-4','md4-employee-master-mockup-v3.html','MD-4 ทะเบียนพนักงาน','new'],
       ['MD5a','md5-branch-warehouse-mockup-v3.html','MD-5a ทะเบียนสาขา','new'],
       ['MD5b','md5-branch-warehouse-mockup-v3.html','MD-5b ทะเบียนคลัง','new'],
-      ['MD-6','bc365/service-item-master-mockup.html','MD-6 ทะเบียนเครื่อง (Service Item)','new']]},
+      ['MD-6','md6-service-item-mockup.html','MD-6 ทะเบียนเครื่อง (Service Item · stub)','new']]},
     {ico:'🧩', label:'Shared Components (SC)', links:[
       ['SCCT','sc-shared-catalog-mockup.html','SC-CAT SC Catalog คู่มือทด API','old'],
       ['SC-1','sc1-customer-search-mockup.html','SC-1 ค้นหาลูกค้า','old'],

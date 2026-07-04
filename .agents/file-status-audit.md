@@ -58,16 +58,18 @@ non-nav (ถูกต้อง): _form-template · login · notification-center 
 
 ---
 
-# ส่วนที่ 2 — 🕳️ ORPHAN / DEAD LINKS (sidebar ชี้ bc365 ที่หาย · รอตัดสิน)
+# ส่วนที่ 2 — ✅ ORPHAN / DEAD LINKS — ปิดครบ (2026-07-04 · sidebar = 0 dead)
 
-> bc365/ folder หายทั้งชุด (design-system refactor ที่ revert) · sidebar group A แก้แล้ว 14 · เหลือ 6 orphan:
+> bc365/ folder หายทั้งชุด · แก้ group A 14 + orphan 6 = **sidebar 0 dead link แล้ว**
 
-| รหัส | ปัญหา | ไฟล์ inspect ได้ | ทางเลือก |
-|---|---|---|---|
-| CL-1 · CL1F | claim=job type แล้ว (archived) | `_archive/cl1-claims-mockup.html` (07-02) | ลบจาก sidebar |
-| PM-1 promotion | gap โปรโมชั่นฝั่งขาย | `_archive/sl6-promotion-setup-mockup.html` (สร้าง 04-19 · 17 commits) | grill+build |
-| CF-3 payment-hub · CF-5 bank | ไม่มี root | — | stub / ลบ |
-| MD-6 service-item | ไม่มี root | — | คู่กับ SV · build |
+| รหัส | เดิม (ตาย) | ทำ |
+|---|---|---|
+| CL-1 · CL1F | bc365/cl1-* | ✅ **ลบเมนู** (claim=job type ใน SV · archived) |
+| PM-1 · PM-2 | bc365/pm1-promotion | ✅ **stub** `pm1-price-list` + `pm2-promotion` (naming locked · รอ build P2) |
+| CF-3 · CF-5 | bc365/cf3/cf5 | ✅ **stub** `cf3-payment-hub` · `cf5-bank-master` |
+| MD-6 | bc365/service-item | ✅ **stub** `md6-service-item` (คู่ SV) |
+
+> stub = placeholder กัน dead link + ref spec/backlog · build เต็มตอน P2 (PM) / TBD (CF-3/5/MD-6) · ref `_archive/sl6-promotion-setup` (04-19 · 17 commits) สำหรับ PM-2
 
 ---
 
