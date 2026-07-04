@@ -46,7 +46,7 @@
   var GROUPS = [
     {ico:'🏠', label:'Overview', links:[
       ['IDX','index.html','Master Index','old'],
-      ['FLOW','.agents/flow-workflow-map.html','🗺️ Workflow Map (6 สาย · กดได้)','new'],
+      ['FLOW','module-flow-overview.html','🗺️ Module Flow Overview (spine + per-module + ✦)','new'],
       ['ARCH','sangwijit-portal-architecture.html','Architecture','old'],['SPEC','dev-handoff-spec.html','Dev Handoff','old']]},
     {ico:'💼', label:'งานขาย (SL)', links:[
       ['SL-Q','slq-sales-queue-mockup.html','SL-Q คิวงานขาย','old'],
