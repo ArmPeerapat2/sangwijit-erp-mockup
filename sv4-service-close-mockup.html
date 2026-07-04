@@ -168,7 +168,8 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
 <div class="saab">
   <button class="btn btn-secondary">&#128194; เปิดเอกสารเก่า</button>
   <button class="btn btn-secondary">&#128203; Copy</button>
-
+  <div class="saab-spacer"></div>
+  <button class="btn btn-secondary" style="color:#C55A11" onclick="document.getElementById('cnReqModal').style.display='flex'" title="บิล post แล้วแก้ไม่ได้ → ออกใบลดหนี้ผ่าน SL-Q">↩️ ส่งคำขอลดหนี้</button>
 </div>
 
 <div class="status-pills">
@@ -519,6 +520,34 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
 
 </div></div></div>
 
+<!-- ============ MODAL: B6 Credit Note Request → SL-Q ============ -->
+<div id="cnReqModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:flex-start;justify-content:center;padding:60px 20px;overflow-y:auto">
+  <div style="background:#fff;border-radius:10px;max-width:540px;width:100%;padding:22px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+      <span style="font-size:17px;font-weight:700;color:#111827">↩️ ส่งคำขอลดหนี้ → SL-Q</span>
+      <div style="flex:1"></div>
+      <button onclick="document.getElementById('cnReqModal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:#6B7280">✕</button>
+    </div>
+    <div style="font-size:12px;color:#6B7280;margin-bottom:16px">บิล post แล้วแก้ไม่ได้ → ต้องออกใบลดหนี้ · ส่งเบา (เหตุผล+บิล) → ทีม SL เลือก line + CF-2.6 อนุมัติก่อน post</div>
+    <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:10px 12px;margin-bottom:14px">
+      <div style="font-size:11px;color:#6B7280;margin-bottom:4px">บิลต้นทาง (auto)</div>
+      <div style="font-size:13px;font-weight:600;color:#111827">👤 ARI-Customer <span class="mono">ARI-SV1-2604-0090</span> · ฿567.10 · คุณสมชาย ใจดี</div>
+    </div>
+    <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:8px">เหตุผลการลดหนี้ <span style="color:#DC2626">*</span></div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+      <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#374151;padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;cursor:pointer"><input type="radio" name="cnreason" checked> 🔁 รายการจริงเคลม Vendor ได้ (recategorize ใน→นอก Comp)</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#374151;padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;cursor:pointer"><input type="radio" name="cnreason"> 🎁 Goodwill ชดเชยลูกค้า <span style="font-size:10.5px;color:#C55A11">(ต้อง approval)</span></label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#374151;padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;cursor:pointer"><input type="radio" name="cnreason"> 🧮 คิดเงินผิด/เกิน (ราคา/จำนวน)</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#374151;padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;cursor:pointer"><input type="radio" name="cnreason"> 📦 คืนของ/ยกเลิกงานบางส่วน</label>
+    </div>
+    <div style="margin-bottom:16px"><label style="font-size:12px;color:#6B7280;display:block;margin-bottom:4px">หมายเหตุถึงทีม SL</label><textarea placeholder="เช่น น้ำยา R32 อยู่ในเงื่อนไขเคลม vendor → คืนลูกค้า 380" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;font-family:inherit;min-height:56px;resize:vertical"></textarea></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-secondary" onclick="document.getElementById('cnReqModal').style.display='none'">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="sendCnReq()">↩️ ส่งไป SL-Q</button>
+    </div>
+  </div>
+</div>
+
 <!-- ============ MODAL: SV-4.3 QA Checklist Detail ============ -->
 <div id="qaModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:flex-start;justify-content:center;padding:60px 20px;overflow-y:auto">
   <div style="background:#fff;border-radius:12px;max-width:720px;width:100%;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,0.3)">
@@ -623,6 +652,13 @@ function coreGate(){
   });
 }
 document.addEventListener('DOMContentLoaded', coreGate);
+// B6: ส่งคำขอลดหนี้ → สร้าง SL-CN draft → SL-Q (เบา: เหตุผล+บิล · line เลือกที่ SL-CN · CF-2.6 อนุมัติ)
+function sendCnReq(){
+  var r=document.querySelector('input[name="cnreason"]:checked');
+  var reason=r?r.closest('label').textContent.trim():'';
+  document.getElementById('cnReqModal').style.display='none';
+  alert('✅ สร้างใบลดหนี้ draft → SL-Q\n\nSL-CN: 08CN-2607-0012 (อ้าง ARI-SV1-2604-0090)\nเหตุผล: '+reason+'\n\n→ โผล่กลุ่ม "↩️ ใบลดหนี้ CN รอ Post" ที่ SL-Q\n→ ทีม SL เลือก line (copy-from-bill) + CF-2.6 อนุมัติก่อน post');
+}
 </script>
 <script src="swt-link.js"></script>
 <script src="swt-sidebar.js"></script>
