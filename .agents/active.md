@@ -55,6 +55,8 @@ project_type: "frontend-mockup (HTML + docs)"
 
 **🔧 SV backlog B4 ✅ (2026-07-04 · grill Q1-Q3):** per-line payer assignable ที่ sv4 · **Q3 auto-bind:** ประเภท(ใน/นอก Comp)=dropdown → เก็บจาก payer พลิกเอง (ใน→Vendor·นอก→ลูกค้า · chip=derived คำนวณสด · เปลี่ยน payer=เปลี่ยนประเภท กัน maker error) · **Q1 payer=bill-to party:** Vendor=ลูกค้าอีกราย/วิธีจ่าย กรอกบริษัทเมนวล (ไม่ hardcode type) · **Q2 ออก 2 ARI ที่ sv4:** ARI-Vendor + ARI-Customer(อ้าง SL-4/SO) post ทันที · SV-7 = รับชำระเท่านั้น (invoice ออกที่ sv4 แล้ว) · เหลือ B5 (parts return dashboard+gate) · B6-B14
 
+**🔧 SV backlog B5 ✅ (2026-07-04 · grill 3 ข้อ):** core-return dashboard + gate ที่ sv4 · **Q1** คืนเฉพาะอะไหล่ในประกัน (เคลม · ซาก=หลักฐาน · out-warranty=ของลูกค้า) · **Q2** 3 สถานะ: ⏳รอส่งคืน→🚚ส่งแล้ว→✅Vendorรับแล้ว · **Q3** gate **เข้มสุด** = block "→ ส่งต่อ SV-7" จน Vendor รับซากครบ (coreGate() สด) · SV-4.4b dashboard + sv3 flag "ต้องคืนซาก→SV-4.4b" · ⚠️ **timing tension:** gate เข้มอาจ block customer delivery ระหว่างรอ vendor รับซาก — flag ให้ user ทบทวน (ถ้าติดจริงค่อยผ่อนเป็น "≥ส่งแล้ว") · **C4 (B2/B4/B5) ปิดครบ**
+
 **🎨 SV design-consistency sweep ✅ (2026-07-04 · ยึด SL-4):** ปรับ SV ทั้งกลุ่มให้ตรงกัน —
 - **section-code:** ทุกโซน (การ์ด+section) มี code emoji+`SV-x.x ·` · แก้ sv7 (การ์ดไม่มี code → SV-7.1/7.1b · renumber 7.2-7.4) · sv2/3 + sv-order-parts (num-badge → emoji+code)
 - **CSS shared:** base `.saab` ย้ายเข้า `swt-patterns.css` · sv1-7+clm+sv-order inline/local `.saab-bar` → `class="saab"` (memory [[css-shared-not-inline]])
