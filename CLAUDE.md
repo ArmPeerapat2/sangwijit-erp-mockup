@@ -81,7 +81,7 @@ Already decided, do not re-litigate:
 3. **Archive** — full path ของ `_archive/…-YYYY-MM-DD.html` (ถ้ามีการ archive)
 4. **Chain ทดสอบ** — หน้าต้นทาง + ปุ่ม/action ที่พาไปหน้าที่เพิ่งทำ (ถ้าเชื่อม doc-chain)
 5. **ไฟล์แก้ร่วม** — เช่น `swt-sidebar.js`, `.agents/active.md` (ถ้าแตะ)
-6. **อัปเดต `.agents/flow-workflow-map.html`** (ชื่อเดิม `module-flow-overview.html` · rename 2026-07) — ทุกครั้งที่ **เพิ่มหน้า · แก้ flow/สถานะ · rebuild (ติด ✦)** ต้องไปปรับ node/สถานะ/ลิงก์/มาร์ก ✦↔เก่า ในหน้านี้ให้ตรงเสมอ (locked 2026-06-14 · path-fixed 2026-07-04)
+6. **อัปเดต flow overview** — ทุกครั้งที่ **เพิ่มหน้า · แก้ flow/สถานะ · rebuild (ติด ✦)** ต้องปรับ node/สถานะ/ลิงก์/มาร์ก ✦↔เก่า ให้ตรง (locked 2026-06-14) · มี 2 ไฟล์: **`../Dev-Handoff-SLPOWH/module-flow-overview.html`** (per-module · handoff SL/PO/WH · มี copy mockup แยก) + **`.agents/flow-workflow-map.html`** (working · cross-module 7 สาย · กดได้)
 
 รูปแบบตัวอย่าง:
 

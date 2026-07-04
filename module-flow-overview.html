@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Module Flow Overview — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;font-size:13px;line-height:1.45}
+.main{margin-left:240px;padding:24px 28px 60px}
+.page-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.page-head h1{font-size:22px;font-weight:700;letter-spacing:-0.01em}
+.page-head p{font-size:12px;color:#6B7280;margin-top:2px}
+.page-head .sp{flex:1}
+.kpi{display:flex;gap:8px}
+.kpi .box{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:6px 12px;text-align:center}
+.kpi .n{font-size:18px;font-weight:700;color:#2563EB;font-family:'Inter',monospace}
+.kpi .l{font-size:9.5px;color:#6B7280;text-transform:uppercase;letter-spacing:0.05em}
+.legend{display:flex;gap:14px;flex-wrap:wrap;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:8px 14px;margin-bottom:20px;font-size:11.5px;align-items:center}
+.legend b{font-size:11px;color:#374151}
+.lg{display:inline-flex;align-items:center;gap:5px}
+.dot{width:12px;height:12px;border-radius:3px;display:inline-block}
+.dot.done{background:#10B981}.dot.old{background:#CBD5E1}.dot.stub{background:#F59E0B}
+.chip-post{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D;border-radius:4px;padding:1px 6px;font-size:9.5px;font-weight:700}
+.mod{background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:16px 18px 18px;margin-bottom:18px}
+.mod-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.mod-head .ico{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;background:#EFF6FF}
+.mod-head h2{font-size:16px;font-weight:700}
+.mod-head .cnt{font-size:10px;font-weight:700;color:#6B7280;background:#F3F4F6;border-radius:9px;padding:2px 8px}
+.mod-head .phase{font-size:10px;font-weight:700;border-radius:9px;padding:2px 8px}
+.phase.p1{background:#DCFCE7;color:#166534}.phase.p2{background:#FEF3C7;color:#92400E}.phase.p3{background:#F3E8FF;color:#6D28D9}
+.mod-sub{font-size:11.5px;color:#6B7280;margin:0 0 12px 44px}
+.flow{display:flex;flex-direction:column;gap:10px}
+.flow-row{display:flex;align-items:stretch;gap:6px;flex-wrap:wrap}
+.branch-lead{display:flex;align-items:center;font-size:10.5px;font-weight:700;color:#6B7280;background:#F8FAFC;border:1px dashed #CBD5E1;border-radius:6px;padding:0 10px;min-width:120px;white-space:nowrap}
+.branch-lead.in{color:#1D4ED8;border-color:#93C5FD;background:#EFF6FF}
+.node{display:flex;flex-direction:column;justify-content:flex-start;gap:3px;min-width:158px;max-width:200px;border:1px solid #E5E7EB;border-left:4px solid #CBD5E1;border-radius:8px;padding:7px 10px;text-decoration:none;color:#111827;background:#fff;transition:all .12s}
+.node:hover{box-shadow:0 3px 10px rgba(37,99,235,0.12);transform:translateY(-1px);border-color:#93C5FD}
+.node.done{border-left-color:#10B981;background:#F0FDF4}
+.node.stub{border-left-color:#F59E0B;background:#FFFBEB}
+.node.ext{border-style:dashed;background:#FAFAFA;opacity:.92}
+.node .nh{display:flex;align-items:center;gap:5px}
+.node .code{font-family:'Inter',monospace;font-size:10.5px;font-weight:700;color:#2563EB}
+.node.done .code{color:#059669}
+.node .star{margin-left:auto;color:#10B981;font-size:12px}
+.node .mk{margin-left:auto;font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:999px;background:#F1F5F9;color:#94A3B8}
+.node .mk.stub{background:#FEF3C7;color:#92400E}
+.node .name{font-size:12px;font-weight:600;line-height:1.25}
+.node .st{font-size:10px;color:#6B7280;font-family:'Inter',monospace;line-height:1.3}
+.node .st b{color:#111827}
+.node .post{font-size:9px;font-weight:700;color:#92400E;background:#FEF3C7;border:1px solid #FCD34D;border-radius:4px;padding:1px 5px;align-self:flex-start;margin-top:1px}
+.arr{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:46px;color:#94A3B8}
+.arr .l{font-size:9px;font-weight:700;color:#6B7280;white-space:nowrap;margin-bottom:1px}
+.arr .a{font-size:16px;line-height:1;color:#2563EB}
+.arr.soft .a{color:#CBD5E1}
+.note{margin-top:12px;font-size:11px;color:#6B7280;background:#F8FAFC;border:1px solid #EEF2F7;border-left:3px solid #93C5FD;border-radius:6px;padding:8px 12px;line-height:1.55}
+.note b{color:#374151}
+.note.warn{border-left-color:#F59E0B;background:#FFFBEB;color:#92400E}
+.note.warn b{color:#7C2D12}
+.grid-mods{display:flex;flex-direction:column}
+@media(max-width:1100px){.main{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="main">
+
+  <div class="page-head">
+    <div>
+      <h1>🗺️ Module Flow Overview</h1>
+      <p>ผังการไหลของเอกสารทุกหมวด · status flow + จุด BC Post + doc-chain · คลิกกล่องเพื่อเปิดหน้าจริง · regen 2026-07-04 (current · 0 dead link)</p>
+    </div>
+    <div class="sp"></div>
+    <div class="kpi">
+      <div class="box"><div class="n">8</div><div class="l">หมวด</div></div>
+      <div class="box"><div class="n">34</div><div class="l">✦ rebuild แล้ว</div></div>
+      <div class="box"><div class="n">A</div><div class="l">chain ปิด</div></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <b>สัญลักษณ์:</b>
+    <span class="lg"><span class="dot done"></span> ✦ ตัวใหม่ (rebuild ตาม template)</span>
+    <span class="lg"><span class="dot old"></span> ตัวเก่า (ยังไม่ rebuild)</span>
+    <span class="lg"><span class="dot stub"></span> stub (placeholder · รอ build P2)</span>
+    <span class="lg"><span class="chip-post">⚡ BC Post</span> จุดที่ BC โพสต์จริง</span>
+    <span class="lg">— — กล่องประ = หน้าโมดูลอื่น/ปลายทาง</span>
+  </div>
+
+  <div class="grid-mods">
+
+  <!-- ═══════════ 1) SALES ═══════════ -->
+  <div class="mod">
+    <div class="mod-head"><div class="ico">💼</div><h2>งานขาย (SL)</h2><span class="cnt">7 ✦ / 12</span><span class="phase p1">Phase 1</span></div>
+    <div class="mod-sub">Quote → Order → มัดจำ → บิลขาย → รับชำระ · ลดหนี้ผ่าน SL-CN · ส่งของเป็นงานคลัง (WH-2 เบิก)</div>
+    <div class="flow">
+      <div class="flow-row">
+        <a class="node done" href="sl1-quotation-mockup.html"><div class="nh"><span class="code">SL-1</span><span class="star">✦</span></div><div class="name">ใบเสนอราคา</div><div class="st">Draft → Sent → <b>Accepted</b></div></a>
+        <div class="arr"><span class="l">แปลง</span><span class="a">→</span></div>
+        <a class="node done" href="sl2-reservation-mockup.html"><div class="nh"><span class="code">SL-2</span><span class="star">✦</span></div><div class="name">ใบจอง (จองสต็อก)</div><div class="st">Draft → Reserved → <b>Converted</b></div></a>
+        <div class="arr"><span class="l">มัดจำ</span><span class="a">→</span></div>
+        <a class="node done" href="sl3-deposit-mockup.html"><div class="nh"><span class="code">SL-3</span><span class="star">✦</span></div><div class="name">ใบมัดจำ</div><div class="st">Draft → Confirmed → Applied</div><div class="post">⚡ Prepayment Post</div></a>
+        <div class="arr"><span class="l">ออกบิล</span><span class="a">→</span></div>
+        <a class="node done" href="sl4-invoice-mockup.html"><div class="nh"><span class="code">SL-4</span><span class="star">✦</span></div><div class="name">บิลขาย</div><div class="st">Draft → Confirmed → <b>Posted</b></div><div class="post">⚡ Ship + Invoice</div></a>
+        <div class="arr"><span class="l">ค้างชำระ</span><span class="a">→</span></div>
+        <a class="node done ext" href="fi1-ar-receive-mockup.html"><div class="nh"><span class="code">FI-1</span><span class="star">✦</span></div><div class="name">รับชำระลูกหนี้ (AR)</div><div class="st">Apply → <b>Post</b></div></a>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead in">⛔ ก่อน SL-2/4 →</span>
+        <a class="node done" href="slf1-credit-approval-mockup.html"><div class="nh"><span class="code">SL-F1</span><span class="star">✦</span></div><div class="name">อนุมัติวงเงินขาย</div><div class="st">เกินวงเงิน → CF-2.6 Matrix</div></a>
+        <div class="arr soft"><span class="a">⟳</span></div>
+        <span class="branch-lead">ผ่าน → กลับเข้า flow ขาย</span>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead">↩ ลดหนี้จาก SL-4 →</span>
+        <a class="node done" href="slcn-credit-memo-mockup.html"><div class="nh"><span class="code">SL-CN</span><span class="star">✦</span></div><div class="name">ใบลดหนี้ขาย</div><div class="st">Draft → Approved → <b>Posted</b></div><div class="post">⚡ Apply Posted Inv</div></a>
+        <span class="branch-lead in" style="margin-left:14px">📦 ส่งของ SL-4 →</span>
+        <a class="node ext done" href="wh-q2-issue-queue-mockup.html"><div class="nh"><span class="code">WH-Q2</span><span class="star">✦</span></div><div class="name">คิวเบิก (คลัง)</div><div class="st">Release → หยิบ → Ship</div></a>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead">🗂 แผงรวม</span>
+        <a class="node done" href="slq-sales-queue-mockup.html"><div class="nh"><span class="code">SL-Q</span><span class="star">✦</span></div><div class="name">คิวงานขาย</div><div class="st">Quote/Order/Invoice/มัดจำ/CN</div></a>
+      </div>
+    </div>
+    <div class="note"><b>กฎ:</b> ส่วนลดหักก่อน VAT (VAT Golden Rule) · หักมัดจำหลายใบ · ส่งของ = งานคลัง (WH-2 เบิก · renumber 2026-07-03) · เคลม SV → SL-Q กลุ่ม CN → SL-CN</div>
+  </div>
+
+  <!-- ═══════════ 2) PURCHASE ═══════════ -->
+  <div class="mod">
+    <div class="mod-head"><div class="ico">🛒</div><h2>จัดซื้อ (PO)</h2><span class="cnt">9 ✦ / 9</span><span class="phase p1">Phase 1</span></div>
+    <div class="mod-sub">PR → PO → รับของ (คลัง) → วางบิล → ตั้งหนี้ → จ่าย · บิลฝาก + ส่งเสริมการขาย (PO-2→PO-7) ลด AP</div>
+    <div class="flow">
+      <div class="flow-row">
+        <a class="node done" href="po1-purchase-request-mockup.html"><div class="nh"><span class="code">PO-1</span><span class="star">✦</span></div><div class="name">ใบขอสั่งซื้อ (PR)</div><div class="st">Open → <b>Approved</b></div></a>
+        <div class="arr"><span class="l">Make PO</span><span class="a">→</span></div>
+        <a class="node done" href="po4-purchase-order-mockup.html"><div class="nh"><span class="code">PO-4</span><span class="star">✦</span></div><div class="name">ใบสั่งซื้อ (PO)</div><div class="st">Draft → Approved → Released → <b>Received</b></div></a>
+        <div class="arr"><span class="l">รับของ</span><span class="a">→</span></div>
+        <a class="node done ext" href="wh1-receive-mockup.html"><div class="nh"><span class="code">WH-1</span><span class="star">✦</span></div><div class="name">ใบรับสินค้า (GRN)</div><div class="st">รับครบ → flag</div><div class="post">⚡ Post Receive</div></a>
+        <div class="arr"><span class="l">วางบิล</span><span class="a">→</span></div>
+        <a class="node done" href="po3-vendor-onboarding-mockup.html"><div class="nh"><span class="code">PO-3</span><span class="star">✦</span></div><div class="name">ใบวางบิล Vendor</div><div class="st">เลือกทั้งบิล/รายการ</div></a>
+        <div class="arr"><span class="l">ตั้งหนี้</span><span class="a">→</span></div>
+        <a class="node done" href="po6-ap-invoice-mockup.html"><div class="nh"><span class="code">PO-6</span><span class="star">✦</span></div><div class="name">ใบตั้งหนี้เจ้าหนี้ (AP)</div><div class="st">Open → Approved → <b>Posted</b></div><div class="post">⚡ Post Invoice</div></a>
+        <div class="arr"><span class="l">จ่าย</span><span class="a">→</span></div>
+        <a class="node done ext" href="fi2-ap-payment-mockup.html"><div class="nh"><span class="code">FI-2</span><span class="star">✦</span></div><div class="name">จ่ายชำระเจ้าหนี้</div><div class="st">Open → Approved → <b>Posted</b></div></a>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead">📥 บิลฝาก: PO-4 →</span>
+        <a class="node done" href="po8-deposit-bill-mockup.html"><div class="nh"><span class="code">PO-8</span><span class="star">✦</span></div><div class="name">สั่งซื้อสินค้าฝาก (Deposit)</div><div class="st">2-Way · ทยอยรับตามรอบ</div></a>
+        <div class="arr"><span class="l">เข้าคลัง/ตรง</span><span class="a">→</span></div>
+        <span class="branch-lead">WH-1 หรือ SL-4 (drop-ship)</span>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead">🎯 ส่งเสริมการขาย →</span>
+        <a class="node done" href="po2-rfq-mockup.html"><div class="nh"><span class="code">PO-2</span><span class="star">✦</span></div><div class="name">Vendor Commitment (ข้อตกลง)</div><div class="st">MOU/Sell-in/out/Co-op + Evidence Level (รับปาก→เซ็น)</div></a>
+        <div class="arr"><span class="l">ดึง+ยอดจริง</span><span class="a">→</span></div>
+        <a class="node done" href="po7-rebate-dashboard.html"><div class="nh"><span class="code">PO-7</span><span class="star">✦</span></div><div class="name">ส่งเสริมได้จริง (Realize)</div><div class="st">เป้า vs จริง + confidence</div></a>
+        <div class="arr"><span class="l">ลด AP</span><span class="a">→</span></div>
+        <span class="branch-lead in">PO-6 net</span>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead">↩ หลังบิล →</span>
+        <a class="node done" href="po-cn-credit-note-mockup.html"><div class="nh"><span class="code">PO-CN</span><span class="star">✦</span></div><div class="name">ใบลดหนี้เจ้าหนี้</div><div class="st">Open → Approved → <b>Posted</b> → PO-6</div></a>
+        <span class="branch-lead" style="margin-left:14px">🗂 แผงรวม</span>
+        <a class="node done" href="poq-purchase-queue-mockup.html"><div class="nh"><span class="code">PO-Q</span><span class="star">✦</span></div><div class="name">คิวจัดซื้อ</div><div class="st">PR/PO/รอวางบิล/AP/ลดหนี้</div></a>
+      </div>
+    </div>
+    <div class="note warn"><b>⚠️ Open question (บัญชี):</b> Promotion Flow 02 รับรู้เคลมด้วย <b>Sales Credit Memo (รายได้ส่วนลด)</b> แต่ portal ออกแบบเป็น <b>AP offset ฝั่งซื้อ (PO-6/PO-CN)</b> — ทิศ GL ต่างกัน ต้องชี้ขาดก่อนทำ PM/PO-7 จริง (grill 07-04)</div>
+  </div>
+
+  <!-- ═══════════ 3) WAREHOUSE ═══════════ -->
+  <div class="mod">
+    <div class="mod-head"><div class="ico">📦</div><h2>คลังสินค้า (WH)</h2><span class="cnt">10 ✦ / 12</span><span class="phase p1">Phase 1</span></div>
+    <div class="mod-sub">รับ-เบิก-โอน-นับ · คิว = kitchen rail (รวมตั๋วตามทิศ) · R = ใบขอ · action = ทำจริง · renumber 2026-07-03 (เบิก=WH-2 · โอน=WH-3)</div>
+    <div class="flow">
+      <div class="flow-row">
+        <span class="branch-lead in">📥 รับ ← PO/โอน/คืน</span>
+        <a class="node done" href="wh-q1-receive-queue-mockup.html"><div class="nh"><span class="code">WH-Q1</span><span class="star">✦</span></div><div class="name">คิวรับ (Kitchen Rail)</div><div class="st">รวมตั๋วเข้า → ใบรับ</div></a>
+        <div class="arr"><span class="a">→</span></div>
+        <a class="node done" href="wh1-receive-mockup.html"><div class="nh"><span class="code">WH-1</span><span class="star">✦</span></div><div class="name">ใบรับสินค้า (GRN)</div><div class="st">รับครบ · idempotent</div><div class="post">⚡ Post Receive</div></a>
+        <span class="branch-lead" style="margin-left:14px">📤 จ่าย ← SL/จอง</span>
+        <a class="node done" href="wh-q2-issue-queue-mockup.html"><div class="nh"><span class="code">WH-Q2</span><span class="star">✦</span></div><div class="name">คิวเบิก (Kitchen Rail)</div><div class="st">รวมตั๋วออก → ใบเบิก</div></a>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead">🔵 เบิก (waterfall)</span>
+        <a class="node done" href="wh2r-issue-request-mockup.html"><div class="nh"><span class="code">WH-2R</span><span class="star">✦</span></div><div class="name">ใบขอเบิก</div><div class="st">auto จากขาย · reserve</div></a>
+        <div class="arr"><span class="a">→</span></div>
+        <a class="node done" href="wh2-issue-mockup.html"><div class="nh"><span class="code">WH-2</span><span class="star">✦</span></div><div class="name">ใบเบิกสินค้า</div><div class="st">เบิกจริง + Serial → Post Ship</div><div class="post">⚡ Post Shipment</div></a>
+        <span class="branch-lead" style="margin-left:14px">🟣 โอน</span>
+        <a class="node done" href="wh3r-transfer-request-mockup.html"><div class="nh"><span class="code">WH-3R</span><span class="star">✦</span></div><div class="name">ใบขอโอน</div><div class="st">ปลายทางขอ (pull)</div></a>
+        <div class="arr"><span class="a">→</span></div>
+        <a class="node done" href="wh3-transfer-mockup.html"><div class="nh"><span class="code">WH-3</span><span class="star">✦</span></div><div class="name">ใบโอนสินค้า</div><div class="st">จำนวนได้จริง → In-Transit → WH-1</div><div class="post">⚡ Ship + Receive</div></a>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead">🔢 นับ</span>
+        <a class="node done" href="wh4r-count-prep-mockup.html"><div class="nh"><span class="code">WH-4R</span><span class="star">✦</span></div><div class="name">ใบเตรียมนับ</div><div class="st">ขอบเขต + freeze snapshot</div></a>
+        <div class="arr"><span class="a">→</span></div>
+        <a class="node" href="wh4-count-mockup.html"><div class="nh"><span class="code">WH-4</span><span class="mk">เก่า</span></div><div class="name">ใบนับสินค้า</div><div class="st">นับจริง + Variance + recount</div><div class="post">⚡ Phys. Inv.</div></a>
+        <span class="branch-lead" style="margin-left:14px">📊 รายงาน</span>
+        <a class="node" href="wh-q-dashboard-mockup.html"><div class="nh"><span class="code">WH-Q</span><span class="mk">เก่า</span></div><div class="name">Dashboard</div><div class="st"></div></a>
+        <a class="node" href="wh-r-stock-card-mockup.html"><div class="nh"><span class="code">WH-R</span><span class="mk">เก่า</span></div><div class="name">Stock Card</div><div class="st"></div></a>
+        <a class="node" href="wh-nm-non-move-report-mockup.html"><div class="nh"><span class="code">WH-NM</span><span class="mk">เก่า</span></div><div class="name">ไม่เคลื่อนไหว</div><div class="st"></div></a>
+      </div>
+    </div>
+    <div class="note"><b>waterfall:</b> ขาย+ระบุคลัง → เบิก(คลังจ่าย)→โอน(คลังอื่น)→ซื้อ(PO) ตามลำดับ · กันสต๊อกตอนสร้างใบขอ · <b>kitchen rail:</b> คิว = รวมหลายเอกสารตามทิศ คลิกตั๋ว→ฟอร์มทำจริง</div>
+  </div>
+
+  <!-- ═══════════ 4) FINANCE ═══════════ -->
+  <div class="mod">
+    <div class="mod-head"><div class="ico">💵</div><h2>บัญชี/การเงิน (FI)</h2><span class="cnt">7 ✦ / 13</span><span class="phase p1">Phase 1</span></div>
+    <div class="mod-sub">รับเงินลูกหนี้ (AR) · จ่ายเจ้าหนี้ (AP) + WHT · กระทบยอดธนาคาร · รายงานภาษี — กลไกจริงใน BC</div>
+    <div class="flow">
+      <div class="flow-row">
+        <span class="branch-lead in">รับ: SL-4 →</span>
+        <a class="node done" href="fi1-ar-receive-mockup.html"><div class="nh"><span class="code">FI-1</span><span class="star">✦</span></div><div class="name">รับชำระลูกหนี้ (AR)</div><div class="st">Apply Posted Inv → <b>Post</b></div><div class="post">⚡ Cash Receive</div></a>
+        <div class="arr"><span class="l">apply/QR</span><span class="a">→</span></div>
+        <a class="node done" href="fi1q-apply-queue-mockup.html"><div class="nh"><span class="code">FI-1Q</span><span class="star">✦</span></div><div class="name">Apply Queue (เครดิต)</div><div class="st">apply / คืนเงิน (จาก SL-CN)</div></a>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead in">จ่าย: PO-6 →</span>
+        <a class="node done" href="fi2-ap-payment-mockup.html"><div class="nh"><span class="code">FI-2</span><span class="star">✦</span></div><div class="name">จ่ายชำระเจ้าหนี้ (AP)</div><div class="st">apply AP หลายใบ → <b>Posted</b></div><div class="post">⚡ Payment</div></a>
+        <div class="arr"><span class="l">หัก WHT</span><span class="a">→</span></div>
+        <a class="node done" href="fi12-wht-mockup.html"><div class="nh"><span class="code">FI-12</span><span class="star">✦</span></div><div class="name">WHT (ภ.ง.ด.3/53)</div><div class="st">รวม pending → Release → พิมพ์ (จุดเดียว)</div></a>
+        <div class="arr"><span class="l">คิวรวม</span><span class="a">→</span></div>
+        <a class="node done" href="fiq-finance-queue-mockup.html"><div class="nh"><span class="code">FI-Q</span><span class="star">✦</span></div><div class="name">คิวงานการเงิน (รวม AR+AP)</div><div class="st">AR/AP/Tax/WHT/JV/Close</div></a>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead">🏦 อื่นๆ</span>
+        <a class="node" href="fi3-bank-reconciliation-mockup.html"><div class="nh"><span class="code">FI-3</span><span class="mk">เก่า</span></div><div class="name">กระทบยอดธนาคาร</div><div class="st">ทีละ Bank Code</div></a>
+        <a class="node" href="fi7-vat-report-mockup.html"><div class="nh"><span class="code">FI-7</span><span class="mk">เก่า</span></div><div class="name">รายงานภาษี</div><div class="st">Get VAT → Release</div></a>
+        <a class="node" href="fi4-expense-wht-mockup.html"><div class="nh"><span class="code">FI-4</span><span class="mk">เก่า</span></div><div class="name">ค่าใช้จ่าย + WHT</div><div class="st">สร้าง WHT record (ไม่ออก cert)</div></a>
+        <a class="node" href="fi5-ar-audit-mockup.html"><div class="nh"><span class="code">FI-5</span><span class="mk">เก่า</span></div><div class="name">ตรวจสอบ AR</div><div class="st">candidate archive</div></a>
+      </div>
+    </div>
+    <div class="note">FI-1/FI-2 ตาม PDF เป็นงานใน BC — portal ยก UI (Apply/Post ตรง) · 🔒 WHT ออกหนังสือที่ FI-12 จุดเดียว (FI-2/FI-4 สร้าง pending เท่านั้น) · FI-Q รวม AR+AP (เดิมแยก 2 คิว)</div>
+  </div>
+
+  <!-- ═══════════ 5) SERVICE ═══════════ -->
+  <div class="mod">
+    <div class="mod-head"><div class="ico">🔧</div><h2>บริการ (SV)</h2><span class="cnt">1 ✦ / 12</span><span class="phase p2">Phase 2</span></div>
+    <div class="mod-sub">รับงาน → มอบหมาย → เบิก/สั่งอะไหล่ → ปิดงาน/บิล → ส่ง/ติดตั้ง · เคลม Vendor → PO-CN · grill root-canonical 07-03 (ไม่รื้อใหม่ · backlog B1-B14)</div>
+    <div class="flow">
+      <div class="flow-row">
+        <a class="node" href="sv-q-service-queue-mockup.html"><div class="nh"><span class="code">SV-Q</span><span class="mk">เก่า</span></div><div class="name">คิวงานซ่อม</div><div class="st">dashboard ช่าง → CM-1</div></a>
+        <div class="arr"><span class="a">→</span></div>
+        <a class="node done" href="sv1-service-intake-mockup.html"><div class="nh"><span class="code">SV-1</span><span class="star">✦</span></div><div class="name">ใบรับงานซ่อม</div><div class="st">Doc Type + Warranty In/Out/Release + claim reveal (B1)</div></a>
+        <div class="arr"><span class="l">มอบหมาย</span><span class="a">→</span></div>
+        <a class="node" href="sv2-service-assignment-mockup.html"><div class="nh"><span class="code">SV-2</span><span class="mk">เก่า</span></div><div class="name">มอบหมายช่าง</div><div class="st">Confirm Assignment</div></a>
+        <div class="arr"><span class="l">job card</span><span class="a">→</span></div>
+        <a class="node" href="sv5-job-card-mockup.html"><div class="nh"><span class="code">SV-5</span><span class="mk">เก่า</span></div><div class="name">Job Card ช่าง</div><div class="st">Ready</div></a>
+        <div class="arr"><span class="l">ปิดงาน</span><span class="a">→</span></div>
+        <a class="node" href="sv4-service-close-mockup.html"><div class="nh"><span class="code">SV-4</span><span class="mk">เก่า</span></div><div class="name">ปิดงาน/QA + บิล</div><div class="st">payer รายบรรทัด → ARI/SL-4</div></a>
+        <div class="arr"><span class="l">ส่ง</span><span class="a">→</span></div>
+        <a class="node" href="sv7-service-delivery-mockup.html"><div class="nh"><span class="code">SV-7</span><span class="mk">เก่า</span></div><div class="name">ส่งงานลูกค้า</div><div class="st">+ SV-6 ติดตั้ง</div></a>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead">🔩 อะไหล่</span>
+        <a class="node" href="sv3-spare-part-issue-mockup.html"><div class="nh"><span class="code">SV-3</span><span class="mk">เก่า</span></div><div class="name">เบิกอะไหล่ (สต็อก)</div><div class="st"></div></a>
+        <a class="node" href="sv-order-parts-request-mockup.html"><div class="nh"><span class="code">SV-O</span><span class="mk">เก่า</span></div><div class="name">สั่งอะไหล่ (นอกประกัน)</div><div class="st">spawn PO</div></a>
+        <span class="branch-lead" style="margin-left:14px">↩ เคลม</span>
+        <a class="node" href="clm-vendor-claim-mockup.html"><div class="nh"><span class="code">CLM</span><span class="mk">เก่า</span></div><div class="name">ใบเคลม Vendor</div><div class="st">→ PO-CN (S1-S4)</div></a>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead">📋 ต้นทาง/แผง</span>
+        <a class="node" href="sir-site-inspection-mockup.html"><div class="nh"><span class="code">SIR</span><span class="mk">เก่า</span></div><div class="name">ประเมินหน้างาน</div><div class="st"></div></a>
+        <a class="node" href="sqt-service-quotation-mockup.html"><div class="nh"><span class="code">SQT</span><span class="mk">เก่า</span></div><div class="name">เสนอราคาบริการ</div><div class="st"></div></a>
+      </div>
+    </div>
+    <div class="note"><b>flow-reconciled (B1):</b> Doc Type = Repair/Installation + งานย่อย(ซ่อม/ตรวจเช็ค/ล้าง) · เคลม = route เมื่อ In-Warranty (Bill to Vendor) · <b>เปลี่ยนเครื่องใหม่</b> = เบิก WH-2 + เครื่องเดิม→CLM/PO-CN · ไม่ออก SL-CN · ประกัน per-component · backlog B2-B14 (A-E · payer · parts return · MA/mobile)</div>
+  </div>
+
+  <!-- ═══════════ 6) PROMOTION ═══════════ -->
+  <div class="mod">
+    <div class="mod-head"><div class="ico">🎁</div><h2>โปรโมชั่น (PM)</h2><span class="cnt">0 ✦ / 3 · stub</span><span class="phase p2">Phase 2</span></div>
+    <div class="mod-sub">ตั้ง Price List → stamp promo by line ทุกบิลขาย → รวบ accrual → เคลม vendor · grill 07-04 (naming locked · parked P2)</div>
+    <div class="flow">
+      <div class="flow-row">
+        <a class="node stub" href="pm1-price-list-mockup.html"><div class="nh"><span class="code">PM-1</span><span class="mk stub">stub</span></div><div class="name">รายการราคา (Price List)</div><div class="st">Draft → Active → sync BC (Flow 01)</div></a>
+        <div class="arr"><span class="l">โปรฯ บนราคา</span><span class="a">→</span></div>
+        <a class="node stub" href="pm2-promotion-mockup.html"><div class="nh"><span class="code">PM-2</span><span class="mk stub">stub</span></div><div class="name">โปรโมชั่น/แคมเปญ</div><div class="st">5 types (Flow 02 · rebuild sl6)</div></a>
+        <div class="arr"><span class="l">stamp/line</span><span class="a">→</span></div>
+        <a class="node ext done" href="sl4-invoice-mockup.html"><div class="nh"><span class="code">SL-4</span><span class="star">✦</span></div><div class="name">บิลขาย (Promo Code)</div><div class="st">by line</div></a>
+        <div class="arr"><span class="l">รวบ+เคลม</span><span class="a">→</span></div>
+        <a class="node ext done" href="po7-rebate-dashboard.html"><div class="nh"><span class="code">PO-7</span><span class="star">✦</span></div><div class="name">Accrual/เคลม (ฝั่งซื้อ)</div><div class="st">→ PO-6 net / PO-CN</div></a>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead">🧮 เครื่องมือ</span>
+        <a class="node" href="pm5-vat-simulator-mockup.html"><div class="nh"><span class="code">PM-5</span><span class="mk">เก่า</span></div><div class="name">VAT Simulator</div><div class="st">จำลอง VAT/ส่วนลด · Golden Rule</div></a>
+        <a class="node ext" href="sc2-item-search-mockup.html"><div class="nh"><span class="code">SC-9</span><span class="mk">เก่า</span></div><div class="name">PromoPrice (shared)</div><div class="st">อ่านราคา+โปรฯ ทุกหน้าขาย</div></a>
+      </div>
+    </div>
+    <div class="note"><b>grill 07-04:</b> "โปรโมชั่น" ในโฟลว์ = vendor-funded loop → **loop เคลม = PO-7 + SC-9 (ทำแล้ว)** · เหลือ gap 2 หน้า setup (PM-1 ราคา + PM-2 โปรฯ · stub) · Price List อยู่ PM (ไม่ใช่ MD) · parked P2</div>
+  </div>
+
+  <!-- ═══════════ 7) MASTER DATA ═══════════ -->
+  <div class="mod">
+    <div class="mod-head"><div class="ico">📚</div><h2>ข้อมูลหลัก (MD)</h2><span class="cnt">0 ✦ / 6</span><span class="phase p1">Phase 1</span></div>
+    <div class="mod-sub">Pattern เดียว: สร้างแบบ Block → กรอกครบ → ปลด Block = Active</div>
+    <div class="flow">
+      <div class="flow-row">
+        <a class="node" href="md1-item-master-mockup-v3.html"><div class="nh"><span class="code">MD-1</span><span class="mk">เก่า</span></div><div class="name">ทะเบียนสินค้า</div><div class="st">Block → กรอก → <b>Active</b></div></a>
+        <a class="node" href="md2-customer-master-mockup-v3.html"><div class="nh"><span class="code">MD-2</span><span class="mk">เก่า</span></div><div class="name">ทะเบียนลูกค้า</div><div class="st">+ Credit Limit</div></a>
+        <a class="node" href="md3-vendor-master-mockup-v3.html"><div class="nh"><span class="code">MD-3</span><span class="mk">เก่า</span></div><div class="name">ทะเบียน Vendor</div><div class="st">เช็ค VAT ซ้ำ</div></a>
+        <a class="node" href="md4-employee-master-mockup-v3.html"><div class="nh"><span class="code">MD-4</span><span class="mk">เก่า</span></div><div class="name">ทะเบียนพนักงาน</div><div class="st"></div></a>
+        <a class="node" href="md5-branch-warehouse-mockup-v3.html"><div class="nh"><span class="code">MD-5</span><span class="mk">เก่า</span></div><div class="name">สาขา & คลัง</div><div class="st">ไม่มี Block</div></a>
+        <a class="node stub" href="md6-service-item-mockup.html"><div class="nh"><span class="code">MD-6</span><span class="mk stub">stub</span></div><div class="name">ทะเบียนเครื่อง (Service Item)</div><div class="st">serial + warranty per-comp · ใช้ SV-1</div></a>
+      </div>
+    </div>
+    <div class="note">Customer/Vendor/Item/Employee = Block จนกว่าข้อมูลครบ · MD-6 เครื่องลูกค้า (คู่ SV · stub) · Sales Price List → PM-1 (ไม่ใช่ MD)</div>
+  </div>
+
+  <!-- ═══════════ 8) CONFIG + ศูนย์กลาง + IA ═══════════ -->
+  <div class="mod">
+    <div class="mod-head"><div class="ico">⚙️</div><h2>ตั้งค่า + ศูนย์กลางระบบ (CF / IA)</h2><span class="cnt">4 ✦ / 12</span><span class="phase p2">รองรับ</span></div>
+    <div class="mod-sub">RBAC · Config Hub · Approval Matrix · Doc Template · ศูนย์อนุมัติ/รายงาน · BC Sync (บาง CF ใช้ BC ตรง = cut-to-BC)</div>
+    <div class="flow">
+      <div class="flow-row">
+        <span class="branch-lead">⚙️ ตั้งค่า (CF)</span>
+        <a class="node done" href="cf1-rbac-permission-mockup.html"><div class="nh"><span class="code">CF-1</span><span class="star">✦</span></div><div class="name">RBAC / สิทธิ์</div><div class="st">Role → Permission</div></a>
+        <a class="node" href="cf2-config-hub-mockup.html"><div class="nh"><span class="code">CF-2</span><span class="mk">เก่า</span></div><div class="name">Config Hub</div><div class="st">8 card</div></a>
+        <a class="node done" href="cf2-6-approval-matrix-mockup.html"><div class="nh"><span class="code">CF-2.6</span><span class="star">✦</span></div><div class="name">Approval Matrix</div><div class="st">12 WF · Maker≠Checker (เดิม CF-7)</div></a>
+        <a class="node done" href="cf2-7-doc-template-mockup.html"><div class="nh"><span class="code">CF-2.7</span><span class="star">✦</span></div><div class="name">Doc Template</div><div class="st">22 doc · live preview</div></a>
+        <a class="node done" href="cf2-5-tech-template-mockup.html"><div class="nh"><span class="code">CF-2.5</span><span class="star">✦</span></div><div class="name">Template ช่าง</div><div class="st">Portal owns</div></a>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead in">📋 cut-to-BC (reference)</span>
+        <a class="node" href="cf2-1-tax-setup-mockup.html"><div class="nh"><span class="code">CF-2.1</span><span class="mk">เก่า</span></div><div class="name">Tax Setup</div><div class="st">ใช้ BC ตรง</div></a>
+        <a class="node" href="cf2-2-number-series-mockup.html"><div class="nh"><span class="code">CF-2.2</span><span class="mk">เก่า</span></div><div class="name">Number Series</div><div class="st">ใช้ BC ตรง</div></a>
+        <a class="node" href="cf2-9-general-parameter-mockup.html"><div class="nh"><span class="code">CF-2.9</span><span class="mk">เก่า</span></div><div class="name">General Parameter</div><div class="st">ใช้ BC ตรง</div></a>
+        <a class="node stub" href="cf3-payment-hub-mockup.html"><div class="nh"><span class="code">CF-3</span><span class="mk stub">stub</span></div><div class="name">Payment Hub</div><div class="st">Terms/Methods/Shipment</div></a>
+        <a class="node stub" href="cf5-bank-master-mockup.html"><div class="nh"><span class="code">CF-5</span><span class="mk stub">stub</span></div><div class="name">Bank Master</div><div class="st">ทะเบียนธนาคาร</div></a>
+      </div>
+      <div class="flow-row">
+        <span class="branch-lead">🚦 ศูนย์กลาง + IA</span>
+        <a class="node" href="ap1-approval-center-mockup.html"><div class="nh"><span class="code">AP-1</span><span class="mk">เก่า</span></div><div class="name">ศูนย์อนุมัติกลาง</div><div class="st">รวมงานรออนุมัติ</div></a>
+        <a class="node" href="ex1-executive-dashboard-mockup.html"><div class="nh"><span class="code">EX-1</span><span class="mk">เก่า</span></div><div class="name">Dashboard ผู้บริหาร</div><div class="st">P2/P3</div></a>
+        <a class="node" href="rp1-report-center-mockup.html"><div class="nh"><span class="code">RP-1</span><span class="mk">เก่า</span></div><div class="name">Report Center</div><div class="st">รายงานรวม</div></a>
+        <a class="node" href="cm1-commission-mockup.html"><div class="nh"><span class="code">CM-1</span><span class="mk">เก่า</span></div><div class="name">Commission</div><div class="st">ค่าคอม + feed รายงานช่าง SV</div></a>
+        <a class="node" href="iaq-bc-sync-monitor-mockup.html"><div class="nh"><span class="code">IA-Q</span><span class="mk">เก่า</span></div><div class="name">BC Sync Monitor</div><div class="st">P2/P3</div></a>
+      </div>
+    </div>
+    <div class="note"><b>BC scope (2026-04-16):</b> cut-to-BC (ใช้ BC ตรง · mockup = reference): CF-2.1 Tax · CF-2.2 Number · CF-2.9 General · CF-2.3/2.4 · Portal owns: CF-1 · CF-2.5/2.6/2.7 · CF-3/5 = stub รอ build</div>
+  </div>
+
+  </div><!-- /grid-mods -->
+
+  <div style="text-align:center;font-size:11px;color:#94A3B8;margin-top:24px">
+    regen 2026-07-04 · ต้นฉบับ Design Ai · คู่กับ <b>.agents/flow-workflow-map.html</b> (cross-module spine) · maintain ตาม CLAUDE.md ทุกครั้งเพิ่ม/แก้/rebuild หน้า
+  </div>
+
+</div>
+<script src="swt-link.js" defer></script>
+<script src="swt-sidebar.js"></script>
+</body>
+</html>
