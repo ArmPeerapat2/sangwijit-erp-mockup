@@ -27,7 +27,13 @@
 
 ---
 
-## 1. หลักการ job type (grill 2026-07-01)
+## 1. หลักการ job type (grill 2026-07-01 · 🔄 reconciled กับ Flow 2026-07-04)
+
+> **🔄 Flow-reconciled (B1 build 2026-07-04):** Flow Design/Service 01+06 = **Document Type: Repair/Installation (2)** + **Warranty Status: In/Out/Release** (จาก Serial→itemLedger BC) · **เคลม = route เมื่อ In-Warranty ไม่ใช่ doc type แยก**
+> **Hybrid ที่ build ใน sv1:** Doc Type 2 (BC) + **งานย่อย ซ่อม/ตรวจเช็ค/ล้าง** (ใต้ Repair · แทน 5-selector เดิม) + **claim reveal** (In-Warranty → Bill to Vendor · Resolution: 🔧 ซ่อมในประกัน / ♻️ เปลี่ยนเครื่องใหม่)
+> **♻️ เปลี่ยนเครื่องใหม่ (replace · S2):** เบิกเครื่องใหม่ WH-2 (ลูกค้าไม่จ่าย · warranty) · เครื่องเดิม → รับคืน/ไม่รับ → CLM→PO-CN (เงิน vendor) · **ไม่ออก SL-CN** — ตรง decision "② เปลี่ยนตัวใหม่"
+> **B1 = ✅ done** (sv1 intake: Doc Type + งานย่อย + Warranty In/Out/Release + claim reveal + replace path) · เดิม 5 job types selector ยุบเป็นโครงนี้
+
 
 - งานเคลม (CL-1 เดิม) **ไม่เป็น module แยก** — เป็น **job type ใน SV-1 Service Intake**
 - Service form = **skeleton ร่วม** · แต่ละ job type toggle **extension ของตัวเอง**

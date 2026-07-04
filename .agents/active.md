@@ -47,6 +47,8 @@ project_type: "frontend-mockup (HTML + docs)"
 - **Q4** flow map **เพิ่มสาย 7 Service Ops** (SV-Q→SV-1→SV-2→SV-3→SV-5→SV-4→SV-7 · branch เคลม①→CLM/PO-CN · เคลม②→ARI/SL-4 · rule per-component/3 รายได้/gate คืนอะไหล่) · header 6→7 สาย · PGMAP เพิ่มรหัส SV กดได้
 - **DONE ทั้งชุด:** sidebar SV group ใช้งานได้ · flow map สาย 7 + callout SV backlog · spec B12-14 · เหลือ orphan CL-1/PM-1/CF-3/CF-5/MD-6 รอ user ตัดสิน (จะเปิดตรวจ archived ก่อน)
 
+**🔧 SV backlog B1 ✅ (2026-07-04 · flow-reconciled):** rebuild sv1 intake ตาม Flow Design/Service 01+06 — Step 0 Gate จับ discrepancy (flow: Doc Type Repair/Installation + Warranty In/Out/Release · เคลม=route ≠ doc type · vs spec 5 job types) → user เลือก **hybrid**: Doc Type 2 + งานย่อย(ซ่อม/ตรวจเช็ค/ล้าง) + **claim reveal เมื่อ In-Warranty** (Bill to Vendor · Resolution ซ่อม/♻️เปลี่ยนเครื่องใหม่) · **replace path:** เบิกใหม่ WH-2 + เครื่องเดิม→CLM/PO-CN · ไม่ออก SL-CN · spec §1 reconciled · เหลือ B2-B14
+
 **✅ Orphan 6 ปิดครบ (2026-07-04 · sidebar = 0 dead link):** CL-1/CL1F → ลบเมนู (claim=job type) · PM-1/PM-2/CF-3/CF-5/MD-6 → สร้าง stub placeholder (pm1-price-list · pm2-promotion · cf3-payment-hub · cf5-bank-master · md6-service-item) + repoint sidebar + เคลียร์ DONE[] bc365 · stub = กัน dead link · build เต็มตอน P2/TBD
 
 **⏸️ Grill ฝั่งขาย PM — parked P2 (2026-07-04):** grill ครั้งแรกที่เจาะ PM (เดิม parked P2 จาก SL-CN grill Q10) · **user เลือก C: ปิด grill · P2-defer ยังยืน · ไม่ build ตอนนี้**
