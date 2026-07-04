@@ -277,7 +277,7 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
   </div>
 
   <!-- Line items -->
-  <div style="margin-top:0;font-size:13px;font-weight:600;color:#374151;margin-bottom:8px">รายการค่าบริการ — <span style="color:#C55A11">เปลี่ยน "ประเภท" (ใน/นอก Comp) → "เก็บจาก" พลิก payer เอง + ยอด 2 ARI คำนวณสด</span></div>
+  <div style="margin-top:0;font-size:13px;font-weight:600;color:#374151;margin-bottom:8px">รายการค่าบริการ — <span style="color:#C55A11">เปลี่ยน "ประเภท" (ใน/นอก Comp) → "เก็บจาก" พลิก payer เอง + ยอด 2 ARI คำนวณสด</span> · <span style="color:#92400E;font-weight:500">⚠️ ระบบเทียบประกันรายชิ้น (SV-1.3/B3) — ชิ้นในประกันแต่ตั้งเก็บลูกค้า = flag เตือน (ปิดได้)</span></div>
   <table>
     <thead>
       <tr>
@@ -292,7 +292,7 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
       </tr>
     </thead>
     <tbody id="billRows">
-      <tr data-amt="8920">
+      <tr data-amt="8920" data-b3="in">
         <td style="font-family:monospace">DAI-COMP-2HP-01</td>
         <td>Compressor 2 HP (เปลี่ยนใหม่)</td>
         <td class="num">1</td><td>เครื่อง</td><td class="num">8,920.00</td>
@@ -308,7 +308,7 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
         <td class="num"><strong>680.00</strong></td>
         <td class="bill-pay"></td>
       </tr>
-      <tr data-amt="1500">
+      <tr data-amt="1500" data-b3="in">
         <td style="font-family:monospace">LABOR-COMP</td>
         <td>ค่าแรงเปลี่ยน Compressor (ใน 2 ปีแรก)</td>
         <td class="num">1</td><td>งาน</td><td class="num">1,500.00</td>
@@ -593,7 +593,10 @@ function svRebill(){
   document.querySelectorAll('#billRows tr').forEach(function(r){
     var t=r.querySelector('.bill-type').value, amt=parseFloat(r.dataset.amt), pc=r.querySelector('.bill-pay');
     if(t==='in'){ pc.innerHTML='<span class="chip chip-blue">🏢 Vendor</span>'; vSub+=amt; }
-    else { pc.innerHTML='<span class="chip chip-gray">👤 ลูกค้า</span>'; cSub+=amt; }
+    else { pc.innerHTML='<span class="chip chip-gray">👤 ลูกค้า</span>'; cSub+=amt;
+      // B3 mismatch soft-flag: ชิ้นในประกัน (per-component) แต่บิลลูกค้า → เตือน (Q4 · ปิดได้)
+      if(r.dataset.b3==='in'){ pc.innerHTML += ' <span title="ขัดประกันรายชิ้น (SV-1.3/B3): ชิ้นนี้ในประกัน แต่ตั้งเก็บลูกค้า — ตรวจสอบ" style="cursor:help;color:#C55A11;font-weight:700">⚠️</span>'; }
+    }
   });
   svSet('vSub',vSub); svSet('vVat',vSub*0.07); svSet('vTot',vSub*1.07,true);
   svSet('cSub',cSub); svSet('cVat',cSub*0.07); svSet('cTot',cSub*1.07,true);

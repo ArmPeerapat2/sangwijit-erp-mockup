@@ -279,7 +279,7 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
   </div>
 
   <div class="alert alert-info" style="margin:14px 0 0">
-    ℹ️ <div><strong>Warranty จาก Serial → itemLedger (BC):</strong> ระบบดึงวันซื้อ/วันหมดประกันจาก Serial · พนักงานยืนยัน + เลือก Warranty Status ด้านล่าง (per-component detail = B3 ทีหลัง)</div>
+    ℹ️ <div><strong>Warranty จาก Serial → itemLedger (BC):</strong> ระบบดึงวันซื้อจาก Serial · พนักงานยืนยัน + เลือก Warranty Status ด้านล่าง · <strong>ประกันรายชิ้น</strong> กรอกจากใบประกันในตาราง 🔩 ด้านล่าง</div>
   </div>
 
   <!-- B2: Resolve Serial → เมนู A-E (spec §2) -->
@@ -357,6 +357,40 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
     <div class="field"><label>การตรวจสอบเบื้องต้น (พนักงานรับเรื่อง)</label>
       <textarea>เปิดลองเย็นเล็กน้อยแต่ไม่เย็นพอ · น่าจะเป็น Compressor หรือน้ำยารั่ว · ต้องส่งช่างตรวจที่บ้าน</textarea>
     </div>
+  </div>
+
+  <!-- B3: per-component warranty (manual · reference) -->
+  <div style="margin-top:16px;border-top:1px dashed #E5E7EB;padding-top:14px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+      <span style="font-size:13px;font-weight:600;color:#374151">🔩 ประกันรายชิ้น (per-component)</span>
+      <span style="font-size:11px;color:#6B7280">กรอกจากใบประกัน · เฉพาะชิ้นที่เกี่ยวงาน · <b>reference</b> ตอนตั้งบิล SV-4</span>
+      <div style="flex:1"></div>
+      <button class="btn btn-secondary" style="padding:4px 10px;font-size:12px" onclick="svAddComp()">➕ เพิ่มชิ้น</button>
+    </div>
+    <div style="font-size:11px;color:#2563EB;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:6px 10px;margin-bottom:8px">💡 แนะนำจาก model <b>Daikin FTKM24</b>: คอมเพรสเซอร์ 5 ปี · อะไหล่ทั่วไป 1 ปี (แก้ได้)</div>
+    <table>
+      <thead><tr>
+        <th>Component</th>
+        <th style="width:120px">ประกันถึง</th>
+        <th style="width:150px">สถานะ</th>
+        <th style="width:160px">หมายเหตุ</th>
+      </tr></thead>
+      <tbody id="compRows">
+        <tr>
+          <td><input value="คอมเพรสเซอร์ (Compressor)" style="width:100%;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12.5px;font-family:inherit"></td>
+          <td><input value="10/06/29" style="width:100%;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12.5px;font-family:inherit"></td>
+          <td><select style="width:100%;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12.5px;font-family:inherit"><option>🟢 ในประกัน</option><option>🔴 หมดประกัน</option></select></td>
+          <td><input value="เหลือ 3 ปี" style="width:100%;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12.5px;font-family:inherit"></td>
+        </tr>
+        <tr>
+          <td><input value="แผงวงจร (PCB)" style="width:100%;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12.5px;font-family:inherit"></td>
+          <td><input value="10/06/25" style="width:100%;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12.5px;font-family:inherit"></td>
+          <td><select style="width:100%;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12.5px;font-family:inherit"><option selected>🔴 หมดประกัน</option><option>🟢 ในประกัน</option></select></td>
+          <td><input value="หมดปีที่แล้ว" style="width:100%;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12.5px;font-family:inherit"></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:8px;font-size:11px;color:#92400E;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:6px 10px;display:flex;align-items:center;gap:8px">📎 <b>แนบสแกนใบประกัน</b> (manual ต้องมีหลักฐาน = audit trail) <button class="btn btn-secondary" style="padding:2px 8px;font-size:11px">📷 แนบไฟล์</button></div>
   </div>
 
   <div class="form-grid-4" style="margin-top:14px">
@@ -527,6 +561,16 @@ function svRes(x){
       document.querySelectorAll('input[name="warranty"]').forEach(function(i){ i.closest('.warranty-card').classList.toggle('selected', i.value===w); }); } }
 }
 function svResolve(){ alert('ตรวจ Serial ใหม่ (mock)\nระบบ query itemLedger (BC) → resolve เมนู A-E อัตโนมัติ · พนักงาน override เลือกเองได้'); }
+// B3: เพิ่มแถวประกันรายชิ้น (manual · scope เฉพาะชิ้นเกี่ยวงาน + เพิ่มได้)
+function svAddComp(){
+  var inp='width:100%;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12.5px;font-family:inherit';
+  var tr=document.createElement('tr');
+  tr.innerHTML='<td><input placeholder="ชื่อชิ้นส่วน..." style="'+inp+'"></td>'+
+    '<td><input placeholder="dd/mm/yy" style="'+inp+'"></td>'+
+    '<td><select style="'+inp+'"><option>🟢 ในประกัน</option><option>🔴 หมดประกัน</option></select></td>'+
+    '<td><input placeholder="หมายเหตุ..." style="'+inp+'"></td>';
+  document.getElementById('compRows').appendChild(tr);
+}
 </script>
 <script src="swt-link.js"></script>
 <script src="swt-sidebar.js"></script>
