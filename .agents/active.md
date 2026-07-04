@@ -67,6 +67,8 @@ project_type: "frontend-mockup (HTML + docs)"
 
 **🏷️ PM โปรโมชั่นฝั่งขาย ✅ (2026-07-04 · grill + build จาก stub):** เดิม parked P2 → user สั่งลุย · spec PM ละเอียดครบ (conflict = Priority+Stack≤2 RESOLVED) · **PM-1 รายการราคา** (`pm1-price-list`): ราคาก่อน VAT + qty bracket + กลุ่มลูกค้า + ต้นทุนซ่อน · Draft→อนุมัติ→Posted→sync BC · **PM-2 โปรโมชั่น** (`pm2-promotion`): grill Q1 เลือกแบบ→ช่องเปลี่ยนตาม (5 แบบ ลด%/ลดเงิน/แถม/ชุด/ซื้อXแถมY · selType) · Q2 ไม่ใส่เช็คกำไร/ชนกันสด (defer P3 · rule stack≤2 เขียน note ไว้) · sidebar อัปเดต (ตัด "stub P2") · เหลือ PM-Q/PM-3/PM-4/PM-5 = P3
 
+**🧮 PM-5 จำลองราคาขาย ✅ (2026-07-04 · grill Q1-Q3):** `pm5-price-simulator` (หน้าใหม่ · แยกจาก `pm5-vat-simulator` เดิมที่สอน Golden Rule) · **Q1** 2 โหมดสลับได้ (forward สินค้า→ราคา/กำไร · reverse กำไรเป้า→ราคา) · **Q2** ระบบเลือกโปรดีสุด 2 ชั้น (priority) + ติ๊กแก้ได้ · เกิน 2 = เตือนต้องอนุมัติ · **Q3** แค่ดู/พิมพ์ ไม่ save · JS: calc() ลดทีละชั้นก่อน VAT + margin สี (≥10 เขียว/<10 เหลือง/<0 แดง) + คอมประมาณ · calcR() reverse · sidebar เพิ่ม PM-5(price) + PM5V(vat) · **PM เหลือ P3: PM-Q · PM-3 · PM-4**
+
 **⏭️ NEXT (resume จุดนี้):** (a) ~~Q-sweep~~ ✅ **ตรวจแล้วไม่ต้องทำ (2026-07-04):** rail ทุกหน้าโชว์ ref ต้นทางอยู่แล้ว (fiq→PO/บิล · sv-q→SIR/SQT/CLM · poq→PR · fi1q→INV) · wh-q-dashboard=stock ไม่ใช่ rail · SL-Q(B6) คือหน้าเดียวที่ขาดจริง เติมแล้ว · (b) SV backlog เหลือ: **B4b** goodwill payer (โยง B4+B6) · **B7** WH-SVC 6 bins · **B8** CM-1 เรทช่าง · **B9** checklist tmpl · **B10** SLA config · **B12** MA contract · **B13** tech-mobile · **B14** posted-docs · (c) sweep density โมดูลอื่น (PO/WH/FI/MD ค่าเดิม 24/20/16) · **⚠️ ~25 commits ยังไม่ push** (local focus ตามสั่ง)
 
 **🎨 SV design-consistency sweep ✅ (2026-07-04 · ยึด SL-4):** ปรับ SV ทั้งกลุ่มให้ตรงกัน —

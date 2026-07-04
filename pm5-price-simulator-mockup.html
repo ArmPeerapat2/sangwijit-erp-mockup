@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PM-5 · จำลองราคาขาย (Price Simulator) — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
+.app-container{display:flex;min-height:100vh}
+.main-content{flex:1;margin-left:240px;padding:0;background:#F8FAFC}
+.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.breadcrumb{font-size:13px;color:#6B7280}.breadcrumb strong{color:#111827}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.search-box{width:280px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;background:#F9FAFB}
+.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.content-wrapper{padding:16px 24px}
+.btn{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.btn-primary{background:#2563EB;color:#fff}.btn-secondary{background:#fff;color:#374151;border:1px solid #D1D5DB}.btn-ghost{background:transparent;color:#6B7280;border:1px solid transparent}
+.section-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.section-title{font-size:15px;font-weight:600;color:#111827;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.section-title .tag{font-size:11px;background:#EFF6FF;color:#1E40AF;padding:2px 8px;border-radius:4px;font-weight:600;margin-left:auto}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;color:#6B7280;font-weight:500}
+.field input,.field select{padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;font-family:inherit;background:#fff;outline:none;width:100%}
+.field input:focus,.field select:focus{border-color:#2563EB}
+.mode-tog{display:inline-flex;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;background:#fff;margin-bottom:12px}
+.mode-tog button{border:none;background:#fff;padding:9px 18px;font-size:13px;font-weight:600;color:#6B7280;cursor:pointer;font-family:inherit;border-right:1px solid #E5E7EB}
+.mode-tog button:last-child{border-right:none}
+.mode-tog button.on{background:#2563EB;color:#fff}
+.grid2{display:grid;grid-template-columns:1.1fr 1fr;gap:12px;align-items:start}
+.promo-item{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid #E5E7EB;border-radius:8px;margin-bottom:7px;cursor:pointer;font-size:12.5px}
+.promo-item input{width:17px;height:17px;accent-color:#2563EB}
+.promo-item .pri{font-size:10.5px;color:#6B7280;background:#F3F4F6;padding:1px 7px;border-radius:10px;font-weight:600;margin-left:auto}
+.calc-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px dashed #F3F4F6}
+.calc-row .l{color:#6B7280}.calc-row .v{font-variant-numeric:tabular-nums;font-weight:600}
+.calc-row.op{font-family:monospace;font-size:11px;color:#9CA3AF;border:none;padding:2px 0}
+.calc-row.tot{border-top:2px solid #111827;border-bottom:none;margin-top:6px;padding-top:10px;font-weight:700;font-size:16px}
+.mbadge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:12px;font-size:13px;font-weight:700}
+.m-ok{background:#D1FAE5;color:#065F46}.m-warn{background:#FEF3C7;color:#92400E}.m-bad{background:#FEE2E2;color:#991B1B}
+.alert{padding:10px 14px;border-radius:8px;font-size:12.5px;margin-top:10px;display:none;align-items:flex-start;gap:8px;line-height:1.5}
+.alert.show{display:flex}
+.alert-warn{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
+.kpi{background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:10px 14px;text-align:center}
+.kpi .l{font-size:11px;color:#6B7280}.kpi .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;margin-top:2px}
+.footer-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid #E5E7EB;padding:14px 24px;margin:16px -24px -24px;display:flex;gap:8px;align-items:center;box-shadow:0 -4px 12px rgba(0,0,0,0.05)}
+.footer-actions .spacer{flex:1}.footer-actions .hint{font-size:12px;color:#6B7280}
+</style>
+</head>
+<body>
+<div class="app-container"><div class="main-content"><div class="topbar">
+<div class="breadcrumb">หน้าแรก › โปรโมชั่น &amp; ราคา › <strong>PM-5 จำลองราคาขาย</strong></div>
+<div class="topbar-right"><input class="search-box" placeholder="ค้นหา..."><span>🔔</span><span class="branch-tag">สำนักงานใหญ่ · SWT</span><div class="avatar">P</div></div>
+</div><div class="content-wrapper">
+
+<header class="swt-mh">
+  <div class="swt-mh-left">
+    <div class="swt-mh-title"><div class="swt-mh-ico">🧮</div>
+      <div><h1>จำลองราคาขาย (Price Simulator)</h1><p>PM-5 · เช็คราคา+กำไรก่อนเสนอลูกค้า · ลดก่อน VAT</p></div>
+    </div>
+    <div class="swt-mh-divider"></div>
+    <div class="swt-mh-meta"><div class="swt-mh-meta-item"><div class="lbl">โหมด</div><div class="val" id="modeName">สอบ → สลับได้</div></div></div>
+  </div>
+  <div class="swt-mh-right">
+    <span class="swt-mh-badge" style="background:#DBEAFE;color:#1E40AF">🧪 ดูอย่างเดียว</span>
+    <button class="swt-mh-btn swt-mh-btn-ghost" onclick="window.print()">🖨️ พิมพ์</button>
+  </div>
+</header>
+
+<div class="mode-tog">
+  <button class="on" id="mF" onclick="setMode('f')">➡️ จากสินค้า → ราคา/กำไร</button>
+  <button id="mR" onclick="setMode('r')">⬅️ จากกำไรเป้า → ราคาที่ควรตั้ง</button>
+</div>
+
+<!-- ============ FORWARD MODE ============ -->
+<div id="fwd">
+<div class="grid2">
+  <!-- input -->
+  <div class="section-card">
+    <div class="section-title">🛒 PM-5.1 · สินค้า + ลูกค้า</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="field"><label>ลูกค้า</label><input value="ร้านสมชายการไฟฟ้า (ตัวแทน)"></div>
+      <div class="field"><label>สินค้า</label><input value="แอร์ Daikin FTKM24"></div>
+      <div class="field"><label>ราคาฐาน/หน่วย (ก่อน VAT · จาก PM-1)</label><input id="base" value="10000" oninput="calc()"></div>
+      <div class="field"><label>จำนวน</label><input id="qty" value="5" oninput="calc()"></div>
+      <div class="field" style="grid-column:span 2"><label>ต้นทุน/หน่วย <span style="font-size:10.5px;color:#9CA3AF">🔒 เห็นเฉพาะสิทธิ์การเงิน</span></label><input id="cost" value="7500" oninput="calc()"></div>
+    </div>
+    <div class="section-title" style="margin-top:16px;margin-bottom:8px">🎁 โปรที่ใช้ได้ <span class="tag">ระบบเลือกดีสุด 2 · ติ๊กแก้ได้</span></div>
+    <label class="promo-item"><input type="checkbox" class="promo" data-pri="1" data-disc="10" checked onchange="calc()"><span>โปร A · ลด 10% ทุกรุ่น Daikin</span><span class="pri">ลำดับ 1</span></label>
+    <label class="promo-item"><input type="checkbox" class="promo" data-pri="3" data-disc="5" checked onchange="calc()"><span>โปร B · ซื้อ 5+ เครื่อง ลดอีก 5%</span><span class="pri">ลำดับ 3</span></label>
+    <label class="promo-item"><input type="checkbox" class="promo" data-pri="5" data-disc="3" onchange="calc()"><span>โปร C · ลดพิเศษท้ายเดือน 3%</span><span class="pri">ลำดับ 5</span></label>
+    <div class="alert alert-warn" id="stackWarn">⚠️ <div><strong>ซ้อนเกิน 2 ชั้น</strong> — ชั้นที่ 3 ขึ้นไปต้องผู้จัดการอนุมัติก่อนใช้จริง (คำนวณให้ดูก่อนได้)</div></div>
+  </div>
+  <!-- output -->
+  <div class="section-card">
+    <div class="section-title">💰 PM-5.2 · ราคาสุทธิ + กำไร <span class="tag" id="marginTag"></span></div>
+    <div style="font-size:11.5px;color:#6B7280;margin-bottom:8px">คำนวณต่อ 1 หน่วย (ลดก่อน VAT ทีละชั้นตามลำดับ)</div>
+    <div id="calcRows"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px">
+      <div class="kpi"><div class="l">ยอดรวม (× จำนวน)</div><div class="v" id="grandTotal" style="color:#1E40AF">฿0</div></div>
+      <div class="kpi"><div class="l">ส่วนลดรวม</div><div class="v" id="discTotal" style="color:#C55A11">฿0</div></div>
+      <div class="kpi"><div class="l">คอมโดยประมาณ (2%)</div><div class="v" id="commEst" style="color:#059669">฿0</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ REVERSE MODE ============ -->
+<div id="rev" style="display:none">
+<div class="grid2">
+  <div class="section-card">
+    <div class="section-title">🎯 PM-5.3 · ตั้งกำไรเป้า → หาราคาที่ควรตั้ง</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="field"><label>ต้นทุนสุทธิ/หน่วย (ก่อน VAT)</label><input id="rcost" value="7500" oninput="calcR()"></div>
+      <div class="field"><label>กำไรเป้าหมาย (%)</label><input id="rgp" value="15" oninput="calcR()"></div>
+    </div>
+    <div style="margin-top:12px;font-size:11.5px;color:#6B7280;background:#F9FAFB;border-radius:6px;padding:10px 12px;line-height:1.7">
+      สูตร: ราคาขายก่อน VAT = ต้นทุนสุทธิ ÷ (1 − กำไร%)<br>
+      → บวก VAT 7% เป็นราคารวม
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="section-title">💵 ราคาที่ควรตั้ง</div>
+    <div class="calc-row"><span class="l">ต้นทุนสุทธิ</span><span class="v" id="rOutCost">7,500.00</span></div>
+    <div class="calc-row op">÷ (1 − กำไรเป้า)</div>
+    <div class="calc-row"><span class="l">ราคาขาย (ก่อน VAT)</span><span class="v" id="rOutPre">8,823.53</span></div>
+    <div class="calc-row"><span class="l">+ VAT 7%</span><span class="v" id="rOutVat">617.65</span></div>
+    <div class="calc-row tot"><span class="l">ราคาขายรวม VAT</span><span class="v" id="rOutTot" style="color:#1E40AF">฿9,441.18</span></div>
+    <div style="margin-top:10px;text-align:center"><span class="mbadge m-ok" id="rGpBadge">กำไร 15.0% ✓</span></div>
+  </div>
+</div>
+</div>
+
+<div class="footer-actions">
+  <div class="hint">🧪 เครื่องมือช่วยคิด · ไม่บันทึก/ไม่ออกเอกสาร · ราคาจริงต้องออกใบเสนอราคา (SL-1) · ลดก่อน VAT ตาม Golden Rule</div>
+  <div class="spacer"></div>
+  <button class="btn btn-ghost" onclick="location.reload()">↺ ล้าง</button>
+  <button class="btn btn-secondary" onclick="window.print()">🖨️ พิมพ์</button>
+</div>
+
+</div></div></div>
+<script src="swt-link.js"></script>
+<script src="swt-sidebar.js"></script>
+<script>
+function baht(n){return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function setMode(m){
+  document.getElementById('mF').classList.toggle('on',m==='f');
+  document.getElementById('mR').classList.toggle('on',m==='r');
+  document.getElementById('fwd').style.display=m==='f'?'block':'none';
+  document.getElementById('rev').style.display=m==='r'?'block':'none';
+  document.getElementById('modeName').textContent=m==='f'?'สินค้า → ราคา/กำไร':'กำไรเป้า → ราคา';
+}
+function calc(){
+  var base=parseFloat(document.getElementById('base').value)||0;
+  var qty=parseFloat(document.getElementById('qty').value)||0;
+  var cost=parseFloat(document.getElementById('cost').value)||0;
+  var promos=Array.from(document.querySelectorAll('.promo:checked'))
+    .map(function(c){return {pri:+c.dataset.pri,disc:+c.dataset.disc};})
+    .sort(function(a,b){return a.pri-b.pri;});
+  document.getElementById('stackWarn').classList.toggle('show',promos.length>2);
+  // apply sequentially (before VAT)
+  var rows='<div class="calc-row"><span class="l">ราคาฐาน (ก่อน VAT)</span><span class="v">'+baht(base)+'</span></div>';
+  var net=base;
+  promos.forEach(function(p,i){
+    net=net*(1-p.disc/100);
+    rows+='<div class="calc-row op">− '+p.disc+'% (ชั้น '+(i+1)+(i>1?' · ต้องอนุมัติ':'')+')</div>';
+    rows+='<div class="calc-row"><span class="l">หลังโปรชั้น '+(i+1)+'</span><span class="v">'+baht(net)+'</span></div>';
+  });
+  var vat=net*0.07, total=net+vat;
+  var margin=net>0?(net-cost)/net*100:0;
+  rows+='<div class="calc-row"><span class="l">+ VAT 7% (คิดจากราคาหลังลด)</span><span class="v">'+baht(vat)+'</span></div>';
+  rows+='<div class="calc-row tot"><span class="l">ราคา/หน่วย (รวม VAT)</span><span class="v" style="color:#1E40AF">฿'+baht(total)+'</span></div>';
+  document.getElementById('calcRows').innerHTML=rows;
+  document.getElementById('grandTotal').textContent='฿'+baht(total*qty);
+  document.getElementById('discTotal').textContent='฿'+baht((base-net)*qty);
+  document.getElementById('commEst').textContent='฿'+baht(net*qty*0.02);
+  // margin badge
+  var mt=document.getElementById('marginTag');
+  var cls=margin>=10?'m-ok':(margin>=0?'m-warn':'m-bad');
+  var ic=margin>=10?'✓':(margin>=0?'⚠️ กำไรบาง':'🔴 ขาดทุน');
+  mt.innerHTML='<span class="mbadge '+cls+'">กำไร '+margin.toFixed(1)+'% '+ic+'</span>';
+}
+function calcR(){
+  var cost=parseFloat(document.getElementById('rcost').value)||0;
+  var gp=parseFloat(document.getElementById('rgp').value)||0;
+  var pre=gp<100?cost/(1-gp/100):0;
+  var vat=pre*0.07, tot=pre+vat;
+  document.getElementById('rOutCost').textContent=baht(cost);
+  document.getElementById('rOutPre').textContent=baht(pre);
+  document.getElementById('rOutVat').textContent=baht(vat);
+  document.getElementById('rOutTot').textContent='฿'+baht(tot);
+  var b=document.getElementById('rGpBadge');
+  b.className='mbadge '+(gp>=10?'m-ok':(gp>=0?'m-warn':'m-bad'));
+  b.textContent='กำไร '+gp.toFixed(1)+'% '+(gp>=10?'✓':(gp>=0?'⚠️':'🔴'));
+}
+document.addEventListener('DOMContentLoaded',function(){calc();calcR();});
+</script>
+</body>
+</html>
