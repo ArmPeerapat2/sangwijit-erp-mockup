@@ -265,107 +265,115 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
       </div>
       <div style="display:flex;gap:8px">
         <label style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#fff;border:2px solid #10B981;border-radius:8px;font-size:13px;font-weight:700;color:#065F46;cursor:pointer">
-          <input type="radio" name="billWarranty" value="in" checked>
-          🟢 ในประกัน → 🏢 Vendor จ่าย
+          <input type="radio" name="billWarranty" value="in" onclick="svBillAll('in')">
+          🟢 ในประกัน → 🏢 Vendor จ่าย (ทุก line)
         </label>
         <label style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#F9FAFB;border:2px solid #E5E7EB;border-radius:8px;font-size:13px;font-weight:700;color:#92400E;cursor:pointer">
-          <input type="radio" name="billWarranty" value="out">
-          🟡 นอกประกัน → 👤 ลูกค้าจ่าย
+          <input type="radio" name="billWarranty" value="out" onclick="svBillAll('out')">
+          🟡 นอกประกัน → 👤 ลูกค้าจ่าย (ทุก line)
         </label>
       </div>
     </div>
   </div>
 
   <!-- Line items -->
-  <div style="margin-top:0;font-size:13px;font-weight:600;color:#374151;margin-bottom:8px">รายการค่าบริการ (Admin ปรับ<span style="color:#C55A11">ประเภท+ราคา</span>ได้)</div>
+  <div style="margin-top:0;font-size:13px;font-weight:600;color:#374151;margin-bottom:8px">รายการค่าบริการ — <span style="color:#C55A11">เปลี่ยน "ประเภท" (ใน/นอก Comp) → "เก็บจาก" พลิก payer เอง + ยอด 2 ARI คำนวณสด</span></div>
   <table>
     <thead>
       <tr>
         <th style="width:120px">รหัส</th>
         <th>รายการ</th>
-        <th style="width:80px" class="num">จำนวน</th>
-        <th style="width:90px">หน่วย</th>
-        <th style="width:100px" class="num">ราคา/หน่วย</th>
-        <th style="width:110px">ประเภท</th>
-        <th style="width:100px" class="num">รวม</th>
+        <th style="width:70px" class="num">จำนวน</th>
+        <th style="width:80px">หน่วย</th>
+        <th style="width:95px" class="num">ราคา/หน่วย</th>
+        <th style="width:120px">ประเภท 🖊️</th>
+        <th style="width:95px" class="num">รวม</th>
         <th style="width:100px">เก็บจาก</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
+    <tbody id="billRows">
+      <tr data-amt="8920">
         <td style="font-family:monospace">DAI-COMP-2HP-01</td>
         <td>Compressor 2 HP (เปลี่ยนใหม่)</td>
         <td class="num">1</td><td>เครื่อง</td><td class="num">8,920.00</td>
-        <td><span class="chip chip-green">ใน Comp</span></td>
+        <td><select class="bill-type" onchange="svRebill()"><option value="in" selected>🟢 ใน Comp</option><option value="out">🟡 นอก Comp</option></select></td>
         <td class="num"><strong>8,920.00</strong></td>
-        <td><span class="chip chip-blue">🏢 Vendor</span></td>
+        <td class="bill-pay"></td>
       </tr>
-      <tr>
+      <tr data-amt="680">
         <td style="font-family:monospace">DAI-PAN-STD-12</td>
         <td>ถาดน้ำทิ้ง 12k BTU</td>
         <td class="num">1</td><td>ชิ้น</td><td class="num">680.00</td>
-        <td><span class="chip chip-green">ใน Comp</span></td>
+        <td><select class="bill-type" onchange="svRebill()"><option value="in" selected>🟢 ใน Comp</option><option value="out">🟡 นอก Comp</option></select></td>
         <td class="num"><strong>680.00</strong></td>
-        <td><span class="chip chip-blue">🏢 Vendor</span></td>
+        <td class="bill-pay"></td>
       </tr>
-      <tr>
+      <tr data-amt="1500">
         <td style="font-family:monospace">LABOR-COMP</td>
         <td>ค่าแรงเปลี่ยน Compressor (ใน 2 ปีแรก)</td>
         <td class="num">1</td><td>งาน</td><td class="num">1,500.00</td>
-        <td><span class="chip chip-green">ใน Comp</span></td>
+        <td><select class="bill-type" onchange="svRebill()"><option value="in" selected>🟢 ใน Comp</option><option value="out">🟡 นอก Comp</option></select></td>
         <td class="num"><strong>1,500.00</strong></td>
-        <td><span class="chip chip-blue">🏢 Vendor</span></td>
+        <td class="bill-pay"></td>
       </tr>
-      <tr>
+      <tr data-amt="380">
         <td style="font-family:monospace">REF-GAS-R32-1KG</td>
         <td>น้ำยา R32 1 กก. (นอก Comp)</td>
         <td class="num">1</td><td>กก.</td><td class="num">380.00</td>
-        <td><span class="chip chip-yellow">นอก Comp</span></td>
+        <td><select class="bill-type" onchange="svRebill()"><option value="in">🟢 ใน Comp</option><option value="out" selected>🟡 นอก Comp</option></select></td>
         <td class="num"><strong>380.00</strong></td>
-        <td><span class="chip chip-gray">👤 ลูกค้า</span></td>
+        <td class="bill-pay"></td>
       </tr>
-      <tr>
+      <tr data-amt="150">
         <td style="font-family:monospace">TRAVEL-BKK</td>
         <td>ค่าเดินทาง · BKK-Service → ลูกค้า</td>
         <td class="num">1</td><td>ครั้ง</td><td class="num">150.00</td>
-        <td><span class="chip chip-yellow">นอก Comp</span></td>
+        <td><select class="bill-type" onchange="svRebill()"><option value="in">🟢 ใน Comp</option><option value="out" selected>🟡 นอก Comp</option></select></td>
         <td class="num"><strong>150.00</strong></td>
-        <td><span class="chip chip-gray">👤 ลูกค้า</span></td>
+        <td class="bill-pay"></td>
       </tr>
     </tbody>
   </table>
 
-  <!-- Split summary -->
+  <!-- Split summary: 2 ARI post ที่ sv4 (B4) -->
   <div class="form-grid-2" style="margin-top:18px">
+    <!-- ARI-Vendor -->
     <div class="sum-box" style="background:#EFF6FF;border-color:#93C5FD;border-width:2px;position:relative">
-      <div style="position:absolute;top:-10px;left:14px;background:#4472C4;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px">✓ ตั้งหนี้ที่นี่ (SV-4)</div>
-      <div style="font-size:13px;font-weight:700;color:#1E40AF;margin-bottom:8px;display:flex;align-items:center;gap:6px">🏢 เรียกเก็บจาก Vendor (Daikin TH)</div>
-      <div class="sum-row"><span class="label">อะไหล่ใน Comp</span><span class="val">9,600.00</span></div>
-      <div class="sum-row"><span class="label">ค่าแรง (2 ปีแรก)</span><span class="val">1,500.00</span></div>
-      <div class="sum-row subtotal"><span class="label">รวมก่อน VAT</span><span class="val">11,100.00</span></div>
-      <div class="sum-row"><span class="label">VAT 7% (Vendor รับผิดชอบ)</span><span class="val">777.00</span></div>
-      <div class="sum-row total"><span class="label">ตั้งหนี้ Vendor</span><span class="val" style="color:#1E40AF">฿11,877.00</span></div>
+      <div style="position:absolute;top:-10px;left:14px;background:#4472C4;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px">✓ ตั้ง ARI ที่นี่ (SV-4)</div>
+      <div style="font-size:13px;font-weight:700;color:#1E40AF;margin-bottom:8px;display:flex;align-items:center;gap:6px">🏢 ARI-Vendor · line "ใน Comp"</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fff;border:1px solid #BFDBFE;border-radius:6px;padding:7px 10px;margin-bottom:10px">
+        <div style="font-size:11.5px;color:#1E40AF;line-height:1.4"><b>ผู้จ่าย:</b> Daikin (Thailand) Co.,Ltd.<br><span class="mono" style="font-size:10.5px;color:#6B7280">Tax 0105539000ก · Net 30</span></div>
+        <button class="btn btn-secondary" style="padding:3px 9px;font-size:11px;flex-shrink:0" onclick="svPayer('vendor')">🖊️ แก้ผู้จ่าย</button>
+      </div>
+      <div class="sum-row subtotal"><span class="label">รวมก่อน VAT</span><span class="val" id="vSub">11,100.00</span></div>
+      <div class="sum-row"><span class="label">VAT 7% (Vendor รับผิดชอบ)</span><span class="val" id="vVat">777.00</span></div>
+      <div class="sum-row total"><span class="label">ตั้งหนี้ Vendor</span><span class="val" id="vTot" style="color:#1E40AF">฿11,877.00</span></div>
       <div style="margin-top:10px;padding:10px 12px;background:#fff;border-radius:6px;border:1px solid #93C5FD">
-        <div style="font-size:11.5px;color:#1E40AF;margin-bottom:6px"><strong>📄 Vendor Invoice (AR Receivable):</strong></div>
         <div class="sum-row" style="padding:2px 0;font-size:11.5px"><span class="label">เลขที่จะได้</span><span class="val mono">ARI-SV1-2604-0089</span></div>
         <div class="sum-row" style="padding:2px 0;font-size:11.5px"><span class="label">Entity Tag</span><span class="val">1 · SWT (Dual-Book)</span></div>
         <div class="sum-row" style="padding:2px 0;font-size:11.5px"><span class="label">Claim Ref</span><span class="val mono">DKN-CLM-2604-0089</span></div>
-        <div class="sum-row" style="padding:2px 0;font-size:11.5px"><span class="label">กำหนดรับเงิน</span><span class="val">30 วัน (Net 30)</span></div>
       </div>
-      <button class="btn btn-primary" style="margin-top:10px;width:100%">🏢 ตั้งหนี้ Vendor ตอนนี้</button>
+      <button class="btn btn-primary" style="margin-top:10px;width:100%">🏢 Post ARI-Vendor</button>
       <a href="clm-vendor-claim-mockup.html" class="btn btn-secondary" style="margin-top:6px;width:100%;text-decoration:none;justify-content:center">🎫 เปิดเคลม Vendor (CLM) →</a>
     </div>
-    <div class="sum-box" style="background:#F9FAFB;opacity:0.85">
-      <div style="position:absolute;position:relative;margin-bottom:4px;font-size:10px;font-weight:700;color:#C55A11;text-transform:uppercase;letter-spacing:0.05em">👁️ Preview · ออกบิลจริงที่ SV-7</div>
-      <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:8px;display:flex;align-items:center;gap:6px">👤 ยอดที่ลูกค้าต้องจ่าย (ยังไม่ออก)</div>
-      <div class="sum-row"><span class="label">อะไหล่นอก Comp (น้ำยา R32)</span><span class="val">380.00</span></div>
-      <div class="sum-row"><span class="label">ค่าเดินทาง</span><span class="val">150.00</span></div>
-      <div class="sum-row subtotal"><span class="label">รวมก่อน VAT</span><span class="val">530.00</span></div>
-      <div class="sum-row"><span class="label">VAT 7%</span><span class="val">37.10</span></div>
-      <div class="sum-row total"><span class="label">ลูกค้าจะจ่าย</span><span class="val" style="color:#C55A11">฿567.10</span></div>
-      <div style="margin-top:10px;padding:10px 12px;background:#FEF3C7;border-radius:6px;font-size:11.5px;color:#92400E">
-        💳 <strong>ส่งต่อ SV-7:</strong> ลูกค้าจะเซ็นรับ · ระบุวิธีชำระ · ออก Customer Invoice · รับชำระ/ลง AR
+    <!-- ARI-Customer (postable ที่ sv4 · อ้าง SL-4) -->
+    <div class="sum-box" style="background:#FFFBEB;border-color:#FCD34D;border-width:2px;position:relative">
+      <div style="position:absolute;top:-10px;left:14px;background:#C55A11;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px">✓ ตั้ง ARI ที่นี่ (SV-4)</div>
+      <div style="font-size:13px;font-weight:700;color:#92400E;margin-bottom:8px;display:flex;align-items:center;gap:6px">👤 ARI-Customer · line "นอก Comp"</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fff;border:1px solid #FCD34D;border-radius:6px;padding:7px 10px;margin-bottom:10px">
+        <div style="font-size:11.5px;color:#92400E;line-height:1.4"><b>ผู้จ่าย:</b> คุณสมชาย ใจดี (ลูกค้า)<br><span class="mono" style="font-size:10.5px;color:#6B7280">C-26-0142 · เงินสด/โอน</span></div>
+        <button class="btn btn-secondary" style="padding:3px 9px;font-size:11px;flex-shrink:0" onclick="svPayer('customer')">🖊️ เปลี่ยนผู้จ่าย</button>
       </div>
+      <div class="sum-row subtotal"><span class="label">รวมก่อน VAT</span><span class="val" id="cSub">530.00</span></div>
+      <div class="sum-row"><span class="label">VAT 7%</span><span class="val" id="cVat">37.10</span></div>
+      <div class="sum-row total"><span class="label">ลูกค้าจะจ่าย</span><span class="val" id="cTot" style="color:#C55A11">฿567.10</span></div>
+      <div style="margin-top:10px;padding:10px 12px;background:#fff;border-radius:6px;border:1px solid #FCD34D">
+        <div class="sum-row" style="padding:2px 0;font-size:11.5px"><span class="label">เลขที่จะได้</span><span class="val mono">ARI-SV1-2604-0090</span></div>
+        <div class="sum-row" style="padding:2px 0;font-size:11.5px"><span class="label">Entity Tag</span><span class="val">1 · SWT</span></div>
+        <div class="sum-row" style="padding:2px 0;font-size:11.5px"><span class="label">อ้างอิงงานขาย</span><span class="val mono">SL-4 · SO-26-0771</span></div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:10px;width:100%;background:#C55A11">👤 Post ARI-Customer</button>
+      <div style="margin-top:6px;font-size:11px;color:#92400E;text-align:center">→ SV-7 = ลูกค้าเซ็นรับ + รับชำระ (invoice ออกที่นี่แล้ว)</div>
     </div>
   </div>
 
@@ -546,6 +554,24 @@ document.querySelectorAll('.rating-group .star').forEach(function(s,i,arr){
     arr.forEach(function(x,j){x.classList.toggle('active',j<=i);});
   });
 });
+// B4: per-line payer ผูก "ประเภท" (ใน Comp→Vendor · นอก Comp→ลูกค้า) + คำนวณ 2 ARI สด
+function svBaht(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function svSet(id,n,baht){ var e=document.getElementById(id); if(e) e.textContent=(baht?'฿':'')+svBaht(n); }
+function svRebill(){
+  var vSub=0,cSub=0;
+  document.querySelectorAll('#billRows tr').forEach(function(r){
+    var t=r.querySelector('.bill-type').value, amt=parseFloat(r.dataset.amt), pc=r.querySelector('.bill-pay');
+    if(t==='in'){ pc.innerHTML='<span class="chip chip-blue">🏢 Vendor</span>'; vSub+=amt; }
+    else { pc.innerHTML='<span class="chip chip-gray">👤 ลูกค้า</span>'; cSub+=amt; }
+  });
+  svSet('vSub',vSub); svSet('vVat',vSub*0.07); svSet('vTot',vSub*1.07,true);
+  svSet('cSub',cSub); svSet('cVat',cSub*0.07); svSet('cTot',cSub*1.07,true);
+}
+function svBillAll(t){ document.querySelectorAll('#billRows .bill-type').forEach(function(s){ s.value=t; }); svRebill(); }
+function svPayer(t){ alert(t==='vendor'
+  ? 'แก้ข้อมูลผู้จ่าย (Vendor party)\nชื่อบริษัท / เลขภาษี / ที่อยู่ / เครดิตเทอม — กรอกเมนวล (เหมือนเพิ่มวิธีจ่าย 1 ประเภท)'
+  : 'เปลี่ยนผู้จ่าย (bill-to party)\nเลือกจากลูกค้าเดิม หรือเพิ่ม party ใหม่ (บริษัท/นายหน้า) กรอกเมนวล'); }
+document.addEventListener('DOMContentLoaded', svRebill);
 </script>
 <script src="swt-link.js"></script>
 <script src="swt-sidebar.js"></script>
