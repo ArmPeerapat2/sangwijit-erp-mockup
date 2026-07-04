@@ -69,6 +69,13 @@ project_type: "frontend-mockup (HTML + docs)"
 
 **🧮 PM-5 จำลองราคาขาย ✅ (2026-07-04 · grill Q1-Q3):** `pm5-price-simulator` (หน้าใหม่ · แยกจาก `pm5-vat-simulator` เดิมที่สอน Golden Rule) · **Q1** 2 โหมดสลับได้ (forward สินค้า→ราคา/กำไร · reverse กำไรเป้า→ราคา) · **Q2** ระบบเลือกโปรดีสุด 2 ชั้น (priority) + ติ๊กแก้ได้ · เกิน 2 = เตือนต้องอนุมัติ · **Q3** แค่ดู/พิมพ์ ไม่ save · JS: calc() ลดทีละชั้นก่อน VAT + margin สี (≥10 เขียว/<10 เหลือง/<0 แดง) + คอมประมาณ · calcR() reverse · sidebar เพิ่ม PM-5(price) + PM5V(vat) · **PM เหลือ P3: PM-Q · PM-3 · PM-4**
 
+**🔍 SL group 2-agent audit + refine ✅ (2026-07-04):** ใช้ agent 2 ตัวคู่ขนาน — `erp-design-architect` (ดีไซน์) + general-purpose ใช้สกิล `dynamics-bc365` (ตรวจ field ↔ BC365 · verify Microsoft Learn) — ก่อนปรับจริง (user สั่ง "สรุปก่อนปรับ")
+- **ผลดีไซน์:** SL = คนละ design-system กับ SV (form-template fit-100vh · ไม่ใช่ content-wrapper scroll) · **แน่นกว่า SV อยู่แล้ว** · section code ครบ · ไทยครบ → **ห้าม density sweep แบบ SV = พัง** · saab เป็น flush (≠ ตัวกลาง SV card) → **คงไว้ ไม่ย้าย**
+- **ผล BC365 (กลาง-ค่อนสูง):** field แกน (เลขที่/วันที่/ลูกค้า/line/VAT trio/discount 2 ระดับ/Bill-to·Ship-to) ตรง BC · ยอด summary ทั้งหมด **BC เจ้าของ = read-only**
+- **ทำแล้ว (A · sl1-4+cn):** ป้าย WHT sl1 → "ประมาณการ · คิดจริงตอน FI" (BC ไม่คิด WHT บนบิลขาย) · โน้ต 🔒 ยอด/VAT ระบบ BC คำนวณ + ⚖ ลดก่อน VAT ทุกหน้า
+- **⏭️ ส่งทีม BC dev (custom fields · ไม่ใช่งาน mockup):** Entity Tag (dimension/company?) · SL-2 ประเภทจอง SO/SOW · SL-CN ประเภทใบ ใน/นอกประกัน · SL-3 มัดจำ (ไม่มี standard endpoint) · โปรฯ auto-match · ส่วนลดท้ายบิล %→฿ ก่อนส่ง BC
+- **บทเรียน:** "สรุปก่อนปรับ" คุ้มมาก — agent จับได้ว่าโจทย์ตั้งสมมติฐานผิด (นึกว่า SL ต้อง sweep แบบ SV) กันพังก่อนลงมือ
+
 **⏭️ NEXT (resume จุดนี้):** (a) ~~Q-sweep~~ ✅ **ตรวจแล้วไม่ต้องทำ (2026-07-04):** rail ทุกหน้าโชว์ ref ต้นทางอยู่แล้ว (fiq→PO/บิล · sv-q→SIR/SQT/CLM · poq→PR · fi1q→INV) · wh-q-dashboard=stock ไม่ใช่ rail · SL-Q(B6) คือหน้าเดียวที่ขาดจริง เติมแล้ว · (b) SV backlog เหลือ: **B4b** goodwill payer (โยง B4+B6) · **B7** WH-SVC 6 bins · **B8** CM-1 เรทช่าง · **B9** checklist tmpl · **B10** SLA config · **B12** MA contract · **B13** tech-mobile · **B14** posted-docs · (c) sweep density โมดูลอื่น (PO/WH/FI/MD ค่าเดิม 24/20/16) · **⚠️ ~25 commits ยังไม่ push** (local focus ตามสั่ง)
 
 **🎨 SV design-consistency sweep ✅ (2026-07-04 · ยึด SL-4):** ปรับ SV ทั้งกลุ่มให้ตรงกัน —
