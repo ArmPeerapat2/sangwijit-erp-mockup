@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>แบบฟอร์มเช็คลิสต์ (ล้าง/ตรวจเช็ค) — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
+.app-container{display:flex;min-height:100vh}
+.main-content{flex:1;margin-left:240px;padding:0;background:#F8FAFC}
+.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.breadcrumb{font-size:13px;color:#6B7280}
+.breadcrumb strong{color:#111827}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.search-box{width:280px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;background:#F9FAFB}
+.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.content-wrapper{padding:16px 24px}
+.btn{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.btn-primary{background:#2563EB;color:#fff}
+.btn-secondary{background:#fff;color:#374151;border:1px solid #D1D5DB}
+.section-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.section-title{font-size:15px;font-weight:600;color:#111827;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.section-title .tag{font-size:11px;background:#EFF6FF;color:#1E40AF;padding:2px 8px;border-radius:4px;font-weight:600;margin-left:auto}
+.ptype{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.ptype button{border:1px solid #E5E7EB;background:#fff;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:600;color:#374151;cursor:pointer;font-family:inherit}
+.ptype button.on{background:#1E3A5F;color:#fff;border-color:#1E3A5F}
+.ck-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ck-list{list-style:none}
+.ck-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #F3F4F6}
+.ck-item .drag{color:#CBD5E1;cursor:grab;font-size:14px}
+.ck-item .no{font-size:11px;color:#9CA3AF;width:18px;font-weight:600}
+.ck-item input.txt{flex:1;padding:5px 8px;border:1px solid transparent;border-radius:5px;font-size:12.5px;font-family:inherit;background:transparent}
+.ck-item input.txt:hover,.ck-item input.txt:focus{border-color:#E5E7EB;background:#fff;outline:none}
+.ck-item .del{color:#EF4444;cursor:pointer;font-size:13px;opacity:0.5}
+.ck-item .del:hover{opacity:1}
+.add-bar{margin-top:10px;font-size:12.5px;color:#2563EB;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.hd{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:12px;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.alert-info{background:#DBEAFE;color:#1E40AF;border:1px solid #93C5FD}
+.footer-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid #E5E7EB;padding:14px 24px;margin:16px -24px -24px;display:flex;gap:8px;align-items:center;box-shadow:0 -4px 12px rgba(0,0,0,0.05)}
+.footer-actions .spacer{flex:1}
+.footer-actions .hint{font-size:12px;color:#6B7280}
+</style>
+</head>
+<body>
+<div class="app-container"><div class="main-content"><div class="topbar">
+<div class="breadcrumb">หน้าแรก › ศูนย์บริการ › <strong>แบบฟอร์มเช็คลิสต์</strong></div>
+<div class="topbar-right">
+<input class="search-box" placeholder="ค้นหา...">
+<span>🔔</span>
+<span class="branch-tag">BKK-Service · SWT</span>
+<div class="avatar">P</div>
+</div>
+</div><div class="content-wrapper">
+
+<header class="swt-mh">
+  <div class="swt-mh-left">
+    <div class="swt-mh-title">
+      <div class="swt-mh-ico">📋</div>
+      <div>
+        <h1>แบบฟอร์มเช็คลิสต์ (ล้าง / ตรวจเช็ค)</h1>
+        <p>Checklist Template · แยกตามชนิดเครื่อง</p>
+      </div>
+    </div>
+    <div class="swt-mh-divider"></div>
+    <div class="swt-mh-meta">
+      <div class="swt-mh-meta-item"><div class="lbl">ชนิดเครื่อง</div><div class="val">6 แบบ</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">ใช้ที่</div><div class="val">sv5 ใบงานช่าง</div></div>
+    </div>
+  </div>
+  <div class="swt-mh-right">
+    <button class="swt-mh-btn swt-mh-btn-primary">💾 บันทึกแบบฟอร์ม</button>
+  </div>
+</header>
+
+<div class="alert alert-info">
+  ℹ️ <div><strong>ตั้งรายการที่ช่างต้องเช็ค แยกตามชนิดเครื่อง</strong> · ช่างเปิดใบงาน (sv5) แล้วเช็คลิสต์นี้จะโผล่ตามชนิดที่เลือก · เพิ่ม/ลบ/แก้รายการได้เอง</div>
+</div>
+
+<!-- Product type -->
+<div class="ptype">
+  <button class="on">🧊 แอร์ผนัง (Wall)</button>
+  <button>🏢 แอร์ตั้ง-แขวน</button>
+  <button>⬛ แอร์ฝัง 4 ทิศ (Cassette)</button>
+  <button>🌀 แอร์ท่อลม (Duct)</button>
+  <button>❄️ ตู้แช่/ห้องเย็น</button>
+  <button>➕ เพิ่มชนิด</button>
+</div>
+
+<div class="section-card">
+  <div class="section-title">📋 CK.1 · เช็คลิสต์: แอร์ผนัง (Wall Type) <span class="tag">แก้/เพิ่ม/ลบ ได้</span></div>
+  <div class="ck-cols">
+    <!-- Cleaning -->
+    <div>
+      <div class="hd">🧼 งานล้าง (Cleaning) <span style="font-size:11px;color:#9CA3AF;font-weight:400">— 6 รายการ</span></div>
+      <ul class="ck-list" id="cleanList">
+        <li class="ck-item"><span class="drag">⠿</span><span class="no">1</span><input class="txt" value="ล้างแผงคอยล์เย็น (evaporator)"><span class="del" onclick="this.closest('li').remove()">✕</span></li>
+        <li class="ck-item"><span class="drag">⠿</span><span class="no">2</span><input class="txt" value="ล้างแผงคอยล์ร้อน (condenser)"><span class="del" onclick="this.closest('li').remove()">✕</span></li>
+        <li class="ck-item"><span class="drag">⠿</span><span class="no">3</span><input class="txt" value="ล้างฟิลเตอร์ / ตะแกรงหน้ากาก"><span class="del" onclick="this.closest('li').remove()">✕</span></li>
+        <li class="ck-item"><span class="drag">⠿</span><span class="no">4</span><input class="txt" value="ล้างถาดน้ำทิ้ง + ท่อน้ำทิ้ง"><span class="del" onclick="this.closest('li').remove()">✕</span></li>
+        <li class="ck-item"><span class="drag">⠿</span><span class="no">5</span><input class="txt" value="ล้างใบพัดลม (blower)"><span class="del" onclick="this.closest('li').remove()">✕</span></li>
+        <li class="ck-item"><span class="drag">⠿</span><span class="no">6</span><input class="txt" value="เช็ดทำความสะอาดตัวเครื่อง"><span class="del" onclick="this.closest('li').remove()">✕</span></li>
+      </ul>
+      <div class="add-bar" onclick="addCk('cleanList')">➕ เพิ่มรายการล้าง</div>
+    </div>
+    <!-- Inspection -->
+    <div>
+      <div class="hd">🔍 งานตรวจเช็ค (Inspection) <span style="font-size:11px;color:#9CA3AF;font-weight:400">— 6 รายการ</span></div>
+      <ul class="ck-list" id="checkList">
+        <li class="ck-item"><span class="drag">⠿</span><span class="no">1</span><input class="txt" value="วัดแรงดันน้ำยา (แรงดันสูง/ต่ำ)"><span class="del" onclick="this.closest('li').remove()">✕</span></li>
+        <li class="ck-item"><span class="drag">⠿</span><span class="no">2</span><input class="txt" value="วัดกระแสไฟคอมเพรสเซอร์ (แอมป์)"><span class="del" onclick="this.closest('li').remove()">✕</span></li>
+        <li class="ck-item"><span class="drag">⠿</span><span class="no">3</span><input class="txt" value="เช็คอุณหภูมิลมเย็น (ควรต่ำ 8-12°C จากลมกลับ)"><span class="del" onclick="this.closest('li').remove()">✕</span></li>
+        <li class="ck-item"><span class="drag">⠿</span><span class="no">4</span><input class="txt" value="เช็คการรั่วน้ำยา (จุดต่อ/ข้อต่อ)"><span class="del" onclick="this.closest('li').remove()">✕</span></li>
+        <li class="ck-item"><span class="drag">⠿</span><span class="no">5</span><input class="txt" value="เช็คการทำงานรีโมท/บอร์ดควบคุม"><span class="del" onclick="this.closest('li').remove()">✕</span></li>
+        <li class="ck-item"><span class="drag">⠿</span><span class="no">6</span><input class="txt" value="เช็คขันแน่นจุดต่อไฟฟ้า"><span class="del" onclick="this.closest('li').remove()">✕</span></li>
+      </ul>
+      <div class="add-bar" onclick="addCk('checkList')">➕ เพิ่มรายการตรวจ</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-actions">
+  <div class="hint">🔒 แก้แบบฟอร์มต้องสิทธิ์ผู้จัดการ · มีผลกับใบงานใหม่ (งานเก่าเก็บแบบเดิม)</div>
+  <div class="spacer"></div>
+  <button class="btn btn-secondary">ยกเลิก</button>
+  <button class="btn btn-primary">💾 บันทึกแบบฟอร์ม</button>
+</div>
+
+</div></div></div>
+<script src="swt-link.js"></script>
+<script src="swt-sidebar.js"></script>
+<script>
+function addCk(id){
+  var ul=document.getElementById(id);
+  var li=document.createElement('li');
+  li.className='ck-item';
+  var n=ul.children.length+1;
+  li.innerHTML='<span class="drag">⠿</span><span class="no">'+n+'</span><input class="txt" placeholder="พิมพ์รายการใหม่..."><span class="del" onclick="this.closest(\'li\').remove()">✕</span>';
+  ul.appendChild(li);
+  li.querySelector('input').focus();
+}
+</script>
+</body>
+</html>
