@@ -215,7 +215,7 @@
 | # | งาน | ผูก grill |
 |---|-----|-----------|
 | B1 ✅ | **`sv1-service-intake-mockup.html`** rebuild — แยก job type 5 ตัว + `.jx` extension slot (ตอนนี้ dropdown 4 ตัว) | §1 · §12.4 |
-| B4b | SV-4 billing เพิ่ม payer option "goodwill" (แบรนด์/SWT) + approval | §12.1 |
+| B4b ✅ | SV-4 billing เพิ่ม payer option "goodwill" (แบรนด์/SWT) + approval | §12.1 |
 | B11 | SL-CN validation: refund ≤ ราคาขายเดิม รายบรรทัด | §12.3 |
 | B2 ✅ | Resolution A-E ตอน S/N-first entry | §2 |
 | B3 ✅ | S/N lookup → ตารางประกันรายชิ้น | §3 |
