@@ -183,6 +183,7 @@
   body.sb-mini .swt-sb:hover{width:240px;padding-left:10px;padding-right:10px;box-shadow:4px 0 26px rgba(0,0,0,0.4)}
   .swt-sb-collapse{margin-left:auto;background:rgba(255,255,255,0.08);border:none;color:#94A3B8;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:inherit;line-height:1}
   .swt-sb-collapse:hover{background:rgba(255,255,255,0.18);color:#fff}
+  .swt-sb-collapse.on{background:#2563EB;color:#fff}
   .swt-sb::-webkit-scrollbar{width:6px}
   .swt-sb::-webkit-scrollbar-thumb{background:#334E70;border-radius:3px}
   .swt-sb-brand{display:flex;align-items:center;gap:9px;padding:4px 8px 14px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:12px}
@@ -241,7 +242,7 @@
     var doneSet = {}; DONE.forEach(function(d){doneSet[d.toLowerCase()]=1;});
     var activeUsed = false;
     var html = '<aside class="swt-sb" id="swtSb">'
-      + '<div class="swt-sb-brand"><div class="swt-sb-logo">ส</div><div><h1>Sangwijit ERP</h1><p>Web Portal · v3.0</p></div><button type="button" id="swtSbCollapse" class="swt-sb-collapse" onclick="swtSbToggleMini()" title="ย่อ / ขยาย · ปักหมุด sidebar">«</button></div>'
+      + '<div class="swt-sb-brand"><div class="swt-sb-logo">ส</div><div><h1>Sangwijit ERP</h1><p>Web Portal · v3.0</p></div><button type="button" id="swtSbCollapse" class="swt-sb-collapse on" onclick="swtSbToggleMini()" title="ปักหมุดอยู่ — กดเพื่อย่อ">📌</button></div>'
       + '<div class="swt-sb-search"><input placeholder="ค้นหาเมนู…" oninput="swtSbFilter(this.value)"></div>'
       + '<div class="swt-sb-tools"><div class="swt-sb-legend"><span class="o">เก่า</span><span class="n">ใหม่</span></div><button type="button" id="swtSbToggleDone" class="swt-sb-toggle" onclick="swtSbToggleDoneOnly()" aria-pressed="false">ซ่อนไม่มี✦</button></div>'
       + '<a class="swt-sb-home" href="index.html">🏠 Master Index</a>';
@@ -344,7 +345,7 @@
       }
     }catch(e){}
     var b = document.getElementById('swtSbCollapse');
-    if(b){ b.textContent = on?'»':'«'; b.title = on?'ขยาย / ปักหมุด sidebar':'ย่อ sidebar (เหลือไอคอน)'; }
+    if(b){ b.textContent = '📌'; b.classList.toggle('on', !on); b.title = on?'ย่ออยู่ — กดเพื่อปักหมุด (กางเต็ม)':'ปักหมุดอยู่ — กดเพื่อย่อ'; }
     try{ localStorage.setItem(MINI_KEY, on?'1':'0'); }catch(e){}
   }
   window.swtSbToggleMini = function(){ applyMini(!getMini()); };
