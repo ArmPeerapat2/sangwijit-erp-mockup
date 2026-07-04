@@ -97,6 +97,16 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
 .footer-actions .spacer{flex:1}
 .footer-actions .hint{font-size:12px;color:#6B7280}
 .action-tag{font-size:10px;background:#FEE2E2;color:#B91C1C;padding:1px 6px;border-radius:3px;font-weight:700;margin-left:6px}
+/* ③ SAAB (sub-action bar · ตาม _form-template) */
+.saab-bar{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:8px 14px;flex-wrap:wrap;margin-bottom:16px}
+.saab-bar .sp{flex:1}
+.saab-bar .btn{padding:6px 12px}
+/* ⑤ DOC-CHAIN (ตาม _form-template) */
+.dc-strip{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:16px;flex-wrap:wrap}
+.dc-lbl{font-weight:700;color:#7C3AED;text-transform:uppercase;font-size:9px;letter-spacing:.06em;margin-right:6px}
+.dc-node{padding:3px 10px;border-radius:5px;background:#F3F4F6;color:#374151;text-decoration:none;font-weight:600;font-size:11px}
+.dc-node.current{background:#2563EB;color:#fff}.dc-node.done{background:#DCFCE7;color:#166534}
+.dc-arrow{color:#CBD5E1}
 </style>
 </head>
 <body>
@@ -131,11 +141,20 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
   </div>
   <div class="swt-mh-right">
     <span class="swt-mh-badge draft">🕓 รอมอบหมาย</span>
-    <button class="swt-mh-btn swt-mh-btn-ghost">📄 พิมพ์ใบรับ</button>
     <button class="swt-mh-btn swt-mh-btn-ghost">💾 บันทึก Draft</button>
     <button class="swt-mh-btn swt-mh-btn-primary">→ ส่งต่อ SV-2</button>
   </div>
 </header>
+
+<!-- ③ SAAB (sub-action bar · ตาม _form-template) -->
+<div class="saab-bar">
+  <button class="btn btn-secondary">📂 เปิดเอกสารเก่า</button>
+  <button class="btn btn-secondary">📋 Copy</button>
+  <button class="btn btn-secondary">🖨️ พิมพ์ใบรับ</button>
+  <button class="btn btn-secondary" onclick="location.href='sir-site-inspection-mockup.html'">🔍 ขอประเมินหน้างาน (SIR)</button>
+  <div class="sp"></div>
+  <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
+</div>
 
 <!-- Status pills -->
 <div class="status-pills">
@@ -429,13 +448,24 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
   </div>
 </div>
 
-<!-- Footer action bar -->
+<!-- ⑤ DOC-CHAIN (ตาม _form-template) -->
+<div class="dc-strip">
+  <span class="dc-lbl">เอกสารที่เกี่ยวข้อง</span>
+  <span class="dc-node current">SV-1 รับงาน (นี้)</span>
+  <span class="dc-arrow">→</span>
+  <a class="dc-node" href="sv2-service-assignment-mockup.html">SV-2 มอบหมาย</a>
+  <span class="dc-arrow">→</span>
+  <a class="dc-node" href="sv5-job-card-mockup.html">SV-5 Job Card</a>
+  <span class="dc-arrow">→</span>
+  <a class="dc-node" href="sv4-service-close-mockup.html">SV-4 ปิดงาน/บิล</a>
+  <span class="dc-arrow">→</span>
+  <a class="dc-node" href="sv7-service-delivery-mockup.html">SV-7 ส่งคืน</a>
+</div>
+
+<!-- Footer: sticky submit เดียว (long-form UX · de-dup แล้ว) -->
 <div class="footer-actions">
-  <div class="hint">🔒 ส่งต่อ SV-2 = บันทึกใบรับเข้า BC + สร้าง SV-2 Draft (รอมอบหมายช่าง) · หากต้องประเมินหน้างานก่อน → กด <b>SIR</b></div>
+  <div class="hint">🔒 ส่งต่อ SV-2 = บันทึกใบรับเข้า BC + สร้าง SV-2 Draft (รอมอบหมายช่าง)</div>
   <div class="spacer"></div>
-  <button class="btn btn-ghost">ยกเลิก</button>
-  <button class="btn btn-secondary">💾 บันทึก Draft</button>
-  <button class="btn btn-secondary" onclick="location.href='sir-site-inspection-mockup.html'">🔍 ขอประเมินหน้างาน (SIR)</button>
   <button class="btn btn-success" onclick="location.href='sv2-service-assignment-mockup.html'">→ ส่งต่อ SV-2 มอบหมาย</button>
 </div>
 
