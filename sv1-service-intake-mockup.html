@@ -70,6 +70,13 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
 .warranty-card input[type=radio]{margin-top:2px}
 .warranty-card .wc-title{font-size:13px;font-weight:600;color:#111827}
 .warranty-card .wc-desc{font-size:11.5px;color:#6B7280;margin-top:2px;line-height:1.4}
+/* B2 Resolution A-E */
+.res-opt{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#374151;padding:6px 8px;border-radius:6px;cursor:pointer;border:1px solid transparent;line-height:1.5}
+.res-opt:hover{background:#F8FAFC}
+.res-opt.selected{background:#EFF6FF;border-color:#BFDBFE}
+.res-opt input{margin-top:2px;flex-shrink:0}
+.res-opt .rc{color:#2563EB;font-weight:700;min-width:14px}
+.res-drive{color:#059669;font-weight:600;font-size:11px;margin-left:auto;white-space:nowrap;flex-shrink:0}
 /* Tabs */
 .tabs{display:flex;gap:0;border-bottom:2px solid #E5E7EB;margin-bottom:16px}
 .tab-btn{padding:10px 16px;border:none;background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:#6B7280;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px}
@@ -276,6 +283,26 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
 
   <div class="alert alert-info" style="margin:14px 0 0">
     ℹ️ <div><strong>Warranty จาก Serial → itemLedger (BC):</strong> ระบบดึงวันซื้อ/วันหมดประกันจาก Serial · พนักงานยืนยัน + เลือก Warranty Status ด้านล่าง (per-component detail = B3 ทีหลัง)</div>
+  </div>
+
+  <!-- B2: Resolve Serial → เมนู A-E (spec §2) -->
+  <div style="margin:14px 0;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:8px;padding:9px 14px;background:#F1F5F9;border-bottom:1px solid #E5E7EB">
+      <span style="font-size:13px;font-weight:700;color:#1E3A5F">🔍 Resolve Serial → เมนู A-E</span>
+      <span style="font-size:11px;color:#6B7280;font-family:monospace">SN 1234567890</span>
+      <span id="svResTag" style="font-size:11px;color:#059669;font-weight:600">✓ resolved = A</span>
+      <div style="flex:1"></div>
+      <button class="btn btn-secondary" style="padding:5px 12px;font-size:12px" onclick="svResolve()">🔄 ตรวจใหม่</button>
+    </div>
+    <div style="padding:8px 12px;display:flex;flex-direction:column;gap:3px" id="svResBox">
+      <label class="res-opt selected" onclick="svRes('A')"><input type="radio" name="svres" value="A" checked><span class="rc">A</span><span>เจอ S/N + <b>ในประกัน</b> → เคลม/ซ่อมในประกัน · ดึงประวัติซื้อ + vendor + ตารางประกันรายชิ้น</span><span class="res-drive">→ Warranty In · Bill Vendor</span></label>
+      <label class="res-opt" onclick="svRes('B')"><input type="radio" name="svres" value="B"><span class="rc">B</span><span>เจอ S/N + <b>หมดประกัน</b> → ซ่อมปกติ คิดเงินลูกค้า</span><span class="res-drive">→ Warranty Out · Bill ลูกค้า</span></label>
+      <label class="res-opt" onclick="svRes('C')"><input type="radio" name="svres" value="C"><span class="rc">C</span><span>เจอ S/N + <b>มีงานค้างเปิดอยู่</b> → เปิดงานเดิมต่อ (กันเปิด job ซ้ำ)</span><span class="res-drive">→ ลิงก์งานเดิม</span></label>
+      <label class="res-opt" onclick="svRes('D')"><input type="radio" name="svres" value="D"><span class="rc">D</span><span><b>ไม่เจอ S/N</b> (ของเก่า/ข้อมูลไม่ครบ) → กรอก manual + แนบหลักฐาน</span><span class="res-drive">→ admin ยืนยันก่อนเข้าเคลม 🔒</span></label>
+      <label class="res-opt" onclick="svRes('E')"><input type="radio" name="svres" value="E"><span class="rc">E</span><span>เจอ S/N แต่ <b>ซื้อจากที่อื่น</b> → เช็คแบรนด์ · เข้าเงื่อนไข → ซ่อม+เคลมอะไหล่/ค่าแรงได้</span><span class="res-drive">→ In (แบรนด์) · เปลี่ยนเครื่องใหม่ไม่ได้</span></label>
+    </div>
+    <div id="svResC" style="display:none;padding:9px 14px;background:#DBEAFE;border-top:1px solid #93C5FD;font-size:12px;color:#1E40AF">🔗 <b>C · มีงานค้าง:</b> พบ <b>SVJ-260210</b> (เปิด 28/06/26 · รออะไหล่) — <a href="sv5-job-card-mockup.html" style="color:#1E40AF;font-weight:600">เปิดงานเดิมต่อ</a> แทนสร้างใหม่</div>
+    <div id="svResD" style="display:none;padding:9px 14px;background:#FEF3C7;border-top:1px solid #FCD34D;font-size:12px;color:#92400E">⚠️ <b>D · ไม่เจอ S/N:</b> กรอกรุ่น/วันซื้อ manual + แนบใบเสร็จ/รูปเครื่อง → สถานะ <b>Release (รอ admin ยืนยัน)</b> ก่อนเข้าเคลม (Maker≠Checker)</div>
   </div>
 
   <div style="margin:16px 0 8px;font-size:13px;font-weight:600;color:#374151">Warranty Status <span class="req" style="color:#DC2626">*</span> <span style="font-size:11px;font-weight:400;color:#6B7280">— เปลี่ยน payer อัตโนมัติ (flow 01)</span></div>
@@ -491,6 +518,18 @@ document.querySelectorAll('.warranty-card').forEach(function(c){
 });
 function svWarr(v){ var b=document.getElementById('svClaimBox'); if(b) b.style.display=(v==='in')?'block':'none'; }
 function svClaimRes(v){ var b=document.getElementById('svReplaceBox'); if(b) b.style.display=(v==='replace')?'block':'none'; }
+// B2: Resolve Serial A-E → ขับ Warranty Status (A/E→in · B→out · C/D→banner)
+function svRes(x){
+  document.querySelectorAll('#svResBox .res-opt').forEach(function(o){o.classList.remove('selected');});
+  var el=document.querySelector('#svResBox input[value="'+x+'"]'); if(el){ el.checked=true; el.closest('.res-opt').classList.add('selected'); }
+  var tag=document.getElementById('svResTag'); if(tag) tag.textContent='✓ resolved = '+x;
+  document.getElementById('svResC').style.display=(x==='C')?'block':'none';
+  document.getElementById('svResD').style.display=(x==='D')?'block':'none';
+  var w=(x==='A'||x==='E')?'in':(x==='B')?'out':(x==='D')?'release':null;
+  if(w){ var r=document.querySelector('input[name="warranty"][value="'+w+'"]'); if(r){ r.checked=true; svWarr(w);
+      document.querySelectorAll('input[name="warranty"]').forEach(function(i){ i.closest('.warranty-card').classList.toggle('selected', i.value===w); }); } }
+}
+function svResolve(){ alert('ตรวจ Serial ใหม่ (mock)\nระบบ query itemLedger (BC) → resolve เมนู A-E อัตโนมัติ · พนักงาน override เลือกเองได้'); }
 </script>
 <script src="swt-link.js"></script>
 <script src="swt-sidebar.js"></script>
