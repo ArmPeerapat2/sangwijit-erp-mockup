@@ -160,7 +160,7 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
     <button class="swt-mh-btn swt-mh-btn-ghost">📄 พิมพ์</button>
     <button class="swt-mh-btn swt-mh-btn-danger">↩ ส่งกลับช่าง</button>
     <button class="swt-mh-btn swt-mh-btn-ghost" onclick="location.href='clm-vendor-claim-mockup.html'" title="เฉพาะงานในประกัน — เปิด CLM ส่งเคลมแบรนด์ + ตั้ง APCN ตัด ARI">🎫 เปิดเคลม Vendor</button>
-    <button class="swt-mh-btn swt-mh-btn-primary">→ ส่งต่อ SV-7</button>
+    <button class="swt-mh-btn swt-mh-btn-primary core-gated">→ ส่งต่อ SV-7</button>
   </div>
 </header>
 
@@ -412,6 +412,37 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
   </div>
 </div>
 
+<!-- Section SV-4.4b: Core Return to Vendor (B5) -->
+<div class="section-card">
+  <div class="section-title">🔄 SV-4.4b · ส่งคืนซาก Vendor <span class="tag" style="margin-left:auto">เฉพาะอะไหล่ในประกัน (เคลม)</span></div>
+  <div id="coreGate" class="alert alert-warn" style="border-width:2px">
+    🔒 <div><strong>ปิดงานไม่ได้:</strong> ซากค้างส่งคืน <b id="corePend">1</b> ชิ้น — ต้องส่งคืน Vendor + <b>Vendor รับครบ</b> (<span id="coreCount">1/2</span>) ก่อนกด "→ ส่งต่อ SV-7" ได้ · <span style="color:#92400E">ซากคือหลักฐานเคลม — หายก่อน = Vendor reject</span></div>
+  </div>
+  <table>
+    <thead><tr>
+      <th>อะไหล่ (ซากที่ถอด)</th>
+      <th style="width:160px">Claim Ref</th>
+      <th style="width:175px">สถานะส่งคืน 🖊️</th>
+      <th style="width:190px">เลขพัสดุ · วันส่ง</th>
+    </tr></thead>
+    <tbody id="coreRows">
+      <tr data-core="1">
+        <td>Compressor 2 HP <span class="mono" style="color:#6B7280;font-size:11px">DAI-COMP-2HP-01</span></td>
+        <td class="mono">DKN-CLM-2604-0089</td>
+        <td><select class="core-st" onchange="coreGate()"><option value="pend">⏳ รอส่งคืน</option><option value="ship">🚚 ส่งแล้ว</option><option value="recv" selected>✅ Vendor รับแล้ว</option></select></td>
+        <td><span class="mono">KERRY-TH-88231</span> · 22/04/26</td>
+      </tr>
+      <tr data-core="2">
+        <td>ถาดน้ำทิ้ง 12k BTU <span class="mono" style="color:#6B7280;font-size:11px">DAI-PAN-STD-12</span></td>
+        <td class="mono">DKN-CLM-2604-0089</td>
+        <td><select class="core-st" onchange="coreGate()"><option value="pend" selected>⏳ รอส่งคืน</option><option value="ship">🚚 ส่งแล้ว</option><option value="recv">✅ Vendor รับแล้ว</option></select></td>
+        <td><input placeholder="เลขพัสดุ..." style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"></td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="margin-top:8px;font-size:11.5px;color:#6B7280">💡 ซากมาจากอะไหล่ "ใน Comp" (SV-4.2) เท่านั้น · out-warranty = ของลูกค้า (ไม่ต้องคืน Vendor) · สถานะ mark โดยคลัง/ช่าง</div>
+</div>
+
 <!-- Section SV-4.5: Hand-off + Customer Sign (กรณีนอกสถานที่) -->
 <div class="section-card">
   <div class="section-title">🚀 SV-4.5 · ส่งต่อลูกค้า + เซ็นรับ <span class="tag">Hand-off · ลำดับสุดท้าย</span></div>
@@ -483,7 +514,7 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top
   <button class="btn btn-ghost">ยกเลิก</button>
   <button class="btn btn-danger">↩ ส่งกลับช่าง (QA ไม่ผ่าน)</button>
   <button class="btn btn-primary">🏢 ตั้งหนี้ Vendor</button>
-  <button class="btn btn-success">→ ส่งต่อ SV-7 ลูกค้าเซ็น</button>
+  <button class="btn btn-success core-gated">→ ส่งต่อ SV-7 ลูกค้าเซ็น</button>
 </div>
 
 </div></div></div>
@@ -572,6 +603,23 @@ function svPayer(t){ alert(t==='vendor'
   ? 'แก้ข้อมูลผู้จ่าย (Vendor party)\nชื่อบริษัท / เลขภาษี / ที่อยู่ / เครดิตเทอม — กรอกเมนวล (เหมือนเพิ่มวิธีจ่าย 1 ประเภท)'
   : 'เปลี่ยนผู้จ่าย (bill-to party)\nเลือกจากลูกค้าเดิม หรือเพิ่ม party ใหม่ (บริษัท/นายหน้า) กรอกเมนวล'); }
 document.addEventListener('DOMContentLoaded', svRebill);
+// B5: core-return gate — block "ส่งต่อ SV-7" จน Vendor รับซากครบ (in-warranty)
+function coreGate(){
+  var rows = document.querySelectorAll('#coreRows tr');
+  var total = rows.length, recv = 0;
+  rows.forEach(function(r){ if(r.querySelector('.core-st').value==='recv') recv++; });
+  var pend = total - recv, ok = pend === 0;
+  var cc=document.getElementById('coreCount'); if(cc) cc.textContent = recv+'/'+total;
+  var cp=document.getElementById('corePend'); if(cp) cp.textContent = pend;
+  var g=document.getElementById('coreGate'); if(g) g.style.display = ok ? 'none' : 'flex';
+  document.querySelectorAll('.core-gated').forEach(function(b){
+    b.disabled = !ok;
+    b.style.opacity = ok ? '' : '0.45';
+    b.style.cursor = ok ? '' : 'not-allowed';
+    b.title = ok ? '' : 'ซากยังไม่ครบ — ปิดงานไม่ได้';
+  });
+}
+document.addEventListener('DOMContentLoaded', coreGate);
 </script>
 <script src="swt-link.js"></script>
 <script src="swt-sidebar.js"></script>
