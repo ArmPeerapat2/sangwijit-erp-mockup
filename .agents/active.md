@@ -57,6 +57,12 @@ project_type: "frontend-mockup (HTML + docs)"
 
 **🔧 SV backlog B5 ✅ (2026-07-04 · grill 3 ข้อ):** core-return dashboard + gate ที่ sv4 · **Q1** คืนเฉพาะอะไหล่ในประกัน (เคลม · ซาก=หลักฐาน · out-warranty=ของลูกค้า) · **Q2** 3 สถานะ: ⏳รอส่งคืน→🚚ส่งแล้ว→✅Vendorรับแล้ว · **Q3** gate **เข้มสุด** = block "→ ส่งต่อ SV-7" จน Vendor รับซากครบ (coreGate() สด) · SV-4.4b dashboard + sv3 flag "ต้องคืนซาก→SV-4.4b" · ⚠️ **timing tension:** gate เข้มอาจ block customer delivery ระหว่างรอ vendor รับซาก — flag ให้ user ทบทวน (ถ้าติดจริงค่อยผ่อนเป็น "≥ส่งแล้ว") · **C4 (B2/B4/B5) ปิดครบ**
 
+**🔧 SV backlog B3 ✅ (2026-07-04 · grill Q1-Q4):** per-component warranty ที่ sv1 SV-1.3 · **Q1** manual กรอกเอง (+pre-fill hint model +แนบสแกน=audit) · **Q2** เฉพาะชิ้นเกี่ยวงาน +เพิ่มแถว (svAddComp) · **Q3** loose = ตาราง reference เฉย ๆ ไม่ auto-drive B4 · **Q4** mismatch soft-flag ⚠️ ที่ sv4 line (data-b3=in + ตั้งเก็บลูกค้า) ปิดได้ · demo คอม🟢/PCB🔴 · ปิด placeholder "B3 ทีหลัง"
+
+**🔧 SV backlog B6 ✅ + kitchen-rail (2026-07-04 · grill Q1-Q3):** ปุ่มส่งคำขอลดหนี้ · **Q1** 4 เหตุผล (vendor-claim/goodwill/คิดเกิน/คืนของ) · **Q2** SV-4 จุดเดียว (admin คุม) · **Q3** เบา: ส่ง ARI+เหตุผล → SL-CN draft · line เลือกที่ SL-CN · ปุ่มใน SAAB sv4 + popup(cnReqModal) · **B6+ enhance:** SL-Q รับ CN ticket จาก SV-4 พร้อมอ้างอิงต้นทาง (SCR+ARI) · **📌 model ใหม่ [[q-kitchen-rail-pattern]]:** ทุก Q=ครัวรับออเดอร์ · โมดูล=โต๊ะสั่ง · ticket โชว์ ref ต้นทางเสมอ · จัดตามงานไม่ใช่ doc-type
+
+**⏭️ NEXT (resume จุดนี้):** (a) **Q-sweep** — 5 Q (fiq·sv-q·fi1q·poq·wh-q-dashboard) โชว์ ref ต้นทางไม่ครบ → ทำทุกแถวมี "จาก[โมดูล]·เลขเอกสาร" ตาม kitchen model · (b) SV backlog เหลือ: **B4b** goodwill payer (โยง B4+B6) · **B7** WH-SVC 6 bins · **B8** CM-1 เรทช่าง · **B9** checklist tmpl · **B10** SLA config · **B12** MA contract · **B13** tech-mobile · **B14** posted-docs · (c) sweep density โมดูลอื่น (PO/WH/FI/MD ค่าเดิม 24/20/16) · **⚠️ ~25 commits ยังไม่ push** (local focus ตามสั่ง)
+
 **🎨 SV design-consistency sweep ✅ (2026-07-04 · ยึด SL-4):** ปรับ SV ทั้งกลุ่มให้ตรงกัน —
 - **section-code:** ทุกโซน (การ์ด+section) มี code emoji+`SV-x.x ·` · แก้ sv7 (การ์ดไม่มี code → SV-7.1/7.1b · renumber 7.2-7.4) · sv2/3 + sv-order-parts (num-badge → emoji+code)
 - **CSS shared:** base `.saab` ย้ายเข้า `swt-patterns.css` · sv1-7+clm+sv-order inline/local `.saab-bar` → `class="saab"` (memory [[css-shared-not-inline]])

@@ -210,18 +210,18 @@
 
 ---
 
-## 11. Build backlog (หลัง grill นี้ — ยังไม่ทำ)
+## 11. Build backlog — B1-B6 ✅ (2026-07-04) · เหลือ B4b/B7-B14 + Q-sweep (5 หน้า) ตาม kitchen-rail model
 
 | # | งาน | ผูก grill |
 |---|-----|-----------|
-| B1 | **`sv1-service-intake-mockup.html`** rebuild — แยก job type 5 ตัว + `.jx` extension slot (ตอนนี้ dropdown 4 ตัว) | §1 · §12.4 |
+| B1 ✅ | **`sv1-service-intake-mockup.html`** rebuild — แยก job type 5 ตัว + `.jx` extension slot (ตอนนี้ dropdown 4 ตัว) | §1 · §12.4 |
 | B4b | SV-4 billing เพิ่ม payer option "goodwill" (แบรนด์/SWT) + approval | §12.1 |
 | B11 | SL-CN validation: refund ≤ ราคาขายเดิม รายบรรทัด | §12.3 |
-| B2 | Resolution A-E ตอน S/N-first entry | §2 |
-| B3 | S/N lookup → ตารางประกันรายชิ้น | §3 |
-| B4 | SV-4 billing: assignable payer ต่อบรรทัด + default + แยก ARI/SL-4 | §4 |
-| B5 | Parts return dashboard (per-line 3 สถานะ) + gate ปิดงาน + exception ติ๊ก | §6 |
-| B6 | ปุ่ม "ส่งคำขอลดหนี้" ใน SV-4/SV-7 → SL-Q (ฝั่งส่ง ยังไม่มี · ฝั่งรับใน SL-Q ทำแล้ว) | §0 |
+| B2 ✅ | Resolution A-E ตอน S/N-first entry | §2 |
+| B3 ✅ | S/N lookup → ตารางประกันรายชิ้น | §3 |
+| B4 ✅ | SV-4 billing: assignable payer ต่อบรรทัด + default + แยก ARI/SL-4 | §4 |
+| B5 ✅ | Parts return dashboard (per-line 3 สถานะ) + gate ปิดงาน + exception ติ๊ก | §6 |
+| B6 ✅ | ปุ่ม "ส่งคำขอลดหนี้" ใน SV-4/SV-7 → SL-Q (ฝั่งส่ง ยังไม่มี · ฝั่งรับใน SL-Q ทำแล้ว) | §0 |
 | B7 | WH-SVC-CTR 6 bins | §7 |
 | B8 | รายงานสรุปงานช่าง → CM-1 (เรทจ่ายช่าง) | §8 |
 | B9 | checklist template ตรวจเช็ค/ล้าง (ราย product type · เพิ่มรายการได้) | §1 |
