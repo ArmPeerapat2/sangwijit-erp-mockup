@@ -1,31 +1,187 @@
-<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PM-1 รายการราคา (Price List) — Sangwijit ERP</title>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PM-1 · รายการราคา (Price List) — Sangwijit ERP</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;min-width:1440px;color:#1F2937}
-.main{margin-left:240px}
-.topbar{background:#fff;border-bottom:1px solid #E2E8F0;padding:14px 28px}
-.bc{font-size:12px;color:#64748B}
-.wrap{padding:24px 28px;max-width:1100px}
-h1{font-size:22px;color:#1E3A5F;margin-bottom:4px}
-.sub{font-size:13px;color:#64748B;margin-bottom:18px}
-.plan-badge{display:inline-block;background:#FEF3C7;color:#92400E;border:1px solid #FCD34D;border-radius:10px;font-size:11px;font-weight:700;padding:3px 10px;margin-bottom:14px}
-.card{background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:18px 20px;margin-bottom:14px}
-.card h3{font-size:14px;color:#1E3A5F;margin-bottom:8px}
-.card p{font-size:13px;line-height:1.75;color:#374151}
-</style></head><body>
-<div class="main">
-  <div class="topbar"><div class="bc">โปรโมชั่น (PM) &rsaquo; PM-1 รายการราคา (Price List)</div></div>
-  <div class="wrap">
-    <div class="plan-badge">🔜 รอ build P2 · naming locked (grill 2026-07-04)</div>
-    <h1>PM-1 · รายการราคา (Price List)</h1>
-    <div class="sub">หน้าในแผน · stub placeholder (กัน sidebar dead link) · รอ build เต็ม</div>
-    <div class="card"><h3>หน้านี้ทำอะไร</h3><p>ตั้งราคาขาย + วันเริ่ม/สิ้นสุดโปรฯ → Draft → Set Active → sync BC365 Sales Price List (Flow 01 · ฐานข้อมูลราคา&สัญญา)</p></div>
-    <div class="card" style="background:#F8FAFC"><p style="font-size:12px;color:#64748B">spec: <code>PM_promotion.md · Flow Design/Promotion/01</code> · สถานะ backlog ดู <code>.agents/file-status-audit.md</code></p></div>
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
+.app-container{display:flex;min-height:100vh}
+.main-content{flex:1;margin-left:240px;padding:0;background:#F8FAFC}
+.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.breadcrumb{font-size:13px;color:#6B7280}
+.breadcrumb strong{color:#111827}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.search-box{width:280px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;background:#F9FAFB}
+.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.content-wrapper{padding:16px 24px}
+.btn{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.btn-primary{background:#2563EB;color:#fff}.btn-secondary{background:#fff;color:#374151;border:1px solid #D1D5DB}.btn-success{background:#10B981;color:#fff}.btn-ghost{background:transparent;color:#6B7280;border:1px solid transparent}
+.section-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.section-title{font-size:15px;font-weight:600;color:#111827;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.section-title .tag{font-size:11px;background:#EFF6FF;color:#1E40AF;padding:2px 8px;border-radius:4px;font-weight:600;margin-left:auto}
+.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 16px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;color:#6B7280;font-weight:500}
+.field input,.field select{padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;font-family:inherit;background:#fff;color:#111827;outline:none;width:100%}
+.field input:focus,.field select:focus{border-color:#2563EB}
+.status-pills{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.status-pill{padding:6px 12px;border-radius:16px;font-size:12px;font-weight:600;border:1px solid #E5E7EB;background:#F9FAFB;color:#6B7280}
+.status-pill.active{background:#2563EB;color:#fff;border-color:#2563EB}
+.status-pill.done{background:#D1FAE5;color:#065F46;border-color:#86EFAC}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#F9FAFB;padding:9px 10px;text-align:left;font-weight:600;color:#374151;border-bottom:1px solid #E5E7EB;font-size:11.5px;text-transform:uppercase;letter-spacing:0.04em}
+td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:middle}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+td input,td select{width:100%;padding:5px 7px;border:1px solid #E5E7EB;border-radius:5px;font-size:12.5px;font-family:inherit}
+.hidecost{color:#9CA3AF;font-style:italic;font-size:11.5px}
+.chip{display:inline-flex;padding:2px 7px;border-radius:4px;font-size:10.5px;font-weight:600}
+.chip-b{background:#DBEAFE;color:#1E40AF}.chip-g{background:#D1FAE5;color:#065F46}
+.alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:12px;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.alert-info{background:#DBEAFE;color:#1E40AF;border:1px solid #93C5FD}
+.footer-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid #E5E7EB;padding:14px 24px;margin:16px -24px -24px;display:flex;gap:8px;align-items:center;box-shadow:0 -4px 12px rgba(0,0,0,0.05)}
+.footer-actions .spacer{flex:1}
+.footer-actions .hint{font-size:12px;color:#6B7280}
+</style>
+</head>
+<body>
+<div class="app-container"><div class="main-content"><div class="topbar">
+<div class="breadcrumb">หน้าแรก › โปรโมชั่น &amp; ราคา › <strong>PM-1 รายการราคา</strong></div>
+<div class="topbar-right">
+<input class="search-box" placeholder="ค้นหา...">
+<span>🔔</span><span class="branch-tag">สำนักงานใหญ่ · SWT</span><div class="avatar">P</div>
+</div>
+</div><div class="content-wrapper">
+
+<header class="swt-mh">
+  <div class="swt-mh-left">
+    <div class="swt-mh-title">
+      <div class="swt-mh-ico">🏷️</div>
+      <div><h1>รายการราคา (Price List)</h1><p>PM-1 · ราคาขายมาตรฐาน + ช่วงโปรฯ → sync BC</p></div>
+    </div>
+    <div class="swt-mh-divider"></div>
+    <div class="swt-mh-meta">
+      <div class="swt-mh-meta-item"><div class="lbl">เลขที่</div><div class="val">PL-2607-0004</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">SKU</div><div class="val">24 รายการ</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">มีผล</div><div class="val">01/07 – 30/09/26</div></div>
+    </div>
+  </div>
+  <div class="swt-mh-right">
+    <span class="swt-mh-badge pending">🟠 ร่าง</span>
+    <button class="swt-mh-btn swt-mh-btn-ghost">📄 พิมพ์</button>
+    <button class="swt-mh-btn swt-mh-btn-primary">✓ ส่งขออนุมัติ</button>
+  </div>
+</header>
+
+<div class="saab">
+  <button class="btn btn-secondary">📂 เปิดรายการเก่า</button>
+  <button class="btn btn-secondary">📋 Copy จากรายการอื่น</button>
+  <div class="saab-spacer"></div>
+  <button class="btn btn-secondary">⬆️ นำเข้า Excel</button>
+</div>
+
+<div class="status-pills">
+  <span class="status-pill active">1. ร่าง (Draft · ปัจจุบัน)</span>
+  <span class="status-pill">2. รออนุมัติ</span>
+  <span class="status-pill">3. อนุมัติแล้ว</span>
+  <span class="status-pill">4. Posted (มีผล + sync BC)</span>
+</div>
+
+<div class="alert alert-info">
+  ℹ️ <div><strong>ราคาที่ตั้งที่นี่ = ราคาก่อน VAT เสมอ</strong> (VAT บวกทีหลัง) · Posted แล้วแก้ไม่ได้ → ต้องสร้างรายการใหม่ · ราคานี้เป็นฐานให้ทั้งฝ่ายขาย (SL) และบริการ (SV) ผ่าน SC9</div>
+</div>
+
+<div class="section-card">
+  <div class="section-title">🏷️ PM-1.1 · ข้อมูลรายการราคา</div>
+  <div class="form-grid">
+    <div class="field"><label>รหัสรายการ</label><input value="PL-2607-0004" readonly style="background:#F9FAFB"></div>
+    <div class="field"><label>ประเภท</label><select><option>มาตรฐาน (Standard)</option><option selected>ตามฤดู/โปรฯ (Seasonal)</option><option>เฉพาะกิจ (Promo)</option></select></div>
+    <div class="field"><label>สกุลเงิน</label><select><option>THB (บาท)</option></select></div>
+    <div class="field"><label>ใช้กับ</label><select><option>ลูกค้าทุกราย</option><option selected>กลุ่มลูกค้า: ตัวแทนจำหน่าย</option><option>ลูกค้าเฉพาะราย</option></select></div>
+    <div class="field"><label>มีผลตั้งแต่ <span style="color:#DC2626">*</span></label><input value="01/07/26"></div>
+    <div class="field"><label>ถึง</label><input value="30/09/26"></div>
+    <div class="field" style="grid-column:span 2"><label>คำอธิบาย</label><input value="ราคาตัวแทนจำหน่าย ไตรมาส 3/2569 (โปรฤดูร้อน)"></div>
   </div>
 </div>
-<script src="swt-link.js" defer></script>
+
+<div class="section-card">
+  <div class="section-title">📦 PM-1.2 · รายการสินค้า + ราคา <span class="tag">ราคาก่อน VAT · ต้นทุนซ่อนจากฝ่ายขาย</span></div>
+  <table>
+    <thead><tr>
+      <th style="width:140px">รหัสสินค้า</th>
+      <th>ชื่อสินค้า</th>
+      <th style="width:70px">หน่วย</th>
+      <th style="width:110px" class="num">จำนวน (ตั้งแต่-ถึง)</th>
+      <th style="width:120px" class="num">ราคาขาย (ก่อน VAT)</th>
+      <th style="width:100px" class="num">ต้นทุน</th>
+      <th style="width:120px">กลุ่มลูกค้า</th>
+    </tr></thead>
+    <tbody id="plRows">
+      <tr>
+        <td><input value="DAI-FTKM24" style="font-family:monospace"></td>
+        <td><input value="แอร์ Daikin FTKM24 24000 BTU"></td>
+        <td><input value="เครื่อง"></td>
+        <td class="num"><input value="1 - 4" style="text-align:center"></td>
+        <td class="num"><input value="18,900.00" style="text-align:right;font-weight:600"></td>
+        <td class="num"><span class="hidecost">🔒 ซ่อน</span></td>
+        <td><input value="ตัวแทน"></td>
+      </tr>
+      <tr>
+        <td><input value="DAI-FTKM24" style="font-family:monospace"></td>
+        <td><input value="แอร์ Daikin FTKM24 (ซื้อ 5+ เครื่อง)"></td>
+        <td><input value="เครื่อง"></td>
+        <td class="num"><input value="5 ขึ้นไป" style="text-align:center"></td>
+        <td class="num"><input value="18,200.00" style="text-align:right;font-weight:600"></td>
+        <td class="num"><span class="hidecost">🔒 ซ่อน</span></td>
+        <td><input value="ตัวแทน"></td>
+      </tr>
+      <tr>
+        <td><input value="MIT-MSY13" style="font-family:monospace"></td>
+        <td><input value="แอร์ Mitsubishi MSY-13 13000 BTU"></td>
+        <td><input value="เครื่อง"></td>
+        <td class="num"><input value="1 - 9" style="text-align:center"></td>
+        <td class="num"><input value="13,500.00" style="text-align:right;font-weight:600"></td>
+        <td class="num"><span class="hidecost">🔒 ซ่อน</span></td>
+        <td><input value="ตัวแทน"></td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="margin-top:8px;font-size:12.5px;color:#2563EB;font-weight:600;cursor:pointer" onclick="addPl()">➕ เพิ่มรายการสินค้า</div>
+</div>
+
+<div class="section-card" style="padding:12px 16px">
+  <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-size:13px">
+    <span>📦 สินค้า: <b>3 SKU</b> (2 รุ่น)</span>
+    <span>✅ มีผล: <b>ทั้งหมด</b></span>
+    <span>⏳ อนุมัติ: <span class="chip chip-b">รอส่ง</span></span>
+    <div style="flex:1"></div>
+    <a href="#" style="font-size:12px;color:#2563EB">📜 ดูประวัติการแก้ไข (PM-1.3)</a>
+  </div>
+</div>
+
+<div class="footer-actions">
+  <div class="hint">🔒 Post แล้วแก้ไม่ได้ · ผ่านอนุมัติ (Pricing Manager) ก่อน Post → sync BC salesPriceLists</div>
+  <div class="spacer"></div>
+  <button class="btn btn-ghost">ยกเลิก</button>
+  <button class="btn btn-secondary">💾 บันทึกร่าง</button>
+  <button class="btn btn-primary">✓ ส่งขออนุมัติ</button>
+</div>
+
+</div></div></div>
+<script src="swt-link.js"></script>
 <script src="swt-sidebar.js"></script>
-</body></html>
+<script>
+function addPl(){
+  var tb=document.getElementById('plRows');
+  var tr=document.createElement('tr');
+  var i='width:100%;padding:5px 7px;border:1px solid #E5E7EB;border-radius:5px;font-size:12.5px;font-family:inherit';
+  tr.innerHTML='<td><input placeholder="รหัส..." style="'+i+';font-family:monospace"></td><td><input placeholder="ชื่อสินค้า..." style="'+i+'"></td><td><input value="เครื่อง" style="'+i+'"></td><td class="num"><input placeholder="1 - ..." style="'+i+';text-align:center"></td><td class="num"><input placeholder="0.00" style="'+i+';text-align:right"></td><td class="num"><span class="hidecost">🔒 ซ่อน</span></td><td><input placeholder="กลุ่ม" style="'+i+'"></td>';
+  tb.appendChild(tr);
+}
+</script>
+</body>
+</html>
