@@ -63,6 +63,8 @@ project_type: "frontend-mockup (HTML + docs)"
 
 **🔧 SV backlog B4b ✅ (2026-07-04 · grill Q1-Q4 · ภาษาบ้าน):** ตัวเลือก "บริษัทออกให้ฟรี" (goodwill) ตอนตั้งบิล sv4 · **Q1** ทางที่ 3 ต่อบรรทัด (Vendor/ลูกค้า/บริษัทให้ฟรี) · **Q2** เลือกได้ บริษัทเรา/แบรนด์ (กล่อง goodwill) · **Q3** อนุมัติทุกครั้ง หัวหน้า+เก็บหลักฐาน (ชั้นสิทธิ์ที่ CF-2.6) · **Q4**(default) ลูกค้าเห็นราคาเต็ม+ป้าย จ่าย 0 + กล่องสรุปแยก · svRebill 3 ถัง
 
+**🎉 SV backlog ครบ B1-B14 ✅ (2026-07-04):** 7 หน้าใหม่ session นี้ — **B10** ตั้งค่า SLA (`sv-sla-config`) · **B7** คลังศูนย์ซ่อม 6 bins (`wh-svc-center`) · **B8** สรุปงานช่าง→CM-1 (`sv-tech-report`) · **B14** เอกสารโพสต์แล้ว (`sv-posted-docs`) · **B9** เช็คลิสต์ล้าง/ตรวจ (`sv-checklist-template`) · **B12** สัญญา MA รายปี (`sv-ma-contract` · เปิดงาน→ค้างมอบหมาย reuse flow) · **B13** มือถือช่าง (`sv-tech-mobile` · phone mockup ครบวงจรหน้างาน) · เพิ่ม sidebar 7 links · **เหลือแค่ B11** (SL-CN validation = งาน SL ไม่ใช่ SV)
+
 **⏭️ NEXT (resume จุดนี้):** (a) ~~Q-sweep~~ ✅ **ตรวจแล้วไม่ต้องทำ (2026-07-04):** rail ทุกหน้าโชว์ ref ต้นทางอยู่แล้ว (fiq→PO/บิล · sv-q→SIR/SQT/CLM · poq→PR · fi1q→INV) · wh-q-dashboard=stock ไม่ใช่ rail · SL-Q(B6) คือหน้าเดียวที่ขาดจริง เติมแล้ว · (b) SV backlog เหลือ: **B4b** goodwill payer (โยง B4+B6) · **B7** WH-SVC 6 bins · **B8** CM-1 เรทช่าง · **B9** checklist tmpl · **B10** SLA config · **B12** MA contract · **B13** tech-mobile · **B14** posted-docs · (c) sweep density โมดูลอื่น (PO/WH/FI/MD ค่าเดิม 24/20/16) · **⚠️ ~25 commits ยังไม่ push** (local focus ตามสั่ง)
 
 **🎨 SV design-consistency sweep ✅ (2026-07-04 · ยึด SL-4):** ปรับ SV ทั้งกลุ่มให้ตรงกัน —

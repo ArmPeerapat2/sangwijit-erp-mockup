@@ -222,13 +222,13 @@
 | B4 ✅ | SV-4 billing: assignable payer ต่อบรรทัด + default + แยก ARI/SL-4 | §4 |
 | B5 ✅ | Parts return dashboard (per-line 3 สถานะ) + gate ปิดงาน + exception ติ๊ก | §6 |
 | B6 ✅ | ปุ่ม "ส่งคำขอลดหนี้" ใน SV-4/SV-7 → SL-Q (ฝั่งส่ง ยังไม่มี · ฝั่งรับใน SL-Q ทำแล้ว) | §0 |
-| B7 | WH-SVC-CTR 6 bins | §7 |
-| B8 | รายงานสรุปงานช่าง → CM-1 (เรทจ่ายช่าง) | §8 |
-| B9 | checklist template ตรวจเช็ค/ล้าง (ราย product type · เพิ่มรายการได้) | §1 |
-| B10 | SLA config table ที่ CF + badge สีทุกขั้น | §9 |
-| B12 | **MA contract** สัญญาบำรุงรักษา (บริการเป็นรอบ · concept จาก bc365 by-role) — **ข้ามก่อน ต้องทำ** | grill SV struct 2026-07-03 |
-| B13 | **tech-mobile** หน้าช่างมือถือ (field technician) — **ข้ามก่อน ต้องทำ** (workspace desktop · แต่ user ยืนยันต้องมี) | grill SV struct 2026-07-03 |
-| B14 | **posted-docs** เอกสารบริการที่โพสต์แล้ว — **ข้ามก่อน ต้องทำ** | grill SV struct 2026-07-03 |
+| B7 ✅ | WH-SVC-CTR 6 bins | §7 |
+| B8 ✅ | รายงานสรุปงานช่าง → CM-1 (เรทจ่ายช่าง) | §8 |
+| B9 ✅ | checklist template ตรวจเช็ค/ล้าง (ราย product type · เพิ่มรายการได้) | §1 |
+| B10 ✅ | SLA config table ที่ CF + badge สีทุกขั้น | §9 |
+| B12 ✅ | **MA contract** สัญญาบำรุงรักษา (บริการเป็นรอบ · concept จาก bc365 by-role) — **ข้ามก่อน ต้องทำ** | grill SV struct 2026-07-03 |
+| B13 ✅ | **tech-mobile** หน้าช่างมือถือ (field technician) — **ข้ามก่อน ต้องทำ** (workspace desktop · แต่ user ยืนยันต้องมี) | grill SV struct 2026-07-03 |
+| B14 ✅ | **posted-docs** เอกสารบริการที่โพสต์แล้ว — **ข้ามก่อน ต้องทำ** | grill SV struct 2026-07-03 |
 
 ## ไฟล์เกี่ยวข้อง
 
