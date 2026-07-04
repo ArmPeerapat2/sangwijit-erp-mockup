@@ -55,6 +55,13 @@ project_type: "frontend-mockup (HTML + docs)"
 
 **🔧 SV backlog B4 ✅ (2026-07-04 · grill Q1-Q3):** per-line payer assignable ที่ sv4 · **Q3 auto-bind:** ประเภท(ใน/นอก Comp)=dropdown → เก็บจาก payer พลิกเอง (ใน→Vendor·นอก→ลูกค้า · chip=derived คำนวณสด · เปลี่ยน payer=เปลี่ยนประเภท กัน maker error) · **Q1 payer=bill-to party:** Vendor=ลูกค้าอีกราย/วิธีจ่าย กรอกบริษัทเมนวล (ไม่ hardcode type) · **Q2 ออก 2 ARI ที่ sv4:** ARI-Vendor + ARI-Customer(อ้าง SL-4/SO) post ทันที · SV-7 = รับชำระเท่านั้น (invoice ออกที่ sv4 แล้ว) · เหลือ B5 (parts return dashboard+gate) · B6-B14
 
+**🎨 SV design-consistency sweep ✅ (2026-07-04 · ยึด SL-4):** ปรับ SV ทั้งกลุ่มให้ตรงกัน —
+- **section-code:** ทุกโซน (การ์ด+section) มี code emoji+`SV-x.x ·` · แก้ sv7 (การ์ดไม่มี code → SV-7.1/7.1b · renumber 7.2-7.4) · sv2/3 + sv-order-parts (num-badge → emoji+code)
+- **CSS shared:** base `.saab` ย้ายเข้า `swt-patterns.css` · sv1-7+clm+sv-order inline/local `.saab-bar` → `class="saab"` (memory [[css-shared-not-inline]])
+- **density = ยึด SL-4** (`sl4-invoice`): cw `16px 24px` · card `14px 16px`/mb12 · title mb10 · pills 12 · saab mb12 · `.swt-mh` shared `12px 24px` · footer gap 16 (memory [[density-first-hierarchy]] spacing tokens)
+- **ครอบ:** sv1-5,7 + clm-vendor-claim + sv-order-parts (8 form) + sv-q (queue) · sv6 แน่นแล้ว (template `.content`) · sv6-1/print = component ไม่แตะ
+- **sv7 "เลื่อนไม่ได้" = viewer แคบ** (min-width 1440 · หน้าปกติ · render พิสูจน์ scroll 0→771 ที่ 1460)
+
 **✅ Orphan 6 ปิดครบ (2026-07-04 · sidebar = 0 dead link):** CL-1/CL1F → ลบเมนู (claim=job type) · PM-1/PM-2/CF-3/CF-5/MD-6 → สร้าง stub placeholder (pm1-price-list · pm2-promotion · cf3-payment-hub · cf5-bank-master · md6-service-item) + repoint sidebar + เคลียร์ DONE[] bc365 · stub = กัน dead link · build เต็มตอน P2/TBD
 
 **⏸️ Grill ฝั่งขาย PM — parked P2 (2026-07-04):** grill ครั้งแรกที่เจาะ PM (เดิม parked P2 จาก SL-CN grill Q10) · **user เลือก C: ปิด grill · P2-defer ยังยืน · ไม่ build ตอนนี้**
