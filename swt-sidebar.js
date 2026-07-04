@@ -177,7 +177,12 @@
 
   var CSS = `
   .swt-sb,.swt-sb *{box-sizing:border-box}
-  .swt-sb{position:fixed;left:0;top:0;width:240px;height:100vh;background:#1E3A5F;color:#D1D5DB;overflow-y:auto;padding:14px 10px 32px;z-index:500;font-family:'Inter','Noto Sans Thai',sans-serif;font-size:13px;line-height:1.4}
+  .swt-sb{position:fixed;left:0;top:0;width:240px;height:100vh;background:#1E3A5F;color:#D1D5DB;overflow-y:auto;overflow-x:hidden;transition:width .16s ease;padding:14px 10px 32px;z-index:500;font-family:'Inter','Noto Sans Thai',sans-serif;font-size:13px;line-height:1.4}
+  /* ย่อ (mini) / ปักหมุด — เหลือ 56px โชว์ไอคอน+โค้ด · hover ขยายชั่วคราว (peek) */
+  body.sb-mini .swt-sb{width:56px;padding-left:6px;padding-right:6px}
+  body.sb-mini .swt-sb:hover{width:240px;padding-left:10px;padding-right:10px;box-shadow:4px 0 26px rgba(0,0,0,0.4)}
+  .swt-sb-collapse{margin-left:auto;background:rgba(255,255,255,0.08);border:none;color:#94A3B8;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:inherit;line-height:1}
+  .swt-sb-collapse:hover{background:rgba(255,255,255,0.18);color:#fff}
   .swt-sb::-webkit-scrollbar{width:6px}
   .swt-sb::-webkit-scrollbar-thumb{background:#334E70;border-radius:3px}
   .swt-sb-brand{display:flex;align-items:center;gap:9px;padding:4px 8px 14px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:12px}
@@ -236,7 +241,7 @@
     var doneSet = {}; DONE.forEach(function(d){doneSet[d.toLowerCase()]=1;});
     var activeUsed = false;
     var html = '<aside class="swt-sb" id="swtSb">'
-      + '<div class="swt-sb-brand"><div class="swt-sb-logo">ส</div><div><h1>Sangwijit ERP</h1><p>Web Portal · v3.0</p></div></div>'
+      + '<div class="swt-sb-brand"><div class="swt-sb-logo">ส</div><div><h1>Sangwijit ERP</h1><p>Web Portal · v3.0</p></div><button type="button" id="swtSbCollapse" class="swt-sb-collapse" onclick="swtSbToggleMini()" title="ย่อ / ขยาย · ปักหมุด sidebar">«</button></div>'
       + '<div class="swt-sb-search"><input placeholder="ค้นหาเมนู…" oninput="swtSbFilter(this.value)"></div>'
       + '<div class="swt-sb-tools"><div class="swt-sb-legend"><span class="o">เก่า</span><span class="n">ใหม่</span></div><button type="button" id="swtSbToggleDone" class="swt-sb-toggle" onclick="swtSbToggleDoneOnly()" aria-pressed="false">ซ่อนไม่มี✦</button></div>'
       + '<a class="swt-sb-home" href="index.html">🏠 Master Index</a>';
@@ -325,11 +330,31 @@
     });
     refreshGroupVisibility();
   };
+  /* ย่อ/ปักหมุด sidebar — mini 56px + ขยาย content · จำสถานะทุกหน้า */
+  var MINI_KEY = 'swtSbMini';
+  function getMini(){ try{ return localStorage.getItem(MINI_KEY)==='1'; }catch(e){ return false; } }
+  function applyMini(on){
+    document.body.classList.toggle('sb-mini', on);
+    try{
+      var all = document.body.getElementsByTagName('*');
+      for(var i=0;i<all.length;i++){
+        var el = all[i];
+        if(on){ if(getComputedStyle(el).marginLeft==='240px'){ el.setAttribute('data-sbml','1'); el.style.marginLeft='56px'; } }
+        else if(el.getAttribute('data-sbml')){ el.style.marginLeft=''; el.removeAttribute('data-sbml'); }
+      }
+    }catch(e){}
+    var b = document.getElementById('swtSbCollapse');
+    if(b){ b.textContent = on?'»':'«'; b.title = on?'ขยาย / ปักหมุด sidebar':'ย่อ sidebar (เหลือไอคอน)'; }
+    try{ localStorage.setItem(MINI_KEY, on?'1':'0'); }catch(e){}
+  }
+  window.swtSbToggleMini = function(){ applyMini(!getMini()); };
+
   document.addEventListener('DOMContentLoaded', function(){
     if(inIframe()){ stripForEmbed(); return; }
     var st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st);
     var tmp = document.createElement('div'); tmp.innerHTML = render();
     document.body.insertBefore(tmp.firstChild, document.body.firstChild);
     applyDoneOnly(getDoneOnly());
+    applyMini(getMini());
   });
 })();
