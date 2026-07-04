@@ -49,6 +49,12 @@ project_type: "frontend-mockup (HTML + docs)"
 
 **🔧 SV backlog B1 ✅ (2026-07-04 · flow-reconciled):** rebuild sv1 intake ตาม Flow Design/Service 01+06 — Step 0 Gate จับ discrepancy (flow: Doc Type Repair/Installation + Warranty In/Out/Release · เคลม=route ≠ doc type · vs spec 5 job types) → user เลือก **hybrid**: Doc Type 2 + งานย่อย(ซ่อม/ตรวจเช็ค/ล้าง) + **claim reveal เมื่อ In-Warranty** (Bill to Vendor · Resolution ซ่อม/♻️เปลี่ยนเครื่องใหม่) · **replace path:** เบิกใหม่ WH-2 + เครื่องเดิม→CLM/PO-CN · ไม่ออก SL-CN · spec §1 reconciled · เหลือ B2-B14
 
+**🔧 SV layout C1-C3 ✅ (2026-07-04):** replicate B-layout → กลุ่มฟอร์ม SV · **C1** doc-chain sv1-5,7 (SV-1→2→3→5→4→7) · **C2** SAAB uniform (เปิดเก่า/Copy) sv2-5,7 · **C3** sv6 = **queue ไม่ใช่ฟอร์ม** (main-header · ไม่แตะ · correctly นอกกลุ่ม) · sv6-1/sv6-print = component ย่อย
+
+**🔧 SV backlog B2 ✅ (2026-07-04 · spec §2):** Resolve Serial → เมนู A-E ที่ sv1 · S/N-first resolve 5 ทาง → ขับ Warranty (B1) อัตโนมัติ: **A**เจอ+ในประกัน→In·BillVendor · **B**หมดประกัน→Out·ลูกค้า · **C**มีงานค้าง→ลิงก์งานเดิม(กัน job ซ้ำ) · **D**ไม่เจอ→Release(admin ยืนยัน·Maker≠Checker) · **E**ซื้อที่อื่น→In(แบรนด์)·เคลมอะไหล่/ค่าแรงได้·เปลี่ยนเครื่องไม่ได้ · svRes()reuse svWarr()
+
+**🔧 SV backlog B4 ✅ (2026-07-04 · grill Q1-Q3):** per-line payer assignable ที่ sv4 · **Q3 auto-bind:** ประเภท(ใน/นอก Comp)=dropdown → เก็บจาก payer พลิกเอง (ใน→Vendor·นอก→ลูกค้า · chip=derived คำนวณสด · เปลี่ยน payer=เปลี่ยนประเภท กัน maker error) · **Q1 payer=bill-to party:** Vendor=ลูกค้าอีกราย/วิธีจ่าย กรอกบริษัทเมนวล (ไม่ hardcode type) · **Q2 ออก 2 ARI ที่ sv4:** ARI-Vendor + ARI-Customer(อ้าง SL-4/SO) post ทันที · SV-7 = รับชำระเท่านั้น (invoice ออกที่ sv4 แล้ว) · เหลือ B5 (parts return dashboard+gate) · B6-B14
+
 **✅ Orphan 6 ปิดครบ (2026-07-04 · sidebar = 0 dead link):** CL-1/CL1F → ลบเมนู (claim=job type) · PM-1/PM-2/CF-3/CF-5/MD-6 → สร้าง stub placeholder (pm1-price-list · pm2-promotion · cf3-payment-hub · cf5-bank-master · md6-service-item) + repoint sidebar + เคลียร์ DONE[] bc365 · stub = กัน dead link · build เต็มตอน P2/TBD
 
 **⏸️ Grill ฝั่งขาย PM — parked P2 (2026-07-04):** grill ครั้งแรกที่เจาะ PM (เดิม parked P2 จาก SL-CN grill Q10) · **user เลือก C: ปิด grill · P2-defer ยังยืน · ไม่ build ตอนนี้**
