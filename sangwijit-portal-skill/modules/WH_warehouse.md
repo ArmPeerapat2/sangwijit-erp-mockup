@@ -15,6 +15,7 @@
 | WH-2 | เบิกจ่ายขาย (Sales Issue) | P1 | warehouseShipmentLines | List + Form |
 | WH-3 | โอนสินค้า (Stock Transfer) | P1 | transferOrders (5740/5741) | List + Form |
 | WH-4 | นับสต็อก (Stock Count / Physical Inventory) | P1 | physInventoryOrderLines | List + Form |
+| WH-5 | ปรับปรุง/ตัดจำหน่ายสต็อก (Stock Adjustment / Write-off) | P1 | itemLedgerEntries (+/− Adjmt.) | Form (`wh5-stock-adjustment-mockup.html`) |
 
 > **🔢 WH Renumber (2026-07-02):** เดิม WH-2=โอน · WH-3=เบิก → สลับเป็น **WH-2=เบิก · WH-3=โอน** (เรียงตามปริมาณงาน เบิก>โอน) · ดู `.agents/topics/wh-renumber-plan.md` · **execute ตอน rebuild หน้า · ไฟล์ rename แล้ว (wh2-issue/wh3-transfer)**
 | WH-R | Stock Card / รายงานสต็อก | P1 | itemLedgerEntries (32) | Report View |
@@ -452,6 +453,41 @@ GET  /itemLedgerEntries?entryType='Positive Adjmt.' → ดูการปรั
 - ผลต่างเกิน ±5% ต่อ Item → ต้องนับซ้ำก่อน Post
 - Post Adjustment → บันทึก GL Entry (Inventory Adjustment Account)
 - Serial Item: ผลต่าง → ระบุว่า Serial ไหนหาย / Serial ไหนเกิน
+
+---
+
+## WH-5 — ปรับปรุง/ตัดจำหน่ายสต็อก (Stock Adjustment / Write-off)
+
+หน้าจอ: `wh5-stock-adjustment-mockup.html` · form-template fit-100vh · grill Q1-Q8 (2026-07-06)
+
+### วัตถุประสงค์
+ปรับสต็อกให้ตรงจริง **นอกรอบนับ** — ของหาย/แตกชำรุด/หมดอายุ/เจอเกิน ที่เกิดระหว่างวัน (gap ที่เจ้าของงานบอก "เจ็บสุด" — เดิมต้องเปิดรอบนับ WH-4 ถึงจะปรับได้)
+
+### ⚖ เส้นแบ่ง WH-4 ↔ WH-5 (สำคัญ — อย่าให้ 2 หน้าแย่งงาน)
+- **WH-4 = ปรับจากรอบนับ** — มี snapshot ทั้งคลัง · ผลต่างจากการนับจริง vs ระบบ
+- **WH-5 = ปรับนอกรอบนับ** — เหตุการณ์เดี่ยว ad-hoc · เปิดใบตัดได้ทันทีไม่ต้องรอรอบนับ
+- ทั้งคู่ Post ลง `itemLedgerEntries` เป็น Positive/Negative Adjmt. เหมือนกัน แต่ WH-5 ไม่มี snapshot
+
+### Business Rules (จาก grill Q1-Q8)
+- **Q1** ใบเดียวครอบทุกสาเหตุ · เลือกเหตุผลต่อบรรทัด (ไม่แตกหน้าตามสาเหตุ)
+- **Q2** ส่งอนุมัติเข้า **AP-1 ศูนย์อนุมัติรวม** (ไม่ทำหน้าอนุมัติแยก) · ผู้อนุมัติ/threshold อ่านจาก **CF-2.6 Approval Matrix** · Maker≠Checker
+- **Q3** บรรทัดทิศ **− (ตัดจำหน่าย) บังคับแนบรูป + เหตุผล** ถึงส่งอนุมัติได้ (soft-gate) · ทิศ + ไม่บังคับ
+- **Q4** โชว์มูลค่ารวม (ต้นทุนเฉลี่ย ประมาณการ) + badge read-only — **BC เป็นเจ้าของ posting/GL**
+- **Q5** สินค้ามี **Serial → ต้องเลือก SN เจาะจง** (ดึงคงเหลือจาก itemLedger) · ไม่มี SN → ตัดตามจำนวน
+- **Q6** **ทิศ +/− ต่อบรรทัด** (เจอเกิน = +, ตัดออก = −) · เจอเกินคุมเบา (ไม่บังคับรูป) แต่ยังผ่านอนุมัติ
+- **Q7** **เหตุผล = master** (list-detail เหมือน 1.5.1.x) · แต่ละเหตุผล**ผูกทิศ (+/−) + ผังบัญชีปลายทาง** ที่ BC ลง GL (หาย→ค่าใช้จ่ายสูญเสีย · หมดอายุ→ตัดจำหน่าย ฯลฯ)
+- **Q8** สร้าง **ad-hoc ได้** (ไม่ต้องมีเอกสารต้นทาง) · อ้างอิง WH-R Stock Card / WH-4 ใบนับ ได้ (optional)
+
+### Flow
+```
+(ของแตก/หาย ad-hoc) หรือ WH-R / WH-4 (อ้างอิง optional)
+   → WH-5 ใบปรับ/ตัดจำหน่าย → [ส่งอนุมัติ] AP-1 (เกณฑ์ CF-2.6)
+   → Post → BC itemLedgerEntries (+/− Adjmt.) + GL ตามผังบัญชีของเหตุผล
+```
+
+### TODO (ยังไม่ทำ)
+- master "เหตุผลปรับสต็อก" (ผูกทิศ + ผังบัญชี) — เป็น CF/BC master, พอร์ทัลดึงมาโชว์
+- ผูก AP-1 การ์ด "ปรับ/ตัดจำหน่ายสต็อก" (เพิ่มแถวตัวอย่างแล้ว)
 
 ---
 

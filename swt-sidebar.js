@@ -95,6 +95,7 @@
       ['WH3R','wh3r-transfer-request-mockup.html','WH-3R ใบขอโอน','new'],
       ['WH-4','wh4-count-mockup.html','WH-4 ใบนับสินค้า','old'],
       ['WH4R','wh4r-count-prep-mockup.html','WH-4R ใบเตรียมนับ','new'],
+      ['WH-5','wh5-stock-adjustment-mockup.html','WH-5 ปรับ/ตัดจำหน่ายสต็อก','new'],
       ['WH-R','wh-r-stock-card-mockup.html','รายงานคลัง > Stock Card','old'],
       ['WHNM','wh-nm-non-move-report-mockup.html','รายงานคลัง > สินค้าไม่เคลื่อนไหว','old'],
       ['WHR1','wh-r-stock-card-mockup.html','รายงานคลัง > คงเหลือสินค้าแบบรวม','new'],

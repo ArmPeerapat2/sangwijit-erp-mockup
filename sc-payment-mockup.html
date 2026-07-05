@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SC-Payment รับชำระเงิน (Shared Component) — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+/* หน้า demo ของ shared component — โครง/สไตล์ component อยู่ใน swt-payment.js (inject เอง) */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
+.app-container{display:flex;min-height:100vh}
+.main-content{flex:1;margin-left:240px}
+.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.breadcrumb{font-size:13px;color:#6B7280}.breadcrumb strong{color:#111827}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.search-box{width:280px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;background:#F9FAFB}
+.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.content-wrapper{padding:16px 24px}
+.demo-note{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;font-size:12.5px;color:#1E40AF;margin-bottom:14px;display:flex;gap:8px;align-items:flex-start}
+.demo-bar{display:flex;gap:10px;align-items:center;margin-bottom:16px}
+.demo-btn{padding:9px 16px;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;background:#2563EB;color:#fff}
+.demo-lbl{font-size:12.5px;color:#6B7280}
+</style>
+</head>
+<body>
+<div class="app-container"><div class="main-content">
+<div class="topbar">
+  <div class="breadcrumb">Shared Component › <strong>SC-Payment รับชำระเงิน</strong></div>
+  <div class="topbar-right"><input class="search-box" placeholder="ค้นหา… (Ctrl+K)"><span>🔔</span><span class="branch-tag">07 · ศูนย์บริการ</span><div class="avatar">P</div></div>
+</div>
+<div class="content-wrapper">
+
+  <div class="demo-note">💡 <div><strong>Shared Component</strong> (<code>swt-payment.js</code>) — ทุกโมดูลเรียกใช้ตัวเดียวกัน (sv7 ปิดงาน · sl3 มัดจำ · fiq รับ AR) · อิง "รับชำระเงิน" ERP เดิม (<code>_reference/ComponanceShare/</code>) · split payment · %ชาร์จบัตรจาก master</div></div>
+
+  <div class="demo-bar">
+    <button class="demo-btn" onclick="demoModal()">💵 เปิดแบบ Modal (วิธีที่หน้าจริงเรียกใช้)</button>
+    <span class="demo-lbl">← กดเพื่อดูแบบ popup · ด้านล่างคือแบบ inline (host ในหน้า)</span>
+  </div>
+
+  <!-- host: หน้าจริงแค่วาง div นี้ + เรียก swtRenderPayment -->
+  <div id="payHost"></div>
+
+</div></div></div>
+
+<script src="swt-payment.js"></script>
+<script>
+var demoOpts = {
+  total: 567.10,
+  ref: 'CD-2604-0055 · ลูกค้า C-00125 คุณสมหญิง',
+  accounts: ['547-2-55623-9 · กสิกรไทย (SWT)','012-3-45678-9 · ไทยพาณิชย์ (SWT)'],
+  promptpay: { biller:'SWT 099-4-12345-6', ref1:'CD-2604-0055 (ใบส่งงาน)', ref2:'C-00125 (รหัสลูกค้า)' },
+  onConfirm: function(paid){ alert('รับชำระ '+paid.length+' รายการ · รวม '+paid.reduce(function(s,p){return s+p.amount;},0).toFixed(2)+' ฿'); }
+};
+// inline render (แบบที่ฝังในแท็บของหน้าจริง)
+swtRenderPayment(document.getElementById('payHost'), demoOpts);
+// modal demo
+function demoModal(){ swtOpenPayment(Object.assign({}, demoOpts, {onCancel:function(){}})); }
+</script>
+<script src="swt-sidebar.js"></script>
+</body>
+</html>
