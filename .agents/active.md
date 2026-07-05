@@ -1,10 +1,43 @@
 ---
-updated_at: "2026-06-03T00:00:00+07:00"
+updated_at: "2026-07-06T00:00:00+07:00"
 status: "active"
 current_focus: "🏁 SL กลุ่มงานขายปิดครบ 6 หน้า: SL-Q(คิว·จัดกลุ่ม QT/SO/INV/DP/CN) · SL-1 · SL-2 · SL-3 · SL-4 · SL-CN(ใบลดหนี้ 3 โหมด) — build บนเทมเพลตเดียวกัน · doc-chain เชื่อม · sc1/sc2 shared · routing ชัด (sl-post-save-routing.md) · SL-Q เน้นเอกสารขาย / ปลายทาง(เบิก/ส่ง/สั่งซื้อ)=แยกเมนู cross-link · ถัดไป: WH(รอเบิก)/PO(รอสั่งซื้อ) ตาม Form Build Pattern · [เดิม SL-1→4]" (ใบเสนอราคา/ใบจอง/ใบมัดจำ/บิลขาย · doc-chain เชื่อมกัน · status+chain รวมแถวบน · เลขที่อ้างอิงต่อไลน์ · per-doc reservation routing · หักมัดจำ) · **Component หลัก: sc1-customer-search + sc2-item-search = canonical** (Customer Search 9 คอลัมน์+ประวัติ 4 แท็บ · Product Search) เรียกผ่าน swt-doc-finder dfOpenCust/dfOpenProd (iframe modal) · + Reference Picker dfOpenRef (multi-select ตามลูกหนี้) · guideline: .agents/topics/form-template-guideline.md + queue-dashboard-matrix.md · ถัดไป: SL-CN ใบลดหนี้ (flow 07) หรือ propagate sc1/sc2 ไปหน้าเก่า"
 branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
+
+## 🧭 CURRENT FOCUS (2026-07-06)
+โหมด **grill→build ทีละส่วน** · เพิ่งจบ WH-5 · ถัดไป: grill **A Config/ตั้งค่าบริษัท** (แนะนำ · reference SystemDefaults พร้อม · ปลดล็อก API ธนาคาร/ค่าเริ่มต้น) หรือ C form-designer · **queue build ค้าง:** เสียบ sc-payment→sv7 + retrofit sl3/sl1/fiq · preview-หลัง-พิมพ์ (sl4/sv7) · 13 หน้าปุ่มซ้ำ/density sweep
+
+## 🗓️ SESSION 2026-07-05/06 — cleanup · UX fixes · sc-payment · WH-5 · references
+
+**🧹 Cleanup batch ✅** (commit `ec59d4c`, `ef7eaa0`)
+- dead `bc365/` links = 0 · เติม `swtRenderDocChain` ให้ sl2/sl3/slcn/po1 (มี div แต่ไม่ render)
+- route fix: ลบ node ปลอม "ใบวางบิล/VBL" ที่ชี้ผิดไป po3-vendor-onboarding (po4/po6) — vendor bill บันทึกที่ PO-6 ไม่มีหน้าแยก
+- **topbar affordance:** 🔔→notification-center · avatar→user-profile คลิกได้จริง **31 หน้า** (เดิม `<div>` ตาย)
+
+**🐛 Root-cause fixes ✅** (commit `ef7eaa0`)
+- **scroll ล็อกทุกหน้า scroll** — `swt-patterns.css` `html{overflow:hidden}` (ตั้งมาเพื่อ fit-100vh) เหวี่ยงล็อก sv*/sc*/login → ลบ overflow ออก (หน้า fit ล็อกที่ `body` เองอยู่แล้ว · verify po4 ไม่พัง)
+- **sidebar "ถอดหมุดไม่ได้"** — `swt-sidebar.js` hover-peek เด้งแถบกลับ 240px ตอนคลิกปุ่มในแถบ → ลบ peek + เพิ่ม CSS icon-rail (ย่อ=56px โชว์ไอคอน/โค้ด)
+
+**🎨 sv7 UX (3 กฎพื้นฐานทั้งระบบ) ✅** → memory [[action-buttons-single-top]]
+- บีบระยะห่าง (table 7px · gap 10px · section 10px) · รวมปุ่มบนหัวที่เดียว ลบ footer-actions · ตัด banner ซ้ำ (นอก Comp·VAT) · **สลับ 7.3 สรุป ↔ 7.4 เซ็น/จ่าย**
+- **⏳ ค้าง sweep 13 หน้าปุ่มซ้ำ** (clm·pm1/2/5·sir·sqt·sv-checklist·sv-order-parts·sv-sla·sv1/2/3/4) — ทำ Rule1-2 เป็นชุด · Rule3 (ตัด banner) ราย page
+
+**💳 sc-payment shared component ✅** (commit `a2ab333`)
+- `swt-payment.js` — รับชำระเงิน split (Total/Remain · เงินสด/QR/โอน/บัตร+%ชาร์จ/เช็ค/อื่นๆ) อิง ERP เดิม · `swtRenderPayment(el,opts)` + `swtOpenPayment(opts)` modal · state ต่อ instance
+- `sc-payment-mockup.html` demo · **QR โผล่หลังเลือก PromptPay · %ชาร์จบัตรจาก master**
+- **⏳ ค้าง:** เสียบเข้า sv7 (แทน pay-grid) + retrofit sl3/sl1/fiq · **preview-หลัง-พิมพ์** (sl4/sv7)
+
+**📦 WH-5 ปรับ/ตัดจำหน่ายสต็อก ✅** (grill Q1-Q8 · commit `a2ab333`) — gap ที่ user บอก "เจ็บสุด"
+- `wh5-stock-adjustment-mockup.html` fit-100vh · เหตุผล/ทิศ +/− ต่อบรรทัด · serial เลือกเจาะจง · soft-gate ตัดจำหน่ายบังคับรูป · สรุปแยก +/− · ส่งอนุมัติ **AP-1** (ไม่มีหน้าอนุมัติแยก) · BC ลง GL ตามผังบัญชีของเหตุผล
+- **เส้นแบ่ง:** WH-4=ปรับจากรอบนับ (snapshot) · WH-5=ad-hoc นอกรอบนับ
+- sync: sidebar + AP-1 แถวอนุมัติ + spec `WH_warehouse.md` (Menu + section WH-5 + Q1-Q8 + boundary)
+- **TODO:** master "เหตุผลปรับสต็อก" (ผูกทิศ+ผังบัญชี = CF/BC master)
+
+**📚 References catalog ✅** (commit `2890f5d` · worktree) — `_reference/INDEX.md` + ถอดสกรีนช็อต ERP เดิมเป็น README
+- `ComponanceShare/` (payment/ค้นลูกค้า/ค้นสินค้า) · `SystemDefaults/` (Company+Options ค่าตั้งต้นครบ) · `FormReportDesigner/` (drag-drop = ข้อ 7) · `MenuStructure/` (เลข 1-9,A-H) · `MasterDataSetup/` (สาขาจริง + ประเภทบัตร+%ชาร์จ→feed sc-payment)
+- ⚠️ ไฟล์รูป .jpg ต้อง user ลากวางเอง (AI เซฟจากแชทไม่ได้) · user แจ้ง "มีเพิ่มอีก พรุ่งนี้"
 
 ## 🔢 WH Renumber — ✅ EXECUTED rename+refs (2026-07-03)
 

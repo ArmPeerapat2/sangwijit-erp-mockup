@@ -26,15 +26,17 @@
 | ราคา | — | หลังเลือก → ดึง Price List + promo (ผ่าน PromoPrice) |
 | API | mock | GET `/items?$expand=itemVariants` · `/priceLists` · `/items/{id}/substitutes` |
 
-## 3. SharedPayment (ชำระเงิน) — 🔴 ขาด (มีแค่ QR)
-| ด้าน | เดิม | เสนอเพิ่ม |
-|---|---|---|
-| รับชำระ | QR (customer/invoice) | **split payment หลายวิธี** (PaymentLine[] {method,amount,ref}) |
-| props | — | `mode · netAmount · vatAmount · depositAmt · customerId · allowedMethods · requireApproval` |
-| state | — | totalPaid · remaining(net−deposit−paid) · creditCheck{available,limit,over} · approvalRequired |
-| เครดิต | — | เช็กวงเงิน real-time → เกิน = บล็อก + trigger approval |
-| events | — | `payment:changed` · `approval:required`(→ApprovalBanner) · `payment:complete` |
-| รวม QR | (มี) | ผนวก QR เป็น 1 method ใน split |
+## 3. SharedPayment (ชำระเงิน) — 🟢 BUILT (`swt-payment.js` · 2026-07-06)
+| ด้าน | เดิม | เสนอเพิ่ม | **BUILT (swt-payment.js)** |
+|---|---|---|---|
+| รับชำระ | QR (customer/invoice) | **split payment หลายวิธี** (PaymentLine[] {method,amount,ref}) | ✅ split · `paid[]{method,label,amount}` + chip ลบได้ · auto-เติมยอดคงเหลือ |
+| props | — | `mode · netAmount · vatAmount · depositAmt · customerId · allowedMethods · requireApproval` | `{total · ref · accounts[] · cardTypes[] · promptpay · onConfirm · onCancel}` |
+| state | — | totalPaid · remaining · creditCheck · approvalRequired | ✅ Total/Remain (เขียวเมื่อ 0) · กันจ่ายเกิน · ⏳ creditCheck/approval ยังไม่ผูก |
+| วิธีจ่าย | — | — | เงินสด · **QR PromptPay (โผล่หลังเลือกแท็บ)** · โอนธนาคาร · **บัตร/มาร์เก็ตเพลส +%ชาร์จจาก master** · เช็ค · AR/ผ่อน |
+| events | — | `payment:changed` · `approval:required` · `payment:complete` | ⏳ ใช้ callback `onConfirm(paid[])` แทน event (พอสำหรับ mockup) |
+| API | — | `swtRenderPayment(el,opts)` (inline) · `swtOpenPayment(opts)` (modal) · demo `sc-payment-mockup.html` |
+
+**TODO เชื่อมต่อ:** เสียบ sv7/sl3/fiq/sl1 · ผูก credit-check + approval banner · %ชาร์จบัตรดึงจาก master ประเภทบัตร (1.5.1.A) จริง · อ้างอิง `_reference/ComponanceShare/payment` + `_reference/MasterDataSetup`
 
 ## 4. SharedDelivery (จัดส่ง/ติดตั้ง) — 🔴 ขาด
 | ด้าน | เดิม | เสนอเพิ่ม |
@@ -91,6 +93,6 @@
 ---
 
 ## สรุปสำหรับ review
-- 🟢 1 (Timeline) · 🟡 2 (Customer/Item — ปรับให้ครบ contract + wire) · 🔴 6 (สร้างใหม่ตาม contract)
+- 🟢 2 (Timeline · **Payment ✅ build 2026-07-06**) · 🟡 2 (Customer/Item — ปรับให้ครบ contract + wire) · 🔴 5 (สร้างใหม่ตาม contract)
 - หัวใจ: ทุกตัว **mode + Events contract** · DocReference = ตัวเชื่อม chain (Cascading + Partial Pull)
 - หลัง user อนุมัติ → build ทีละตัว (ขึ้น canvas) ตามลำดับ: CustomerSearch → ItemSearch → DocReference → PromoPrice → Payment/Deposit/Delivery/Serial
