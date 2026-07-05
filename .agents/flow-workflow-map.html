@@ -43,7 +43,7 @@ a.pg:hover{background:#DBEAFE;border-bottom-style:solid}
 </head>
 <body>
 <div class="header">
-  <h1>🗺️ Workflow Map — 5 สายหลักของระบบ</h1>
+  <h1>🗺️ Workflow Map — 6 สายหลักของระบบ</h1>
   <p>Sangwijit ERP Portal · หลังปิด Flow Redundancy Audit 17/17 (2026-07-02) — ทุกสายติดกติกา ownership + gate ที่ล็อกแล้ว · คู่กับ <b>SKILL.md § Cross-Module Flow Rules</b></p>
 </div>
 <div class="container">
@@ -79,6 +79,7 @@ a.pg:hover{background:#DBEAFE;border-bottom-style:solid}
     <div class="rules">
       <span class="rule lock">🔒 สต๊อกไม่พอตอนจอง → แสดงลิสต์ใบจองที่ถือของ (เลขใบ+เซลล์+วันหมดอายุ) ไปคุยถอนจอง</span>
       <span class="rule">💰 เงินเข้า: FI-1 รับชำระ · เครดิต/มัดจำ apply ที่ FI-1Q</span>
+      <span class="rule">🧩 รับชำระเงิน = shared component <b>sc-payment</b> (split Total/Remain · QR/บัตร+%ชาร์จ/โอน/เช็ค) ใช้ร่วม sv7/sl3/fiq</span>
     </div>
   </div>
 </div>
@@ -172,8 +173,31 @@ a.pg:hover{background:#DBEAFE;border-bottom-style:solid}
   </div>
 </div>
 
+<!-- ═══ 6. สายปรับ/ตัดจำหน่ายสต็อก ═══ -->
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--wh)"></span><h2>6. สายปรับ/ตัดจำหน่ายสต็อก (Stock Adjustment)</h2><span class="sub">ad-hoc นอกรอบนับ · grill Q1-Q8 (2026-07-06)</span></div>
+  <div class="lane-body">
+    <div class="flow">
+      <div class="node" style="--mc:var(--wh)"><span class="code">WH-R / WH-4</span><span class="name">Stock Card / ใบนับ</span><span class="note">อ้างอิงต้นทาง (optional) — เปิด WH-5 ad-hoc ได้เลย</span></div>
+      <div class="arr">→</div>
+      <div class="node owner" style="--mc:var(--wh)"><span class="code">WH-5</span><span class="name">ปรับ/ตัดจำหน่ายสต็อก</span><span class="note">เหตุผล/ทิศ +/− ต่อบรรทัด · serial เจาะจง · +เจอเกิน / −ตัดออก</span></div>
+      <div class="gate"><span class="g">GATE: ตัดจำหน่าย (−) = บังคับแนบรูป</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--cf)"><span class="code">AP-1</span><span class="name">ศูนย์อนุมัติรวม</span><span class="note">เกณฑ์/ผู้อนุมัติจาก CF-2.6 · Maker≠Checker · ไม่มีหน้าอนุมัติแยก</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--fi)"><span class="code">BC POST</span><span class="name">itemLedger + GL</span><span class="note">+/− Adjmt. · ลง GL ตามผังบัญชีของเหตุผล</span></div>
+    </div>
+    <div class="branch"><span class="b-lbl">⚖ เส้นแบ่ง</span><div><b>WH-4</b> = ปรับจากรอบนับ (snapshot ทั้งคลัง) · <b>WH-5</b> = เหตุการณ์เดี่ยว ad-hoc (ของแตก/หายนอกรอบนับ)</div></div>
+    <div class="rules">
+      <span class="rule lock">🔒 มูลค่า/GL = BC เจ้าของ (portal read-only) · เหตุผล = master ผูกทิศ +/− + ผังบัญชี</span>
+      <span class="rule">📉 gap ที่เจ้าของงานบอก "เจ็บสุด" — เดิมต้องเปิดรอบนับ WH-4 ถึงปรับได้</span>
+    </div>
+  </div>
+</div>
+
 <div class="footer">
-  แหล่งอ้างอิง: <b>flow-redundancy-analysis.html</b> (audit 17/17) · <b>sangwijit-portal-skill/SKILL.md</b> § Cross-Module Flow Rules · decisions ทั้งหมดใน <b>.agents/active.md</b> — สร้าง 2026-07-02
+  แหล่งอ้างอิง: <b>flow-redundancy-analysis.html</b> (audit 17/17) · <b>sangwijit-portal-skill/SKILL.md</b> § Cross-Module Flow Rules · decisions ทั้งหมดใน <b>.agents/active.md</b> — สร้าง 2026-07-02 · <b>อัพเดท 2026-07-06</b> (+ สาย 6 WH-5 · note sc-payment)
+  <br>⚠️ label WH ในสาย 1/4 ยังเป็นก่อน renumber 2026-07-03 (แผนที่แสดง WH-3=เบิก/WH-2=โอน · จริงคือ WH-2=เบิก/WH-3=โอน) — sync ทีหลัง
 </div>
 
 </div>
