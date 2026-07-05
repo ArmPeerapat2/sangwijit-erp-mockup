@@ -178,9 +178,20 @@
   var CSS = `
   .swt-sb,.swt-sb *{box-sizing:border-box}
   .swt-sb{position:fixed;left:0;top:0;width:240px;height:100vh;background:#1E3A5F;color:#D1D5DB;overflow-y:auto;overflow-x:hidden;transition:width .16s ease;padding:14px 10px 32px;z-index:500;font-family:'Inter','Noto Sans Thai',sans-serif;font-size:13px;line-height:1.4}
-  /* ย่อ (mini) / ปักหมุด — เหลือ 56px โชว์ไอคอน+โค้ด · hover ขยายชั่วคราว (peek) */
+  /* ย่อ (mini) — icon rail 56px · ซ่อน label เหลือไอคอน/โค้ด · กด 📌 เพื่อกางเต็ม
+     (เอา hover-peek ออก — เดิมพอคลิกปุ่มในแถบ เมาส์ยัง hover เลยเด้งกลับ 240px = เหมือนถอดหมุดไม่ได้) */
   body.sb-mini .swt-sb{width:56px;padding-left:6px;padding-right:6px}
-  body.sb-mini .swt-sb:hover{width:240px;padding-left:10px;padding-right:10px;box-shadow:4px 0 26px rgba(0,0,0,0.4)}
+  body.sb-mini .swt-sb-brand{justify-content:center;padding:4px 0 12px;gap:0}
+  body.sb-mini .swt-sb-logo,body.sb-mini .swt-sb-brand>div:not(.swt-sb-logo){display:none}
+  body.sb-mini .swt-sb-search,body.sb-mini .swt-sb-tools,body.sb-mini .swt-sb-div{display:none}
+  body.sb-mini .swt-sb-home{font-size:0;justify-content:center;padding:7px 4px}
+  body.sb-mini .swt-sb-home::before{content:"🏠";font-size:14px}
+  body.sb-mini .swt-sb details>summary{justify-content:center;padding:7px 2px;gap:0}
+  body.sb-mini .swt-sb-lbl,body.sb-mini .swt-sb-cnt,body.sb-mini .swt-sb-chv{display:none}
+  body.sb-mini .swt-sb-links{padding-left:0}
+  body.sb-mini .swt-sb-links a{justify-content:center;padding:5px 1px;gap:0}
+  body.sb-mini .swt-sb-links a .t,body.sb-mini .swt-sb-links a .m,body.sb-mini .swt-sb-links a .d{display:none}
+  body.sb-mini .swt-sb-links a .c{min-width:0;text-align:center;font-size:9px}
   .swt-sb-collapse{margin-left:auto;background:rgba(255,255,255,0.08);border:none;color:#94A3B8;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:inherit;line-height:1}
   .swt-sb-collapse:hover{background:rgba(255,255,255,0.18);color:#fff}
   .swt-sb-collapse.on{background:#2563EB;color:#fff}
