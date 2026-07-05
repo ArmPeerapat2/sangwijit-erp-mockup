@@ -281,7 +281,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           </tbody>
         </table>
       </div>
-      <div class="add-row-bar">➕ + เพิ่มงวดมัดจำ</div>
+      <div class="add-row-bar" style="cursor:pointer" onclick="sl3AddDeposit()">➕ + เพิ่มงวดมัดจำ (รับชำระ)</div>
     </div>
 
     <!-- ④d ROW-BOTTOM -->
@@ -390,6 +390,19 @@ function swtSbFilter(v){
 ]});</script>
 <script src="swt-sc-modals.js"></script>
 <script src="swt-panels.js"></script>
+<script src="swt-payment.js"></script>
+<script>
+/* รับมัดจำงวดใหม่ผ่าน sc-payment (modal) — split ได้ */
+function sl3AddDeposit(){
+  if(typeof swtOpenPayment!=='function')return;
+  swtOpenPayment({
+    total:6290.00, ref:'มัดจำ · C-00142 · งวดใหม่',
+    accounts:['547-2-55623-9 · กสิกรไทย (SWT)'],
+    promptpay:{biller:'SWT 099-4-12345-6', ref1:'DEP-2604', ref2:'C-00142'},
+    onConfirm:function(paid){ alert('รับมัดจำ '+paid.reduce(function(s,p){return s+p.amount;},0).toFixed(2)+' ฿ → เพิ่มงวดในตาราง + Post'); }
+  });
+}
+</script>
 <script src="swt-sc-wire.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>

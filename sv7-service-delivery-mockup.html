@@ -339,8 +339,7 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
 
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(event,'tab-sign')">✍️ ลูกค้าเซ็นรับ + Rating</button>
-    <button class="tab-btn" onclick="switchTab(event,'tab-pay')">💳 วิธีรับชำระ</button>
-    <button class="tab-btn" onclick="switchTab(event,'tab-qr')">📱 QR PromptPay</button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-pay')">💳 รับชำระเงิน</button>
     <button class="tab-btn" onclick="switchTab(event,'tab-inv')">🧾 Preview Invoice</button>
     <button class="tab-btn" onclick="switchTab(event,'tab-tl')">🕑 Timeline</button>
   </div>
@@ -385,63 +384,8 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
 
   <!-- Tab 2: Payment method -->
   <div class="tab-pane" id="tab-pay">
-    <div style="margin-bottom:12px;font-size:12.5px;color:#6B7280">เลือกวิธีรับชำระ <strong>567.10 ฿</strong> (รวม VAT)</div>
-    <div class="pay-grid">
-      <label class="pay-card selected">
-        <div class="pc-ico">📱</div>
-        <div class="pc-title">QR PromptPay</div>
-        <div class="pc-meta">สแกนจ่ายทันที</div>
-      </label>
-      <label class="pay-card">
-        <div class="pc-ico">💵</div>
-        <div class="pc-title">เงินสด</div>
-        <div class="pc-meta">รับเลย</div>
-      </label>
-      <label class="pay-card">
-        <div class="pc-ico">🏦</div>
-        <div class="pc-title">โอน</div>
-        <div class="pc-meta">Internet Banking</div>
-      </label>
-      <label class="pay-card">
-        <div class="pc-ico">💳</div>
-        <div class="pc-title">บัตรเครดิต</div>
-        <div class="pc-meta">EDC / Online</div>
-      </label>
-      <label class="pay-card">
-        <div class="pc-ico">📋</div>
-        <div class="pc-title">ค้างไว้ (AR)</div>
-        <div class="pc-meta">เก็บทีหลัง · Net 7</div>
-      </label>
-    </div>
-    <div class="form-grid" style="margin-top:16px">
-      <div class="field"><label>ยอดที่รับจริง <span class="en">Amount Received</span></label><input value="567.10 ฿" readonly style="font-weight:700;font-size:16px"></div>
-      <div class="field"><label>วันเวลารับชำระ <span class="en">Received At</span></label><input value="23 เม.ย. 26 · 14:20 น."></div>
-      <div class="field"><label>ผู้รับเงิน <span class="en">Received By</span></label><input value="คุณปภาวรินทร์"></div>
-    </div>
-  </div>
-
-  <!-- Tab 3: QR -->
-  <div class="tab-pane" id="tab-qr">
-    <div class="qr-box">
-      <div class="qr-image"></div>
-      <div class="qr-info">
-        <h3>📱 สแกนจ่าย PromptPay</h3>
-        <div style="font-size:13px;color:#374151;line-height:1.7">
-          <div><strong>Biller ID:</strong> 099-4-12345-6 (Sangwijit)</div>
-          <div><strong>Ref 1:</strong> CD-2604-0055 (เลขใบส่งงาน)</div>
-          <div><strong>Ref 2:</strong> C-00125 (รหัสลูกค้า)</div>
-          <div><strong>ยอด:</strong> <span style="color:#4472C4;font-weight:700;font-size:16px">฿567.10</span> (fix)</div>
-        </div>
-        <div style="margin-top:14px;display:flex;gap:8px">
-          <button class="btn btn-secondary">📥 ดาวน์โหลด PNG</button>
-          <button class="btn btn-secondary">💚 ส่ง LINE</button>
-          <button class="btn btn-secondary">🖨️ พิมพ์</button>
-        </div>
-      </div>
-    </div>
-    <div class="alert alert-info" style="margin-top:14px">
-      💡 <div>ลูกค้าสแกน QR → เงินเข้าบัญชี SWT → IA-Q sync bank statement → สร้าง URC → ไปคิว FI-1Q Apply Queue → match Ref1 → ปิด AR อัตโนมัติ</div>
-    </div>
+    <!-- shared component sc-payment (swt-payment.js) — split · QR/บัตร+%ชาร์จ/โอน/เช็ค -->
+    <div id="sv7PayHost"></div>
   </div>
 
   <!-- Tab 4: Preview Invoice -->
@@ -531,6 +475,17 @@ document.querySelectorAll('.pay-card').forEach(function(c){
 document.querySelectorAll('.rating-group .star').forEach(function(s,i,arr){
   s.addEventListener('click',function(){
     arr.forEach(function(x,j){x.classList.toggle('active',j<=i);});
+  });
+});
+</script>
+<script src="swt-payment.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  if(typeof swtRenderPayment==='function') swtRenderPayment(document.getElementById('sv7PayHost'),{
+    total:567.10, ref:'CD-2604-0055 · C-00125 คุณสมหญิง',
+    accounts:['547-2-55623-9 · กสิกรไทย (SWT)','012-3-45678-9 · ไทยพาณิชย์ (SWT)'],
+    promptpay:{biller:'SWT 099-4-12345-6', ref1:'CD-2604-0055 (ใบส่งงาน)', ref2:'C-00125 (ลูกค้า)'},
+    onConfirm:function(paid){ alert('รับชำระ '+paid.length+' รายการ · รวม '+paid.reduce(function(s,p){return s+p.amount;},0).toFixed(2)+' ฿ → Post SVI-C'); }
   });
 });
 </script>

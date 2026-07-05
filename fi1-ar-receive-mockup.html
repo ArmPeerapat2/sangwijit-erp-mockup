@@ -213,6 +213,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
                 <option value="card">บัตร</option>
               </select>
             </span>
+            <span class="ctl"><button type="button" onclick="fi1OpenPay()" style="padding:4px 10px;border:1px solid #BFDBFE;background:#EFF6FF;color:#2563EB;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit" title="รับหลายวิธีรวมกัน (sc-payment)">💳 รับหลายวิธี (split)</button></span>
             <span class="ctl"><span class="lbl">ธนาคารรับ</span> <span class="tpl-zone">SC-15</span>
               <select class="pay-sel" id="fi1BankIn"><option>KBANK · 098-7-65432-1</option><option>BBL · 123-4-56789-0</option></select>
             </span>
@@ -478,6 +479,20 @@ document.addEventListener('DOMContentLoaded',fi1InitPatterns);
 <script src="swt-sc-modals.js"></script>
 <script src="swt-panels.js"></script>
 <script src="swt-sc-wire.js"></script>
+<script src="swt-payment.js"></script>
+<script>
+/* รับชำระ AR หลายวิธีผ่าน sc-payment (modal · split) */
+function fi1OpenPay(){
+  if(typeof swtOpenPayment!=='function')return;
+  var amt=parseFloat((document.getElementById('recvAmt')||{}).value||'11140.30')||11140.30;
+  swtOpenPayment({
+    total:amt, ref:'08INV-0221 · C-00142 · รับชำระ AR',
+    accounts:['KBANK · 098-7-65432-1 (SWT)','BBL · 123-4-56789-0 (SWT)'],
+    promptpay:{biller:'SWT 099-4-12345-6', ref1:'08INV-0221', ref2:'C-00142'},
+    onConfirm:function(paid){ alert('รับชำระ '+paid.reduce(function(s,p){return s+p.amount;},0).toFixed(2)+' ฿ ('+paid.length+' วิธี) → ปิด AR + Post'); }
+  });
+}
+</script>
 <script src="swt-sidebar.js"></script>
 <script src="swt-link.js"></script>
 </body></html>

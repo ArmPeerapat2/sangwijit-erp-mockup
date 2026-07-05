@@ -27,7 +27,8 @@ project_type: "frontend-mockup (HTML + docs)"
 **💳 sc-payment shared component ✅** (commit `a2ab333`)
 - `swt-payment.js` — รับชำระเงิน split (Total/Remain · เงินสด/QR/โอน/บัตร+%ชาร์จ/เช็ค/อื่นๆ) อิง ERP เดิม · `swtRenderPayment(el,opts)` + `swtOpenPayment(opts)` modal · state ต่อ instance
 - `sc-payment-mockup.html` demo · **QR โผล่หลังเลือก PromptPay · %ชาร์จบัตรจาก master**
-- **⏳ ค้าง:** เสียบเข้า sv7 (แทน pay-grid) + retrofit sl3/sl1/fiq · **preview-หลัง-พิมพ์** (sl4/sv7)
+- **✅ เสียบแล้ว (07-06):** sv7 (inline แทน pay-grid + ตัด QR tab) · sl3 (ปุ่มเพิ่มงวดมัดจำ→modal) · **fi1-ar-receive** (ปุ่มรับหลายวิธี→modal · fiq เป็นคิวพาไป fi1) · sl1 ข้าม (ไม่มี payment UI)
+- **⏳ ค้าง:** **preview-หลัง-พิมพ์** (sl4/sv7) · ผูก credit-check/approval · %ชาร์จบัตรจาก master จริง
 
 **📦 WH-5 ปรับ/ตัดจำหน่ายสต็อก ✅** (grill Q1-Q8 · commit `a2ab333`) — gap ที่ user บอก "เจ็บสุด"
 - `wh5-stock-adjustment-mockup.html` fit-100vh · เหตุผล/ทิศ +/− ต่อบรรทัด · serial เลือกเจาะจง · soft-gate ตัดจำหน่ายบังคับรูป · สรุปแยก +/− · ส่งอนุมัติ **AP-1** (ไม่มีหน้าอนุมัติแยก) · BC ลง GL ตามผังบัญชีของเหตุผล
