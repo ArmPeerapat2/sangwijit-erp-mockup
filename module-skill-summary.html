@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สรุปสกิลแต่ละโมดูล — Sangwijit ERP Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1E3A5F; --blue:#2563EB; --blue-d:#1D4ED8; --green:#10B981; --amber:#F59E0B;
+    --red:#EF4444; --violet:#8B5CF6; --ink:#0F172A; --muted:#64748B; --line:#E5E7EB;
+    --bg:#F8FAFC; --card:#fff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Noto Sans Thai','Inter',system-ui,sans-serif;font-size:14px;line-height:1.5}
+  .mono{font-family:'Inter',monospace}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px 80px}
+
+  /* header */
+  .top{background:linear-gradient(100deg,#1E3A5F,#2563EB);color:#fff;padding:26px 0 22px;margin-bottom:0}
+  .top .wrap{padding-bottom:0}
+  .top h1{font-size:26px;font-weight:700;letter-spacing:-.01em}
+  .top p{font-size:13px;color:rgba(255,255,255,.82);margin-top:5px}
+  .stats{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+  .stat{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:9px;padding:8px 16px;text-align:center}
+  .stat .n{font-size:20px;font-weight:700;font-family:'Inter',monospace}
+  .stat .l{font-size:10.5px;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.05em}
+
+  /* sticky jump nav */
+  .nav{position:sticky;top:0;z-index:20;background:rgba(248,250,252,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:11px 0;margin-bottom:26px}
+  .nav .wrap{padding-bottom:0;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+  .nav .lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-right:4px}
+  .chip{text-decoration:none;font-size:12px;font-weight:600;color:var(--blue-d);background:#EFF6FF;border:1px solid #BFDBFE;border-radius:20px;padding:4px 12px;transition:all .12s}
+  .chip:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  /* module card */
+  .mod{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c,#2563EB);border-radius:12px;padding:20px 22px 22px;margin-bottom:20px;scroll-margin-top:64px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+  .mod-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+  .mod-ico{width:42px;height:42px;border-radius:10px;background:var(--cl,#EFF6FF);display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+  .mod-head h2{font-size:20px;font-weight:700}
+  .mod-head .code{font-family:'Inter',monospace;font-size:13px;font-weight:700;color:var(--c);background:var(--cl);border-radius:6px;padding:2px 9px}
+  .mod-head .sp{flex:1}
+  .badge{font-size:10.5px;font-weight:700;border-radius:20px;padding:3px 11px}
+  .b-done{background:#DCFCE7;color:#166534} .b-p1{background:#DBEAFE;color:#1E40AF}
+  .b-p2{background:#FEF3C7;color:#92400E} .b-p3{background:#F3E8FF;color:#6D28D9}
+  .purpose{font-size:13.5px;color:#334155;margin:2px 0 16px;padding-left:54px}
+
+  .body{display:grid;grid-template-columns:1fr 1fr;gap:16px 22px}
+  @media(max-width:820px){.body{grid-template-columns:1fr} .purpose{padding-left:0}}
+  .block{min-width:0}
+  .block.full{grid-column:1/-1}
+  .block h3{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .block h3::before{content:"";width:9px;height:9px;border-radius:3px;background:var(--c)}
+
+  /* menu chips */
+  .menu{display:flex;flex-direction:column;gap:5px}
+  .menu .m{font-size:12.5px;display:flex;gap:8px;align-items:baseline}
+  .menu .m code{font-family:'Inter',monospace;font-weight:700;color:var(--c);flex:none;min-width:52px}
+
+  /* use cases */
+  ol.uc{list-style:none;counter-reset:uc;display:flex;flex-direction:column;gap:7px}
+  ol.uc li{counter-increment:uc;font-size:12.5px;color:#334155;padding-left:26px;position:relative;line-height:1.45}
+  ol.uc li::before{content:counter(uc);position:absolute;left:0;top:0;width:18px;height:18px;border-radius:50%;background:var(--cl);color:var(--c);font-size:10px;font-weight:700;font-family:'Inter',monospace;display:flex;align-items:center;justify-content:center}
+
+  /* decisions */
+  ul.dec{list-style:none;display:flex;flex-direction:column;gap:7px}
+  ul.dec li{font-size:12.5px;color:#334155;padding-left:20px;position:relative;line-height:1.45}
+  ul.dec li::before{content:"✓";position:absolute;left:0;top:0;color:var(--green);font-weight:700}
+  ul.dec li b{color:var(--ink)}
+
+  /* bc chips */
+  .bc{display:flex;gap:6px;flex-wrap:wrap}
+  .bc span{font-family:'Inter',monospace;font-size:11px;background:#F1F5F9;border:1px solid var(--line);border-radius:5px;padding:2px 8px;color:#475569}
+
+  .lead{background:#EFF6FF;border:1px solid #BFDBFE;border-left:4px solid var(--blue);border-radius:0 8px 8px 0;padding:12px 16px;font-size:12.5px;color:#1E40AF;margin-bottom:24px}
+  .lead b{color:var(--navy)}
+  .foot{text-align:center;font-size:11px;color:var(--muted);margin-top:30px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <h1>🧭 สรุปสกิลแต่ละโมดูล — Sangwijit ERP Portal</h1>
+    <p>วัตถุประสงค์ · เมนู · use case จริง · คำตอบ/กติกาที่ตัดสินแล้ว · BC entity ที่ผูก · (Frontend layer เหนือ Business Central)</p>
+    <div class="stats">
+      <div class="stat"><div class="n">11</div><div class="l">โมดูล</div></div>
+      <div class="stat"><div class="n">~44</div><div class="l">หน้า ✦ เสร็จ</div></div>
+      <div class="stat"><div class="n">1</div><div class="l">นิติบุคคล (SWT)</div></div>
+      <div class="stat"><div class="n">P1</div><div class="l">เฟสปัจจุบัน</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="wrap">
+    <span class="lbl">ไปที่:</span>
+    <a class="chip" href="#sl">SL ขาย</a>
+    <a class="chip" href="#po">PO จัดซื้อ</a>
+    <a class="chip" href="#wh">WH คลัง</a>
+    <a class="chip" href="#fi">FI การเงิน</a>
+    <a class="chip" href="#sv">SV บริการ</a>
+    <a class="chip" href="#md">MD ข้อมูลหลัก</a>
+    <a class="chip" href="#pm">PM โปรโมชั่น</a>
+    <a class="chip" href="#cm">CM คอมมิชชั่น</a>
+    <a class="chip" href="#cf">CF ตั้งค่า</a>
+    <a class="chip" href="#ia">IA เชื่อมต่อ</a>
+    <a class="chip" href="#rp">RP รายงาน</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="lead">
+    <b>อ่านยังไง:</b> แต่ละการ์ด = 1 โมดูล · <b>วัตถุประสงค์</b> (โมดูลทำอะไร) → <b>เมนู</b> (หน้าจอในโมดูล) → <b>Use case</b> (พนักงานใช้จริงตอนไหน) → <b>คำตอบ/กติกา</b> (กฎธุรกิจที่ตัดสินแล้ว ห้ามทำผิด) → <b>BC entity</b> (ตารางใน Business Central ที่ข้อมูลไปลง) · กติกาแม่ทั้งระบบ: <b>VAT ลดก่อนคิดภาษีเสมอ</b> · <b>Rebate ≠ Discount</b> · <b>Maker ≠ Checker</b> · <b>Portal = UI เท่านั้น (BC เป็นเจ้าของ posting)</b>
+  </div>
+
+  <!-- SL -->
+  <div class="mod" id="sl" style="--c:#2563EB;--cl:#EFF6FF">
+    <div class="mod-head">
+      <div class="mod-ico">💼</div>
+      <span class="code">SL</span><h2>งานขาย</h2>
+      <span class="sp"></span>
+      <span class="badge b-done">7/7 ✦ ครบ</span>
+    </div>
+    <div class="purpose">คุมวงจรขายตั้งแต่เสนอราคา → จอง → มัดจำ → บิลขาย → รับชำระ → ลดหนี้ · เป็นศูนย์ยืนยันลูกค้า + ตรวจวงเงินเครดิต + คิด VAT</div>
+    <div class="body">
+      <div class="block"><h3>เมนู / หน้าจอ</h3><div class="menu">
+        <div class="m"><code>SL-Q</code> คิวขาย (งานค้างรอทำ)</div>
+        <div class="m"><code>SL-1</code> ใบเสนอราคา</div>
+        <div class="m"><code>SL-2</code> ใบจอง (= BC Sales Order)</div>
+        <div class="m"><code>SL-3</code> ใบมัดจำ</div>
+        <div class="m"><code>SL-4</code> บิลขาย / ขายสด</div>
+        <div class="m"><code>SL-CN</code> ใบลดหนี้ขาย</div>
+        <div class="m"><code>SL-F1</code> ขออนุมัติวงเงิน</div>
+      </div></div>
+      <div class="block"><h3>Use case จริง</h3><ol class="uc">
+        <li>ลูกค้าถามราคา → เสนอราคา → ตกลง → จองสต็อก</li>
+        <li>จอง + จ่ายมัดจำ → ส่งของครบเงื่อนไข → ออกบิลขาย</li>
+        <li>วงเงินไม่พอ → ระบบเตือน → ขออนุมัติวงเงิน (ตามชั้น)</li>
+        <li>ขายสด → รับเงินหลายวิธี + โปรฯ อัตโนมัติ + ออกใบกำกับ</li>
+        <li>ลูกค้าคืนสินค้า/ราคาผิด → ออกใบลดหนี้ (อ้างบิลต้นทาง)</li>
+      </ol></div>
+      <div class="block full"><h3>คำตอบ / กติกาสำคัญ</h3><ul class="dec">
+        <li><b>Serial ไม่บังคับที่ขาย</b> — ไปลงที่คลัง (WH เบิก) เท่านั้น</li>
+        <li><b>VAT 3 แบบต่อบิล</b> — รวม / ไม่รวม / ไม่แสดง (แต่คิดลดก่อน VAT เสมอ)</li>
+        <li><b>ตรวจวงเงินทุกครั้ง</b> — เกิน → เข้า SL-F1 ตามชั้น (0-50K / 50-200K / 200-500K / &gt;500K)</li>
+        <li><b>Maker ≠ Checker</b> — คนเปิดเอกสารอนุมัติตัวเองไม่ได้</li>
+        <li><b>ใบลดหนี้ต้องอ้างบิล</b> — ไม่มีบิลต้นทาง = ออกไม่ได้</li>
+      </ul></div>
+      <div class="block full"><h3>BC entity</h3><div class="bc">
+        <span>salesQuotes 6660</span><span>salesOrders 36/37</span><span>salesInvoices 112/113</span><span>salesCreditMemos 114</span><span>customers 18</span>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- PO -->
+  <div class="mod" id="po" style="--c:#0891B2;--cl:#ECFEFF">
+    <div class="mod-head">
+      <div class="mod-ico">🛒</div>
+      <span class="code">PO</span><h2>งานจัดซื้อ</h2>
+      <span class="sp"></span>
+      <span class="badge b-done">9 ✦</span>
+    </div>
+    <div class="purpose">สั่งซื้อสินค้า · เจรจาส่วนลด/โปรฯ คู่ค้า · บันทึกข้อตกลงงบ · ตั้งหนี้เจ้าหนี้ · ติดตามเงินคืน (Trade Support) จาก Vendor</div>
+    <div class="body">
+      <div class="block"><h3>เมนู / หน้าจอ</h3><div class="menu">
+        <div class="m"><code>PO-Q</code> คิวจัดซื้อ (เตือนของใกล้หมด)</div>
+        <div class="m"><code>PO-1</code> ใบขอซื้อ (PR)</div>
+        <div class="m"><code>PO-2</code> ข้อตกลงงบ Vendor (MOU/Sell-in/out/Co-op)</div>
+        <div class="m"><code>PO-3</code> ใบวางบิล Vendor</div>
+        <div class="m"><code>PO-4</code> ใบสั่งซื้อ (PO)</div>
+        <div class="m"><code>PO-6</code> ใบตั้งหนี้เจ้าหนี้ (AP)</div>
+        <div class="m"><code>PO-7</code> สรุปได้จริง (Rebate/Trade Support)</div>
+        <div class="m"><code>PO-8</code> บิลฝาก (Deposit Pool)</div>
+        <div class="m"><code>PO-CN</code> ใบลดหนี้เจ้าหนี้</div>
+      </div></div>
+      <div class="block"><h3>Use case จริง</h3><ol class="uc">
+        <li>ของใกล้หมด (MOS ≤2 เดือน) → เปิด PR → อนุมัติ → แปลงเป็น PO</li>
+        <li>ตกลง MOU กับ Vendor (เป้า/Rebate/ระยะ) → บันทึก PO-2 → Vendor เซ็น</li>
+        <li>ของส่งไม่ครบแต่ครบกำหนดจ่าย → ใช้บิลฝาก (PO-8) จ่ายก่อน</li>
+        <li>Sell-in ลด% บนบิล → PO-4 สั่ง → PO-6 ตั้งหนี้หักทันที</li>
+        <li>ถึงเป้า MOU → ขอ CN จาก Vendor → PO-7 Realize → หัก AP</li>
+      </ol></div>
+      <div class="block full"><h3>คำตอบ / กติกาสำคัญ</h3><ul class="dec">
+        <li><b>ลด% บนบิล (Case 4) ดีสุด</b> — ประหยัด VAT กว่าลดหลังบิล</li>
+        <li><b>"ตั้งหนี้" ต่างกัน</b> — PO-2/PO-7 = บันทึกงบ (ไม่มีภาษี) · PO-6 = ตั้งหนี้จริง (มีภาษี)</li>
+        <li><b>กติกา MOS</b> — ≤2 เดือนต้องสั่ง · ≤4 โอเค · &gt;4 ห้ามสั่ง</li>
+        <li><b>Sanction Flow</b> — Vendor ไม่ส่ง CN: เตือน Day-0 → Day-7 → Day-15 หยุดออก PO</li>
+        <li><b>จ่ายเงินจุดเดียว</b> — Record Payment ที่ PO-7 เท่านั้น (กัน GL ซ้ำ)</li>
+      </ul></div>
+      <div class="block full"><h3>BC entity</h3><div class="bc">
+        <span>purchaseOrders 38/39</span><span>purchaseInvoices 122/123</span><span>purchaseReceipts 120/121</span><span>vendors 23</span><span>vendorCommitments (custom)</span>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- WH -->
+  <div class="mod" id="wh" style="--c:#7C3AED;--cl:#F5F3FF">
+    <div class="mod-head">
+      <div class="mod-ico">📦</div>
+      <span class="code">WH</span><h2>งานคลังสินค้า</h2>
+      <span class="sp"></span>
+      <span class="badge b-done">9 ✦ ครบโมดูล</span>
+    </div>
+    <div class="purpose">รับสินค้าจาก Vendor · เบิกจ่ายให้ขาย · โอนระหว่างคลัง · นับสต็อก · คุม Serial + Bin ทุกการเคลื่อนไหว</div>
+    <div class="body">
+      <div class="block"><h3>เมนู / หน้าจอ</h3><div class="menu">
+        <div class="m"><code>WH-Q</code> คิวคลัง (Q1 รับ / Q2 เบิก)</div>
+        <div class="m"><code>WH-1</code> ใบรับสินค้า (GRN + รับโอน)</div>
+        <div class="m"><code>WH-2</code> ใบเบิกจ่ายขาย (+2R ขอเบิก)</div>
+        <div class="m"><code>WH-3</code> ใบโอนสินค้า (+3R ขอโอน)</div>
+        <div class="m"><code>WH-4</code> ใบนับสต็อก (+4R เตรียมนับ)</div>
+        <div class="m"><code>WH-R</code> Stock Card / รายงาน</div>
+      </div></div>
+      <div class="block"><h3>Use case จริง</h3><ol class="uc">
+        <li>Vendor ส่งของตาม PO → รับเข้า ใส่ Serial ทีละชิ้น + Bin → Post</li>
+        <li>ขาย 5 ชิ้น → Waterfall: เบิกคลัง A → ไม่พอขอโอน B → ยังขาดค่อยซื้อ</li>
+        <li>เบิกขาย → ใส่ Serial ต่อบรรทัด → พิมพ์ใบหยิบ → ยิงยืนยัน → ตัดสต็อก</li>
+        <li>โอนคลัง → ส่งออก (In Transit) → ปลายทางรับเข้า → สต็อกอัปเดต</li>
+        <li>นับสต็อกรายเดือน → ยิงนับของจริง → Manager ยืนยัน → ปรับ BC</li>
+      </ol></div>
+      <div class="block full"><h3>คำตอบ / กติกาสำคัญ</h3><ul class="dec">
+        <li><b>Serial บังคับที่คลัง</b> — รับเข้าต้องใส่ · เบิกออกต้องใส่ (ไม่ใช่ที่บิลขาย)</li>
+        <li><b>Waterfall</b> — 1 บรรทัดขาย แตกได้ 3 ใบขอ (เบิก/โอน/ซื้อ) อ้างกลับขายใบเดียว</li>
+        <li><b>SLA</b> — รับของ ≤4 ชม. · เบิกขาย ≤2 ชม. · โอน ≤1 วันทำการ</li>
+        <li><b>QC Hold</b> — ของไม่ผ่าน → เข้า Location Hold อัตโนมัติ</li>
+        <li><b>ล็อกช่วงนับ</b> — นับสต็อก item ไหน ล็อกการเคลื่อนไหว item นั้น</li>
+      </ul></div>
+      <div class="block full"><h3>BC entity</h3><div class="bc">
+        <span>transferOrders 5740/5741</span><span>itemLedgerEntries 32</span><span>warehouseEntries 7152</span><span>purchaseReceipts 120/121</span><span>itemSerialNumbers 6505</span>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- FI -->
+  <div class="mod" id="fi" style="--c:#059669;--cl:#ECFDF5">
+    <div class="mod-head">
+      <div class="mod-ico">💵</div>
+      <span class="code">FI</span><h2>บัญชี / การเงิน</h2>
+      <span class="sp"></span>
+      <span class="badge b-done">5 ✦</span>
+    </div>
+    <div class="purpose">รับ-จ่าย · ลูกหนี้-เจ้าหนี้ · กระทบยอดธนาคาร · ค่าใช้จ่าย · ภาษีขาย/ซื้อ · ภาษีหัก ณ ที่จ่าย · บัญชี 2 เล่ม</div>
+    <div class="body">
+      <div class="block"><h3>เมนู / หน้าจอ</h3><div class="menu">
+        <div class="m"><code>FI-Q</code> คิวการเงิน (AR/AP/Aging)</div>
+        <div class="m"><code>FI-1</code> รับชำระลูกหนี้ (+1Q Apply)</div>
+        <div class="m"><code>FI-2</code> จ่ายชำระเจ้าหนี้ (+ WHT auto)</div>
+        <div class="m"><code>FI-3</code> กระทบยอดธนาคาร</div>
+        <div class="m"><code>FI-7</code> รายงานภาษี (ภ.พ.30)</div>
+        <div class="m"><code>FI-12</code> ภาษีหัก ณ ที่จ่าย (ภ.ง.ด.3/53)</div>
+        <div class="m"><code>FI-13</code> บัญชี 2 เล่ม (Dual-Book)</div>
+      </div></div>
+      <div class="block"><h3>Use case จริง</h3><ol class="uc">
+        <li>ลูกค้าโอนเงิน → เข้าคิว Apply → จับคู่ Invoice อัตโนมัติ → ปิด</li>
+        <li>ครบกำหนดจ่าย Vendor → เลือก Invoice → หัก WHT อัตโนมัติ → เข้าคิว FI-12</li>
+        <li>ปลายเดือน → นำเข้า Statement เทียบ BC → จับคู่ → สร้าง JV ปรับ</li>
+        <li>ปิดภาษีรายนิติบุคคล → เลือก Tag → โอนห้องภาษี → ออก ภ.พ.30</li>
+        <li>สินทรัพย์ถาวร → สร้างการ์ด → รันค่าเสื่อมรายเดือน</li>
+      </ol></div>
+      <div class="block full"><h3>คำตอบ / กติกาสำคัญ</h3><ul class="dec">
+        <li><b>Dual-Book Entity Tag</b> — ทุกบิลซื้อติด Tag (1/2/3/novat) ว่าบริษัทไหนออกใบกำกับ → กรองเข้าห้องภาษี</li>
+        <li><b>WHT คิดอัตโนมัติ</b> — ตอนจ่าย (FI-2) หัก 1-5% ตามหมวด Vendor</li>
+        <li><b>WHT ออกใบที่เดียว</b> — สร้างค้างได้หลายที่ แต่ Release + พิมพ์ที่ FI-12 เท่านั้น</li>
+        <li><b>กระทบยอดก่อนปิดงวด</b> — ทุกเดือน ก่อนล็อก posting ย้อนหลัง</li>
+        <li><b>เกินวงเงิน = ล็อก</b> — ลูกค้าเกิน → สร้าง SO ไม่ได้จนขออนุมัติ</li>
+      </ul></div>
+      <div class="block full"><h3>BC entity</h3><div class="bc">
+        <span>customerLedgerEntries 21</span><span>vendorLedgerEntries 25</span><span>bankAccLedgerEntries 274</span><span>vatEntries 254</span><span>fixedAssets 5600</span>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- SV -->
+  <div class="mod" id="sv" style="--c:#DB2777;--cl:#FDF2F8">
+    <div class="mod-head">
+      <div class="mod-ico">🔧</div>
+      <span class="code">SV</span><h2>งานบริการ + เคลม</h2>
+      <span class="sp"></span>
+      <span class="badge b-done">11 ✦ (BC365)</span>
+    </div>
+    <div class="purpose">รับซ่อม · นัดช่าง · เบิกอะไหล่ · ปิดงาน/QA · ส่ง+ติดตั้ง · เคลม Vendor (ซ่อมไม่ได้/ของชำรุด)</div>
+    <div class="body">
+      <div class="block"><h3>เมนู / หน้าจอ</h3><div class="menu">
+        <div class="m"><code>SV-Q</code> คิวบริการ (+ นับถอย SLA)</div>
+        <div class="m"><code>SV-1</code> รับเรื่องซ่อม (เลือกประเภทงาน)</div>
+        <div class="m"><code>SV-2</code> มอบหมายช่าง + นัด</div>
+        <div class="m"><code>SV-5</code> Job Card ช่าง (+ ภาพ Before/After)</div>
+        <div class="m"><code>SV-3</code> เบิกอะไหล่ / <code>SV-O</code> สั่งอะไหล่</div>
+        <div class="m"><code>SV-4</code> ปิดงาน / QA</div>
+        <div class="m"><code>SV-6</code> จัดส่ง + ติดตั้ง</div>
+        <div class="m"><code>CLM</code> เคลม Vendor</div>
+      </div></div>
+      <div class="block"><h3>Use case จริง</h3><ol class="uc">
+        <li>ลูกค้านำมาซ่อม → ตรวจ Serial → เช็คประกันอัตโนมัติ → นัดช่าง</li>
+        <li>ช่างซ่อม → Job Card ใส่อาการ+อะไหล่ → เบิกสต็อก (ยิง Barcode)</li>
+        <li>ซ่อมไม่ได้/ของชำรุด → เลือก "ส่งเคลม" → เปิด CLM อัตโนมัติ</li>
+        <li>Vendor รับเคลม → บันทึก → เปิด AP Credit Note ให้ FI</li>
+        <li>ส่งลูกค้า + ติดตั้ง → ยืนยัน Serial → ลูกค้าเซ็นดิจิทัล → QR ติดตาม</li>
+      </ol></div>
+      <div class="block full"><h3>คำตอบ / กติกาสำคัญ</h3><ul class="dec">
+        <li><b>เคลม = ประเภทงาน ไม่ใช่โมดูลแยก</b> — เลือกในหน้ารับซ่อม (ซ่อม/ติดตั้ง/ตรวจ/เคลม)</li>
+        <li><b>เช็คประกันอัตโนมัติ</b> — จากวันรับของ (GRN) + อายุประกัน → ในหรือนอกประกัน</li>
+        <li><b>ทุกงานต้องมี Serial</b> — ยิง Barcode ตรวจว่าซื้อจาก SWT ไหม</li>
+        <li><b>ภาพ + ลายเซ็นบังคับ</b> — ก่อนปิดงาน ต้องมี Before/After + เซ็น</li>
+        <li><b>เคลม 2 ทาง</b> — ซ่อมได้ = จบใน SV · ซ่อมไม่ได้ = ส่ง Vendor → PO-CN / คืนเงิน</li>
+      </ul></div>
+      <div class="block full"><h3>BC entity</h3><div class="bc">
+        <span>serviceOrders 5900/5901</span><span>serviceItemComponents 5943</span><span>purchaseCreditMemos</span>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- MD -->
+  <div class="mod" id="md" style="--c:#CA8A04;--cl:#FEFCE8">
+    <div class="mod-head">
+      <div class="mod-ico">📚</div>
+      <span class="code">MD</span><h2>ข้อมูลหลัก (Master)</h2>
+      <span class="sp"></span>
+      <span class="badge b-p1">2 ✦ · ที่เหลือทำต่อ</span>
+    </div>
+    <div class="purpose">ทะเบียนอ้างอิงที่ทุกโมดูลใช้ร่วม — สินค้า · ลูกค้า · Vendor · พนักงาน · สาขา/คลัง · ราคามาตรฐาน</div>
+    <div class="body">
+      <div class="block"><h3>เมนู / หน้าจอ</h3><div class="menu">
+        <div class="m"><code>MD-1</code> ทะเบียนสินค้า ✦ (BC365)</div>
+        <div class="m"><code>MD-2</code> ทะเบียนลูกค้า</div>
+        <div class="m"><code>MD-3</code> ทะเบียน Vendor ✦</div>
+        <div class="m"><code>MD-4</code> ทะเบียนพนักงาน</div>
+        <div class="m"><code>MD-5</code> สาขา &amp; คลัง</div>
+        <div class="m"><code>MD-6</code> ทะเบียนเครื่อง (Service Item) ✦</div>
+      </div></div>
+      <div class="block"><h3>Use case จริง</h3><ol class="uc">
+        <li>ลูกค้าใหม่ → สร้าง + ตรวจ Tax ID + ที่อยู่ 3 แบบ + วงเงิน → ใช้ SO ได้</li>
+        <li>สินค้าใหม่ → ตั้งรหัส/หมวด/ต้นทุน/Barcode + จุดสั่งซ้ำ</li>
+        <li>Vendor ใหม่ → ตั้ง Tax ID/Bank/หมวด WHT → Finance ตรวจ → ใช้ PO ได้</li>
+        <li>ช่างใหม่ → ตั้ง Technician + skills → โผล่ให้เลือกในหน้ารับซ่อม</li>
+      </ol></div>
+      <div class="block full"><h3>คำตอบ / กติกาสำคัญ</h3><ul class="dec">
+        <li><b>Lifecycle Block→Active</b> — สร้าง = Block ทั้งหมด → กรอกครบ → ปลด Block = ใช้งานได้</li>
+        <li><b>ที่อยู่ 3 แบบ (ลูกค้า)</b> — ออกใบกำกับ + จัดส่ง + ตามบัตร (บังคับสำหรับนิติบุคคล)</li>
+        <li><b>วงเงิน = 0 → เงินสด</b> — ไม่มีเครดิต บังคับจ่ายเต็ม (Vendor ไม่มี Credit Limit ใน BC)</li>
+        <li><b>Blocked = ล็อกอัตโนมัติ</b> — สร้าง SO/PO ไม่ได้จนปลด</li>
+        <li><b>ต้นทุนซ่อนจาก Sales</b> — ผ่าน field permission</li>
+      </ul></div>
+      <div class="block full"><h3>BC entity</h3><div class="bc">
+        <span>Item 27</span><span>Customer 18</span><span>Vendor 23</span><span>Employee 5200</span><span>Location 14</span><span>+ SWT custom tables 50100+</span>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- PM -->
+  <div class="mod" id="pm" style="--c:#EA580C;--cl:#FFF7ED">
+    <div class="mod-head">
+      <div class="mod-ico">🏷️</div>
+      <span class="code">PM</span><h2>โปรโมชั่น &amp; ราคา</h2>
+      <span class="sp"></span>
+      <span class="badge b-p1">spec ครบ 5 หน้า</span>
+    </div>
+    <div class="purpose">ออกแบบราคา · ส่วนลด · โปรโมชั่น · โควตา · เครื่องจำลองราคา → ป้อนให้ SC9 ที่ทุกหน้าขาย/บริการดึงไปใช้</div>
+    <div class="body">
+      <div class="block"><h3>เมนู / หน้าจอ</h3><div class="menu">
+        <div class="m"><code>PM-Q</code> แดชบอร์ดโปรฯ (โปรที่ active/ใกล้หมด)</div>
+        <div class="m"><code>PM-1</code> Price List (ราคาขายตามลูกค้า/สินค้า)</div>
+        <div class="m"><code>PM-2</code> โปรโมชั่น (%/บาท/แถม/Bundle)</div>
+        <div class="m"><code>PM-3</code> ส่วนลดขั้นบันได + Bundle</div>
+        <div class="m"><code>PM-4</code> โควตาขาย (เป้า + งบส่วนลด)</div>
+        <div class="m"><code>PM-5</code> เครื่องจำลองราคา (ดูราคา + margin)</div>
+      </div></div>
+      <div class="block"><h3>Use case จริง</h3><ol class="uc">
+        <li>จำลองราคา → เลือกลูกค้า + สินค้า + จำนวน → เห็นราคาสุทธิ + โปรฯ ที่ได้</li>
+        <li>เปิดโปร "ลด 20%" → เช็คชนกัน (ซ้อน ≤2) → อนุมัติ → active</li>
+        <li>โควตา: เซลล์ทำได้ 150K/200K → งบส่วนลดเหลือ 10%</li>
+        <li>เลือกสินค้าในบิลขาย → SC9 ดึงโปรฯ ที่ match ให้อัตโนมัติ</li>
+      </ol></div>
+      <div class="block full"><h3>คำตอบ / กติกาสำคัญ</h3><ul class="dec">
+        <li><b>VAT Golden Rule</b> — (ราคาก่อน VAT − ส่วนลด) → +VAT 7% · <b>ห้าม</b>ลดจากราคารวม VAT</li>
+        <li><b>โปรซ้อนได้ ≤ 2 ชั้น</b> — Priority 1-10 · เกิน 2 ชั้นต้องอนุมัติ</li>
+        <li><b>Rebate ≠ Discount</b> — Rebate = คืนหลังขาย (PO-7) · Discount = ลดก่อนขาย (PM)</li>
+        <li><b>เตือน margin</b> — GP% &lt;10% เหลือง · &lt;0% แดง ต้อง GM อนุมัติ</li>
+        <li><b>Sale-In Accrual ย้ายไป PO-7</b> — จัดซื้อคุม Trade Agreement</li>
+      </ul></div>
+      <div class="block full"><h3>หมายเหตุ BC</h3><div class="bc"><span>Portal owns 100% (pricing engine + SC9)</span></div></div>
+    </div>
+  </div>
+
+  <!-- CM -->
+  <div class="mod" id="cm" style="--c:#0D9488;--cl:#F0FDFA">
+    <div class="mod-head">
+      <div class="mod-ico">🎯</div>
+      <span class="code">CM</span><h2>คอมมิชชั่น</h2>
+      <span class="sp"></span>
+      <span class="badge b-p1">CM-1 + skill doc</span>
+    </div>
+    <div class="purpose">คำนวณคอมมิชชั่น 4 ชั้น (ทีม → หมวด → ตัวเร่ง → ทักษะ) สำหรับ 3 ช่องทาง: ค้าปลีก · ค้าส่ง · ส่งออก</div>
+    <div class="body">
+      <div class="block"><h3>เมนู / หน้าจอ</h3><div class="menu">
+        <div class="m"><code>CM-1</code> แดชบอร์ดคอมมิชชั่น (เป้า · คอมที่ได้ · pool ทีม)</div>
+      </div></div>
+      <div class="block"><h3>Use case จริง</h3><ol class="uc">
+        <li>ค้าปลีก: ทำได้ 150K (75% เป้า) → คอม pool 5% + โบนัสต่อชิ้น</li>
+        <li>ค้าส่ง: ขายครบทุกแบรนด์ → คูณ ×1.2</li>
+        <li>ส่งออก: ขาย 100 เครื่อง → ฿500/เครื่อง</li>
+        <li>โปรเร่งยอด active → +200 บาท/บิล</li>
+      </ol></div>
+      <div class="block full"><h3>คำตอบ / กติกาสำคัญ</h3><ul class="dec">
+        <li><b>4 ชั้น (ออกแบบพฤติกรรม)</b> — L1 ทีมถึงเป้าก่อน (ปลด pool) · L2 ครบหมวด (กันเลือกขายเฉพาะตัวทำเงิน) · L3 ดันสินค้าเร่ง · L4 ทักษะพิเศษ</li>
+        <li><b>ต่างช่องทาง ต่างสูตร</b> — ปลีก = %+฿/บิล · ส่ง = %+tier แบรนด์ · ส่งออก = ฿/เครื่อง</li>
+        <li><b>ล็อกสิ้นเดือน</b> — ปิดงวดแล้วล็อก คำนวณใหม่เฉพาะตอนปิดงวด (คุมโดย PM-4)</li>
+      </ul></div>
+      <div class="block full"><h3>หมายเหตุ BC</h3><div class="bc"><span>Portal owns 100%</span><span>อ่านจาก PM-4 + SO posted → ลง GL ที่ FI</span></div></div>
+    </div>
+  </div>
+
+  <!-- CF -->
+  <div class="mod" id="cf" style="--c:#475569;--cl:#F1F5F9">
+    <div class="mod-head">
+      <div class="mod-ico">⚙️</div>
+      <span class="code">CF</span><h2>ตั้งค่าระบบ</h2>
+      <span class="sp"></span>
+      <span class="badge b-p1">spec ครบ 9 หน้า</span>
+    </div>
+    <div class="purpose">ตั้งค่าพฤติกรรมระบบ/BC ที่ไม่เปลี่ยนบ่อย — ภาษี · เลขเอกสาร · สิทธิ์ · GL · นโยบายคลัง · ค่าแรงช่าง · เส้นทางอนุมัติ · เทมเพลต · Entity Tag</div>
+    <div class="body">
+      <div class="block"><h3>เมนู / หน้าจอ</h3><div class="menu">
+        <div class="m"><code>CF-1</code> ทะเบียนตำแหน่ง (Position + RBAC) ✦</div>
+        <div class="m"><code>CF-2.1</code> Tax Setup (VAT + WHT) ✦</div>
+        <div class="m"><code>CF-2.5</code> เทมเพลตช่าง (ค่าแรง)</div>
+        <div class="m"><code>CF-2.6</code> Approval Matrix (Maker≠Checker) ✦</div>
+        <div class="m"><code>CF-2.7</code> เทมเพลตเอกสาร (Email/PDF) ✦</div>
+        <div class="m"><code>CF-3/5</code> Payment Hub / Bank Master (stub)</div>
+        <div class="m"><code>CF-2.8</code> Entity Tag (Dual-Book) — defer P2</div>
+      </div></div>
+      <div class="block"><h3>Use case จริง</h3><ol class="uc">
+        <li>ตั้ง VAT 7% + WHT 3% + GL account → บังคับ posting ถูก</li>
+        <li>เซลล์อนุมัติ SO &lt;50K · PM อนุมัติ &gt;500K (แยกหน้าที่)</li>
+        <li>ตั้งค่าแรงช่าง Daikin: senior 800 บาท/ชม → คิด SV invoice</li>
+        <li>ตั้ง Entity Tag "1" = SWT → FI-13 แยกห้องภาษี</li>
+      </ol></div>
+      <div class="block full"><h3>คำตอบ / กติกาสำคัญ</h3><ul class="dec">
+        <li><b>ระบบสิทธิ์ = ตำแหน่ง (Position-based RBAC · ADR-0003)</b> — เลิก role ตายตัว 9 อัน → admin สร้าง "ตำแหน่ง" เอง · 1 พนักงาน = 1 ตำแหน่ง · สิทธิ์ CRUD รายหน้า + scope สาขา/แผนก + วงเงิน · <b>สร้างพนักงาน (MD-4) → มอบตำแหน่ง (CF-1) → อนุมัติตามวงเงิน (CF-2.6)</b></li>
+        <li><b>CF-2.6 Approval Matrix</b> — routing ตามยอด + SLA + auto-escalate · SL และ PO ต้องผ่านที่นี่ · sync กับ CF-1</li>
+        <li><b>Maker ≠ Checker</b> — คนสร้าง ≠ คนอนุมัติ (account เดียวห้าม)</li>
+        <li><b>เลขเอกสาร reset ไม่ได้</b> — ข้อบังคับภาษี เก็บ 10+ ปี</li>
+      </ul></div>
+      <div class="block full"><h3>หมายเหตุ BC (audit 2026-04-16)</h3><div class="bc">
+        <span>Cut → ใช้ BC ตรง: CF-2.1/2.2/2.3/2.4/2.9</span><span>Portal owns: CF-2.5/2.6/2.7/RBAC</span><span>Defer P2: CF-2.8 Entity Tag</span>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- IA -->
+  <div class="mod" id="ia" style="--c:#0369A1;--cl:#F0F9FF">
+    <div class="mod-head">
+      <div class="mod-ico">🔗</div>
+      <span class="code">IA</span><h2>เชื่อมต่อ / API</h2>
+      <span class="sp"></span>
+      <span class="badge b-done">IA-Q ✦ · spec 5 หน้า</span>
+    </div>
+    <div class="purpose">มองเห็นการเชื่อม Portal ↔ BC — สถานะ sync · error log · webhook · connector marketplace · สำรวจ entity</div>
+    <div class="body">
+      <div class="block"><h3>เมนู / หน้าจอ</h3><div class="menu">
+        <div class="m"><code>IA-Q</code> Monitor Dashboard (สุขภาพ sync)</div>
+        <div class="m"><code>IA-1</code> BC Sync Monitor (ตาราง sync + trigger)</div>
+        <div class="m"><code>IA-2</code> Error Log + Retry</div>
+        <div class="m"><code>IA-3</code> Webhook Config</div>
+        <div class="m"><code>IA-4/5</code> Marketplace / Entity Explorer — P3</div>
+      </div></div>
+      <div class="block"><h3>Use case จริง</h3><ol class="uc">
+        <li>Dashboard แสดง "MD-1 sync 2 นาทีที่แล้ว · 9,843 รายการ · OK"</li>
+        <li>Error "PM-1 HTTP 400" → Admin แก้ข้อมูลใน BC → retry</li>
+        <li>Webhook: SO posted → ส่ง JSON เข้า Portal → สร้าง GL</li>
+        <li>Shopee order → sync เป็น SO (P3)</li>
+      </ol></div>
+      <div class="block full"><h3>คำตอบ / กติกาสำคัญ</h3><ul class="dec">
+        <li><b>Service Account เดียว</b> — ทุก user ผ่าน Portal RBAC → BC 1 license (ประหยัด)</li>
+        <li><b>Auto-Retry</b> — 5xx retry 3 ครั้ง (5s/15s/60s) · 4xx ไม่ retry · 401 refresh token</li>
+        <li><b>Rate Limit</b> — BC 600 req/min → Portal batch (10-20/call)</li>
+        <li><b>ความถี่ sync</b> — MD 15 นาที · SO/PO 5 นาที · GL 30 นาที</li>
+      </ul></div>
+      <div class="block full"><h3>หมายเหตุ BC</h3><div class="bc"><span>Portal owns: IA-Q/1/2/3</span><span>Defer P3: IA-4/5</span></div></div>
+    </div>
+  </div>
+
+  <!-- RP -->
+  <div class="mod" id="rp" style="--c:#9333EA;--cl:#FAF5FF">
+    <div class="mod-head">
+      <div class="mod-ico">📊</div>
+      <span class="code">RP</span><h2>ศูนย์รายงาน</h2>
+      <span class="sp"></span>
+      <span class="badge b-p3">Mockup · full build P3</span>
+    </div>
+    <div class="purpose">ศูนย์กลางดาวน์โหลด · ตั้งเวลา · ปรับแต่งรายงานทุกโมดูล (ขาย · ซื้อ · AR/AP · GL · สต็อก · ภาษี)</div>
+    <div class="body">
+      <div class="block"><h3>เมนู / หน้าจอ</h3><div class="menu">
+        <div class="m"><code>RP-1</code> Report Center (ทั้งหมด/โปรด/ล่าสุด)</div>
+      </div></div>
+      <div class="block"><h3>Use case จริง</h3><ol class="uc">
+        <li>Finance: ดาวน์โหลด AR Aging (ณ วันที่) → CSV → อีเมล</li>
+        <li>เซลล์: ดูยอดขายตัวเอง YTD → กรองหมวด → PDF</li>
+        <li>GM: ตั้งเวลารายงานคอมมิชชั่นรายเดือน → อีเมลบัญชี</li>
+        <li>ส่งออก VAT Summary สำหรับ e-Filing</li>
+      </ol></div>
+      <div class="block full"><h3>คำตอบ / กติกาสำคัญ</h3><ul class="dec">
+        <li><b>สิทธิ์ตามบทบาท</b> — Finance เห็น GL · เซลล์เห็นยอดตัวเอง</li>
+        <li><b>ตั้งเวลา + อีเมลได้</b> — รายวัน/สัปดาห์/เดือน</li>
+        <li><b>เฉพาะรายการที่ post แล้ว</b> — draft ไม่นับ</li>
+      </ul></div>
+      <div class="block full"><h3>หมายเหตุ BC</h3><div class="bc"><span>Portal owns hub</span><span>อ่านจาก BC ทุกตาราง + Portal-only (audit/error log)</span><span>Phase 3</span></div></div>
+    </div>
+  </div>
+
+  <div class="foot">Sangwijit ERP Web Portal · สรุปจาก sangwijit-portal-skill/modules/*.md · สร้าง 2026-06-28 · Portal = UI layer เหนือ Business Central</div>
+
+</div>
+</body>
+</html>
