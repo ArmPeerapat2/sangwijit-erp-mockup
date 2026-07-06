@@ -177,7 +177,7 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
   </div>
   <div class="swt-mh-right">
     <span class="swt-mh-badge pending">🟠 รอลูกค้าเซ็น</span>
-    <button class="swt-mh-btn swt-mh-btn-ghost">📄 พิมพ์</button>
+    <button class="swt-mh-btn swt-mh-btn-ghost" onclick="sv7OpenPrint()">📄 พิมพ์</button>
     <button class="swt-mh-btn swt-mh-btn-ghost">💬 LINE</button>
     <button class="swt-mh-btn swt-mh-btn-ghost">💾 Draft</button>
     <button class="swt-mh-btn swt-mh-btn-primary" title="Post SVI-C ลง BC AR · ปิดงาน · ย้อนไม่ได้">✓ ปิดงาน</button>
@@ -340,7 +340,6 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(event,'tab-sign')">✍️ ลูกค้าเซ็นรับ + Rating</button>
     <button class="tab-btn" onclick="switchTab(event,'tab-pay')">💳 รับชำระเงิน</button>
-    <button class="tab-btn" onclick="switchTab(event,'tab-inv')">🧾 Preview Invoice</button>
     <button class="tab-btn" onclick="switchTab(event,'tab-tl')">🕑 Timeline</button>
   </div>
 
@@ -388,36 +387,42 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
     <div id="sv7PayHost"></div>
   </div>
 
-  <!-- Tab 4: Preview Invoice -->
-  <div class="tab-pane" id="tab-inv">
-    <div style="max-width:520px;margin:0 auto;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:24px;font-size:12.5px;line-height:1.7">
-      <div style="text-align:center;border-bottom:2px solid #111827;padding-bottom:12px;margin-bottom:14px">
-        <div style="font-size:16px;font-weight:700">บริษัท แสงวิจิตร จำกัด</div>
-        <div style="color:#6B7280">เลขผู้เสียภาษี 0105xxxxx · สาขา BKK-Service</div>
-        <div style="margin-top:8px;font-size:15px;font-weight:700;color:#4472C4">Service Invoice · ใบแจ้งหนี้บริการ</div>
+  <!-- preview ใบเสร็จ = modal เด้งตอนกดพิมพ์ (ไม่ยืนพื้น) -->
+  <div id="sv7PrintModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:9999;align-items:flex-start;justify-content:center;padding:32px 16px;overflow:auto">
+    <div style="max-width:560px;width:100%">
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:10px">
+        <button onclick="sv7ClosePrint()" style="padding:7px 14px;border:1px solid #D1D5DB;background:#fff;color:#374151;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">✕ ปิด</button>
+        <button onclick="window.print()" style="padding:7px 14px;border:none;background:#2563EB;color:#fff;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">🖨️ พิมพ์เอกสารนี้</button>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div><strong>เลขที่:</strong> SVI-C-2604-0146</div>
-        <div><strong>วันที่:</strong> 23 เม.ย. 26</div>
-        <div style="grid-column:span 2"><strong>ลูกค้า:</strong> คุณสมหญิง เจริญสุข (C-00125)</div>
-        <div style="grid-column:span 2"><strong>Service Order:</strong> SV-SV1-2604-0146</div>
+      <div style="max-width:520px;margin:0 auto;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:24px;font-size:12.5px;line-height:1.7">
+        <div style="text-align:center;border-bottom:2px solid #111827;padding-bottom:12px;margin-bottom:14px">
+          <div style="font-size:16px;font-weight:700">บริษัท แสงวิจิตร จำกัด</div>
+          <div style="color:#6B7280">เลขผู้เสียภาษี 0105xxxxx · สาขา BKK-Service</div>
+          <div style="margin-top:8px;font-size:15px;font-weight:700;color:#4472C4">Service Invoice · ใบแจ้งหนี้บริการ</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div><strong>เลขที่:</strong> SVI-C-2604-0146</div>
+          <div><strong>วันที่:</strong> 23 เม.ย. 26</div>
+          <div style="grid-column:span 2"><strong>ลูกค้า:</strong> คุณสมหญิง เจริญสุข (C-00125)</div>
+          <div style="grid-column:span 2"><strong>Service Order:</strong> SV-SV1-2604-0146</div>
+        </div>
+        <table style="margin-bottom:12px">
+          <thead>
+            <tr><th>รายการ</th><th class="num">จำนวน</th><th class="num">ยอด</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>น้ำยา R32 1 กก. (นอก Comp)</td><td class="num">1</td><td class="num">380.00</td></tr>
+            <tr><td>ค่าเดินทาง</td><td class="num">1</td><td class="num">150.00</td></tr>
+          </tbody>
+        </table>
+        <div class="sum-row" style="font-size:12.5px"><span class="label">ยอดก่อน VAT</span><span class="val">530.00</span></div>
+        <div class="sum-row" style="font-size:12.5px"><span class="label">VAT 7%</span><span class="val">37.10</span></div>
+        <div class="sum-row total" style="font-size:16px"><span class="label">รวมทั้งสิ้น</span><span class="val" style="color:#4472C4">฿567.10</span></div>
+        <div style="margin-top:12px;padding:8px 10px;background:#F0FDF4;border-radius:4px;font-size:11.5px;color:#065F46">
+          ✓ ทำงานในประกัน Daikin 7 ปี · อะไหล่หลัก (Compressor + ถาดน้ำทิ้ง + ค่าแรง) เคลียร์กับ Daikin โดยตรง · ลูกค้าไม่ต้องจ่าย
+        </div>
+        <div style="margin-top:12px;text-align:center;font-size:11px;color:#6B7280">ขอบคุณที่ใช้บริการ · Service Line 02-xxx</div>
       </div>
-      <table style="margin-bottom:12px">
-        <thead>
-          <tr><th>รายการ</th><th class="num">จำนวน</th><th class="num">ยอด</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>น้ำยา R32 1 กก. (นอก Comp)</td><td class="num">1</td><td class="num">380.00</td></tr>
-          <tr><td>ค่าเดินทาง</td><td class="num">1</td><td class="num">150.00</td></tr>
-        </tbody>
-      </table>
-      <div class="sum-row" style="font-size:12.5px"><span class="label">ยอดก่อน VAT</span><span class="val">530.00</span></div>
-      <div class="sum-row" style="font-size:12.5px"><span class="label">VAT 7%</span><span class="val">37.10</span></div>
-      <div class="sum-row total" style="font-size:16px"><span class="label">รวมทั้งสิ้น</span><span class="val" style="color:#4472C4">฿567.10</span></div>
-      <div style="margin-top:12px;padding:8px 10px;background:#F0FDF4;border-radius:4px;font-size:11.5px;color:#065F46">
-        ✓ ทำงานในประกัน Daikin 7 ปี · อะไหล่หลัก (Compressor + ถาดน้ำทิ้ง + ค่าแรง) เคลียร์กับ Daikin โดยตรง · ลูกค้าไม่ต้องจ่าย
-      </div>
-      <div style="margin-top:12px;text-align:center;font-size:11px;color:#6B7280">ขอบคุณที่ใช้บริการ · Service Line 02-xxx</div>
     </div>
   </div>
 
@@ -459,6 +464,8 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
 </div></div></div>
 
 <script>
+function sv7OpenPrint(){document.getElementById('sv7PrintModal').style.display='flex';}
+function sv7ClosePrint(){document.getElementById('sv7PrintModal').style.display='none';}
 function switchTab(e,id){
   var card=e.target.closest('.section-card');
   card.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
