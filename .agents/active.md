@@ -9,6 +9,18 @@ project_type: "frontend-mockup (HTML + docs)"
 ## 🧭 CURRENT FOCUS (2026-07-06)
 โหมด **grill→build ทีละส่วน** · เพิ่งจบ WH-5 · ถัดไป: grill **A Config/ตั้งค่าบริษัท** (แนะนำ · reference SystemDefaults พร้อม · ปลดล็อก API ธนาคาร/ค่าเริ่มต้น) หรือ C form-designer · **queue build ค้าง:** เสียบ sc-payment→sv7 + retrofit sl3/sl1/fiq · preview-หลัง-พิมพ์ (sl4/sv7) · 13 หน้าปุ่มซ้ำ/density sweep
 
+## ⚙️ GRILL A — Config/ตั้งค่า (2026-07-06 · A1-A3 เคาะ · A4 parked)
+
+**A1 · บริษัท + ค่าเริ่มต้น:** 2 ชั้น (BC mirror read-only + ค่าเริ่มต้นพอร์ทัลแก้ได้ · อ่าน Options บางตัว [อนุมัติก่อนพิมพ์/เช็คในมือ] มาปรับพฤติกรรม) · 2 ระดับ (บริษัท admin + ผู้ใช้เอง) · **สาขา default ดึงจาก user management** (ไม่ตั้งซ้ำ) · แจ้งเตือน **route ตามสิทธิ์/role** + user เลือกช่องทาง (แอป/LINE) · ฟอร์มพิมพ์ default ต่อชนิด **ดึงจาก cf2-7 Doc Template**
+
+**A2 · Master data:** พอร์ทัลถือเฉพาะ **UI master** (บัตร+%ชาร์จ→sc-payment · สถานะสี · **เหตุผลปรับสต็อก WH-5** · doc template) · accounting master (กลุ่ม/ประเภท→dimension/posting) = **BC ถือ · cache+refresh · เพิ่มใหม่ลิงก์ BC** · **สร้าง shared `swt-master-editor(el,{title,columns,fields,data})`** (list-detail schema-driven · nested optional) ใช้ซ้ำทุก portal-owned master → **ปิด TODO WH-5 เหตุผล**
+
+**A3 · API ธนาคาร:** inbound statement + QR เท่านั้น (read-only · ไม่ย้ายเงิน · outbound เฟส 2) · **แก้ทิศ Q2: credential ตั้งที่ BC · พอร์ทัลแสดงสถานะ read-only** (ต่างจากที่ user ขอตอนแรก "กรอกในsetting" — ย้ายไป BC ปลอดภัยกว่า) · หลายบัญชี/นิติ · **manual sync + คนจับคู่เอง** (ไม่ auto-match · statement→FI-1Q ให้คน match) · เห็นสถานะตาม RBAC
+
+**A4 · โอนข้ามบริษัท→ห้องภาษี (1.6.3 · Dual-Book 4 นิติ):** ⏸️ **parked — grill รอบใหม่** (โยง multi-company/Entity Tag ที่ defer Phase 2)
+
+**build plan:** #1 `swt-master-editor` + หน้าตั้งค่า Master (ปิด TODO WH-5) → #2 หน้า Config บริษัท+ค่าเริ่มต้น (4 โซน) → #3 หน้าสถานะธนาคาร (read-only) · reference: `_reference/ConfigMasterData-catalog.md` + SystemDefaults/MasterDataSetup
+
 ## 🗓️ SESSION 2026-07-05/06 — cleanup · UX fixes · sc-payment · WH-5 · references
 
 **🧹 Cleanup batch ✅** (commit `ec59d4c`, `ef7eaa0`)

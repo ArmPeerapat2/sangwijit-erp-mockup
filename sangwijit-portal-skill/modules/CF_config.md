@@ -19,6 +19,22 @@ System Config (CF) contains admin-only settings that define how the portal and B
 
 ---
 
+## 🎯 Grill A — Config Design Decisions (2026-07-06 · A1-A3 · A4 parked)
+
+**หลักการรวม:** พอร์ทัลถือเฉพาะ config ที่ BC ไม่มี/ต้องต่อเอง · ที่ BC ถือ (บัญชี/posting/integration) = mirror read-only
+
+**A1 · บริษัท + ค่าเริ่มต้น** — 2 ชั้น: BC mirror read-only + ค่าเริ่มต้นพอร์ทัลแก้ได้ (อ่าน Options บางตัวมาปรับพฤติกรรม: อนุมัติก่อนพิมพ์→gate ปุ่มพิมพ์ · เช็คในมือ→credit check) · 2 ระดับ: บริษัท(admin: ฟอร์มพิมพ์·แจ้งเตือน) + ผู้ใช้(ธีม/หนาแน่น/pin/ช่องทาง) · **สาขา default = ดึงจาก user management** · แจ้งเตือน route ตามสิทธิ์/role · ฟอร์มพิมพ์ default ดึงจาก CF-2.7 Doc Template
+
+**A2 · Master data** — พอร์ทัลถือเฉพาะ **UI master** (ประเภทบัตร+%ชาร์จ→sc-payment · สถานะสีลูกค้า · **เหตุผลปรับสต็อก WH-5** [ผูกทิศ+ผังบัญชี] · doc template) · accounting master (กลุ่ม/ประเภท/ยี่ห้อ→dimension/posting group) = **BC ถือ · dropdown cache+refresh · เพิ่มใหม่ลิงก์ BC** · **shared component `swt-master-editor(el,{title,columns,fields,data})`** (list-detail schema-driven · nested optional) ใช้ซ้ำทุก portal-owned master
+
+**A3 · API ธนาคาร** — inbound statement + QR เท่านั้น (read-only · ไม่ย้ายเงิน · outbound = เฟส 2) · **credential/เชื่อม = ตั้งที่ BC · พอร์ทัลแสดงสถานะ read-only** (list ธนาคาร/บัญชี/นิติ + badge เชื่อม/หลุด + sync ล่าสุด + ปุ่ม manual sync) · หลายบัญชี · **manual sync + คนจับคู่เอง** (ไม่ auto-match · statement→FI-1Q ให้คน match) · เห็นตาม RBAC (การเงิน)
+
+**A4 · โอนข้ามบริษัท→ห้องภาษี (1.6.3 · Dual-Book 4 นิติ SWT/SWE/VMN/WPS)** — ⏸️ **parked · grill รอบใหม่** (โยง multi-company BC + CF-9 Entity Tag ที่ defer Phase 2)
+
+**Build:** #1 `swt-master-editor` + หน้าตั้งค่า Master (ปิด TODO WH-5) → #2 หน้า Config บริษัท+ค่าเริ่มต้น → #3 หน้าสถานะธนาคาร · ref `_reference/ConfigMasterData-catalog.md`
+
+---
+
 ## Menu Structure & Module Specifications
 
 ### CF-1: Tax Setup (VAT+WHT / ตั้งค่าภาษี)

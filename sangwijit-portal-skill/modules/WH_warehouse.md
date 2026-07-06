@@ -485,8 +485,8 @@ GET  /itemLedgerEntries?entryType='Positive Adjmt.' → ดูการปรั
    → Post → BC itemLedgerEntries (+/− Adjmt.) + GL ตามผังบัญชีของเหตุผล
 ```
 
-### TODO (ยังไม่ทำ)
-- master "เหตุผลปรับสต็อก" (ผูกทิศ + ผังบัญชี) — เป็น CF/BC master, พอร์ทัลดึงมาโชว์
+### TODO
+- ✅ master "เหตุผลปรับสต็อก" (ผูกทิศ +/− + ผังบัญชี + บังคับรูป) — สร้างแล้วใน `cf-master-settings-mockup.html` (ผ่าน `swt-master-editor`) · WH-5 dropdown เหตุผลดึงจากนี้
 - ผูก AP-1 การ์ด "ปรับ/ตัดจำหน่ายสต็อก" (เพิ่มแถวตัวอย่างแล้ว)
 
 ---
