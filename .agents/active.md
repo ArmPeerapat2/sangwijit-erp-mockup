@@ -9,7 +9,7 @@ project_type: "frontend-mockup (HTML + docs)"
 ## 🧭 CURRENT FOCUS (2026-07-06)
 โหมด **grill→build ทีละส่วน** · เพิ่งจบ WH-5 · ถัดไป: grill **A Config/ตั้งค่าบริษัท** (แนะนำ · reference SystemDefaults พร้อม · ปลดล็อก API ธนาคาร/ค่าเริ่มต้น) หรือ C form-designer · **queue build ค้าง:** เสียบ sc-payment→sv7 + retrofit sl3/sl1/fiq · preview-หลัง-พิมพ์ (sl4/sv7) · 13 หน้าปุ่มซ้ำ/density sweep
 
-## ⚙️ GRILL A — Config/ตั้งค่า (2026-07-06 · A1-A3 เคาะ · A4 parked)
+## ⚙️ GRILL A — Config/ตั้งค่า (2026-07-06 · A1-A4 เคาะครบ · build #1-3 · A4 build=Phase2)
 
 **A1 · บริษัท + ค่าเริ่มต้น:** 2 ชั้น (BC mirror read-only + ค่าเริ่มต้นพอร์ทัลแก้ได้ · อ่าน Options บางตัว [อนุมัติก่อนพิมพ์/เช็คในมือ] มาปรับพฤติกรรม) · 2 ระดับ (บริษัท admin + ผู้ใช้เอง) · **สาขา default ดึงจาก user management** (ไม่ตั้งซ้ำ) · แจ้งเตือน **route ตามสิทธิ์/role** + user เลือกช่องทาง (แอป/LINE) · ฟอร์มพิมพ์ default ต่อชนิด **ดึงจาก cf2-7 Doc Template**
 
@@ -17,7 +17,7 @@ project_type: "frontend-mockup (HTML + docs)"
 
 **A3 · API ธนาคาร:** inbound statement + QR เท่านั้น (read-only · ไม่ย้ายเงิน · outbound เฟส 2) · **แก้ทิศ Q2: credential ตั้งที่ BC · พอร์ทัลแสดงสถานะ read-only** (ต่างจากที่ user ขอตอนแรก "กรอกในsetting" — ย้ายไป BC ปลอดภัยกว่า) · หลายบัญชี/นิติ · **manual sync + คนจับคู่เอง** (ไม่ auto-match · statement→FI-1Q ให้คน match) · เห็นสถานะตาม RBAC
 
-**A4 · โอนข้ามบริษัท→ห้องภาษี (1.6.3 · Dual-Book 4 นิติ):** ⏸️ **parked — grill รอบใหม่** (โยง multi-company/Entity Tag ที่ defer Phase 2)
+**A4 · โอนข้ามบริษัท→ห้องภาษี (1.6.3 · Dual-Book 4 นิติ):** ✅ **grilled Q1-Q4 (build=Phase 2 กับ Entity Tag)** — BC ทำโอน+6ไฟล์ภาษี · พอร์ทัลติด Entity Tag บนเอกสาร (ขาย auto/ซื้อ dropdown บังคับ · gate no-tag-no-post) + แสดงสถานะ · **เอกสารแยกกันอิสระเต็มสาย** (ไม่รวมแล้วแตก) · **สต็อกกายภาพรวม 22 พอร์ทัลโชว์ · บัญชีแยกนิติ = BC ถือ** · doc-level tag · novat ไม่โอน · ห้องภาษี=คนละ BC db · ดู CF_config.md §Grill A
 
 **build ✅ ครบ #1-#3 (2026-07-06):** #1 `swt-master-editor.js` + `cf-master-settings` (บัตร%ชาร์จ·สีลูกค้า·เหตุผลสต็อก WH-5) · #2 `cf-company-settings` (4 แท็บ: บริษัท BC-mirror·Options·ค่าเริ่มต้นบริษัท·ค่าส่วนตัว) · #3 `cf-bank-status` (read-only · 4 นิติ·สถานะเชื่อม·manual sync→FI-1Q) · sidebar CFCO/CFMS/CFBK · **A4 (โอนข้ามบริษัท) ยัง parked** · ref `_reference/ConfigMasterData-catalog.md`
 

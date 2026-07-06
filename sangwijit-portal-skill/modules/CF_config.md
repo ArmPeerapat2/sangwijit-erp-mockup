@@ -29,7 +29,12 @@ System Config (CF) contains admin-only settings that define how the portal and B
 
 **A3 · API ธนาคาร** — inbound statement + QR เท่านั้น (read-only · ไม่ย้ายเงิน · outbound = เฟส 2) · **credential/เชื่อม = ตั้งที่ BC · พอร์ทัลแสดงสถานะ read-only** (list ธนาคาร/บัญชี/นิติ + badge เชื่อม/หลุด + sync ล่าสุด + ปุ่ม manual sync) · หลายบัญชี · **manual sync + คนจับคู่เอง** (ไม่ auto-match · statement→FI-1Q ให้คน match) · เห็นตาม RBAC (การเงิน)
 
-**A4 · โอนข้ามบริษัท→ห้องภาษี (1.6.3 · Dual-Book 4 นิติ SWT/SWE/VMN/WPS)** — ⏸️ **parked · grill รอบใหม่** (โยง multi-company BC + CF-9 Entity Tag ที่ defer Phase 2)
+**A4 · โอนข้ามบริษัท→ห้องภาษี (1.6.3 · Dual-Book 4 นิติ)** — ✅ **grilled (Q1-Q4 · build = Phase 2 กับ Entity Tag)**
+- **Q1** BC ทำโอน/multi-company + 6 ไฟล์ภาษีหมด · พอร์ทัลแค่ ① ติด Entity Tag บนเอกสาร ② แสดงสถานะโอน read-only
+- **Q2** tag: ขาย(SL-4) auto by branch · ซื้อ(PO-6) dropdown บังคับ · จ่าย(FI-2) auto · **gate ไม่มี tag = Post ไม่ได้** (กันข้อมูลตกห้องภาษี)
+- **Q3** **เอกสารแยกกันอิสระเต็มสาย** (แต่ละนิติ = PO→รับ→ตั้งหนี้→จ่าย แยกใบ · ไม่รวมแล้วแตก) → พอร์ทัลไม่ต้องทำ UI แตกเอกสารพิเศษ
+- **Q4** สต็อก: **กายภาพรวม (22) พอร์ทัลโชว์อันนี้** · บัญชีแยกนิติ (SWT 17=10vat+7novat · SWE 5) = **BC ถือ ledger** · พอร์ทัลไม่ทำ stock แยกนิติ (กันทำบัญชีซ้อน BC)
+- **โมเดล:** doc-level tag (เอกสารเป็นตัวแยก · ไม่ใช่ line-level) · novat = อยู่ห้องหลัก ไม่โอน · ห้องภาษี = คนละ BC database · ⚠️ risk: ขายเกินสต็อกนิติ (แต่กายภาพยังมี) → BC ต้องเช็ค = เหตุผล defer Phase 2
 
 **Build:** #1 `swt-master-editor` + หน้าตั้งค่า Master (ปิด TODO WH-5) → #2 หน้า Config บริษัท+ค่าเริ่มต้น → #3 หน้าสถานะธนาคาร · ref `_reference/ConfigMasterData-catalog.md`
 
