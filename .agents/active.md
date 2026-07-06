@@ -22,7 +22,7 @@ project_type: "frontend-mockup (HTML + docs)"
 
 **🎨 sv7 UX (3 กฎพื้นฐานทั้งระบบ) ✅** → memory [[action-buttons-single-top]]
 - บีบระยะห่าง (table 7px · gap 10px · section 10px) · รวมปุ่มบนหัวที่เดียว ลบ footer-actions · ตัด banner ซ้ำ (นอก Comp·VAT) · **สลับ 7.3 สรุป ↔ 7.4 เซ็น/จ่าย**
-- **⏳ ค้าง sweep 13 หน้าปุ่มซ้ำ** (clm·pm1/2/5·sir·sqt·sv-checklist·sv-order-parts·sv-sla·sv1/2/3/4) — ทำ Rule1-2 เป็นชุด · Rule3 (ตัด banner) ราย page
+- **✅ sweep เสร็จ (07-06):** Rule1 density (17 หน้า SV/PM: section-card 12px 16px · แถว 7px) + Rule2 footer dedup (13 หน้า · agent ลบ footer-actions · ย้าย unique ปุ่มขึ้น header · เก็บคำเตือน safety สลิม) · preview-หลัง-พิมพ์ sv7 · **ไล่ครบ 3 โมดูล: SL+PO = fit-100vh compliant อยู่แล้ว (ไม่แตะ) · SV = swept** · เหลือ Rule3 (ตัด banner ราย page) + cruft CSS `.footer-actions` ที่ไม่ใช้
 
 **💳 sc-payment shared component ✅** (commit `a2ab333`)
 - `swt-payment.js` — รับชำระเงิน split (Total/Remain · เงินสด/QR/โอน/บัตร+%ชาร์จ/เช็ค/อื่นๆ) อิง ERP เดิม · `swtRenderPayment(el,opts)` + `swtOpenPayment(opts)` modal · state ต่อ instance
