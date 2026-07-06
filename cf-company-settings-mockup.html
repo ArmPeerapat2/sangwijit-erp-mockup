@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CF · ตั้งค่าบริษัท + ค่าเริ่มต้น — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+/* CF Company Settings (Grill A / A1) — 4 โซน: บริษัท(BC mirror) · Options(BC mirror) · ค่าเริ่มต้นบริษัท · ค่าส่วนตัว */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
+.app-container{display:flex;min-height:100vh}
+.main-content{flex:1;margin-left:240px}
+.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.breadcrumb{font-size:13px;color:#6B7280}.breadcrumb strong{color:#111827}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.search-box{width:260px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;background:#F9FAFB}
+.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.content-wrapper{padding:16px 24px}
+.page-title{font-size:20px;font-weight:700;margin-bottom:2px}
+.page-sub{font-size:12.5px;color:#6B7280;margin-bottom:14px}
+.tabs{display:flex;gap:0;border-bottom:2px solid #E5E7EB;margin-bottom:14px}
+.tab{padding:9px 16px;border:none;background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:#6B7280;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;display:flex;gap:6px;align-items:center}
+.tab.on{color:#2563EB;border-bottom-color:#2563EB}
+.pane{display:none}.pane.on{display:block}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:14px 16px;margin-bottom:12px;max-width:860px}
+.card-h{font-size:13px;font-weight:700;color:#1E3A5F;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.lock{font-size:10px;font-weight:700;background:#F3F4F6;color:#6B7280;padding:2px 8px;border-radius:8px}
+.lock a{color:#2563EB;text-decoration:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px}
+.fld{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+.fld .l{font-size:10.5px;color:#9CA3AF;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.fld .v{font-size:13px;color:#111827;font-weight:500}
+.fld .v.ro{color:#374151}
+.opt-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #F3F4F6;font-size:12.5px}
+.opt-row .on{margin-left:auto;font-family:'Inter',monospace;font-weight:700;color:#374151}
+.opt-tag{font-size:9.5px;font-weight:700;background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;padding:1px 6px;border-radius:8px}
+table.st{width:100%;border-collapse:collapse;font-size:12.5px}
+table.st th{background:#F8FAFC;padding:7px 10px;text-align:left;font-size:10.5px;font-weight:600;color:#6B7280;text-transform:uppercase;border-bottom:1px solid #E5E7EB}
+table.st td{padding:7px 10px;border-bottom:1px solid #F3F4F6}
+.sel{padding:5px 8px;border:1px solid #D1D5DB;border-radius:6px;font-size:12.5px;font-family:inherit}
+.toggle{display:inline-flex;align-items:center;gap:6px}
+.sw{width:36px;height:20px;border-radius:12px;background:#10B981;position:relative;cursor:pointer;flex-shrink:0}
+.sw.off{background:#D1D5DB}
+.sw::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;right:2px;transition:.15s}
+.sw.off::after{right:18px}
+.route{font-size:10.5px;color:#6B7280}
+.chk{display:flex;align-items:center;gap:6px;font-size:12.5px;padding:4px 0}
+.bc-note{font-size:11px;color:#0C4A6E;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:8px 10px;margin-top:8px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="app-container"><div class="main-content">
+<div class="topbar">
+  <div class="breadcrumb">ตั้งค่าระบบ (CF) › <strong>บริษัท + ค่าเริ่มต้น</strong></div>
+  <div class="topbar-right"><input class="search-box" placeholder="ค้นหา… (Ctrl+K)"><span>🔔</span><span class="branch-tag">Admin</span><div class="avatar">P</div></div>
+</div>
+<div class="content-wrapper">
+  <div class="page-title">⚙️ ตั้งค่าบริษัท + ค่าเริ่มต้น</div>
+  <div class="page-sub">ค่าบัญชี/บริษัท = อ่านจาก BC (🔒 read-only) · ค่าเริ่มต้นพอร์ทัล = แก้ได้</div>
+
+  <div class="tabs">
+    <button class="tab on" onclick="tab(event,'p-com')">🏢 ข้อมูลบริษัท</button>
+    <button class="tab" onclick="tab(event,'p-opt')">⚙️ ค่าระบบ (Options)</button>
+    <button class="tab" onclick="tab(event,'p-def')">🏭 ค่าเริ่มต้นบริษัท</button>
+    <button class="tab" onclick="tab(event,'p-usr')">👤 ค่าส่วนตัว</button>
+  </div>
+
+  <!-- ① บริษัท (BC mirror) -->
+  <div class="pane on" id="p-com">
+    <div class="card">
+      <div class="card-h">🏢 ข้อมูลบริษัท <span class="lock">🔒 จาก BC · <a href="#">แก้ที่ BC ↗</a></span></div>
+      <div class="grid2">
+        <div class="fld"><span class="l">ชื่อบริษัท</span><span class="v ro">บริษัท แสงวิจิตร เทรดดิ้ง จำกัด</span></div>
+        <div class="fld"><span class="l">Company-Eng</span><span class="v ro">Sangwijit Tradding</span></div>
+        <div class="fld"><span class="l">เลขที่ผู้เสียภาษี</span><span class="v ro mono">0475553000242</span></div>
+        <div class="fld"><span class="l">สาขา (ภาษี)</span><span class="v ro">00000 (สนง.ใหญ่)</span></div>
+        <div class="fld" style="grid-column:span 2"><span class="l">ที่อยู่ใบกำกับ</span><span class="v ro">112/1 หมู่ 16 ถ.เลี่ยงเมือง ต.ธาตุเชิงชุม อ.เมืองสกลนคร จ.สกลนคร 47000</span></div>
+        <div class="fld"><span class="l">โทรศัพท์</span><span class="v ro">042-972-588</span></div>
+        <div class="fld"><span class="l">สกุลเงินหลัก</span><span class="v ro">บาท (THB)</span></div>
+        <div class="fld"><span class="l">ประเภทราคา</span><span class="v ro">Ext.Vat (ยังไม่รวมภาษี)</span></div>
+        <div class="fld"><span class="l">อัตราภาษี</span><span class="v ro">7.00 %</span></div>
+        <div class="fld"><span class="l">ธนาคารพร้อมเพย์</span><span class="v ro">กสิกรไทย 547-2-55623-9</span></div>
+        <div class="fld"><span class="l">เลขพร้อมเพย์ / E-TAX</span><span class="v ro">099-4-12345-6 · E-TAX ปิด</span></div>
+      </div>
+      <div class="bc-note">🔒 BC เป็นเจ้าของข้อมูลบริษัท (CF-2.9) — พอร์ทัลอ่านมาโชว์ · แก้ต้องทำที่ BC เพื่อกันข้อมูล 2 ที่ขัดกัน</div>
+    </div>
+  </div>
+
+  <!-- ② Options (BC mirror + tag มีผลกับพอร์ทัล) -->
+  <div class="pane" id="p-opt">
+    <div class="card">
+      <div class="card-h">⚙️ ค่าระบบ (Options) <span class="lock">🔒 จาก BC</span></div>
+      <div class="opt-row">เปิดใช้ระบบสิทธิ์ <span class="on">Open</span></div>
+      <div class="opt-row">การบันทึกบัญชีต้นทุน <span class="on">Periodic</span></div>
+      <div class="opt-row">ต้นทุนสินค้าเริ่มต้น <span class="on">FIFO/LOT</span></div>
+      <div class="opt-row">การคำนวณส่วนลดขาย <span class="on">Price</span></div>
+      <div class="opt-row">อนุมัติก่อนถึงพิมพ์ได้ <span class="opt-tag">🔗 พอร์ทัล: gate ปุ่มพิมพ์</span> <span class="on">ON</span></div>
+      <div class="opt-row">เช็คในมือกันวงเงิน <span class="opt-tag">🔗 พอร์ทัล: credit check</span> <span class="on">✓</span></div>
+      <div class="opt-row">ลูกค้ามีเช็คคืนห้ามขายเชื่อ <span class="opt-tag">🔗 พอร์ทัล: block ขายเชื่อ</span> <span class="on">✓</span></div>
+      <div class="opt-row">จ่าย Serial ด้วยการยิงบาร์โค้ด <span class="opt-tag">🔗 พอร์ทัล: serial input</span> <span class="on">✓</span></div>
+      <div class="opt-row">คำนวณยอดบิลใหม่ก่อนบันทึก <span class="on">✓</span></div>
+      <div class="opt-row">ทศนิยมราคา / จำนวน <span class="on">2 / 0</span></div>
+      <div class="bc-note">🔒 ค่าเหล่านี้ BC ถือ (CF-2.9) แก้ที่ BC · <b>ตัวที่มีป้าย 🔗</b> พอร์ทัล<b>อ่านมาปรับพฤติกรรม</b> (เช่น "อนุมัติก่อนพิมพ์ ON" → พอร์ทัล lock ปุ่มพิมพ์จนอนุมัติ)</div>
+    </div>
+  </div>
+
+  <!-- ③ ค่าเริ่มต้นบริษัท (admin แก้ได้) -->
+  <div class="pane" id="p-def">
+    <div class="card">
+      <div class="card-h">📄 ฟอร์มพิมพ์เริ่มต้น (ต่อชนิดเอกสาร)</div>
+      <table class="st">
+        <thead><tr><th>ชนิดเอกสาร</th><th style="width:280px">ฟอร์มเริ่มต้น (จาก CF-2.7)</th></tr></thead>
+        <tbody>
+          <tr><td>บิลขาย / ใบกำกับภาษี</td><td><select class="sel" style="width:100%"><option>ฟอร์ม A — เต็ม (โลโก้+QR)</option><option>ฟอร์ม B — ย่อ</option></select></td></tr>
+          <tr><td>ใบเสนอราคา</td><td><select class="sel" style="width:100%"><option>ฟอร์ม QT มาตรฐาน</option><option>ฟอร์ม QT + เงื่อนไข</option></select></td></tr>
+          <tr><td>ใบมัดจำ</td><td><select class="sel" style="width:100%"><option>ฟอร์มมัดจำ</option></select></td></tr>
+          <tr><td>ใบส่งงานบริการ (SV)</td><td><select class="sel" style="width:100%"><option>ฟอร์มบริการ</option></select></td></tr>
+        </tbody>
+      </table>
+      <div class="bc-note">📄 รายการฟอร์มดึงจาก <b>CF-2.7 Doc Template</b> (พอร์ทัลถือเอง) · ตอนพิมพ์ยังเลือกเปลี่ยนได้ (print modal)</div>
+    </div>
+    <div class="card">
+      <div class="card-h">🔔 การแจ้งเตือน (เปิด/ปิดต่อชนิด · route ตามสิทธิ์)</div>
+      <table class="st">
+        <thead><tr><th>ชนิดเหตุการณ์</th><th style="width:180px">ส่งถึง (role)</th><th style="width:70px">เปิด</th></tr></thead>
+        <tbody>
+          <tr><td>อนุมัติค้าง (AP-1)</td><td class="route">หัวหน้า / ผู้อนุมัติ</td><td><span class="sw"></span></td></tr>
+          <tr><td>สต็อกต่ำกว่าจุดสั่งซื้อ</td><td class="route">คลัง / จัดซื้อ</td><td><span class="sw"></span></td></tr>
+          <tr><td>เอกสาร Post ลง BC</td><td class="route">ผู้เกี่ยวข้อง</td><td><span class="sw off"></span></td></tr>
+          <tr><td>SLA บริการเกินกำหนด</td><td class="route">ช่าง / หัวหน้าศูนย์</td><td><span class="sw"></span></td></tr>
+          <tr><td>เงินเข้า / รอ match</td><td class="route">การเงิน</td><td><span class="sw"></span></td></tr>
+        </tbody>
+      </table>
+      <div class="bc-note">🔔 admin เปิดชนิด → ระบบส่งให้คนที่เกี่ยวตาม <b>role (RBAC)</b> เอง · user เลือกช่องทาง (แอป/LINE) ในแท็บ "ค่าส่วนตัว"</div>
+    </div>
+  </div>
+
+  <!-- ④ ค่าส่วนตัว (user แก้ได้) -->
+  <div class="pane" id="p-usr">
+    <div class="card">
+      <div class="card-h">👤 ค่าส่วนตัว (แต่ละคนตั้งเอง)</div>
+      <div class="grid2">
+        <div class="fld"><span class="l">ธีม</span><select class="sel"><option>สว่าง (Light)</option><option>มืด (Dark)</option></select></div>
+        <div class="fld"><span class="l">ความหนาแน่นจอ</span><select class="sel"><option>ปกติ</option><option>แน่น (Compact)</option></select></div>
+        <div class="fld"><span class="l">Sidebar เริ่มต้น</span><select class="sel"><option>📌 ปักหมุด (กางเต็ม)</option><option>ย่อ (icon rail)</option></select></div>
+        <div class="fld"><span class="l">สาขาเริ่มต้น</span><span class="v ro">08 · การไฟฟ้าสาขาสมเด็จ <span class="lock" style="margin-left:4px">จาก user management</span></span></div>
+      </div>
+      <div class="card-h" style="margin-top:12px;font-size:12px">🔔 ช่องทางรับการแจ้งเตือน</div>
+      <label class="chk"><input type="checkbox" checked> 📱 ในแอป (กระดิ่ง)</label>
+      <label class="chk"><input type="checkbox" checked> 💬 LINE</label>
+      <label class="chk"><input type="checkbox"> 📧 อีเมล</label>
+      <div class="bc-note">👤 ค่าเหล่านี้เก็บแบบ per-user (ธีม/หนาแน่น/pin ทำไว้แล้วเป็น localStorage) · <b>สาขาเริ่มต้นดึงจาก user management</b> ไม่ตั้งซ้ำที่นี่</div>
+    </div>
+  </div>
+</div>
+</div></div>
+
+<script>
+function tab(e,id){
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+  e.currentTarget.classList.add('on');
+  document.querySelectorAll('.pane').forEach(function(p){p.classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+}
+document.querySelectorAll('.sw').forEach(function(s){s.addEventListener('click',function(){s.classList.toggle('off');});});
+</script>
+<script src="swt-sidebar.js"></script>
+</body>
+</html>

@@ -19,7 +19,7 @@ project_type: "frontend-mockup (HTML + docs)"
 
 **A4 · โอนข้ามบริษัท→ห้องภาษี (1.6.3 · Dual-Book 4 นิติ):** ⏸️ **parked — grill รอบใหม่** (โยง multi-company/Entity Tag ที่ defer Phase 2)
 
-**build plan:** #1 `swt-master-editor` + หน้าตั้งค่า Master (ปิด TODO WH-5) → #2 หน้า Config บริษัท+ค่าเริ่มต้น (4 โซน) → #3 หน้าสถานะธนาคาร (read-only) · reference: `_reference/ConfigMasterData-catalog.md` + SystemDefaults/MasterDataSetup
+**build ✅ ครบ #1-#3 (2026-07-06):** #1 `swt-master-editor.js` + `cf-master-settings` (บัตร%ชาร์จ·สีลูกค้า·เหตุผลสต็อก WH-5) · #2 `cf-company-settings` (4 แท็บ: บริษัท BC-mirror·Options·ค่าเริ่มต้นบริษัท·ค่าส่วนตัว) · #3 `cf-bank-status` (read-only · 4 นิติ·สถานะเชื่อม·manual sync→FI-1Q) · sidebar CFCO/CFMS/CFBK · **A4 (โอนข้ามบริษัท) ยัง parked** · ref `_reference/ConfigMasterData-catalog.md`
 
 ## 🗓️ SESSION 2026-07-05/06 — cleanup · UX fixes · sc-payment · WH-5 · references
 

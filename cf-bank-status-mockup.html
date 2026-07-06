@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CF · สถานะเชื่อมธนาคาร — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+/* CF Bank Status (Grill A / A3) — read-only · credential ตั้งที่ BC · พอร์ทัลแสดงสถานะ + manual sync → FI-1Q */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
+.app-container{display:flex;min-height:100vh}
+.main-content{flex:1;margin-left:240px}
+.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.breadcrumb{font-size:13px;color:#6B7280}.breadcrumb strong{color:#111827}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.search-box{width:260px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;background:#F9FAFB}
+.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.content-wrapper{padding:16px 24px}
+.page-title{font-size:20px;font-weight:700;margin-bottom:2px}
+.page-sub{font-size:12.5px;color:#6B7280;margin-bottom:14px}
+.bar{display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.btn{padding:8px 14px;border:none;border-radius:7px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-p{background:#2563EB;color:#fff}.btn-o{background:#fff;color:#374151;border:1px solid #D1D5DB}
+.hint{font-size:11.5px;color:#6B7280}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.card-h{font-size:13px;font-weight:700;color:#1E3A5F;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.lock{font-size:10px;font-weight:700;background:#F3F4F6;color:#6B7280;padding:2px 8px;border-radius:8px}
+.lock a{color:#2563EB;text-decoration:none}
+table.bk{width:100%;border-collapse:collapse;font-size:12.5px}
+table.bk th{background:#F8FAFC;padding:8px 10px;text-align:left;font-size:10.5px;font-weight:600;color:#6B7280;text-transform:uppercase;border-bottom:1px solid #E5E7EB;white-space:nowrap}
+table.bk td{padding:9px 10px;border-bottom:1px solid #F3F4F6;vertical-align:middle}
+.ent{font-weight:700;color:#1E3A5F}
+.acc{font-family:'Inter',monospace}
+.st{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:2px 9px;border-radius:12px}
+.st.on{background:#ECFDF5;color:#065F46}.st.off{background:#FEF2F2;color:#991B1B}.st.wait{background:#FEF3C7;color:#92400E}
+.sync-btn{padding:4px 10px;border:1px solid #BFDBFE;background:#EFF6FF;color:#2563EB;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+.flow{display:flex;align-items:center;gap:8px;font-size:12px;color:#374151;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px;padding:10px 12px;flex-wrap:wrap}
+.flow .n{background:#fff;border:1px solid #E5E7EB;border-radius:6px;padding:4px 9px;font-weight:600}
+.flow .n.hl{background:#EFF6FF;border-color:#93C5FD;color:#1D4ED8}
+.flow .ar{color:#CBD5E1}
+.kpi{display:inline-flex;gap:5px;align-items:center;background:#FEF3C7;color:#92400E;font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px}
+.bc-note{font-size:11px;color:#0C4A6E;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:8px 10px;margin-top:10px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="app-container"><div class="main-content">
+<div class="topbar">
+  <div class="breadcrumb">ตั้งค่าระบบ (CF) › <strong>สถานะเชื่อมธนาคาร</strong></div>
+  <div class="topbar-right"><input class="search-box" placeholder="ค้นหา… (Ctrl+K)"><span>🔔</span><span class="branch-tag">การเงิน</span><div class="avatar">P</div></div>
+</div>
+<div class="content-wrapper">
+  <div class="page-title">🏦 สถานะเชื่อมธนาคาร</div>
+  <div class="page-sub">พอร์ทัลแสดงสถานะเชื่อม (read-only) · การตั้งค่า credential/เชื่อมทำที่ BC · statement เข้า → FI-1Q ให้คนจับคู่เอง</div>
+
+  <div class="bar">
+    <button class="btn btn-p" onclick="alert('ดึง statement ทุกบัญชี (manual)… → เข้า FI-1Q รอ match')">🔄 Sync ทุกบัญชีตอนนี้</button>
+    <a class="btn btn-o" href="#" style="text-decoration:none">⚙️ ตั้งค่าเชื่อมที่ BC ↗</a>
+    <span class="kpi" onclick="location.href='fiq-finance-queue-mockup.html'" style="cursor:pointer">📥 statement รอจับคู่: 7 รายการ → FI-1Q</span>
+    <span class="hint" style="margin-left:auto">อัปเดตล่าสุด 5 นาทีที่แล้ว</span>
+  </div>
+
+  <div class="card">
+    <div class="card-h">บัญชีธนาคาร (ต่อนิติบุคคล) <span class="lock">🔒 credential ตั้งที่ BC · <a href="#">แก้ที่ BC ↗</a></span></div>
+    <table class="bk">
+      <thead><tr><th>นิติบุคคล</th><th>ธนาคาร</th><th>เลขบัญชี</th><th>ประเภท</th><th>สถานะเชื่อม</th><th>Sync ล่าสุด</th><th></th></tr></thead>
+      <tbody>
+        <tr><td class="ent">SWT</td><td>กสิกรไทย</td><td class="acc">547-2-55623-9</td><td>กระแสรายวัน</td><td><span class="st on">🟢 เชื่อมแล้ว</span></td><td>5 นาทีที่แล้ว</td><td><button class="sync-btn">🔄 sync</button></td></tr>
+        <tr><td class="ent">SWT</td><td>ไทยพาณิชย์</td><td class="acc">012-3-45678-9</td><td>ออมทรัพย์</td><td><span class="st on">🟢 เชื่อมแล้ว</span></td><td>5 นาทีที่แล้ว</td><td><button class="sync-btn">🔄 sync</button></td></tr>
+        <tr><td class="ent">SWE</td><td>กสิกรไทย</td><td class="acc">555-1-22222-3</td><td>กระแสรายวัน</td><td><span class="st on">🟢 เชื่อมแล้ว</span></td><td>12 นาทีที่แล้ว</td><td><button class="sync-btn">🔄 sync</button></td></tr>
+        <tr><td class="ent">VMN</td><td>กรุงเทพ</td><td class="acc">333-4-55555-6</td><td>ออมทรัพย์</td><td><span class="st off">🔴 หลุด — token หมดอายุ</span></td><td>2 ชม.ที่แล้ว</td><td><button class="sync-btn">🔄 sync</button></td></tr>
+        <tr><td class="ent">WPS</td><td>กรุงไทย</td><td class="acc">777-8-99999-0</td><td>กระแสรายวัน</td><td><span class="st wait">🟡 รอเชื่อม (ตั้งค่าที่ BC)</span></td><td>—</td><td><button class="sync-btn">🔄 sync</button></td></tr>
+      </tbody>
+    </table>
+    <div class="bc-note">🔒 <b>credential/การเชื่อม = ตั้งที่ BC</b> (พอร์ทัลไม่เก็บ secret) · พอร์ทัลแค่แสดงสถานะ + สั่ง sync manual · 🔴 หลุด → ต้องต่อ token ใหม่ที่ BC</div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">🔗 statement → รับชำระ (flow)</div>
+    <div class="flow">
+      <span class="n">ธนาคาร statement</span><span class="ar">→</span>
+      <span class="n">Sync (manual)</span><span class="ar">→</span>
+      <span class="n hl">FI-1Q · คนจับคู่ Ref1 ↔ บิล</span><span class="ar">→</span>
+      <span class="n">ปิด AR</span>
+    </div>
+    <div class="bc-note">💡 <b>ไม่ auto-match</b> — statement เข้าคิว FI-1Q ให้คนจับคู่เอง (คุมเงินเอง กันปิดบิลผิดคน) · ที่จับคู่ไม่ได้ (Ref ผิด/โอนไม่ระบุ) ค้างในคิว unmatched · outbound (จ่ายออกผ่าน API) = เฟส 2</div>
+  </div>
+</div>
+</div></div>
+<script src="swt-sidebar.js"></script>
+</body>
+</html>
