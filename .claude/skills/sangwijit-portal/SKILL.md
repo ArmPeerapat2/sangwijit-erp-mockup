@@ -1,18 +1,6 @@
 ---
 name: sangwijit-portal
-description: |
-  ระบบความรู้ครบวงจรสำหรับโปรเจกต์ Sangwijit ERP Web Portal — ระบบ Frontend Portal เชื่อมต่อกับ Dynamics 365 Business Central
-  ครอบคลุม: สถาปัตยกรรมระบบ, 8+ Core Modules, Shared Components SC1-SC13, UI Design Pattern, BC365 API Integration, RBAC, Thailand Compliance
-
-  ใช้ Skill นี้ทุกครั้งที่:
-  - ถามหรือออกแบบ Module ใด ๆ ใน Sangwijit Portal (Sales, WH, Purchase, Finance, Service, Promotion, Master, Claims)
-  - ออกแบบหน้าจอใหม่หรือ Flow ใหม่ตาม ERP Transaction Form Standard
-  - เขียน Spec, Data Dictionary, หรือ Workflow สำหรับ Developer
-  - ถามเรื่อง BC365 API Endpoint, RBAC Role, หรือ Status Flow
-  - วางแผน Phase การพัฒนาหรือประเมิน Task ใหม่
-  - ถามเรื่อง Shared Component SC1-SC13 — ใช้ที่ไหน, Props คืออะไร
-  - ออกแบบ Module ใหม่: e-Tax, Marketplace, Mobile App, HRM Hook
-  - ตรวจสอบ Open Questions ก่อน Implement
+description: ระบบความรู้ครบวงจร Sangwijit ERP Web Portal (Frontend เชื่อม Dynamics 365 BC) — สถาปัตยกรรม, 8+ โมดูล (Sales/WH/Purchase/Finance/Service/Promotion/Master/Claims), Shared Components SC1-SC13, UI pattern, BC365 API, RBAC, Thai compliance. ใช้เมื่อออกแบบหรือถามเรื่อง module/หน้าจอ/flow/spec/API endpoint/RBAC/shared component ในพอร์ทัล ก่อนลงมือเขียน mockup.
 ---
 
 # Sangwijit ERP Web Portal Skill — Knowledge Base (v2.1)
