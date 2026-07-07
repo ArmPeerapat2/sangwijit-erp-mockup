@@ -3,568 +3,283 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MD-3 ทะเบียน Vendor — BC365 Mockup</title>
+<title>MD-3 ทะเบียนเจ้าหนี้/ผู้ขาย — BC365 Mockup</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --navy:#1E3A5F; --blue:#2563EB; --blue-d:#1D4ED8; --green:#10B981; --amber:#F59E0B;
-    --red:#EF4444; --violet:#8B5CF6; --ink:#0F172A; --muted:#6B7280; --line:#E5E7EB;
-    --bg:#F1F5F9; --card:#fff; --soft:#F8FAFC;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0}
+/* MD-3 Vendor Master — parity กับ md2-customer-master-v3 (Grill V · 2026-07-06)
+   field 4 ชั้น: 🟢 API(POST BC) · 🔵 table/dimension(dropdown BC) · 🟠 custom SWT(BC dev/portal)
+   quick-create 3 ช่อง · dup-check เลขภาษี · gate ครบก่อน PO-6 */
+  :root{--navy:#1E3A5F;--blue:#2563EB;--blue-d:#1D4ED8;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--violet:#8B5CF6;--ink:#0F172A;--muted:#6B7280;--line:#E5E7EB;--bg:#F1F5F9;--card:#fff;--soft:#F8FAFC}
+  *{box-sizing:border-box}html,body{height:100%;margin:0}
   body{background:var(--bg);color:var(--ink);font-family:'Noto Sans Thai','Inter',system-ui,sans-serif;font-size:13px}
   .mono{font-family:'Inter',monospace}
   .app{height:100vh;display:flex;flex-direction:column;margin-left:240px;background:var(--card);box-shadow:0 0 0 1px var(--line);min-width:1200px}
-
-  /* ① unified-header */
   .unified-header{flex:none;background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);z-index:30}
   .uh-utility{display:flex;align-items:center;gap:12px;padding:4px 20px;min-height:28px;border-bottom:1px solid rgba(255,255,255,.12)}
   .uh-breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.72)}
-  .uh-breadcrumb .sep{color:rgba(255,255,255,.35)} .uh-breadcrumb .current{color:#FCD34D;font-weight:600}
+  .uh-breadcrumb .sep{color:rgba(255,255,255,.35)}.uh-breadcrumb .current{color:#FCD34D;font-weight:600}
   .uh-tools{margin-left:auto;display:flex;align-items:center;gap:10px}
   .branch-sel{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:20px}
   .avatar{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
   .uh-main{display:flex;align-items:center;gap:14px;padding:7px 20px 8px}
-  .uh-main .no{font-size:15px;font-weight:700;font-family:'Inter',monospace}
-  .uh-main .nm{font-size:11px;color:rgba(255,255,255,.9)}
+  .uh-main .no{font-size:15px;font-weight:700;font-family:'Inter',monospace}.uh-main .nm{font-size:11px;color:rgba(255,255,255,.9)}
   .uh-main .roles{display:flex;gap:5px;margin-left:6px}
   .role-badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:1px 8px;font-size:9.5px;font-weight:600}
   .uh-main .right{margin-left:auto;display:flex;gap:7px;align-items:center}
   .hbtn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;font-family:inherit}
   .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:5px;font-size:10.5px;font-weight:600}
-  .pill-success{background:#ECFDF5;color:#065F46} .pill-danger{background:#FEF2F2;color:#991B1B}
-  .pill-info{background:#EFF6FF;color:#0C4A6E} .pill-warning{background:#FEF3C7;color:#92400E} .pill-neutral{background:#F3F4F6;color:#374151}
-
-  /* ③ saab + field-layer legend */
+  .pill-success{background:#ECFDF5;color:#065F46}.pill-danger{background:#FEF2F2;color:#991B1B}.pill-info{background:#EFF6FF;color:#0C4A6E}.pill-warning{background:#FEF3C7;color:#92400E}.pill-neutral{background:#F3F4F6;color:#374151}
   .saab{flex:none;display:flex;gap:6px;align-items:center;padding:5px 20px;background:var(--soft);border-bottom:1px solid var(--line)}
   .b{border:1px solid var(--line);background:#fff;border-radius:6px;padding:4px 11px;cursor:pointer;font-size:11.5px;font-family:inherit;color:#374151}
-  .b.pri{background:var(--blue);color:#fff;border-color:var(--blue)} .saab .sp{flex:1}
+  .b.pri{background:var(--blue);color:#fff;border-color:var(--blue)}.saab .sp{flex:1}
   .legend{display:flex;gap:9px;align-items:center;font-size:9.5px;color:var(--muted)}
-  .legend .lyr{cursor:default}
-
-  /* field-layer markers */
   .lyr{font-size:9.5px;padding:1px 5px;border-radius:7px;font-weight:700;vertical-align:middle;margin-left:3px;white-space:nowrap}
-  .lyr.api{background:#ECFDF5;color:#047857}
-  .lyr.tbl{background:#EFF6FF;color:#1D4ED8}
-  .lyr.cust{background:#FEF3C7;color:#92400E}
-
-  /* grp/grid/field */
+  .lyr.api{background:#ECFDF5;color:#047857}.lyr.tbl{background:#EFF6FF;color:#1D4ED8}.lyr.cust{background:#FEF3C7;color:#92400E}
   .grp{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#FCFDFE;margin-bottom:7px}
   .grp-h{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--blue-d);margin-bottom:6px;display:flex;align-items:center;gap:6px}
-  .grp-h .lnk{margin-left:auto;color:var(--blue);cursor:pointer;font-weight:600}
-  .grid{display:grid;gap:7px 14px}
-  .g4{grid-template-columns:repeat(4,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:repeat(2,1fr)} .g1{grid-template-columns:1fr}
-  .f{display:flex;flex-direction:column;gap:2px;min-width:0}
-  .f.wide{grid-column:span 2}
+  .grid{display:grid;gap:7px 14px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.g1{grid-template-columns:1fr}
+  .f{display:flex;flex-direction:column;gap:2px;min-width:0}.f.wide{grid-column:span 2}
   .f label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .f label .req{color:var(--red)}
   .f input,.f select{padding:5px 8px;border:1px solid var(--line);border-radius:6px;font-size:13px;background:#fff;width:100%;font-family:inherit;color:var(--ink)}
   .f input:focus,.f select:focus{outline:0;border-color:#93C5FD;box-shadow:0 0 0 3px #2563eb22}
   .f .val{font-size:13px;color:var(--ink);padding:3px 0;font-weight:500}
   .inline-btn{border:1px solid #93C5FD;background:#EFF6FF;color:var(--blue-d);border-radius:6px;cursor:pointer;font-size:10.5px;padding:3px 8px;font-family:inherit;white-space:nowrap}
-  .inline-btn:hover{background:var(--blue);color:#fff}
   .chk{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--ink)}
-
-  /* ② tabgroup */
   .tabgroup{flex:1 1 0;min-height:0;display:flex;flex-direction:column}
   .tabnav{flex:none;display:flex;gap:4px;padding:5px 14px 0;background:#E2E8F0;border-bottom:2px solid var(--blue);overflow-x:auto}
   .tab{padding:8px 16px;cursor:pointer;font-size:12px;font-weight:600;color:#64748B;border-radius:7px 7px 0 0;border:1px solid transparent;border-bottom:none;white-space:nowrap}
-  .tab:hover{background:#F1F5F9;color:var(--blue-d)}
-  .tab.act{color:#fff;background:var(--blue);box-shadow:0 -1px 6px rgba(37,99,235,.3)}
+  .tab:hover{background:#F1F5F9;color:var(--blue-d)}.tab.act{color:#fff;background:var(--blue);box-shadow:0 -1px 6px rgba(37,99,235,.3)}
   .tabbody{flex:1 1 0;min-height:0;overflow:auto;padding:13px 20px}
-  .pane{display:none} .pane.on{display:block}
+  .pane{display:none}.pane.on{display:block}
   .sec-title{font-size:12px;color:var(--navy);font-weight:700;margin:2px 0 8px;text-transform:uppercase;letter-spacing:.03em;border-left:3px solid var(--blue);padding-left:8px;display:flex;align-items:center;gap:10px}
-  .sec-title .tools{margin-left:auto;display:flex;gap:6px;align-items:center}
-  .hint{font-size:10.5px;color:var(--blue);margin-top:6px}
-  .note-box{background:#EFF6FF;border-left:3px solid var(--blue);border-radius:0 6px 6px 0;padding:9px 12px;font-size:11.5px;color:#1E40AF;margin:8px 0}
-  .warn-box{background:#FEF3C7;border-left:3px solid var(--amber);border-radius:0 6px 6px 0;padding:9px 12px;font-size:11.5px;color:#78350F;margin:8px 0}
-
+  .note-box{background:#EFF6FF;border-left:3px solid var(--blue);border-radius:0 6px 6px 0;padding:9px 12px;font-size:11px;color:#1E40AF;margin:8px 0}
+  .warn-box{background:#FEF3C7;border-left:3px solid var(--amber);border-radius:0 6px 6px 0;padding:9px 12px;font-size:11px;color:#78350F;margin:8px 0}
   table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px}
   th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
   th{background:var(--soft);color:var(--muted);font-weight:600;font-size:10.5px;text-transform:uppercase}
-  .ok{color:#047857;font-weight:600} .bad{color:#B91C1C;font-weight:600} .over{color:#B45309;font-weight:600}
-  .mini{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:3px 9px;cursor:pointer;font-size:11px;font-family:inherit;color:#374151}
-  .mini.pri{background:var(--blue);color:#fff;border-color:var(--blue)}
-
-  /* sub-tabs (trade agreement) */
-  .subnav{display:flex;gap:4px;margin:4px 0 10px;border-bottom:1px solid var(--line)}
-  .subtab{padding:5px 13px;cursor:pointer;font-size:12px;font-weight:600;color:#64748B;border-bottom:2px solid transparent}
-  .subtab.act{color:var(--blue-d);border-bottom-color:var(--blue)}
-  .subpane{display:none} .subpane.on{display:block}
-
-  /* lifecycle flow */
-  .flow{display:flex;align-items:flex-start;margin-bottom:12px}
-  .flow-node{flex:1;text-align:center}
-  .flow-node .dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:15px;background:#D1FAE5;border:2px solid var(--green);color:#065F46}
-  .flow-node .t{font-size:11.5px;font-weight:700;color:#065F46;margin-top:6px} .flow-node .s{font-size:10.5px;color:#9CA3AF;margin-top:2px}
-  .flow-line{flex:0 0 36px;height:2px;background:var(--green);margin-top:17px}
-
-  /* dual balance */
-  .bal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:8px}
-  .bal-card{border:1px solid var(--line);border-radius:8px;padding:10px;text-align:center}
-  .bal-card .lbl{font-size:10.5px;color:var(--muted);text-transform:uppercase} .bal-card .amt{font-size:18px;font-weight:700;margin-top:4px}
-  .bal-card.ap{background:#FEF2F2} .bal-card.ap .amt{color:#B91C1C}
-  .bal-card.ar{background:#ECFDF5} .bal-card.ar .amt{color:#047857}
-  .bal-card.net{background:#EFF6FF} .bal-card.net .amt{color:var(--blue-d)}
-  .ref-strip{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:7px 11px;font-size:11.5px;color:#1E40AF;margin-bottom:8px}
-
-  /* ⑤ dc-strip */
-  .dc-strip{flex:none;background:#fff;border-top:1px solid var(--line);padding:5px 20px;display:flex;align-items:center;gap:8px;font-size:11.5px;box-shadow:0 -2px 8px rgba(0,0,0,.04)}
-  .dc-lbl{font-weight:700;color:var(--muted);text-transform:uppercase;font-size:9.5px}
-  .dc-node{padding:3px 9px;border-radius:5px;background:#F3F4F6;color:var(--muted);font-weight:600}
-  .dc-node.current{background:#EFF6FF;color:var(--blue-d);border:1px solid #93C5FD} .dc-arrow{color:#CBD5E1}
-
-  /* 🆕 master-head — ส่วนข้อมูลหลัก (อยู่นอก tab) */
+  .ok{color:#047857;font-weight:600}.bad{color:#B91C1C;font-weight:600}.over{color:#B45309;font-weight:600}
   .master-head{flex:none;max-height:55vh;overflow-y:auto;background:#FAFBFC;border-bottom:2px solid var(--blue);padding:10px 20px 8px}
   .mh-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--navy);margin-bottom:6px;display:flex;align-items:center;gap:8px}
   .mh-title .badge-master{background:var(--navy);color:#fff;padding:2px 8px;border-radius:5px;font-size:10px}
-
-  /* 🆕 Profile Card — compact identity header */
   .profile-card{background:linear-gradient(135deg,#F0F9FF 0%,#EFF6FF 100%);border:1px solid #BFDBFE;border-radius:10px;padding:11px 14px;margin-bottom:8px;position:relative}
   .pc-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
   .pc-logo{width:46px;height:46px;border-radius:10px;background:#fff;border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
   .pc-name-input{font-size:18px;font-weight:700;color:var(--navy);background:transparent;border:1px dashed transparent;border-radius:6px;padding:1px 6px;font-family:inherit;width:100%;line-height:1.2}
-  .pc-name-input:hover{border-color:#BFDBFE;background:rgba(255,255,255,.5)}
-  .pc-name-input:focus{outline:0;border-color:var(--blue);background:#fff;border-style:solid}
-  .pc-meta{font-size:11.5px;color:var(--muted);margin-top:3px}
-  .pc-meta .mono{color:#374151;font-weight:600}
+  .pc-name-input:hover{border-color:#BFDBFE;background:rgba(255,255,255,.5)}.pc-name-input:focus{outline:0;border-color:var(--blue);background:#fff;border-style:solid}
+  .pc-meta{font-size:11.5px;color:var(--muted);margin-top:3px}.pc-meta .mono{color:#374151;font-weight:600}
   .pc-status{margin-left:auto;display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
   .pc-owner{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
   .pc-owner-card{background:#fff;border:1px solid #BFDBFE;border-radius:8px;padding:8px 12px;font-size:12px;display:flex;align-items:center;gap:10px;flex:1;min-width:260px}
-  .pc-owner-card .ico{font-size:22px}
-  .pc-owner-card .who{font-weight:600;color:var(--ink);font-size:12.5px}
-  .pc-owner-card .ch{color:var(--muted);font-size:11px;margin-top:1px}
+  .pc-owner-card .ico{font-size:22px}.pc-owner-card .who{font-weight:600;color:var(--ink);font-size:12.5px}.pc-owner-card .ch{color:var(--muted);font-size:11px;margin-top:1px}
   .pc-owner-card select{font-size:12.5px;padding:3px 6px;border:1px solid var(--line);border-radius:5px;background:#fff;font-family:inherit;color:var(--ink);font-weight:600}
+  .dc-strip{flex:none;background:#fff;border-top:1px solid var(--line);padding:5px 20px;display:flex;align-items:center;gap:8px;font-size:11px;box-shadow:0 -2px 8px rgba(0,0,0,.04)}
+  .dc-lbl{font-weight:700;color:var(--muted);text-transform:uppercase;font-size:9px}
+  .dc-node{padding:3px 9px;border-radius:5px;background:#F3F4F6;color:var(--muted);font-weight:600}
+  .dc-node.current{background:#EFF6FF;color:var(--blue-d);border:1px solid #93C5FD}.dc-arrow{color:#CBD5E1}
+  /* quick-create + dup */
+  .qc-banner{background:#FFFBEB;border:1px solid #FCD34D;border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:11.5px;color:#92400E;display:flex;align-items:center;gap:8px}
+  .dup-warn{font-size:10.5px;color:#B91C1C;margin-top:2px;font-weight:600}
+  .dup-ok{font-size:10.5px;color:#047857;margin-top:2px;font-weight:600}
 </style>
 </head>
 <body>
 <div class="app">
-  <!-- ① unified-header -->
+  <!-- ① header -->
   <div class="unified-header">
     <div class="uh-utility">
-      <div class="uh-breadcrumb">หน้าหลัก <span class="sep">›</span> ข้อมูลหลัก <span class="sep">›</span> <span class="current">ทะเบียน Vendor (MD-3)</span></div>
+      <div class="uh-breadcrumb">หน้าหลัก <span class="sep">›</span> ข้อมูลหลัก <span class="sep">›</span> <span class="current">ทะเบียนเจ้าหนี้/ผู้ขาย (MD-3)</span></div>
       <div class="uh-tools"><span class="branch-sel">🏢 SWT ▾</span><span class="avatar">AD</span></div>
     </div>
     <div class="uh-main">
-      <div class="no mono">V-00012</div>
-      <div class="nm" id="hNm">Daikin Sales (Thailand) Co., Ltd.</div>
-      <div class="roles">
-        <span class="role-badge">🏭 Goods Supplier</span>
-        <span class="role-badge">🛡️ Warranty Partner</span>
-      </div>
-      <div class="right">
-        <span id="pill" class="pill pill-success">● Active</span>
-        <button class="hbtn" onclick="cycleBlock()">Block ↔ Active</button>
-      </div>
+      <div class="no mono">V-00045</div>
+      <div class="nm" id="hNm">บริษัท ไดกิ้น อินดัสทรีส์ (ประเทศไทย) จำกัด</div>
+      <div class="roles"><span class="role-badge">🏭 ผู้ผลิต</span><span class="role-badge">⭐ ประจำ</span></div>
+      <div class="right"><span id="pill" class="pill pill-success">● Active</span><button class="hbtn" onclick="cycleBlock()">Block ↔ Active</button></div>
     </div>
   </div>
 
-  <!-- ③ saab + field-layer legend -->
+  <!-- ③ saab + legend -->
   <div class="saab">
-    <button class="b pri" onclick="m('บันทึก (mockup)')">💾 บันทึก</button>
-    <button class="b" onclick="m('mockup')">✏️ แก้ไข</button>
-    <button class="b" onclick="m('mockup')">🖨️ พิมพ์</button>
-    <button class="b" onclick="m('mockup')">⟵ ก่อนหน้า</button>
-    <button class="b" onclick="m('mockup')">ถัดไป ⟶</button>
+    <button class="b pri">💾 บันทึก</button>
+    <button class="b" onclick="qcToggle()">➕ เพิ่มผู้ขายใหม่ (quick)</button>
+    <button class="b">🖨️ พิมพ์</button>
+    <button class="b">⟵ ก่อนหน้า</button><button class="b">ถัดไป ⟶</button>
     <span class="sp"></span>
-    <div class="legend">
-      <span>BC field:</span>
-      <span class="lyr api">🟢 API v2.0</span>
-      <span class="lyr tbl">🔵 table-only</span>
-      <span class="lyr cust">🟠 custom SWT</span>
-    </div>
+    <div class="legend"><span>BC field:</span><span class="lyr api">🟢 API v2.0</span><span class="lyr tbl">🔵 dimension</span><span class="lyr cust">🟠 custom SWT (BC dev)</span></div>
   </div>
 
-  <!-- 🆕 ส่วน "ข้อมูลหลัก" (อยู่นอก tab — โชว์ตลอด) -->
+  <!-- master-head -->
   <div class="master-head">
-    <div class="mh-title"><span class="badge-master">📋 ข้อมูลหลัก</span> Master Identity — โชว์ตลอดเหนือ tab รายละเอียด · แก้ที่นี่ที่เดียว</div>
+    <div class="mh-title"><span class="badge-master">📋 ข้อมูลหลัก</span> Master Identity — โชว์ตลอดเหนือ tab · แก้ที่นี่ที่เดียว</div>
 
-    <!-- Profile Card (compact — ชื่อแก้ได้ที่นี่เลย = SoT) -->
+    <!-- quick-create banner (โชว์เมื่อ draft/ไม่ครบ) -->
+    <div class="qc-banner" id="qcBanner" style="display:none">⚡ <b>โหมด Quick-Create</b> — กรอกขั้นต่ำ 3 ช่อง (ชื่อ·เลขภาษี·เบอร์) → สร้าง draft เปิด PO ได้ทันที · <b>🔒 ต้องเติมที่อยู่/สาขาภาษีให้ครบก่อนตั้งหนี้ (PO-6)</b></div>
+
     <div class="profile-card">
       <div class="pc-row">
         <div class="pc-logo">🏭</div>
         <div style="flex:1;min-width:280px">
-          <input class="pc-name-input" id="pcName" value="Daikin Sales (Thailand) Co., Ltd." oninput="syncName(this.value)">
-          <div class="pc-meta"><span class="mono">V-00012</span> · 📊 PO YTD ฿28.45M · 47 ใบ · Lead Time 12.5 วัน · ส่งตรงเวลา 94.2% · พันธมิตร 5 ปี</div>
+          <input class="pc-name-input" id="pcName" value="บริษัท ไดกิ้น อินดัสทรีส์ (ประเทศไทย) จำกัด" oninput="syncName(this.value)">
+          <div class="pc-meta"><span class="mono">V-00045</span> · 📊 YTD ซื้อ ฿12.4M · 84 บิล · 📍 1 ที่อยู่ · 🏦 2 บัญชี · ⏱ Lead 7 วัน</div>
         </div>
-        <div class="pc-status">
-          <span class="pill pill-success">● Active</span>
-          <span class="pill pill-info">Net 60</span>
-        </div>
+        <div class="pc-status"><span class="pill pill-success">● Active</span><span class="pill pill-info">เครดิต Net 30</span><span class="pill pill-warning">⚠ CN ค้าง 1</span></div>
       </div>
-
       <div class="pc-owner">
         <div class="pc-owner-card">
           <span class="ico">👤</span>
           <div style="flex:1">
-            <div class="who">ผู้ดูแล Vendor (จัดซื้อ) <span class="lyr tbl">🔵 Purchaser Code</span></div>
-            <select onchange="syncOwnerCard()" id="selPur" style="margin-top:3px">
-              <option value="NIDA">คุณนิดา สังวิจิตร (NIDA)</option>
-              <option value="VICHAI">คุณวิชัย จัดซื้อ (VICHAI)</option>
-              <option value="PIM">คุณพิม ค้าระหว่างประเทศ (PIM)</option>
-            </select>
-            <div class="ch" id="purInfo">📞 ต่อ 2431 · ✉️ nida@sangwijit.co.th · ตำแหน่ง: Senior Purchaser</div>
+            <div class="who">Buyer ผู้ดูแล <span class="lyr cust">🟠 portal</span></div>
+            <select style="margin-top:3px"><option>คุณสมชาย จัดซื้อ (BUY-01)</option><option>คุณมานี จัดซื้อ (BUY-02)</option></select>
           </div>
         </div>
         <div class="pc-owner-card">
-          <span class="ico">🤝</span>
+          <span class="ico">📋</span>
           <div style="flex:1">
-            <div class="who">ผู้ติดต่อหลัก (ฝั่ง Vendor)</div>
-            <input value="Mr. Somchai Daikin" style="margin-top:3px;font-size:12.5px;padding:3px 6px;border:1px solid var(--line);border-radius:5px;width:100%;font-family:inherit">
-            <div class="ch">📞 +66-2-716-3001 · ✉️ somchai@daikin.co.th · ตำแหน่ง: Sales Director</div>
+            <div class="who">ประเภทการค้า <span class="lyr tbl">🔵 dimension</span></div>
+            <select style="margin-top:3px"><option>ผู้ผลิต/โรงงาน</option><option>ตัวแทนจำหน่าย</option><option>ผู้รับเหมา</option><option>ค่าใช้จ่าย</option></select>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- ─── 🏢 ข้อมูลหลัก · ติดต่อ · ภาษี ─── -->
-    <div class="grp">
-      <div class="grp-h">📋 ข้อมูลหลัก · ติดต่อ · ภาษี <span style="margin-left:auto;font-size:10px;font-weight:500;color:var(--muted);text-transform:none">📌 ชื่อ/สถานะ → การ์ดด้านบน · ผู้ดูแล → owner card · ที่อยู่ flat (BC) → ในนี้</span></div>
-      <div class="grid g4">
-        <div class="f"><label>ประเภท <span class="lyr api">🟢 type</span></label><select><option>Company</option><option>Person</option></select></div>
-        <div class="f"><label>ประเทศ <span class="lyr api">🟢 country</span></label><select><option>TH</option><option>JP</option><option>CN</option></select></div>
-        <div class="f"><label>ภาษาเอกสาร <span class="lyr tbl">🔵</span></label><select><option>ไทย</option><option>EN</option><option>JP</option></select></div>
-        <div class="f"><label>Vendor ตั้งแต่</label><div class="val mono">2021-03-08</div></div>
-      </div>
-      <div class="grid g4" style="margin-top:7px">
-        <div class="f wide"><label>ที่อยู่ <span class="lyr api">🟢 addressLine1</span></label><input value="123 อาคารไดกิ้น ซ.สุขุมวิท 71 แขวงพระโขนงเหนือ"></div>
-        <div class="f"><label>จังหวัด/เมือง <span class="lyr api">🟢 city</span></label><input value="กรุงเทพฯ"></div>
-        <div class="f"><label>รหัสไปรษณีย์ <span class="lyr api">🟢 postalCode</span></label><input value="10110"></div>
-      </div>
-      <div class="grid g4" style="margin-top:7px">
-        <div class="f"><label>โทรศัพท์ <span class="lyr api">🟢</span></label><input value="+66-2-716-3000"></div>
-        <div class="f"><label>อีเมล <span class="lyr api">🟢</span></label><input value="vendor@daikin.co.th"></div>
-        <div class="f"><label>เว็บไซต์ <span class="lyr api">🟢</span></label><input value="www.daikin.co.th"></div>
-        <div class="f"><label>%หัก ณ ที่จ่าย (WHT) <span class="lyr cust">🟠 Thai loc</span></label><input class="mono" value="3"></div>
-      </div>
-      <div class="grid g4" style="margin-top:7px">
-        <div class="f wide"><label>เลขผู้เสียภาษี / VAT <span class="lyr api">🟢 taxRegistrationNumber</span></label>
-          <div style="display:flex;gap:5px"><input class="mono" id="vat" value="0105558000163"><button class="inline-btn" onclick="checkVatDuplicate()">🔍 ตรวจซ้ำ</button></div>
-          <div id="vatResult" style="font-size:11px;color:#047857;margin-top:2px">✓ ไม่พบซ้ำในระบบ</div></div>
-        <div class="f"><label>มีภาระภาษี (taxLiable) <span class="lyr api">🟢</span></label><select><option>ใช่ (VAT 7%)</option><option>ไม่ (Non-VAT)</option></select></div>
-      </div>
-    </div>
-
-    <!-- ─── 🎭 บทบาท Vendor (multi-role) ─── -->
-    <div class="grp">
-      <div class="grp-h">🎭 บทบาท Vendor (multi-role) <span class="lyr cust">🟠 custom SWT</span></div>
-      <div class="grid g4">
-        <label class="chk"><input type="checkbox" checked> 🏭 Goods Supplier (ผู้ขายสินค้า)</label>
-        <label class="chk"><input type="checkbox" checked> 🛡️ Warranty Service Partner</label>
-        <label class="chk"><input type="checkbox"> 🔧 ช่างนอก (Outsource)</label>
-        <label class="chk"><input type="checkbox"> 🧰 ผู้ให้บริการ (Service)</label>
-      </div>
-      <div class="hint">BC มาตรฐานไม่มี multi-role → custom field/enum บน Vendor (tableext) · Warranty Partner เปิด tab "ประกัน &amp; บริการ" + dual balance V⇄C</div>
-    </div>
-
-    <!-- ─── 🏷️ แบรนด์ที่ดูแล (SWT Brand custom) ─── -->
-    <div class="grp">
-      <div class="grp-h">🏷️ แบรนด์ที่ดูแล <span class="lyr cust">🟠 SWT Brand (shared 4 บ. · DataPerCompany=false)</span></div>
-      <div class="grid g3">
-        <div class="f wide"><label>แบรนด์ (Brands)</label><input value="Daikin, Goodman, Saijo Denki"></div>
-        <div class="f"><label>ยอดสั่งซื้อขั้นต่ำ <span class="lyr cust">🟠</span></label><input class="mono" value="50,000"></div>
-      </div>
-      <div class="hint">ยี่ห้อใช้ <b>SWT Brand</b> (custom 50100 · DataPerCompany=false แชร์ 4 บริษัท SWT/SWE/VMN/WPS) — <b>ไม่ใช้</b> standard BC Manufacturer ที่เป็น per-company (decided 2026-06-27 · ดู bc-field-reference §C-1)</div>
-    </div>
   </div>
-  <!-- /master-head -->
 
-  <!-- ② tabgroup — 5 tabs (รายละเอียด) -->
+  <!-- ② tabs -->
   <div class="tabgroup">
     <div class="tabnav">
-      <div class="tab act" onclick="showTab('t-fin',this)">🏦 เงื่อนไข · การเงิน · ธนาคาร</div>
-      <div class="tab" onclick="showTab('t-life',this)">Onboarding &amp; สถานะ</div>
-      <div class="tab" onclick="showTab('t-trade',this)">Trade Agreement</div>
-      <div class="tab" onclick="showTab('t-warr',this)">ประกัน &amp; บริการ</div>
-      <div class="tab" onclick="showTab('t-bal',this)">ยอดคงค้าง · ประวัติ · เอกสาร</div>
+      <div class="tab act" onclick="showTab('t-addr',this)">ที่อยู่ · ภาษี</div>
+      <div class="tab" onclick="showTab('t-fin',this)">เครดิต · การค้า</div>
+      <div class="tab" onclick="showTab('t-bank',this)">🏦 ธนาคาร (จ่าย)</div>
+      <div class="tab" onclick="showTab('t-grp',this)">กลุ่ม · จัดซื้อ</div>
+      <div class="tab" onclick="showTab('t-hist',this)">ประวัติ · เอกสาร</div>
     </div>
     <div class="tabbody">
 
-      <!-- ===== Tab 1: เงื่อนไข · การเงิน · ธนาคาร ===== -->
-      <div class="pane on" id="t-fin">
+      <!-- ที่อยู่ · ภาษี -->
+      <div class="pane on" id="t-addr">
+        <div class="sec-title">🏢 MD3.2 · ที่อยู่ &amp; ข้อมูลภาษี</div>
         <div class="grp">
-          <div class="grp-h">💳 เงื่อนไขการค้า / ชำระเงิน <span class="lyr api">🟢</span></div>
+          <div class="grp-h">ข้อมูลนิติบุคคล</div>
           <div class="grid g4">
-            <div class="f"><label>เงื่อนไขชำระเงิน (paymentTermsId)</label><select><option>Net 60</option><option>Net 30</option><option>Net 90</option><option>เงินสด</option></select></div>
-            <div class="f"><label>วิธีชำระเงิน (paymentMethodId)</label><select><option>โอน</option><option>เช็ค</option><option>เงินสด</option></select></div>
-            <div class="f"><label>สกุลเงิน (currencyCode)</label><select><option>THB (ฐาน)</option><option>USD</option><option>JPY</option></select></div>
-            <div class="f"><label>วิธีรับสินค้า</label><select><option>FOB Bangkok</option><option>Door-to-Door</option><option>EXW (รับเอง)</option></select></div>
+            <div class="f"><label>คำนำหน้า <span class="lyr cust">🟠</span></label><select><option>บริษัท</option><option>ห้างหุ้นส่วนจำกัด</option><option>นาย</option><option>นาง</option></select></div>
+            <div class="f wide"><label>ชื่อ (ออกใบกำกับ) <span class="req">*</span><span class="lyr api">🟢</span></label><input value="ไดกิ้น อินดัสทรีส์ (ประเทศไทย) จำกัด" oninput="dupCheck()"></div>
+            <div class="f"><label>ชื่อย่อ <span class="lyr api">🟢</span></label><input value="Daikin"></div>
+            <div class="f"><label>เลขผู้เสียภาษี <span class="req">*</span><span class="lyr api">🟢</span></label><input class="mono" id="taxid" value="0105536000123" oninput="dupCheck()"><div class="dup-ok" id="dupMsg">✓ เลขภาษีไม่ซ้ำในระบบ</div></div>
+            <div class="f"><label>สาขาภาษี (TaxBranch) <span class="lyr cust">🟠</span></label><input class="mono" value="00000" placeholder="00000 = สนง.ใหญ่"></div>
+            <div class="f"><label>ประเภทบุคคล (PersonType) <span class="lyr cust">🟠</span></label><select><option>นิติบุคคล</option><option>บุคคลธรรมดา</option></select></div>
           </div>
         </div>
-
-        <div class="sec-title" style="margin-top:14px">🏦 ธนาคาร / บัญชีรับเงิน <span class="lyr tbl" style="margin-left:6px">🔵 Vendor Bank Account (table 288)</span> <span class="tools"><button class="mini pri" onclick="m('mockup: add bank account')">➕ เพิ่มบัญชี</button></span></div>
-        <table>
-          <thead><tr><th style="width:42px">#</th><th>ธนาคาร · สาขา</th><th>เลขบัญชี</th><th>ชื่อบัญชี</th><th>ประเภท</th><th>SWIFT</th><th style="width:75px">default</th><th style="width:50px">ลบ</th></tr></thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>ธนาคารกรุงเทพ · สาขาพระโขนง</td>
-              <td class="mono">234-2-56789-0</td>
-              <td>Daikin Sales (Thailand) Co., Ltd.</td>
-              <td>กระแสรายวัน</td>
-              <td class="mono">BKKBTHBK</td>
-              <td><input type="radio" name="defBank" checked> หลัก</td>
-              <td><button class="mini">🗑️</button></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>ธนาคาร MUFG · Tokyo</td>
-              <td class="mono">001-234567</td>
-              <td>Daikin Industries (Parent)</td>
-              <td>กระแสรายวัน (JPY)</td>
-              <td class="mono">BOTKJPJT</td>
-              <td><input type="radio" name="defBank"> รอง (FX)</td>
-              <td><button class="mini">🗑️</button></td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="hint" style="margin-top:6px">📌 คลิกแถวเพื่อแก้ไข inline · 1 vendor มีได้หลายบัญชี · BC API v2.0 ไม่ expose → ดึงผ่าน custom API page</div>
-
-        <div class="grp" style="margin-top:12px">
-          <div class="grp-h">📊 กลุ่มลงบัญชี (Posting Group) <span class="lyr tbl">🔵 table-only · จำเป็นตอน post</span></div>
-          <div class="grid g3">
-            <div class="f"><label>Vendor Posting Group</label><select><option>DOMESTIC</option><option>FOREIGN</option></select></div>
-            <div class="f"><label>Gen. Bus. Posting Group</label><select><option>DOMESTIC</option></select></div>
-            <div class="f"><label>VAT Bus. Posting Group</label><select><option>DOMESTIC (VAT7)</option><option>NONVAT</option></select></div>
-          </div>
-          <div class="hint">บังคับตอน BC post แต่ standard API ไม่ให้ → ตั้งผ่าน page/custom API · คุม GL ปลายทางของเจ้าหนี้</div>
-        </div>
-      </div>
-
-      <!-- ===== Tab 2: Onboarding & สถานะ ===== -->
-      <div class="pane" id="t-life">
-        <div class="sec-title">🚀 Onboarding &amp; Lifecycle (PO-3 → ย้ายมา MD-3 ที่เดียว)</div>
-        <div class="flow">
-          <div class="flow-node"><div class="dot">✓</div><div class="t">1. สร้าง Vendor</div><div class="s">Status: Blocked (All)</div><div class="s">2021-03-08</div></div>
-          <div class="flow-line"></div>
-          <div class="flow-node"><div class="dot">✓</div><div class="t">2. กรอกข้อมูลหลัก</div><div class="s">VAT · Bank · Terms · Posting Group</div><div class="s">2021-03-08</div></div>
-          <div class="flow-line"></div>
-          <div class="flow-node"><div class="dot">✓</div><div class="t">3. ปลด Block = Active</div><div class="s">พร้อมทำ PO / AP</div><div class="s">2021-03-08</div></div>
-        </div>
-
         <div class="grp">
-          <div class="grp-h">🔒 สถานะ Block <span class="lyr api">🟢 blocked enum (3 ค่า)</span></div>
+          <div class="grp-h">ที่อยู่ <span class="lyr api">🟢</span> <span style="margin-left:auto;font-weight:400;text-transform:none;color:var(--muted)">addressLine · city · state · postalCode</span></div>
+          <div class="grid g4">
+            <div class="f wide"><label>ที่อยู่ <span class="req">*</span></label><input value="22 ซอยรุ่งเรือง ถ.สุขุมวิท"></div>
+            <div class="f"><label>อำเภอ/เขต (city)</label><input value="เขตวัฒนา"></div>
+            <div class="f"><label>จังหวัด (state)</label><input value="กรุงเทพฯ"></div>
+            <div class="f"><label>รหัสไปรษณีย์</label><input class="mono" value="10110"></div>
+            <div class="f"><label>โทรศัพท์ <span class="req">*</span><span class="lyr api">🟢</span></label><input class="mono" value="02-715-0000"></div>
+            <div class="f"><label>อีเมล <span class="lyr api">🟢</span></label><input value="ap@daikin.co.th"></div>
+            <div class="f"><label>ผู้ติดต่อ</label><input value="คุณวิชัย (ฝ่ายขาย)"></div>
+          </div>
+        </div>
+        <div class="warn-box">🔒 <b>Gate:</b> vendor draft (quick-create) เปิด PO ได้ · แต่ <b>ที่อยู่ + เลขภาษี + สาขาภาษี ต้องครบก่อน PO-6 ตั้งหนี้ post</b> (ใบกำกับภาษีซื้อต้องมีข้อมูลถูก) · <span class="lyr cust">🟠 TaxBranch/PersonType/คำนำหน้า</span> = ต้องรอ custom API (BC dev) ผูกจริง · ตอนนี้พอร์ทัลโชว์ช่องไว้</div>
+      </div>
+
+      <!-- เครดิต · การค้า -->
+      <div class="pane" id="t-fin">
+        <div class="sec-title">💳 MD3.3 · เครดิต &amp; เงื่อนไขการค้า</div>
+        <div class="grp"><div class="grp-h">เงื่อนไขจ่ายชำระ</div>
+          <div class="grid g4">
+            <div class="f"><label>เงื่อนไขจ่าย <span class="lyr api">🟢 paymentTermsId</span></label><select><option>Net 30</option><option>Net 60</option><option>Net 90</option><option>เงินสด (COD)</option><option>โอนก่อนส่ง</option></select></div>
+            <div class="f"><label>เครดิต (วัน)</label><input class="mono" value="30"><div class="dup-ok" style="color:var(--muted)">แปลงจาก payment terms</div></div>
+            <div class="f"><label>สกุลเงิน <span class="lyr api">🟢 currencyCode</span></label><select><option>บาท (THB)</option><option>USD</option><option>JPY</option></select></div>
+            <div class="f"><label>Lead time (วัน) <span class="lyr cust">🟠 portal</span></label><input class="mono" value="7"></div>
+            <div class="f"><label>ประเภทการจ่ายชำระ <span class="lyr tbl">🔵</span></label><select><option>โอน</option><option>เช็ค</option><option>เงินสด</option></select></div>
+            <div class="f"><label>WHT default <span class="lyr tbl">🔵</span></label><select><option>3% ค่าบริการ</option><option>1% ค่าขนส่ง</option><option>ไม่หัก</option></select></div>
+          </div>
+        </div>
+        <div class="note-box">💡 "เครดิตวัน" BC เก็บเป็น <b>Payment Terms (FK)</b> ไม่ใช่ตัวเลข → พอร์ทัลเลือก terms แล้วโชว์วันให้อ่าน · WHT default ดึงจาก FI-12 (ประเภทเงินได้)</div>
+      </div>
+
+      <!-- ธนาคาร -->
+      <div class="pane" id="t-bank">
+        <div class="sec-title">🏦 MD3.4 · บัญชีธนาคาร (สำหรับจ่ายเงิน)</div>
+        <table>
+          <thead><tr><th>ธนาคาร</th><th>สาขา</th><th>เลขบัญชี</th><th>ชื่อบัญชี</th><th>ประเภท</th><th>หลัก</th></tr></thead>
+          <tbody>
+            <tr><td>กสิกรไทย</td><td>สุขุมวิท</td><td class="mono">712-1-23456-7</td><td>บ.ไดกิ้นฯ</td><td>กระแส</td><td>✓</td></tr>
+            <tr><td>ไทยพาณิชย์</td><td>อโศก</td><td class="mono">111-2-33333-4</td><td>บ.ไดกิ้นฯ</td><td>ออมทรัพย์</td><td></td></tr>
+          </tbody>
+        </table>
+        <button class="inline-btn" style="margin-top:8px">+ เพิ่มบัญชี</button>
+        <div class="note-box">💡 บัญชีเจ้าหนี้ = ปลายทางตอน FI-2 จ่ายชำระ · เลือกบัญชีหลักเป็น default</div>
+      </div>
+
+      <!-- กลุ่ม · จัดซื้อ -->
+      <div class="pane" id="t-grp">
+        <div class="sec-title">📦 MD3.5 · กลุ่ม &amp; ข้อมูลจัดซื้อ</div>
+        <div class="grp"><div class="grp-h">กลุ่ม/ประเภท <span class="lyr tbl">🔵 defaultDimensions (BC)</span></div>
           <div class="grid g3">
-            <div class="f"><label>สถานะปัจจุบัน (blocked)</label>
-              <select id="blkSel" onchange="syncBlock()">
-                <option value="">( ) ว่าง = Active (ทำได้ทุกอย่าง)</option>
-                <option value="Payment">Payment (ห้ามจ่ายเงิน · สั่งซื้อได้)</option>
-                <option value="All">All (ห้ามทุก transaction)</option>
-              </select></div>
-            <div class="f"><label>ปลด Block ล่าสุดโดย</label><div class="val">คุณนิดา สังวิจิตร · 2021-03-08</div></div>
-            <div class="f"><label>Onboarding source</label><div class="val">PO-3 เดิม → MD-3 · Admin User</div></div>
+            <div class="f"><label>กลุ่มเจ้าหนี้หลัก</label><select><option>เจ้าหนี้ทั่วไป</option><option>เจ้าหนี้ต่างจังหวัด</option><option>เจ้าหนี้ค่าใช้จ่าย</option></select></div>
+            <div class="f"><label>กลุ่มย่อย</label><select><option>001 นำเข้า</option><option>—</option></select></div>
+            <div class="f"><label>ประเภทเจ้าหนี้</label><select><option>IMPORT 2020</option><option>ในประเทศ</option></select></div>
           </div>
-          <div class="hint">⚠️ BC Vendor `blocked` มี <b>3 ค่า</b> = ( ) / Payment / All — ต่างจาก Customer ที่มี 4 ค่า (Ship/Invoice แยก) · Vendor ไม่มี "ห้ามรับของ" แยก เพราะของไหลทางเดียว</div>
         </div>
-
-        <div class="warn-box">
-          <b>ข้อมูลสำคัญ (required ก่อนปลด Block):</b>
-          ✓ Tax ID/VAT: 0105558000163 · ✓ Bank: BBL 234-2-56789-0 · ✓ Payment Terms: Net 60 · ✓ Posting Group: DOMESTIC
-          <br><b style="color:#B45309">⚠️ เพดานหนี้เจ้าหนี้</b> = <span class="lyr cust">🟠 custom</span> — BC Vendor <b>ไม่มี</b> field Credit Limit (เป็นของ Customer เท่านั้น) → ถ้าต้องคุมเพดานต้องสร้าง custom field
-        </div>
-      </div>
-
-      <!-- ===== Tab 3: Trade Agreement ===== -->
-      <div class="pane" id="t-trade">
-        <div class="note-box">📋 Trade Agreement ทั้งหมด = <span class="lyr cust">🟠 custom SWT</span> (BC มาตรฐานไม่มี Rebate/MDF/Penalty บน Vendor) — ของแสงวิจิตรเฉพาะ · ผูกกับ <b>PO-2 RFQ</b> + <b>PO-7 ส่งเสริมการขาย</b></div>
-        <div class="subnav">
-          <div class="subtab act" onclick="subTab('s-reb',this)">Rebate</div>
-          <div class="subtab" onclick="subTab('s-mdf',this)">MDF / Co-op</div>
-          <div class="subtab" onclick="subTab('s-vol',this)">Volume Discount</div>
-          <div class="subtab" onclick="subTab('s-pen',this)">Penalty</div>
-        </div>
-
-        <div class="subpane on" id="s-reb">
-          <table>
-            <thead><tr><th>ไตรมาส</th><th>เป้า</th><th>ทำได้จริง</th><th>%บรรลุ</th><th>Rate</th><th>Rebate (฿)</th></tr></thead>
-            <tbody>
-              <tr><td>Q1 2026</td><td class="mono">5,000,000</td><td class="mono">4,850,000</td><td class="ok">97%</td><td>2.0%</td><td class="mono">97,000</td></tr>
-              <tr><td>Q2 2026</td><td class="mono">5,000,000</td><td class="mono">3,200,000</td><td class="over">64%</td><td>1.5%</td><td class="mono">48,000</td></tr>
-              <tr><td>Q3 2026</td><td class="mono">5,000,000</td><td class="mono">—</td><td>—</td><td>2.0%</td><td class="mono">—</td></tr>
-            </tbody>
-          </table>
-          <div class="hint">Rebate = คืนหลังการขาย (≠ ส่วนลด) · ผูกกับ PO-7 ส่งเสริมการขาย → ตัดหนี้ที่ PO-6 ใบตั้งหนี้เจ้าหนี้</div>
-        </div>
-        <div class="subpane" id="s-mdf">
-          <div class="grid g3" style="margin-bottom:8px">
-            <div class="f"><label>งบ MDF ทั้งปี</label><div class="val mono">฿2,500,000</div></div>
-            <div class="f"><label>ใช้ไป YTD</label><div class="val mono">฿780,000 (31.2%)</div></div>
-            <div class="f"><label>คงเหลือ</label><div class="val mono">฿1,720,000</div></div>
+        <div class="grp"><div class="grp-h">จัดซื้อ (portal) <span class="lyr cust">🟠</span></div>
+          <div class="grid g3">
+            <div class="f"><label>Vendor Commitment (PO-2)</label><div class="val">MOU Sell-in 2026 · ฿5M</div></div>
+            <div class="f"><label>PO Active</label><div class="val">3 ใบ · ฿1.2M</div></div>
+            <div class="f"><label>เตือน CN ค้าง</label><div class="val over">⚠ 1 ใบ (PO-CN-0089)</div></div>
           </div>
-          <table>
-            <thead><tr><th>เดือน</th><th>งบ</th><th>ใช้จริง</th><th>สถานะ</th></tr></thead>
-            <tbody>
-              <tr><td>ม.ค. 26</td><td class="mono">200,000</td><td class="mono">180,000</td><td class="ok">ในงบ</td></tr>
-              <tr><td>ก.พ. 26</td><td class="mono">200,000</td><td class="mono">150,000</td><td class="ok">ในงบ</td></tr>
-              <tr><td>มี.ค. 26</td><td class="mono">200,000</td><td class="mono">220,000</td><td class="over">เกินงบ</td></tr>
-              <tr><td>เม.ย. 26</td><td class="mono">200,000</td><td class="mono">230,000</td><td class="over">เกินงบ</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="subpane" id="s-vol">
-          <table>
-            <thead><tr><th>ช่วงจำนวน</th><th>ส่วนลด</th><th>เงื่อนไข</th></tr></thead>
-            <tbody>
-              <tr><td>1–50</td><td>0%</td><td>List Price</td></tr>
-              <tr><td>51–200</td><td>5%</td><td>ขั้นต่ำ 100 หน่วย</td></tr>
-              <tr><td>201–500</td><td>8%</td><td>ส่ง 2–4 สัปดาห์</td></tr>
-              <tr><td>500+</td><td>12%</td><td>ต่อรองได้ · FOB Bangkok</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="subpane" id="s-pen">
-          <table>
-            <thead><tr><th>ประเภท Penalty</th><th>เงื่อนไข</th><th>ค่าปรับ</th></tr></thead>
-            <tbody>
-              <tr><td>สินค้าไม่เคลื่อนไหว</td><td>ไม่มียอดขาย 3 เดือน</td><td class="mono">฿50,000</td></tr>
-              <tr><td>อายุสินค้า</td><td>MFG เกิน 18 เดือน</td><td>คืน หรือ ฿15,000 (ทำลาย)</td></tr>
-              <tr><td>ชำระล่าช้า</td><td>เกิน 60 วัน</td><td>1.5% ต่อเดือน</td></tr>
-            </tbody>
-          </table>
         </div>
       </div>
 
-      <!-- ===== Tab 4: ประกัน & บริการ ===== -->
-      <div class="pane" id="t-warr">
-        <div class="note-box">🛡️ แสดงเมื่อมีบทบาท <b>Warranty Service Partner</b> · ทั้ง tab = <span class="lyr cust">🟠 custom SWT</span></div>
-
-        <div class="sec-title">นโยบายความรับผิดชอบ (Warranty Service Policy)</div>
-        <table>
-          <thead><tr><th>รายการ</th><th>ผู้รับผิดชอบ</th></tr></thead>
-          <tbody>
-            <tr><td>อะไหล่ (Parts)</td><td>Vendor จ่าย</td></tr>
-            <tr><td>ค่าแรง (Labor)</td><td>พิจารณาเป็นเคส (Case-by-case)</td></tr>
-            <tr><td>ค่าเดินทาง (Travel)</td><td>ลูกค้าจ่าย</td></tr>
-          </tbody>
-        </table>
-
-        <div class="sec-title" style="margin-top:14px">ระยะประกันตามหมวดสินค้า</div>
-        <table>
-          <thead><tr><th>หมวด</th><th>คอมเพรสเซอร์</th><th>อะไหล่</th><th>ค่าแรง</th></tr></thead>
-          <tbody>
-            <tr><td>แอร์ (Air Conditioning)</td><td>5 ปี</td><td>2 ปี</td><td>1 ปี</td></tr>
-            <tr><td>ตู้เย็น</td><td>3 ปี</td><td>1 ปี</td><td>ฟรี 1 ปี + คิดเงิน</td></tr>
-            <tr><td>เครื่องซักผ้า</td><td>—</td><td>2 ปี</td><td>1 ปี</td></tr>
-          </tbody>
-        </table>
-
-        <div class="grid g3" style="margin-top:12px">
-          <div class="f"><label>SLA Lead Time</label><div class="val">3–5 วัน (กทม.) · 5–7 วัน (ตจว.)</div></div>
-          <div class="f"><label>เงื่อนไขเคลม</label><div class="val">ใบเสร็จ + Product ID + เอกสารอาการเสีย</div></div>
-          <div class="f"><label>ผู้ประสานเคลม</label><div class="val">Mr. Nikhom Daikin</div></div>
+      <!-- ประวัติ · เอกสาร -->
+      <div class="pane" id="t-hist">
+        <div class="sec-title">📚 MD3.6 · ประวัติซื้อ &amp; เอกสารแนบ</div>
+        <div class="grp"><div class="grp-h">AP Aging <span class="lyr cust">🟠 portal (computed)</span></div>
+          <table><thead><tr><th>Current</th><th>1-30</th><th>31-60</th><th>60+</th><th>รวมค้างจ่าย</th></tr></thead>
+            <tbody><tr><td>฿240,000</td><td>฿85,000</td><td class="over">฿12,000</td><td class="bad">฿0</td><td><b>฿337,000</b></td></tr></tbody></table>
         </div>
-      </div>
-
-      <!-- ===== Tab 5: ยอดคงค้าง · ประวัติ · เอกสาร ===== -->
-      <div class="pane" id="t-bal">
-        <div class="sec-title">💰 ยอดคงค้าง Dual Balance (AR + AP) <span class="lyr cust" style="margin-left:6px">🟠 V⇄C linking</span></div>
-        <div class="ref-strip">🔗 BC365 Linked: Vendor <b>V-00012</b> ⇄ Customer <b>C-VDR-00089</b> (shadow AR entity สำหรับบทบาท Warranty Partner) · sync อัตโนมัติ</div>
-        <div class="bal-grid">
-          <div class="bal-card ap"><div class="lbl">AP — เราติดเขา <span class="lyr api">🟢 balance</span></div><div class="amt mono">฿125,400</div><div style="font-size:10px;color:#9CA3AF">3 PO ค้างจ่าย</div></div>
-          <div class="bal-card ar"><div class="lbl">AR — เขาติดเรา</div><div class="amt mono">฿18,600</div><div style="font-size:10px;color:#9CA3AF">5 jobs ค้างรับ</div></div>
-          <div class="bal-card net"><div class="lbl">Net (เราติดเขาสุทธิ)</div><div class="amt mono">฿106,800</div><div style="font-size:10px;color:#9CA3AF">หลังหักกลบ</div></div>
+        <div class="grp"><div class="grp-h">📎 เอกสารแนบ <span style="margin-left:auto;font-weight:400;text-transform:none;color:var(--muted)">→ swt-media (private · version + audit)</span></div>
+          <table><thead><tr><th>เอกสาร</th><th>ประเภท</th><th>วันที่</th><th>เวอร์ชัน</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>หนังสือรับรองจดทะเบียน</td><td>จดทะเบียน</td><td>15 ม.ค. 26</td><td>v1</td><td><span class="inline-btn">👁 ดู</span></td></tr>
+              <tr><td>สัญญาซื้อขาย MOU 2026</td><td>สัญญา</td><td>02 ก.พ. 26</td><td>v2</td><td><span class="inline-btn">👁 ดู</span></td></tr>
+              <tr><td>ภ.พ.20</td><td>ภาษี</td><td>10 ม.ค. 26</td><td>v1</td><td><span class="inline-btn">👁 ดู</span></td></tr>
+            </tbody></table>
+          <button class="inline-btn" style="margin-top:8px">📎 แนบเอกสาร (drag-drop)</button>
         </div>
-        <div style="display:flex;gap:6px;margin-bottom:6px">
-          <button class="mini pri" onclick="m('สร้าง Journal หักกลบ AR-AP (mockup)')">🔄 Reconcile (หักกลบ AR-AP)</button>
-          <button class="mini" onclick="m('mockup')">📊 ประวัติ Reconcile</button>
-          <button class="mini" onclick="m('mockup')">📥 Export statement</button>
-        </div>
-        <div class="hint">balance = read-only (BC คำนวณ) · Reconcile สร้าง Journal Entry: ลด AR + ลด AP ตามยอดน้อยกว่า (BC posting pattern)</div>
-
-        <div class="sec-title" style="margin-top:14px">📈 ประวัติสั่งซื้อ (12 เดือน) <span class="lyr api" style="margin-left:6px">🟢 vendorPurchases (calc)</span></div>
-        <div class="grid g4" style="margin-bottom:6px">
-          <div class="f"><label>ยอดซื้อ YTD</label><div class="val mono">฿28,450,000</div></div>
-          <div class="f"><label>Lead Time เฉลี่ย</label><div class="val">12.5 วัน</div></div>
-          <div class="f"><label>ส่งตรงเวลา</label><div class="val ok">94.2%</div></div>
-          <div class="f"><label>จำนวน PO</label><div class="val">47 ใบ</div></div>
-        </div>
-        <table>
-          <thead><tr><th>เลขที่ PO</th><th>วันที่</th><th>มูลค่า (฿)</th><th>สินค้า</th><th>สถานะ</th></tr></thead>
-          <tbody>
-            <tr><td class="mono">PO-2606-1234</td><td>10 มิ.ย. 26</td><td class="mono">2,450,000</td><td>AC Units (150)</td><td class="ok">รับครบ</td></tr>
-            <tr><td class="mono">PO-2606-1233</td><td>05 มิ.ย. 26</td><td class="mono">1,850,000</td><td>Compressor (200)</td><td class="ok">รับครบ</td></tr>
-            <tr><td class="mono">PO-2606-1232</td><td>28 พ.ค. 26</td><td class="mono">3,100,000</td><td>Parts Kit (500)</td><td class="ok">รับครบ</td></tr>
-          </tbody>
-        </table>
-
-        <div class="sec-title" style="margin-top:14px">📎 เอกสารแนบ <span class="lyr tbl" style="margin-left:6px">🔵 Document Attachment (table 1173)</span></div>
-        <table>
-          <thead><tr><th>ชื่อไฟล์</th><th>ประเภท</th><th>วันที่อัปโหลด</th></tr></thead>
-          <tbody>
-            <tr><td>Daikin_Trade_Agreement_2024.pdf</td><td>Trade Agreement</td><td>15 พ.ค. 24</td></tr>
-            <tr><td>ISO9001_Certificate_2025.pdf</td><td>Certification</td><td>10 มี.ค. 25</td></tr>
-            <tr><td>ภพ.20_Daikin.pdf</td><td>เอกสารภาษี</td><td>20 ม.ค. 26</td></tr>
-          </tbody>
-        </table>
-        <div class="hint">เอกสารแนบใช้ BC standard <b>Document Attachment</b> (table 1173) ได้ — ไม่ต้อง custom</div>
       </div>
 
     </div>
   </div>
 
-  <!-- ⑤ dc-strip -->
+  <!-- ⑤ doc-chain -->
   <div class="dc-strip">
-    <span class="dc-lbl">ใช้อ้างอิงโดย</span>
-    <span class="dc-node current">MD-3 ทะเบียน Vendor</span><span class="dc-arrow">→</span>
-    <span class="dc-node">PO-1 ใบขอสั่งซื้อ</span><span class="dc-arrow">·</span>
-    <span class="dc-node">PO-4 ใบสั่งซื้อ</span><span class="dc-arrow">·</span>
-    <span class="dc-node">PO-6 ใบตั้งหนี้เจ้าหนี้</span><span class="dc-arrow">·</span>
-    <span class="dc-node">FI-2 จ่ายชำระเจ้าหนี้</span>
+    <span class="dc-lbl">เอกสารเกี่ยว</span>
+    <span class="dc-node current">MD-3 ผู้ขาย</span><span class="dc-arrow">→</span>
+    <span class="dc-node">PO-2 ข้อตกลง</span><span class="dc-arrow">→</span>
+    <span class="dc-node">PO-4 สั่งซื้อ</span><span class="dc-arrow">→</span>
+    <span class="dc-node">PO-6 ตั้งหนี้</span><span class="dc-arrow">→</span>
+    <span class="dc-node">FI-2 จ่าย</span>
   </div>
 </div>
 
-<script src="swt-sidebar.js"></script>
 <script>
-function m(t){alert(t)}
-
-function showTab(id,el){
-  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
-  document.getElementById(id).classList.add('on');
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('act'));el.classList.add('act');
-}
-function subTab(id,el){
-  const wrap=el.closest('.pane');
-  wrap.querySelectorAll('.subpane').forEach(p=>p.classList.remove('on'));
-  wrap.querySelector('#'+id).classList.add('on');
-  wrap.querySelectorAll('.subtab').forEach(t=>t.classList.remove('act'));el.classList.add('act');
-}
-
-function syncName(v){
-  document.getElementById('hNm').textContent = v;
-  const pc = document.getElementById('pcName');
-  if(pc.tagName === 'INPUT'){ if(pc.value !== v) pc.value = v; } else { pc.textContent = v; }
-}
-
-const purDict = {
-  NIDA:    '📞 ต่อ 2431 · ✉️ nida@sangwijit.co.th · ตำแหน่ง: Senior Purchaser',
-  VICHAI:  '📞 ต่อ 2442 · ✉️ vichai@sangwijit.co.th · ตำแหน่ง: Purchaser',
-  PIM:     '📞 ต่อ 2455 · ✉️ pim@sangwijit.co.th · ตำแหน่ง: International Trade'
-};
-function syncOwnerCard(){
-  document.getElementById('purInfo').textContent = purDict[document.getElementById('selPur').value] || '—';
-}
-
-/* Vendor block cycle (3 states: ( )/Payment/All) */
-const blkCycle = ['','Payment','All'];
-function cycleBlock(){
-  const sel=document.getElementById('blkSel');
-  const i = blkCycle.indexOf(sel.value);
-  sel.value = blkCycle[(i+1) % blkCycle.length];
-  syncBlock();
-}
-function syncBlock(){
-  const v=document.getElementById('blkSel').value, pill=document.getElementById('pill');
-  if(v===''){pill.className='pill pill-success';pill.textContent='● Active';}
-  else if(v==='Payment'){pill.className='pill pill-warning';pill.textContent='● Blocked: Payment';}
-  else {pill.className='pill pill-danger';pill.textContent='● Blocked: All';}
-}
-
-function checkVatDuplicate(){
-  const r=document.getElementById('vatResult'), v=document.getElementById('vat').value;
-  r.style.color='#6B7280';r.textContent='⏳ กำลังตรวจ...';
-  setTimeout(()=>{r.style.color='#047857';r.textContent='✓ Tax ID '+v+' — ไม่พบซ้ำในระบบ';},600);
+function showTab(id,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('act'));el.classList.add('act');document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));document.getElementById(id).classList.add('on');}
+function syncName(v){document.getElementById('hNm').textContent=v;}
+function cycleBlock(){var p=document.getElementById('pill');if(p.classList.contains('pill-success')){p.className='pill pill-danger';p.textContent='● Blocked';}else{p.className='pill pill-success';p.textContent='● Active';}}
+function qcToggle(){var b=document.getElementById('qcBanner');b.style.display=b.style.display==='none'?'flex':'none';}
+/* dup-check: เลขภาษี exact → block · (ชื่อ fuzzy = soft warn · mock) */
+var EXISTING={'0105536000123':'V-00045 ไดกิ้นฯ (ตัวนี้)','0105512340001':'V-00012 มิตซูบิชิฯ'};
+function dupCheck(){
+  var tax=document.getElementById('taxid').value.trim();
+  var msg=document.getElementById('dupMsg');
+  if(EXISTING[tax] && !EXISTING[tax].includes('ตัวนี้')){ msg.className='dup-warn'; msg.innerHTML='⛔ เลขภาษีซ้ำ: '+EXISTING[tax]+' <span class="inline-btn" style="padding:1px 6px">ไปใช้ตัวเดิม</span>'; }
+  else if(tax.length>=13){ msg.className='dup-ok'; msg.textContent='✓ เลขภาษีไม่ซ้ำในระบบ'; }
+  else { msg.className='dup-ok'; msg.style.color='#B45309'; msg.textContent='กรอกเลขภาษี 13 หลัก'; }
 }
 </script>
+<script src="swt-sidebar.js"></script>
 </body>
 </html>
