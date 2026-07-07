@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SC-Media — swt-gallery + swt-attach (demo) — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
+.app-container{display:flex;min-height:100vh}.main-content{flex:1;margin-left:240px}
+.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.breadcrumb{font-size:13px;color:#6B7280}.breadcrumb strong{color:#111827}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.content-wrapper{padding:16px 24px;max-width:900px}
+.page-title{font-size:20px;font-weight:700;margin-bottom:2px}.page-sub{font-size:12.5px;color:#6B7280;margin-bottom:16px}
+.demo-note{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;font-size:12.5px;color:#1E40AF;margin-bottom:16px}
+.sec{font-size:13px;font-weight:700;color:#1E3A5F;margin:18px 0 8px;display:flex;align-items:center;gap:8px}
+.sec .where{font-size:10.5px;font-weight:600;color:#6B7280;background:#F3F4F6;padding:2px 8px;border-radius:8px}
+</style>
+</head>
+<body>
+<div class="app-container"><div class="main-content">
+<div class="topbar">
+  <div class="breadcrumb">Shared Component › <strong>SC-Media (gallery + attach)</strong></div>
+  <div class="topbar-right"><span>🔔</span><span class="branch-tag">demo</span><div class="avatar">P</div></div>
+</div>
+<div class="content-wrapper">
+  <div class="page-title">🖼️ SC-Media — swt-gallery + swt-attach</div>
+  <div class="page-sub">Grill M · แยกตาม attach point: รูปสินค้า=master · เอกสาร=transaction</div>
+  <div class="demo-note">💡 <b>แยก 2 component:</b> <code>swt-gallery</code> (รูป/วิดีโอ · master-level · public CDN · reuse เว็บ) · <code>swt-attach</code> (เอกสาร · transaction-level · private · version+audit+RBAC) · ไฟล์จริง→Azure Blob · ไม่เก็บ binary ใน BC</div>
+
+  <div class="sec">🖼️ swt-gallery <span class="where">ฝังที่ item master (md1)</span></div>
+  <div id="galHost"></div>
+
+  <div class="sec">📎 swt-attach <span class="where">ฝังที่ transaction (onboarding/PO/WH-5)</span></div>
+  <div id="attHost"></div>
+</div>
+</div></div>
+
+<script src="swt-gallery.js"></script>
+<script src="swt-attach.js"></script>
+<script>
+swtRenderGallery(document.getElementById('galHost'), {
+  title:'แอร์ Daikin FTKM24SV2S', entityId:'AC-DK-24BTU',
+  images:[{alt:'หน้าเครื่อง',main:true},{alt:'ด้านข้าง'},{alt:'รีโมท'},{alt:'สเปกป้าย'},{alt:'ติดตั้งจริง'}],
+  videos:[{label:'รีวิว 30 วิ',kind:'อัปไฟล์'},{label:'สาธิตติดตั้ง',kind:'YouTube'}]
+});
+swtRenderAttach(document.getElementById('attHost'), {
+  title:'เอกสารแนบ — Onboarding V-00045', transaction:'ONB-2607-0045',
+  config:{versioning:true,audit:true,rbac:true},
+  docs:[
+    {name:'หนังสือรับรองจดทะเบียน',type:'จดทะเบียน',date:'15 ม.ค. 26',by:'คุณมานี',version:'v1',history:[{v:'v1',date:'15 ม.ค. 26',by:'คุณมานี'}]},
+    {name:'สัญญาซื้อขาย MOU 2026',type:'สัญญา',date:'02 ก.พ. 26',by:'คุณสมชาย',version:'v2',history:[{v:'v2',date:'02 ก.พ. 26',by:'คุณสมชาย'},{v:'v1',date:'20 ม.ค. 26',by:'คุณสมชาย'}]},
+    {name:'ภ.พ.20',type:'ภาษี',date:'10 ม.ค. 26',by:'คุณมานี',version:'v1'}
+  ]
+});
+</script>
+<script src="swt-sidebar.js"></script>
+</body>
+</html>
