@@ -50,6 +50,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       <div class="cat-hd">พอร์ทัลถือเอง</div>
       <button class="cat-btn on" data-cat="card" onclick="selMaster(this,'card')"><span class="ic">💳</span> ประเภทบัตร/ช่องทาง</button>
       <button class="cat-btn" data-cat="color" onclick="selMaster(this,'color')"><span class="ic">🎨</span> สถานะสีลูกค้า</button>
+      <button class="cat-btn" data-cat="itemcolor" onclick="selMaster(this,'itemcolor')"><span class="ic">🏷️</span> สถานะสีสินค้า</button>
       <button class="cat-btn" data-cat="reason" onclick="selMaster(this,'reason')"><span class="ic">📉</span> เหตุผลปรับสต็อก</button>
       <a class="cat-link" href="cf2-7-doc-template-mockup.html"><span class="ic">📄</span> แบบฟอร์มเอกสาร (CF-2.7) ↗</a>
 
@@ -91,6 +92,19 @@ var MASTERS = {
       {code:'NORMAL',name:'ปกติ',color:'#2563EB',active:true},
       {code:'OVERDUE',name:'ค้างชำระ',color:'#EF4444',active:true},
       {code:'HOLD',name:'ระงับขายเชื่อ',color:'#6B7280',active:true}
+    ]
+  },
+  itemcolor: {
+    title:'สถานะสินค้า (สี)',
+    bcNote:'แสดงสีสถานะสินค้าในหน้าค้นหา/รายการ (1.5.2.L · UI เท่านั้น) · schema เดียวกับสีลูกค้า',
+    columns:[{key:'code',label:'รหัส'},{key:'name',label:'สถานะ'},{key:'color',label:'สี',width:'50px',render:function(r){return '<span style="display:inline-block;width:16px;height:16px;border-radius:4px;vertical-align:-3px;background:'+(r.color||'#ccc')+'"></span>';}}],
+    fields:[{key:'code',label:'รหัส'},{key:'name',label:'ชื่อสถานะ'},{key:'color',label:'สี',type:'color'},{key:'active',label:'สถานะ',type:'toggle'}],
+    data:[
+      {code:'CONT',name:'ปัจจุบัน (ขายอยู่)',color:'#10B981',active:true},
+      {code:'FOCUS',name:'เร่งระบาย',color:'#EF4444',active:true},
+      {code:'SHOW',name:'สินค้าโชว์',color:'#2563EB',active:true},
+      {code:'DISC',name:'ตกรุ่น',color:'#F59E0B',active:true},
+      {code:'STOP',name:'เลิกผลิต',color:'#6B7280',active:true}
     ]
   },
   reason: {
