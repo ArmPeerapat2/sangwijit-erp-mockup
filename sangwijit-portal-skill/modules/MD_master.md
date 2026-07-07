@@ -346,6 +346,34 @@ GET /api/companies/{id}/vendors?$filter=rating eq 'A' (for RFQ filtering)
 - Documents Verified: Visible to Finance, Procurement, Admin
 - Verification Date: Visible to Finance, Procurement, Admin
 
+**Grill V — decisions (2026-07 · mockup `md3-vendor-master-mockup-v3.html`):**
+- **Parity กับ MD-2** (ลูกค้า) — fit-100vh · profile card + 5 tabs · quick-create banner
+- **Dup-check เชิงรุกด้วยเลขผู้เสียภาษี** — พิมพ์ Tax ID → เตือนทันทีถ้าซ้ำ vendor เดิม (กันเปิดซ้ำ **ก่อน** submit ไม่ใช่รอ BC reject)
+- **Field 4 เลเยอร์** (marker เดียวกับ MD-2):
+  - 🟢 **API v2.0** — create/update ผ่าน standard endpoint ได้เต็ม
+  - 🔵 **dimension-table** — กลุ่ม/มิติ → `defaultDimensions` entity (ไม่ทำ master ซ้ำในพอร์ทัล)
+  - 🟠 **custom SWT** — table ext + custom API page ใหม่: **สาขาภาษี (TaxBranch)** · คำนำหน้าไทย · **PersonType** · rebate
+  - ⚠️ **"เครดิตวัน" = Payment Terms (FK)** ไม่ใช่ตัวเลข → แปลงก่อน bind
+- **แท็บเอกสาร = roll-up read** (ไม่ใช่ upload ที่ master) — ไฟล์แนบจริงฝังที่ **transaction** (Onboarding/PO) ผ่าน SC13 · master แค่ดึงมาแสดงรวม (ดู MD-Media / Grill M)
+
+---
+
+### MD-Media: รูปสินค้า & เอกสารแนบ (Grill M · SC12/SC13)
+
+> แยกตาม **จุดแนบ (attach point)** — decision Grill M: **รูปสินค้าฝังที่ master · เอกสารฝังที่ transaction** (ไม่รวมเป็น component เดียว)
+
+**SC12 SharedGallery — รูป/วิดีโอสินค้า (master-level):**
+- ฝังที่ **MD-1 Item Master** · main image + thumbnails + reorder + วิดีโอ (อัปไฟล์/YouTube)
+- Storage: ไฟล์จริง → **Azure Blob (public CDN)** → reuse ทำหน้าเว็บขายต่อได้ · BC/portal เก็บแค่ URL/reference (**ไม่เก็บ binary ใน BC**)
+- Impl: `swt-gallery.js` — `swtRenderGallery(el,{images,videos})`
+
+**SC13 SharedAttach — เอกสารแนบ (transaction-level):**
+- ฝังที่ **transaction**: Onboarding ลูกค้า/ผู้ขาย, PO, WH-5 (ไม่ใช่ master)
+- เอกสาร: หนังสือจดทะเบียน, สัญญา MOU, ภ.พ.20, รูปหลักฐาน
+- ควบคุมต่อจุดแนบ (config): version (ไม่ทับของเก่า) · audit (ใคร upload/ดู/download) · RBAC · signed URL หมดอายุ — **สัญญา/ภาษี=ครบ · รูปหลักฐาน=เบา**
+- Storage: **Azure Blob (private)** · เปิดผ่าน signed URL (SAS · เช็ค RBAC ก่อนออก token)
+- Impl: `swt-attach.js` — `swtRenderAttach(el,{docs,config})` · master ดึงมาแสดงแบบ **roll-up read** (เช่น แท็บเอกสารใน MD-3)
+
 ---
 
 ### MD-4: Employee Master (พนักงาน) — NEW in Portal
