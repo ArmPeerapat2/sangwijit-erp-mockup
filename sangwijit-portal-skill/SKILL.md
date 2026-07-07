@@ -2,7 +2,7 @@
 name: sangwijit-portal
 description: |
   ระบบความรู้ครบวงจรสำหรับโปรเจกต์ Sangwijit ERP Web Portal — ระบบ Frontend Portal เชื่อมต่อกับ Dynamics 365 Business Central
-  ครอบคลุม: สถาปัตยกรรมระบบ, 8+ Core Modules, Shared Components SC1-SC9, UI Design Pattern, BC365 API Integration, RBAC, Thailand Compliance
+  ครอบคลุม: สถาปัตยกรรมระบบ, 8+ Core Modules, Shared Components SC1-SC13, UI Design Pattern, BC365 API Integration, RBAC, Thailand Compliance
 
   ใช้ Skill นี้ทุกครั้งที่:
   - ถามหรือออกแบบ Module ใด ๆ ใน Sangwijit Portal (Sales, WH, Purchase, Finance, Service, Promotion, Master, Claims)
@@ -10,7 +10,7 @@ description: |
   - เขียน Spec, Data Dictionary, หรือ Workflow สำหรับ Developer
   - ถามเรื่อง BC365 API Endpoint, RBAC Role, หรือ Status Flow
   - วางแผน Phase การพัฒนาหรือประเมิน Task ใหม่
-  - ถามเรื่อง Shared Component SC1-SC9 — ใช้ที่ไหน, Props คืออะไร
+  - ถามเรื่อง Shared Component SC1-SC13 — ใช้ที่ไหน, Props คืออะไร
   - ออกแบบ Module ใหม่: e-Tax, Marketplace, Mobile App, HRM Hook
   - ตรวจสอบ Open Questions ก่อน Implement
 ---
@@ -171,7 +171,7 @@ Azure / SQL (BC Database)
 1. **BC-First Data** — ทุก Field ต้องมาจาก BC Entity ที่ระบุในเอกสาร
 2. **Progressive Disclosure** — แสดงข้อมูลตาม Role และ Context
 3. **Status-Driven UI** — สีและ ActionBar เปลี่ยนตาม Document Status เสมอ
-4. **Shared Component First** — ดู SC1-SC9 ก่อนสร้าง Component ใหม่
+4. **Shared Component First** — ดู SC1-SC13 ก่อนสร้าง Component ใหม่
 5. **Bilingual Ready** — ทุก Label มี Key ทั้งไทยและอังกฤษ
 6. **Error Recovery** — ทุก API Error ต้องมี User-readable Message + Retry
 7. **RBAC Everywhere** — Field, Button, Route ต้องเช็ค Permission
@@ -239,7 +239,7 @@ Azure / SQL (BC Database)
 
 ---
 
-## 🔧 Shared Components SC1-SC9 (Full Spec)
+## 🔧 Shared Components SC1-SC13 (Full Spec)
 
 ### ตาราง Usage Matrix — 130+ Screens (v2.1)
 
@@ -255,6 +255,10 @@ Azure / SQL (BC Database)
 | SC8 | SharedSerialPanel | GRN, โอนสินค้า, ใส่ Serial หลังขาย, Stock Count, Service รับซ่อม, เบิกอะไหล่, Item Master |
 | SC9 | SharedPromoPrice | ใบเสนอราคา, ใบจอง, บิลขาย (④ โปรฯ Auto-Match), Employee Master (Commission), Sales Price List |
 | **SC10** | **SharedVendorSearch** *(NEW)* | **PR, PO, AP Invoice, PO-7 Accrual, PO-8 Deposit Bill, FI-2 AP Payment, FI-12 WHT** |
+| **SC11** | **SharedMasterEditor** *(NEW)* — `swt-master-editor.js` | **CF ตั้งค่า Master พอร์ทัล: ประเภทบัตร/%ชาร์จ, สถานะสีลูกค้า/สินค้า, เหตุผลปรับสต็อก (WH-5)** |
+| **SC12** | **SharedGallery** *(NEW)* — `swt-gallery.js` | **Item Master (md1): รูป/วิดีโอสินค้า · master-level · public CDN (reuse หน้าเว็บ)** |
+| **SC13** | **SharedAttach** *(NEW)* — `swt-attach.js` | **transaction-level เอกสารแนบ: Onboarding ลูกค้า/ผู้ขาย, PO, WH-5 · private + version/audit/RBAC** |
+| — | **SharedPaymentPanel (SC3) impl** | `swt-payment.js` (`swtOpenPayment`/`swtRenderPayment`) · sc-payment · ใช้ sv7, sl3, fi1 |
 
 ---
 
@@ -309,6 +313,9 @@ API:  GET /items?$expand=itemVariants, GET /items/{id}/stockByLocation
 ```
 
 ### SC3 — SharedPaymentPanel
+
+> **Impl:** `swt-payment.js` — `swtOpenPayment(opts)` (modal) / `swtRenderPayment(el,opts)` (inline) · demo `sc-payment-mockup.html` · เสียบแล้ว sv7/sl3/fi1
+> ช่องทาง/บัตร+%ชาร์จ ตั้งที่ **SC11 CF ตั้งค่า Master** (มีผลทุกหน้ารับชำระ) · **QR PromptPay แสดงหลังเลือกวิธี=พร้อมเพย์** (ไม่ใช่แท็บแยก)
 
 ```
 ยอด:     ยอดสุทธิ, ยอดมัดจำที่หัก, ยอดคงเหลือ, VAT, ส่วนลดท้ายบิล
@@ -417,6 +424,47 @@ Blocked:   Vendor ยังไม่ Approve → ห้ามสร้าง PO 
 
 API:  GET /vendors?$filter=..., GET /vendors/{id}, POST /vendors
       GET /vendorLedgerEntries?vendorId=&open=true → AP ค้าง
+```
+
+### SC11 — SharedMasterEditor (NEW)
+
+> **Impl:** `swt-master-editor.js` — `swtRenderMasterEditor(el,{title,columns,fields,data,bcNote,onSave,onDelete})` · host `cf-master-settings-mockup.html`
+
+```
+หน้าที่:   แก้ Master ที่ "พอร์ทัลถือเอง" (UI/logic) แบบ list-detail · schema-driven
+Field types: text / number / select / color / toggle
+Master ที่โฮสต์:
+  • ประเภทบัตร/ช่องทางรับชำระ (+%ชาร์จ) → ป้อน SC3 sc-payment
+  • สถานะสีลูกค้า / สถานะสีสินค้า (UI badge เท่านั้น)
+  • เหตุผลปรับ/ตัดจำหน่ายสต็อก (WH-5) → ผูกทิศ +/− + ผังบัญชี GL + บังคับแนบรูป (ทิศ −)
+ขอบเขต:    เฉพาะ master ที่ BC ไม่มี · master บัญชี (กลุ่ม/ยี่ห้อ/ประเภท) = ตั้งที่ BC (พอร์ทัลอ่าน dropdown)
+Grill:     A / A2 — portal owns UI masters only
+```
+
+### SC12 — SharedGallery (NEW)
+
+> **Impl:** `swt-gallery.js` — `swtRenderGallery(el,{title,entityId,images,videos,editable})` · demo `sc-media-demo-mockup.html`
+
+```
+หน้าที่:   รูป/วิดีโอสินค้า ระดับ master (ฝังที่ md1 Item Master)
+รูป:       main image + thumbnails + จัดลำดับ (reorder)
+วิดีโอ:    อัปไฟล์ หรือ ฝัง YouTube
+Storage:   ไฟล์จริง → Azure Blob (public CDN) → reuse ทำหน้าเว็บขายต่อได้ · BC เก็บแค่ URL/reference
+Grill:     M — รูปสินค้าฝังที่ master (แยกจากเอกสาร=transaction ดู SC13)
+```
+
+### SC13 — SharedAttach (NEW)
+
+> **Impl:** `swt-attach.js` — `swtRenderAttach(el,{title,transaction,docs,config:{versioning,audit,rbac}})` · demo `sc-media-demo-mockup.html`
+
+```
+หน้าที่:   เอกสารแนบระดับ transaction (Onboarding ลูกค้า/ผู้ขาย, PO, WH-5)
+เอกสาร:    หนังสือจดทะเบียน, สัญญา MOU, ภ.พ.20, รูปหลักฐาน ฯลฯ
+ควบคุม (config ต่อจุดแนบ):
+  version (ไม่ทับของเก่า) · audit (ใคร upload/ดู/download) · RBAC · signed URL หมดอายุ
+  สัญญา/ภาษี = เปิดครบ · รูปหลักฐาน = เบา
+Storage:   ไฟล์จริง → Azure Blob (private) · เปิดผ่าน signed URL (SAS · เช็ค RBAC ก่อนออก token)
+Grill:     M — เอกสารฝังที่ transaction (แยกจากรูปสินค้า=master ดู SC12)
 ```
 
 ---
