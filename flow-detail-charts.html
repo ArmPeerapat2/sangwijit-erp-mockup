@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Flowchart รายละเอียด — เคสแตกสาขา (Waterfall · เคลม)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;font-size:13px;line-height:1.45}
+.main{margin-left:240px;padding:22px 28px 60px}
+.page-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.page-head h1{font-size:22px;font-weight:700;letter-spacing:-0.01em}
+.page-head p{font-size:12px;color:#6B7280;margin-top:2px}
+.page-head .sp{flex:1}
+.back{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#2563EB;text-decoration:none;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:7px;padding:7px 12px}
+.back:hover{background:#DBEAFE}
+.tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.tab{font-size:12.5px;font-weight:600;color:#374151;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:8px 14px;cursor:pointer}
+.tab.active{background:#1E3A5F;color:#fff;border-color:#1E3A5F}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:18px 20px;margin-bottom:16px}
+.card h2{font-size:17px;font-weight:700;display:flex;align-items:center;gap:9px;margin-bottom:3px}
+.card .lead{font-size:12.5px;color:#6B7280;margin-bottom:14px;line-height:1.55}
+.card .lead b{color:#374151}
+.chart-box{overflow-x:auto;background:#FCFDFF;border:1px solid #EEF2F7;border-radius:10px;padding:14px;text-align:center}
+.mermaid{font-family:'Inter','Noto Sans Thai',sans-serif}
+table.tc{width:100%;border-collapse:collapse;font-size:12px;margin-top:14px}
+table.tc th,table.tc td{border:1px solid #E5E7EB;padding:6px 9px;text-align:center}
+table.tc th{background:#F1F5F9;font-weight:700;color:#374151}
+table.tc td:first-child{font-weight:700;color:#2563EB}
+table.tc .no{color:#CBD5E1}
+.note{margin-top:14px;font-size:11.5px;color:#6B7280;background:#F8FAFC;border:1px solid #EEF2F7;border-left:3px solid #93C5FD;border-radius:6px;padding:9px 13px;line-height:1.6}
+.note b{color:#374151}
+.note.warn{border-left-color:#F59E0B;background:#FFFBEB;color:#92400E}.note.warn b{color:#7C2D12}
+.legend-src{font-size:11px;color:#94A3B8;margin-top:8px}
+.legend-src a{color:#2563EB;text-decoration:none}
+@media(max-width:1100px){.main{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="main">
+
+  <div class="page-head">
+    <div>
+      <h1>🔀 Flowchart รายละเอียด — เคสแตกสาขา</h1>
+      <p>เคสที่ 1 ใบต้นทางแตกเป็นหลายเอกสารตามเงื่อนไข · คลิกโหนดในผังหลักเพื่อดูภาพรวม</p>
+    </div>
+    <div class="sp"></div>
+    <a class="back" href="module-flow-overview.html">← กลับ Module Flow Overview</a>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-p="wf">🟩 Waterfall — ขายเกินสต๊อก</div>
+    <div class="tab" data-p="clm">🟪 เคลม/บริการ — S/N → A-E → settlement</div>
+  </div>
+
+  <!-- ═══════════ WATERFALL ═══════════ -->
+  <div class="panel active" id="p-wf">
+    <div class="card">
+      <h2>🟩 Waterfall Allocation — ขายเกินสต๊อก เกลี่ยของอัตโนมัติ</h2>
+      <div class="lead">1 บรรทัดขายที่ <b>ระบุคลังจ่าย</b> แล้วของไม่พอ → ระบบแตกได้ถึง <b>3 ใบขอ</b> ตามลำดับ <b>เบิกคลังจ่าย → โอนคลังอื่น → ที่ขาดจริงค่อยซื้อ</b> · ทุกใบอ้างอิงกลับใบขายเดียวกัน (SC-5 doc-ref) · กันสต๊อกทันทีตอนสร้างใบขอ</div>
+      <div class="chart-box">
+<pre class="mermaid">
+flowchart TD
+  A["ใบขายยืนยัน · บรรทัดระบุคลังจ่าย<br/>ต้องการ = จำนวนขาย"] --> B{"ระบุคลังจ่าย?"}
+  B -->|"ไม่ระบุ · TC-5"| Z["ไม่ auto — รอ admin ระบุคลัง"]:::stop
+  B -->|"ระบุ"| C["① เบิก = min(ต้องการ, สต๊อกคลังจ่าย)"]
+  C --> C1["ขอเบิก WH-2R"]:::doc
+  C --> D{"ยังเหลือ?"}
+  D -->|"ครบแล้ว · TC-1 / TC-10"| E1["จบ — เบิกล้วน"]:::done
+  D -->|"เหลือ"| E["② โอน = min(เหลือ, สต๊อกคลังอื่น)"]
+  E --> E2["ขอโอน WH-3R"]:::doc
+  E --> F{"ยังเหลือ?"}
+  F -->|"ครบ · TC-3"| G1["จบ — เบิก+โอน"]:::done
+  F -->|"เหลือ"| G["③ ซื้อ = ที่ขาดจริง"]
+  G --> G2["สั่งซื้อ PO-1"]:::doc
+  G --> H1["จบ — เบิก/โอน + ซื้อ · TC-3b / 3c / TC-4"]:::done
+  classDef doc fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F,font-weight:600;
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
+  classDef stop fill:#FEE2E2,stroke:#DC2626,color:#991B1B;
+</pre>
+      </div>
+
+      <div class="lead" style="margin:16px 0 6px">▼ ปลายทางแต่ละใบขอ (downstream)</div>
+      <div class="chart-box">
+<pre class="mermaid">
+flowchart LR
+  R2["WH-2R ขอเบิก"] --> Q2["WH-Q2 คิวเบิก"] --> W2["WH-2 ใบเบิก · ตัดสต๊อก + ส่ง"]:::post
+  R3["WH-3R ขอโอน"] --> W3["WH-3 ใบโอน · In-Transit"] --> W1a["WH-1 รับปลายทาง"]:::post
+  P1["PO-1 ขอซื้อ"] --> P4["PO-4 สั่งซื้อ"] --> W1b["WH-1 รับเข้าคลัง"] --> back["พร้อมเบิกส่งต่อ"]
+  classDef post fill:#FEF3C7,stroke:#F59E0B,color:#92400E,font-weight:600;
+</pre>
+      </div>
+
+      <table class="tc">
+        <thead><tr><th>TC</th><th>คลังจ่าย A / คลังอื่น B</th><th>เบิก</th><th>โอน</th><th>ซื้อ</th><th>หมายเหตุ (A ขาย 5)</th></tr></thead>
+        <tbody>
+          <tr><td>TC-1</td><td>10 / –</td><td>5</td><td class="no">–</td><td class="no">–</td><td>ปกติ เบิกล้วน</td></tr>
+          <tr><td>TC-2</td><td>0 / 10</td><td class="no">–</td><td>5</td><td class="no">–</td><td>โอนล้วน</td></tr>
+          <tr><td>TC-3</td><td>3 / 10</td><td>3</td><td>2</td><td class="no">–</td><td>เบิก + โอน</td></tr>
+          <tr><td>TC-3b</td><td>3 / 0</td><td>3</td><td class="no">–</td><td>2</td><td>เบิก + ซื้อ</td></tr>
+          <tr><td>TC-3c</td><td>0 / 3</td><td class="no">–</td><td>3</td><td>2</td><td>โอน + ซื้อ</td></tr>
+          <tr><td>TC-4</td><td>0 / 0</td><td class="no">–</td><td class="no">–</td><td>5</td><td>ซื้อล้วน (full PO)</td></tr>
+          <tr><td>TC-5</td><td colspan="4">ไม่ระบุคลัง</td><td>❌ ไม่ auto — รอ admin ระบุคลัง</td></tr>
+          <tr><td>TC-7</td><td colspan="4">หลายบรรทัด คนละคลัง</td><td>แตกใบตามคลังต้นทาง (1 ใบ = 1 คลัง)</td></tr>
+          <tr><td>TC-10</td><td colspan="4">คลังจ่าย = ต้นทางเดียวกัน</td><td>เบิกล้วน (กันใบโอนเปล่า)</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>กันสต๊อก:</b> reserve ทันทีตอนสร้างใบขอ (ระบุคลังปุ๊บโดนกันเลย) · ขึ้นคิวเบิกจริงเมื่อแพลนวันนัด · แก้/ยกเลิกใบขายภายหลัง = admin ยืนยันก่อน sync (ไม่ auto) · serial/lot → ใบขอสถานะ "รอเลือก serial"</div>
+      <div class="legend-src">ที่มา: <a href="sangwijit-portal-skill/modules/WH_warehouse.md">WH_warehouse.md §266 — Waterfall Allocation (decision 2026-07-03)</a></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ CLAIM ═══════════ -->
+  <div class="panel" id="p-clm">
+    <div class="card">
+      <h2>🟪 เคลม/บริการ — S/N-first → Resolution A-E → Settlement</h2>
+      <div class="lead">สแกน S/N ก่อน → ระบบ resolve 5 ทาง (A-E) · แยก 2 concept: <b>① เคลมสินค้า</b> (ของคืน vendor · CLM→PO-CN) กับ <b>② เคลมงานบริการ</b> (ของอยู่กับลูกค้า · ซ่อม/เปลี่ยน) · คนจ่ายตัดสิน<b>รายบรรทัด</b>ที่ SV-4 → ออกได้ 2 บิล (ARI แบรนด์ + SL-4 ลูกค้า)</div>
+      <div class="chart-box">
+<pre class="mermaid">
+flowchart TD
+  S["สแกน กรอก Serial · S-N first"] --> R{"Resolve A-E"}
+  R -->|"A · เจอ + ในประกัน"| A1["เคลม ซ่อมในประกัน · ดึงตารางประกันรายชิ้น"]
+  R -->|"B · เจอ + หมดประกัน"| B1["ซ่อมปกติ · ลูกค้าจ่าย"]:::cust
+  R -->|"C · มีงานค้างเปิด"| C1["เปิดงานเดิมต่อ · กัน job ซ้ำ"]
+  R -->|"D · ไม่เจอ Serial"| D1["กรอก manual + หลักฐาน · admin ยืนยันก่อน"]
+  R -->|"E · ซื้อจากที่อื่น"| E1["เช็คแบรนด์ · เคลมอะไหล่ ค่าแรงได้ · เปลี่ยนเครื่องใหม่ไม่ได้"]
+  A1 --> RES{"Resolution งานในประกัน"}
+  RES -->|"ซ่อมในประกัน"| FIX["เบิกอะไหล่ SV-3 · สั่งนอกประกัน SV-Order"]
+  RES -->|"เปลี่ยนเครื่องใหม่ · S2"| REP["เบิกเครื่องใหม่ WH-2 warranty · เครื่องเดิม ส่ง CLM PO-CN · ไม่ออก SL-CN"]:::vend
+  FIX --> PAY{"SV-4 ปิดงาน · คนจ่ายต่อบรรทัด"}
+  PAY -->|"แบรนด์"| ARI["รวมเป็น ARI · vendor billing"]:::vend
+  PAY -->|"ลูกค้า"| SL4["รวมเป็น SL-4 บิลขาย"]:::cust
+  PAY -->|"goodwill · แบรนด์ หรือ SWT"| GW["ยกให้ · อนุมัติตาม tier"]
+  ARI --> CLM["CLM ใบเคลม vendor"]:::vend
+  CLM --> SET{"Vendor ตอบ · S1-S4"}
+  SET -->|"S1 · ส่วนลด CN"| X1["PO-CN หักหนี้ · PO-6"]:::vend
+  SET -->|"S2 · ส่งของใหม่"| X2["รับที่ WH-1 · ปิดเคลม"]
+  SET -->|"S3 · ซ่อมส่งกลับ"| X3["รับที่ WH-1 · ปิดเคลม"]
+  SET -->|"S4 · ปฏิเสธ"| X4["VRA + เหตุผล · SWT รับภาระ"]:::stop
+  classDef cust fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F,font-weight:600;
+  classDef vend fill:#F3E8FF,stroke:#7C3AED,color:#5B21B6,font-weight:600;
+  classDef stop fill:#FEE2E2,stroke:#DC2626,color:#991B1B;
+</pre>
+      </div>
+
+      <table class="tc">
+        <thead><tr><th>เมนู</th><th>เงื่อนไข S/N</th><th>ไปทางไหน</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td>เจอ + ในประกัน</td><td>เคลม/ซ่อมในประกัน — ดึงประวัติซื้อ + vendor + ตารางประกันรายชิ้น</td></tr>
+          <tr><td>B</td><td>เจอ + หมดประกัน</td><td>ซ่อมปกติ คิดเงินลูกค้า</td></tr>
+          <tr><td>C</td><td>เจอ + มีงานค้าง</td><td>เปิดงานเดิมต่อ (กันเปิด job ซ้ำ)</td></tr>
+          <tr><td>D</td><td>ไม่เจอ S/N</td><td>กรอก manual + แนบหลักฐาน → admin ยืนยันก่อน</td></tr>
+          <tr><td>E</td><td>เจอ แต่ซื้อที่อื่น</td><td>เช็คแบรนด์ → เคลมอะไหล่/ค่าแรงได้ · เปลี่ยนเครื่องใหม่ไม่ได้</td></tr>
+        </tbody>
+      </table>
+      <div class="note warn"><b>⛔ Gate ปิดงาน:</b> ค้างคืนอะไหล่ในประกันแม้ line เดียว → SV-4/SV-7 ปิดงานไม่ได้ (หลักเดียวกับ "ของก่อนเงิน") · อะไหล่ในประกัน = ต้องคืนของเก่าให้ vendor · นอกประกัน (ซื้อ PO) = ไม่ต้องคืน</div>
+      <div class="note"><b>① เคลมสินค้า (ไม่มีลูกค้า):</b> ของเสียตอนยังเป็นสต๊อกเรา (incoming QC / DOA แกะกล่อง / pre-sale) → อ้างบิลซื้อของเราเอง → CLM → PO-CN (S1-S4) ตรง ไม่ผ่านลูกค้า</div>
+      <div class="legend-src">ที่มา: <a href=".agents/svc-claim-jobtype-spec.md">svc-claim-jobtype-spec.md</a> · <a href="sv1-service-intake-mockup.html">SV-1 Intake</a> · <a href="clm-vendor-claim-mockup.html">CLM</a> · <a href="sv4-service-close-mockup.html">SV-4</a></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({startOnLoad:true, securityLevel:'loose', theme:'base',
+    themeVariables:{fontFamily:"'Inter','Noto Sans Thai',sans-serif", fontSize:'13px',
+      primaryColor:'#F8FAFC', primaryBorderColor:'#94A3B8', primaryTextColor:'#111827',
+      lineColor:'#94A3B8', tertiaryColor:'#fff'}});
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active')});
+      document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active')});
+      t.classList.add('active');
+      document.getElementById('p-'+t.dataset.p).classList.add('active');
+    });
+  });
+</script>
+<script src="swt-sidebar.js"></script>
+</body>
+</html>

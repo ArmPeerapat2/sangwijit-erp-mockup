@@ -58,6 +58,21 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
 .note b{color:#374151}
 .note.warn{border-left-color:#F59E0B;background:#FFFBEB;color:#92400E}
 .note.warn b{color:#7C2D12}
+.uc-head{display:flex;align-items:center;gap:9px;margin:2px 0 10px 4px}
+.uc-head h2{font-size:15px;font-weight:700}
+.uc-head span{font-size:11.5px;color:#6B7280}
+.uc-wrap{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:20px}
+.uc{background:#fff;border:1px solid #E5E7EB;border-left:4px solid #CBD5E1;border-radius:10px;padding:11px 13px}
+.uc h3{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.uc .sit{font-size:11px;color:#6B7280;margin-bottom:9px;line-height:1.4}
+.uc .chain{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.uc .step{display:inline-flex;flex-direction:column;gap:1px;border:1px solid #E5E7EB;border-radius:6px;padding:4px 8px;text-decoration:none;background:#F8FAFC;transition:all .12s}
+.uc .step:hover{border-color:#93C5FD;background:#EFF6FF;transform:translateY(-1px)}
+.uc .step .c{font-family:'Inter',monospace;font-size:9.5px;font-weight:700;color:#2563EB}
+.uc .step .n{font-size:10.5px;color:#374151;font-weight:600;white-space:nowrap}
+.uc .step.ext{border-style:dashed;opacity:.92}
+.uc .sep{color:#CBD5E1;font-size:12px;font-weight:700}
+.uc .div{font-size:10px;font-weight:700;color:#94A3B8;padding:0 6px;white-space:nowrap}
 .grid-mods{display:flex;flex-direction:column}
 @media(max-width:1100px){.main{margin-left:0}}
 </style>
@@ -68,9 +83,10 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
   <div class="page-head">
     <div>
       <h1>🗺️ Module Flow Overview</h1>
-      <p>ผังการไหลของเอกสารทุกหมวด · status flow + จุด BC Post + doc-chain · คลิกกล่องเพื่อเปิดหน้าจริง · regen 2026-07-04 (current · 0 dead link)</p>
+      <p>ผังการไหลของเอกสารทุกหมวด · status flow + จุด BC Post + doc-chain · คลิกกล่องเพื่อเปิดหน้าจริง · upd 2026-07-07 (+ Use Case 10 การ์ด + Flowchart เคสแตกสาขา · 0 dead link)</p>
     </div>
     <div class="sp"></div>
+    <a href="flow-detail-charts.html" style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:#fff;background:#1E3A5F;border-radius:8px;padding:9px 15px;text-decoration:none;align-self:center">🔀 Flowchart เคสแตกสาขา <span style="font-weight:500;opacity:.85">(waterfall · เคลม)</span></a>
     <div class="kpi">
       <div class="box"><div class="n">8</div><div class="l">หมวด</div></div>
       <div class="box"><div class="n">34</div><div class="l">✦ rebuild แล้ว</div></div>
@@ -101,6 +117,164 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       <div style="grid-column:1 / -1"><b style="color:#7C3AED">7 · บริการ (Service Ops):</b> SV-Q → SV-1 → SV-2 → SV-3 → SV-5 → SV-4 → SV-7 · เคลม vendor → CLM → PO-CN · payer: In-warranty→vendor</div>
     </div>
     <div class="note">🔒 กติกาข้ามหมวด: VAT Golden Rule (ลดก่อน VAT) · Maker≠Checker · อนุมัติผ่าน CF-2.6 · WHT ออกที่ FI-12 จุดเดียว · เคลม = job type ใน SV · Portal = UI · posting อยู่ BC</div>
+  </div>
+
+  <!-- USE CASES: สถานการณ์จริงร้อยหน้าเข้าด้วยกัน (ครบ 7 สายหลัก) -->
+  <div class="uc-head"><h2>🎬 Use Case — สถานการณ์จริง</h2><span>แต่ละการ์ด = 1 เรื่องจริง · โซ่หน้าที่ร้อยต่อกัน · คลิกสเต็ปเปิดหน้าจริง</span></div>
+  <div class="uc-wrap">
+
+    <div class="uc" style="border-left-color:#2563EB">
+      <h3>🟦 ขายปกติ + มัดจำ</h3>
+      <div class="sit">ลูกค้าตกลงซื้อ วางมัดจำก่อน แล้วเก็บเงินที่เหลือตอนส่งของ (สาย 1 ขาย)</div>
+      <div class="chain">
+        <a class="step" href="sl1-quotation-mockup.html"><span class="c">SL-1</span><span class="n">เสนอราคา</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="sl2-reservation-mockup.html"><span class="c">SL-2</span><span class="n">จองสต็อก</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="sl3-deposit-mockup.html"><span class="c">SL-3</span><span class="n">รับมัดจำ</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="sl4-invoice-mockup.html"><span class="c">SL-4</span><span class="n">ออกบิล</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="wh2-issue-mockup.html"><span class="c">WH-2</span><span class="n">เบิกส่ง</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="fi1-ar-receive-mockup.html"><span class="c">FI-1</span><span class="n">รับเงินคงเหลือ</span></a>
+      </div>
+    </div>
+
+    <div class="uc" style="border-left-color:#2563EB">
+      <h3>🟦 ขายเชื่อเกินวงเงิน</h3>
+      <div class="sit">ยอดขายเชื่อเกิน Credit Limit → ต้องผ่านอนุมัติก่อนไปต่อ (สาย 1 ขาย · แตกสาขา)</div>
+      <div class="chain">
+        <a class="step" href="sl1-quotation-mockup.html"><span class="c">SL-1</span><span class="n">เสนอราคา</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="slf1-credit-approval-mockup.html"><span class="c">SL-F1</span><span class="n">อนุมัติวงเงิน</span></a>
+        <span class="sep">→</span>
+        <a class="step ext" href="cf2-6-approval-matrix-mockup.html"><span class="c">CF-2.6</span><span class="n">Matrix</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="sl4-invoice-mockup.html"><span class="c">SL-4</span><span class="n">ออกบิล</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="fi1-ar-receive-mockup.html"><span class="c">FI-1</span><span class="n">รับเงิน</span></a>
+      </div>
+    </div>
+
+    <div class="uc" style="border-left-color:#7C3AED">
+      <h3>🟪 ลูกค้าคืนของ → ลดหนี้ขาย</h3>
+      <div class="sit">ของมีปัญหา/คืนหลังออกบิลแล้ว → ออกใบลดหนี้ แล้วเลือก apply หรือคืนเงิน (สาย 3 ลดหนี้)</div>
+      <div class="chain">
+        <a class="step" href="sl4-invoice-mockup.html"><span class="c">SL-4</span><span class="n">บิลที่ออกไปแล้ว</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="slcn-credit-memo-mockup.html"><span class="c">SL-CN</span><span class="n">ใบลดหนี้</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="fi1q-apply-queue-mockup.html"><span class="c">FI-1Q</span><span class="n">apply / คืนเงิน</span></a>
+      </div>
+    </div>
+
+    <div class="uc" style="border-left-color:#D97706">
+      <h3>🟧 จัดซื้อเข้าคลัง → จ่ายเจ้าหนี้</h3>
+      <div class="sit">ขอซื้อ → สั่งซื้อ → รับของเข้าคลัง → วางบิล → ตั้งหนี้ → จ่าย (สาย 2 ซื้อ)</div>
+      <div class="chain">
+        <a class="step" href="po1-purchase-request-mockup.html"><span class="c">PO-1</span><span class="n">ขอซื้อ</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="po4-purchase-order-mockup.html"><span class="c">PO-4</span><span class="n">สั่งซื้อ</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="wh1-receive-mockup.html"><span class="c">WH-1</span><span class="n">รับของ</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="po3-vendor-onboarding-mockup.html"><span class="c">PO-3</span><span class="n">วางบิล</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="po6-ap-invoice-mockup.html"><span class="c">PO-6</span><span class="n">ตั้งหนี้</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="fi2-ap-payment-mockup.html"><span class="c">FI-2</span><span class="n">จ่าย</span></a>
+      </div>
+    </div>
+
+    <div class="uc" style="border-left-color:#D97706">
+      <h3>🟧 ส่งเสริมการขายจาก Vendor</h3>
+      <div class="sit">ทำข้อตกลงกับ vendor → วัดยอดจริง → เคลมมาหักลดหนี้ฝั่งซื้อ (สาย 2 ซื้อ · ส่งเสริม)</div>
+      <div class="chain">
+        <a class="step" href="po2-rfq-mockup.html"><span class="c">PO-2</span><span class="n">ข้อตกลง</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="po7-rebate-dashboard.html"><span class="c">PO-7</span><span class="n">ยอดได้จริง</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="po-cn-credit-note-mockup.html"><span class="c">PO-CN</span><span class="n">ลดหนี้ซื้อ</span></a>
+        <span class="div">/ หัก</span>
+        <a class="step ext" href="po6-ap-invoice-mockup.html"><span class="c">PO-6</span><span class="n">net AP</span></a>
+      </div>
+    </div>
+
+    <div class="uc" style="border-left-color:#16A34A">
+      <h3>🟩 สาขาขอโอนของข้ามคลัง</h3>
+      <div class="sit">ปลายทางขาดของ → ขอโอน → ต้นทางโอนออก → ปลายทางรับ (In-Transit ระหว่างทาง · สาย 4 โอน)</div>
+      <div class="chain">
+        <a class="step" href="wh3r-transfer-request-mockup.html"><span class="c">WH-3R</span><span class="n">ขอโอน (pull)</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="wh3-transfer-mockup.html"><span class="c">WH-3</span><span class="n">โอนออก</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="wh1-receive-mockup.html"><span class="c">WH-1</span><span class="n">รับปลายทาง</span></a>
+      </div>
+    </div>
+
+    <div class="uc" style="border-left-color:#16A34A;grid-column:1 / -1">
+      <h3>🟩 ขายเกินสต๊อก → เกลี่ยของอัตโนมัติ (Waterfall) · <a href="flow-detail-charts.html" style="font-size:11px;font-weight:600;color:#2563EB;text-decoration:none">ดู flowchart →</a></h3>
+      <div class="sit">1 บรรทัดขายที่คลังจ่ายมีไม่พอ → แตกได้ถึง 3 ใบขอ ตามลำดับ เบิก→โอน→ซื้อ · ทุกใบอ้างใบขายเดียวกัน (สาย 6 คลัง · waterfall)</div>
+      <div class="chain">
+        <a class="step" href="sl4-invoice-mockup.html"><span class="c">SL</span><span class="n">ใบขาย (ระบุคลัง)</span></a>
+        <span class="sep">⇒</span>
+        <a class="step" href="wh2r-issue-request-mockup.html"><span class="c">WH-2R</span><span class="n">① เบิกคลังจ่าย</span></a>
+        <span class="div">ไม่พอ +</span>
+        <a class="step" href="wh3r-transfer-request-mockup.html"><span class="c">WH-3R</span><span class="n">② ขอโอนคลังอื่น</span></a>
+        <span class="div">ที่ขาด +</span>
+        <a class="step" href="po1-purchase-request-mockup.html"><span class="c">PO-1</span><span class="n">③ สั่งซื้อ</span></a>
+      </div>
+    </div>
+
+    <div class="uc" style="border-left-color:#DB2777">
+      <h3>🟥 หักภาษี ณ ที่จ่าย (WHT)</h3>
+      <div class="sit">ตอนจ่ายเงินหักภาษีไว้ (pending) → รวบไปออกหนังสือรับรอง + ภ.ง.ด. ที่จุดเดียว (สาย 5 WHT)</div>
+      <div class="chain">
+        <a class="step" href="fi2-ap-payment-mockup.html"><span class="c">FI-2</span><span class="n">จ่าย+หัก</span></a>
+        <span class="div">/ ค่าใช้จ่าย</span>
+        <a class="step ext" href="fi4-expense-wht-mockup.html"><span class="c">FI-4</span><span class="n">หัก (pending)</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="fi12-wht-mockup.html"><span class="c">FI-12</span><span class="n">Release + พิมพ์ ภ.ง.ด.3/53</span></a>
+      </div>
+    </div>
+
+    <div class="uc" style="border-left-color:#16A34A;grid-column:1 / -1">
+      <h3>🟩 คลังปฏิบัติการผ่านคิว (Kitchen Rail)</h3>
+      <div class="sit">คิว = รวมตั๋วตามทิศ คลิกตั๋ว→ฟอร์มทำจริง · รับ / เบิก / นับ (สาย 6 คลัง)</div>
+      <div class="chain">
+        <a class="step" href="wh-q1-receive-queue-mockup.html"><span class="c">WH-Q1</span><span class="n">คิวรับ</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="wh1-receive-mockup.html"><span class="c">WH-1</span><span class="n">ใบรับ</span></a>
+        <span class="div">·  เบิก →</span>
+        <a class="step" href="wh-q2-issue-queue-mockup.html"><span class="c">WH-Q2</span><span class="n">คิวเบิก</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="wh2-issue-mockup.html"><span class="c">WH-2</span><span class="n">ใบเบิก</span></a>
+        <span class="div">·  นับ →</span>
+        <a class="step" href="wh4r-count-prep-mockup.html"><span class="c">WH-4R</span><span class="n">เตรียมนับ</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="wh4-count-mockup.html"><span class="c">WH-4</span><span class="n">นับจริง</span></a>
+      </div>
+    </div>
+
+    <div class="uc" style="border-left-color:#7C3AED;grid-column:1 / -1">
+      <h3>🟪 งานซ่อมในประกัน → เคลม Vendor</h3>
+      <div class="sit">ลูกค้าส่งเครื่องซ่อม อยู่ในประกัน → ค่าใช้จ่ายเรียกคืนจาก vendor ปลายทางเป็นลดหนี้ซื้อ (สาย 7 บริการ)</div>
+      <div class="chain">
+        <a class="step" href="sv1-service-intake-mockup.html"><span class="c">SV-1</span><span class="n">รับงาน (In-Warranty)</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="sv2-service-assignment-mockup.html"><span class="c">SV-2</span><span class="n">มอบหมายช่าง</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="sv3-spare-part-issue-mockup.html"><span class="c">SV-3</span><span class="n">เบิกอะไหล่</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="sv4-service-close-mockup.html"><span class="c">SV-4</span><span class="n">ปิดงาน</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="clm-vendor-claim-mockup.html"><span class="c">CLM</span><span class="n">เคลม vendor</span></a>
+        <span class="sep">→</span>
+        <a class="step" href="po-cn-credit-note-mockup.html"><span class="c">PO-CN</span><span class="n">ลดหนี้ซื้อ</span></a>
+      </div>
+    </div>
+
   </div>
 
   <div class="grid-mods">
@@ -300,6 +474,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       </div>
       <div class="flow-row">
         <span class="branch-lead">🧮 เครื่องมือ</span>
+        <a class="node" href="pm5-price-simulator-mockup.html"><div class="nh"><span class="code">PM-5</span><span class="mk">ใหม่</span></div><div class="name">Price Simulator (จำลองราคาขาย)</div><div class="st">swt-patterns · 07-06</div></a>
         <a class="node" href="pm5-vat-simulator-mockup.html"><div class="nh"><span class="code">PM-5</span><span class="mk">เก่า</span></div><div class="name">VAT Simulator</div><div class="st">จำลอง VAT/ส่วนลด · Golden Rule</div></a>
         <a class="node ext" href="sc2-item-search-mockup.html"><div class="nh"><span class="code">SC-9</span><span class="mk">เก่า</span></div><div class="name">PromoPrice (shared)</div><div class="st">อ่านราคา+โปรฯ ทุกหน้าขาย</div></a>
       </div>
