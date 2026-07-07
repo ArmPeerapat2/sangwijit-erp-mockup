@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Workflow Map — Sangwijit ERP Portal (post-audit 2026-07-02)</title>
+<style>
+:root{--navy:#1E3A5F;--accent:#2563EB;--bg:#F8FAFC;--text:#1F2937;--muted:#64748B;--border:#E2E8F0;
+--sl:#2563EB;--po:#D97706;--wh:#16A34A;--fi:#DB2777;--sv:#7C3AED;--cf:#1E3A5F}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--text);font-size:14px;padding-bottom:60px}
+.header{background:var(--navy);color:#fff;padding:22px 32px}
+.header h1{font-size:20px}
+.header p{font-size:12.5px;opacity:.85;margin-top:4px}
+.container{max-width:1280px;margin:0 auto;padding:20px 24px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-bottom:18px;align-items:center}
+.legend .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.lane{background:#fff;border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden}
+.lane-head{display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid var(--border);background:#FAFBFC}
+.lane-head .dot{width:12px;height:12px;border-radius:50%}
+.lane-head h2{font-size:15px;color:var(--navy)}
+.lane-head .sub{font-size:11.5px;color:var(--muted);margin-left:auto;text-align:right}
+.lane-body{padding:16px 18px}
+.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;row-gap:14px}
+.node{display:flex;flex-direction:column;justify-content:center;background:#fff;border:1.5px solid var(--mc,#94A3B8);border-radius:8px;padding:7px 12px;min-width:118px;position:relative}
+.node .code{font-size:10.5px;font-weight:700;color:var(--mc,#64748B);letter-spacing:.4px}
+.node .name{font-size:12.5px;font-weight:600;line-height:1.3}
+.node .note{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.35}
+.node.owner{box-shadow:0 0 0 3px color-mix(in srgb,var(--mc) 18%,transparent)}
+.node.owner::after{content:'⭐ OWNER';position:absolute;top:-8px;right:6px;font-size:8.5px;font-weight:800;background:var(--mc);color:#fff;padding:1px 6px;border-radius:8px;letter-spacing:.5px}
+.arr{display:flex;align-items:center;padding:0 7px;color:#94A3B8;font-size:16px}
+.gate{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 4px}
+.gate .g{font-size:9.5px;font-weight:700;background:#FEF3C7;color:#92400E;border:1px dashed #F59E0B;padding:2px 8px;border-radius:10px;white-space:nowrap;line-height:1.5}
+.rules{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;padding-top:10px;border-top:1px dashed var(--border)}
+.rule{font-size:10.5px;background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE;padding:2px 9px;border-radius:10px;line-height:1.6}
+.rule.warn{background:#FFF7ED;color:#9A3412;border-color:#FED7AA}
+.rule.lock{background:#F0FDF4;color:#166534;border-color:#BBF7D0}
+.branch{margin-top:10px;display:flex;align-items:flex-start;gap:8px;font-size:11.5px;color:var(--muted)}
+.branch .b-lbl{font-size:9.5px;font-weight:800;color:#7C3AED;background:#F3E8FF;padding:2px 8px;border-radius:8px;white-space:nowrap;margin-top:5px}
+a.pg{color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent)}
+a.pg:hover{background:#DBEAFE;border-bottom-style:solid}
+.footer{text-align:center;font-size:11.5px;color:var(--muted);margin-top:28px}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🗺️ Workflow Map — 6 สายหลักของระบบ</h1>
+  <p>Sangwijit ERP Portal · หลังปิด Flow Redundancy Audit 17/17 (2026-07-02) — ทุกสายติดกติกา ownership + gate ที่ล็อกแล้ว · คู่กับ <b>SKILL.md § Cross-Module Flow Rules</b></p>
+</div>
+<div class="container">
+
+<div class="legend">
+  <span><span class="sw" style="background:var(--sl)"></span>SL งานขาย</span>
+  <span><span class="sw" style="background:var(--po)"></span>PO จัดซื้อ</span>
+  <span><span class="sw" style="background:var(--wh)"></span>WH คลัง</span>
+  <span><span class="sw" style="background:var(--fi)"></span>FI บัญชี</span>
+  <span><span class="sw" style="background:var(--sv)"></span>SV บริการ</span>
+  <span style="margin-left:8px">⭐ OWNER = จุดเดียวที่สร้าง/สั่งได้ · <span class="g" style="font-size:9.5px;font-weight:700;background:#FEF3C7;color:#92400E;border:1px dashed #F59E0B;padding:2px 8px;border-radius:10px">GATE</span> = เงื่อนไขบังคับก่อนไปต่อ</span>
+</div>
+
+<!-- ═══ 1. สายขาย ═══ -->
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--sl)"></span><h2>1. สายขาย (Order-to-Cash)</h2><span class="sub">เสนอราคา → จอง → มัดจำ → บิล → เบิก → ส่ง+ติดตั้ง</span></div>
+  <div class="lane-body">
+    <div class="flow">
+      <div class="node" style="--mc:var(--sl)"><span class="code">SL-1</span><span class="name">ใบเสนอราคา</span></div>
+      <div class="gate"><span class="g">เกินวงเงิน → SL-F1 ผ่าน CF-2.6</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sl)"><span class="code">SL-2</span><span class="name">ใบจอง</span><span class="note">reserve BC · อายุใบจองระบุได้/default · หมดอายุปล่อยคืนอัตโนมัติ</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sl)"><span class="code">SL-3</span><span class="name">ใบมัดจำ (ขาย มัดจำ)</span><span class="note">ลูกค้าจ่ายล่วงหน้า · หักบิลอัตโนมัติ</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sl)"><span class="code">SL-4</span><span class="name">บิลขาย</span><span class="note">Bill-to = ที่อยู่ใบกำกับ ≠ Ship-to = ที่อยู่ส่งของ</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--wh)"><span class="code">WH-3</span><span class="name">เบิกออก</span><span class="note">Serial กรอกที่นี่ที่เดียว · เห็นคอลัมน์ สต๊อก (จองไว้)</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV-6</span><span class="name">จัดส่ง+ติดตั้ง</span><span class="note">อ่านที่อยู่จาก Ship-to เท่านั้น</span></div>
+    </div>
+    <div class="branch"><span class="b-lbl">↩ CN LOOP</span><div>บิล Post แล้วต้องแก้ → <b>SL-CN ใบลดหนี้</b> เท่านั้น (ดูสาย 3) — ห้ามแก้บิลตรง · Post ไปแล้ว Reverse+สร้างใหม่</div></div>
+    <div class="rules">
+      <span class="rule lock">🔒 สต๊อกไม่พอตอนจอง → แสดงลิสต์ใบจองที่ถือของ (เลขใบ+เซลล์+วันหมดอายุ) ไปคุยถอนจอง</span>
+      <span class="rule">💰 เงินเข้า: FI-1 รับชำระ · เครดิต/มัดจำ apply ที่ FI-1Q</span>
+      <span class="rule">🧩 รับชำระเงิน = shared component <b>sc-payment</b> (split Total/Remain · QR/บัตร+%ชาร์จ/โอน/เช็ค) ใช้ร่วม sv7/sl3/fiq</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 2. สายซื้อ ═══ -->
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--po)"></span><h2>2. สายซื้อ (Procure-to-Pay)</h2><span class="sub">ขอซื้อ → สั่งซื้อ → รับของ → ตั้งหนี้ → จ่าย</span></div>
+  <div class="lane-body">
+    <div class="flow">
+      <div class="node" style="--mc:var(--po)"><span class="code">PO-1</span><span class="name">ใบขอสั่งซื้อ</span></div>
+      <div class="gate"><span class="g">อนุมัติตาม tier CF-2.6</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--po)"><span class="code">PO-4</span><span class="name">ใบสั่งซื้อ</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--wh)"><span class="code">WH-1</span><span class="name">รับเข้าคลัง (GRN)</span><span class="note">ทยอยรับ/รับทั้งบิล · ลง Serial+Bin · Post ครั้งเดียว</span></div>
+      <div class="gate"><span class="g">GATE: รับครบบิล → ปลดล็อกตั้งหนี้</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--po)"><span class="code">PO-6</span><span class="name">ตั้งหนี้เจ้าหนี้</span><span class="note">3-Way Match · picker ดึงใบแจ้งหนี้ + ลดหนี้/หัก 4 หมวด</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--fi)"><span class="code">FI-2</span><span class="name">จ่ายชำระ AP</span><span class="note">หัก WHT → เข้า pending FI-12</span></div>
+    </div>
+    <div class="branch"><span class="b-lbl">🟣 BYPASS</span><div><b>PO-8 สั่งซื้อสินค้าฝาก</b> (เดิม "บิลฝาก") — vendor วางบิลก่อนรับของครบ → PO-6 โหมด Deposit ข้าม GRN gate · 2-Way Match · Settle เมื่อของครบ</div></div>
+    <div class="branch"><span class="b-lbl">↩ AP ลดหนี้</span><div><b>PO-CN ใบลดหนี้ซื้อ</b> (คืนของ/ราคาผิด/เคลม vendor) + <b>PO-7 ส่งเสริมการขาย</b> (⭐ จุดจ่ายเดียว — Realize แล้วส่งเข้า PO-6 · FI-8 ดูอย่างเดียว) → หักยอดใน PO-6 picker</div></div>
+    <div class="rules">
+      <span class="rule lock">🔒 Sell-out rebate: serial จาก itemLedger (WH-3) ผูกกลับ SL-4 · ไม่มีบิล → tab "Serial ไม่มีบิลอ้างอิง" ผูกย้อนหลัง</span>
+      <span class="rule warn">⚠️ Dual-Book: ทุก AP Invoice ต้องมี Entity Tag</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 3. สายเคลม + ใบลดหนี้ ═══ -->
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--sv)"></span><h2>3. สายเคลม → ใบลดหนี้ (grill Q1-Q10)</h2><span class="sub">claim = ประเภทงานใน SV · ไม่ใช่ module แยก</span></div>
+  <div class="lane-body">
+    <div class="flow">
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV</span><span class="name">Service Intake (งานเคลม)</span><span class="note">รับของเข้าตอน intake = หลักฐานรับของคืน</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV</span><span class="name">ตัดสินเคลม — ผลจบ 3 ทาง</span></div>
+    </div>
+    <div class="branch"><span class="b-lbl">① ซ่อมเสร็จ</span><div>จบใน SV — ไม่แตะเอกสารเงิน</div></div>
+    <div class="branch"><span class="b-lbl">② เปลี่ยนตัวใหม่</span><div>จบใน SV/WH (เบิกเครื่องใหม่) → ไล่ vendor ผ่าน <b>CLM → PO-CN</b> — <b>ไม่ออก SL-CN</b> (เงินลูกค้าไม่เกี่ยว)</div></div>
+    <div class="branch"><span class="b-lbl">③ คืนเงิน/ลดหนี้</span><div>ส่ง<b>คำขอ</b>เข้า <b>SL-Q กลุ่ม CN</b> (badge 🛠️ จากเคลม SV) → Sales เปิด <b>SL-CN</b> prefill · เหตุผลล็อก "เคลม (จาก SV)"</div></div>
+    <div class="flow" style="margin-top:12px">
+      <div class="node" style="--mc:var(--sl)"><span class="code">SL-CN</span><span class="name">ใบลดหนี้ขาย</span><span class="note">3 โหมด: ปรับราคา / คืนบางรายการ / คืนทั้งบิล · รูปแบบเอกสาร auto ตามบิลต้นทาง</span></div>
+      <div class="gate"><span class="g">GATE 1: อนุมัติ CF-2.6 ทุกใบ</span></div>
+      <div class="arr">→</div>
+      <div class="gate"><span class="g">GATE 2: โหมดคืนของ = รอรับของคืนก่อนเท่านั้น</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sl)"><span class="code">POST</span><span class="name">ลด AR + ปรับ VAT</span><span class="note">เครดิตค้างใน Customer Ledger</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--fi)"><span class="code">FI-1Q</span><span class="name">ใช้เครดิต (ขั้นแยก)</span><span class="note">หักบิลถัดไป (apply) / คืนเงินสด (Finance + approval)</span></div>
+    </div>
+    <div class="rules">
+      <span class="rule warn">⛔ ห้าม CN สั่งเงินออกเอง — Maker≠Checker</span>
+      <span class="rule lock">🔒 SV ไม่ออกเอกสารบัญชี — ส่งคำขอเท่านั้น (pattern เดียวกับ CLM→PO-CN)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 4. สายโอนคลัง ═══ -->
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--wh)"></span><h2>4. สายโอนคลัง (Transfer)</h2><span class="sub">3 คิว 1 ใบโอน 1 สถานะ</span></div>
+  <div class="lane-body">
+    <div class="flow">
+      <div class="node" style="--mc:var(--wh)"><span class="code">WH-3</span><span class="name">ขอโอน (TR-Out)</span><span class="note">ส่งคำขอเท่านั้น — ไม่สร้างใบโอนเอง</span></div>
+      <div class="arr">→</div>
+      <div class="node owner" style="--mc:var(--wh)"><span class="code">WH-2</span><span class="name">โอนสินค้า</span><span class="note">จุดเดียวที่สร้าง Transfer Order · Draft→Shipped→In-Transit</span></div>
+      <div class="gate"><span class="g">In-Transit ไม่นับสต๊อกทั้ง 2 คลัง</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--wh)"><span class="code">WH-1</span><span class="name">รับโอน (TR-In)</span><span class="note">match TO status=Shipped · ยืนยันรับได้ครั้งเดียว → Received</span></div>
+    </div>
+    <div class="rules"><span class="rule lock">🔒 กันใบซ้อน (2 ที่สร้างไม่ได้) + กันรับซ้ำ (idempotent — สต๊อกไม่เข้า 2 เท่า)</span></div>
+  </div>
+</div>
+
+<!-- ═══ 5. สายภาษีหัก ณ ที่จ่าย ═══ -->
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--fi)"></span><h2>5. สายภาษีหัก ณ ที่จ่าย (WHT)</h2><span class="sub">สร้างได้ 2 ที่ · ออกหนังสือที่เดียว</span></div>
+  <div class="lane-body">
+    <div class="flow">
+      <div class="node" style="--mc:var(--fi)"><span class="code">FI-2</span><span class="name">จ่ายเจ้าหนี้</span><span class="note">auto-calc WHT → record pending</span></div>
+      <div class="arr" style="flex-direction:column;justify-content:center">↘</div>
+      <div class="node owner" style="--mc:var(--fi)"><span class="code">FI-12</span><span class="name">ภาษีหัก ณ ที่จ่าย</span><span class="note">รวม pending ทั้งหมด · เรทเป็น dropdown (1/2/3/5%) · Release → Print หนังสือรับรอง + ภ.ง.ด.3/53</span></div>
+      <div class="arr" style="flex-direction:column;justify-content:center">↗</div>
+      <div class="node" style="--mc:var(--fi)"><span class="code">FI-4</span><span class="name">ค่าใช้จ่าย+WHT</span><span class="note">สร้าง record เท่านั้น — ไม่มีปุ่มออกแบบ ภ.ง.ด.</span></div>
+    </div>
+    <div class="rules">
+      <span class="rule warn">⛔ FI-2/FI-4 ห้ามมีปุ่ม Print Certificate — vendor ได้หนังสือ 2 ใบ = ปัญหากรมสรรพากร</span>
+      <span class="rule">Released แล้วแก้ไม่ได้ — Reverse + สร้างใหม่ (BC เป็นเจ้าของ posting)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 6. สายปรับ/ตัดจำหน่ายสต็อก ═══ -->
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--wh)"></span><h2>6. สายปรับ/ตัดจำหน่ายสต็อก (Stock Adjustment)</h2><span class="sub">ad-hoc นอกรอบนับ · grill Q1-Q8 (2026-07-06)</span></div>
+  <div class="lane-body">
+    <div class="flow">
+      <div class="node" style="--mc:var(--wh)"><span class="code">WH-R / WH-4</span><span class="name">Stock Card / ใบนับ</span><span class="note">อ้างอิงต้นทาง (optional) — เปิด WH-5 ad-hoc ได้เลย</span></div>
+      <div class="arr">→</div>
+      <div class="node owner" style="--mc:var(--wh)"><span class="code">WH-5</span><span class="name">ปรับ/ตัดจำหน่ายสต็อก</span><span class="note">เหตุผล/ทิศ +/− ต่อบรรทัด · serial เจาะจง · +เจอเกิน / −ตัดออก</span></div>
+      <div class="gate"><span class="g">GATE: ตัดจำหน่าย (−) = บังคับแนบรูป</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--cf)"><span class="code">AP-1</span><span class="name">ศูนย์อนุมัติรวม</span><span class="note">เกณฑ์/ผู้อนุมัติจาก CF-2.6 · Maker≠Checker · ไม่มีหน้าอนุมัติแยก</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--fi)"><span class="code">BC POST</span><span class="name">itemLedger + GL</span><span class="note">+/− Adjmt. · ลง GL ตามผังบัญชีของเหตุผล</span></div>
+    </div>
+    <div class="branch"><span class="b-lbl">⚖ เส้นแบ่ง</span><div><b>WH-4</b> = ปรับจากรอบนับ (snapshot ทั้งคลัง) · <b>WH-5</b> = เหตุการณ์เดี่ยว ad-hoc (ของแตก/หายนอกรอบนับ)</div></div>
+    <div class="rules">
+      <span class="rule lock">🔒 มูลค่า/GL = BC เจ้าของ (portal read-only) · เหตุผล = master ผูกทิศ +/− + ผังบัญชี</span>
+      <span class="rule">📉 gap ที่เจ้าของงานบอก "เจ็บสุด" — เดิมต้องเปิดรอบนับ WH-4 ถึงปรับได้</span>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  แหล่งอ้างอิง: <b>flow-redundancy-analysis.html</b> (audit 17/17) · <b>sangwijit-portal-skill/SKILL.md</b> § Cross-Module Flow Rules · decisions ทั้งหมดใน <b>.agents/active.md</b> — สร้าง 2026-07-02 · <b>อัพเดท 2026-07-06</b> (+ สาย 6 WH-5 · note sc-payment)
+  <br>⚠️ label WH ในสาย 1/4 ยังเป็นก่อน renumber 2026-07-03 (แผนที่แสดง WH-3=เบิก/WH-2=โอน · จริงคือ WH-2=เบิก/WH-3=โอน) — sync ทีหลัง
+</div>
+
+</div>
+</body></html>
