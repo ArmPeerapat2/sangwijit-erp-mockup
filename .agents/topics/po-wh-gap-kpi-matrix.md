@@ -4,8 +4,8 @@ status: analysis-doc
 scope: PO (Purchase) + WH (Warehouse) modules
 purpose: ประเมินว่า mockup ปัจจุบันครอบ spec แค่ไหน และ KPI ไหนที่ยังเก็บไม่ได้
 source_spec:
-  - sangwijit-portal-skill/modules/PO_purchase.md
-  - sangwijit-portal-skill/modules/WH_warehouse.md
+  - .claude/skills/sangwijit-portal/modules/PO_purchase.md
+  - .claude/skills/sangwijit-portal/modules/WH_warehouse.md
 ---
 
 # PO + WH — Gap Matrix + KPI Mapping
@@ -201,8 +201,8 @@ WH-KPI Dashboard ─── รอ WH-NM, WH-R เสร็จก่อน ──
 
 ## Appendix — อ้างอิงเร็ว
 
-- spec: `sangwijit-portal-skill/modules/PO_purchase.md` (9 modules)
-- spec: `sangwijit-portal-skill/modules/WH_warehouse.md` (7 modules)
+- spec: `.claude/skills/sangwijit-portal/modules/PO_purchase.md` (9 modules)
+- spec: `.claude/skills/sangwijit-portal/modules/WH_warehouse.md` (7 modules)
 - mockup folder: `C:/Design Ai/` (root level *.html)
 - design standards: `knowledge-base/portal/*.md`
 - Flow diagrams: `Flow Design/Purchase/Flow/*.pdf`, `Flow Design/Warehouse Inventory/Flow/*.pdf`

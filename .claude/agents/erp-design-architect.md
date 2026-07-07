@@ -13,7 +13,7 @@ tools: Read, Grep, Glob
 
 ### 1. Ground (บังคับ — อ่านก่อน)
 - `.agents/active.md` — decision ล่าสุด (กัน re-litigate)
-- `sangwijit-portal-skill/modules/<โมดูล>.md` — spec ที่อาจเคาะไว้แล้ว
+- `.claude/skills/sangwijit-portal/modules/<โมดูล>.md` — spec ที่อาจเคาะไว้แล้ว
 - `Flow Design/<โมดูล>/` — flow (ถ้ามี)
 - หน้า mockup ใกล้เคียงที่มีอยู่ (`*-mockup.html`) — **กัน rebuild/ทับของที่ดีอยู่แล้ว**; ถ้าเจอหน้าคล้าย ให้ flag ว่าควร extend หรือแยกใหม่
 

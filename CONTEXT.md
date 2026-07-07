@@ -33,7 +33,7 @@ The BC Sales Order in Open status; the Portal page SL-2. Same BC entity as the F
 _Avoid_: booking, order (when meaning the BC entity, say "BC Sales Order")
 
 **Module Code**:
-The canonical page identifier (e.g. SL-4, FI-3) defined by the Flow + module spec under `sangwijit-portal-skill/modules/`. A mockup's code must match the spec's meaning for that code.
+The canonical page identifier (e.g. SL-4, FI-3) defined by the Flow + module spec under `.claude/skills/sangwijit-portal/modules/`. A mockup's code must match the spec's meaning for that code.
 _Avoid_: prefix, page number
 
 **VAT Report (รายงานภาษีขาย/ภาษีซื้อ)**:

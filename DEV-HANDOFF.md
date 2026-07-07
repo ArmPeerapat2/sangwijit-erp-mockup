@@ -9,7 +9,7 @@
 ## 🚀 เริ่มที่นี่ (Quick Start)
 1. **ดู UI ทั้งหมด:** เปิด `index.html` ในเบราว์เซอร์ (min-width 1440px) → ลิงก์ทุกหน้า (101 mockup) · sidebar เดียวทุกหน้า (`swt-sidebar.js`)
 2. **ไม่มี build:** เปิดไฟล์ `.html` ตรง ๆ · CSS/JS อยู่ inline หรือ shared `swt-*.js`
-3. **ลำดับอ่าน:** ไฟล์นี้ → `README.md` (ภาพรวม/phase/RBAC) → `sangwijit-portal-skill/SKILL.md` (mental model) → spec แต่ละโมดูล → `.agents/active.md` (decision ล่าสุด)
+3. **ลำดับอ่าน:** ไฟล์นี้ → `README.md` (ภาพรวม/phase/RBAC) → `.claude/skills/sangwijit-portal/SKILL.md` (mental model) → spec แต่ละโมดูล → `.agents/active.md` (decision ล่าสุด)
 
 ---
 
@@ -62,8 +62,8 @@
 | หัวข้อ | ไฟล์ |
 |---|---|
 | ภาพรวม · phase · RBAC · API list | `README.md` |
-| mental model · cross-module rules | `sangwijit-portal-skill/SKILL.md` |
-| spec ต่อโมดูล (SL/PO/WH/FI/SV/PM/MD/CF/IA) | `sangwijit-portal-skill/modules/*.md` |
+| mental model · cross-module rules | `.claude/skills/sangwijit-portal/SKILL.md` |
+| spec ต่อโมดูล (SL/PO/WH/FI/SV/PM/MD/CF/IA) | `.claude/skills/sangwijit-portal/modules/*.md` |
 | **decision ล่าสุด + session log** | `.agents/active.md` |
 | flow map (6 สายหลัก · กดเปิดหน้าได้) | `.agents/flow-workflow-map.html` |
 | master data field list + BC API เทียบ | `_reference/MasterData-fields.md` · `MasterData-3way-analysis.html` |

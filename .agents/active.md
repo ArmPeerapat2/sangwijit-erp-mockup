@@ -489,7 +489,7 @@ flow-understanding: `.agents/topics/finance-flow-understanding.md` (user confirm
   - **Sidebar rollout:** 69 ไฟล์ updated (2-pass Python script) · 6 SV entries ใน group บริการ: SV-Q · SV-1 (NEW) · SV-3 · SV-4 (NEW) · SV-5 · SV-6
   - **index.html:** Service section (5 cards · count 5 pages) + sidebar nav updated
   - **dev-handoff-spec.html:** SV table + file list updated
-- **PO/WH Rename Cleanup ✅ 2026-04-21** — ปรับเลข mockup ให้ตรง `sangwijit-portal-skill` spec
+- **PO/WH Rename Cleanup ✅ 2026-04-21** — ปรับเลข mockup ให้ตรง `.claude/skills/sangwijit-portal` spec
   - `po3-vendor-invoice-mockup.html` → `po6-ap-invoice-mockup.html` (เดิมผิดแมป — จริงๆ คือ PO-6 AP Invoice)
   - `po-rebate-dashboard.html` → `po7-rebate-dashboard.html`
   - `whr-goods-issue-mockup.html` → `wh2-issue-mockup.html` (spec: WH-3 = Sales Issue)
@@ -630,8 +630,8 @@ flow-understanding: `.agents/topics/finance-flow-understanding.md` (user confirm
 12. ~~CF-2.8 Entity Tag~~ → เลื่อน Phase 2
 
 ## Reference Files
-- `sangwijit-portal-skill/SKILL.md` v2.1 — knowledge base (Rule 1: อ่าน Flowchart ก่อน)
-- `sangwijit-portal-skill/modules/CF_config.md` — spec CF-1 ถึง CF-9
+- `.claude/skills/sangwijit-portal/SKILL.md` v2.1 — knowledge base (Rule 1: อ่าน Flowchart ก่อน)
+- `.claude/skills/sangwijit-portal/modules/CF_config.md` — spec CF-1 ถึง CF-9
 - `md1-item-master-mockup-v3.html` — pattern อ้างอิงสำหรับ detail/tab
 - `cf2-config-hub-mockup.html` — pattern landing Hub
 - `cf2-7-doc-template-mockup.html` — pattern sub-page + multi-tab + split layout

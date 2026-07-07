@@ -17,7 +17,7 @@ The project keeps most rules in dedicated docs — load them on demand, don't du
 | **Any non-trivial task** (always) | `.agents/active.md` — current focus, decisions, next actions |
 | Workflow policy for the `.agents/` workspace | `.agents/AGENTS.md` |
 | Portal UI/navigation/BC integration conventions | `knowledge-base/CLAUDE.md` and `knowledge-base/portal/*.md` |
-| Business rules / module specs (SL, WH, PO, FI, SV, PM, MD, CF, IA) | `sangwijit-portal-skill/SKILL.md` + `sangwijit-portal-skill/modules/<MODULE>.md` |
+| Business rules / module specs (SL, WH, PO, FI, SV, PM, MD, CF, IA) | `.claude/skills/sangwijit-portal/SKILL.md` + `.claude/skills/sangwijit-portal/modules/<MODULE>.md` |
 | Flow diagrams (required reading before designing any module) | `Flow Design/<Module>/Flow/*.pdf` |
 | High-level project intro, phase plan, RBAC, API list | `README.md` |
 | Requirements + open questions | `research.md`, `plan.md` |
@@ -49,7 +49,7 @@ Trust priority when sources conflict: latest user instruction → codebase state
 - **Dual-Book** — every AP Invoice carries an Entity Tag (`1 / 2 / 3 / ... / novat`).
 - **Credit Approval Tier** — both SL (SL-F1) and PO flows must route through CF-2.6 Approval Matrix.
 - **Maker ≠ Checker** — a user cannot approve their own document anywhere an Approval step exists.
-- **Portal is UI only** — no local DB, no posting outside BC365. Posting/numbering/status are owned by BC. See `sangwijit-portal-skill/SKILL.md` "Mental Model" section before designing anything.
+- **Portal is UI only** — no local DB, no posting outside BC365. Posting/numbering/status are owned by BC. See `.claude/skills/sangwijit-portal/SKILL.md` "Mental Model" section before designing anything.
 
 ## BC365 scope decisions (2026-04-16 audit — from `.agents/active.md`)
 

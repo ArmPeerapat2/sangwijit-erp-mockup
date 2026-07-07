@@ -1,6 +1,6 @@
 # SL Module — Form Blueprints (ก่อนลงมือทีละฟอร์ม)
 
-> สร้าง 2026-06-06 · grounded จาก Flow PDF (`Flow Design/Sales/Flow`) + Document DD (`.../Document`) + spec (`sangwijit-portal-skill/modules/SL_sales.md`) + ไฟล์ deployed เดิม
+> สร้าง 2026-06-06 · grounded จาก Flow PDF (`Flow Design/Sales/Flow`) + Document DD (`.../Document`) + spec (`.claude/skills/sangwijit-portal/modules/SL_sales.md`) + ไฟล์ deployed เดิม
 > มาตรฐาน Form Blueprint 5 ส่วน: ① โครง section · ② SC · ③ field+อธิบาย · ④ ข้อเสนอ(แนะนำ+เหตุผล) · ⑤ จุดต่าง
 > ใช้เอกสารนี้สั่งงานต่อได้ — ทำทีละฟอร์ม (ห้าม batch)
 

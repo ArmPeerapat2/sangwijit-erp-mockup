@@ -1,7 +1,7 @@
 # Master Flows — นิยามฉบับตัดสินแล้ว (docs-first)
 
 > ทำทีละ flow ให้เสร็จระดับ design ก่อน (HTML = reference, ทำ/ขึ้น canvas ทีหลัง).
-> อ้างอิง: `Flow Design/Master/*.pdf` + `sangwijit-portal-skill/modules/MD_master.md` + `_reference/docs/5 dd_..._phase4.docx` (รหัส MC-) + component framework (`1 component_fw_clean.docx`).
+> อ้างอิง: `Flow Design/Master/*.pdf` + `.claude/skills/sangwijit-portal/modules/MD_master.md` + `_reference/docs/5 dd_..._phase4.docx` (รหัส MC-) + component framework (`1 component_fw_clean.docx`).
 > หลัก: Portal = UI · BC365 เป็นเจ้าของ master + Update Data ผ่าน API.
 
 ---

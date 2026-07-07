@@ -384,8 +384,8 @@ sv6_job
 
 ## 📎 Linked Documents
 
-- `sangwijit-portal-skill/modules/SV_service.md` — original spec
-- `sangwijit-portal-skill/modules/CF_config.md` — CF-2.5 template
+- `.claude/skills/sangwijit-portal/modules/SV_service.md` — original spec
+- `.claude/skills/sangwijit-portal/modules/CF_config.md` — CF-2.5 template
 - `knowledge-base/skills/sangwijit-service/SKILL.md` — portal mapping
 - `CLAUDE.md` (root) — project-wide rules
 

@@ -18,7 +18,7 @@ sangwijit-bc-mockup/
 
 ## 🔗 Complement กับ existing skill
 
-- `sangwijit-portal-skill/SKILL.md` → **business rules + module specs** (มีอยู่แล้ว)
+- `.claude/skills/sangwijit-portal/SKILL.md` → **business rules + module specs** (มีอยู่แล้ว)
 - `sangwijit-bc-mockup/SKILL.md` → **UI/UX + design tokens** (skill ใหม่นี้)
 
 ทั้ง 2 skills ใช้ร่วมกัน — business ดู portal-skill, design ดู bc-mockup
@@ -28,7 +28,7 @@ sangwijit-bc-mockup/
 เมื่อพี่สั่ง `"สร้าง mockup หน้า sl1-quotation"` — Claude จะ:
 1. อ่าน root `CLAUDE.md` → รู้ locked standards (bg #F8FAFC, ค.ศ. 26, VAT rules)
 2. อ่าน `.agents/active.md` → current decisions
-3. อ่าน `sangwijit-portal-skill/modules/SL.md` → business rules ของ Sales
+3. อ่าน `.claude/skills/sangwijit-portal/modules/SL.md` → business rules ของ Sales
 4. อ่าน **`sangwijit-bc-mockup/SKILL.md`** → UI/UX patterns + design tokens
 5. Copy `templates/base.html` → `sl1-quotation-mockup.html`
 6. Inject SWT blocks จาก `assets/`

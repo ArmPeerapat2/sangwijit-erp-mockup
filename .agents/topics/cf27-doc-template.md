@@ -1,6 +1,6 @@
 # CF-2.7 Document Template — โครงสร้างที่เคาะ (2026-06-03 · ก่อน build)
 
-> docs-first: spec `sangwijit-portal-skill/modules/CF_config.md` CF-8 (Email + PDF Template) · mockup เดิม `cf2-7-doc-template-mockup.html` (= "Doc Template & Running Number" 5 tabs)
+> docs-first: spec `.claude/skills/sangwijit-portal/modules/CF_config.md` CF-8 (Email + PDF Template) · mockup เดิม `cf2-7-doc-template-mockup.html` (= "Doc Template & Running Number" 5 tabs)
 
 ## ปัญหา mockup เดิม
 ชื่อเดิม "CF-2.7 Document Template **& Running Number**" — 2 ใน 5 tabs ทับ CF-2.2 (ADR-0004):

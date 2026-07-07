@@ -13,7 +13,7 @@ description: กรอบ grill + ออกแบบหน้าจอ/ฟีเ
 ## ขั้นตอน
 
 ### Step 0 — Ground ก่อนถาม (บังคับ)
-อ่านให้ครบก่อน grill: `.agents/active.md` (decision ล่าสุด) · spec โมดูล (`sangwijit-portal-skill/modules/<X>.md`) · Flow PDF (`Flow Design/<Module>/`) · หน้าใกล้เคียงที่มีอยู่ (กัน rebuild ของที่ดีอยู่แล้ว). ถ้า spec เคาะไว้แล้ว → **อย่า grill ซ้ำ** ข้ามไป blueprint.
+อ่านให้ครบก่อน grill: `.agents/active.md` (decision ล่าสุด) · spec โมดูล (`.claude/skills/sangwijit-portal/modules/<X>.md`) · Flow PDF (`Flow Design/<Module>/`) · หน้าใกล้เคียงที่มีอยู่ (กัน rebuild ของที่ดีอยู่แล้ว). ถ้า spec เคาะไว้แล้ว → **อย่า grill ซ้ำ** ข้ามไป blueprint.
 
 ### Step 1 — Grill ผ่าน 9 มิติ (ถามเฉพาะที่ยังไม่ชัด)
 ถามทีละข้อ · แต่ละข้อ = 1 use-case (ฉากจริง) + 2-4 ตัวเลือก + แนะนำ 1 · ภาษาง่าย เลี่ยงศัพท์ฝรั่ง (ถ้าใช้ให้แปลกำกับ):

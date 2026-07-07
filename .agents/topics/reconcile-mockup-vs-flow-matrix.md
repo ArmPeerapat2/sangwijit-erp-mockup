@@ -1,7 +1,7 @@
 # Reconcile Matrix — Mockup ↔ Flow Design (consolidated)
 
 > **Deliverable ของข้อ ก** (ออดิต Mockup↔Flow ที่ค้างอยู่). รวม 8 กลุ่มโมดูลเป็น matrix เดียวที่ actionable.
-> Canonical = `Flow Design/` (84 PDF) + `sangwijit-portal-skill/` spec (ADR-0001). Mockup ที่ code/scope เพี้ยน = แก้ที่ mockup.
+> Canonical = `Flow Design/` (84 PDF) + `.claude/skills/sangwijit-portal/` spec (ADR-0001). Mockup ที่ code/scope เพี้ยน = แก้ที่ mockup.
 > เริ่ม 2026-05-30 · ต่อยอดจาก reconciliation audit (2026-05-29) + finance-flow-understanding (user-confirmed).
 
 ## Legend (verdict)

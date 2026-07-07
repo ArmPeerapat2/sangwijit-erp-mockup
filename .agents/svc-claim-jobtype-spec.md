@@ -243,4 +243,4 @@
 | `slq-sales-queue-mockup.html` | คิวคำขอลดหนี้จากเคลม (กลุ่ม CN) |
 | `slcn-credit-memo-mockup.html` | ใบลดหนี้ลูกค้า (ผลจบ ② คืนเงิน) |
 | `po-cn-credit-note-mockup.html` | ใบลดหนี้เจ้าหนี้ (ไล่ vendor ① / ②) |
-| `sangwijit-portal-skill/modules/SV_service.md` | spec module SV |
+| `.claude/skills/sangwijit-portal/modules/SV_service.md` | spec module SV |

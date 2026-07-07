@@ -1,18 +1,18 @@
 ---
 name: sangwijit-bc-mockup
-description: UI/UX Design System สำหรับสร้าง mockup HTML ของ Sangwijit ERP Portal (BC365) ทุกหน้า ยึดตาม Locked design standards ใน root CLAUDE.md — #F3F4F6 bg · #2563EB primary · #1E3A5F sidebar · Inter + Noto Sans Thai + IBM Plex Mono · compact 11-13px · ค.ศ. 2-digit dates (YY=26) · bcsale UX (modal-heavy + click-to-edit). รวม Shared Components (SC-1 ถึง SC-8) เป็น self-contained SWT blocks พร้อม copy-paste. ใช้ skill นี้ทุกครั้งที่ — สร้าง mockup หน้าใหม่ (เช่น sl1-quotation, po4-purchase-order, wh1-grn, fi1-ar-receive), เพิ่ม shared component (sidebar / customer search / item search / payment), วาง layout shell, ถามเรื่อง design tokens, ทำ save flow bcsale pattern. Complement กับ sangwijit-portal-skill/ (ซึ่งเก็บ business rules + module specs) — skill นี้เน้น UI/visual/interaction เท่านั้น
+description: UI/UX Design System สำหรับสร้าง mockup HTML ของ Sangwijit ERP Portal (BC365) ทุกหน้า ยึดตาม Locked design standards ใน root CLAUDE.md — #F3F4F6 bg · #2563EB primary · #1E3A5F sidebar · Inter + Noto Sans Thai + IBM Plex Mono · compact 11-13px · ค.ศ. 2-digit dates (YY=26) · bcsale UX (modal-heavy + click-to-edit). รวม Shared Components (SC-1 ถึง SC-8) เป็น self-contained SWT blocks พร้อม copy-paste. ใช้ skill นี้ทุกครั้งที่ — สร้าง mockup หน้าใหม่ (เช่น sl1-quotation, po4-purchase-order, wh1-grn, fi1-ar-receive), เพิ่ม shared component (sidebar / customer search / item search / payment), วาง layout shell, ถามเรื่อง design tokens, ทำ save flow bcsale pattern. Complement กับ .claude/skills/sangwijit-portal/ (ซึ่งเก็บ business rules + module specs) — skill นี้เน้น UI/visual/interaction เท่านั้น
 ---
 
 # Sangwijit BC ERP — UI/UX Design System
 
-> ⚠️ **สำคัญ**: skill นี้ complement กับ `sangwijit-portal-skill/SKILL.md` และ `CLAUDE.md` ของ project — อ่านทั้งสองก่อน
+> ⚠️ **สำคัญ**: skill นี้ complement กับ `.claude/skills/sangwijit-portal/SKILL.md` และ `CLAUDE.md` ของ project — อ่านทั้งสองก่อน
 
 **Scope ของ skill:**
 - ✅ UI structure, CSS, layout, shared components
 - ✅ Design tokens (colors, fonts, spacing)
 - ✅ UX patterns (modal, save flow, hover+pin)
-- ❌ Business rules (ไปอ่าน `sangwijit-portal-skill/`)
-- ❌ Module specs (ไปอ่าน `sangwijit-portal-skill/modules/<MODULE>.md`)
+- ❌ Business rules (ไปอ่าน `.claude/skills/sangwijit-portal/`)
+- ❌ Module specs (ไปอ่าน `.claude/skills/sangwijit-portal/modules/<MODULE>.md`)
 - ❌ Flow diagrams (ไปอ่าน `Flow Design/<Module>/Flow/*.pdf`)
 
 ---
@@ -21,7 +21,7 @@ description: UI/UX Design System สำหรับสร้าง mockup HTML �
 
 ### Step 1 — อ่านก่อน (จาก root CLAUDE.md)
 1. `.agents/active.md` — current focus & latest decisions
-2. `sangwijit-portal-skill/modules/<MODULE>.md` — business rules ของโมดูลนี้
+2. `.claude/skills/sangwijit-portal/modules/<MODULE>.md` — business rules ของโมดูลนี้
 3. `Flow Design/<Module>/Flow/*.pdf` — flow diagram
 4. **ไฟล์นี้ (SKILL.md)** — UI/UX pattern
 
@@ -332,4 +332,4 @@ Prefix ตามหน้า: `sl4_sb_pinned` · `po4_sb_pinned` · etc.
 - [ ] Modals ปิดด้วย ESC + overlay ได้
 - [ ] **Business rules ถูกต้อง** (VAT Golden Rule, Rebate≠Discount, Maker≠Checker)
 - [ ] ไม่มี local DB / posting (Portal is UI only)
-- [ ] มี reference ไปที่ `sangwijit-portal-skill/modules/<MODULE>.md` ใน comment (optional)
+- [ ] มี reference ไปที่ `.claude/skills/sangwijit-portal/modules/<MODULE>.md` ใน comment (optional)
