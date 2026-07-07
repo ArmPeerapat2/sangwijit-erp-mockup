@@ -82,3 +82,27 @@
 - item category · posting groups · payment terms · currency · sales territory
 
 **⏭️ ไม่ใช่งาน master:** ประเภทสมาชิก+ส่วนลด (→ PM/pricing) · ระดับราคา (→ pricing tables)
+
+> 📊 เวอร์ชันอ่านง่าย (HTML): `_reference/MasterData-3way-analysis.html`
+
+---
+
+## 🖼️ ออกแบบการเก็บรูป / วิดีโอ / เอกสารสแกน
+**หลักการทอง: อย่าเก็บ binary ใน BC** (DB บวม·ช้า·ไม่มี CDN) → ไฟล์จริงไป **external object storage (Azure Blob) · BC/พอร์ทัลเก็บแค่ URL/reference**
+
+**แยก 2 ประเภท:**
+| | 🖼️ รูปสินค้า/วิดีโอ | 📄 เอกสารสแกน |
+|---|---|---|
+| ที่เก็บ | **CDN bucket (public)** URL คงที่ | **private bucket + RBAC** signed URL หมดอายุ |
+| ผูกกับ | item number | customer/vendor/promo |
+| reuse | เว็บ/e-commerce ดึง URL ตรง | ไม่ reuse · แนบ+audit+version |
+
+**สถาปัตยกรรม 4 ชั้น:** พอร์ทัล upload → resize/thumbnail/scan → Azure Blob → บันทึก reference `{entityType·entityId·fileType·url·filename·size·uploadedBy·date·tags·isPublic·version·sortOrder}`
+
+**รูปสินค้า→เว็บ:** URL คงที่ต่อ item (gallery หลายรูป·sortOrder) · API คืน array image/video URL → เว็บ render ตรง · gen หลายขนาด (thumb/full) · วิดีโอ=ไฟล์+poster หรือฝัง YouTube เก็บลิงก์
+
+**เอกสาร:** private + signed URL + RBAC · version (ไม่ทับเก่า) · audit log (ใคร upload/ดู) · tag (จดทะเบียน/สัญญา/โปรโมชัน) · OCR-ready อนาคต
+
+**💡 เสนอ shared component `swt-media`** — รวม pattern แนบไฟล์ที่กระจายอยู่ (sv1 scan·po2 evidence·WH-5 photo·item image) เป็นตัวเดียว `swtRenderMedia(el,{entity,entityId,type,public,maxFiles})` — image/video=gallery · doc=attachment+version (เหมือน swt-payment/swt-master-editor)
+
+**❌ ไม่ทำ:** base64/binary ใน BC/DB · URL ถาวรสำหรับ private · ไฟล์ใหญ่ผ่าน BC API

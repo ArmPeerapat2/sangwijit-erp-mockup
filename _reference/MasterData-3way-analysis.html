@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Master Data — วิเคราะห์ 3 ทาง + ออกแบบการเก็บรูป/เอกสาร</title>
+<style>
+:root{--navy:#1E3A5F;--accent:#2563EB;--bg:#F8FAFC;--border:#E2E8F0;--muted:#64748B}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,'Noto Sans Thai',sans-serif;background:var(--bg);color:#1F2937;font-size:14px;line-height:1.55;padding-bottom:60px}
+.header{background:var(--navy);color:#fff;padding:22px 32px}
+.header h1{font-size:21px}.header p{font-size:12.5px;opacity:.85;margin-top:4px}
+.nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);padding:10px 32px;display:flex;gap:8px;flex-wrap:wrap;z-index:10}
+.nav a{font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;padding:4px 10px;border:1px solid #BFDBFE;border-radius:14px;background:#EFF6FF}
+.nav a:hover{background:#2563EB;color:#fff}
+.wrap{max-width:1180px;margin:0 auto;padding:22px 24px}
+h2{font-size:17px;color:var(--navy);margin:26px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:8px}
+h3{font-size:14.5px;color:#111827;margin:16px 0 8px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:8px 0 14px}
+th{background:#F1F5F9;padding:8px 10px;text-align:left;font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border)}
+td{padding:8px 10px;border-bottom:1px solid #F1F5F9;vertical-align:top}
+tr:last-child td{border-bottom:none}
+.ok{color:#059669;font-weight:700}.warn{color:#B45309;font-weight:700}.no{color:#DC2626;font-weight:700}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px;white-space:nowrap}
+.t-portal{background:#ECFDF5;color:#065F46}.t-bc{background:#EFF6FF;color:#1D4ED8}.t-custom{background:#FFF7ED;color:#9A3412}.t-skip{background:#F3F4F6;color:#6B7280}.t-grill{background:#FEF3C7;color:#92400E}
+.card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:10px 0}
+.callout{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px;color:#0C4A6E}
+.callout.warn{background:#FFF7ED;border-color:#FED7AA;color:#9A3412}
+.callout.good{background:#ECFDF5;border-color:#A7F3D0;color:#065F46}
+ol,ul{margin:6px 0 6px 22px}li{margin:3px 0}
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:8px 0;font-size:12px}
+.flow .n{background:#fff;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-weight:600}
+.flow .n.hl{background:#EFF6FF;border-color:#93C5FD;color:#1D4ED8}
+.flow .n.ext{background:#F0FDF4;border-color:#86EFAC;color:#065F46}
+.flow .ar{color:#94A3B8;font-weight:700}
+code{background:#F1F5F9;padding:1px 5px;border-radius:4px;font-size:11.5px;font-family:'Inter',monospace;color:#0F172A}
+.legend{font-size:11px;color:var(--muted);margin:4px 0 14px}
+</style></head>
+<body>
+<div class="header">
+  <h1>🗂️ Master Data — วิเคราะห์ 3 ทาง + ออกแบบการเก็บรูป/เอกสาร</h1>
+  <p>Sangwijit ERP Portal · BC365 API v2.0 ↔ mockup ↔ ERP เดิม · + Media/Document Storage Design · 2026-07-06</p>
+</div>
+<div class="nav">
+  <a href="#pattern">5 Pattern</a>
+  <a href="#cust">ลูกค้า</a>
+  <a href="#vend">เจ้าหนี้</a>
+  <a href="#item">สินค้า</a>
+  <a href="#action">Action</a>
+  <a href="#media">🖼️ เก็บรูป/เอกสาร</a>
+</div>
+<div class="wrap">
+  <p class="legend">Tag: <span class="tag t-portal">พอร์ทัลถือ</span> <span class="tag t-bc">BC dropdown</span> <span class="tag t-custom">custom API (BC dev)</span> <span class="tag t-grill">ต้อง grill</span> <span class="tag t-skip">ข้าม</span> · ✅ standard · ⚠️ ต้อง custom · ❌ ไม่มี</p>
+
+  <h2 id="pattern">🔑 5 Pattern สำคัญ (ข้ามทุก master)</h2>
+  <div class="card">
+    <ol>
+      <li><b>create/update ผ่าน standard API ได้เต็มทั้ง 3 entity</b> (GET/POST/PATCH/DELETE) — ไม่มี master read-only</li>
+      <li><b>กลุ่ม/ประเภท/8 มิติ = <code>defaultDimensions</code> entity</b> (Thai group → BC Dimension) → ตรงกับ decision "BC dropdown" · พอร์ทัลอ่าน/ผูกค่า ไม่สร้าง field เอง</li>
+      <li><b>standard ไม่มีเสมอ = Thai localization + tracking</b>: สาขาภาษี (TaxBranch) · unit ratio ต่อ item · serial/lot → ต้อง <b>table extension + custom API page ใหม่</b> (standard API page extend field ไม่ได้ · <code>ODataKeyFields=SystemId</code>)</li>
+      <li><b>"เครดิตวัน" = Payment Terms (FK)</b> ไม่ใช่ตัวเลข → พอร์ทัลต้องแปลง</li>
+      <li>ก่อน implement จริงต้องดึง <code>$metadata</code> ของ environment (field เปลี่ยนตาม version + custom)</li>
+    </ol>
+  </div>
+
+  <h2 id="cust">1. ลูกค้า (Customer) — 🟢 พร้อมสุด</h2>
+  <table>
+    <thead><tr><th style="width:26%">field เดิม</th><th style="width:30%">① BC API v2.0</th><th style="width:16%">② mockup</th><th>verdict</th></tr></thead>
+    <tbody>
+      <tr><td>รหัส·ชื่อ·ที่อยู่·อำเภอ·จังหวัด·โทร·เลขภาษี·สกุลเงิน</td><td class="ok">✅ standard</td><td class="ok">✅</td><td>standard พอ</td></tr>
+      <tr><td>ชื่อย่อ (POS)</td><td class="warn">⚠️ custom</td><td class="no">❌ ขาด</td><td><span class="tag t-portal">เติม mockup 1 field</span></td></tr>
+      <tr><td><b>สาขาภาษี (TaxBranch)</b></td><td class="warn">⚠️ custom field+API</td><td class="ok">✅</td><td><span class="tag t-custom">BC dev · Thai loc</span></td></tr>
+      <tr><td>คำนำหน้าไทย</td><td class="warn">⚠️ type=Company/Person เท่านั้น</td><td class="ok">✅</td><td><span class="tag t-custom">custom field</span></td></tr>
+      <tr><td>เครดิตวัน</td><td class="warn">⚠️ paymentTermsId (FK)</td><td class="ok">✅</td><td>แปลง</td></tr>
+      <tr><td>กลุ่ม/ประเภท/เขตขาย/tier · เซลส์</td><td class="ok">✅ defaultDimensions · salespersonCode</td><td class="ok">✅ (tag 🔵)</td><td><span class="tag t-bc">BC dropdown</span></td></tr>
+      <tr><td>ประเภทสมาชิก + ส่วนลด + ช่วงวัน</td><td class="no">❌ (pricing engine)</td><td class="no">❌</td><td><span class="tag t-skip">PM/BC · ไม่เข้า master</span></td></tr>
+      <tr><td>PDPA/KYC/aging/credit history</td><td>—</td><td class="ok">✅ (เพิ่มเอง)</td><td><span class="tag t-portal">portal เก็บได้</span></td></tr>
+    </tbody>
+  </table>
+  <div class="callout good">mockup ครบ+เกิน · standard API เกือบพอ · <b>เติมแค่ชื่อย่อ</b> · BC dev: TaxBranch·คำนำหน้าไทย·เขตขาย</div>
+
+  <h2 id="vend">2. เจ้าหนี้ (Vendor) — 🚩 ขาดหน้า master เต็ม</h2>
+  <table>
+    <thead><tr><th style="width:26%">field เดิม</th><th style="width:30%">① BC API v2.0</th><th style="width:16%">② mockup</th><th>verdict</th></tr></thead>
+    <tbody>
+      <tr><td>Code·Name·Address·Tel·TAXID·Currency</td><td class="ok">✅ standard (field น้อยกว่า customer)</td><td class="warn">⚠️ search-panel (อ่าน)</td><td>ยังไม่มีที่กรอก</td></tr>
+      <tr><td>ที่อยู่/อำเภอ/จังหวัด/ชื่อย่อ/กลุ่มย่อย/PersonType</td><td class="ok">✅ / defaultDimensions</td><td class="no">❌ ขาด</td><td><span class="tag t-grill">🚩 ไม่มีหน้า master</span></td></tr>
+      <tr><td><b>TaxBranch</b></td><td class="warn">⚠️ custom field+API</td><td class="no">❌</td><td><span class="tag t-custom">BC dev</span></td></tr>
+      <tr><td>Title/PersonType (นิติ)</td><td class="warn">⚠️ vendor ไม่มีแม้ type</td><td class="no">❌</td><td><span class="tag t-custom">custom</span></td></tr>
+      <tr><td>Group/Type/ประเภทจ่าย</td><td class="ok">✅ defaultDimensions</td><td class="ok">✅ dropdown</td><td><span class="tag t-bc">BC dropdown</span></td></tr>
+      <tr><td>AP aging/Lead time/Buyer/Commitment</td><td>—</td><td class="ok">✅ (เพิ่ม)</td><td><span class="tag t-portal">portal</span></td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn">🚩 <b>จุดต้องตัดสิน</b> — พอร์ทัลไม่มี vendor master เต็ม · ตัวเลือก: (a) BC ถือ 100% พอร์ทัลอ่าน dropdown · (b) สร้าง <code>md3-vendor-master</code> UI เบา (portal ถือ Buyer/Lead-time/เตือน + dropdown BC) → <b>grill ก่อนสร้าง</b></div>
+
+  <h2 id="item">3. สินค้า (Item) — custom เยอะสุด · mockup แข็งแรงสุด</h2>
+  <table>
+    <thead><tr><th style="width:26%">field เดิม</th><th style="width:30%">① BC API v2.0</th><th style="width:16%">② mockup</th><th>verdict</th></tr></thead>
+    <tbody>
+      <tr><td>รหัส·ชื่อ·ราคา·หน่วยหลัก·category·posting·VAT</td><td class="ok">✅ standard</td><td class="ok">✅</td><td>standard พอ</td></tr>
+      <tr><td><b>8 มิติ (DIM1-8)</b></td><td class="ok">✅ defaultDimensions</td><td class="ok">✅ ครบ</td><td><span class="tag t-bc">BC dropdown</span></td></tr>
+      <tr><td>ต้นทุน Average (costing method)</td><td class="warn">⚠️ unitCost มี · method ไม่มีใน API</td><td class="ok">✅ Avg/Last/Std</td><td><span class="tag t-custom">custom ถ้าตั้งผ่าน API</span></td></tr>
+      <tr><td><b>หน่วย ratio (Qty per UoM)</b></td><td class="warn">⚠️ v2.0 ตัด unitConversion</td><td class="warn">⚠️ ต้องเช็ค</td><td><span class="tag t-custom">BC dev · custom API</span></td></tr>
+      <tr><td><b>Serial tracking (Normal)</b></td><td class="warn">⚠️ Item Tracking ไม่มี v2.0</td><td class="ok">✅</td><td><span class="tag t-custom">BC dev</span></td></tr>
+      <tr><td>ยี่ห้อ/รุ่น/หน่วยออกฟอร์ม/rebate</td><td class="warn">⚠️/❌ custom/dimension</td><td class="warn">✅ ยี่ห้อ/รุ่น · rebate ไม่เห็น</td><td><span class="tag t-custom">custom/dimension</span></td></tr>
+      <tr><td>Barcode/GTIN</td><td class="warn">✅ gtin 1 ค่า · ต่อหน่วยต้อง custom</td><td class="ok">✅</td><td>บางส่วน</td></tr>
+      <tr><td>สถานะสีสินค้า (1.5.2.L)</td><td>—</td><td class="no">❌</td><td><span class="tag t-portal">เพิ่ม cf-master-settings</span></td></tr>
+      <tr><td>สินค้าทดแทน (1.5.2.M)</td><td class="ok">✅ itemVariants (บางส่วน)</td><td class="no">❌</td><td>เลื่อน phase หลัง</td></tr>
+      <tr><td>spec แอร์/Min-Max-ROP/landed cost</td><td>—</td><td class="ok">✅ (เพิ่ม)</td><td><span class="tag t-portal">portal</span></td></tr>
+    </tbody>
+  </table>
+  <div class="callout">mockup แข็งแรงสุด · <b>BC dev ต้อง custom เยอะ:</b> หน่วย ratio · serial · costing method · ยี่ห้อ/รุ่น · rebate · barcode ต่อหน่วย · <b>mockup เพิ่ม:</b> สีสินค้า + ยืนยัน rebate group</div>
+
+  <h2 id="action">📋 Action (3 กลุ่ม)</h2>
+  <table>
+    <thead><tr><th style="width:22%">กลุ่ม</th><th>รายการ</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag t-portal">mockup ทำเองได้</span></td><td>ลูกค้า: เติม <b>ชื่อย่อ</b> · สินค้า: เพิ่ม <b>สีสินค้า</b> + ยืนยัน <b>rebate group</b></td></tr>
+      <tr><td><span class="tag t-grill">grill ก่อน</span></td><td><b>เจ้าหนี้</b>: ทำ <code>md3-vendor-master</code> (UI เบา) หรือให้ BC ถือ 100%?</td></tr>
+      <tr><td><span class="tag t-custom">BC dev · custom API</span></td><td>TaxBranch · หน่วย ratio · serial tracking · costing method · ยี่ห้อ/รุ่น · rebate · barcode-ต่อหน่วย · <b>ทุก custom field ต้องสร้าง custom API page ใหม่</b></td></tr>
+      <tr><td><span class="tag t-bc">BC standard</span></td><td>กลุ่ม/ประเภท/8 มิติ → <code>defaultDimensions</code> · category · posting group · payment terms · currency</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ══════════ MEDIA / DOCUMENT STORAGE ══════════ -->
+  <h2 id="media">🖼️ ออกแบบการเก็บรูป / วิดีโอ / เอกสารสแกน</h2>
+  <div class="callout warn"><b>หลักการทอง:</b> <b>อย่าเก็บไฟล์ (binary) ใน BC</b> — BC blob field ทำ DB บวม · ช้า · ไม่มี CDN · จำกัดขนาด · ไม่เหมาะ media/e-commerce · <b>ไฟล์จริง → external object storage (Azure Blob) · BC/พอร์ทัลเก็บแค่ URL/reference</b></div>
+
+  <h3>แยก 2 ประเภท (คนละนโยบาย)</h3>
+  <table>
+    <thead><tr><th style="width:14%"></th><th style="width:43%">🖼️ รูปสินค้า / วิดีโอ (Product Media)</th><th>📄 เอกสารสแกน (Documents)</th></tr></thead>
+    <tbody>
+      <tr><td><b>ตัวอย่าง</b></td><td>ภาพสินค้า · วิดีโอรีวิว/สาธิต</td><td>จดทะเบียน/สัญญา ลูกค้า·vendor · เอกสารส่งเสริมการขาย</td></tr>
+      <tr><td><b>ความลับ</b></td><td class="ok">public / semi (โชว์เว็บได้)</td><td class="no">private (คุมสิทธิ์เข้ม)</td></tr>
+      <tr><td><b>ที่เก็บ</b></td><td><b>CDN bucket (public)</b> — URL คงที่ cache เร็ว</td><td><b>private bucket + RBAC</b> — เข้าถึงผ่าน signed URL หมดอายุ</td></tr>
+      <tr><td><b>ผูกกับ</b></td><td>item number (สินค้า)</td><td>customer / vendor / promo record</td></tr>
+      <tr><td><b>จำนวน</b></td><td>หลายรูป/ตัว (gallery จัดลำดับ) + วิดีโอ</td><td>หลายไฟล์/record + <b>version history</b></td></tr>
+      <tr><td><b>reuse</b></td><td class="ok">เว็บ/e-commerce ดึง URL ตรง (API คืน URL ต่อ item)</td><td>ไม่ reuse · แค่แนบ + audit trail</td></tr>
+    </tbody>
+  </table>
+
+  <h3>สถาปัตยกรรม (4 ชั้น)</h3>
+  <div class="flow">
+    <span class="n">พอร์ทัล upload</span><span class="ar">→</span>
+    <span class="n hl">resize / thumbnail / virus scan</span><span class="ar">→</span>
+    <span class="n ext">Azure Blob Storage (public / private bucket)</span><span class="ar">→</span>
+    <span class="n">บันทึก reference (URL/path + metadata)</span>
+  </div>
+  <div class="card">
+    <ol>
+      <li><b>External object storage</b> = Azure Blob Storage (BC อยู่ Azure อยู่แล้ว · หรือ S3-compatible) — เก็บไฟล์จริง</li>
+      <li><b>CDN</b> หน้า public bucket — เว็บ/แอปดึงรูปสินค้าเร็ว + cache</li>
+      <li><b>Reference table</b> (portal DB หรือ BC custom table) — <code>{id · entityType(item/customer/vendor/promo) · entityId · fileType(image/video/doc) · url/blobPath · filename · size · uploadedBy · date · tags · isPublic · version · sortOrder}</code></li>
+      <li><b>Access:</b> public media = CDN URL ตรง · private doc = <b>signed URL (SAS token) หมดอายุ + เช็ค RBAC</b> ก่อนออก token</li>
+    </ol>
+  </div>
+
+  <h3>รูปสินค้า → เว็บต่อ (e-commerce reuse)</h3>
+  <div class="callout good">
+    <ul>
+      <li><b>URL คงที่ต่อ item</b> (เช่น <code>cdn/products/{itemNo}/1.jpg</code>) · gallery หลายรูป (จัด sortOrder · รูปหลัก/รอง)</li>
+      <li><b>API สินค้าคืน array ของ image URL + video URL</b> → เว็บ/แอป e-commerce render ตรง ไม่ต้องดึงจาก ERP</li>
+      <li><b>วิดีโอ:</b> เก็บไฟล์ + poster thumbnail · embed ผ่าน URL (หรือฝัง YouTube/Vimeo แล้วเก็บแค่ลิงก์ ถ้าไม่อยาก host เอง)</li>
+      <li><b>หลายขนาด:</b> gen thumbnail/medium/full ตอน upload → เว็บเลือกใช้ตามที่ (list ใช้ thumb · หน้า detail ใช้ full)</li>
+    </ul>
+  </div>
+
+  <h3>เอกสารสแกน (สัญญา/จดทะเบียน/ส่งเสริมการขาย)</h3>
+  <div class="callout">
+    <ul>
+      <li><b>แนบกับ record</b> (ลูกค้า/vendor/promo) · private bucket · เข้าถึงผ่าน signed URL + RBAC (ใครดูได้ตามสิทธิ์)</li>
+      <li><b>version + audit:</b> เก็บประวัติ (สัญญาเวอร์ชันใหม่ไม่ทับเก่า) · log ใคร upload/ดู/ดาวน์โหลด เมื่อไหร่ (เอกสารกฎหมาย/ภาษีต้อง trace ได้)</li>
+      <li><b>tag/หมวด:</b> จดทะเบียนภาษี · สัญญา · หนังสือมอบอำนาจ · โปรโมชัน — filter ได้</li>
+      <li><b>OCR-ready (อนาคต):</b> เก็บ text ที่ OCR ได้ → ค้นในเอกสารได้ (optional phase หลัง)</li>
+    </ul>
+  </div>
+
+  <h3>💡 ข้อเสนอ: shared component <code>swt-media</code> (1 ตัวใช้ทุกที่)</h3>
+  <div class="card">
+    ตอนนี้มี pattern แนบไฟล์กระจายหลายที่ (sv1 audit-scan · po2 evidence · WH-5 photo · item image) → รวมเป็น component เดียว <code>swtRenderMedia(el, {entity, entityId, type:'image|video|doc', public, maxFiles})</code>:
+    <ul>
+      <li>upload (drag-drop) · preview grid (thumbnail) · จัดลำดับ (รูปหลัก) · ลบ · version (doc)</li>
+      <li>image/video = โหมด gallery (public) · doc = โหมด attachment (private + version + audit)</li>
+      <li>ทุกหน้าที่ต้องแนบเรียกใช้ตัวเดียว (item master · md2 ลูกค้า · vendor · pm promo · WH-5 · sv) — เหมือน <code>swt-payment</code>/<code>swt-master-editor</code></li>
+    </ul>
+  </div>
+  <div class="callout warn"><b>ไม่ทำ:</b> เก็บ base64/binary ใน BC field หรือ portal DB · แชร์ไฟล์ private ผ่าน URL ถาวร (ต้อง signed+หมดอายุ) · โยนไฟล์ใหญ่ผ่าน BC API (ช้า+limit)</div>
+
+  <p class="legend" style="margin-top:20px">อ้างอิง: <code>_reference/MasterData-fields.md</code> · <code>MasterData-3way-analysis.md</code> · verify BC API = Microsoft Learn v2.0 · decision Grill A2/A4</p>
+</div>
+</body></html>
