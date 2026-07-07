@@ -21,6 +21,14 @@ project_type: "frontend-mockup (HTML + docs)"
 
 **build ✅ ครบ #1-#3 (2026-07-06):** #1 `swt-master-editor.js` + `cf-master-settings` (บัตร%ชาร์จ·สีลูกค้า·เหตุผลสต็อก WH-5) · #2 `cf-company-settings` (4 แท็บ: บริษัท BC-mirror·Options·ค่าเริ่มต้นบริษัท·ค่าส่วนตัว) · #3 `cf-bank-status` (read-only · 4 นิติ·สถานะเชื่อม·manual sync→FI-1Q) · sidebar CFCO/CFMS/CFBK · **A4 (โอนข้ามบริษัท) ยัง parked** · ref `_reference/ConfigMasterData-catalog.md`
 
+## 🖼️ GRILL M — swt-media (2026-07-06 · แยก 2 component · M1-M4)
+- **M1** แยก 2 (ตาม attach point): **`swt-gallery`** (รูป/วิดีโอ · **master-level** · public CDN) + **`swt-attach`** (เอกสาร · **transaction-level** · private)
+- **M2** master โชว์ **roll-up read** (ดึงเอกสารจาก transaction ของ record มาโชว์ + ลิงก์กลับ) · attach/แก้ที่ transaction เท่านั้น (SoT)
+- **M3** swt-attach ครบ: version (ไม่ทับ) + audit (upload/ดู/download) + RBAC + signed URL หมดอายุ · **ปรับระดับต่อจุดแนบได้** (สัญญา/ภาษี=ครบ · รูป WH-5=เบา)
+- **M4** swt-gallery: หลายรูป·รูปหลัก·จัดลำดับ + วิดีโอ (อัป+poster / ฝัง YouTube เก็บลิงก์) · **public CDN URL คงที่ต่อ item · gen หลายขนาด · API คืน array URL → เว็บ/e-commerce reuse**
+- **storage:** ไฟล์→Azure Blob (public/private bucket) · ref table ใน portal · **ไม่เก็บ binary ใน BC** (ดู `_reference/MasterData-3way-analysis.html §media`)
+- **build:** swt-gallery.js (→ md1 item) · swt-attach.js (→ transaction pages) · แก้ md3 เอกสาร→roll-up
+
 ## 🏢 GRILL V — Vendor Master (2026-07-06 · เคาะครบ V1-V3)
 จาก 3-way analysis flag: ลูกค้ามี md2 เต็ม แต่เจ้าหนี้ยังไม่มีหน้า master
 - **V1** สร้าง `md3-vendor-master` เต็ม (parity md2) — พอร์ทัลกรอก+POST BC API
