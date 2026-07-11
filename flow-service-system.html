@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Service System Flowchart + สรุปเอกสาร — Sangwijit ERP</title>
+<style>
+:root{--navy:#1E3A5F;--accent:#2563EB;--bg:#F8FAFC;--text:#1F2937;--muted:#64748B;--border:#E2E8F0;
+--sv:#7C3AED;--sl:#2563EB;--po:#D97706;--wh:#16A34A;--fi:#DB2777;--vendor:#0891B2;
+--repair:#7C3AED;--claim:#DB2777;--install:#0D9488;--check:#2563EB;--wash:#0891B2}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--text);font-size:14px;padding-bottom:60px}
+.header{background:var(--navy);color:#fff;padding:22px 32px}
+.header h1{font-size:20px}
+.header p{font-size:12.5px;opacity:.88;margin-top:4px;line-height:1.5}
+.container{max-width:1320px;margin:0 auto;padding:20px 24px}
+.qnav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.qnav a{font-size:12px;font-weight:600;color:var(--accent);background:#fff;border:1px solid var(--border);border-radius:20px;padding:6px 14px;text-decoration:none}
+.qnav a:hover{background:#DBEAFE}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-bottom:18px;align-items:center;background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 16px}
+.legend .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.legend .wb{font-size:9.5px;font-weight:700;padding:1px 7px;border-radius:8px}
+.wbin{background:#DCFCE7;color:#166534}.wbout{background:#FEE2E2;color:#991B1B}.wbrel{background:#FEF3C7;color:#92400E}
+.sec-title{font-size:16px;font-weight:700;color:var(--navy);margin:26px 0 10px;padding-left:10px;border-left:4px solid var(--sv);scroll-margin-top:14px}
+.sec-title small{font-weight:500;font-size:12px;color:var(--muted);margin-left:8px}
+.lane{background:#fff;border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden}
+.lane-head{display:flex;align-items:center;gap:10px;padding:11px 18px;border-bottom:1px solid var(--border);background:#FAFBFC}
+.lane-head .dot{width:12px;height:12px;border-radius:50%}
+.lane-head h2{font-size:14.5px;color:var(--navy)}
+.lane-head .sub{font-size:11.5px;color:var(--muted);margin-left:auto;text-align:right}
+.lane-body{padding:16px 18px}
+.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;row-gap:14px}
+.node{display:flex;flex-direction:column;justify-content:center;background:#fff;border:1.5px solid var(--mc,#94A3B8);border-radius:8px;padding:7px 12px;min-width:120px;position:relative}
+.node .code{font-size:10.5px;font-weight:700;color:var(--mc,#64748B);letter-spacing:.4px}
+.node .name{font-size:12.5px;font-weight:600;line-height:1.3}
+.node .name a.pg{color:inherit}
+.node .note{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.35}
+.node.start{background:#F5F3FF;border-style:dashed}
+.arr{display:flex;align-items:center;padding:0 7px;color:#94A3B8;font-size:16px}
+.gate{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 4px}
+.gate .g{font-size:9.5px;font-weight:700;background:#FEF3C7;color:#92400E;border:1px dashed #F59E0B;padding:2px 8px;border-radius:10px;white-space:nowrap;line-height:1.5;text-align:center}
+.forks{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.fork{display:flex;align-items:flex-start;gap:9px;font-size:11.8px;color:var(--text);line-height:1.5}
+.fork .b-lbl{font-size:9.5px;font-weight:800;color:#fff;padding:3px 9px;border-radius:8px;white-space:nowrap;margin-top:2px;flex-shrink:0}
+.rules{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;padding-top:10px;border-top:1px dashed var(--border)}
+.rule{font-size:10.5px;background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE;padding:2px 9px;border-radius:10px;line-height:1.6}
+.rule.warn{background:#FFF7ED;color:#9A3412;border-color:#FED7AA}
+.rule.lock{background:#F0FDF4;color:#166534;border-color:#BBF7D0}
+a.pg{color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent)}
+a.pg:hover{background:#DBEAFE;border-bottom-style:solid}
+/* menu chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:flex;flex-direction:column;border:1.5px solid var(--mc);border-radius:8px;padding:8px 12px;min-width:150px;background:#fff}
+.chip .h{font-size:12px;font-weight:700;color:var(--mc)}
+.chip .d{font-size:10.5px;color:var(--muted);margin-top:2px;line-height:1.35}
+/* doc table */
+.tbl-wrap{overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:10px;margin-bottom:16px}
+table.doc{width:100%;border-collapse:collapse;font-size:12px;min-width:900px}
+table.doc th{background:#F1F5F9;color:#334155;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;text-align:left;padding:8px 11px;border-bottom:1px solid var(--border);white-space:nowrap}
+table.doc td{padding:8px 11px;border-bottom:1px solid #F1F5F9;vertical-align:top;line-height:1.45}
+table.doc tr:last-child td{border-bottom:none}
+table.doc .c{font-weight:700;color:var(--mc,var(--navy));white-space:nowrap}
+table.doc .bc{font-family:'Inter',monospace;font-size:10.5px;color:#0F766E;background:#F0FDFA;padding:1px 6px;border-radius:5px}
+table.doc .bc.none{color:#9A3412;background:#FFF7ED}
+.wtag{font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:7px;white-space:nowrap}
+.cap{font-size:11px;color:var(--muted);padding:8px 11px;background:#FAFBFC;border-top:1px dashed var(--border)}
+.footer{text-align:center;font-size:11.5px;color:var(--muted);margin-top:28px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🛠️ Service System — Flowchart + สรุปเอกสาร</h1>
+  <p>Sangwijit ERP Portal · แกน 2 concept: <b>①เคลมสินค้า</b> (ของเราซื้อมาเสีย → คืน vendor · ของหายจากสต็อก) vs <b>②งานบริการ</b> (ของอยู่กับลูกค้า · เราซ่อม/เปลี่ยนอะไหล่) — คนละ flow คนละ ledger · ground จาก <b>svc-claim-jobtype-spec.md</b> + <b>SV_service.md</b> + Flow Design/Service 00–06</p>
+</div>
+<div class="container">
+
+<div class="qnav">
+  <a href="#entry">① Entry · S/N → A-E</a>
+  <a href="#svc">② งานบริการ (SV-1→SV-7)</a>
+  <a href="#claim">① เคลมสินค้า (CLM→PO-CN)</a>
+  <a href="#docs">📄 สรุปเอกสาร</a>
+</div>
+
+<div class="legend">
+  <span><b>ประเภทงาน:</b></span>
+  <span><span class="sw" style="background:var(--repair)"></span>🔧 ซ่อม</span>
+  <span><span class="sw" style="background:var(--claim)"></span>♻️ เคลม</span>
+  <span><span class="sw" style="background:var(--install)"></span>🏗️ ติดตั้ง</span>
+  <span><span class="sw" style="background:var(--check)"></span>🧪 ตรวจเช็ค</span>
+  <span><span class="sw" style="background:var(--wash)"></span>🚿 ล้าง</span>
+  <span style="margin-left:6px"><b>ประกัน (ราย component):</b></span>
+  <span class="wb wbin">ในประกัน</span><span class="wb wbout">หมดประกัน</span><span class="wb wbrel">Release</span>
+  <span style="margin-left:6px"><span class="g" style="font-size:9px;font-weight:700;background:#FEF3C7;color:#92400E;border:1px dashed #F59E0B;padding:1px 7px;border-radius:9px">GATE</span> = เงื่อนไขบังคับก่อนไปต่อ · <a class="pg" href="sv-q-service-queue-mockup.html">ชื่อหน้า</a> = กดเปิด mockup</span>
+</div>
+
+<!-- ═══════════════ ① ENTRY ═══════════════ -->
+<div class="sec-title" id="entry">1. จุดเข้า — สแกน Serial ก่อน แล้ว Resolve 5 ทาง (A–E) <small>S/N-first · กันเปิดงานผิดชนิด</small></div>
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--sv)"></span><h2>Resolution Menu (ที่ SV-1 Service Intake)</h2><span class="sub">ประกันผูกราย component + อายุของมันเอง (แอร์: เครื่อง 1 ปี · คอมเพรสเซอร์ 5 ปี)</span></div>
+  <div class="lane-body">
+    <div class="flow">
+      <div class="node start" style="--mc:var(--sv)"><span class="code">START</span><span class="name">สแกน / กรอก Serial</span><span class="note">ลูกค้านำมาซ่อม / โทร / LINE / แบรนด์ส่งมา — <b>source = ช่องทางล้วน ไม่กำหนดชนิดงาน</b></span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sv)"><span class="code">RESOLVE</span><span class="name"><a class="pg" href="sv1-service-intake-mockup.html">ตรวจ S/N ในระบบ</a></span><span class="note">ได้ตารางประกันรายชิ้น (component × วันหมดประกัน)</span></div>
+    </div>
+    <div class="forks">
+      <div class="fork"><span class="b-lbl" style="background:#166534">A</span><div>เจอ S/N + <b>ในประกัน</b> → งานเคลม/ซ่อมในประกัน <b>(②)</b> — ดึงประวัติซื้อ + vendor + ตารางประกันรายชิ้น</div></div>
+      <div class="fork"><span class="b-lbl" style="background:#991B1B">B</span><div>เจอ S/N + <b>หมดประกัน</b> → ซ่อมปกติ <b>คิดเงินลูกค้า</b> (ไม่ใช่งานเคลม) → ปลายทาง SL-4</div></div>
+      <div class="fork"><span class="b-lbl" style="background:#B45309">C</span><div>เจอ S/N + <b>มีงานค้างเปิดอยู่</b> → เปิดงานเดิมต่อ (กันเปิด job ซ้ำใบเดียวกัน)</div></div>
+      <div class="fork"><span class="b-lbl" style="background:#6B7280">D</span><div><b>ไม่เจอ S/N</b> (ของเก่า/ข้อมูลไม่ครบ) → กรอก manual + แนบหลักฐาน (ใบเสร็จ/ใบประกันกระดาษ) → <b>admin ยืนยันก่อน</b>เข้าเคลม</div></div>
+      <div class="fork"><span class="b-lbl" style="background:#0891B2">E</span><div>เจอ S/N แต่<b>ซื้อจากที่อื่น</b> → เช็คกับแบรนด์ → เข้าเงื่อนไขแบรนด์ → <b>รับซ่อม + เคลมอะไหล่/ค่าแรงในประกันได้</b> · <b>แต่เปลี่ยนเครื่องใหม่ไม่ได้</b> (สงวนเฉพาะของที่ซื้อจากเรา) · ไม่เข้า → ซ่อมนอกประกันคิดเงิน</div></div>
+    </div>
+    <div class="rules">
+      <span class="rule lock">🔒 ประกัน = per-component ไม่ใช่ธง in/out รายเครื่อง — งานเดียวเสียหลายชิ้น บางชิ้นในประกัน บางชิ้นหมด</span>
+      <span class="rule">A/E → เข้าสาย ② งานบริการ · D → รอ admin · ของยังเป็นสต๊อกเรา (pre-sale/DOA) → เข้าสาย ① เคลมสินค้า</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ② SERVICE ═══════════════ -->
+<div class="sec-title" id="svc">2. ② งานบริการ — ของอยู่กับลูกค้า · เราซ่อม/เปลี่ยนอะไหล่ <small>SV-1 → SV-2 → SV-5 → SV-4 → SV-7 · คิว SV-Q เป็นศูนย์กลาง (kitchen-rail)</small></div>
+
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--repair)"></span><h2>เลือกประเภทงานที่ SV-1 (5 job type · skeleton ร่วม + extension ของตัวเอง)</h2></div>
+  <div class="lane-body">
+    <div class="chips">
+      <div class="chip" style="--mc:var(--repair)"><span class="h">🔧 ซ่อม (core)</span><span class="d">งาน default · ค่าแรง/อะไหล่/เดินทาง</span></div>
+      <div class="chip" style="--mc:var(--claim)"><span class="h">♻️ เคลม (②)</span><span class="d">ในประกัน · reveal: 🔧ซ่อมในประกัน / ♻️เปลี่ยนเครื่องใหม่</span></div>
+      <div class="chip" style="--mc:var(--install)"><span class="h">🏗️ ติดตั้ง</span><span class="d">1 job/site · stock สืบทอด SL-2/SL-4</span></div>
+      <div class="chip" style="--mc:var(--check)"><span class="h">🧪 ตรวจเช็ค</span><span class="d">checklist template · ลูกค้าจ่าย (SL-4)</span></div>
+      <div class="chip" style="--mc:var(--wash)"><span class="h">🚿 ล้าง</span><span class="d">checklist template · คนละงานกับตรวจเช็ค</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--sv)"></span><h2>เส้นทางงานหลัก (job lifecycle)</h2><span class="sub">SV-Q คิวรวมทุกสถานะ · SLA แสดงอย่างเดียว (config ที่ CF)</span></div>
+  <div class="lane-body">
+    <div class="flow">
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV-1</span><span class="name"><a class="pg" href="sv1-service-intake-mockup.html">รับเรื่องซ่อม</a></span><span class="note">job type + อาการ + ประเมิน</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV-2</span><span class="name"><a class="pg" href="sv2-service-assignment-mockup.html">มอบหมายงาน</a></span><span class="note">admin เลือกช่าง + นัด</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV-5</span><span class="name"><a class="pg" href="sv5-job-card-mockup.html">Job Card ช่าง</a></span><span class="note">อาการจริง + ซ่อม + รูป before/after</span></div>
+      <div class="arr">→</div>
+      <div class="gate"><span class="g">GATE: ค้างคืนอะไหล่<br>→ ปิดงานไม่ได้</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV-4</span><span class="name"><a class="pg" href="sv4-service-close-mockup.html">ปิดงาน + pricing</a></span><span class="note">admin กำหนดคนจ่ายต่อบรรทัด</span></div>
+      <div class="arr">→</div>
+      <div class="gate"><span class="g">GATE: ของก่อนเงิน</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--sv)"><span class="code">SV-7</span><span class="name"><a class="pg" href="sv7-service-delivery-mockup.html">ส่งมอบลูกค้า</a></span><span class="note">เซ็น + QR + invoice + ปิดงาน</span></div>
+    </div>
+
+    <div class="forks">
+      <div class="fork"><span class="b-lbl" style="background:var(--wh)">อะไหล่ · 2 แหล่ง</span><div><b>มีในสต็อก</b> → <a class="pg" href="sv3-spare-part-issue-mockup.html">SV-3 เบิก</a> (ในประกัน = ต้องคืนของเก่า) · <b>ไม่มีในสต็อก/นอกประกัน</b> → <a class="pg" href="sv-order-parts-request-mockup.html">SV-Order สั่ง</a> → spawn <b>PO-4</b> (ซื้อขาด ไม่ต้องคืน)</div></div>
+    </div>
+
+    <div class="rules">
+      <span class="rule lock">🔒 คืนอะไหล่ (เฉพาะในประกัน) per-line: ⬇️รับจากแบรนด์ → 🔧เปลี่ยน → ⬆️คืนของเก่า · ค้างแม้ line เดียว = gate ปิดงาน · exception "ไม่ต้องคืน" = admin ติ๊ก (ช่างติ๊กไม่ได้)</span>
+      <span class="rule">📦 คลัง WH-SVC-CTR 6 bins ตามสถานะของ · 🗓️ SLA แสดงสีทุกขั้น (ไม่ enforce)</span>
+    </div>
+  </div>
+</div>
+
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--fi)"></span><h2>ผลจบงานเคลม ② — 3 ทาง + Billing (payer ต่อบรรทัด ที่ SV-4)</h2></div>
+  <div class="lane-body">
+    <div class="forks">
+      <div class="fork"><span class="b-lbl" style="background:var(--repair)">🔧 ซ่อมในประกัน</span><div>จบใน SV — เปลี่ยน/ซ่อมอะไหล่ในประกัน · <b>ไม่แตะเอกสารเงินลูกค้า</b></div></div>
+      <div class="fork"><span class="b-lbl" style="background:var(--claim)">♻️ เปลี่ยนเครื่องใหม่</span><div>เบิกเครื่องใหม่ <b>WH-2</b> (ลูกค้าไม่จ่าย · warranty) · เครื่องเดิม → รับคืน/ไม่รับ → <b><a class="pg" href="clm-vendor-claim-mockup.html">CLM</a> → <a class="pg" href="po-cn-credit-note-mockup.html">PO-CN</a></b> (เงิน vendor) · <b>ไม่ออก SL-CN</b></div></div>
+      <div class="fork"><span class="b-lbl" style="background:var(--sl)">💵 คืนเงิน/ลดหนี้</span><div>ส่ง<b>คำขอ</b> → <a class="pg" href="slq-sales-queue-mockup.html">SL-Q กลุ่ม CN</a> (badge 🛠️ จากเคลม) → Sales เปิด <b><a class="pg" href="slcn-credit-memo-mockup.html">SL-CN</a></b> prefill · อนุมัติ CF-2.6 ทุกใบ</div></div>
+    </div>
+    <div class="flow" style="margin-top:12px">
+      <div class="node" style="--mc:var(--vendor)"><span class="code">ARI</span><span class="name">บรรทัด "แบรนด์จ่าย"</span><span class="note">รวมเป็น Vendor billing AR (ใน clm-vendor-claim) → FI-1 รับเงิน</span></div>
+      <div class="arr">+</div>
+      <div class="node" style="--mc:var(--sl)"><span class="code">SL-4</span><span class="name">บรรทัด "ลูกค้าจ่าย"</span><span class="note">รวมเป็นบิลขาย</span></div>
+      <div class="arr">＝</div>
+      <div class="node start" style="--mc:var(--fi)"><span class="code">2 บิล</span><span class="name">งานเดียวออกได้ 2 บิล</span><span class="note">กรณีผสม (บอร์ดหมด→ลูกค้า · คอมเพรสเซอร์ยัง→แบรนด์)</span></div>
+    </div>
+    <div class="rules">
+      <span class="rule">👤 default คนจ่าย: จากตารางประกันรายชิ้น · ค่าแรง = มีนอกประกันแม้ชิ้นเดียว→ลูกค้า · ค่าเดินทาง = admin เลือก (ไม่มี default)</span>
+      <span class="rule warn">🎁 Goodwill = payer option ที่ 3 (แบรนด์/SWT รับภาระ ลูกค้าไม่จ่าย) → <b>ต้องอนุมัติตาม tier + บันทึกเหตุผล</b></span>
+      <span class="rule warn">⛔ SV ไม่ออกเอกสารบัญชีเอง — ส่งคำขอเท่านั้น (Maker≠Checker)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ① PRODUCT CLAIM ═══════════════ -->
+<div class="sec-title" id="claim">3. ① เคลมสินค้า — ของเราซื้อมาเสีย → คืน vendor (ของหายจากสต็อก) <small>รวม pre-sale/DOA (ยังไม่มีลูกค้า) · chain CLM → PO-CN</small></div>
+<div class="lane">
+  <div class="lane-head"><span class="dot" style="background:var(--vendor)"></span><h2>Product Claim Settlement (S1–S4)</h2><span class="sub">อ้างบิลซื้อของเรา (จาก S/N) · SLA reply supplier ≤ 7 วัน</span></div>
+  <div class="lane-body">
+    <div class="flow">
+      <div class="node start" style="--mc:var(--vendor)"><span class="code">TRIGGER</span><span class="name">ของซื้อเราเสีย</span><span class="note">DOA แกะกล่อง / incoming QC / ซ่อมไม่ได้ (จาก ②) / pre-sale</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--vendor)"><span class="code">CLM</span><span class="name"><a class="pg" href="clm-vendor-claim-mockup.html">ใบเคลม vendor</a></span><span class="note">Draft → ส่งเคลม → รอ vendor</span></div>
+      <div class="arr">→</div>
+      <div class="node" style="--mc:var(--vendor)"><span class="code">S1–S4</span><span class="name">vendor ตอบ</span></div>
+    </div>
+    <div class="forks">
+      <div class="fork"><span class="b-lbl" style="background:#166534">S1 · ส่วนลด (CN)</span><div><i>ส่วนมากได้อันนี้</i> → เข้าคิว "รอหักหนี้" → <b>PO-6 ดึงตัด</b> (chain <a class="pg" href="clm-vendor-claim-mockup.html">CLM</a> → <a class="pg" href="po-cn-credit-note-mockup.html">PO-CN</a>)</div></div>
+      <div class="fork"><span class="b-lbl" style="background:var(--wh)">S2 · ส่งใหม่ทดแทน</span><div>รอรับที่ <b>WH-1</b> (รับจาก vendor) → ปิดเคลมเมื่อของเข้า · ระหว่างรอ → flag ยืมเครื่องสำรอง (เบิก WH-3 loaner)</div></div>
+      <div class="fork"><span class="b-lbl" style="background:var(--wh)">S3 · ซ่อมส่งกลับ</span><div>vendor ซ่อมแล้วส่งคืน → รอรับ <b>WH-1</b> → ปิดเคลม</div></div>
+      <div class="fork"><span class="b-lbl" style="background:#991B1B">S4 · ปฏิเสธ</span><div>ออก <b>VRA</b> (Vendor Rejection Ack + เหตุผล) → <b>SWT รับภาระ</b> (cost binary: vendor 100% หรือ SWT · ลูกค้าไม่จ่าย)</div></div>
+    </div>
+    <div class="rules">
+      <span class="rule lock">🔒 ต่างจาก ② — ของ<b>หายจากสต็อกเรา</b> (ส่งคืน vendor รอผล) · ledger ฝั่ง AP · ไม่ใช่งานซ่อมของลูกค้า</span>
+      <span class="rule">♻️ "เปลี่ยนเครื่องใหม่" ใน ② เมื่อได้เครื่องเดิมคืน → ป้อนสาย ① นี้เพื่อไล่ vendor</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ DOC SUMMARY ═══════════════ -->
+<div class="sec-title" id="docs">4. สรุปเอกสาร — แยกตาม concept <small>Portal = UI เท่านั้น · BC เป็นเจ้าของ posting/numbering</small></div>
+
+<h3 style="font-size:13.5px;color:var(--sv);margin:6px 2px 8px">② งานบริการ (Service Warranty) — ของอยู่กับลูกค้า</h3>
+<div class="tbl-wrap">
+<table class="doc">
+  <thead><tr><th>รหัส</th><th>เอกสาร</th><th>ใครออก</th><th>Trigger</th><th>ปลายทาง / chain</th><th>BC entity</th><th>ประกัน</th></tr></thead>
+  <tbody>
+    <tr><td class="c" style="--mc:var(--sv)">SV-Q</td><td><a class="pg" href="sv-q-service-queue-mockup.html">คิวงานบริการ</a></td><td>ระบบ (dashboard)</td><td>ทุกสถานะงาน</td><td>คลิกการ์ด → หน้าทำงานจริง · รายงานช่าง → CM-1</td><td class="bc none">— (view)</td><td>—</td></tr>
+    <tr><td class="c" style="--mc:var(--sv)">SV-1</td><td><a class="pg" href="sv1-service-intake-mockup.html">ใบรับเรื่องซ่อม</a></td><td>แอดมิน</td><td>ลูกค้านำมาซ่อม / โทร / LINE</td><td>→ SV-2 มอบหมาย</td><td class="bc">serviceOrders 5900</td><td><span class="wtag wbin">ตรวจ S/N</span></td></tr>
+    <tr><td class="c" style="--mc:var(--sv)">SV-2</td><td><a class="pg" href="sv2-service-assignment-mockup.html">ใบมอบหมายงาน</a></td><td>แอดมิน</td><td>เลือกช่าง + นัดหมาย</td><td>→ SV-5 Job Card</td><td class="bc">serviceOrders 5900</td><td>—</td></tr>
+    <tr><td class="c" style="--mc:var(--sv)">SV-5</td><td><a class="pg" href="sv5-job-card-mockup.html">ใบงานช่าง (Job Card)</a></td><td>ช่าง</td><td>ซ่อมจริง · อาการที่พบ · รูป</td><td>→ SV-4 ปิดงาน</td><td class="bc">serviceLines 5901</td><td>per-component</td></tr>
+    <tr><td class="c" style="--mc:var(--sv)">SV-3</td><td><a class="pg" href="sv3-spare-part-issue-mockup.html">ใบเบิกอะไหล่ (สต็อก)</a></td><td>ช่าง / แอดมิน</td><td>อะไหล่มีในสต็อก</td><td>ในประกัน = ต้องคืนของเก่า (gate)</td><td class="bc">serviceItemComponents 5943</td><td><span class="wtag wbin">คืน</span></td></tr>
+    <tr><td class="c" style="--mc:var(--sv)">SV-Order</td><td><a class="pg" href="sv-order-parts-request-mockup.html">ใบสั่งอะไหล่ (นอกสต็อก)</a></td><td>แอดมิน</td><td>อะไหล่ไม่มีในสต็อก</td><td>spawn <b>PO-4</b> (ซื้อขาด ไม่ต้องคืน)</td><td class="bc">purchaseOrders 38</td><td><span class="wtag wbout">ไม่คืน</span></td></tr>
+    <tr><td class="c" style="--mc:var(--sv)">SV-4</td><td><a class="pg" href="sv4-service-close-mockup.html">ใบปิดงาน + pricing</a></td><td>แอดมิน</td><td>ซ่อมเสร็จ (ผ่าน gate คืนอะไหล่)</td><td>payer ต่อบรรทัด → ARI + SL-4</td><td class="bc">serviceOrders (Post)</td><td>กำหนดคนจ่าย</td></tr>
+    <tr><td class="c" style="--mc:var(--sv)">SV-7</td><td><a class="pg" href="sv7-service-delivery-mockup.html">ใบส่งมอบลูกค้า</a></td><td>แอดมิน</td><td>ปิดงาน · ของก่อนเงิน (gate)</td><td>เซ็น + QR + invoice + ปิด</td><td class="bc">serviceOrders (Post)</td><td>—</td></tr>
+    <tr><td class="c" style="--mc:var(--sv)">SV-6</td><td><a class="pg" href="sv6-delivery-install-mockup.html">จัดส่ง + ติดตั้ง</a></td><td>ช่าง / คนส่ง</td><td>บิลขายมี Delivery Flag (auto)</td><td>อ่านที่อยู่จาก Ship-to · เซ็นรับ</td><td class="bc">warehouseShipment</td><td>—</td></tr>
+    <tr><td class="c" style="--mc:var(--vendor)">ARI</td><td>Vendor Billing AR</td><td>แอดมิน (จาก SV-4)</td><td>บรรทัด "แบรนด์จ่าย"</td><td>เรียกเก็บแบรนด์ → <b>FI-1</b> รับเงิน</td><td class="bc">salesInvoices (ARI)</td><td><span class="wtag wbin">แบรนด์</span></td></tr>
+    <tr><td class="c" style="--mc:var(--sl)">SL-4</td><td>บิลขาย (นอกประกัน)</td><td>แอดมิน (จาก SV-4)</td><td>บรรทัด "ลูกค้าจ่าย"</td><td>→ FI-1 รับเงิน</td><td class="bc">salesInvoices</td><td><span class="wtag wbout">ลูกค้า</span></td></tr>
+    <tr><td class="c" style="--mc:var(--sl)">SL-CN</td><td><a class="pg" href="slcn-credit-memo-mockup.html">ใบลดหนี้ขาย</a></td><td>Sales (ผ่าน SL-Q)</td><td>ผลจบ 💵 คืนเงิน · เคลม → คำขอ</td><td>ลด AR → FI-1Q ใช้เครดิต · อนุมัติ CF-2.6 ทุกใบ</td><td class="bc">salesCreditMemos</td><td>refund ≤ ราคาขาย</td></tr>
+    <tr><td class="c" style="--mc:var(--check)">CHK</td><td>Checklist ตรวจเช็ค / ล้าง</td><td>ช่าง</td><td>job type ตรวจเช็ค/ล้าง</td><td>template ราย product category · ผ่าน/ไม่ผ่าน + รูป</td><td class="bc none">Portal (custom)</td><td>ลูกค้าจ่าย</td></tr>
+  </tbody>
+</table>
+<div class="cap">รายได้งานบริการ ② = 3 อย่าง (ค่าแรง/อะไหล่/เดินทาง) · คนจ่ายราย <b>บรรทัด</b> ที่ SV-4 → งานเดียวออกได้ 2 บิล (ARI แบรนด์ + SL-4 ลูกค้า)</div>
+</div>
+
+<h3 style="font-size:13.5px;color:var(--vendor);margin:16px 2px 8px">① เคลมสินค้า (Product Claim) — ของเราซื้อมาเสีย → คืน vendor</h3>
+<div class="tbl-wrap">
+<table class="doc">
+  <thead><tr><th>รหัส</th><th>เอกสาร</th><th>ใครออก</th><th>Trigger</th><th>ปลายทาง / chain</th><th>BC entity</th><th>settlement</th></tr></thead>
+  <tbody>
+    <tr><td class="c" style="--mc:var(--vendor)">CLM</td><td><a class="pg" href="clm-vendor-claim-mockup.html">ใบเคลม vendor</a></td><td>แอดมินเคลม</td><td>ของซื้อเราเสีย / DOA / pre-sale / ②ซ่อมไม่ได้</td><td>ส่งแบรนด์ → รอตอบ S1–S4</td><td class="bc none">Custom Claim (ไม่มีใน BC)</td><td>อ้างบิลซื้อเรา</td></tr>
+    <tr><td class="c" style="--mc:var(--po)">PO-CN</td><td><a class="pg" href="po-cn-credit-note-mockup.html">ใบลดหนี้เจ้าหนี้</a></td><td>จัดซื้อ (จาก S1)</td><td>vendor ให้ส่วนลด (CN)</td><td>หัก AP ที่ <b>PO-6</b> picker</td><td class="bc">purchaseCreditMemos 121</td><td><span class="wtag wbin">S1</span></td></tr>
+    <tr><td class="c" style="--mc:var(--wh)">WH-1</td><td>รับของ (GRN)</td><td>คลัง</td><td>vendor ส่งใหม่ / ซ่อมส่งกลับ</td><td>รับเข้า → ปิดเคลมเมื่อของเข้า</td><td class="bc">purchaseReceipts</td><td><span class="wtag wbin">S2/S3</span></td></tr>
+    <tr><td class="c" style="--mc:var(--vendor)">VRA</td><td>Vendor Rejection Ack</td><td>แอดมินเคลม</td><td>vendor ปฏิเสธเคลม</td><td>บันทึกเหตุผล → SWT รับภาระ (cost binary)</td><td class="bc none">Portal (custom)</td><td><span class="wtag wbout">S4</span></td></tr>
+    <tr><td class="c" style="--mc:var(--wh)">WH-3</td><td>เบิก loaner (เครื่องสำรอง)</td><td>คลัง</td><td>ระหว่างรอ vendor (S2/S3)</td><td>flag ยืม → คืนเมื่อของจริงกลับ (ไม่มีระบบ loaner แยก)</td><td class="bc">itemJournal (loaner)</td><td>ชั่วคราว</td></tr>
+  </tbody>
+</table>
+<div class="cap">S1 ส่วนมากได้ (ส่วนลด CN) · <b>cost binary</b>: vendor 100% หรือ SWT — ลูกค้าไม่จ่าย · คลัง WH-SVC-CTR bin 6 = ของคืน vendor ทั้งชิ้น/ซาก</div>
+</div>
+
+<div class="footer">
+  Sangwijit ERP Portal — Service System Flowchart · ground: <b>.agents/svc-claim-jobtype-spec.md</b> · <b>.claude/skills/sangwijit-portal/modules/SV_service.md</b> · Flow Design/Service 00–06<br>
+  คู่กับ <b>flow-workflow-map.html</b> (สาย 7 ภาพรวม) · <b>flow-detail-charts.html</b> (เคสแตกสาขา waterfall) — BC เป็นเจ้าของ posting/numbering ทั้งหมด · Portal = UI
+</div>
+
+</div>
+</body>
+</html>

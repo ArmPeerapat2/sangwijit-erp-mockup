@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>เทรนแอดมิน — งานบริการ: ใช้เอกสารอะไร ส่งต่อให้ใคร | Sangwijit</title>
+<style>
+:root{--navy:#1E3A5F;--accent:#2563EB;--bg:#F8FAFC;--text:#1F2937;--muted:#64748B;--border:#E2E8F0;
+--front:#2563EB;--tech:#7C3AED;--wh:#16A34A;--acct:#DB2777;--vendor:#0891B2;--cust:#64748B;--sales:#4F46E5}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--text);font-size:15px;padding-bottom:60px}
+.header{background:var(--navy);color:#fff;padding:24px 32px}
+.header h1{font-size:22px}
+.header p{font-size:13.5px;opacity:.9;margin-top:5px;line-height:1.5}
+.container{max-width:1080px;margin:0 auto;padding:22px 24px}
+/* role legend */
+.roles{display:flex;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:22px}
+.roles .lb{font-size:12px;color:var(--muted);align-self:center;font-weight:600;margin-right:4px}
+.rchip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#fff;padding:5px 12px;border-radius:20px}
+.rchip .ic{font-size:14px}
+/* intake choice */
+.intake{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:26px}
+.icard{background:#fff;border:2px solid var(--c);border-radius:12px;padding:16px 18px}
+.icard h3{font-size:15px;color:var(--c);display:flex;align-items:center;gap:8px}
+.icard p{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
+.icard .go{display:inline-block;margin-top:10px;font-size:12.5px;font-weight:700;color:var(--c);text-decoration:none;border-bottom:2px solid var(--c)}
+/* journey */
+.jtitle{font-size:18px;font-weight:800;color:var(--navy);margin:30px 0 6px;display:flex;align-items:center;gap:10px;scroll-margin-top:12px}
+.jtitle .badge{font-size:11px;font-weight:700;color:#fff;background:var(--navy);padding:3px 10px;border-radius:8px}
+.jsub{font-size:13px;color:var(--muted);margin-bottom:16px}
+.step{position:relative;background:#fff;border:1px solid var(--border);border-left:6px solid var(--rc,var(--accent));border-radius:10px;padding:14px 18px 14px 20px;margin-bottom:12px}
+.step-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.step .num{position:absolute;left:-15px;top:14px;width:30px;height:30px;border-radius:50%;background:var(--rc,var(--accent));color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px var(--bg)}
+.step .who{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#fff;background:var(--rc);padding:4px 11px;border-radius:20px;white-space:nowrap}
+.step .act{font-size:14.5px;font-weight:600;line-height:1.4}
+.step .detail{font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.5;padding-left:2px}
+.step-foot{display:flex;flex-wrap:wrap;gap:16px;margin-top:11px;padding-top:10px;border-top:1px dashed var(--border);align-items:center}
+.doc{display:inline-flex;align-items:center;gap:6px;font-size:12.5px}
+.doc .lbl{font-size:10px;color:var(--muted);font-weight:700}
+.doc a,.doc b{font-size:12.5px;font-weight:700;color:var(--accent);text-decoration:none}
+.doc a{border-bottom:1px dashed var(--accent)}.doc a:hover{background:#DBEAFE}
+.doc .nodoc{color:var(--muted);font-weight:600}
+.handoff{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;margin-left:auto}
+.handoff .lbl{font-size:10px;color:var(--muted);font-weight:700}
+.handoff .to{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#fff;padding:4px 11px;border-radius:20px}
+.handoff .end{font-size:12.5px;font-weight:700;color:#166534;background:#DCFCE7;padding:4px 11px;border-radius:20px}
+/* outcome cards */
+.outs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:8px 0 4px}
+.out{background:#fff;border:1px solid var(--border);border-top:4px solid var(--c);border-radius:10px;padding:13px 15px}
+.out h4{font-size:13.5px;color:var(--c);display:flex;align-items:center;gap:6px}
+.out p{font-size:12px;color:var(--text);margin-top:6px;line-height:1.5}
+.out .h2{font-size:11px;color:var(--muted);margin-top:8px}
+.out .h2 b{color:var(--c)}
+/* doc quick ref */
+.tbl-wrap{overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:10px;margin:10px 0}
+table.qr{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+table.qr th{background:#F1F5F9;color:#334155;font-size:11px;font-weight:700;text-align:left;padding:9px 13px;border-bottom:1px solid var(--border)}
+table.qr td{padding:9px 13px;border-bottom:1px solid #F1F5F9;vertical-align:top;line-height:1.45}
+table.qr tr:last-child td{border-bottom:none}
+table.qr .d{font-weight:700;color:var(--accent);white-space:nowrap}
+/* rules */
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.rc{background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:12px 15px;font-size:13px;line-height:1.5}
+.rc b{color:#9A3412}
+.rc.lock{background:#F0FDF4;border-color:#BBF7D0}.rc.lock b{color:#166534}
+.sh{font-size:16px;font-weight:800;color:var(--navy);margin:28px 0 10px;padding-left:10px;border-left:4px solid var(--accent)}
+.footer{text-align:center;font-size:12px;color:var(--muted);margin-top:30px;line-height:1.7}
+@media print{.header{background:#fff!important;color:#000!important} body{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>📘 คู่มือเทรนแอดมิน — งานบริการ (Service)</h1>
+  <p>ไล่ทีละสเต็ป: <b>ฉันทำอะไร → ออกเอกสารอะไร → ส่งต่อให้ใคร</b> · สีของป้าย = บทบาทคนทำ (ตามสีข้างล่าง) · กดชื่อเอกสารเพื่อเปิดหน้าจริง</p>
+</div>
+<div class="container">
+
+<!-- ROLE LEGEND -->
+<div class="roles">
+  <span class="lb">คนในระบบ:</span>
+  <span class="rchip" style="background:var(--cust)"><span class="ic">🛒</span> ลูกค้า</span>
+  <span class="rchip" style="background:var(--front)"><span class="ic">🧑‍💼</span> แอดมินรับเรื่อง</span>
+  <span class="rchip" style="background:var(--tech)"><span class="ic">🔧</span> ช่าง</span>
+  <span class="rchip" style="background:var(--wh)"><span class="ic">📦</span> คลังศูนย์</span>
+  <span class="rchip" style="background:var(--acct)"><span class="ic">💰</span> แอดมินบัญชี</span>
+  <span class="rchip" style="background:var(--sales)"><span class="ic">🧾</span> Sales</span>
+  <span class="rchip" style="background:var(--vendor)"><span class="ic">🏭</span> แบรนด์/vendor</span>
+</div>
+
+<!-- INTAKE CHOICE -->
+<div class="sh">งานเข้ามา 2 แบบ — แยกให้ออกก่อน</div>
+<div class="intake">
+  <div class="icard" style="--c:var(--tech)">
+    <h3>①→ ② งานบริการ (ซ่อม/เคลม/ติดตั้ง)</h3>
+    <p><b>ของอยู่กับลูกค้า</b> — ลูกค้าเอาเครื่องมาซ่อม หรือเราไปติดตั้ง/ล้าง · เราซ่อมหรือเปลี่ยนอะไหล่ให้</p>
+    <a class="go" href="#svc">ดูสเต็ปงานบริการ →</a>
+  </div>
+  <div class="icard" style="--c:var(--vendor)">
+    <h3>① เคลมสินค้า (ของเราเสีย)</h3>
+    <p><b>ของหายจากสต็อกเรา</b> — ของที่เราซื้อมาเสีย (แกะกล่องเจอ / ก่อนขาย / ซ่อมไม่ได้) → ส่งคืนแบรนด์</p>
+    <a class="go" href="#claim">ดูสเต็ปเคลมสินค้า →</a>
+  </div>
+</div>
+
+<!-- ═══ JOURNEY A: SERVICE ═══ -->
+<div class="jtitle" id="svc"><span class="badge">②</span> งานบริการ — ของอยู่กับลูกค้า</div>
+<div class="jsub">คิวรวมทุกงานอยู่ที่ <a class="doc" href="sv-q-service-queue-mockup.html" style="color:var(--accent);font-weight:700">SV-Q คิวงานบริการ</a> — เปิดดูว่ามีงานอะไรค้างตรงไหน</div>
+
+<div class="step" style="--rc:var(--cust)">
+  <div class="num">1</div>
+  <div class="step-top"><span class="who"><span>🛒</span> ลูกค้า</span><span class="act">เอาเครื่องมาซ่อม / โทร / ทัก LINE</span></div>
+  <div class="detail">มาจากช่องทางไหนก็ได้ — ช่องทาง<b>ไม่ได้บอกชนิดงาน</b> · แอดมินเป็นคนดูว่าเป็นงานแบบไหน</div>
+  <div class="step-foot">
+    <span class="doc"><span class="lbl">เอกสาร</span> <span class="nodoc">— ยังไม่ออก</span></span>
+    <span class="handoff"><span class="lbl">ส่งต่อ</span> <span class="to" style="background:var(--front)">🧑‍💼 แอดมินรับเรื่อง</span></span>
+  </div>
+</div>
+
+<div class="step" style="--rc:var(--front)">
+  <div class="num">2</div>
+  <div class="step-top"><span class="who"><span>🧑‍💼</span> แอดมินรับเรื่อง</span><span class="act">สแกน Serial → เช็คประกัน → เปิดใบรับเรื่อง</span></div>
+  <div class="detail"><b>สแกน S/N ก่อนเสมอ</b> → ระบบบอก 5 ทาง: <b>A</b> ในประกัน · <b>B</b> หมดประกัน(คิดเงิน) · <b>C</b> มีงานค้างอยู่แล้ว(เปิดต่อ) · <b>D</b> ไม่เจอ S/N(กรอกเอง+แนบหลักฐาน รอยืนยัน) · <b>E</b> ซื้อที่อื่น(เช็คแบรนด์) · ประกันดู<b>รายชิ้น</b> (เครื่อง 1 ปี · คอมเพรสเซอร์ 5 ปี)</div>
+  <div class="step-foot">
+    <span class="doc"><span class="lbl">ออกเอกสาร</span> 📄 <a href="sv1-service-intake-mockup.html">ใบรับเรื่องซ่อม (SV-1)</a></span>
+    <span class="handoff"><span class="lbl">ส่งต่อ</span> <span class="to" style="background:var(--front)">🧑‍💼 แอดมิน (มอบหมาย)</span></span>
+  </div>
+</div>
+
+<div class="step" style="--rc:var(--front)">
+  <div class="num">3</div>
+  <div class="step-top"><span class="who"><span>🧑‍💼</span> แอดมินรับเรื่อง</span><span class="act">เลือกช่าง + นัดวัน แล้วมอบหมายงาน</span></div>
+  <div class="detail">เลือกช่างที่ว่าง + วันนัดลูกค้า · SLA แสดงสีเตือน (เกินเวลา → เหลือง/แดง) แต่<b>ไม่บล็อกงาน</b></div>
+  <div class="step-foot">
+    <span class="doc"><span class="lbl">ออกเอกสาร</span> 📄 <a href="sv2-service-assignment-mockup.html">ใบมอบหมายงาน (SV-2)</a></span>
+    <span class="handoff"><span class="lbl">ส่งต่อ</span> <span class="to" style="background:var(--tech)">🔧 ช่าง</span></span>
+  </div>
+</div>
+
+<div class="step" style="--rc:var(--tech)">
+  <div class="num">4</div>
+  <div class="step-top"><span class="who"><span>🔧</span> ช่าง</span><span class="act">ตรวจอาการจริง + ลงมือซ่อม (Job Card)</span></div>
+  <div class="detail">บันทึกอาการที่พบจริง · ถ่ายรูป <b>ก่อน/หลัง</b> · ถ้าต้องใช้อะไหล่ → ขอไปที่คลัง</div>
+  <div class="step-foot">
+    <span class="doc"><span class="lbl">ออกเอกสาร</span> 📄 <a href="sv5-job-card-mockup.html">ใบงานช่าง / Job Card (SV-5)</a></span>
+    <span class="handoff"><span class="lbl">ต้องใช้อะไหล่ → ส่งต่อ</span> <span class="to" style="background:var(--wh)">📦 คลังศูนย์</span></span>
+  </div>
+</div>
+
+<div class="step" style="--rc:var(--wh)">
+  <div class="num">5</div>
+  <div class="step-top"><span class="who"><span>📦</span> คลังศูนย์</span><span class="act">จ่ายอะไหล่ — มีในสต็อก vs ต้องสั่ง</span></div>
+  <div class="detail"><b>มีในสต็อก</b> → เบิกเลย · <b>ไม่มี/นอกประกัน</b> → เปิดใบสั่งอะไหล่ (จะกลายเป็นใบสั่งซื้อ PO ให้อัตโนมัติ) · ⚠️ <b>อะไหล่ในประกัน = ต้องเก็บของเก่าคืนแบรนด์</b> (ถ้าไม่คืน ปิดงานไม่ได้)</div>
+  <div class="step-foot">
+    <span class="doc"><span class="lbl">ออกเอกสาร</span> 📄 <a href="sv3-spare-part-issue-mockup.html">ใบเบิกอะไหล่ (SV-3)</a> / <a href="sv-order-parts-request-mockup.html">ใบสั่งอะไหล่ (SV-Order)</a></span>
+    <span class="handoff"><span class="lbl">ได้ของแล้ว → กลับไป</span> <span class="to" style="background:var(--tech)">🔧 ช่าง</span></span>
+  </div>
+</div>
+
+<div class="step" style="--rc:var(--tech)">
+  <div class="num">6</div>
+  <div class="step-top"><span class="who"><span>🔧</span> ช่าง</span><span class="act">ซ่อมเสร็จ · ถ่ายรูปหลัง · ส่งคืนงาน</span></div>
+  <div class="detail">ทดสอบว่าใช้งานได้ · ถ่ายรูปหลังซ่อม · ถ้าซ่อมไม่ได้จริง → แจ้งแอดมิน (อาจกลายเป็นเคลมสินค้า ①)</div>
+  <div class="step-foot">
+    <span class="doc"><span class="lbl">เอกสาร</span> <span class="nodoc">อัปเดต Job Card</span></span>
+    <span class="handoff"><span class="lbl">ส่งต่อ</span> <span class="to" style="background:var(--front)">🧑‍💼 แอดมิน (ปิดงาน)</span></span>
+  </div>
+</div>
+
+<div class="step" style="--rc:var(--front)">
+  <div class="num">7</div>
+  <div class="step-top"><span class="who"><span>🧑‍💼</span> แอดมินรับเรื่อง</span><span class="act">ปิดงาน + ตั้งราคา + เลือกคนจ่ายแต่ละรายการ</span></div>
+  <div class="detail">แต่ละบรรทัด (ค่าแรง/อะไหล่/เดินทาง) เลือก <b>คนจ่าย: แบรนด์ / ลูกค้า / goodwill</b> · ระบบ default ให้จากตารางประกัน แต่แอดมินแก้ได้ · <b>🔒 gate:</b> ต้องคืนอะไหล่เก่าครบก่อนถึงปิดได้</div>
+  <div class="step-foot">
+    <span class="doc"><span class="lbl">ออกเอกสาร</span> 📄 <a href="sv4-service-close-mockup.html">ใบปิดงาน (SV-4)</a></span>
+    <span class="handoff"><span class="lbl">ส่งต่อ</span> <span class="to" style="background:var(--front)">🧑‍💼 ส่งมอบ</span> <span class="to" style="background:var(--acct)">💰 บัญชี</span></span>
+  </div>
+</div>
+
+<div class="step" style="--rc:var(--front)">
+  <div class="num">8</div>
+  <div class="step-top"><span class="who"><span>🧑‍💼</span> แอดมินรับเรื่อง</span><span class="act">ส่งมอบ · ลูกค้าเซ็น · เก็บเงิน · จบงาน</span></div>
+  <div class="detail"><b>🔒 ของก่อนเงิน</b> — ลูกค้าเซ็นรับของ + จ่ายเงิน · บิลออกตามคนจ่าย: <b>ลูกค้าจ่าย → บิลขาย SL-4</b> · <b>แบรนด์จ่าย → ARI (ไปเก็บกับแบรนด์)</b> · งานผสมออกได้ 2 บิล</div>
+  <div class="step-foot">
+    <span class="doc"><span class="lbl">ออกเอกสาร</span> 📄 <a href="sv7-service-delivery-mockup.html">ใบส่งมอบ (SV-7)</a> + บิล SL-4 / ARI</span>
+    <span class="handoff"><span class="lbl"></span> <span class="end">✅ จบงาน</span></span>
+  </div>
+</div>
+
+<!-- OUTCOMES -->
+<div class="sh" style="border-color:var(--tech)">งานเคลมในประกัน จบได้ 3 ทาง — ส่งต่อต่างกัน</div>
+<div class="outs">
+  <div class="out" style="--c:var(--tech)">
+    <h4>🔧 ซ่อมในประกัน</h4>
+    <p>เปลี่ยน/ซ่อมอะไหล่ในประกัน จบที่ช่าง</p>
+    <div class="h2">ส่งต่อ: <b>ไม่มี — จบใน SV</b> (ลูกค้าไม่จ่าย)</div>
+  </div>
+  <div class="out" style="--c:var(--acct)">
+    <h4>♻️ เปลี่ยนเครื่องใหม่</h4>
+    <p>เบิกเครื่องใหม่ให้ลูกค้า (ลูกค้าไม่จ่าย) · เครื่องเดิมเก็บไว้ไล่แบรนด์</p>
+    <div class="h2">ส่งต่อ: <b>📦 คลัง</b> เบิกใหม่ + <b>🏭 แบรนด์</b> ผ่านใบเคลม (ดูสาย ①)</div>
+  </div>
+  <div class="out" style="--c:var(--sales)">
+    <h4>💵 คืนเงิน / ลดหนี้</h4>
+    <p>แอดมินบริการ <b>ส่งคำขอ</b> ไม่ได้ออกใบเอง</p>
+    <div class="h2">ส่งต่อ: <b>🧾 Sales</b> เปิดใบลดหนี้ <a class="doc" href="slcn-credit-memo-mockup.html" style="font-weight:700;color:var(--sales)">SL-CN</a> (ผ่านคิว SL-Q)</div>
+  </div>
+</div>
+
+<!-- ═══ JOURNEY B: PRODUCT CLAIM ═══ -->
+<div class="jtitle" id="claim"><span class="badge" style="background:var(--vendor)">①</span> เคลมสินค้า — ของเราซื้อมาเสีย</div>
+<div class="jsub">ของ<b>หายจากสต็อกเรา</b>ส่งคืนแบรนด์ · ไม่เกี่ยวเงินลูกค้า · แอดมินไล่กับ vendor อย่างเดียว</div>
+
+<div class="step" style="--rc:var(--front)">
+  <div class="num">1</div>
+  <div class="step-top"><span class="who"><span>🧑‍💼</span> แอดมิน / 📦 คลัง</span><span class="act">เจอของซื้อเราเสีย → เปิดใบเคลม vendor</span></div>
+  <div class="detail">เจอตอน: แกะกล่องเสีย (DOA) · ตรวจก่อนขาย · หรือ ②ซ่อมไม่ได้ → อ้าง<b>บิลซื้อของเรา</b> (จาก S/N)</div>
+  <div class="step-foot">
+    <span class="doc"><span class="lbl">ออกเอกสาร</span> 📄 <a href="clm-vendor-claim-mockup.html">ใบเคลม vendor (CLM)</a></span>
+    <span class="handoff"><span class="lbl">ส่งต่อ</span> <span class="to" style="background:var(--vendor)">🏭 แบรนด์/vendor</span></span>
+  </div>
+</div>
+
+<div class="step" style="--rc:var(--vendor)">
+  <div class="num">2</div>
+  <div class="step-top"><span class="who"><span>🏭</span> แบรนด์/vendor</span><span class="act">แบรนด์ตอบกลับ (ภายใน ~7 วัน)</span></div>
+  <div class="detail">ตอบได้ 4 แบบ: <b>S1</b> ให้ส่วนลด(ส่วนมากได้อันนี้) · <b>S2</b> ส่งของใหม่ · <b>S3</b> ซ่อมส่งกลับ · <b>S4</b> ปฏิเสธ</div>
+  <div class="step-foot">
+    <span class="doc"><span class="lbl">เอกสาร</span> <span class="nodoc">บันทึกผลใน CLM</span></span>
+    <span class="handoff"><span class="lbl">ส่งต่อตามคำตอบ ↓</span></span>
+  </div>
+</div>
+
+<div class="outs">
+  <div class="out" style="--c:var(--acct)">
+    <h4>S1 · ส่วนลด (CN)</h4>
+    <p>เข้าคิว "รอหักหนี้"</p>
+    <div class="h2">ส่งต่อ: <b>💰 บัญชี</b> ดึงตัดที่ PO-6 → ใบลดหนี้ <a class="doc" href="po-cn-credit-note-mockup.html" style="font-weight:700;color:var(--acct)">PO-CN</a></div>
+  </div>
+  <div class="out" style="--c:var(--wh)">
+    <h4>S2/S3 · ส่งใหม่ / ซ่อมกลับ</h4>
+    <p>รอของจากแบรนด์</p>
+    <div class="h2">ส่งต่อ: <b>📦 คลัง</b> รับของ (WH-1) → ปิดเคลม</div>
+  </div>
+  <div class="out" style="--c:var(--vendor)">
+    <h4>S4 · ปฏิเสธ</h4>
+    <p>แบรนด์ไม่รับเคลม บันทึกเหตุผล</p>
+    <div class="h2">ส่งต่อ: <b>บริษัทรับภาระเอง</b> (ลูกค้าไม่จ่าย)</div>
+  </div>
+</div>
+
+<!-- DOC QUICK REF -->
+<div class="sh">📄 เอกสารที่แอดมินต้องรู้ (สรุปสั้น)</div>
+<div class="tbl-wrap">
+<table class="qr">
+  <thead><tr><th>เอกสาร</th><th>ออกตอนไหน</th><th>ใครรับต่อ</th></tr></thead>
+  <tbody>
+    <tr><td class="d">ใบรับเรื่องซ่อม (SV-1)</td><td>รับเครื่องเข้ามา</td><td>แอดมิน (มอบหมายช่าง)</td></tr>
+    <tr><td class="d">ใบมอบหมายงาน (SV-2)</td><td>เลือกช่าง + นัดวัน</td><td>ช่าง</td></tr>
+    <tr><td class="d">ใบงานช่าง (SV-5)</td><td>ช่างลงมือซ่อม</td><td>คลัง (ถ้าขออะไหล่) / แอดมิน (ปิดงาน)</td></tr>
+    <tr><td class="d">ใบเบิกอะไหล่ (SV-3)</td><td>อะไหล่มีในสต็อก</td><td>ช่าง · ในประกันต้องคืนของเก่าให้แบรนด์</td></tr>
+    <tr><td class="d">ใบสั่งอะไหล่ (SV-Order)</td><td>อะไหล่ไม่มีในสต็อก</td><td>จัดซื้อ (กลายเป็นใบสั่งซื้อ PO)</td></tr>
+    <tr><td class="d">ใบปิดงาน (SV-4)</td><td>ซ่อมเสร็จ ตั้งราคา</td><td>แอดมินส่งมอบ + บัญชี</td></tr>
+    <tr><td class="d">ใบส่งมอบ (SV-7)</td><td>ลูกค้ามารับ + จ่ายเงิน</td><td>จบงาน</td></tr>
+    <tr><td class="d">บิลขาย (SL-4) / ARI</td><td>ลูกค้าจ่าย / แบรนด์จ่าย</td><td>การเงินรับเงิน (FI-1)</td></tr>
+    <tr><td class="d">ใบลดหนี้ลูกค้า (SL-CN)</td><td>ต้องคืนเงินลูกค้า</td><td>Sales ออก (แอดมินบริการส่งคำขอ)</td></tr>
+    <tr><td class="d">ใบเคลม vendor (CLM)</td><td>ของเราซื้อมาเสีย</td><td>แบรนด์/vendor</td></tr>
+    <tr><td class="d">ใบลดหนี้เจ้าหนี้ (PO-CN)</td><td>แบรนด์ให้ส่วนลด (S1)</td><td>บัญชีหักที่ PO-6</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- RULES -->
+<div class="sh" style="border-color:#F59E0B">⚠️ กติกาที่ห้ามพลาด</div>
+<div class="rules">
+  <div class="rc lock"><b>🔒 คืนอะไหล่ก่อนปิดงาน</b> — อะไหล่ในประกันที่ถอดออก ต้องคืนแบรนด์ให้ครบ ค้างแม้ชิ้นเดียว = ปิดงานไม่ได้</div>
+  <div class="rc lock"><b>🔒 ของก่อนเงิน</b> — ลูกค้าเซ็นรับของก่อน ถึงเก็บเงิน/ปิด</div>
+  <div class="rc"><b>⛔ แอดมินบริการไม่ออกใบลดหนี้เอง</b> — ต้องคืนเงินลูกค้า → ส่งคำขอให้ Sales เปิด SL-CN (คนทำ ≠ คนอนุมัติ)</div>
+  <div class="rc"><b>🎁 Goodwill ต้องขออนุมัติ</b> — ยกให้ลูกค้าฟรี (แบรนด์/บริษัทรับ) ต้องอนุมัติตามระดับ + เขียนเหตุผล</div>
+  <div class="rc"><b>🔎 สแกน S/N ก่อนเสมอ</b> — เพื่อรู้ว่าในประกันไหม (ดูรายชิ้น) และกันเปิดงานซ้ำใบเดียวกัน</div>
+  <div class="rc"><b>💳 คนจ่ายดูรายบรรทัด</b> — งานเดียวมีทั้งแบรนด์จ่ายและลูกค้าจ่ายได้ (ออก 2 บิล)</div>
+</div>
+
+<div class="footer">
+  คู่มือเทรนแอดมิน — งานบริการ Sangwijit ERP · ภาษาแอดมิน (ไม่ใช่ spec dev)<br>
+  เวอร์ชันเทคนิค/ผังตัดสินใจ + BC entity ดูที่ <b>flow-service-system.html</b> · คิวงานจริง <b>sv-q-service-queue-mockup.html</b>
+</div>
+
+</div>
+</body>
+</html>
