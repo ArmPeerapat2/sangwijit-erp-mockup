@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Consolidation Review — เทียบทีละข้อ แยกโมดูล (ยังไม่ทำจริง) | Sangwijit</title>
+<style>
+:root{--navy:#1E3A5F;--accent:#2563EB;--bg:#F8FAFC;--muted:#64748B;--border:#E2E8F0;
+--new:#EA580C;--del:#DC2626;--keep:#16A34A;--ask:#B45309}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,'Noto Sans Thai',sans-serif;background:var(--bg);color:#1F2937;font-size:14px}
+.header{background:var(--navy);color:#fff;padding:20px 32px}
+.header h1{font-size:20px}
+.header p{font-size:12.5px;opacity:.9;margin-top:5px;line-height:1.5}
+.container{max-width:1380px;margin:0 auto;padding:16px 24px}
+.banner{background:#FFF7ED;border:1px solid #FED7AA;border-left:5px solid var(--new);border-radius:10px;padding:11px 16px;margin-bottom:12px;font-size:12.5px;line-height:1.6}
+.banner b{color:#9A3412}
+/* module tabs */
+.mtabs{position:sticky;top:0;z-index:60;display:flex;gap:6px;flex-wrap:wrap;background:rgba(248,250,252,.98);padding:10px 0;border-bottom:2px solid var(--border);margin-bottom:16px}
+.mtab{padding:8px 16px;border:1px solid var(--border);border-radius:9px;background:#fff;color:#374151;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.mtab:hover{background:#EFF6FF}
+.mtab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.mtab .c{font-size:10px;font-weight:800;background:#FEF3C7;color:#92400E;border-radius:8px;padding:1px 6px;margin-left:4px}
+.mtab.on .c{background:rgba(255,255,255,.2);color:#FDE68A}
+.tabpane{display:none}
+.tabpane.on{display:block}
+/* summary bar */
+.sumbar{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--border);border-radius:12px;padding:13px 20px;margin-bottom:16px;flex-wrap:wrap}
+.sumbar .big{font-size:23px;font-weight:800;color:var(--navy)}
+.sumbar .arr{font-size:19px;color:var(--muted)}
+.sumbar .big.after{color:var(--keep)}
+.sumbar .pct{font-size:12.5px;font-weight:700;color:#fff;background:var(--keep);padding:4px 12px;border-radius:14px}
+.sumbar .note{font-size:11.5px;color:var(--muted);margin-left:auto}
+/* flow ref strip */
+.flowref{background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden}
+.flowref-h{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#F1F5F9;border-bottom:1px solid var(--border);font-size:12.5px;font-weight:800;color:var(--navy);flex-wrap:wrap}
+.flowref-h .links{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.flowref-h .links a{font-size:11px;font-weight:700;color:var(--accent);background:#fff;border:1px solid var(--border);border-radius:12px;padding:3px 10px;text-decoration:none}
+.flowref .frame{height:330px;overflow:hidden;position:relative}
+.flowref iframe{width:1380px;height:1400px;border:0;transform:scale(0.55);transform-origin:0 0;pointer-events:none}
+.flowref .fade{position:absolute;bottom:0;left:0;right:0;height:44px;background:linear-gradient(transparent,#fff)}
+/* item card */
+.item{background:#fff;border:1px solid var(--border);border-radius:14px;margin-bottom:22px;overflow:hidden;scroll-margin-top:70px}
+.item-h{display:flex;align-items:center;gap:12px;padding:13px 20px;border-bottom:1px solid var(--border);background:#FAFBFC;flex-wrap:wrap}
+.item-h .qn{min-width:38px;height:38px;border-radius:10px;background:var(--navy);color:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0 8px}
+.item-h h2{font-size:15.5px;color:var(--navy);flex:1;min-width:250px}
+.rec{font-size:11.5px;font-weight:700;color:#fff;background:var(--keep);padding:4px 12px;border-radius:14px;white-space:nowrap}
+.opts{padding:9px 20px;font-size:12.5px;color:#374151;background:#F8FAFC;border-bottom:1px solid var(--border);line-height:1.7}
+.opts b{color:var(--navy)}
+.item-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.pane{padding:15px 18px;min-width:0}
+.pane+.pane{border-left:1px dashed var(--border)}
+.pane-h{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.pane-h.cur{color:var(--muted)}
+.pane-h.new{color:var(--new)}
+/* live shot */
+.shot{border:1px solid var(--border);border-radius:9px;overflow:hidden;background:#fff;margin-bottom:10px;position:relative}
+.shot .cap{position:absolute;top:0;left:0;z-index:2;font-size:10px;font-weight:700;background:rgba(30,58,95,.88);color:#fff;padding:3px 10px;border-radius:0 0 8px 0}
+.shot .frame{height:290px;overflow:hidden}
+.shot iframe{width:1440px;height:1000px;border:0;transform:scale(0.4);transform-origin:0 0;pointer-events:none}
+.shot a.open{position:absolute;right:6px;top:5px;z-index:2;font-size:10px;font-weight:700;background:#fff;border:1px solid var(--border);border-radius:6px;padding:2px 8px;color:var(--accent);text-decoration:none}
+/* wireframe */
+.wf{border:1.5px dashed #94A3B8;border-radius:10px;padding:12px;background:#FCFCFD;font-size:11.5px}
+.wf .wt{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.wf-tabs{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
+.wf-tab{padding:5px 12px;border:1px solid #CBD5E1;border-bottom:none;border-radius:7px 7px 0 0;background:#EEF2F7;color:#64748B;font-weight:600;font-size:11px}
+.wf-tab.on{background:#fff;color:var(--navy);font-weight:800;border-color:#94A3B8}
+.wf-tab.add{background:#FFF7ED;color:var(--new);border-color:#FDBA74;font-weight:800}
+.wf-box{border:1px solid #CBD5E1;border-radius:7px;background:#fff;padding:8px 10px;margin-bottom:6px}
+.wf-box.add{border-color:#FDBA74;background:#FFF7ED}
+.wf-box.del{border-color:#FECACA;background:#FEF2F2;text-decoration:line-through;color:#991B1B}
+.wf-row{display:flex;gap:5px;margin-bottom:5px;flex-wrap:wrap}
+.wf-cell{flex:1;min-width:52px;border:1px solid #E2E8F0;border-radius:5px;background:#F8FAFC;padding:4px 7px;font-size:10px;color:#64748B;text-align:center;font-weight:600}
+.wf-cell.add{background:#FFF7ED;border-color:#FDBA74;color:var(--new);font-weight:800}
+.wf-pill{display:inline-block;font-size:10px;font-weight:800;padding:3px 10px;border-radius:12px;border:1px solid}
+.wf-pill.a{background:#EFF6FF;color:#1E40AF;border-color:#BFDBFE}
+.wf-pill.b{background:#FFF7ED;color:var(--new);border-color:#FDBA74}
+.wf-note{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.55;border-top:1px dashed var(--border);padding-top:7px}
+.wf-note b{color:#374151}
+.wf-arrow{text-align:center;color:#94A3B8;font-size:14px;margin:4px 0}
+.tagadd{font-size:9px;font-weight:800;background:var(--new);color:#fff;border-radius:6px;padding:1px 6px;vertical-align:2px}
+/* 💬 comment/grill box */
+.ask{background:#FFFBEB;border:1.5px solid #FCD34D;border-left:6px solid var(--ask);border-radius:12px;padding:13px 17px;margin-bottom:22px;scroll-margin-top:70px}
+.ask-h{display:flex;align-items:center;gap:10px;margin-bottom:7px;flex-wrap:wrap}
+.ask-h .cn{font-size:12px;font-weight:800;color:#fff;background:var(--ask);border-radius:8px;padding:3px 10px}
+.ask-h h3{font-size:14px;color:#78350F;flex:1;min-width:220px}
+.ask p{font-size:12.5px;color:#78350F;line-height:1.65}
+.ask .why{font-size:11.5px;color:#92400E;background:#FEF3C7;border-radius:7px;padding:7px 11px;margin:8px 0;line-height:1.55}
+.ask .ans{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.ask .ans span{font-size:11.5px;font-weight:700;background:#fff;border:1px solid #FCD34D;border-radius:8px;padding:5px 12px;color:#78350F}
+/* safe */
+.safe{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:22px}
+.safe h2{font-size:15.5px;color:var(--navy);margin-bottom:4px}
+.safe .sub{font-size:12px;color:var(--muted);margin-bottom:12px}
+.safe-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.sg{border:1px solid var(--border);border-radius:10px;padding:10px 14px}
+.sg h3{font-size:12.5px;color:var(--navy);margin-bottom:6px}
+.sg ul{list-style:none}
+.sg li{font-size:12px;padding:3px 0;line-height:1.5}
+.sg li a{color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent)}
+.sg li .to{color:var(--keep);font-weight:700}
+/* answer sheet */
+.sheet{background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;line-height:1.9}
+.sheet b{color:#166534}
+.sheet code{background:#fff;border:1px solid #BBF7D0;border-radius:6px;padding:2px 9px;font-size:12px}
+.footer{text-align:center;font-size:12px;color:var(--muted);margin:24px 0;line-height:1.7}
+@media (max-width:1000px){.item-body{grid-template-columns:1fr}.pane+.pane{border-left:none;border-top:1px dashed var(--border)}.safe-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🔍 Consolidation Review — เทียบทีละข้อ · แยกโมดูล · อ้างอิง flowchart</h1>
+  <p>ซ้าย = <b>หน้าจริงปัจจุบัน (live preview)</b> · ขวา = <b>wireframe ข้อเสนอ</b> (ส้ม=เพิ่ม/ย้าย · แดงขีดฆ่า=ตัด) · 🟡 <b>C-box = จุดที่ผมสงสัยเอง ให้คุณตอบ/grill ก่อนตัดสิน</b> · แผนเต็ม: <code>.agents/topics/consolidation-plan-2026-07.md</code></p>
+</div>
+<div class="container">
+
+<div class="banner">⏸️ <b>ยังไม่ทำจริง</b> · ตอบรวมทีเดียวได้ เช่น <b>"1ก 2ก 3ข 4ข 5ก 6ก 7ก 8ก · C1=... C2=..."</b> · preview เลื่อนไม่ได้ (จงใจ เหมือนภาพแคป) — กด <b>เปิด ↗</b> ดูหน้าเต็ม</div>
+
+<!-- ═══ MODULE TABS ═══ -->
+<div class="mtabs">
+  <button class="mtab on" onclick="mt(this,'t-ov')">📊 ภาพรวม + SAFE</button>
+  <button class="mtab" onclick="mt(this,'t-wh')">📦 WH <span class="c">Q1 · C3</span></button>
+  <button class="mtab" onclick="mt(this,'t-sv')">🛠️ SV <span class="c">Q2-4 · C1-2</span></button>
+  <button class="mtab" onclick="mt(this,'t-fi')">💰 FI+PO <span class="c">Q5</span></button>
+  <button class="mtab" onclick="mt(this,'t-cf')">⚙️ CF+ทั่วไป <span class="c">Q6-8 · C6</span></button>
+  <button class="mtab" onclick="mt(this,'t-sl')">🛒 SL·MD·PM·SC <span class="c">C4-5</span></button>
+</div>
+
+<!-- ════════════════ TAB: ภาพรวม ════════════════ -->
+<div class="tabpane on" id="t-ov">
+
+<div class="sumbar">
+  <span class="big">~101 หน้า</span><span class="arr">→</span><span class="big after">~62 หน้า build</span>
+  <span class="pct">ลด ~40%</span>
+  <span class="note">SV 20→10 · WH 14→10 · CF 21→12 · FI+PO 19→15 · SL/MD/PM/SC 27→15+3comp</span>
+</div>
+
+<div class="sheet">
+  <b>📝 ใบตอบ (ก็อปไปแก้ได้เลย):</b><br>
+  <code>Q: 1ก 2ก 3ก 4ข 5ก 6ก 7ก 8ก</code> &nbsp;(ตามคำแนะนำทั้งหมด — แก้รายตัวได้)<br>
+  <code>C: C1=มือถือเท่านั้น C2=คงแยก C3=ยุบ C4=reference C5=P1 C6=P2</code>
+</div>
+
+<div class="flowref">
+  <div class="flowref-h">📎 Flowchart อ้างอิงหลัก — Workflow Map ทั้งระบบ (6-7 สาย · kitchen rail)
+    <span class="links"><a href=".agents/flow-workflow-map.html" target="_blank">เปิดเต็ม ↗</a><a href="module-flow-overview.html" target="_blank">module overview ↗</a><a href="flow-detail-charts.html" target="_blank">เคสแตกสาขา ↗</a></span>
+  </div>
+  <div class="frame"><iframe src=".agents/flow-workflow-map.html" loading="lazy"></iframe><div class="fade"></div></div>
+</div>
+
+<div class="safe" id="safe">
+  <h2>✅ SAFE — ไม่ต้องเคาะ ทำได้เลย (ไม่ขัด decision ไหน)</h2>
+  <div class="sub">agent ตรวจโค้ด+spec แล้วชัดเจน — จะลงมือหลังคุณตอบ Q/C ครบ</div>
+  <div class="safe-grid">
+    <div class="sg">
+      <h3>🗑️ Archive 5 หน้า</h3>
+      <ul>
+        <li><a href="_archive/sl5-crm-followup-mockup-2026-07-12.html" target="_blank">sl5-crm-followup</a> — ตัดสินแล้ว (SL-5/6/7 archived)</li>
+        <li><a href="_archive/fi5-ar-audit-mockup-2026-07-12.html" target="_blank">fi5-ar-audit</a> — เนื้อ=FI-6 Credit Control (P2) · design เก่า</li>
+        <li><a href="_archive/fi13-dual-book-mockup-2026-07-12.html" target="_blank">fi13-dual-book</a> — P2 + ขัด doc-level tag</li>
+        <li><a href="_archive/po3-vendor-onboarding-mockup-2026-07-12.html" target="_blank">po3-vendor-onboarding</a> — แทนด้วย md3 + VBL→PO-6</li>
+        <li><a href="_archive/wh-q-dashboard-mockup-2026-07-12.html" target="_blank">wh-q-dashboard</a> — เหลือแต่ KPI · ลิงก์ stale 2 จุด</li>
+      </ul>
+    </div>
+    <div class="sg">
+      <h3>🔀 Merge / ย้ายบ้าน</h3>
+      <ul>
+        <li>sl7-sales-report <span class="to">→ rp1</span> (มีหมวดขายแล้ว)</li>
+        <li>sv-tech-report <span class="to">→ cm1 แท็บบริการ</span> (section stage-9 มีแล้ว)</li>
+        <li>sv-sla-config + sv-checklist-template <span class="to">→ cf-master-settings</span></li>
+        <li>sv6-print-templates <span class="to">→ cf2-7</span> · sv-posted-docs <span class="to">→ chip ใน sv-q</span></li>
+        <li>ลบ stub: cf3 · cf5 <span class="to">→ repoint sidebar</span></li>
+      </ul>
+    </div>
+    <div class="sg">
+      <h3>📚 เปลี่ยนเป็น Reference (ไม่ build)</h3>
+      <ul>
+        <li>cf2-1-tax · cf2-9-general-param (banner cut ติดแล้ว)</li>
+        <li>cf2-config-hub (decision map · แก้ note Entity Tag ก่อน)</li>
+        <li>demo 5: sc7 · sc10 · sc-payment · sc-media-demo · sc-shared-catalog</li>
+        <li>⚠️ <b>ห้ามแตะ sc1/sc2/sc3</b> — runtime จริง (iframe จาก swt-doc-finder)</li>
+      </ul>
+    </div>
+    <div class="sg">
+      <h3>🔧 แก้ stale / ตัด section ซ้ำ</h3>
+      <ul>
+        <li>CLAUDE.md "CF-2.2=cut" ขัด ADR-0004 (จริง=Portal-managed)</li>
+        <li>dead iframe swt-doc-finder.js:335 ชี้ bc365/ ที่ไม่มี</li>
+        <li>fi4 ตัดโซน WHT ซ้ำ → ลิงก์ fi12 · ap1 ตัดแท็บตั้งค่า → ลิงก์ cf2-6</li>
+        <li>fiq การ์ด stale 2 จุด · fi1q:114 dead link · sidebar sl5/SLR1-5</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div><!-- /t-ov -->
+
+<!-- ════════════════ TAB: WH ════════════════ -->
+<div class="tabpane" id="t-wh">
+
+<div class="flowref">
+  <div class="flowref-h">📎 Flowchart อ้างอิง — สาย 1 ขาย (SL-4→WH-2R→Q2→WH-2) + สาย 6 คลังปฏิบัติการ (kitchen rail Q1/Q2 · R→เอกสารจริง)
+    <span class="links"><a href=".agents/flow-workflow-map.html" target="_blank">เปิด workflow map ↗</a></span>
+  </div>
+  <div class="frame"><iframe src=".agents/flow-workflow-map.html" loading="lazy"></iframe><div class="fade"></div></div>
+</div>
+
+<!-- Q1 -->
+<div class="item" id="q1">
+  <div class="item-h"><span class="qn">Q1</span><h2>WH คู่ R+จริง (WH-2R/WH-2 · WH-3R/WH-3) — ฟอร์มแฝดกัน 90%</h2><span class="rec">แนะนำ ก · ยุบโค้ด คงเมนู</span></div>
+  <div class="opts"><b>ก.</b> build ฟอร์มเดียว 2 โหมด — เมนู/เลขเอกสารยังแยกเหมือนเดิม (dev เขียนครั้งเดียว) &nbsp;·&nbsp; <b>ข.</b> คงแยก 2 หน้า ตาม decision Q5 เดิม<br>⚠️ flowchart สาย 6 ยืนยัน: R กับเอกสารจริงเป็น<b>คนละใบใน BC</b> (request ≠ shipment) — ข้อเสนอนี้ยุบแค่ "หน้า" ไม่ยุบเอกสาร</div>
+  <div class="item-body">
+    <div class="pane">
+      <div class="pane-h cur">📷 ปัจจุบัน — 2 หน้าแยก (โครงเดียวกัน)</div>
+      <div class="shot"><span class="cap">wh2r-issue-request (ใบขอเบิก)</span><a class="open" href="wh2r-issue-request-mockup.html" target="_blank">เปิด ↗</a><div class="frame"><iframe src="wh2r-issue-request-mockup.html" loading="lazy"></iframe></div></div>
+      <div class="shot"><span class="cap">wh2-issue (ใบเบิกจริง)</span><a class="open" href="wh2-issue-mockup.html" target="_blank">เปิด ↗</a><div class="frame"><iframe src="wh2-issue-mockup.html" loading="lazy"></iframe></div></div>
+    </div>
+    <div class="pane">
+      <div class="pane-h new">✏️ ข้อเสนอ ก — ฟอร์มเดียว สลับโหมด</div>
+      <div class="wf">
+        <div class="wt">WH-2 เบิกสินค้า <span class="wf-pill a">📝 โหมดใบขอ (2R)</span><span class="wf-pill b">📦 โหมดเบิกจริง <span class="tagadd">สลับตามสิทธิ์</span></span></div>
+        <div class="wf-box">หัวเอกสาร · อ้างอิง SL-4 / คิว WH-Q2 <span style="color:#94A3B8">(เหมือนกัน 2 โหมด)</span></div>
+        <div class="wf-row"><span class="wf-cell">รหัส</span><span class="wf-cell">ชื่อสินค้า</span><span class="wf-cell">จำนวนขอ</span><span class="wf-cell add">กันสต๊อก✓ (ใบขอ)</span></div>
+        <div class="wf-row"><span class="wf-cell">รหัส</span><span class="wf-cell">ชื่อสินค้า</span><span class="wf-cell">จำนวนขอ</span><span class="wf-cell add">เบิกจริง 🟠 (จริง)</span><span class="wf-cell add">Serial (จริง)</span></div>
+        <div class="wf-box add">ปุ่ม <b>Post Shipment</b> — เฉพาะโหมดเบิกจริง + role คลัง (เซลล์ไม่เห็น)</div>
+        <div class="wf-note"><b>เมนู sidebar ยังแยก 2 รายการ</b> ชี้หน้าเดียวคนละโหมด · เอกสาร BC แยก 2 ใบเหมือนเดิม · ทำเหมือนกันกับคู่ WH-3R/WH-3 · <b>ผลกับ dev:</b> 4 หน้า → 2 template</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- C3 -->
+<div class="ask" id="c3">
+  <div class="ask-h"><span class="cn">💬 C3</span><h3>wh4r "เตรียมนับ" → เป็นแท็บ "สร้างรอบนับ" ใน wh4-count — ยุบได้ไหม?</h3></div>
+  <p>agent เสนอยุบเพราะ: งาน prep = ตั้งขอบเขต+freeze snapshot (ไม่มีคอลัมน์นับจริง) · เป็น step แรกของ lifecycle เดียวกัน · <b>คนใช้เดียวกัน = หัวหน้าคลัง</b></p>
+  <div class="why">🤔 <b>ที่ผมสงสัย:</b> ตอนนับจริง หัวหน้าคลังเป็นคนสร้างรอบ + คนนับเป็นพนักงานอีกคนไหม? ถ้าคนนับ (มือถือ/กระดาษ) ต้องเปิดหน้า "รอบนับของฉัน" แยก → ควรคงแยก · ถ้าหัวหน้าคลังทำเองครบวงจร → ยุบเป็นแท็บได้</p>
+  <div class="ans"><span>ก. ยุบเป็นแท็บ (หัวหน้าคลังทำเองครบ)</span><span>ข. คงแยก (คนนับเป็นคนละคน)</span></div>
+</div>
+
+</div><!-- /t-wh -->
+
+<!-- ════════════════ TAB: SV ════════════════ -->
+<div class="tabpane" id="t-sv">
+
+<div class="flowref">
+  <div class="flowref-h">📎 Flowchart อ้างอิง — งานบริการ 9 stage (spine 1→2→3→4→5→7 · สาย 6 อะไหล่ · 8 เคลม · 9 จ่ายช่าง)
+    <span class="links"><a href="flow-service-chart.html" target="_blank">ผัง 9 stage ↗</a><a href="flow-service-status.html" target="_blank">สถานะเต็ม ↗</a><a href="flow-service-training.html" target="_blank">เทรนแอดมิน ↗</a></span>
+  </div>
+  <div class="frame"><iframe src="flow-service-chart.html" loading="lazy"></iframe><div class="fade"></div></div>
+</div>
+
+<!-- Q2 -->
+<div class="item" id="q2">
+  <div class="item-h"><span class="qn">Q2</span><h2>sv7 ส่งมอบ+รับชำระ → เป็นแท็บใน sv4 ปิดงาน</h2><span class="rec">แนะนำ ก · ยุบเป็นแท็บ</span></div>
+  <div class="opts"><b>ก.</b> ยุบเป็นแท็บ 2 ของ sv4 (decision B4: "SV-7 = รับชำระเท่านั้น · invoice ออกที่ sv4") &nbsp;·&nbsp; <b>ข.</b> คงแยก<br>📎 ตรง flowchart: stage 5 ปิดงาน → 7 วางบิล → รับชำระ = ต่อเนื่องกัน · ลูกค้ามารับทีหลัง → แท็บถือสถานะ "ปิดงานแล้ว·รอส่งมอบ"</div>
+  <div class="item-body">
+    <div class="pane">
+      <div class="pane-h cur">📷 ปัจจุบัน — 2 หน้า</div>
+      <div class="shot"><span class="cap">sv4-service-close (ปิดงาน+ตั้งราคา)</span><a class="open" href="sv4-service-close-mockup.html" target="_blank">เปิด ↗</a><div class="frame"><iframe src="sv4-service-close-mockup.html" loading="lazy"></iframe></div></div>
+      <div class="shot"><span class="cap">sv7-service-delivery (ส่งมอบ+เซ็น+รับเงิน)</span><a class="open" href="sv7-service-delivery-mockup.html" target="_blank">เปิด ↗</a><div class="frame"><iframe src="sv7-service-delivery-mockup.html" loading="lazy"></iframe></div></div>
+    </div>
+    <div class="pane">
+      <div class="pane-h new">✏️ ข้อเสนอ ก — หน้าเดียว 2 แท็บ</div>
+      <div class="wf">
+        <div class="wt">SV-4 ปิดงาน & ส่งมอบ</div>
+        <div class="wf-tabs"><span class="wf-tab on">1 · ปิดงาน + ตั้งราคา (payer รายบรรทัด)</span><span class="wf-tab add">2 · ส่งมอบ + รับชำระ (เดิม SV-7) <span class="tagadd">ย้ายเข้า</span></span></div>
+        <div class="wf-box">แท็บ 1: QA · ราคา 3 อย่าง · คนจ่าย แบรนด์/ลูกค้า/goodwill · ออก ARI + SL-4</div>
+        <div class="wf-box add">แท็บ 2: สถานะ <b>"ปิดงานแล้ว · รอส่งมอบ"</b> → เซ็น → sc-payment → QR → ปิดจบ</div>
+        <div class="wf-box">🔒 gate ค้างคืนซาก → <b>ล็อกแท็บ 2</b> (แทน block "ส่งต่อ SV-7")</div>
+        <div class="wf-note"><b>เอกสาร BC แยกใบเหมือนเดิม</b> · <b>ผลกับ dev:</b> −1 หน้า · gate อยู่ที่เดียว</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="item" id="q3">
+  <div class="item-h"><span class="qn">Q3</span><h2>sv6 จัดส่ง+ติดตั้ง → รวมเข้าคิว sv-q (view ปฏิทิน)</h2><span class="rec">ทีมเดียวกัน=ก · คนละทีม=ข</span></div>
+  <div class="opts"><b>ก.</b> รวม — flowchart 9 stage ให้งานติดตั้ง (1.4) วิ่งรางเดียวกับซ่อมอยู่แล้ว · ยกปฏิทิน slot ของ sv6 มาเป็น view ใน sv-q &nbsp;·&nbsp; <b>ข.</b> คงแยก — ถ้าทีมจัดส่ง (รถ+คนยก จาก SL-4) เป็น<b>คนละทีม</b>กับ dispatcher ซ่อม (kitchen rail อนุญาตหลายรางถ้าคนละสถานี)</div>
+  <div class="item-body">
+    <div class="pane">
+      <div class="pane-h cur">📷 ปัจจุบัน — 2 หน้า</div>
+      <div class="shot"><span class="cap">sv-q-service-queue</span><a class="open" href="sv-q-service-queue-mockup.html" target="_blank">เปิด ↗</a><div class="frame"><iframe src="sv-q-service-queue-mockup.html" loading="lazy"></iframe></div></div>
+      <div class="shot"><span class="cap">sv6-delivery-install (ปฏิทิน slot)</span><a class="open" href="sv6-delivery-install-mockup.html" target="_blank">เปิด ↗</a><div class="frame"><iframe src="sv6-delivery-install-mockup.html" loading="lazy"></iframe></div></div>
+    </div>
+    <div class="pane">
+      <div class="pane-h new">✏️ ข้อเสนอ ก — sv-q เพิ่ม chip + view ปฏิทิน</div>
+      <div class="wf">
+        <div class="wt">SV-Q คิวงานบริการ</div>
+        <div class="wf-row"><span class="wf-cell">🆕 รับเรื่อง</span><span class="wf-cell">📅 รอนัด</span><span class="wf-cell">🛠️ ดำเนินการ</span><span class="wf-cell">🔧 รออะไหล่</span><span class="wf-cell add">🚚 จัดส่ง+ติดตั้ง <span class="tagadd">chip ใหม่</span></span></div>
+        <div class="wf-tabs"><span class="wf-tab on">📋 ตาราง</span><span class="wf-tab add">🗓️ ปฏิทินช่าง (ยกจาก sv6) <span class="tagadd">view ใหม่</span></span></div>
+        <div class="wf-box add">ปฏิทินรายวัน: ช่าง × slot เช้า/บ่าย · ลากงานลง slot · split job (ของดีจาก sv6 ไม่ทิ้ง)</div>
+        <div class="wf-box del">sv6-delivery-install (หน้าแยก) — archive</div>
+        <div class="wf-note"><b>เงื่อนไข ก:</b> dispatcher เดียวกัน · คนละทีมคนละจอ → เลือก ข (ไม่เจ็บ)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="item" id="q4">
+  <div class="item-h"><span class="qn">Q4</span><h2>sv-order สั่งอะไหล่ — แท็บ หรือคงหน้าแยก (จุดเงิน 2 จุด)</h2><span class="rec">แนะนำ ข · คงหน้าแยก</span></div>
+  <div class="opts"><b>ก.</b> เป็นแท็บ "สั่งอะไหล่ (stage 6)" ในหน้างาน Job &nbsp;·&nbsp; <b>ข.</b> คงแยก — มี <b>มัดจำลูกค้า (6.1)</b> + <b>จ่าย vendor</b> = จุดคุมเงิน<br>📎 flowchart สาย 6: 6.1 มัดจำ 💰 → 6.2/6.3 สั่ง → 6.4 รับ → ↩ นัดใหม่ 2.1</div>
+  <div class="item-body">
+    <div class="pane">
+      <div class="pane-h cur">📷 ปัจจุบัน</div>
+      <div class="shot"><span class="cap">sv-order-parts-request (tracker PO-4/WH-1)</span><a class="open" href="sv-order-parts-request-mockup.html" target="_blank">เปิด ↗</a><div class="frame"><iframe src="sv-order-parts-request-mockup.html" loading="lazy"></iframe></div></div>
+    </div>
+    <div class="pane">
+      <div class="pane-h new">✏️ ข้อเสนอ ข — คงหน้าแยก + เพิ่มมัดจำ 6.1</div>
+      <div class="wf">
+        <div class="wt">SV-Order (หน้าแยก · จุดเงิน)</div>
+        <div class="wf-box">doc-chain: SV-5 ขออะไหล่ → <b>SV-Order</b> → spawn PO-4 → รอรับ WH-1 → ↩ นัดใหม่ 2.1</div>
+        <div class="wf-box add">➕ เพิ่ม: <b>รับมัดจำลูกค้า (6.1)</b> — ปุ่มรับมัดจำ → sc-payment → ใบเสร็จ ก่อนสั่ง</div>
+        <div class="wf-box">🔗 หน้างาน Job มีแค่ลิงก์+สถานะ "สั่งอะไหล่ · รอรับ (SVO-xxxx)"</div>
+        <div class="wf-note"><b>เหตุผล ข:</b> จุดเงินควรมี approval+audit ของตัวเอง · +1 หน้าไม่เจ็บ (โครงเสร็จแล้ว)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- C1 -->
+<div class="ask" id="c1">
+  <div class="ask-h"><span class="cn">💬 C1</span><h3>ยุบ sv5 Job Card (desktop) เป็นแท็บ — ยืนบนสมมติฐาน "ช่างกรอกผ่านมือถือเท่านั้น"</h3></div>
+  <p>แผน SV เสนอรวม sv2+sv5 เป็น "หน้างานซ่อม Job" เดียว (desktop สำหรับแอดมิน) โดยช่างกรอกงานจริงที่ <b>sv-tech-mobile</b> — คุณเคยยืนยัน "ช่างส่งงานส่วนมากผ่านมือถือ" (07-08)</p>
+  <div class="why">🤔 <b>ที่ผมสงสัย:</b> คำว่า "ส่วนมาก" — มีเคสที่ช่าง/แอดมิน<b>กรอกผลงานแทนบน desktop</b> ไหม (เช่นช่างอาวุโสไม่ถนัดมือถือ · งานในศูนย์ที่นั่งหน้าคอม · มือถือแบตหมด/เน็ตหลุด)? ถ้ามี → แท็บ "บันทึกงานช่าง" บน desktop ต้องกรอกได้เต็ม (ไม่ใช่ read-only) ซึ่งกระทบขนาดงาน dev</p>
+  <div class="ans"><span>ก. มือถือเท่านั้น · desktop = ดู/แก้ของแอดมิน</span><span>ข. desktop ต้องกรอกแทนได้เต็ม (สำรอง)</span></div>
+</div>
+
+<!-- C2 -->
+<div class="ask" id="c2">
+  <div class="ask-h"><span class="cn">💬 C2</span><h3>sir-site-inspection (ประเมินหน้างาน) — คงหน้าแยก หรือยุบเป็นงานใน tech-mobile?</h3></div>
+  <p>agent ให้ KEEP (confidence กลาง) เพราะเป็นต้นทางของ SQT ใบเสนอราคางานบริการ + เก็บหลักฐานรูป/ข้อจำกัดหน้างาน · แต่ตั้งข้อสังเกตว่า input จริงเกิดบนมือถือช่าง และ SQT มี view ผล SIR อยู่แล้ว</p>
+  <div class="why">🤔 <b>ที่ผมสงสัย:</b> ใบ SIR ถูกใช้เป็น<b>เอกสารอ้างอิงแยก</b> (พิมพ์/แนบ/ให้ลูกค้าเซ็น) หรือเป็นแค่<b>ข้อมูลประกอบ</b>ใบเสนอราคา SQT? ถ้าเป็นแค่ข้อมูลประกอบ → ยุบเป็นฟอร์มใน tech-mobile + section ใน SQT พอ (−1 หน้า)</p>
+  <div class="ans"><span>ก. เอกสารแยกจริง (ลูกค้าเซ็น/พิมพ์) → คงหน้า</span><span>ข. ข้อมูลประกอบ SQT → ยุบเข้า tech-mobile</span></div>
+</div>
+
+</div><!-- /t-sv -->
+
+<!-- ════════════════ TAB: FI+PO ════════════════ -->
+<div class="tabpane" id="t-fi">
+
+<div class="flowref">
+  <div class="flowref-h">📎 Flowchart อ้างอิง — สาย 2 ซื้อ (PO-1→PO-4→WH-1→PO-6→FI-2) + สาย 3 เคลม→ลดหนี้ + AP reduction (PO-7/PO-CN/CLM → PO-6)
+    <span class="links"><a href=".agents/flow-workflow-map.html" target="_blank">เปิด workflow map ↗</a></span>
+  </div>
+  <div class="frame"><iframe src=".agents/flow-workflow-map.html" loading="lazy"></iframe><div class="fade"></div></div>
+</div>
+
+<!-- Q5 -->
+<div class="item" id="q5">
+  <div class="item-h"><span class="qn">Q5</span><h2>fi3 กระทบยอดธนาคาร — BC มี Bank Reconciliation native</h2><span class="rec">แนะนำ ก · cut ใช้ BC ตรง</span></div>
+  <div class="opts"><b>ก.</b> cut — ทำที่ BC ตรง (ตรรกะเดียวกับ CF-2.1/2.3 ที่ cut · เดือนละครั้ง · คนทำ=บัญชีที่มีสิทธิ์ BC) &nbsp;·&nbsp; <b>ข.</b> คง portal build<br>⚠️ <b>ไม่กระทบ fi1q</b> — เงินเข้ารายวัน (URC → จับคู่ → Post) ยังเป็น rail ของ portal ตาม decision A3</div>
+  <div class="item-body">
+    <div class="pane">
+      <div class="pane-h cur">📷 ปัจจุบัน</div>
+      <div class="shot"><span class="cap">fi3-bank-reconciliation</span><a class="open" href="fi3-bank-reconciliation-mockup.html" target="_blank">เปิด ↗</a><div class="frame"><iframe src="fi3-bank-reconciliation-mockup.html" loading="lazy"></iframe></div></div>
+    </div>
+    <div class="pane">
+      <div class="pane-h new">✏️ ข้อเสนอ ก — cut ไป BC</div>
+      <div class="wf">
+        <div class="wt">แบ่งงาน Portal ↔ BC</div>
+        <div class="wf-box del">fi3-bank-reconciliation (portal) — cut · เก็บ reference</div>
+        <div class="wf-box add">🏦 <b>BC Bank Reconciliation (native)</b> — เดือนละครั้ง · auto-match จาก statement feed</div>
+        <div class="wf-box">portal เหลือ: การ์ดใน fiq "กระทบยอด → เปิดใน BC ↗" · เงินเข้ารายวัน = <b>fi1q</b> (ไม่เปลี่ยน)</div>
+        <div class="wf-note"><b>ผลกับ dev:</b> −1 หน้าใหญ่ (reconcile ทำยาก) · ตรง pattern CF-2.x</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="safe">
+  <h2>กลุ่มที่ตรวจแล้ว "ดูซ้ำแต่ไม่ซ้ำ" — คงแยกทั้งหมด</h2>
+  <div class="sub">agent เปิดโค้ดเทียบแล้ว ต่างงานจริง (บันทึกไว้กัน re-audit รอบหน้า)</div>
+  <div class="safe-grid">
+    <div class="sg"><h3>💰 Finance</h3><ul>
+      <li><b>fiq ≠ fi1q</b> — dashboard 6 คิว vs rail เงินเข้า (ปลายทาง A3)</li>
+      <li><b>fi4 ≠ fi12</b> — บันทึกค่าใช้จ่ายนอก PO vs ศูนย์ WHT (แต่ตัดโซน WHT ซ้ำใน fi4)</li>
+      <li><b>fi7</b> — ไม่ใช่ report ล้วน มี Release ล็อกรายงาน = workflow ภาษี · คง portal</li>
+    </ul></div>
+    <div class="sg"><h3>🛒 Purchase</h3><ul>
+      <li><b>po6 ≠ po8</b> — ฝั่งเงิน (ตั้งหนี้) vs ฝั่งของ (กองฝาก+จ่ายออก+S/N)</li>
+      <li><b>po2</b> — เนื้อจริง = Vendor Commitment (คู่ form/realize กับ po7) · ชื่อไฟล์ rfq stale แจ้ง dev</li>
+      <li><b>poq</b> — Q เดียวของโมดูล ตาม kitchen rail</li>
+    </ul></div>
+  </div>
+</div>
+
+</div><!-- /t-fi -->
+
+<!-- ════════════════ TAB: CF ════════════════ -->
+<div class="tabpane" id="t-cf">
+
+<div class="flowref">
+  <div class="flowref-h">📎 อ้างอิง — CF ไม่มี flowchart สายเฉพาะ · ยึด decision Grill A1-A4 + ADR-0004 (number series = Portal-managed) · ภาพรวมระบบดู module overview
+    <span class="links"><a href="module-flow-overview.html" target="_blank">module overview ↗</a><a href="cf2-config-hub-mockup.html" target="_blank">config decision map ↗</a></span>
+  </div>
+</div>
+
+<!-- Q6 -->
+<div class="item" id="q6">
+  <div class="item-h"><span class="qn">Q6</span><h2>cf-bank-status → เป็นแท็บ 5 ของ cf-company-settings</h2><span class="rec">แนะนำ ก · ยุบเป็นแท็บ</span></div>
+  <div class="opts"><b>ก.</b> ยุบ — เนื้อสั้น (สถานะ 4 นิติ read-only + manual sync) · admin จบที่เดียว &nbsp;·&nbsp; <b>ข.</b> คงแยก (จอ monitor เปิดค้าง)</div>
+  <div class="item-body">
+    <div class="pane">
+      <div class="pane-h cur">📷 ปัจจุบัน — 2 หน้า</div>
+      <div class="shot"><span class="cap">cf-company-settings (4 แท็บ)</span><a class="open" href="cf-company-settings-mockup.html" target="_blank">เปิด ↗</a><div class="frame"><iframe src="cf-company-settings-mockup.html" loading="lazy"></iframe></div></div>
+      <div class="shot"><span class="cap">cf-bank-status</span><a class="open" href="_archive/cf-bank-status-mockup-2026-07-12.html" target="_blank">เปิด ↗</a><div class="frame"><iframe src="_archive/cf-bank-status-mockup-2026-07-12.html" loading="lazy"></iframe></div></div>
+    </div>
+    <div class="pane">
+      <div class="pane-h new">✏️ ข้อเสนอ ก — settings hub 5 แท็บ</div>
+      <div class="wf">
+        <div class="wt">CF · ตั้งค่าบริษัท (hub เดียว)</div>
+        <div class="wf-tabs"><span class="wf-tab on">🏢 บริษัท</span><span class="wf-tab">⚙️ Options</span><span class="wf-tab">🏭 ค่าเริ่มต้น</span><span class="wf-tab add">🏦 เชื่อมธนาคาร <span class="tagadd">ย้ายเข้า</span></span><span class="wf-tab">👤 ค่าส่วนตัว (Q7)</span></div>
+        <div class="wf-box add">แท็บธนาคาร: SWT ✅ · SWE ✅ · VMN ⚠️ token หมดอายุ · WPS ⏸️ · [🔄 sync → FI-1Q] · credential ที่ BC (A3)</div>
+        <div class="wf-box del">cf-bank-status (หน้าแยก) — archive หลังย้าย</div>
+        <div class="wf-note"><b>ผลกับ dev:</b> −1 หน้า · sidebar CF สั้นลง</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Q7 -->
+<div class="item" id="q7">
+  <div class="item-h"><span class="qn">Q7</span><h2>"ค่าส่วนตัว" ตั้งได้ 2 ที่ — เลือกบ้านเดียว</h2><span class="rec">แนะนำ ก · user-profile</span></div>
+  <div class="opts"><b>ก.</b> อยู่ <b>user-profile</b> ที่เดียว (คลิกรูปตัวเอง=เจอเลย) · แท็บใน settings เป็นลิงก์ &nbsp;·&nbsp; <b>ข.</b> อยู่ company-settings ที่เดียว</div>
+  <div class="item-body">
+    <div class="pane">
+      <div class="pane-h cur">📷 ปัจจุบัน — ตั้งได้ 2 ที่ (ค่าอาจตีกัน)</div>
+      <div class="shot"><span class="cap">user-profile (มี ⚙️ ภาษา/แจ้งเตือน)</span><a class="open" href="user-profile-mockup.html" target="_blank">เปิด ↗</a><div class="frame"><iframe src="user-profile-mockup.html" loading="lazy"></iframe></div></div>
+      <div class="shot"><span class="cap">cf-company-settings แท็บค่าส่วนตัว</span><a class="open" href="cf-company-settings-mockup.html" target="_blank">เปิด ↗</a><div class="frame"><iframe src="cf-company-settings-mockup.html" loading="lazy"></iframe></div></div>
+    </div>
+    <div class="pane">
+      <div class="pane-h new">✏️ ข้อเสนอ ก — จุดเดียวที่โปรไฟล์</div>
+      <div class="wf">
+        <div class="wt">👤 user-profile = บ้านของค่าส่วนตัว</div>
+        <div class="wf-box add">รวม: ธีม · density · ภาษา · แจ้งเตือน Email/LINE · ปักหมุด sidebar <span class="tagadd">ย้ายจาก settings</span></div>
+        <div class="wf-box">+ เดิม: โปรไฟล์ · role RBAC (read-only) · Activity log</div>
+        <div class="wf-arrow">↕</div>
+        <div class="wf-box">settings แท็บค่าส่วนตัว → การ์ดลิงก์ <b>"ตั้งค่าส่วนตัวย้ายไปโปรไฟล์ →"</b></div>
+        <div class="wf-note"><b>เหตุผล:</b> จุดคุมเดียว กันค่าตีกัน · พฤติกรรมผู้ใช้ทุกระบบ = คลิก avatar</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Q8 -->
+<div class="item" id="q8">
+  <div class="item-h"><span class="qn">Q8</span><h2>tr1-treasury — BC มี Cash Flow Forecast built-in</h2><span class="rec">แนะนำ ก · archive</span></div>
+  <div class="opts"><b>ก.</b> archive Phase 1 — forecast ใช้ BC ตรง · ยอดคงเหลือโชว์แท็บธนาคาร (Q6) &nbsp;·&nbsp; <b>ข.</b> เก็บ P2 reference</div>
+  <div class="item-body">
+    <div class="pane">
+      <div class="pane-h cur">📷 ปัจจุบัน</div>
+      <div class="shot"><span class="cap">tr1-treasury (ดีไซน์ เม.ย.)</span><a class="open" href="_archive/tr1-treasury-mockup-2026-07-12.html" target="_blank">เปิด ↗</a><div class="frame"><iframe src="_archive/tr1-treasury-mockup-2026-07-12.html" loading="lazy"></iframe></div></div>
+    </div>
+    <div class="pane">
+      <div class="pane-h new">✏️ ข้อเสนอ ก — แบ่งไป BC + แท็บธนาคาร</div>
+      <div class="wf">
+        <div class="wt">งาน treasury หลังยุบ</div>
+        <div class="wf-box del">tr1-treasury (portal) — archive</div>
+        <div class="wf-box add">📈 forecast → <b>BC Cash Flow Forecast</b> (native · ดึง AR/AP อัตโนมัติ)</div>
+        <div class="wf-box add">💰 ยอดคงเหลือ 4 นิติ → แท็บ 🏦 ธนาคาร (Q6) — จาก statement feed A3</div>
+        <div class="wf-note"><b>ตรรกะเดียวกับ CF-2.x ที่ cut</b> · ต้องการเมื่อไหร่ค่อย P2</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- C6 -->
+<div class="ask" id="c6">
+  <div class="ask-h"><span class="cn">💬 C6</span><h3>ex1-executive-dashboard → เลื่อนไป P2 พร้อม Entity Tag ใช่ไหม?</h3></div>
+  <p>หน้ามี section "ประสิทธิภาพนิติบุคคล" = multi-entity ซึ่งผูกกับ Dual-Book/Entity Tag ที่เคาะเป็น Phase 2 (Grill A4) · agent เสนอส่งเป็น P2 + ติดธง refresh ดีไซน์ (ของ เม.ย.)</p>
+  <div class="why">🤔 <b>ที่ผมสงสัย:</b> ผู้บริหารต้องการ dashboard <b>ตั้งแต่ Phase 1</b> ไหม (เวอร์ชัน SWT เดี่ยว ตัด section multi-entity ออก)? หรือรอ P2 ทีเดียว — ถ้าผู้บริหารคือ sponsor โปรเจกต์ การมีจอให้เห็นตั้งแต่ P1 อาจสำคัญเชิงการเมืองมากกว่าเชิงฟังก์ชัน</p>
+  <div class="ans"><span>ก. รอ P2 ทีเดียว (ตามแผน)</span><span>ข. P1 เวอร์ชัน SWT เดี่ยว (ตัด multi-entity)</span></div>
+</div>
+
+</div><!-- /t-cf -->
+
+<!-- ════════════════ TAB: SL·MD·PM·SC ════════════════ -->
+<div class="tabpane" id="t-sl">
+
+<div class="flowref">
+  <div class="flowref-h">📎 Flowchart อ้างอิง — สาย 1 ขาย (SL-1→2→3→4→WH→SV-6) + สาย 3 CN loop · master/promo ไม่มีสายแยก
+    <span class="links"><a href=".agents/flow-workflow-map.html" target="_blank">เปิด workflow map ↗</a></span>
+  </div>
+  <div class="frame"><iframe src=".agents/flow-workflow-map.html" loading="lazy"></iframe><div class="fade"></div></div>
+</div>
+
+<div class="safe">
+  <h2>กลุ่มนี้ไม่มี Q ใหญ่ — สรุป verdict + 2 คำถาม C</h2>
+  <div class="sub">SL 6 หน้า canonical ทั้งหมด (เพิ่ง audit+BC verify) · MD 5 หน้า KEEP · sc1/2/3 = runtime ห้ามแตะ</div>
+  <div class="safe-grid">
+    <div class="sg"><h3>✅ KEEP ชุด build</h3><ul>
+      <li>SL: sl1 · sl2 · sl3 · sl4 · slcn · slf1 · slq (7)</li>
+      <li>MD: md1-md5 (5) · PM: pm1 · pm2 · pm5-price (3 · ธง P2)</li>
+      <li>SC component: sc1 · sc2 · sc3 (build เป็น modal)</li>
+    </ul></div>
+    <div class="sg"><h3>🔀 จัดการ</h3><ul>
+      <li>sl5 <span class="to">→ archive</span> · sl7 <span class="to">→ rp1</span> (repoint sidebar SLR1-5)</li>
+      <li>demo 5 หน้า <span class="to">→ reference</span> (sc7/sc10/sc-payment/sc-media/sc-catalog)</li>
+      <li>pm5-vat · md6 <span class="to">→ ดู C4 / C5 ข้างล่าง</span></li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- C4 -->
+<div class="ask" id="c4">
+  <div class="ask-h"><span class="cn">💬 C4</span><h3>pm5-vat-simulator (หน้าสอน VAT Golden Rule) — เก็บเป็นหน้าในพอร์ทัล หรือ reference?</h3></div>
+  <p>เนื้อหน้า = สอนกติกา "ส่วนลดหักก่อน VAT" แบบเทียบถูก/ผิด · logic คิดจริงอยู่ใน pm5-price-simulator แล้ว · โน้ต ⚖ ฝังในหน้างานจริง (sl1-4/slcn) ครบแล้ว</p>
+  <div class="why">🤔 <b>ที่ผมสงสัย:</b> คุณตั้งใจให้เป็น<b>สื่อสอนพนักงานในพอร์ทัลจริง</b> (พนักงานใหม่เปิดดูได้) หรือทำไว้<b>สอนตอนออกแบบ</b>เฉย ๆ? ถ้าอยากให้พนักงานเข้าถึง → ทำเป็นแท็บ "เรียนรู้" ใน pm5-price (ไม่ต้อง build หน้าแยก)</p>
+  <div class="ans"><span>ก. reference ตอนออกแบบพอ (แนะนำ)</span><span>ข. แท็บ "เรียนรู้" ใน pm5-price</span></div>
+</div>
+
+<!-- C5 -->
+<div class="ask" id="c5">
+  <div class="ask-h"><span class="cn">💬 C5</span><h3>md6-service-item (ทะเบียนเครื่องรายตัว per-serial) — จำเป็น Phase ไหน?</h3></div>
+  <p>ตอนนี้เป็น stub 31 บรรทัดกัน dead link · แต่<b>เนื้องานจริงจำเป็น</b>: SV-1 resolve S/N (เมนู A-E) + ตารางประกันรายชิ้น (per-component) ต้องมี "ทะเบียนเครื่อง" เป็นฐาน — ยุบเข้า md1 ไม่ได้ (คนละ entity: master สินค้า vs เครื่องรายตัว)</p>
+  <div class="why">🤔 <b>ที่ผมสงสัย:</b> ฝั่ง BC — ข้อมูลเครื่องรายตัวจะอ่านจาก itemLedger+Serial โดยตรง (ไม่ต้องมีหน้า master แยก) หรือธุรกิจต้องการหน้า "ทะเบียนเครื่อง" ให้แอดมินแก้/เพิ่มประกันรายชิ้นเองได้? ถ้าอย่างหลัง = ต้อง build จริง P1 (SV พึ่งมัน) ไม่ใช่ stub</p>
+  <div class="ans"><span>ก. อ่านจาก BC พอ (ไม่ต้องมีหน้า — ตัด stub)</span><span>ข. ต้องมีหน้าแก้ได้ → build P1</span><span>ค. build แต่รอ P2</span></div>
+</div>
+
+</div><!-- /t-sl -->
+
+<div class="footer">
+  Consolidation Review · 5-agent audit 2026-07-11 · แผนเต็ม <b>.agents/topics/consolidation-plan-2026-07.md</b><br>
+  ⏸️ ยังไม่ทำจริง — ตอบ Q1-Q8 + C1-C6 แล้วค่อยลงมือ
+</div>
+
+</div>
+<script>
+function mt(btn, id){
+  document.querySelectorAll('.mtab').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  document.querySelectorAll('.tabpane').forEach(function(p){p.classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+  window.scrollTo({top:0});
+}
+</script>
+</body>
+</html>

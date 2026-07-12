@@ -642,3 +642,13 @@ flow-understanding: `.agents/topics/finance-flow-understanding.md` (user confirm
 - Collapse: `<details class="collapse">` + `▼` rotation
 - Sub-tabs: JavaScript `switchSubTab()` scoped per section
 - Status badges: green=ยืนยัน / amber=พิจารณา / gray=ไม่แน่ใจ
+
+---
+
+**🧹 Consolidation EXECUTED (2026-07-12):** 5-agent audit → Peerapat เคาะครบ Q1-8 (1ก 2ก 3ก 4ข 5ก 6ก 7ก 8ก) + C1-6 (C1ข desktop กรอกเต็ม · C2ข SIR ยุบ · C3ก · C4 ตัด pm5-vat · C5ก md6 อ่าน BC · C6ข ex1 P1 SWT เดี่ยว) — plan เต็ม `.agents/topics/consolidation-plan-2026-07.md` + `consolidation-review.html`
+- **archive 18:** sl5 sl7 fi5 fi13 po3 wh-q-dashboard sv-tech-report sv-posted-docs sv-sla-config sv-checklist-template sv6-print-templates pm5-vat md6 cf3 cf5 tr1 sir cf-bank-status (→ `_archive/*-2026-07-12.html` · ลิงก์ทุกหน้า repoint แล้ว)
+- **sidebar:** ลบแถวตาย 10 · repoint SLR→rp1 · SVCK/SVSLA→cf-master-settings · SVTC→cm1 · SVPD→sv-q · CF-3→cf-master-settings · CF-5→cf-company-settings
+- **badge 🔧 DEV (โหมด/แท็บ):** wh2r wh3r (โหมดใบขอ) · wh4r (แท็บ WH-4) · sv5 (แท็บ Job·กรอกเต็ม) · sv7 (แท็บ2 SV-4) · sv6 (view ปฏิทิน SV-Q) · ex1 (SWT เดี่ยว) · sv-tech-mobile (SIR ที่นี่)
+- **merges:** cf-company-settings +แท็บธนาคาร (Q6ก) · ค่าส่วนตัว→user-profile (Q7ก) · cf-master-settings +SLA+เช็คลิสต์ · sv-q +chip โพสต์แล้ว · fi4 ตัดโซน WHT→ลิงก์ fi12 · ap1 ตัดแท็บตั้งค่า→ลิงก์ CF-2.6
+- **stale fixed:** doc-finder bc365 path · fi1q dead link · fiq การ์ด FI-5→FI-4 + ปิดงวด→BC · CLAUDE.md CF-2.2=Portal-managed · config-hub Entity Tag=P2
+- **DEV-HANDOFF:** +§Consolidation (กติกาอ่าน mockup: archive=ไม่ build · badge=โหมด/แท็บ · cut=BC)

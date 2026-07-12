@@ -7,7 +7,7 @@
 ---
 
 ## 🚀 เริ่มที่นี่ (Quick Start)
-1. **ดู UI ทั้งหมด:** เปิด `index.html` ในเบราว์เซอร์ (min-width 1440px) → ลิงก์ทุกหน้า (101 mockup) · sidebar เดียวทุกหน้า (`swt-sidebar.js`)
+1. **ดู UI ทั้งหมด:** เปิด `index.html` ในเบราว์เซอร์ (min-width 1440px) · sidebar เดียวทุกหน้า (`swt-sidebar.js`) · **ชุด build จริง ~62 หน้า** (ผ่าน consolidation 2026-07-12 — ดู §Consolidation ด้านล่าง)
 2. **ไม่มี build:** เปิดไฟล์ `.html` ตรง ๆ · CSS/JS อยู่ inline หรือ shared `swt-*.js`
 3. **ลำดับอ่าน:** ไฟล์นี้ → `README.md` (ภาพรวม/phase/RBAC) → `.claude/skills/sangwijit-portal/SKILL.md` (mental model) → spec แต่ละโมดูล → `.agents/active.md` (decision ล่าสุด)
 
@@ -55,6 +55,19 @@
   - **Serial/Lot tracking API** — Item Tracking Code ไม่มี v2.0
   - คำนำหน้าไทย · PersonType(vendor) · costing method · ยี่ห้อ/รุ่น(หรือ dimension) · rebate · barcode ต่อหน่วย
 - **"เครดิตวัน"** = Payment Terms (FK) ไม่ใช่ตัวเลข → แปลง · ก่อน implement ดึง `$metadata` ของ environment จริง
+
+---
+
+## 🧹 Consolidation 2026-07-12 (ลดจาก ~101 → ~62 หน้า build · decisions locked)
+
+> เต็ม: `.agents/topics/consolidation-plan-2026-07.md` + `consolidation-review.html` (เทียบก่อน/หลัง + wireframe ทุกข้อ)
+
+**กติกาอ่าน mockup หลัง consolidation:**
+- หน้าใน `_archive/*-2026-07-12.html` = **ไม่ build** (ตาย/ซ้ำ/ย้ายบ้าน/cut ไป BC)
+- หน้าที่มี **badge น้ำเงิน "🔧 DEV:" มุมล่างขวา** = build เป็น **โหมด/แท็บ/view ของหน้าอื่น** — mockup หน้านั้นคือ spec ของโหมดนั้น: `wh2r`/`wh3r` (โหมดใบขอของ WH-2/3 · เมนู/เลขเอกสารแยกเดิม) · `wh4r` (แท็บใน WH-4) · `sv5` (แท็บในหน้างาน Job · desktop กรอกได้เต็ม) · `sv7` (แท็บ 2 ใน SV-4 + gate ซาก) · `sv6` (view ปฏิทินใน SV-Q) · `ex1` (P1 = SWT เดี่ยว · multi-entity → P2)
+- **cut ไป BC (ไม่ build):** fi3 กระทบยอดธนาคาร · tr1 treasury (BC native) · CF-2.1/2.3/2.4/2.9 — ⚠️ **CF-2.2 Number Series = Portal-managed** (ADR-0004 un-cut)
+- **ย้ายบ้านแล้ว:** SLA + เช็คลิสต์ → `cf-master-settings` · สถานะธนาคาร → แท็บใน `cf-company-settings` · ค่าส่วนตัว → `user-profile` ที่เดียว · จ่ายค่าแรงช่าง → `cm1` section บริการ · รายงานขาย → `rp1` · ตั้งค่า approval → CF-2.6 เท่านั้น (ap1 = runtime)
+- **sc1/sc2/sc3 = runtime component จริง** (iframe จาก `swt-doc-finder.js`) — build เป็น modal component · หน้า sc-* อื่น = demo/reference
 
 ---
 

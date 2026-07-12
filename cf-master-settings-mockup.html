@@ -52,6 +52,8 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       <button class="cat-btn" data-cat="color" onclick="selMaster(this,'color')"><span class="ic">🎨</span> สถานะสีลูกค้า</button>
       <button class="cat-btn" data-cat="itemcolor" onclick="selMaster(this,'itemcolor')"><span class="ic">🏷️</span> สถานะสีสินค้า</button>
       <button class="cat-btn" data-cat="reason" onclick="selMaster(this,'reason')"><span class="ic">📉</span> เหตุผลปรับสต็อก</button>
+      <button class="cat-btn" data-cat="sla" onclick="selMaster(this,'sla')"><span class="ic">🗓️</span> SLA งานบริการ</button>
+      <button class="cat-btn" data-cat="chk" onclick="selMaster(this,'chk')"><span class="ic">🧪</span> เช็คลิสต์ ตรวจ/ล้าง</button>
       <a class="cat-link" href="cf2-7-doc-template-mockup.html"><span class="ic">📄</span> แบบฟอร์มเอกสาร (CF-2.7) ↗</a>
 
       <div class="cat-div">🔒 Master บัญชี → ตั้งที่ BC</div>
@@ -124,6 +126,42 @@ var MASTERS = {
       {code:'EXPIRE',name:'หมดอายุ',dir:'-',gl:'5312 ตัดจำหน่ายหมดอายุ',photo:true,active:true},
       {code:'FOUND',name:'เจอเกิน (นับได้มากกว่า)',dir:'+',gl:'4910 รายได้อื่น',photo:false,active:true},
       {code:'ADJ',name:'ปรับยอดทั่วไป',dir:'±',gl:'5319 ปรับปรุงสินค้า',photo:false,active:true}
+    ]
+  },
+  sla: {
+    title:'SLA งานบริการ (แสดงสี · ไม่บล็อกงาน)',
+    bcNote:'ย้ายจาก sv-sla-config (consolidation 2026-07-12) — SV-Q ใช้แสดง badge สีทุกขั้น · visibility only ไม่ enforce',
+    columns:[{key:'code',label:'รหัส'},{key:'name',label:'ขั้นตอน'},{key:'target',label:'เป้าเวลา',width:'110px'},{key:'warn',label:'เกิน→สี',width:'70px'}],
+    fields:[
+      {key:'code',label:'รหัส'},{key:'name',label:'ขั้นตอน'},{key:'target',label:'เป้าเวลา'},
+      {key:'warn',label:'เกินแล้วแสดงสี',type:'select',options:[{value:'เหลือง',label:'🟡 เหลือง'},{value:'ส้ม',label:'🟠 ส้ม'},{value:'แดง',label:'🔴 แดง'}]},
+      {key:'chase',label:'ทวงอัตโนมัติ',type:'toggle'},{key:'active',label:'สถานะ',type:'toggle'}
+    ],
+    data:[
+      {code:'S1',name:'รับเรื่อง → มอบหมายช่าง',target:'1 วันทำการ',warn:'เหลือง',chase:false,active:true},
+      {code:'S2',name:'มอบหมาย → เริ่มงาน (นัดลูกค้า)',target:'3 วัน',warn:'ส้ม',chase:false,active:true},
+      {code:'S3',name:'เริ่มงาน → ซ่อมเสร็จ (ไม่รออะไหล่)',target:'3 วัน',warn:'แดง',chase:false,active:true},
+      {code:'S4',name:'รออะไหล่ (สั่ง/แบรนด์ส่ง)',target:'lead time + buffer',warn:'แดง',chase:true,active:true},
+      {code:'S5',name:'Reply Supplier (เคลม)',target:'7 วัน',warn:'แดง',chase:true,active:true},
+      {code:'S6',name:'ซ่อมเสร็จ → ส่งคืนลูกค้า',target:'2 วัน',warn:'เหลือง',chase:false,active:true}
+    ]
+  },
+  chk: {
+    title:'เช็คลิสต์ ตรวจเช็ค / ล้าง (template ราย product category)',
+    bcNote:'ย้ายจาก sv-checklist-template (consolidation 2026-07-12) — job type ตรวจเช็ค/ล้าง ใช้ template ตามหมวดเครื่อง · ช่างติ๊ก ผ่าน/ไม่ผ่าน + แนบรูป',
+    columns:[{key:'code',label:'รหัส'},{key:'cat',label:'หมวด',width:'110px'},{key:'name',label:'รายการตรวจ'}],
+    fields:[
+      {key:'code',label:'รหัส'},
+      {key:'cat',label:'หมวดเครื่อง',type:'select',options:[{value:'แอร์',label:'❄️ แอร์'},{value:'ตู้เย็น',label:'🧊 ตู้เย็น'},{value:'เครื่องซักผ้า',label:'🌀 เครื่องซักผ้า'}]},
+      {key:'name',label:'รายการตรวจ'},
+      {key:'photo',label:'บังคับแนบรูป',type:'toggle'},{key:'active',label:'สถานะ',type:'toggle'}
+    ],
+    data:[
+      {code:'AC01',cat:'แอร์',name:'วัดแรงดันน้ำยา + อุณหภูมิลมออก',photo:true,active:true},
+      {code:'AC02',cat:'แอร์',name:'ล้างคอยล์เย็น/ร้อน + เป่าถาดน้ำทิ้ง',photo:true,active:true},
+      {code:'AC03',cat:'แอร์',name:'เช็คจุดต่อไฟ + เบรกเกอร์ + กระแสคอมเพรสเซอร์',photo:false,active:true},
+      {code:'RF01',cat:'ตู้เย็น',name:'เช็คขอบยางประตู + อุณหภูมิช่องแช่',photo:false,active:true},
+      {code:'WM01',cat:'เครื่องซักผ้า',name:'ทดสอบรอบปั่น + เช็คท่อน้ำทิ้ง',photo:true,active:true}
     ]
   }
 };

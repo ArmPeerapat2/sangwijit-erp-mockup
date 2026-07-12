@@ -65,6 +65,7 @@ table.st td{padding:7px 10px;border-bottom:1px solid #F3F4F6}
     <button class="tab on" onclick="tab(event,'p-com')">🏢 ข้อมูลบริษัท</button>
     <button class="tab" onclick="tab(event,'p-opt')">⚙️ ค่าระบบ (Options)</button>
     <button class="tab" onclick="tab(event,'p-def')">🏭 ค่าเริ่มต้นบริษัท</button>
+    <button class="tab" onclick="tab(event,'p-bank')">🏦 เชื่อมธนาคาร</button>
     <button class="tab" onclick="tab(event,'p-usr')">👤 ค่าส่วนตัว</button>
   </div>
 
@@ -138,21 +139,33 @@ table.st td{padding:7px 10px;border-bottom:1px solid #F3F4F6}
     </div>
   </div>
 
-  <!-- ④ ค่าส่วนตัว (user แก้ได้) -->
+  <!-- ④ เชื่อมธนาคาร (ย้ายจาก cf-bank-status · Q6ก 2026-07-12) -->
+  <div class="pane" id="p-bank">
+    <div class="card">
+      <div class="card-h">🏦 สถานะเชื่อมต่อธนาคาร (4 นิติบุคคล) <span class="lock">🔒 credential ตั้งที่ BC (Grill A3) · พอร์ทัลแสดง + สั่ง sync</span></div>
+      <table class="st">
+        <thead><tr><th>นิติบุคคล</th><th>ธนาคาร / บัญชี</th><th style="width:150px">สถานะ</th><th style="width:150px">sync ล่าสุด</th><th style="width:120px"></th></tr></thead>
+        <tbody>
+          <tr><td><b>SWT</b> แสงวิจิตร เทรดดิ้ง</td><td>กสิกรไทย 547-2-55623-9</td><td><span style="color:#166534;font-weight:700">✅ เชื่อมแล้ว</span></td><td>12 ก.ค. 26 08:30</td><td><button class="sel" style="cursor:pointer">🔄 sync ตอนนี้</button></td></tr>
+          <tr><td><b>SWE</b></td><td>กสิกรไทย 547-2-88114-2</td><td><span style="color:#166534;font-weight:700">✅ เชื่อมแล้ว</span></td><td>12 ก.ค. 26 08:30</td><td><button class="sel" style="cursor:pointer">🔄 sync ตอนนี้</button></td></tr>
+          <tr><td><b>VMN</b></td><td>ไทยพาณิชย์ 402-1-33871-5</td><td><span style="color:#B45309;font-weight:700">⚠️ token หมดอายุ</span></td><td>10 ก.ค. 26 17:02</td><td><button class="sel" style="cursor:pointer">แก้ที่ BC ↗</button></td></tr>
+          <tr><td><b>WPS</b></td><td>กรุงเทพ 118-4-22903-7</td><td><span style="color:#6B7280;font-weight:700">⏸️ ยังไม่เปิดใช้</span></td><td>—</td><td></td></tr>
+        </tbody>
+      </table>
+      <div class="bc-note">🔄 sync ดึง statement เข้า → รายการเงินเข้าไปที่ <b>FI-1Q คิวจับคู่</b> · กระทบยอดรายเดือน = <b>BC Bank Reconciliation</b> (native · Q5ก cut จาก portal) · treasury/forecast = BC Cash Flow Forecast (Q8ก)</div>
+    </div>
+  </div>
+
+  <!-- ⑤ ค่าส่วนตัว → ย้ายบ้านไป user-profile (Q7ก 2026-07-12) -->
   <div class="pane" id="p-usr">
     <div class="card">
-      <div class="card-h">👤 ค่าส่วนตัว (แต่ละคนตั้งเอง)</div>
-      <div class="grid2">
-        <div class="fld"><span class="l">ธีม</span><select class="sel"><option>สว่าง (Light)</option><option>มืด (Dark)</option></select></div>
-        <div class="fld"><span class="l">ความหนาแน่นจอ</span><select class="sel"><option>ปกติ</option><option>แน่น (Compact)</option></select></div>
-        <div class="fld"><span class="l">Sidebar เริ่มต้น</span><select class="sel"><option>📌 ปักหมุด (กางเต็ม)</option><option>ย่อ (icon rail)</option></select></div>
-        <div class="fld"><span class="l">สาขาเริ่มต้น</span><span class="v ro">08 · การไฟฟ้าสาขาสมเด็จ <span class="lock" style="margin-left:4px">จาก user management</span></span></div>
+      <div class="card-h">👤 ค่าส่วนตัว</div>
+      <div style="border:1.5px dashed #CBD5E1;border-radius:10px;padding:22px;text-align:center">
+        <div style="font-size:14px;font-weight:700;color:#1E3A5F;margin-bottom:6px">การตั้งค่าส่วนตัวย้ายไปที่ "โปรไฟล์ของฉัน"</div>
+        <div style="font-size:12.5px;color:#6B7280;margin-bottom:12px">ธีม · ความหนาแน่นจอ · ภาษา · ช่องทางแจ้งเตือน (แอป/LINE/อีเมล) · ปักหมุด sidebar — ตั้งที่เดียว กันค่าตีกัน (Q7ก)</div>
+        <a href="user-profile-mockup.html" style="display:inline-block;background:#2563EB;color:#fff;font-size:13px;font-weight:700;padding:9px 20px;border-radius:8px;text-decoration:none">👤 ไปที่โปรไฟล์ของฉัน →</a>
       </div>
-      <div class="card-h" style="margin-top:12px;font-size:12px">🔔 ช่องทางรับการแจ้งเตือน</div>
-      <label class="chk"><input type="checkbox" checked> 📱 ในแอป (กระดิ่ง)</label>
-      <label class="chk"><input type="checkbox" checked> 💬 LINE</label>
-      <label class="chk"><input type="checkbox"> 📧 อีเมล</label>
-      <div class="bc-note">👤 ค่าเหล่านี้เก็บแบบ per-user (ธีม/หนาแน่น/pin ทำไว้แล้วเป็น localStorage) · <b>สาขาเริ่มต้นดึงจาก user management</b> ไม่ตั้งซ้ำที่นี่</div>
+      <div class="bc-note">👤 กติกา: ค่าส่วนตัว = per-user อยู่ที่โปรไฟล์ (คลิกรูปตัวเองมุมขวา) · หน้านี้เหลือเฉพาะค่า<b>ระดับบริษัท</b> · สาขาเริ่มต้นดึงจาก user management เหมือนเดิม</div>
     </div>
   </div>
 </div>

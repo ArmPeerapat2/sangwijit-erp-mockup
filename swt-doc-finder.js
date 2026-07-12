@@ -332,7 +332,7 @@
   }
   window.dfCloseFrame=function(){var m=document.getElementById('dfFrame');m.classList.remove('on');document.getElementById('dfFrameSrc').src='about:blank';};
   window.dfOpenCust=function(){dfFrameOpen('sc1-customer-search-mockup.html','🔎 ค้นหาลูกหนี้ (SC-1)');};
-  window.dfOpenProd=function(){dfFrameOpen('bc365/sc2-item-search-mockup.html','🔎 ค้นหาสินค้า (SC-2)');};
+  window.dfOpenProd=function(){dfFrameOpen('sc2-item-search-mockup.html','🔎 ค้นหาสินค้า (SC-2)');};
   window.dfOpenVend=function(){dfFrameOpen('sc3-vendor-search-mockup.html','🔎 ค้นหาเจ้าหนี้/Vendor (SC-3)');};
   window.dfCloseCust=function(){dfCloseFrame();};
   window.dfCloseProd=function(){dfCloseFrame();};

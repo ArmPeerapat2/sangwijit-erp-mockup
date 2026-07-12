@@ -54,7 +54,7 @@ Trust priority when sources conflict: latest user instruction → codebase state
 ## BC365 scope decisions (2026-04-16 audit — from `.agents/active.md`)
 
 Already decided, do not re-litigate:
-- **Cut (use BC directly, mockups kept as reference only):** CF-2.1 Tax, CF-2.2 Number Series, CF-2.3 Posting & GL, CF-2.4 Bin Policy, CF-2.9 General Parameter.
+- **Cut (use BC directly, mockups kept as reference only):** CF-2.1 Tax, CF-2.3 Posting & GL, CF-2.4 Bin Policy, CF-2.9 General Parameter. (CF-2.2 Number Series un-cut by ADR-0004 → **Portal-managed**: branch sub-series + monthly reset ที่ BC ทำไม่ได้)
 - **Portal as thin UI layer over BC API:** 18 pages.
 - **Portal owns 100% (BC has no equivalent):** 21 pages, including CF-2.5 Tech Template and CF-2.7 Doc Template.
 - **Deferred to Phase 2:** CL-1 Claims, SM-3 Vendor Portal, CF-2.8 Entity Tag.
