@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Status Lifecycle — ทุกโมดูล (แท็บเดียว) | Sangwijit</title>
+<style>
+:root{--navy:#1E3A5F;--bg:#F8FAFC;--border:#E2E8F0;--muted:#64748B}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:Inter,'Noto Sans Thai',sans-serif;background:var(--bg);color:#1F2937;display:flex;flex-direction:column;overflow:hidden}
+.tabbar{flex-shrink:0;background:var(--navy);display:flex;align-items:center;gap:6px;padding:8px 16px;flex-wrap:wrap}
+.tabbar .brand{color:#fff;font-size:14px;font-weight:800;margin-right:10px;display:flex;align-items:center;gap:7px}
+.tabbar .brand small{font-size:10.5px;font-weight:500;opacity:.7}
+.tb{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border:none;border-radius:8px;background:rgba(255,255,255,.1);color:#E2E8F0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.tb:hover{background:rgba(255,255,255,.2)}
+.tb.on{background:#fff;color:var(--navy)}
+.tb .dot{width:9px;height:9px;border-radius:50%}
+.content{flex:1;position:relative;min-height:0}
+.pane{position:absolute;inset:0;display:none}
+.pane.on{display:block}
+.pane iframe{width:100%;height:100%;border:0;background:#fff}
+/* glossary */
+.gpane{overflow-y:auto;padding:22px 26px}
+.gpane h1{font-size:19px;color:var(--navy);margin-bottom:4px}
+.gpane .sub{font-size:12.5px;color:var(--muted);margin-bottom:18px}
+.gcat{font-size:15px;font-weight:800;color:var(--navy);margin:20px 0 9px;padding-left:9px;border-left:4px solid #2563EB}
+.gwrap{overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:10px;margin-bottom:6px}
+table.g{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+table.g th{background:#F1F5F9;color:#334155;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;text-align:left;padding:8px 12px;border-bottom:1.5px solid var(--border)}
+table.g td{padding:7px 12px;border-bottom:1px solid #F1F5F9;vertical-align:top;line-height:1.5}
+table.g tr:last-child td{border-bottom:none}
+table.g .k{font-weight:800;color:#1E40AF;font-family:'Inter',monospace;white-space:nowrap}
+table.g .warn{color:#B45309;font-size:11px}
+.gmax{max-width:1100px;margin:0 auto}
+</style>
+</head>
+<body>
+<div class="tabbar">
+  <span class="brand">🔄 Status Lifecycle <small>ทุกโมดูล · ฟอร์แมต service.pdf</small></span>
+  <button class="tb on" onclick="pick(this,'p-sv')"><span class="dot" style="background:#7C3AED"></span>🛠️ SV บริการ</button>
+  <button class="tb" onclick="pick(this,'p-wh')"><span class="dot" style="background:#16A34A"></span>📦 WH คลัง</button>
+  <button class="tb" onclick="pick(this,'p-sl')"><span class="dot" style="background:#2563EB"></span>💼 SL ขาย</button>
+  <button class="tb" onclick="pick(this,'p-po')"><span class="dot" style="background:#D97706"></span>🛒 PO ซื้อ</button>
+  <button class="tb" onclick="pick(this,'p-fi')"><span class="dot" style="background:#DB2777"></span>💵 FI การเงิน</button>
+  <button class="tb" onclick="pick(this,'p-gl')"><span class="dot" style="background:#64748B"></span>📖 ศัพท์ย่อ</button>
+</div>
+
+<div class="content">
+  <div class="pane on" id="p-sv"><iframe data-src="flow-service-status.html" src="flow-service-status.html"></iframe></div>
+  <div class="pane" id="p-wh"><iframe data-src="flow-wh-status.html"></iframe></div>
+  <div class="pane" id="p-sl"><iframe data-src="flow-sl-status.html"></iframe></div>
+  <div class="pane" id="p-po"><iframe data-src="flow-po-status.html"></iframe></div>
+  <div class="pane" id="p-fi"><iframe data-src="flow-fi-status.html"></iframe></div>
+
+  <!-- glossary inline -->
+  <div class="pane gpane" id="p-gl"><div class="gmax">
+    <h1>📖 ศัพท์ย่อ / รหัสโมดูล</h1>
+    <div class="sub">อ้างอิงคู่กับทุกแท็บ · dev มือใหม่/ต่างชาติอ่านก่อนดู flow</div>
+
+    <div class="gcat">1. รหัสโมดูล (ตัวหน้า)</div>
+    <div class="gwrap"><table class="g"><thead><tr><th style="width:90px">ย่อ</th><th style="width:170px">เต็ม</th><th>คือ</th></tr></thead><tbody>
+      <tr><td class="k">SL</td><td>Sales</td><td>งานขาย</td></tr>
+      <tr><td class="k">PM</td><td>Promotion</td><td>โปรโมชั่น / ราคา</td></tr>
+      <tr><td class="k">CM</td><td>Commission</td><td>ค่าคอมมิชชั่น</td></tr>
+      <tr><td class="k">PO</td><td>Purchase</td><td>จัดซื้อ</td></tr>
+      <tr><td class="k">SM</td><td>SKU/Slot Mgmt</td><td>จัดการช่องวางสินค้า</td></tr>
+      <tr><td class="k">WH</td><td>Warehouse</td><td>คลังสินค้า</td></tr>
+      <tr><td class="k">FI</td><td>Finance</td><td>การเงิน / บัญชี</td></tr>
+      <tr><td class="k">TR</td><td>Treasury</td><td>บริหารเงินสด</td></tr>
+      <tr><td class="k">FA</td><td>Fixed Asset</td><td>สินทรัพย์ถาวร (ค่าเสื่อม)</td></tr>
+      <tr><td class="k">SV</td><td>Service</td><td>งานบริการ / ซ่อม</td></tr>
+      <tr><td class="k">CL</td><td>Claim</td><td>เคลม</td></tr>
+      <tr><td class="k">MD</td><td>Master Data</td><td>ทะเบียนหลัก (ลูกค้า/สินค้า/vendor)</td></tr>
+      <tr><td class="k">CF</td><td>Config</td><td>ตั้งค่าระบบ</td></tr>
+      <tr><td class="k">AP</td><td>Approval</td><td>ศูนย์อนุมัติ (AP-1) <span class="warn">⚠️ คนละตัวกับ AP=เจ้าหนี้</span></td></tr>
+      <tr><td class="k">EX</td><td>Executive</td><td>แดชบอร์ดผู้บริหาร</td></tr>
+      <tr><td class="k">RP</td><td>Report</td><td>ศูนย์รายงาน</td></tr>
+      <tr><td class="k">SC</td><td>Shared Component</td><td>ตัวช่วยใช้ร่วมทุกหน้า</td></tr>
+      <tr><td class="k">IA</td><td>Integration API</td><td>ตัวเชื่อม BC</td></tr>
+    </tbody></table></div>
+
+    <div class="gcat">2. ตัวห้อย (suffix)</div>
+    <div class="gwrap"><table class="g"><thead><tr><th style="width:90px">ย่อ</th><th>คือ</th></tr></thead><tbody>
+      <tr><td class="k">-Q</td><td>Queue = คิวงานรอทำ (SL-Q, WH-Q2)</td></tr>
+      <tr><td class="k">-R</td><td>ใบขอ / คืน / ย้อน (WH-2R = ใบขอเบิก)</td></tr>
+      <tr><td class="k">-F1</td><td>flow เฉพาะทาง (SL-F1 = อนุมัติวงเงิน)</td></tr>
+      <tr><td class="k">-CN</td><td>Credit Note = ใบลดหนี้ (SL-CN ขาย / PO-CN ซื้อ)</td></tr>
+      <tr><td class="k">-V</td><td>สายพิเศษ void / edge (SL-V1 = ยกเลิก/แก้/พิมพ์ซ้ำ)</td></tr>
+    </tbody></table></div>
+
+    <div class="gcat">3. เอกสาร + บัญชี/ภาษี</div>
+    <div class="gwrap"><table class="g"><thead><tr><th style="width:120px">ย่อ</th><th>คือ</th></tr></thead><tbody>
+      <tr><td class="k">PR / GRN</td><td>ใบขอซื้อ / ใบรับสินค้า</td></tr>
+      <tr><td class="k">AR / AP</td><td>ลูกหนี้ / เจ้าหนี้</td></tr>
+      <tr><td class="k">ARI</td><td>ตั้งหนี้เรียกเก็บแบรนด์ (งานเคลมในประกัน)</td></tr>
+      <tr><td class="k">RV / PV / JV</td><td>ใบรับเงิน / ใบจ่ายเงิน / ใบบันทึกบัญชี</td></tr>
+      <tr><td class="k">VAT</td><td>ภาษีมูลค่าเพิ่ม · <b>ภ.พ.30</b> = แบบยื่น VAT</td></tr>
+      <tr><td class="k">WHT</td><td>ภาษีหัก ณ ที่จ่าย · <b>ภ.ง.ด.3/53</b> = แบบยื่น (บุคคล/นิติ)</td></tr>
+      <tr><td class="k">URC</td><td>เงินโอนเข้าที่ยังไม่จับคู่บิล (รอจัดสรร)</td></tr>
+      <tr><td class="k">MOS</td><td>จำนวนเดือนที่ของพอขาย (เกณฑ์เตือนสั่งซื้อ)</td></tr>
+      <tr><td class="k">GL</td><td>บัญชีแยกประเภท (General Ledger)</td></tr>
+    </tbody></table></div>
+
+    <div class="gcat">4. ระบบ / เทคนิค</div>
+    <div class="gwrap"><table class="g"><thead><tr><th style="width:130px">ย่อ</th><th>คือ</th></tr></thead><tbody>
+      <tr><td class="k">BC / BC365</td><td>Business Central = ระบบ ERP หลัก (Microsoft) ที่ portal ครอบทับ</td></tr>
+      <tr><td class="k">RBAC</td><td>สิทธิ์ตามบทบาท</td></tr>
+      <tr><td class="k">SLA</td><td>เวลามาตรฐานที่ต้องเสร็จ</td></tr>
+      <tr><td class="k">KYC</td><td>ยืนยันตัวตน/เอกสารลูกค้า</td></tr>
+      <tr><td class="k">S/N</td><td>Serial Number = เลขเครื่องรายตัว</td></tr>
+      <tr><td class="k">QC / CRUD</td><td>ตรวจคุณภาพ / สร้าง-อ่าน-แก้-ลบ</td></tr>
+      <tr><td class="k">3-Way Match</td><td>จับคู่ 3 เอกสาร: ใบสั่งซื้อ = ใบรับของ = ใบวางบิล</td></tr>
+      <tr><td class="k">Maker≠Checker</td><td>คนทำ ≠ คนอนุมัติ (กันโกง)</td></tr>
+    </tbody></table></div>
+
+    <div class="gcat">5. เฉพาะโปรเจกต์นี้</div>
+    <div class="gwrap"><table class="g"><thead><tr><th style="width:180px">ย่อ</th><th>คือ</th></tr></thead><tbody>
+      <tr><td class="k">SWT / SWE / VMN / WPS</td><td>4 นิติบุคคลในเครือแสงวิจิตร</td></tr>
+      <tr><td class="k">Dual-Book</td><td>บัญชี 2 เล่ม (เล่มหลัก / เล่มภาษี)</td></tr>
+      <tr><td class="k">Entity Tag</td><td>ป้ายบอกว่าเอกสารเป็นของนิติบุคคลไหน</td></tr>
+      <tr><td class="k">kitchen rail</td><td>โมเดลคิว "ครัวรับออเดอร์" (คิวเดียวรวมทุกงาน · แสดงต้นทาง)</td></tr>
+      <tr><td class="k">A / Popup / Mobile</td><td>Surface = จอที่ใช้ (หน้าเมนู / หน้าต่างเด้ง / มือถือ)</td></tr>
+      <tr><td class="k">Accrued/Realized/Settled</td><td>ตั้งยอดรอเก็บ / เก็บได้จริง / เคลียร์จบ (rebate ฝั่งซื้อ)</td></tr>
+    </tbody></table></div>
+    <div style="height:30px"></div>
+  </div></div>
+</div>
+
+<script>
+function pick(btn, id){
+  document.querySelectorAll('.tb').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  document.querySelectorAll('.pane').forEach(function(p){p.classList.remove('on');});
+  var pane = document.getElementById(id);
+  pane.classList.add('on');
+  var f = pane.querySelector('iframe');            // lazy-load iframe on first open
+  if(f && !f.src && f.dataset.src){ f.src = f.dataset.src; }
+}
+</script>
+</body>
+</html>
