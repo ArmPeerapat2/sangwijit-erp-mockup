@@ -47,7 +47,7 @@ table.st td.dim{color:#94A3B8}
 </div>
 <div class="container">
 
-<div class="note">✅ <b>ไม่มีอะไรต้อง rebuild</b> — ทุก step ลงหน้า/component ที่มีอยู่ครบ (SL-Q · SL-1..4 · SL-CN · SL-F1 · sc-payment) · 💬 S1-S4 รอเคาะท้ายหน้า</div>
+<div class="note">✅ <b>ไม่มีอะไรต้อง rebuild</b> — ทุก step ลงหน้า/component ที่มีอยู่ครบ (SL-Q · SL-1..4 · SL-CN · SL-F1 · sc-payment) · <b>S1-S5 เคาะแล้ว 2026-07-12</b></div>
 
 <div class="surf">
   <span class="lb">Surface ทั้งโมดูล:</span>
@@ -66,7 +66,7 @@ table.st td.dim{color:#94A3B8}
 <div class="twrap"><table class="st">
   <thead><tr><th style="width:44px">ขั้น</th><th>งาน</th><th style="width:80px">ถัดไป</th><th style="width:140px">เซลล์</th><th style="width:130px">ผู้อนุมัติ</th><th style="width:140px">คลัง/บัญชี</th><th style="width:170px">สถานะจะเปลี่ยนเป็น</th><th style="width:80px">Surface</th></tr></thead>
   <tbody>
-    <tr><td class="c">1.1</td><td>สร้างใบเสนอราคา — ค้นลูกค้า (sc1) + สินค้า (sc2) + โปรฯ</td><td><span class="nx">→ 1.2</span></td><td>สร้าง/แก้</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">ร่าง</span></td><td>F·SL-1</td></tr>
+    <tr><td class="c">1.1</td><td>เมนูขาย: สร้าง <b>ใบเสนอราคา หรือ ใบสั่งขาย</b> ได้ (S1) — ค้นลูกค้า (sc1) + สินค้า (sc2) · <b>ดูราคา + สต๊อกเบื้องต้น</b>ตอนคีย์</td><td><span class="nx">→ 1.2</span></td><td>สร้าง/แก้</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">ร่าง</span></td><td>F·SL-1</td></tr>
     <tr><td class="c">1.2</td><td>ยืนยันใบเสนอ <span class="gate">🔒 เกินวงเงิน/ต่ำกว่า floor → สาย 2</span> · หมดอายุ auto 30 วัน</td><td><span class="nx">→ 1.3</span></td><td>ส่งยืนยัน</td><td>(ติด gate → สาย 2)</td><td class="dim">—</td><td><span class="stt">รอสั่งซื้อ</span></td><td>F·SL-1</td></tr>
     <tr><td class="c">1.3</td><td>แปลงเป็นใบจอง — กันสต๊อก BC ทันที + ตั้งอายุ (7/15/30 วัน) · สต๊อกไม่พอ → ลิสต์ใบจองที่ถือของ + ขอถอนจอง</td><td><span class="nx">→ 1.4</span></td><td>Confirm ใบจอง</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">Confirmed · กันสต๊อก✓</span> หมดอายุ=ปล่อยคืน auto</td><td>F·SL-2 · P3/P4</td></tr>
     <tr><td class="c">1.4</td><td>รับมัดจำ — หลายงวดได้ (sc-payment) → Post ลง Customer Ledger</td><td><span class="nx">→ 1.5</span></td><td>รับเงิน+Post</td><td class="dim">—</td><td>บัญชีเห็น GL</td><td><span class="stt">มัดจำ Posted · รอหักบิล</span></td><td>F·SL-3 · P2</td></tr>
@@ -102,10 +102,10 @@ table.st td.dim{color:#94A3B8}
   </tbody>
 </table></div>
 
-<div class="ask"><span class="cn">💬 S1</span><b>เซลล์ต้องมีจอมือถือไหม?</b> — ตอนนี้ SL เป็นจอคอมหมด · ก. ไม่ต้อง เซลล์อยู่หน้าร้าน (แนะนำ — เพิ่มทีหลังได้) · ข. มี — ทำแบบมือถือช่าง (เคสออกไปหาลูกค้านอกร้าน)</div>
-<div class="ask"><span class="cn">💬 S2</span><b>เอกสารติดวงเงิน (2.1) ฝั่งเซลล์ทำยังไง?</b> — ก. เด้ง popup ในฟอร์ม กรอกเหตุผลแล้วส่ง (แนะนำ — ไม่หลุดจากงาน) · ข. พาไปหน้า SL-F1 เต็ม · <b>พ่วง:</b> ผู้อนุมัติ (SLA 4 ชม.) ควรกดอนุมัติจากมือถือ/LINE ได้ไหม?</div>
-<div class="ask"><span class="cn">💬 S3</span><b>อนุมัติใบลดหนี้ (3.3) ใช้จอเดียวกับอนุมัติวงเงินไหม?</b> — ก. รวมที่ SL-F1/A2 คิวอนุมัติงานขายที่เดียว (แนะนำ — จุดคุมเดียว) · ข. แยกคิวอนุมัติ CN (ตอนนี้ยังไม่มีจอนี้เลย)</div>
-<div class="ask"><span class="cn">💬 S4</span><b>สถานะ "ชำระแล้ว/ค้างชำระ" บนบิล (1.7)</b> — คนรับเงินเครดิตคือบัญชี (FI-1) ไม่ใช่เซลล์ · ก. SL-Q อ่านสถานะข้ามมาโชว์ (แนะนำ — โชว์ไม่ซ่อน · เซลล์เห็นบิลตัวเองเก็บได้ยัง) · ข. ไม่โชว์ เรื่องเงินจบที่ FI</div>
+<div class="ask" style="background:#F0FDF4;border-color:#86EFAC"><span class="cn" style="background:#16A34A">✅ S1</span>เมนูขาย = สร้าง <b>ใบเสนอราคา หรือ ใบสั่งขาย</b> ได้ · ใช้ <b>ดูราคา + สต๊อกเบื้องต้น</b>ตอนคีย์ (ผูก SC-2 ค้นสินค้า)</div>
+<div class="ask" style="background:#F0FDF4;border-color:#86EFAC"><span class="cn" style="background:#16A34A">✅ S2</span>เอกสารติดวงเงิน = <b>เด้ง popup ในฟอร์ม</b> กรอกเหตุผลแล้วส่ง (ไม่หลุดจากงาน)</div>
+<div class="ask" style="background:#F0FDF4;border-color:#86EFAC"><span class="cn" style="background:#16A34A">✅ S3</span>อนุมัติ SL-CN = <b>รวมจอเดียวกับอนุมัติวงเงิน</b> (SL-F1/AP-1 คิวอนุมัติงานขายที่เดียว)</div>
+<div class="ask" style="background:#F0FDF4;border-color:#86EFAC"><span class="cn" style="background:#16A34A">✅ S4</span><b>โชว์</b> — SL-Q อ่านสถานะ "ค้างชำระ/ชำระแล้ว" ข้ามมาให้เซลล์เห็น (read-only)</div>
 
 <div class="stage-h"><span class="n">4</span><h2>สายคอมมิชชั่นเซลล์ (CM) — ปิดรอบ → คำนวณ → อนุมัติ → จ่าย</h2><span class="chain">4 ชั้น (เป้าทีม+หมวด+รายตัว+ทักษะ) · จุดเดียวที่ cm1</span></div>
 <div class="twrap"><table class="st">
@@ -118,7 +118,7 @@ table.st td.dim{color:#94A3B8}
     <tr><td class="c">C5</td><td>ส่งจ่าย → เข้า payroll / ตั้งเบิก</td><td><span class="nx">จบ</span></td><td class="dim">—</td><td class="dim">—</td><td>จ่ายผ่านเงินเดือน</td><td><span class="stt">จ่ายคอมแล้ว 💬</span></td><td>A·cm1 → payroll</td></tr>
   </tbody>
 </table></div>
-<div class="ask" style="margin-top:10px"><span class="cn">💬 S5</span><b>Clawback (หักคอมคืน) ทำเมื่อไหร่?</b> — บิลถูกยกเลิก/CN <b>หลังจ่ายคอมไปแล้ว</b> · ก. หักคืนรอบถัดไปอัตโนมัติ (แนะนำ) · ข. แจ้งเตือน ผจก.ตัดสินรายกรณี · <b>พ่วง:</b> คอมคิดจาก <b>ยอดขาย</b> หรือ <b>ยอดเก็บเงินจริง</b>? (ปกติจ่ายเมื่อเก็บเงินได้ กันหนี้สูญ)</div>
+<div class="ask" style="margin-top:10px;background:#F0FDF4;border-color:#86EFAC"><span class="cn" style="background:#16A34A">✅ S5</span><b>CM แสดงเป็นรายงานสรุป — ไม่ใช่ flow เดินเอกสาร</b> (เคาะ 2026-07-12) · ตารางบนคือ logic เบื้องหลังให้ dev เข้าใจการคำนวณ · <b>ผู้ใช้เห็นเป็นรายงาน</b> (ยอดคอม 4 ชั้น + clawback หักคืน) ในศูนย์รายงาน RP-1 / cm1</div>
 
 <div class="stage-h"><span class="n">E</span><h2>สายพิเศษ — Edge cases (ยกเลิก / แก้ / พิมพ์ซ้ำ)</h2><span class="chain">dev ต้องรู้ว่าทำได้/ไม่ได้ · กันของ-เงินหาย</span></div>
 <div class="twrap"><table class="st">
