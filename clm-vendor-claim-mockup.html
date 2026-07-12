@@ -142,15 +142,33 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
   <button class="btn btn-secondary">&#128203; Copy</button>
 </div>
 
-<!-- Status pills (Vendor claim flow) -->
+<!-- Mode toggle: ② warranty billing vs ① product-return (stage 8) -->
+<div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">
+  <span style="font-size:12px;color:#6B7280;font-weight:600">โหมดเคลม:</span>
+  <button onclick="clmMode('warranty',this)" class="clm-mode" style="padding:6px 13px;border:1px solid #D1D5DB;border-radius:7px;background:#2563EB;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">② งานบริการ (billing ARI)</button>
+  <button onclick="clmMode('return',this)" class="clm-mode" style="padding:6px 13px;border:1px solid #D1D5DB;border-radius:7px;background:#fff;color:#374151;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">① เคลมสินค้าใหม่ทั้งชิ้น (stage 8 · คืนสินค้า)</button>
+</div>
+
+<!-- Status pills (Vendor claim flow · .clm8 = เฉพาะโหมด ① stage 8) -->
 <div class="status-pills">
   <span class="status-pill done">1. ตั้งเคลม (CLM Draft)</span>
   <span class="status-pill done">2. ส่งให้ Vendor</span>
+  <span class="status-pill clm8" style="display:none">8.2 รอรถมารับ (ของคืน)</span>
   <span class="status-pill active">3. รอ Vendor ตอบ (ปัจจุบัน)</span>
   <span class="status-pill">4. Vendor อนุมัติ/ปฏิเสธ</span>
   <span class="status-pill">5. รับเงิน/ของแทน</span>
   <span class="status-pill">6. ออกใบลดหนี้ (PO-CN) → รอหักหนี้</span>
+  <span class="status-pill clm8" style="display:none">8.5 ส่งสินค้าคืนลูกค้า</span>
 </div>
+<script>
+function clmMode(m, btn){
+  document.querySelectorAll('.clm-mode').forEach(function(b){b.style.background='#fff';b.style.color='#374151';});
+  if(btn){btn.style.background='#2563EB';btn.style.color='#fff';}
+  var show = m==='return';
+  document.querySelectorAll('.clm8').forEach(function(e){e.style.display = show?'':'none';});
+  var rs=document.getElementById('clmReturnSec'); if(rs) rs.style.display = show?'':'none';
+}
+</script>
 
 <!-- Row 2: Customer (SL-4 compact pattern) + Doc extras -->
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
@@ -351,6 +369,22 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
   <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
     <a href="po-cn-credit-note-mockup.html" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:linear-gradient(90deg,#7C2D12,#EF4444);color:#fff;border-radius:7px;font-size:13px;font-weight:700;text-decoration:none">↩️ ออกใบลดหนี้เจ้าหนี้ (PO-CN) → เข้าคิวรอหักหนี้</a>
     <span style="font-size:11px;color:#6B7280">เมื่อ Post → PO-6 (ใบตั้งหนี้) ดึงรายการ "รอหักหนี้" นี้ไปตัด AP เจ้าหนี้</span>
+  </div>
+</div>
+
+<!-- CLM-8: Customer return (stage 8.5 · โหมด ① เท่านั้น) -->
+<div class="section-card" id="clmReturnSec" style="display:none">
+  <div class="section-title">🔄 CLM-8 · คืนสินค้าใหม่ / เงินให้ลูกค้า (stage 8.5) <span class="tag">โหมด ① สินค้าใหม่ทั้งชิ้น</span></div>
+  <div class="alert alert-info" style="margin-top:0">
+    ℹ️ <div>ลูกค้าเอาสินค้าใหม่ที่ชำรุดมา → ส่งคืนแบรนด์ทั้งชิ้น (8.2 รอรถมารับ) → ได้ CN/ของใหม่ (8.4) → <b>คืนของใหม่หรือเงินให้ลูกค้า (8.5)</b> + บันทึกประวัติ</div>
+  </div>
+  <div class="form-grid">
+    <div class="field"><label>วิธีคืนลูกค้า</label><select><option>🔄 เปลี่ยนสินค้าใหม่ให้ลูกค้า (เบิก WH-2)</option><option>💵 คืนเงินลูกค้า (→ SL-CN)</option><option>🎫 เครดิตร้าน</option></select></div>
+    <div class="field"><label>สินค้าใหม่ที่ส่งคืน</label><input value="AC-DAI-FTKM24 · เครื่องใหม่ (S/N ใหม่)"></div>
+    <div class="field"><label>วันที่คืนลูกค้า</label><input type="text" placeholder="—"></div>
+  </div>
+  <div style="margin-top:12px">
+    <button style="padding:9px 16px;background:#166534;color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">✅ บันทึกคืนสินค้า/เงิน (ปิด stage 8)</button>
   </div>
 </div>
 
