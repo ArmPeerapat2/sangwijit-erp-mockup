@@ -3,225 +3,181 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Flowchart งานบริการ — การไหลของเอกสาร + การทำงาน | Sangwijit</title>
+<title>Flowchart งานบริการ 9 stage (connected) — Sangwijit</title>
 <style>
-:root{--navy:#1E3A5F;--accent:#2563EB;--bg:#F8FAFC;--muted:#64748B;--border:#E2E8F0}
+:root{--navy:#1E3A5F;--accent:#2563EB;--bg:#F8FAFC;--muted:#64748B;--border:#E2E8F0;
+--admin:#2563EB;--tech:#7C3AED;--sale:#4F46E5;--acct:#DB2777;--vendor:#0891B2;--line:#94A3B8}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Inter,'Noto Sans Thai',sans-serif;background:var(--bg);color:#1F2937}
+body{font-family:Inter,'Noto Sans Thai',sans-serif;background:var(--bg);color:#1F2937;font-size:14px}
 .header{background:var(--navy);color:#fff;padding:22px 32px}
-.header h1{font-size:21px}
-.header p{font-size:13px;opacity:.9;margin-top:5px}
-.container{max-width:1120px;margin:0 auto;padding:18px 20px}
-.callout{background:#EFF6FF;border:1px solid #BFDBFE;border-left:5px solid var(--accent);border-radius:10px;padding:13px 18px;margin-bottom:16px;font-size:13.5px;line-height:1.6}
+.header h1{font-size:21px}.header p{font-size:13px;opacity:.9;margin-top:5px;line-height:1.5}
+.container{max-width:1040px;margin:0 auto;padding:20px 22px}
+.callout{background:#EFF6FF;border:1px solid #BFDBFE;border-left:5px solid var(--accent);border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:12.5px;line-height:1.6}
 .callout b{color:#1E40AF}
-.callout .k{display:inline-block;background:#DBEAFE;color:#1E40AF;font-weight:700;font-size:12px;padding:1px 8px;border-radius:6px}
-.legend{display:flex;gap:16px;flex-wrap:wrap;background:#fff;border:1px solid var(--border);border-radius:10px;padding:11px 16px;margin-bottom:16px;font-size:12.5px;align-items:center}
-.legend b{color:var(--navy)}
-.lg{display:inline-flex;align-items:center;gap:7px}
-.chart{background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px;overflow-x:auto}
-.chart svg{display:block;margin:0 auto;min-width:940px}
-.footer{text-align:center;font-size:12px;color:var(--muted);margin:20px 0;line-height:1.7}
-text{font-family:Inter,'Noto Sans Thai',sans-serif}
+.legend{display:flex;gap:15px;flex-wrap:wrap;background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 15px;margin-bottom:18px;font-size:12px;align-items:center}
+.lg{display:inline-flex;align-items:center;gap:6px}.lg .s{width:26px;height:15px;display:inline-block;border-radius:3px;border:1.5px solid}
+.flow{display:flex;flex-direction:column;align-items:center}
+.node{background:#fff;border:1.7px solid var(--c,var(--admin));border-radius:9px;padding:9px 16px;text-align:center;max-width:460px;position:relative}
+.node .code{font-size:10px;font-weight:800;color:var(--c);font-family:'Inter',monospace}
+.node .t{font-size:13.5px;font-weight:700;line-height:1.35}
+.node .who{font-size:10.5px;color:var(--muted);margin-top:2px}
+.node .doc{display:inline-block;font-size:10px;font-weight:700;color:#6D28D9;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:6px;padding:1px 7px;margin-top:5px}
+.oval{border-radius:40px;color:#fff;border:none;font-weight:700;padding:11px 26px}
+.oval.start{background:var(--navy)}.oval.end{background:#166534}
+.dia{background:#FEF3C7;border:1.7px solid #F59E0B;color:#92400E;font-weight:700;font-size:13px;padding:20px 34px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);min-width:230px;text-align:center}
+.conn{width:2px;height:20px;background:var(--line);position:relative}
+.conn::after{content:'';position:absolute;bottom:-1px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--line)}
+.branches{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0}
+.br{font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:8px;border:1px solid;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.br-go{background:#F0FDF4;color:#166534;border-color:#BBF7D0}
+.br-side{background:#EFF6FF;color:#1E40AF;border-color:#BFDBFE}
+.br-stop{background:#FEF2F2;color:#991B1B;border-color:#FECACA}
+.br-loop{background:#FFFBEB;color:#B45309;border-color:#FCD34D}
+.sub{background:#fff;border:1px solid var(--border);border-radius:11px;padding:14px 16px;margin-top:14px}
+.sub-h{font-size:14.5px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.chain{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.cbox{border:1.5px solid var(--c);border-radius:8px;padding:7px 11px;font-size:12px;background:#fff;min-width:92px}
+.cbox .cc{font-size:9.5px;font-weight:800;color:var(--c);font-family:'Inter',monospace}
+.cbox .ct{font-size:12px;font-weight:600;line-height:1.3}
+.ar{color:var(--line);font-size:15px;font-weight:700}
+.loop{font-size:11.5px;font-weight:700;color:#B45309;background:#FFFBEB;border:1px dashed #FCD34D;padding:5px 11px;border-radius:8px}
+.money{font-size:10px;font-weight:700;color:#065F46;background:#ECFDF5;border:1px solid #A7F3D0;padding:1px 6px;border-radius:8px}
+.mblock{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:780px;margin:0 auto}
+.mcol{border-radius:11px;padding:13px 15px}.mcol.in{background:#ECFDF5;border:1px solid #A7F3D0}.mcol.out{background:#FFFBEB;border:1px solid #FDE68A}
+.mcol h4{font-size:13.5px;margin-bottom:8px}.mcol.in h4{color:#065F46}.mcol.out h4{color:#92400E}
+.mrow{background:#fff;border:1px solid var(--border);border-radius:7px;padding:8px 11px;font-size:12px;margin-bottom:7px;line-height:1.45}
+.mwarn{font-size:11px;font-weight:700;margin-top:2px}.mcol.in .mwarn{color:#047857}.mcol.out .mwarn{color:#B45309}
+.footer{text-align:center;font-size:12px;color:var(--muted);margin:22px 0;line-height:1.7}
 </style>
 </head>
 <body>
 <div class="header">
-  <h1>🔀 Flowchart งานบริการ — การไหลของเอกสาร + การทำงาน</h1>
-  <p>อ่านบนลงล่าง · กล่องน้ำเงิน = งานที่ทำ · ข้าวหลามตัด = ตัดสินใจ · รูปม่วง = เอกสาร · แยกท้าย = เงิน 2 ทิศ</p>
+  <h1>🔀 Flowchart งานบริการ — 9 Stage (connected)</h1>
+  <p>ตาม transition "ขั้นถัดไป" จริง · spine หลัก 1→2→3→4→5→7 · แตกสาย ⑥ อะไหล่ / ⑧ เคลมสินค้าใหม่ / ⑨ จ่ายค่าแรงช่าง</p>
 </div>
 <div class="container">
 
 <div class="callout">
-  🔁 <b>งานเหมือนกันทุกเคส</b> — รับเรื่อง → มอบหมาย → ซ่อม → ปิดงาน <b>เหมือนกันหมด ไม่ว่าในหรือนอกประกัน</b> · สิ่งที่ต่างคือ <b>"เงิน 2 ทิศ"</b> ตอนท้าย:<br>
-  <span class="k">💰 เงินเข้า</span> ในประกัน→เก็บกับแบรนด์ (ARI) · นอกประกัน→เก็บกับลูกค้า (SL-4) — <b>รับอย่างใดอย่างหนึ่ง หรือทั้งคู่</b> (รายบรรทัด งานเดียวออก 2 บิลได้)&nbsp;&nbsp;
-  <span class="k">💸 เงินออก</span> ช่างใน / ช่างนอก → <b>สรุปรายการงาน → จ่ายตามเรทที่ตกลง</b> (คนละตัวเลขกับที่เก็บลูกค้า)
+  🔁 <b>งานเหมือนกันทุกเคส — ต่างที่เงิน</b> · <b>เคลมคืนสินค้าใหม่ (1.1) = เลือกตั้งแต่รับเรื่อง → สาย ⑧ เลย</b> (สินค้าใหม่ ตัดสินแต่แรก) · <b>ช่างส่งงานเสร็จ (4.1) → ดึงรายการเข้าสาย ⑨ จ่ายค่าแรงช่าง</b> · อะไหล่ (⑥) เสร็จ → ↩ วนกลับนัดหมาย (2.1)
 </div>
 
 <div class="legend">
-  <b>สัญลักษณ์:</b>
-  <span class="lg"><svg width="34" height="20"><ellipse cx="17" cy="10" rx="16" ry="9" fill="#1E3A5F"/></svg> เริ่ม/จบ</span>
-  <span class="lg"><svg width="34" height="20"><rect x="1" y="2" width="32" height="16" rx="3" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.5"/></svg> งานที่ทำ</span>
-  <span class="lg"><svg width="34" height="22"><polygon points="17,2 32,11 17,20 2,11" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5"/></svg> ตัดสินใจ</span>
-  <span class="lg"><svg width="34" height="22"><path d="M2,2 H32 V16 Q24,22 17,17 Q10,12 2,18 Z" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1.5"/></svg> เอกสาร</span>
+  <span class="lg"><span class="s" style="background:var(--navy);border-color:var(--navy)"></span> เริ่ม/จบ</span>
+  <span class="lg"><span class="s" style="background:#fff;border-color:var(--admin)"></span> งานที่ทำ</span>
+  <span class="lg"><span class="s" style="background:#FEF3C7;border-color:#F59E0B"></span> ตัดสินใจ</span>
+  <span class="lg"><span style="font-size:10px;font-weight:700;color:#6D28D9;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:6px;padding:1px 6px">📄 เอกสาร</span></span>
+  <span class="lg"><span class="money">💰 เงิน</span></span>
 </div>
 
-<div class="chart">
-<svg viewBox="0 0 940 1330" width="940" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#64748B"/></marker>
-    <marker id="arrp" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#7C3AED"/></marker>
-    <marker id="arrr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#DC2626"/></marker>
-  </defs>
+<!-- ===== MAIN SPINE ===== -->
+<div class="flow">
+  <div class="node oval start">🛒 ลูกค้านำเครื่องมา / แจ้ง</div>
+  <div class="conn"></div>
 
-  <!-- ===== spine connectors ===== -->
-  <g stroke="#64748B" stroke-width="1.8" fill="none" marker-end="url(#arr)">
-    <line x1="300" y1="66" x2="300" y2="86"/>            <!-- start->R1 -->
-    <line x1="300" y1="144" x2="300" y2="188"/>          <!-- R1->R2 -->
-    <line x1="300" y1="246" x2="300" y2="288"/>          <!-- R2->R3 -->
-    <line x1="300" y1="346" x2="300" y2="378"/>          <!-- R3->diamond อะไหล่ -->
-    <line x1="300" y1="460" x2="300" y2="500"/>          <!-- อะไหล่ ไม่ ->diamond ซ่อมได้ -->
-    <line x1="300" y1="582" x2="300" y2="614"/>          <!-- ซ่อมได้ ใช่ ->R4 -->
-  </g>
-  <!-- parts branch -->
-  <g stroke="#64748B" stroke-width="1.8" fill="none">
-    <path d="M378,419 H520" marker-end="url(#arr)"/>
-    <path d="M615,446 V488 H300" marker-end="url(#arr)"/>
-  </g>
-  <!-- ซ่อมได้ ไม่ -> claim -->
-  <path d="M378,541 H560 V1120 H255" stroke="#DC2626" stroke-width="1.8" fill="none" marker-end="url(#arrr)"/>
+  <div class="node" style="--c:var(--admin)"><div class="code">1 · รับงานซ่อม</div><div class="t">รับเรื่อง · ตรวจ Serial · เช็คเงื่อนไขประกัน</div><div class="who">🧑‍💼 แอดมิน · แยกประเภทงาน</div></div>
+  <div class="conn"></div>
 
-  <!-- R4 -> money bus -->
-  <g stroke="#64748B" stroke-width="1.8" fill="none">
-    <line x1="300" y1="670" x2="300" y2="690"/>
-    <path d="M235,690 H665"/>
-    <line x1="235" y1="690" x2="235" y2="712" marker-end="url(#arr)"/>
-    <line x1="665" y1="690" x2="665" y2="712" marker-end="url(#arr)"/>
-  </g>
-  <!-- money-in internal -->
-  <g stroke="#64748B" stroke-width="1.6" fill="none" marker-end="url(#arr)">
-    <line x1="235" y1="752" x2="235" y2="770"/>
-    <line x1="235" y1="815" x2="235" y2="833"/>
-  </g>
-  <!-- money-out internal -->
-  <g stroke="#64748B" stroke-width="1.6" fill="none" marker-end="url(#arr)">
-    <line x1="665" y1="752" x2="665" y2="770"/>
-    <line x1="665" y1="815" x2="665" y2="833"/>
-  </g>
-  <!-- both -> END -->
-  <g stroke="#64748B" stroke-width="1.8" fill="none">
-    <path d="M235,875 V905 H450" />
-    <path d="M665,875 V905 H450" />
-    <line x1="450" y1="905" x2="450" y2="922" marker-end="url(#arr)"/>
-  </g>
+  <div class="dia">ประเภทงาน?</div>
+  <div class="branches">
+    <span class="br br-go">🔧 ซ่อม/ติดตั้ง/ล้าง/ตรวจเช็ค/ซ่อมซ้ำ (1.2–1.6) → 2 ↓</span>
+    <a class="br br-side" href="#s8">♻️ เคลมคืนสินค้าใหม่ (1.1) → สาย ⑧</a>
+  </div>
+  <div class="conn"></div>
 
-  <!-- doc dashed connectors -->
-  <g stroke="#7C3AED" stroke-width="1.6" fill="none" stroke-dasharray="5 3" marker-end="url(#arrp)">
-    <line x1="425" y1="115" x2="600" y2="115"/>   <!-- R1->SV-1 -->
-    <line x1="425" y1="217" x2="600" y2="217"/>   <!-- R2->SV-2 -->
-    <line x1="425" y1="317" x2="600" y2="317"/>   <!-- R3->SV-5 -->
-    <line x1="710" y1="446" x2="710" y2="378"/>   <!-- parts->SV-3 doc -->
-    <line x1="425" y1="642" x2="600" y2="642"/>   <!-- R4->SV-4 -->
-  </g>
+  <div class="node" style="--c:var(--admin)"><div class="code">2 · นัดหมาย</div><div class="t">รอวันนัด (2.1) → นัดหมายวันกำหนด (2.2)</div><div class="who">🧑‍💼 แอดมิน เลือกช่าง มอบหมาย → ช่างกดรับ</div></div>
+  <div class="conn"></div>
 
-  <!-- ===== NODES ===== -->
-  <!-- START -->
-  <ellipse cx="300" cy="40" rx="150" ry="26" fill="#1E3A5F"/>
-  <text x="300" y="45" text-anchor="middle" fill="#fff" font-size="13.5" font-weight="700">🛒 ลูกค้านำเครื่องมา / แจ้งซ่อม</text>
+  <div class="node" style="--c:var(--tech)"><div class="code">3 · ช่างรับงาน</div><div class="t">ถึงวัน ช่างรับสินค้า (3.1) → เริ่มงาน (3.2)</div><div class="who">🔧 ช่าง · ถ่ายรูปรับ · กำลังดำเนินการ</div></div>
+  <div class="conn"></div>
 
-  <!-- R1 -->
-  <rect x="175" y="88" width="250" height="56" rx="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
-  <text x="300" y="110" text-anchor="middle" font-size="13" font-weight="700" fill="#1E40AF">สแกน Serial → เช็คประกัน</text>
-  <text x="300" y="128" text-anchor="middle" font-size="10.5" fill="#64748B">🧑‍💼 แอดมิน · ประกันรายชิ้น (A–E)</text>
-  <path d="M600,90 H820 V132 Q765,144 710,137 Q655,130 600,142 Z" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1.5"/>
-  <text x="710" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#6D28D9">📄 ใบรับเรื่องซ่อม</text>
-  <text x="710" y="127" text-anchor="middle" font-size="10" fill="#7C3AED">SV-1</text>
+  <div class="node" style="--c:var(--tech)"><div class="code">4 · ช่างส่งงาน</div><div class="t">ช่างทำงาน · ถ่ายรูป/รายงาน · คืนอะไหล่เก่า</div><div class="who">🔧 ช่าง</div></div>
+  <div class="branches">
+    <span class="br br-go">4.1 เสร็จ → 5 ↓ <span class="money">🔗 ดึงเข้า ⑨ จ่ายช่าง</span></span>
+    <a class="br br-side" href="#s6">4.2 ต้องสั่งอะไหล่ → สาย ⑥</a>
+    <span class="br br-loop">4.3 นัดใหม่ → กลับ 2.2</span>
+    <span class="br br-stop">4.4 ยกเลิกงาน → จบ</span>
+  </div>
+  <div class="conn"></div>
 
-  <!-- R2 -->
-  <rect x="175" y="190" width="250" height="56" rx="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
-  <text x="300" y="212" text-anchor="middle" font-size="13" font-weight="700" fill="#1E40AF">มอบหมายช่าง + นัดหมาย</text>
-  <text x="300" y="230" text-anchor="middle" font-size="10.5" fill="#64748B">🧑‍💼 แอดมิน · ช่างใน / ช่างนอก</text>
-  <path d="M600,192 H820 V234 Q765,246 710,239 Q655,232 600,244 Z" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1.5"/>
-  <text x="710" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#6D28D9">📄 ใบมอบหมายงาน</text>
-  <text x="710" y="229" text-anchor="middle" font-size="10" fill="#7C3AED">SV-2</text>
+  <div class="node" style="--c:var(--acct)"><div class="code">5 · ปิดงาน</div><div class="t">ปิดสมบูรณ์ / ตั้งหนี้ในระบบ</div><div class="who">🧑‍💼 แอดมิน เปิดบิลปิดสินค้า</div></div>
+  <div class="branches">
+    <span class="br br-go" style="background:#F0FDF4;color:#166534;border-color:#BBF7D0">🟢 ในประกัน (5.1) → 7</span>
+    <span class="br br-stop" style="background:#FEF2F2;color:#991B1B;border-color:#FECACA">🔴 นอกประกัน (5.2) → 7.3 <span class="money">💰 ลูกค้า</span></span>
+  </div>
+  <div class="conn"></div>
 
-  <!-- R3 -->
-  <rect x="175" y="290" width="250" height="56" rx="6" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1.6"/>
-  <text x="300" y="312" text-anchor="middle" font-size="13" font-weight="700" fill="#6D28D9">ช่างตรวจ + ลงมือซ่อม</text>
-  <text x="300" y="330" text-anchor="middle" font-size="10.5" fill="#64748B">🔧 ช่าง · Job Card · รูปก่อน/หลัง</text>
-  <path d="M600,292 H820 V334 Q765,346 710,339 Q655,332 600,344 Z" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1.5"/>
-  <text x="710" y="314" text-anchor="middle" font-size="12" font-weight="700" fill="#6D28D9">📄 ใบงานช่าง (Job Card)</text>
-  <text x="710" y="329" text-anchor="middle" font-size="10" fill="#7C3AED">SV-5</text>
+  <div class="node" style="--c:var(--acct)"><div class="code">7 · วางบิลบริษัท</div><div class="t">สรุป job (7.1) → วางบิล Vendor (7.2) → รับชำระ (7.3)</div><div class="who">🧑‍💼 แอดมิน/บัญชี · ในประกัน=บริษัท · นอกประกัน=ลูกค้า <span class="money">💰</span></div></div>
+  <div class="branches"><span class="br br-go">7.3 → ปิดงานสมบูรณ์ (5.4) ↓</span></div>
+  <div class="conn"></div>
 
-  <!-- diamond อะไหล่ -->
-  <polygon points="300,378 378,419 300,460 222,419" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.6"/>
-  <text x="300" y="416" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">ต้องใช้</text>
-  <text x="300" y="431" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">อะไหล่?</text>
-  <text x="300" y="484" text-anchor="middle" font-size="10.5" font-weight="700" fill="#64748B">ไม่ ↓</text>
-  <text x="448" y="413" text-anchor="middle" font-size="10.5" font-weight="700" fill="#16A34A">ใช่ →</text>
-  <rect x="518" y="396" width="194" height="50" rx="6" fill="#F0FDF4" stroke="#16A34A" stroke-width="1.5"/>
-  <text x="615" y="416" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">เบิก / สั่งอะไหล่</text>
-  <text x="615" y="433" text-anchor="middle" font-size="10" fill="#15803D">📦 คลัง · ในประกันคืนของเก่า</text>
-  <path d="M618,306 H802 V338 Q756,348 710,342 Q664,336 618,346 Z" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1.5"/>
-  <text x="710" y="326" text-anchor="middle" font-size="11" font-weight="700" fill="#6D28D9">📄 SV-3 / SV-Order</text>
+  <div class="node oval end">✅ จบงาน</div>
+</div>
 
-  <!-- diamond ซ่อมได้ -->
-  <polygon points="300,500 378,541 300,582 222,541" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.6"/>
-  <text x="300" y="546" text-anchor="middle" font-size="12.5" font-weight="700" fill="#92400E">ซ่อมได้?</text>
-  <text x="300" y="606" text-anchor="middle" font-size="10.5" font-weight="700" fill="#16A34A">ใช่ ↓</text>
-  <text x="470" y="535" text-anchor="middle" font-size="10.5" font-weight="700" fill="#DC2626">ไม่ → เคลม ①</text>
+<!-- money 2 dir -->
+<div class="mblock" style="margin-top:16px">
+  <div class="mcol in">
+    <h4>💰 เงินเข้า — รับชำระ</h4>
+    <div class="mrow">🟢 <b>ในประกัน</b> → เก็บกับบริษัท/แบรนด์ (7.3)</div>
+    <div class="mrow">🔴 <b>นอกประกัน</b> → เก็บกับลูกค้า (5.2/7.3)</div>
+    <div class="mrow">💰 <b>มัดจำอะไหล่</b> → รับที่ 6.1</div>
+    <div class="mwarn">⚖️ รับเดี่ยว/ทั้งคู่ได้</div>
+  </div>
+  <div class="mcol out">
+    <h4>💸 เงินออก — จ่ายค่าแรงช่าง (สาย ⑨)</h4>
+    <div class="mrow">🔧 <b>ช่างใน</b> → incentive</div>
+    <div class="mrow">🔧 <b>ช่างนอก</b> → เหมา (ตั้งเบิก AP)</div>
+    <div class="mwarn">⚖️ trigger จาก 4.1 ช่างส่งงานเสร็จ · เรทจ่าย ≠ ราคาเก็บ</div>
+  </div>
+</div>
 
-  <!-- R4 -->
-  <rect x="175" y="614" width="250" height="56" rx="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.6"/>
-  <text x="300" y="636" text-anchor="middle" font-size="13" font-weight="700" fill="#1E40AF">ปิดงาน + ตั้งราคา</text>
-  <text x="300" y="654" text-anchor="middle" font-size="10.5" fill="#64748B">🧑‍💼 แอดมิน · เลือกคนจ่ายรายบรรทัด</text>
-  <path d="M600,616 H820 V658 Q765,670 710,663 Q655,656 600,668 Z" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1.5"/>
-  <text x="710" y="638" text-anchor="middle" font-size="12" font-weight="700" fill="#6D28D9">📄 ใบปิดงาน</text>
-  <text x="710" y="653" text-anchor="middle" font-size="10" fill="#7C3AED">SV-4</text>
+<!-- ===== SUB ⑥ อะไหล่ ===== -->
+<div class="sub" id="s6">
+  <div class="sub-h" style="color:#16A34A">⑥ สาย อะไหล่ <span style="font-size:11px;font-weight:600;color:var(--muted)">(จาก 4.2 สั่งอะไหล่)</span></div>
+  <div class="chain">
+    <div class="cbox" style="--c:#16A34A"><div class="cc">6.1</div><div class="ct">รอลูกค้ามัดจำ <span class="money">💰</span></div></div>
+    <span class="ar">→</span>
+    <div class="cbox" style="--c:#16A34A"><div class="cc">6.2 / 6.3</div><div class="ct">สั่งอะไหล่ ในประกัน(เบิก/ยืม) / นอกประกัน(ซื้อ vendor)</div></div>
+    <span class="ar">→</span>
+    <div class="cbox" style="--c:#16A34A"><div class="cc">6.4</div><div class="ct">รับอะไหล่</div></div>
+    <span class="ar">→</span>
+    <span class="loop">↩ กลับ นัดหมาย (2.1)</span>
+  </div>
+  <div style="font-size:11.5px;color:var(--muted);margin-top:8px">6.5 ส่งคืนอะไหล่บริษัท (อะไหล่เก่าในประกัน) · นอกประกัน = ไม่คืน</div>
+</div>
 
-  <!-- ===== MONEY 2 ทิศ ===== -->
-  <!-- money IN (left) -->
-  <rect x="55" y="712" width="360" height="40" rx="7" fill="#10B981"/>
-  <text x="235" y="737" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">💰 เงินเข้า — รับชำระ (ที่ SV-7)</text>
-  <rect x="55" y="770" width="360" height="45" rx="6" fill="#ECFDF5" stroke="#10B981" stroke-width="1.4"/>
-  <text x="235" y="788" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">🏭 รายการ<tspan font-weight="800">ในประกัน</tspan> → เก็บกับแบรนด์</text>
-  <text x="235" y="805" text-anchor="middle" font-size="10.5" fill="#047857">ออก ARI (Vendor billing)</text>
-  <rect x="55" y="833" width="360" height="45" rx="6" fill="#ECFDF5" stroke="#10B981" stroke-width="1.4"/>
-  <text x="235" y="851" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">🛒 รายการ<tspan font-weight="800">นอกประกัน</tspan> → เก็บกับลูกค้า</text>
-  <text x="235" y="868" text-anchor="middle" font-size="10.5" fill="#047857">ออกบิลขาย SL-4</text>
-  <text x="235" y="895" text-anchor="middle" font-size="10.5" font-weight="700" fill="#B45309">⚖️ รับรายการเดียว หรือทั้งคู่ — งานเดียวออก 2 บิลได้</text>
+<!-- ===== SUB ⑧ เคลมสินค้าใหม่ ===== -->
+<div class="sub" id="s8">
+  <div class="sub-h" style="color:var(--vendor)">⑧ สาย เคลมสินค้าใหม่กับบริษัท <span style="font-size:11px;font-weight:600;color:var(--muted)">(จาก 1.1 เท่านั้น · สินค้าใหม่ · ในประกัน)</span></div>
+  <div class="chain">
+    <div class="cbox" style="--c:var(--vendor)"><div class="cc">8.1</div><div class="ct">รอส่งเรื่อง</div></div>
+    <span class="ar">→</span>
+    <div class="cbox" style="--c:var(--vendor)"><div class="cc">8.2</div><div class="ct">รอรถมารับ</div></div>
+    <span class="ar">→</span>
+    <div class="cbox" style="--c:var(--vendor)"><div class="cc">8.3</div><div class="ct">รอเอกสารลดหนี้ / รับสินค้าใหม่กลับ</div></div>
+    <span class="ar">→</span>
+    <div class="cbox" style="--c:var(--acct)"><div class="cc">8.4</div><div class="ct">รับเอกสารลดหนี้ / สินค้าใหม่</div></div>
+    <span class="ar">→</span>
+    <div class="cbox" style="--c:var(--sale)"><div class="cc">8.5</div><div class="ct">ส่งสินค้าคืนลูกค้า</div></div>
+  </div>
+  <div style="font-size:11.5px;color:var(--muted);margin-top:8px">8.5 บันทึกประวัติคืนสินค้า / ส่วนลด / คืนเงิน · chain เอกสาร CLM → PO-CN (ฝั่ง vendor)</div>
+</div>
 
-  <!-- money OUT (right) -->
-  <rect x="485" y="712" width="360" height="40" rx="7" fill="#D97706"/>
-  <text x="665" y="737" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">💸 เงินออก — จ่ายช่าง (ตามเรท)</text>
-  <rect x="485" y="770" width="360" height="45" rx="6" fill="#FFFBEB" stroke="#D97706" stroke-width="1.4"/>
-  <text x="665" y="788" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">🔧 <tspan font-weight="800">ช่างใน</tspan> → สรุปงาน → CM-1</text>
-  <text x="665" y="805" text-anchor="middle" font-size="10.5" fill="#B45309">ค่าแรง / คอมมิชชั่น (payroll)</text>
-  <rect x="485" y="833" width="360" height="45" rx="6" fill="#FFFBEB" stroke="#D97706" stroke-width="1.4"/>
-  <text x="665" y="851" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">🔧 <tspan font-weight="800">ช่างนอก</tspan> → สรุปงาน → จ่ายตามเรทตกลง</text>
-  <text x="665" y="868" text-anchor="middle" font-size="10.5" fill="#B45309">ตั้งเบิก AP (จ่ายเจ้าหนี้)</text>
-  <text x="665" y="895" text-anchor="middle" font-size="10.5" font-weight="700" fill="#B45309">⚖️ เรทจ่ายช่าง ≠ ราคาที่เก็บลูกค้า/แบรนด์</text>
-
-  <!-- END -->
-  <ellipse cx="450" cy="948" rx="105" ry="26" fill="#166534"/>
-  <text x="450" y="953" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">✅ จบงาน</text>
-
-  <!-- ===== divider ===== -->
-  <line x1="40" y1="1010" x2="900" y2="1010" stroke="#CBD5E1" stroke-width="1.4" stroke-dasharray="6 4"/>
-  <text x="40" y="1038" font-size="14" font-weight="800" fill="#0891B2">① เคลมสินค้า — ของเราซื้อมาเสีย → คืนแบรนด์ (ของหายจากสต็อก)</text>
-
-  <!-- claim horizontal flow -->
-  <g stroke="#64748B" stroke-width="1.8" fill="none" marker-end="url(#arr)">
-    <line x1="255" y1="1120" x2="297" y2="1120"/>
-    <line x1="475" y1="1120" x2="497" y2="1120"/>
-  </g>
-  <rect x="45" y="1096" width="210" height="48" rx="6" fill="#ECFEFF" stroke="#0891B2" stroke-width="1.5"/>
-  <text x="150" y="1116" text-anchor="middle" font-size="11.5" font-weight="700" fill="#155E75">เจอของซื้อเราเสีย</text>
-  <text x="150" y="1132" text-anchor="middle" font-size="10" fill="#0E7490">DOA / ก่อนขาย / ซ่อมไม่ได้</text>
-  <path d="M297,1098 H473 V1132 Q429,1142 385,1136 Q341,1130 297,1140 Z" fill="#F5F3FF" stroke="#7C3AED" stroke-width="1.5"/>
-  <text x="385" y="1118" text-anchor="middle" font-size="11.5" font-weight="700" fill="#6D28D9">📄 ใบเคลม vendor</text>
-  <text x="385" y="1132" text-anchor="middle" font-size="10" fill="#7C3AED">CLM</text>
-  <polygon points="575,1080 670,1120 575,1160 480,1120" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.6"/>
-  <text x="575" y="1124" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">แบรนด์ตอบ?</text>
-  <g stroke="#64748B" stroke-width="1.6" fill="none" marker-end="url(#arr)">
-    <path d="M670,1105 H745 V1078"/>
-    <path d="M670,1120 H755"/>
-    <path d="M670,1135 H745 V1168"/>
-  </g>
-  <rect x="745" y="1048" width="150" height="42" rx="6" fill="#FDF2F8" stroke="#DB2777" stroke-width="1.4"/>
-  <text x="820" y="1066" text-anchor="middle" font-size="11" font-weight="700" fill="#9D174D">S1 ส่วนลด</text>
-  <text x="820" y="1081" text-anchor="middle" font-size="9.5" fill="#BE185D">→ หัก PO-6 (PO-CN)</text>
-  <rect x="755" y="1100" width="140" height="40" rx="6" fill="#F0FDF4" stroke="#16A34A" stroke-width="1.4"/>
-  <text x="825" y="1117" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">S2/S3 ของใหม่</text>
-  <text x="825" y="1132" text-anchor="middle" font-size="9.5" fill="#15803D">→ รับที่ WH-1</text>
-  <rect x="745" y="1148" width="150" height="40" rx="6" fill="#FEF2F2" stroke="#EF4444" stroke-width="1.4"/>
-  <text x="820" y="1165" text-anchor="middle" font-size="11" font-weight="700" fill="#991B1B">S4 ปฏิเสธ</text>
-  <text x="820" y="1180" text-anchor="middle" font-size="9.5" fill="#B91C1C">→ บริษัทรับเอง</text>
-</svg>
+<!-- ===== SUB ⑨ จ่ายค่าแรงช่าง ===== -->
+<div class="sub" id="s9">
+  <div class="sub-h" style="color:#D97706">⑨ สาย จ่ายค่าแรงช่าง <span style="font-size:11px;font-weight:600;color:var(--muted)">(trigger จาก 4.1 ช่างส่งงานเสร็จ)</span></div>
+  <div class="chain">
+    <div class="cbox" style="--c:#D97706"><div class="cc">9.1</div><div class="ct">สรุปรายการ job · จำนวนช่าง + เรท</div></div>
+    <span class="ar">→</span>
+    <div class="cbox" style="--c:#D97706"><div class="cc">9.2</div><div class="ct">ส่งวางบิลกับบัญชี</div></div>
+    <span class="ar">→</span>
+    <span class="loop" style="color:#065F46;background:#ECFDF5;border-color:#A7F3D0">💸 ช่างใน = incentive · ช่างนอก = เหมา</span>
+  </div>
 </div>
 
 <div class="footer">
-  Flowchart งานบริการ Sangwijit ERP · งานเหมือนกันทุกเคส — ต่างที่เงิน 2 ทิศ (เข้า: vendor/ลูกค้า/ทั้งคู่ · ออก: ช่างใน CM-1 / ช่างนอก ตามเรท)<br>
-  คู่กับ <b>flow-service-training.html</b> (เทรนแอดมิน) · <b>flow-service-system.html</b> (ผังตัดสินใจ + BC)
+  Flowchart งานบริการ 9 stage (connected) · ตาม transition map ยืนยัน 2026-07-08<br>
+  spine: 1→2→3→4→5→7 · สาย ⑥ อะไหล่ (↩2.1) · ⑧ เคลมสินค้าใหม่ (จาก 1.1) · ⑨ จ่ายช่าง (จาก 4.1)<br>
+  คู่กับ <b>flow-service-status.html</b> (สถานะเต็ม) · <b>flow-service-training.html</b> (เทรนแอดมิน)
 </div>
 
 </div>
