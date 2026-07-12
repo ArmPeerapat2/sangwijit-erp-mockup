@@ -652,3 +652,5 @@ flow-understanding: `.agents/topics/finance-flow-understanding.md` (user confirm
 - **merges:** cf-company-settings +แท็บธนาคาร (Q6ก) · ค่าส่วนตัว→user-profile (Q7ก) · cf-master-settings +SLA+เช็คลิสต์ · sv-q +chip โพสต์แล้ว · fi4 ตัดโซน WHT→ลิงก์ fi12 · ap1 ตัดแท็บตั้งค่า→ลิงก์ CF-2.6
 - **stale fixed:** doc-finder bc365 path · fi1q dead link · fiq การ์ด FI-5→FI-4 + ปิดงวด→BC · CLAUDE.md CF-2.2=Portal-managed · config-hub Entity Tag=P2
 - **DEV-HANDOFF:** +§Consolidation (กติกาอ่าน mockup: archive=ไม่ build · badge=โหมด/แท็บ · cut=BC)
+
+**📋 Status Lifecycle ทุกโมดูล (ฟอร์แมต service.pdf · 2026-07-12):** flow-wh/sl/po/fi-status.html — ตาราง step × บทบาท × สถานะ × surface (A/P/M) · ชื่อสถานะดึงจาก mockup จริง · surface SV ครบ 9 (A1-A5+P1-2+M1-2 · spec §13.4) · **รอเคาะ: W1-3 (WH) · S1-4 (SL) · Q1-4 (PO) · F1-4 (FI)** — คำถามฝังท้ายแต่ละไฟล์

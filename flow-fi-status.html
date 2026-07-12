@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FI Status Lifecycle — step × บทบาท × สถานะ × surface | Sangwijit</title>
+<style>
+:root{--navy:#1E3A5F;--accent:#2563EB;--bg:#F8FAFC;--muted:#64748B;--border:#E2E8F0;--mod:#DB2777;--ask:#B45309}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,'Noto Sans Thai',sans-serif;background:var(--bg);color:#1F2937;font-size:14px}
+.header{background:var(--navy);color:#fff;padding:20px 32px}
+.header h1{font-size:20px}
+.header p{font-size:12.5px;opacity:.9;margin-top:5px;line-height:1.5}
+.container{max-width:1240px;margin:0 auto;padding:18px 22px}
+.note{background:#EFF6FF;border:1px solid #BFDBFE;border-left:5px solid var(--accent);border-radius:10px;padding:11px 16px;margin-bottom:14px;font-size:12.5px;line-height:1.6}
+.note b{color:#1E40AF}
+.surf{display:flex;gap:8px;flex-wrap:wrap;background:#fff;border:1px solid var(--border);border-radius:11px;padding:11px 15px;margin-bottom:16px;align-items:center}
+.surf .lb{font-size:12px;color:var(--muted);font-weight:700}
+.sfc{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:800;padding:4px 11px;border-radius:8px;border:1.5px solid}
+.sfc.menu{background:#EFF6FF;color:#1E40AF;border-color:#93C5FD}
+.sfc.pop{background:#FFF7ED;color:#C2410C;border-color:#FDBA74}
+.sfc.x{background:#F3F4F6;color:#4B5563;border-color:#D1D5DB}
+.stage-h{display:flex;align-items:center;gap:10px;margin:24px 0 10px;flex-wrap:wrap}
+.stage-h .n{min-width:34px;height:34px;border-radius:9px;background:var(--mod);color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 8px}
+.stage-h h2{font-size:16.5px;color:var(--navy)}
+.stage-h .chain{font-size:11.5px;color:var(--muted);margin-left:auto}
+.twrap{overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:11px}
+table.st{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1000px}
+table.st th{background:#F1F5F9;color:#334155;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;text-align:left;padding:8px 11px;border-bottom:1.5px solid var(--border);white-space:nowrap}
+table.st td{padding:8px 11px;border-bottom:1px solid #F1F5F9;vertical-align:top;line-height:1.5}
+table.st tr:last-child td{border-bottom:none}
+table.st .c{font-weight:800;color:var(--mod);font-family:'Inter',monospace;white-space:nowrap}
+table.st .nx{font-weight:800;color:#3730A3;background:#EEF2FF;border:1px solid #C7D2FE;border-radius:9px;padding:1px 8px;font-size:11px;white-space:nowrap;display:inline-block}
+table.st .stt{font-weight:700;color:#0F766E;background:#F0FDFA;border:1px solid #99F6E4;border-radius:9px;padding:1px 8px;font-size:11px;display:inline-block;white-space:nowrap}
+table.st .gate{font-weight:700;color:#92400E;background:#FEF3C7;border-radius:7px;padding:1px 7px;font-size:10.5px;display:inline-block}
+table.st td.dim{color:#94A3B8}
+.ask{background:#FFFBEB;border:1.5px solid #FCD34D;border-left:6px solid var(--ask);border-radius:11px;padding:12px 16px;margin:14px 0;font-size:12.5px;line-height:1.6}
+.ask .cn{font-size:11.5px;font-weight:800;color:#fff;background:var(--ask);border-radius:7px;padding:2px 9px;margin-right:8px}
+.ask b{color:#78350F}
+.footer{text-align:center;font-size:12px;color:var(--muted);margin:24px 0;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>💵 FI Status Lifecycle — step × บทบาท × สถานะ × surface</h1>
+  <p>ฟอร์แมต service.pdf · ชื่อสถานะจาก mockup จริง (💬 = ร่างใหม่ แก้ได้) · Posted/Released ทั้งหมด = BC เจ้าของจริง portal สะท้อน</p>
+</div>
+<div class="container">
+
+<div class="note">✅ <b>reuse ทั้งสาย — mockup ครบ 5 ฟอร์ม + 2 คิว ไม่ต้องสร้างหน้าใหม่</b> · จุด cut-to-BC: กระทบยอดธนาคาร (Q5ก) · ปิดงวด · posting · 💬 F1-F4 ท้ายหน้า</div>
+
+<div class="surf">
+  <span class="lb">Surface ทั้งโมดูล:</span>
+  <span class="sfc menu">A1 · FI-Q คิวการเงิน</span>
+  <span class="sfc menu">A2 · FI-1Q คิวจับคู่เงินเข้า</span>
+  <span class="sfc menu">F · FI-1 / FI-2 / FI-4 / FI-7 / FI-12</span>
+  <span class="sfc pop">P1 · sc-payment (มีแล้ว · เสียบ fi1)</span>
+  <span class="sfc x">BC · กระทบยอด / ปิดงวด / posting</span>
+</div>
+
+<!-- สาย 1 -->
+<div class="stage-h"><span class="n">1</span><h2>สายเงินเข้า AR (FI-Q → FI-1 / FI-1Q → Post RV)</h2><span class="chain">ที่มา: SL-4 · SL-3 · SV/ARI · เงินโอนเข้าธนาคาร (A3)</span></div>
+<div class="twrap"><table class="st">
+  <thead><tr><th style="width:44px">ขั้น</th><th>งาน</th><th style="width:86px">ถัดไป</th><th style="width:130px">แคชเชียร์/สาขา</th><th style="width:150px">การเงิน (AR)</th><th style="width:110px">บัญชี</th><th style="width:190px">สถานะจะเปลี่ยนเป็น</th><th style="width:90px">Surface</th></tr></thead>
+  <tbody>
+    <tr><td class="c">1.1</td><td>บิลค้างรับถึงกำหนด → การ์ดโผล่ในคิว (โชว์อ้างอิงบิลต้นทางเสมอ)</td><td><span class="nx">→ 1.2/1.3</span></td><td class="dim">—</td><td>เห็นการ์ดในคิว</td><td class="dim">—</td><td><span class="stt">รอรับชำระ</span></td><td>A1</td></tr>
+    <tr><td class="c">1.2</td><td><b>ทางหน้าร้าน:</b> ลูกค้าจ่ายที่เคาน์เตอร์ → sc-payment แบ่งจ่ายได้ → เข้า FI-1</td><td><span class="nx">→ 1.5</span></td><td>รับเงิน + สลิป</td><td>เปิด FI-1</td><td class="dim">—</td><td><span class="stt">รอประกบบิล</span></td><td>P1 + F·FI-1</td></tr>
+    <tr><td class="c">1.3</td><td><b>ทางธนาคาร:</b> เงินโอนเข้า → กดดึง statement (manual sync ตาม A3) → เกิด URC เข้าคิว</td><td><span class="nx">→ 1.4</span></td><td class="dim">—</td><td>กด sync</td><td class="dim">—</td><td><span class="stt">รอจัดสรร · URC</span></td><td>A2</td></tr>
+    <tr><td class="c">1.4</td><td>จับคู่ในคิว: Ref+ยอดตรง=🟢 Auto / ยอดไม่ตรง=🟡 Partial → FI-1 จัดสรรเอง / ไม่รู้ใคร=🔴 Unmatched → เลือกลูกค้า หรือบันทึกเป็นมัดจำ</td><td><span class="nx">→ 1.5</span></td><td class="dim">—</td><td>จับคู่/ยืนยัน 💬F2</td><td class="dim">—</td><td><span class="stt">Auto/Partial/Unmatched</span> → <span class="stt">จับคู่แล้ว · รอประกบ 💬</span></td><td>A2</td></tr>
+    <tr><td class="c">1.5</td><td>ประกบบิลใน FI-1 — ทั้งใบ/บางส่วน · <b>ใช้เครดิตค้าง (SL-CN) + มัดจำ ตัดที่จุดนี้จุดเดียว</b></td><td><span class="nx">→ 1.6</span></td><td class="dim">—</td><td>เลือกบิล+จำนวน</td><td class="dim">—</td><td><span class="stt">ประกบแล้ว · รอ Post 💬</span></td><td>F·FI-1</td></tr>
+    <tr><td class="c">1.6</td><td>Post RV ลง BC → บิลปิด/ลดยอด · พิมพ์ใบเสร็จ</td><td><span class="nx">จบ</span></td><td class="dim">—</td><td>Post + พิมพ์</td><td>BC ปิด ledger</td><td><span class="stt">Posted · บิลปิด / Partial</span></td><td>F·FI-1</td></tr>
+  </tbody>
+</table></div>
+
+<!-- สาย 2 -->
+<div class="stage-h"><span class="n">2</span><h2>สายเงินออก AP (FI-Q → FI-2 → อนุมัติ → จ่าย → Post PV)</h2><span class="chain">ที่มา: PO-6 · ตั้งเบิกช่างนอก (สาย 9 SV) · PO-CN หักก่อนจ่าย</span></div>
+<div class="twrap"><table class="st">
+  <thead><tr><th style="width:44px">ขั้น</th><th>งาน</th><th style="width:86px">ถัดไป</th><th style="width:150px">การเงิน (AP)</th><th style="width:150px">ผู้อนุมัติ (CF-2.6)</th><th style="width:110px">บัญชี</th><th style="width:180px">สถานะจะเปลี่ยนเป็น</th><th style="width:90px">Surface</th></tr></thead>
+  <tbody>
+    <tr><td class="c">2.1</td><td>บิลตั้งหนี้ครบกำหนด (มอง 7 วันข้างหน้า) → การ์ดโผล่ในคิว</td><td><span class="nx">→ 2.2</span></td><td>เห็นการ์ด+ยอด</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">รอจ่าย</span></td><td>A1</td></tr>
+    <tr><td class="c">2.2</td><td>เปิด FI-2 เลือกเจ้าหนี้ → ติ๊กบิลค้างหลายใบ · WHT auto ตามหมวดเจ้าหนี้ (แก้เรทได้) → <b>WHT = record pending ส่ง FI-12 ห้ามออก cert ที่นี่</b></td><td><span class="nx">→ 2.3</span></td><td>สร้างใบจ่าย</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">ร่าง</span> · WHT → Pending</td><td>F·FI-2</td></tr>
+    <tr><td class="c">2.3</td><td>ส่งอนุมัติจ่าย — tier CF-2.6 · Maker≠Checker</td><td><span class="nx">→ 2.4</span></td><td>ส่ง+รอผล</td><td>อนุมัติ/ตีกลับ</td><td class="dim">—</td><td><span class="stt">รออนุมัติจ่าย</span></td><td>AP-1</td></tr>
+    <tr><td class="c">2.4</td><td>จ่ายจริง (โอน/เช็ค/เงินสด) + แนบหลักฐานสลิป 💬F4</td><td><span class="nx">→ 2.5</span></td><td>โอน + แนบสลิป</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">จ่ายแล้ว</span></td><td>F·FI-2</td></tr>
+    <tr><td class="c">2.5</td><td>Post PV ลง BC → ปิด AP entry + ตัดธนาคาร</td><td><span class="nx">จบ</span></td><td>Post</td><td class="dim">—</td><td>BC ปิด ledger</td><td><span class="stt">Posted</span></td><td>F·FI-2</td></tr>
+  </tbody>
+</table></div>
+
+<!-- สาย 3 -->
+<div class="stage-h"><span class="n">3</span><h2>สายค่าใช้จ่ายนอก PO (FI-4)</h2><span class="chain">ค่าน้ำ/ไฟ/เดินทาง/ซ่อมแซม · WHT ไปออกที่ FI-12</span></div>
+<div class="twrap"><table class="st">
+  <thead><tr><th style="width:44px">ขั้น</th><th>งาน</th><th style="width:86px">ถัดไป</th><th style="width:160px">ผู้บันทึก (สาขา/แอดมิน)</th><th style="width:130px">ผู้อนุมัติ</th><th style="width:140px">การเงิน/บัญชี</th><th style="width:170px">สถานะจะเปลี่ยนเป็น</th><th style="width:80px">Surface</th></tr></thead>
+  <tbody>
+    <tr><td class="c">3.1</td><td>กรอกค่าใช้จ่าย + แนบใบเสร็จ/ใบกำกับ</td><td><span class="nx">→ 3.2</span></td><td>กรอก + แนบ</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">ร่าง</span></td><td>F·FI-4</td></tr>
+    <tr><td class="c">3.2</td><td>ระบุ VAT + WHT ต่อบรรทัด — บรรทัดมี WHT → record pending ไป FI-12</td><td><span class="nx">→ 3.3</span></td><td>ระบุ</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">รอ WHT</span></td><td>F·FI-4</td></tr>
+    <tr><td class="c">3.3</td><td>ส่งอนุมัติ (tier CF-2.6)</td><td><span class="nx">→ 3.4</span></td><td>รอผล</td><td>อนุมัติ/ตีกลับ</td><td class="dim">—</td><td><span class="stt">รออนุมัติ</span></td><td>AP-1</td></tr>
+    <tr><td class="c">3.4</td><td>ตั้งหนี้/จ่าย + Post GL ลง BC</td><td><span class="nx">จบ</span></td><td class="dim">—</td><td class="dim">—</td><td>Post GL</td><td><span class="stt">บันทึกแล้ว → จ่ายแล้ว · ปิด</span></td><td>F·FI-4</td></tr>
+  </tbody>
+</table></div>
+
+<!-- สาย 4A -->
+<div class="stage-h"><span class="n">4A</span><h2>สายภาษีขาย/ซื้อ VAT (FI-7)</h2><span class="chain">รวบรวม → ตรวจ → Release ล็อก → ภ.พ.30 ยื่นใน 15 เดือนถัดไป</span></div>
+<div class="twrap"><table class="st">
+  <thead><tr><th style="width:50px">ขั้น</th><th>งาน</th><th style="width:86px">ถัดไป</th><th style="width:150px">บัญชีภาษี</th><th style="width:130px">ผจก.การเงิน</th><th style="width:130px">ระบบ BC</th><th style="width:170px">สถานะจะเปลี่ยนเป็น</th><th style="width:80px">Surface</th></tr></thead>
+  <tbody>
+    <tr><td class="c">4A.1</td><td>BC post บิลขาย/ซื้อที่มี VAT → vatEntries สะสมเข้างวดอัตโนมัติ</td><td><span class="nx">→ 4A.2</span></td><td class="dim">—</td><td class="dim">—</td><td>สะสม vatEntries</td><td><span class="stt">Posted · สะสมในงวด</span></td><td>BC</td></tr>
+    <tr><td class="c">4A.2</td><td>เลือกนิติบุคคล + งวด → ตรวจรายงานภาษีขาย (Output) / ภาษีซื้อ (Input)</td><td><span class="nx">→ 4A.3</span></td><td>ตรวจรายการ</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">รอตรวจ 💬</span></td><td>F·FI-7</td></tr>
+    <tr><td class="c">4A.3</td><td>กด Release <span class="gate">🔒 ล็อกรายงานแต่ละฝั่ง ห้ามแก้ย้อน</span></td><td><span class="nx">→ 4A.4</span></td><td>กด Release</td><td class="dim">—</td><td>ล็อกงวด</td><td><span class="stt">Released · ล็อก</span></td><td>F·FI-7</td></tr>
+    <tr><td class="c">4A.4</td><td>พิมพ์รายงาน + สรุป ภ.พ.30 (ขาย−ซื้อ) → ยื่น</td><td><span class="nx">จบ</span></td><td>พิมพ์ + ยื่น</td><td>อนุมัติ ภ.พ.30</td><td class="dim">—</td><td><span class="stt">ยื่นแล้ว 💬</span></td><td>F·FI-7</td></tr>
+  </tbody>
+</table></div>
+
+<!-- สาย 4B -->
+<div class="stage-h"><span class="n">4B</span><h2>สายหัก ณ ที่จ่าย WHT (FI-12)</h2><span class="chain">จุดออกหนังสือรับรองจุดเดียวทั้งระบบ · ภ.ง.ด.3/53 ยื่นใน 7 เดือนถัดไป</span></div>
+<div class="twrap"><table class="st">
+  <thead><tr><th style="width:50px">ขั้น</th><th>งาน</th><th style="width:86px">ถัดไป</th><th style="width:150px">บัญชีภาษี</th><th style="width:150px">ผจก.การเงิน</th><th style="width:130px">เจ้าหนี้ (ปลายทาง)</th><th style="width:180px">สถานะจะเปลี่ยนเป็น</th><th style="width:80px">Surface</th></tr></thead>
+  <tbody>
+    <tr><td class="c">4B.1</td><td>record WHT ไหลเข้าอัตโนมัติจาก FI-2 (จ่าย AP) + FI-4 (ค่าใช้จ่าย)</td><td><span class="nx">→ 4B.2</span></td><td>เห็น list สะสม</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">Pending</span></td><td>F·FI-12</td></tr>
+    <tr><td class="c">4B.2</td><td>ตรวจรายการ + เรท (1/2/3/5% dropdown แก้ได้ก่อน Release)</td><td><span class="nx">→ 4B.3</span></td><td>ตรวจ/แก้เรท</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">Pending</span></td><td>F·FI-12</td></tr>
+    <tr><td class="c">4B.3</td><td>Release <span class="gate">🔒 ล็อก · แก้=Reverse+สร้างใหม่ (Mgr เท่านั้น)</span></td><td><span class="nx">→ 4B.4</span></td><td>Release</td><td>แก้หลังล็อก</td><td class="dim">—</td><td><span class="stt">Released</span></td><td>F·FI-12</td></tr>
+    <tr><td class="c">4B.4</td><td>พิมพ์หนังสือรับรองหัก ณ ที่จ่าย — <b>ใบเดียวต่อรายการ ที่นี่ที่เดียว</b></td><td><span class="nx">→ 4B.5</span></td><td>พิมพ์ Cert</td><td class="dim">—</td><td>รับหนังสือรับรอง</td><td><span class="stt">พิมพ์ Cert แล้ว</span></td><td>F·FI-12</td></tr>
+    <tr><td class="c">4B.5</td><td>Export ภ.ง.ด.3 (บุคคล) / ภ.ง.ด.53 (นิติ) → ยื่น</td><td><span class="nx">จบ</span></td><td>Export + ยื่น</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">รอนำส่ง → นำส่งแล้ว 💬</span></td><td>F·FI-12</td></tr>
+  </tbody>
+</table></div>
+
+<div class="ask"><span class="cn">💬 F1</span><b>ชื่อสถานะที่ร่างใหม่</b> (จับคู่แล้ว·รอประกบ / ประกบแล้ว·รอ Post / รอตรวจ / ยื่นแล้ว / นำส่งแล้ว) — แก้คำได้เลยเหมือนตอนแก้ service.pdf ว่าหน้างานเรียกอะไร</div>
+<div class="ask"><span class="cn">💬 F2</span><b>ปุ่มจับคู่เงินเข้า (1.4)</b> — ก. ระบบชงคู่ที่ตรงเป๊ะ แล้ว<b>คนกดยืนยันทีละก้อน</b> (แนะนำ — เงินเข้าต้องมีคนมอง) · ข. ปุ่มเดียวยืนยันทั้งชุดที่ตรง 100% · ค. ระบบยิงเอง (ขัด A3 — ไม่แนะนำ) · <b>พ่วง:</b> Unmatched ค้างเกินกี่วันให้ป้ายแดงเตือนหัวหน้า? (เสนอ 3 วัน)</div>
+<div class="ask"><span class="cn">💬 F3</span><b>การ์ด "รอกระทบ" ในคิวการเงิน</b> — กระทบยอดไป BC แล้ว (Q5ก) · ก. เปลี่ยนเป็นการ์ดเตือน "เดือนนี้ยังไม่กระทบใน BC" + ลิงก์เปิด BC (แนะนำ — โชว์ไม่ซ่อน ไม่ทำงานซ้ำ) · ข. ตัดการ์ดทิ้ง</div>
+<div class="ask"><span class="cn">💬 F4</span><b>หลักฐานตอนจ่ายเงินออก (2.4)</b> — ก. <b>บังคับแนบสลิป</b>ก่อน Post ทุกครั้งที่จ่ายโอน/เช็ค (แนะนำ — เข้มจุดที่เจ็บ=เงินออก แบบเดียวกับ WH-5 บังคับรูป) · ข. เตือนแต่ไม่บังคับ · ค. ไม่ต้อง</div>
+
+<div class="footer">FI Status Lifecycle (ฟอร์แมต service.pdf) · ร่าง 2026-07-12 — รอเคาะ F1-F4 · ครอบ P1 ครบ (FI-9..11 สินทรัพย์=P2 · FI-13 Dual-Book=P2 กับ Entity Tag)</div>
+
+</div>
+</body>
+</html>
