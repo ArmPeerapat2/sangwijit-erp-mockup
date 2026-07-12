@@ -43,7 +43,7 @@ table.st td.dim{color:#94A3B8}
 <body>
 <div class="header">
   <h1>💼 SL Status Lifecycle — step × บทบาท × สถานะ × surface</h1>
-  <p>ฟอร์แมต service.pdf · ชื่อสถานะดึงจาก mockup จริง (ตัวที่ mark 💬 = ร่างใหม่ แก้ได้) · surface: A=หน้าเมนู · P=Popup</p>
+  <p>ฟอร์แมต service.pdf · ชื่อสถานะดึงจาก mockup จริง (ตัวที่ mark  = ร่างใหม่ แก้ได้) · surface: A=หน้าเมนู · P=Popup</p>
 </div>
 <div class="container">
 
@@ -52,13 +52,13 @@ table.st td.dim{color:#94A3B8}
 <div class="surf">
   <span class="lb">Surface ทั้งโมดูล:</span>
   <span class="sfc menu">A1 · SL-Q คิวขาย</span>
-  <span class="sfc menu">A2 · SL-F1 อนุมัติ (วงเงิน+CN💬)</span>
+  <span class="sfc menu">A2 · SL-F1 อนุมัติ (วงเงิน+CN)</span>
   <span class="sfc menu">F · ฟอร์ม SL-1..4 / SL-CN</span>
-  <span class="sfc pop">P1 · ขออนุมัติวงเงิน💬</span>
+  <span class="sfc pop">P1 · ขออนุมัติวงเงิน</span>
   <span class="sfc pop">P2 · sc-payment (มีแล้ว)</span>
   <span class="sfc pop">P3 · ต่ออายุ/ยกเลิกใบจอง</span>
   <span class="sfc pop">P4 · ขอถอนจอง</span>
-  <span class="sfc x">Mobile — ไม่เสนอ (เซลล์หน้าเคาน์เตอร์💬S1)</span>
+  <span class="sfc x">Mobile — ไม่เสนอ (เซลล์หน้าเคาน์เตอร์S1)</span>
 </div>
 
 <!-- สาย 1 -->
@@ -72,7 +72,7 @@ table.st td.dim{color:#94A3B8}
     <tr><td class="c">1.4</td><td>รับมัดจำ — หลายงวดได้ (sc-payment) → Post ลง Customer Ledger</td><td><span class="nx">→ 1.5</span></td><td>รับเงิน+Post</td><td class="dim">—</td><td>บัญชีเห็น GL</td><td><span class="stt">มัดจำ Posted · รอหักบิล</span></td><td>F·SL-3 · P2</td></tr>
     <tr><td class="c">1.5</td><td>เปิดบิลขาย — หักมัดจำอัตโนมัติ · โปร auto-match · เลือกรับเอง/จัดส่ง/ติดตั้ง <span class="gate">🔒 เครดิตเกิน → สาย 2</span></td><td><span class="nx">→ 1.6</span></td><td>คีย์บิล</td><td>(ติด gate → สาย 2)</td><td class="dim">—</td><td><span class="stt">ร่าง · รอ Post</span></td><td>F·SL-4</td></tr>
     <tr><td class="c">1.6</td><td>Post บิล → BC (VAT + AR) · <b>waterfall auto-gen ใบขอเบิกต่อบรรทัด</b> (WH-2R) · ติดตั้ง → เปิดงาน SV</td><td><span class="nx">→ 1.7 + WH</span></td><td>Post</td><td class="dim">—</td><td>คลังเห็นตั๋ว WH-Q2</td><td><span class="stt">Posted · แจ้งคลังเบิก</span></td><td>F·SL-4</td></tr>
-    <tr><td class="c">1.7</td><td>รับเงิน — สด/QR/บัตร จบที่บิล · เครดิต → รอ FI-1 รับชำระ</td><td><span class="nx">จบ / FI-1</span></td><td>รับเงินสด</td><td class="dim">—</td><td>บัญชีรับเครดิตที่ FI-1</td><td><span class="stt">ชำระแล้ว 💬</span> / <span class="stt">ค้างชำระ</span></td><td>P2 · FI-1</td></tr>
+    <tr><td class="c">1.7</td><td>รับเงิน — สด/QR/บัตร จบที่บิล · เครดิต → รอ FI-1 รับชำระ</td><td><span class="nx">จบ / FI-1</span></td><td>รับเงินสด</td><td class="dim">—</td><td>บัญชีรับเครดิตที่ FI-1</td><td><span class="stt">ชำระแล้ว </span> / <span class="stt">ค้างชำระ</span></td><td>P2 · FI-1</td></tr>
   </tbody>
 </table></div>
 
@@ -81,7 +81,7 @@ table.st td.dim{color:#94A3B8}
 <div class="twrap"><table class="st">
   <thead><tr><th style="width:44px">ขั้น</th><th>งาน</th><th style="width:90px">ถัดไป</th><th style="width:160px">เซลล์</th><th style="width:190px">ผู้อนุมัติ (tier CF-2.6)</th><th style="width:170px">สถานะจะเปลี่ยนเป็น</th><th style="width:80px">Surface</th></tr></thead>
   <tbody>
-    <tr><td class="c">2.1</td><td>ระบบจับ 3 เหตุ: เกินวงเงิน / ค้างเกิน term / ต่ำกว่า floor → เซลล์กรอกเหตุผล + ส่งคำขอ</td><td><span class="nx">→ 2.2</span></td><td>กรอกเหตุผล 1 ช่อง</td><td class="dim">—</td><td><span class="stt">รออนุมัติวงเงิน</span></td><td>P1 💬S2</td></tr>
+    <tr><td class="c">2.1</td><td>ระบบจับ 3 เหตุ: เกินวงเงิน / ค้างเกิน term / ต่ำกว่า floor → เซลล์กรอกเหตุผล + ส่งคำขอ</td><td><span class="nx">→ 2.2</span></td><td>กรอกเหตุผล 1 ช่อง</td><td class="dim">—</td><td><span class="stt">รออนุมัติวงเงิน</span></td><td>P1 S2</td></tr>
     <tr><td class="c">2.2</td><td>ตั๋วเข้าคิวอนุมัติ — tier ตามยอดเกิน · Maker≠Checker · เกิน SLA → escalate</td><td><span class="nx">→ 2.3/2.4</span></td><td class="dim">ดูสถานะได้</td><td>เปิดดูวงเงิน/ประวัติชำระ</td><td><span class="stt">รออนุมัติ</span></td><td>A2</td></tr>
     <tr><td class="c">2.3</td><td>อนุมัติ → เปิดวงเงินชั่วคราว (มีวันหมดอายุ) → เอกสารต้นทางปลดล็อก</td><td><span class="nx">↩ สายเดิม</span></td><td>ไปต่อได้</td><td>อนุมัติ + เงื่อนไข</td><td><span class="stt">Approved</span></td><td>A2</td></tr>
     <tr><td class="c">2.4</td><td>ปฏิเสธ — บังคับกรอกเหตุผล → ตีกลับให้เซลล์แก้</td><td><span class="nx">↩ 1.1/1.5</span></td><td>แก้เอกสาร</td><td>ปฏิเสธ + เหตุผล</td><td><span class="stt">ตีกลับเป็น Open</span></td><td>A2</td></tr>
@@ -93,12 +93,12 @@ table.st td.dim{color:#94A3B8}
 <div class="twrap"><table class="st">
   <thead><tr><th style="width:44px">ขั้น</th><th>งาน</th><th style="width:80px">ถัดไป</th><th style="width:150px">เซลล์/แอดมินขาย</th><th style="width:130px">ผู้อนุมัติ</th><th style="width:140px">คลัง/บัญชี</th><th style="width:180px">สถานะจะเปลี่ยนเป็น</th><th style="width:90px">Surface</th></tr></thead>
   <tbody>
-    <tr><td class="c">3.1</td><td>คำขอ CN เกิด — จากบิล SL-4 Posted / SV-4 ส่งคำขอเข้า SL-Q กลุ่ม CN (badge 🛠️ + อ้าง ARI)</td><td><span class="nx">→ 3.2</span></td><td>เห็นตั๋วในคิว</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">คำขอรอเปิดใบ 💬</span></td><td>A1·SL-Q</td></tr>
+    <tr><td class="c">3.1</td><td>คำขอ CN เกิด — จากบิล SL-4 Posted / SV-4 ส่งคำขอเข้า SL-Q กลุ่ม CN (badge 🛠️ + อ้าง ARI)</td><td><span class="nx">→ 3.2</span></td><td>เห็นตั๋วในคิว</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">คำขอรอเปิดใบ </span></td><td>A1·SL-Q</td></tr>
     <tr><td class="c">3.2</td><td>เปิดฟอร์ม SL-CN — โหมด ✏️ปรับราคา / 📦คืนบางรายการ / ↩️คืนทั้งบิล · เหตุผลล็อกถ้ามาจากเคลม</td><td><span class="nx">→ 3.3</span></td><td>กรอก + เลือกโหมด</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">ร่าง</span></td><td>F·SL-CN</td></tr>
-    <tr><td class="c">3.3</td><td>ส่งอนุมัติ <span class="gate">🔒 CF-2.6 ทุกใบ ไม่มียกเว้น (กัน fraud ซอยใบเล็ก)</span></td><td><span class="nx">→ 3.4</span></td><td>รอผล</td><td>อนุมัติ/ตีกลับ</td><td class="dim">—</td><td><span class="stt">รออนุมัติ</span></td><td>A2 💬S3</td></tr>
+    <tr><td class="c">3.3</td><td>ส่งอนุมัติ <span class="gate">🔒 CF-2.6 ทุกใบ ไม่มียกเว้น (กัน fraud ซอยใบเล็ก)</span></td><td><span class="nx">→ 3.4</span></td><td>รอผล</td><td>อนุมัติ/ตีกลับ</td><td class="dim">—</td><td><span class="stt">รออนุมัติ</span></td><td>A2 S3</td></tr>
     <tr><td class="c">3.4</td><td><span class="gate">🔒 ของก่อนเงิน</span> — โหมดคืนของ: รอ WH รับของคืน (ผ่าน WH-Q1/WH-1) · จากเคลม = ใช้หลักฐานรับตอน intake · ปุ่ม Post disable จนครบ</td><td><span class="nx">→ 3.5</span></td><td>รอ</td><td class="dim">—</td><td>คลังรับของคืน</td><td><span class="stt">อนุมัติแล้ว · รอรับของคืน</span></td><td>F·SL-CN + WH-Q1</td></tr>
     <tr><td class="c">3.5</td><td>Post CN → ลด AR + ปรับ VAT · เครดิตค้างใน Customer Ledger — <b>CN ห้ามสั่งเงินออกเอง</b></td><td><span class="nx">→ 3.6</span></td><td>Post</td><td class="dim">—</td><td>บัญชีเห็นเครดิตค้าง</td><td><span class="stt">Posted · เครดิตค้าง</span></td><td>F·SL-CN</td></tr>
-    <tr><td class="c">3.6</td><td>ใช้เครดิต = ขั้นแยกที่ FI-1Q — หักบิลถัดไป / คืนเงินสด (Finance + approval · refund ≤ ราคาขายเดิม)</td><td><span class="nx">จบ</span></td><td class="dim">—</td><td>อนุมัติจ่ายคืน</td><td>Finance ทำรายการ</td><td><span class="stt">เครดิตถูกใช้ / คืนเงินแล้ว 💬</span></td><td>FI-1Q</td></tr>
+    <tr><td class="c">3.6</td><td>ใช้เครดิต = ขั้นแยกที่ FI-1Q — หักบิลถัดไป / คืนเงินสด (Finance + approval · refund ≤ ราคาขายเดิม)</td><td><span class="nx">จบ</span></td><td class="dim">—</td><td>อนุมัติจ่ายคืน</td><td>Finance ทำรายการ</td><td><span class="stt">เครดิตถูกใช้ / คืนเงินแล้ว </span></td><td>FI-1Q</td></tr>
   </tbody>
 </table></div>
 
@@ -115,7 +115,7 @@ table.st td.dim{color:#94A3B8}
     <tr><td class="c">C2</td><td>คำนวณคอม <b>4 ชั้น</b>: เป้าทีม (base 2%) + หมวดเร่ง (+0.5% แอร์) + เกินเป้ารายตัว (+0.3%) + โบนัสทักษะ (ขายประกัน/ติดตั้ง/bundle)</td><td><span class="nx">→ C3</span></td><td>ระบบคำนวณ</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">ร่างคอม (รอตรวจ)</span></td><td>A·cm1</td></tr>
     <tr><td class="c">C3</td><td>ตรวจ + <b>หักคืน (clawback)</b> — บิลถูก CN/ยกเลิก/กลายเป็นหนี้สูญ → ดึงคอมคืน</td><td><span class="nx">→ C4</span></td><td class="dim">—</td><td>ผจก.ขายตรวจ+ปรับ</td><td class="dim">—</td><td><span class="stt">รออนุมัติ</span></td><td>A·cm1</td></tr>
     <tr><td class="c">C4</td><td>อนุมัติจ่ายคอม <span class="gate">🔒 CF-2.6 · Maker≠Checker</span></td><td><span class="nx">→ C5</span></td><td class="dim">รอผล</td><td>อนุมัติ/ตีกลับ</td><td class="dim">—</td><td><span class="stt">อนุมัติแล้ว</span></td><td>AP-1</td></tr>
-    <tr><td class="c">C5</td><td>ส่งจ่าย → เข้า payroll / ตั้งเบิก</td><td><span class="nx">จบ</span></td><td class="dim">—</td><td class="dim">—</td><td>จ่ายผ่านเงินเดือน</td><td><span class="stt">จ่ายคอมแล้ว 💬</span></td><td>A·cm1 → payroll</td></tr>
+    <tr><td class="c">C5</td><td>ส่งจ่าย → เข้า payroll / ตั้งเบิก</td><td><span class="nx">จบ</span></td><td class="dim">—</td><td class="dim">—</td><td>จ่ายผ่านเงินเดือน</td><td><span class="stt">จ่ายคอมแล้ว </span></td><td>A·cm1 → payroll</td></tr>
   </tbody>
 </table></div>
 <div class="ask" style="margin-top:10px;background:#F0FDF4;border-color:#86EFAC"><span class="cn" style="background:#16A34A">✅ S5</span><b>CM แสดงเป็นรายงานสรุป — ไม่ใช่ flow เดินเอกสาร</b> (เคาะ 2026-07-12) · ตารางบนคือ logic เบื้องหลังให้ dev เข้าใจการคำนวณ · <b>ผู้ใช้เห็นเป็นรายงาน</b> (ยอดคอม 4 ชั้น + clawback หักคืน) ในศูนย์รายงาน RP-1 / cm1</div>
@@ -132,7 +132,7 @@ table.st td.dim{color:#94A3B8}
   </tbody>
 </table></div>
 
-<div class="footer">SL Status Lifecycle (ฟอร์แมต service.pdf) · ร่าง 2026-07-12 — รอเคาะ S1-S4 · คู่กับ flow-service-status (SV) · flow-wh-status (WH) · flow-po-status (PO) · flow-fi-status (FI)</div>
+<div class="footer">SL Status Lifecycle (ฟอร์แมต service.pdf) · ร่าง 2026-07-12 — ✅ S1-S5 เคาะแล้ว 2026-07-12 · คู่กับ flow-service-status (SV) · flow-wh-status (WH) · flow-po-status (PO) · flow-fi-status (FI)</div>
 
 </div>
 </body>
