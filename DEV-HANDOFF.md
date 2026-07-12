@@ -69,6 +69,11 @@
 - **ย้ายบ้านแล้ว:** SLA + เช็คลิสต์ → `cf-master-settings` · สถานะธนาคาร → แท็บใน `cf-company-settings` · ค่าส่วนตัว → `user-profile` ที่เดียว · จ่ายค่าแรงช่าง → `cm1` section บริการ · รายงานขาย → `rp1` · ตั้งค่า approval → CF-2.6 เท่านั้น (ap1 = runtime)
 - **sc1/sc2/sc3 = runtime component จริง** (iframe จาก `swt-doc-finder.js`) — build เป็น modal component · หน้า sc-* อื่น = demo/reference
 
+**📋 Status Lifecycle (ผัง step × บทบาท × สถานะ × surface):** `flow-all-status.html` (แท็บเดียวรวม SV/WH/SL/PO/FI + ศัพท์ย่อ) · ต้นแบบฟอร์แมต = `service.pdf` · แต่ละไฟล์มี edge cases (void/reverse/พิมพ์ซ้ำ) + คำถาม 💬 ที่รอ Peerapat เคาะ
+
+**🗂️ MD ทะเบียนหลัก — state สั้น (ไม่มี flow เดินเอกสาร · ไม่ต้องทำผังแยก):**
+> `Draft (ร่าง)` → `รอตรวจ/KYC` (ลูกค้า/vendor: ยืนยันเลขภาษี+บัญชีธนาคารก่อนใช้) → `Active (ใช้งาน)` → `Blocked (ระงับ · ห้ามเปิดเอกสารใหม่ + เหตุผล)` → `Inactive (ปิด · soft-delete ไม่ลบจริง)` · ทุก master ใช้ pattern นี้ (MD-1..5) · สถานะจริง BC เป็นเจ้าของ · portal แสดง badge + ปุ่มเปลี่ยนสถานะตามสิทธิ์
+
 ---
 
 ## 🗂️ เอกสารสำคัญ (อ่านตามนี้)

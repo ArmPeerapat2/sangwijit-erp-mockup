@@ -107,6 +107,19 @@ table.st td.dim{color:#94A3B8}
 <div class="ask"><span class="cn">💬 S3</span><b>อนุมัติใบลดหนี้ (3.3) ใช้จอเดียวกับอนุมัติวงเงินไหม?</b> — ก. รวมที่ SL-F1/A2 คิวอนุมัติงานขายที่เดียว (แนะนำ — จุดคุมเดียว) · ข. แยกคิวอนุมัติ CN (ตอนนี้ยังไม่มีจอนี้เลย)</div>
 <div class="ask"><span class="cn">💬 S4</span><b>สถานะ "ชำระแล้ว/ค้างชำระ" บนบิล (1.7)</b> — คนรับเงินเครดิตคือบัญชี (FI-1) ไม่ใช่เซลล์ · ก. SL-Q อ่านสถานะข้ามมาโชว์ (แนะนำ — โชว์ไม่ซ่อน · เซลล์เห็นบิลตัวเองเก็บได้ยัง) · ข. ไม่โชว์ เรื่องเงินจบที่ FI</div>
 
+<div class="stage-h"><span class="n">4</span><h2>สายคอมมิชชั่นเซลล์ (CM) — ปิดรอบ → คำนวณ → อนุมัติ → จ่าย</h2><span class="chain">4 ชั้น (เป้าทีม+หมวด+รายตัว+ทักษะ) · จุดเดียวที่ cm1</span></div>
+<div class="twrap"><table class="st">
+  <thead><tr><th style="width:44px">ขั้น</th><th>งาน</th><th style="width:80px">ถัดไป</th><th style="width:150px">ระบบ / เซลล์</th><th style="width:130px">ผจก.ขาย</th><th style="width:120px">บัญชี (payroll)</th><th style="width:160px">สถานะจะเปลี่ยนเป็น</th><th style="width:70px">Surface</th></tr></thead>
+  <tbody>
+    <tr><td class="c">C1</td><td>ปิดรอบเดือน — ระบบดึง<b>ยอดขาย + ยอดเก็บเงินจริง</b>ของแต่ละเซลล์เข้ารอบ</td><td><span class="nx">→ C2</span></td><td>ระบบดึงอัตโนมัติ</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">รอคำนวณคอม</span></td><td>A·cm1</td></tr>
+    <tr><td class="c">C2</td><td>คำนวณคอม <b>4 ชั้น</b>: เป้าทีม (base 2%) + หมวดเร่ง (+0.5% แอร์) + เกินเป้ารายตัว (+0.3%) + โบนัสทักษะ (ขายประกัน/ติดตั้ง/bundle)</td><td><span class="nx">→ C3</span></td><td>ระบบคำนวณ</td><td class="dim">—</td><td class="dim">—</td><td><span class="stt">ร่างคอม (รอตรวจ)</span></td><td>A·cm1</td></tr>
+    <tr><td class="c">C3</td><td>ตรวจ + <b>หักคืน (clawback)</b> — บิลถูก CN/ยกเลิก/กลายเป็นหนี้สูญ → ดึงคอมคืน</td><td><span class="nx">→ C4</span></td><td class="dim">—</td><td>ผจก.ขายตรวจ+ปรับ</td><td class="dim">—</td><td><span class="stt">รออนุมัติ</span></td><td>A·cm1</td></tr>
+    <tr><td class="c">C4</td><td>อนุมัติจ่ายคอม <span class="gate">🔒 CF-2.6 · Maker≠Checker</span></td><td><span class="nx">→ C5</span></td><td class="dim">รอผล</td><td>อนุมัติ/ตีกลับ</td><td class="dim">—</td><td><span class="stt">อนุมัติแล้ว</span></td><td>AP-1</td></tr>
+    <tr><td class="c">C5</td><td>ส่งจ่าย → เข้า payroll / ตั้งเบิก</td><td><span class="nx">จบ</span></td><td class="dim">—</td><td class="dim">—</td><td>จ่ายผ่านเงินเดือน</td><td><span class="stt">จ่ายคอมแล้ว 💬</span></td><td>A·cm1 → payroll</td></tr>
+  </tbody>
+</table></div>
+<div class="ask" style="margin-top:10px"><span class="cn">💬 S5</span><b>Clawback (หักคอมคืน) ทำเมื่อไหร่?</b> — บิลถูกยกเลิก/CN <b>หลังจ่ายคอมไปแล้ว</b> · ก. หักคืนรอบถัดไปอัตโนมัติ (แนะนำ) · ข. แจ้งเตือน ผจก.ตัดสินรายกรณี · <b>พ่วง:</b> คอมคิดจาก <b>ยอดขาย</b> หรือ <b>ยอดเก็บเงินจริง</b>? (ปกติจ่ายเมื่อเก็บเงินได้ กันหนี้สูญ)</div>
+
 <div class="stage-h"><span class="n">E</span><h2>สายพิเศษ — Edge cases (ยกเลิก / แก้ / พิมพ์ซ้ำ)</h2><span class="chain">dev ต้องรู้ว่าทำได้/ไม่ได้ · กันของ-เงินหาย</span></div>
 <div class="twrap"><table class="st">
   <thead><tr><th style="width:66px">รหัส</th><th style="width:240px">use case</th><th>วิธี / กติกา</th><th style="width:180px">สถานะ / ปลายทาง</th></tr></thead>
