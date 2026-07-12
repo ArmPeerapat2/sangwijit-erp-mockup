@@ -294,6 +294,17 @@
 - **มัดจำอะไหล่** = 6.1 · **นอกประกัน** = 5.2/7.3 (ลูกค้า) · **ในประกัน** = 7.3 (บริษัท/แบรนด์)
 - รับรายการเดียว หรือทั้งคู่ (รายบรรทัด · ยึด §4 payer-per-line)
 
+### 13.1a ✅ Stage 7 "เปิดบิลเครดิต → ลูกหนี้อัตโนมัติ" — verified BC standard (Microsoft Learn · 2026-07-12)
+- **ตั้งแบรนด์เป็น Customer** (นอกจากเป็น Vendor) → Post บิล ARI แบบเครดิต (Payment Terms) → BC สร้าง **Customer Ledger Entry (ลูกหนี้เปิด) อัตโนมัติ** — พฤติกรรมมาตรฐาน ไม่ต้อง custom
+- **หักกลบลูกหนี้↔เจ้าหนี้ (netting) = BC standard เช่นกัน**: "Consolidate Balances for a Company that is a Customer and a Vendor"
+  1. ผูก Customer + Vendor ของแบรนด์เดียวกันผ่าน **Contact type Company** (1 contact ต่อราย)
+  2. Customer Card จะมี field **"Balance as Vendor"** · Vendor Card มี **"Balance as Customer"**
+  3. Payment Journal → action **"Net Customer/Vendor Balances"** → สร้าง journal lines หักกลบ (ยังไม่ post — คนตรวจก่อน ตรง Maker≠Checker)
+  - prereq: Marketing Setup → ใส่ business relation codes (Customers/Vendors)
+  - ต่างสกุลเงิน → แยกบรรทัดต่อสกุล
+  - ref: learn.microsoft.com/dynamics365/business-central/finance-consolidate-customer-vendor-balances
+- **งาน BC dev**: setup แบรนด์เป็นคู่ Customer+Vendor + contact link ตอน onboard (md3) · portal แค่แสดง "Balance as Vendor/Customer" บนหน้าแบรนด์
+
 ### 13.2 💸 จ่ายค่าแรงช่าง (เงินออก · สาย ⑨ · trigger จาก 4.1)
 - **ช่างใน** → incentive · **ช่างนอก** → เหมา (ตั้งเบิก AP)
 - ⚖️ เรทจ่ายช่าง ≠ ราคาที่เก็บลูกค้า/แบรนด์ (ต่อยอด §8)
