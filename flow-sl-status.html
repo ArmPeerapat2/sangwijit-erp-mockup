@@ -107,6 +107,18 @@ table.st td.dim{color:#94A3B8}
 <div class="ask"><span class="cn">💬 S3</span><b>อนุมัติใบลดหนี้ (3.3) ใช้จอเดียวกับอนุมัติวงเงินไหม?</b> — ก. รวมที่ SL-F1/A2 คิวอนุมัติงานขายที่เดียว (แนะนำ — จุดคุมเดียว) · ข. แยกคิวอนุมัติ CN (ตอนนี้ยังไม่มีจอนี้เลย)</div>
 <div class="ask"><span class="cn">💬 S4</span><b>สถานะ "ชำระแล้ว/ค้างชำระ" บนบิล (1.7)</b> — คนรับเงินเครดิตคือบัญชี (FI-1) ไม่ใช่เซลล์ · ก. SL-Q อ่านสถานะข้ามมาโชว์ (แนะนำ — โชว์ไม่ซ่อน · เซลล์เห็นบิลตัวเองเก็บได้ยัง) · ข. ไม่โชว์ เรื่องเงินจบที่ FI</div>
 
+<div class="stage-h"><span class="n">E</span><h2>สายพิเศษ — Edge cases (ยกเลิก / แก้ / พิมพ์ซ้ำ)</h2><span class="chain">dev ต้องรู้ว่าทำได้/ไม่ได้ · กันของ-เงินหาย</span></div>
+<div class="twrap"><table class="st">
+  <thead><tr><th style="width:66px">รหัส</th><th style="width:240px">use case</th><th>วิธี / กติกา</th><th style="width:180px">สถานะ / ปลายทาง</th></tr></thead>
+  <tbody>
+    <tr><td class="c">SL-V1</td><td>ยกเลิกใบก่อน Post (เสนอ/จอง/บิลร่าง)</td><td>กดยกเลิก + เหตุผล · <b>ใบจอง = ปล่อยสต๊อกคืนทันที</b></td><td><span class="stt">ยกเลิกแล้ว</span></td></tr>
+    <tr><td class="c">SL-V2</td><td>บิล Post แล้วต้องแก้/คืน</td><td><span class="gate">❌ ห้ามแก้บิลตรง</span> → เปิด SL-CN (สาย 3) reverse + ออกใหม่</td><td><span class="nx">→ สาย 3</span></td></tr>
+    <tr><td class="c">SL-V3</td><td>ใบเสนอ/ใบจอง แพ้งาน หรือ หมดอายุ</td><td>ปิดเป็น Lost / Expired · จอง = ปล่อยสต๊อก (auto)</td><td><span class="stt">Lost / Expired</span></td></tr>
+    <tr><td class="c">SL-V4</td><td>คืนมัดจำที่ไม่เกิดการขาย</td><td>ยกเลิกจอง → คืนมัดจำผ่าน FI (ต้อง approval)</td><td><span class="stt">คืนมัดจำแล้ว</span></td></tr>
+    <tr><td class="c">SL-V5</td><td>พิมพ์เอกสารซ้ำ (reprint)</td><td>พิมพ์ซ้ำได้ · <b>ลง audit log</b> (ใคร/เมื่อไหร่/กี่ครั้ง)</td><td class="dim">ไม่เปลี่ยนสถานะ</td></tr>
+  </tbody>
+</table></div>
+
 <div class="footer">SL Status Lifecycle (ฟอร์แมต service.pdf) · ร่าง 2026-07-12 — รอเคาะ S1-S4 · คู่กับ flow-service-status (SV) · flow-wh-status (WH) · flow-po-status (PO) · flow-fi-status (FI)</div>
 
 </div>

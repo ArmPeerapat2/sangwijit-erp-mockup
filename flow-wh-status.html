@@ -128,6 +128,17 @@ table.st td.dim{color:#94A3B8}
 <div class="ask"><span class="cn">💬 W2</span><b>Mobile (M1)</b> — รับของ (1.3) กับนับสต็อก (4.2) หน้างานจริงใช้<b>มือถือ/เครื่องยิงสแกน</b>ไหม? ถ้าใช่ WH ต้องมี mobile surface แบบช่างบริการ (ตอนนี้ mockup เป็น desktop หมด)</div>
 <div class="ask"><span class="cn">💬 W3</span><b>กดรับตั๋วจากคิว (P1)</b> — ทำเป็น popup จากคิว (แบบ Popup 1 ของ service) หรือคลิกแล้วเด้งไปหน้าฟอร์มเลย?</div>
 
+<div class="stage-h"><span class="n">E</span><h2>สายพิเศษ — Edge cases (void / ตีกลับ / รับเกิน-ขาด / พิมพ์ซ้ำ)</h2><span class="chain">จุด "ของหาย" = เข้มสุด</span></div>
+<div class="twrap"><table class="st">
+  <thead><tr><th style="width:66px">รหัส</th><th style="width:240px">use case</th><th>วิธี / กติกา</th><th style="width:190px">สถานะ / ปลายทาง</th></tr></thead>
+  <tbody>
+    <tr><td class="c">WH-V1</td><td>void ใบเบิก/รับ/โอน ก่อน Post</td><td>ยกเลิก + เหตุผล · <b>ใบเบิก = ปล่อยกันสต๊อกคืน</b></td><td><span class="stt">ยกเลิกแล้ว</span></td></tr>
+    <tr><td class="c">WH-V2</td><td>โอนถูกปฏิเสธที่ปลายทาง</td><td>ปลายทางตีกลับ → ของกลับต้นทาง (In-Transit ย้อน) · กันของหายระหว่างทาง</td><td><span class="stt">ตีกลับ · รอรับคืนต้นทาง</span></td></tr>
+    <tr><td class="c">WH-V3</td><td>รับเกิน / รับขาด จาก PO</td><td>เกิน → กันรับ + แจ้งจัดซื้อ · ขาด → ค้างรับต่อ (ทยอยรับ)</td><td><span class="stt">ค้างรับ / เกินยอด</span></td></tr>
+    <tr><td class="c">WH-V4</td><td>พิมพ์เอกสารซ้ำ (reprint)</td><td>พิมพ์ซ้ำได้ · ลง audit log</td><td class="dim">ไม่เปลี่ยนสถานะ</td></tr>
+  </tbody>
+</table></div>
+
 <div class="footer">
   WH Status Lifecycle (ต้นแบบฟอร์แมต service.pdf) · ร่าง 2026-07-12 — รอแก้/ยืนยัน แล้วทำ SL · PO · FI ต่อ<br>
   คู่กับ <b>flow-service-status.html</b> (SV แม่แบบ) · spec: <b>WH_warehouse.md</b> · flow map สาย 1/2/6

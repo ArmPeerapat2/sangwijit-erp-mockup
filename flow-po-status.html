@@ -118,6 +118,18 @@ table.st td.dim{color:#94A3B8}
 <div class="ask"><span class="cn">💬 Q3</span><b>กดอนุมัติ PR/PO ที่ไหน?</b> — ก. popup จากคิวกลาง AP-1 เหมือน WH-5 + ลิงก์เปิดใบเต็ม (แนะนำ — ผู้อนุมัติเห็นงานค้างที่เดียว) · ข. เปิดหน้าเอกสารเต็มเท่านั้น · ค. ได้ทั้งสองทาง</div>
 <div class="ask"><span class="cn">💬 Q4</span><b>ปุ่ม Settle บิลฝาก (2.5) ใครถือ?</b> — ก. การเงินเท่านั้น จัดซื้อแจ้ง "ของครบ" (แนะนำ — Maker≠Checker · จัดซื้อไม่ปิดตัวเลขที่ตัวเองสั่ง) · ข. ผจก.จัดซื้อกดได้ด้วย (spec เดิม)</div>
 
+<div class="stage-h"><span class="n">E</span><h2>สายพิเศษ — Edge cases (ยกเลิก / แก้ / คืน / พิมพ์ซ้ำ)</h2><span class="chain">dev ต้องรู้ว่าทำได้/ไม่ได้</span></div>
+<div class="twrap"><table class="st">
+  <thead><tr><th style="width:66px">รหัส</th><th style="width:240px">use case</th><th>วิธี / กติกา</th><th style="width:190px">สถานะ / ปลายทาง</th></tr></thead>
+  <tbody>
+    <tr><td class="c">PO-V1</td><td>PR / PO ตีกลับจากอนุมัติ</td><td>แก้ตามคอมเมนต์ → ส่งใหม่ (loop กลับ 1.2 / 1.4)</td><td><span class="stt">ตีกลับ · รอแก้</span></td></tr>
+    <tr><td class="c">PO-V2</td><td>แก้ PO หลัง Send Vendor</td><td>Amend · <b>ถ้าเกินวงเงินเดิม → re-approve</b> · แจ้ง vendor</td><td><span class="stt">แก้ไข · รออนุมัติใหม่</span></td></tr>
+    <tr><td class="c">PO-V3</td><td>ยกเลิก PO ก่อนรับของ</td><td>กดยกเลิก + เหตุผล · แจ้ง vendor</td><td><span class="stt">ยกเลิกแล้ว</span></td></tr>
+    <tr><td class="c">PO-V4</td><td>คืนของให้ vendor</td><td>→ PO-CN (สาย 4) โหมดคืนสินค้า · คลังตัดสต็อกออก</td><td><span class="nx">→ สาย 4</span></td></tr>
+    <tr><td class="c">PO-V5</td><td>พิมพ์ PO ซ้ำ (reprint)</td><td>พิมพ์ซ้ำได้ · ลง audit log</td><td class="dim">ไม่เปลี่ยนสถานะ</td></tr>
+  </tbody>
+</table></div>
+
 <div class="footer">PO Status Lifecycle (ฟอร์แมต service.pdf) · ร่าง 2026-07-12 — รอเคาะ Q1-Q4 · ⚠️ poq mockup เปิดด้วย grep ไม่ได้ (แจ้ง binary/encoding) ควรเช็คไฟล์ก่อน lock ชื่อสถานะบนคิว</div>
 
 </div>

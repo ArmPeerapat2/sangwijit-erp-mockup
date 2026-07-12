@@ -127,6 +127,17 @@ table.st td.dim{color:#94A3B8}
 <div class="ask"><span class="cn">💬 F3</span><b>การ์ด "รอกระทบ" ในคิวการเงิน</b> — กระทบยอดไป BC แล้ว (Q5ก) · ก. เปลี่ยนเป็นการ์ดเตือน "เดือนนี้ยังไม่กระทบใน BC" + ลิงก์เปิด BC (แนะนำ — โชว์ไม่ซ่อน ไม่ทำงานซ้ำ) · ข. ตัดการ์ดทิ้ง</div>
 <div class="ask"><span class="cn">💬 F4</span><b>หลักฐานตอนจ่ายเงินออก (2.4)</b> — ก. <b>บังคับแนบสลิป</b>ก่อน Post ทุกครั้งที่จ่ายโอน/เช็ค (แนะนำ — เข้มจุดที่เจ็บ=เงินออก แบบเดียวกับ WH-5 บังคับรูป) · ข. เตือนแต่ไม่บังคับ · ค. ไม่ต้อง</div>
 
+<div class="stage-h"><span class="n">E</span><h2>สายพิเศษ — Edge cases (void / เช็คเด้ง / ถอนจับคู่ / พิมพ์ซ้ำ)</h2><span class="chain">จุดเงิน = เข้มสุด</span></div>
+<div class="twrap"><table class="st">
+  <thead><tr><th style="width:66px">รหัส</th><th style="width:240px">use case</th><th>วิธี / กติกา</th><th style="width:200px">สถานะ / ปลายทาง</th></tr></thead>
+  <tbody>
+    <tr><td class="c">FI-V1</td><td>void ใบรับ/จ่าย ก่อน Post</td><td>ยกเลิกร่าง + เหตุผล</td><td><span class="stt">ยกเลิกแล้ว</span></td></tr>
+    <tr><td class="c">FI-V2</td><td>เช็คเด้ง / ยกเลิกการจ่ายหลัง Post</td><td><b>Reverse PV (BC)</b> → เปิด AP กลับ · แจ้งบัญชี · แนบเหตุผล</td><td><span class="stt">Reversed · AP เปิดใหม่</span></td></tr>
+    <tr><td class="c">FI-V3</td><td>จับคู่เงินเข้าผิดคน/ผิดบิล</td><td>ถอนการจับคู่ (unapply) → กลับเป็น URC ในคิว</td><td><span class="stt">ถอนแล้ว · รอจับคู่ใหม่</span></td></tr>
+    <tr><td class="c">FI-V4</td><td>พิมพ์ใบเสร็จ / หนังสือรับรอง WHT ซ้ำ</td><td>reprint + audit · <b>WHT cert ยังใบเดียวต่อรายการ</b> (กันได้ 2 ใบ)</td><td class="dim">ไม่เปลี่ยนสถานะ</td></tr>
+  </tbody>
+</table></div>
+
 <div class="footer">FI Status Lifecycle (ฟอร์แมต service.pdf) · ร่าง 2026-07-12 — รอเคาะ F1-F4 · ครอบ P1 ครบ (FI-9..11 สินทรัพย์=P2 · FI-13 Dual-Book=P2 กับ Entity Tag)</div>
 
 </div>
