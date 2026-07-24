@@ -22,6 +22,7 @@ project_type: "frontend-mockup (HTML + docs)"
 - **✅ กลุ่มลูกค้า = BC เจ้าของ** (md2 อ่าน dropdown แล้ว · ไม่สร้าง portal register)
 - **✅ ที่อยู่ 12 ช่อง (2026-07-24):** `swt-address.js` shared — grill: postal-first (พิมพ์ไปรษณีย์→เด้ง จว./อำเภอ/ตำบล) + อ่านบัตรประชาชน · `swtAddressWire()` ผูกฟอร์มเดิม + `swtRenderAddress()` render เต็ม · wired md2 verified
 - **✅ retrofit ที่อยู่ md3/md5/md4 ครบ (2026-07-24):** grill scope → **แปลงเป็นฟอร์มกรอกทั้ง 3** (Peerapat เลือก) · md3 ผู้ขาย (input อยู่แล้ว → เติม id `va_*` + ปุ่มอ่านบัตร + wire) · md4 พนักงาน (static · แปลง `form-value` div→input `ep_*`) · md5 สาขา (dynamic · แปลง `info-value` div→input + `selectBranch()` แยก `.value`(input)/`.textContent`(div) · สลับสาขา refill ได้) · **เติม POSTAL dataset สกลนคร 47000/47230 + บึงกาฬ 38000 ใน swt-address.js** (ไม่งั้น postal-first error ทุกสาขา md5) · **verified บนเซิร์ฟเวอร์จริง (port 8093)**: console clean · postal-first เด้ง จว./อำเภอ/ตำบล ทั้ง 3 หน้า · ปุ่มอ่านบัตรเติมครบ · md5 สลับสาขา 1↔11 input refill ถูก
+- **✅ sync สถานะเมนู (2026-07-24):** sidebar `DONE[]` มี md3/md4/md5 อยู่แล้ว (✦ ครบ) · **module-flow-overview.html แก้ทั้งแถว MD-1..MD-5 `เก่า`→`node done`+✦** (เดิม drift — md1/md2 เสร็จนานแล้วแต่ยังมาร์กเก่า) + เติมสถานะ "ที่อยู่ 12 ช่อง" · ✦ รวม 40→45
 - **master ขาดต่อไป:** นำเข้ายอดยกมา (ตอนขึ้นระบบ) · สร้างรหัสอัตโนมัติ · fi4/fi12 อ่าน income register
 - **⚠️ git ค้าง:** งาน grill 3 บล็อกเกอร์ (md4/sc2/6หน้า relabel/backlog/active) ยังไม่ commit · ทับกอง `06071aa` ที่ยังไม่ push
 
