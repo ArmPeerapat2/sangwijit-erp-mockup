@@ -56,6 +56,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       <button class="cat-btn" data-cat="chk" onclick="selMaster(this,'chk')"><span class="ic">🧪</span> เช็คลิสต์ ตรวจ/ล้าง</button>
       <button class="cat-btn" data-cat="position" onclick="selMaster(this,'position')"><span class="ic">👤</span> ตำแหน่งพนักงาน</button>
       <button class="cat-btn" data-cat="income" onclick="selMaster(this,'income')"><span class="ic">🧾</span> ประเภทเงินได้ (WHT)</button>
+      <button class="cat-btn" data-cat="rebate" onclick="selMaster(this,'rebate')"><span class="ic">💰</span> กลุ่มสินค้า Rebate</button>
       <a class="cat-link" href="cf2-7-doc-template-mockup.html"><span class="ic">📄</span> แบบฟอร์มเอกสาร (CF-2.7) ↗</a>
 
       <div class="cat-div">🔒 Master บัญชี → ตั้งที่ BC</div>
@@ -103,6 +104,18 @@ var MASTERS = {
       {code:'ADV',name:'ค่าโฆษณา',vat:'7%',wht:'2%',gl:'5330 ค่าโฆษณา',active:true},
       {code:'TRANSPORT',name:'ค่าขนส่ง',vat:'7%',wht:'1%',gl:'5340 ค่าขนส่ง',active:true},
       {code:'PROF',name:'ค่าวิชาชีพ / ที่ปรึกษา',vat:'7%',wht:'3%',gl:'5350 ค่าที่ปรึกษา',active:true}
+    ]
+  },
+  rebate: {
+    title:'กลุ่มสินค้า Rebate',
+    bcNote:'portal ถือ (Rebate ≠ Discount · คืนหลังขาย · BC ไม่มี logic นี้) · md1 field "Rebate Group" เลือกจากนี่ · rebate% ไม่อยู่ที่นี่ — แปรตาม vendor/รอบ ที่ PO-7 (grill 2026-07-24) · เชื่อมต้นทุน ผปย (สุทธิหลังรีเบท)',
+    columns:[{key:'code',label:'รหัส'},{key:'name',label:'กลุ่ม Rebate'},{key:'brand',label:'แบรนด์/vendor'}],
+    fields:[{key:'code',label:'รหัส'},{key:'name',label:'ชื่อกลุ่ม Rebate'},{key:'brand',label:'แบรนด์/vendor'},{key:'note',label:'หมายเหตุ (rebate% จริงดูที่ PO-7)'},{key:'active',label:'สถานะ',type:'toggle'}],
+    data:[
+      {code:'DAIKIN-INV',name:'Daikin แอร์ Inverter',brand:'Daikin',note:'rebate ราย sell-out · รอบไตรมาส',active:true},
+      {code:'LG-WM',name:'LG เครื่องซักผ้า',brand:'LG',note:'rebate sell-in · รอบครึ่งปี',active:true},
+      {code:'HAIER-REF',name:'Haier ตู้เย็น',brand:'Haier',note:'rebate เป้ายอด',active:true},
+      {code:'MITSU-AC',name:'Mitsubishi แอร์',brand:'Mitsubishi',note:'co-op + rebate',active:true}
     ]
   },
   card: {

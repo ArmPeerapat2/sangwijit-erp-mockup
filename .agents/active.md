@@ -18,7 +18,9 @@ project_type: "frontend-mockup (HTML + docs)"
 - **🎉 บล็อกเกอร์ master-data ครบ 3/3** (1 บริษัท · md4 สิทธิ์ · gate ต้นทุน) — ปลดล็อกออกแบบข้อมูลหลักต่อได้
 - **✅ ทะเบียนตำแหน่ง (2026-07-24):** schema `position` ใน cf-master-settings (6 ตำแหน่ง) · แยกอิสระไม่ผูกกลุ่ม default · verified
 - **✅ ทะเบียนประเภทเงินได้ (2026-07-24):** schema `income` ใน cf-master-settings (6 ประเภท · VAT/WHT/GL) · grill: schema ไม่ใช่หน้าแยก · GL=อ้างรหัส BC (CF-2.3) · แก้ conflict ค่าโฆษณา→2% · verified · ⏳ ตามต่อ: fi4/fi12 อ่านจากตัวนี้ (ยังมีตารางเอง)
-- **master ขาดต่อไป:** กลุ่มสินค้า rebate · กลุ่มลูกค้า (ง่าย) · ที่อยู่ 12 ช่อง component · นำเข้ายอดยกมา
+- **✅ กลุ่มสินค้า rebate (2026-07-24):** schema `rebate` ใน cf-master-settings (4 กลุ่ม) · portal ถือ · rebate% แปรตาม vendor/รอบ ที่ PO-7 (ไม่อยู่ register) · verified
+- **✅ กลุ่มลูกค้า = BC เจ้าของ** (md2 อ่าน dropdown แล้ว · ไม่สร้าง portal register)
+- **master ขาดต่อไป:** ที่อยู่ 12 ช่อง (component ใช้ซ้ำ ลูกค้า/ผู้ขาย/สาขา/พนักงาน) · นำเข้ายอดยกมา (ตอนขึ้นระบบ) · สร้างรหัสอัตโนมัติ
 - **⚠️ git ค้าง:** งาน grill 3 บล็อกเกอร์ (md4/sc2/6หน้า relabel/backlog/active) ยังไม่ commit · ทับกอง `06071aa` ที่ยังไม่ push
 
 ## 🔄 SESSION 2026-07-20 — reconcile งานยุค bc365 + grill ปิดท้าย (จัดซื้อ 3-Way · งานศูนย์ · lead)
