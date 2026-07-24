@@ -298,6 +298,30 @@
             font-weight: 500;
         }
 
+        /* address inputs (retrofit swt-address 2026-07-24) */
+        .addr-in {
+            font-size: 13px;
+            color: #1E293B;
+            padding: 7px 9px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            width: 100%;
+            font-family: inherit;
+            box-sizing: border-box;
+            background: #fff;
+        }
+        .addr-idbtn {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #1E40AF;
+            background: #EFF6FF;
+            border: 1px solid #BFDBFE;
+            border-radius: 7px;
+            padding: 4px 11px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
         /* Action bar */
         .action-bar {
             position: fixed;
@@ -450,28 +474,28 @@
                         </div>
 
                         <!-- ===== ที่อยู่สาขา — ชุดมาตรฐาน 12 ช่อง (เคาะ 2026-07-21) ===== -->
-                        <div style="font-size:13px;font-weight:700;color:#1E293B;margin:18px 0 8px">🏢 ที่อยู่สาขา · กลุ่มอาคาร <span style="font-weight:500;color:#64748B">(กรอกเฉพาะกรณีคอนโด/อาคาร — ไม่บังคับ)</span></div>
+                        <div style="font-size:13px;font-weight:700;color:#1E293B;margin:18px 0 8px;display:flex;align-items:center;gap:10px">🏢 ที่อยู่สาขา · กลุ่มอาคาร <span style="font-weight:500;color:#64748B">(กรอกเฉพาะกรณีคอนโด/อาคาร — ไม่บังคับ)</span> <span style="margin-left:auto;display:flex;align-items:center;gap:8px"><button type="button" id="addrIdcard" class="addr-idbtn">📇 อ่านบัตรประชาชน</button> <span id="addrIdresult" style="font-size:11px;color:#059669;font-weight:400"></span></span></div>
                         <div class="info-grid" style="grid-template-columns:repeat(4,1fr)">
-                            <div class="info-item"><div class="info-label">ชื่ออาคาร</div><div class="info-value" id="addrBuilding">-</div></div>
-                            <div class="info-item"><div class="info-label">หมู่บ้าน</div><div class="info-value" id="addrMoobaan">-</div></div>
-                            <div class="info-item"><div class="info-label">เลขห้อง</div><div class="info-value" id="addrRoom">-</div></div>
-                            <div class="info-item"><div class="info-label">ชั้น</div><div class="info-value" id="addrFloor">-</div></div>
+                            <div class="info-item"><div class="info-label">ชื่ออาคาร</div><input class="addr-in" id="addrBuilding" value=""></div>
+                            <div class="info-item"><div class="info-label">หมู่บ้าน</div><input class="addr-in" id="addrMoobaan" value=""></div>
+                            <div class="info-item"><div class="info-label">เลขห้อง</div><input class="addr-in" id="addrRoom" value=""></div>
+                            <div class="info-item"><div class="info-label">ชั้น</div><input class="addr-in" id="addrFloor" value=""></div>
                         </div>
 
                         <div style="font-size:13px;font-weight:700;color:#1E293B;margin:14px 0 8px">📍 ที่อยู่สาขา · กลุ่มที่ตั้ง</div>
                         <div class="info-grid" style="grid-template-columns:repeat(4,1fr)">
-                            <div class="info-item"><div class="info-label">เลขที่</div><div class="info-value" id="addrNo">-</div></div>
-                            <div class="info-item"><div class="info-label">หมู่</div><div class="info-value" id="addrMoo">-</div></div>
-                            <div class="info-item"><div class="info-label">ตรอก/ซอย</div><div class="info-value" id="addrSoi">-</div></div>
-                            <div class="info-item"><div class="info-label">ถนน</div><div class="info-value" id="addrStreet">-</div></div>
+                            <div class="info-item"><div class="info-label">เลขที่</div><input class="addr-in" id="addrNo" value=""></div>
+                            <div class="info-item"><div class="info-label">หมู่</div><input class="addr-in" id="addrMoo" value=""></div>
+                            <div class="info-item"><div class="info-label">ตรอก/ซอย</div><input class="addr-in" id="addrSoi" value=""></div>
+                            <div class="info-item"><div class="info-label">ถนน</div><input class="addr-in" id="addrStreet" value=""></div>
                         </div>
 
                         <div style="font-size:13px;font-weight:700;color:#1E293B;margin:14px 0 8px">🗺 ที่อยู่สาขา · กลุ่มเขตปกครอง <span style="font-weight:500;color:#B45309">(ช่องบังคับ — ใช้ออกใบกำกับภาษี)</span></div>
                         <div class="info-grid" style="grid-template-columns:repeat(4,1fr)">
-                            <div class="info-item"><div class="info-label">ตำบล/แขวง</div><div class="info-value" id="addrTambon">-</div></div>
-                            <div class="info-item"><div class="info-label">อำเภอ/เขต</div><div class="info-value" id="addrAmphur">-</div></div>
-                            <div class="info-item"><div class="info-label">จังหวัด</div><div class="info-value" id="addrProvince">-</div></div>
-                            <div class="info-item"><div class="info-label">รหัสไปรษณีย์</div><div class="info-value" id="addrPostcode">-</div></div>
+                            <div class="info-item"><div class="info-label">ตำบล/แขวง</div><input class="addr-in" id="addrTambon" value=""></div>
+                            <div class="info-item"><div class="info-label">อำเภอ/เขต</div><input class="addr-in" id="addrAmphur" value=""></div>
+                            <div class="info-item"><div class="info-label">จังหวัด</div><input class="addr-in" id="addrProvince" value=""></div>
+                            <div class="info-item"><div class="info-label">รหัสไปรษณีย์</div><input class="addr-in" id="addrPostcode" value=""></div>
                         </div>
 
                         <div style="background:#EFF6FF;border-left:3px solid #3B82F6;border-radius:0 6px 6px 0;padding:10px 12px;margin:12px 0;font-size:12.5px;line-height:1.7;color:#1E40AF">
@@ -707,7 +731,7 @@
             const branch = branches.find(b => b.id === id);
             Object.entries(branch.info).forEach(([key, value]) => {
                 const el = document.getElementById(key);
-                if (el) el.textContent = value;
+                if (el) el[el.tagName === 'INPUT' ? 'value' : 'textContent'] = value;  // ที่อยู่ = input, อื่น ๆ = div
             });
             document.getElementById('branchName').textContent = branch.name;
             document.getElementById('branchCode').textContent = branch.code;
@@ -743,5 +767,10 @@
 <!-- SWT_LINK_END -->
 
 <script src="swt-sidebar.js"></script>
+<script src="swt-address.js"></script>
+<script>
+  // postal-first (พิมพ์ไปรษณีย์→เด้งจังหวัด/อำเภอ/ตำบล) + อ่านบัตรประชาชน · shared swt-address.js · retrofit 2026-07-24
+  swtAddressWire({post:'addrPostcode', tambon:'addrTambon', amphur:'addrAmphur', province:'addrProvince', no:'addrNo', moo:'addrMoo', road:'addrStreet', idBtn:'addrIdcard', idResult:'addrIdresult'});
+</script>
 </body>
 </html>

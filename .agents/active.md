@@ -20,8 +20,9 @@ project_type: "frontend-mockup (HTML + docs)"
 - **✅ ทะเบียนประเภทเงินได้ (2026-07-24):** schema `income` ใน cf-master-settings (6 ประเภท · VAT/WHT/GL) · grill: schema ไม่ใช่หน้าแยก · GL=อ้างรหัส BC (CF-2.3) · แก้ conflict ค่าโฆษณา→2% · verified · ⏳ ตามต่อ: fi4/fi12 อ่านจากตัวนี้ (ยังมีตารางเอง)
 - **✅ กลุ่มสินค้า rebate (2026-07-24):** schema `rebate` ใน cf-master-settings (4 กลุ่ม) · portal ถือ · rebate% แปรตาม vendor/รอบ ที่ PO-7 (ไม่อยู่ register) · verified
 - **✅ กลุ่มลูกค้า = BC เจ้าของ** (md2 อ่าน dropdown แล้ว · ไม่สร้าง portal register)
-- **✅ ที่อยู่ 12 ช่อง (2026-07-24):** `swt-address.js` shared — grill: postal-first (พิมพ์ไปรษณีย์→เด้ง จว./อำเภอ/ตำบล) + อ่านบัตรประชาชน · `swtAddressWire()` ผูกฟอร์มเดิม + `swtRenderAddress()` render เต็ม · wired md2 verified · ⏳ retrofit md3/md5/md4 ตามหลัง
-- **master ขาดต่อไป:** retrofit ที่อยู่ (md3/md5/md4) · นำเข้ายอดยกมา (ตอนขึ้นระบบ) · สร้างรหัสอัตโนมัติ · fi4/fi12 อ่าน income register
+- **✅ ที่อยู่ 12 ช่อง (2026-07-24):** `swt-address.js` shared — grill: postal-first (พิมพ์ไปรษณีย์→เด้ง จว./อำเภอ/ตำบล) + อ่านบัตรประชาชน · `swtAddressWire()` ผูกฟอร์มเดิม + `swtRenderAddress()` render เต็ม · wired md2 verified
+- **✅ retrofit ที่อยู่ md3/md5/md4 ครบ (2026-07-24):** grill scope → **แปลงเป็นฟอร์มกรอกทั้ง 3** (Peerapat เลือก) · md3 ผู้ขาย (input อยู่แล้ว → เติม id `va_*` + ปุ่มอ่านบัตร + wire) · md4 พนักงาน (static · แปลง `form-value` div→input `ep_*`) · md5 สาขา (dynamic · แปลง `info-value` div→input + `selectBranch()` แยก `.value`(input)/`.textContent`(div) · สลับสาขา refill ได้) · **เติม POSTAL dataset สกลนคร 47000/47230 + บึงกาฬ 38000 ใน swt-address.js** (ไม่งั้น postal-first error ทุกสาขา md5) · **verified บนเซิร์ฟเวอร์จริง (port 8093)**: console clean · postal-first เด้ง จว./อำเภอ/ตำบล ทั้ง 3 หน้า · ปุ่มอ่านบัตรเติมครบ · md5 สลับสาขา 1↔11 input refill ถูก
+- **master ขาดต่อไป:** นำเข้ายอดยกมา (ตอนขึ้นระบบ) · สร้างรหัสอัตโนมัติ · fi4/fi12 อ่าน income register
 - **⚠️ git ค้าง:** งาน grill 3 บล็อกเกอร์ (md4/sc2/6หน้า relabel/backlog/active) ยังไม่ commit · ทับกอง `06071aa` ที่ยังไม่ push
 
 ## 🔄 SESSION 2026-07-20 — reconcile งานยุค bc365 + grill ปิดท้าย (จัดซื้อ 3-Way · งานศูนย์ · lead)
