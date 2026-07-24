@@ -554,6 +554,7 @@
                         <div class="tab" data-tab="leaves">Leave Management</div>
                         <div class="tab" data-tab="skills">Skills & Development</div>
                         <div class="tab" data-tab="documents">Documents</div>
+                        <div class="tab" data-tab="permissions">🔑 สิทธิ์การใช้งาน</div>
                     </div>
 
                     <!-- Tab Contents -->
@@ -1400,6 +1401,50 @@
                             </table>
                         </div>
                     </div>
+
+                    <!-- ═══ TAB: สิทธิ์การใช้งาน (blocker #2 · grill 2026-07-24 · สิทธิ์สืบจากกลุ่ม · read-only) ═══ -->
+                    <div class="tab-content" id="tab-permissions">
+                        <div class="section">
+                            <div class="section-title">🔑 MD-4.6 · มอบหมายกลุ่มสิทธิ์</div>
+                            <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-left:4px solid #2563EB;border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:12.5px;line-height:1.6;color:#1E40AF">
+                                สิทธิ์ของพนักงาน <b>สืบจากตำแหน่ง + กลุ่มสิทธิ์</b> — หน้านี้ดูได้อย่างเดียว ·
+                                แก้สิทธิ์จริงที่ <a href="cf1-rbac-permission-mockup.html" style="color:#2563EB;font-weight:700">CF-1 กลุ่มสิทธิ์</a> ·
+                                ต้องการสิทธิ์ต่างจากกลุ่ม → <b>สร้างกลุ่มใหม่</b> (ไม่ติ๊กรายคน)
+                            </div>
+                            <div class="form-group">
+                                <div class="form-field">
+                                    <label class="form-label">ตำแหน่ง (Position)</label>
+                                    <select id="mdPos" style="width:100%;padding:7px 10px;border:1px solid #CBD5E1;border-radius:7px;font-family:inherit;font-size:13px;background:#fff">
+                                        <option>หัวหน้าคลัง (Warehouse Supervisor)</option>
+                                        <option>พนักงานคลัง (Warehouse Staff)</option>
+                                        <option>พนักงานขาย (Salesperson)</option>
+                                        <option>หัวหน้าฝ่ายขาย (Sales Manager)</option>
+                                    </select>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">กลุ่มสิทธิ์ (เลือกได้หลายกลุ่ม)</label>
+                                    <div id="mdGroups" style="display:flex;flex-direction:column;gap:6px;padding-top:4px">
+                                        <label style="font-size:13px;cursor:pointer;display:flex;gap:7px;align-items:center"><input type="checkbox" value="WH" checked onchange="mdPermRender()"> ผู้จัดการคลัง (GRP-WH-MGR)</label>
+                                        <label style="font-size:13px;cursor:pointer;display:flex;gap:7px;align-items:center"><input type="checkbox" value="SALES" onchange="mdPermRender()"> พนักงานขาย (GRP-SALES)</label>
+                                        <label style="font-size:13px;cursor:pointer;display:flex;gap:7px;align-items:center"><input type="checkbox" value="SALESMGR" onchange="mdPermRender()"> หัวหน้าฝ่ายขาย (GRP-SALES-MGR)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="section-title">✅ MD-4.7 · สิทธิ์ที่ได้รับ (รวมจากกลุ่ม · อ่านอย่างเดียว)</div>
+                            <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+                                <thead>
+                                    <tr style="background:#1E3A5F;color:#fff">
+                                        <th style="text-align:left;padding:8px 12px">สิทธิ์</th>
+                                        <th style="text-align:left;padding:8px 12px;width:110px">สถานะ</th>
+                                        <th style="text-align:left;padding:8px 12px;width:230px">ได้จากกลุ่ม</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mdPermBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1465,6 +1510,42 @@
 <script src="swt-link.js" defer></script>
 <!-- SWT_LINK_END -->
 
+<script>
+// MD-4.6/4.7 สิทธิ์สืบจากกลุ่ม (blocker #2 · read-only · แหล่งจริง = CF-1)
+(function(){
+  var CATS=[
+    {t:'อนุมัติ (Approval)',items:[['approve-po','อนุมัติใบสั่งซื้อ'],['approve-transfer','อนุมัติใบโอน'],['approve-adjust','อนุมัติปรับสต็อก'],['approve-payment','อนุมัติจ่ายเงิน']]},
+    {t:'คลัง / สต็อก',items:[['release-reserve','ปลดยอดกันสต็อก'],['cross-wh-issue','เบิกข้ามคลัง'],['transfer-stock','โอนสต็อก'],['adjust-stock','ปรับสต็อก']]},
+    {t:'ขาย / ราคา',items:[['discount-over','ให้ส่วนลดเกินเพดาน'],['promo-below-cost','ตั้งโปรฯ ต่ำกว่าทุน'],['view-cost','เห็นต้นทุน']]},
+    {t:'ขอบเขตการมองเห็น',items:[['cross-branch','ข้ามสาขา'],['cross-dept','ข้ามแผนก'],['multi-wh','เห็นหลายคลัง']]}
+  ];
+  var GROUPS={
+    WH:{name:'ผู้จัดการคลัง',perms:['approve-transfer','approve-adjust','release-reserve','cross-wh-issue','transfer-stock','adjust-stock','cross-branch','multi-wh','view-cost']},
+    SALES:{name:'พนักงานขาย',perms:['discount-over']},
+    SALESMGR:{name:'หัวหน้าฝ่ายขาย',perms:['approve-po','discount-over','promo-below-cost','view-cost','cross-branch']}
+  };
+  window.mdPermRender=function(){
+    var granted={};
+    document.querySelectorAll('#mdGroups input:checked').forEach(function(c){
+      var g=GROUPS[c.value]; if(!g)return;
+      g.perms.forEach(function(p){ (granted[p]=granted[p]||[]).push(g.name); });
+    });
+    var html='';
+    CATS.forEach(function(cat){
+      html+='<tr><td colspan="3" style="background:#F1F5F9;font-weight:700;color:#1E3A5F;padding:6px 12px;font-size:12px">'+cat.t+'</td></tr>';
+      cat.items.forEach(function(it){
+        var on=granted[it[0]];
+        html+='<tr style="border-bottom:1px solid #E2E8F0">'
+          +'<td style="padding:7px 12px">'+it[1]+'</td>'
+          +'<td style="padding:7px 12px">'+(on?'<span style="color:#16A34A;font-weight:700">✓ มี</span>':'<span style="color:#94A3B8">✗ ไม่มี</span>')+'</td>'
+          +'<td style="padding:7px 12px;font-size:11px;color:#64748B">'+(on?on.join(' · '):'—')+'</td></tr>';
+      });
+    });
+    var b=document.getElementById('mdPermBody'); if(b)b.innerHTML=html;
+  };
+  mdPermRender();
+})();
+</script>
 <script src="swt-sidebar.js"></script>
 </body>
 </html>

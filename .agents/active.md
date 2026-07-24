@@ -11,7 +11,12 @@ project_type: "frontend-mockup (HTML + docs)"
 - **poq เสีย → กู้แล้ว:** `poq-purchase-queue-mockup.html` โดน null-byte corruption **74,141 ตัว** (OneDrive sync / save พัง · `file` มองเป็น binary) → strip null · เนื้อ HTML จริง 214 บรรทัดครบ (`</body></html>` ปิด · JS ครบ) · สำรองตัวเสีย `_archive/poq-purchase-queue-mockup-CORRUPT-2026-07-13.html.bak`
 - **สแกนทั้งโปรเจกต์:** html/js/css/md ทุกไฟล์ — **poq ตัวเดียวที่เสีย** ตัวอื่นปลอด null
 - **QA อื่นผ่าน:** 💬 ในไฟล์ flow/consolidation = icon กล่อง grill (เนื้อหาตั้งใจ ไม่ใช่ marker ค้าง) · div balance flow files ครบ · consolidation-review div 218/212 = ของเดิม commit แล้ว (review doc · render ได้ · ไม่แตะ) · DEV-HANDOFF ไม่มี dead link (3 flag = false positive อยู่ subdir)
-- **สถานะรวม:** flow lifecycle 5 โมดูล (SV/WH/SL/PO/FI) + consolidation execute + QA = **พร้อมส่ง dev นอก** · backlog เหลือ P2 (PM/FA lifecycle) · git 2 branch เคยสะอาด/push ครบ (poq fix + บันทึกนี้ = ยังไม่ commit)
+- **สถานะรวม:** flow lifecycle 5 โมดูล (SV/WH/SL/PO/FI) + consolidation execute + QA = **พร้อมส่ง dev นอก** · git commit `06071aa` catch-up 72 ไฟล์ (รอ push)
+- **✅ Grill บล็อกเกอร์ 1 (master-data backlog) — เคาะ 1 บริษัท (SWT):** Q1 ยืนมติ 05-31 (4=สาขา ไม่ใช่ 4 นิติ) · Q2 "นิติบุคคล" ที่หลุด→"สาขา"+มิติ SITECODE (reuse 07-23) · ตรวจแล้วแก้ไป ~90% (md5/cf1 cleaned 07-21 · หน้าภาษี=ภ.ง.ด.53 legit · ex1/Entity Tag=tracked P2) — **ไม่มี build ค้าง** · ราย backlog: `master-data-and-settings-backlog.md §1`
+- **✅ Grill+build บล็อกเกอร์ 2 (2026-07-24) — md4 แท็บสิทธิ์:** Q1 สิทธิ์ผ่านกลุ่ม/ตำแหน่งพอ (ไม่มี override รายคน) · Q2 md4 read-only สืบจากกลุ่ม แก้จริงที่ CF-1 · build แท็บ "🔑 สิทธิ์การใช้งาน" (MD-4.6 มอบหมาย + MD-4.7 ตาราง 14 สิทธิ์ 4 หมวด union) verified · relabel 16 จุด (ap1/sl2/wh-q2/wh2r) · ราย `master-data-and-settings-backlog.md §2`
+- **✅ Grill+build บล็อกเกอร์ 3 (2026-07-24) — gate ต้นทุน sc2:** Q1 ซ่อนคอลัมน์หาย (ไม่ render DOM) · Q2 คุมรวม 1 สิทธิ์ view-cost · Q3 อุด sc2 shared ก่อน (จุดเดียวครอบทุกหน้า) · build `sc2` ย้ายค่าไป JS + toggle + scRenderCost verified · ราย `master-data-and-settings-backlog.md §3`
+- **🎉 บล็อกเกอร์ master-data ครบ 3/3** (1 บริษัท · md4 สิทธิ์ · gate ต้นทุน) — ปลดล็อกออกแบบข้อมูลหลักต่อได้
+- **⚠️ git ค้าง:** งาน grill 3 บล็อกเกอร์ (md4/sc2/6หน้า relabel/backlog/active) ยังไม่ commit · ทับกอง `06071aa` ที่ยังไม่ push
 
 ## 🔄 SESSION 2026-07-20 — reconcile งานยุค bc365 + grill ปิดท้าย (จัดซื้อ 3-Way · งานศูนย์ · lead)
 

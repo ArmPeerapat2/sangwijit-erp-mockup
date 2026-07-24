@@ -362,6 +362,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:transparent;colo
           <div class="pane-bar">
             <button class="ref-btn">🔄 Refresh</button>
             <span style="margin-left:10px;font-size:11px;color:#64748B">⚖ VAT Golden Rule — ราคาแสดงแบบ ex-VAT · ดู simulator ที่ <b style="color:#2563EB">PM-5</b></span>
+            <label style="margin-left:auto;font-size:11.5px;color:#334155;display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:600;background:#FEF3C7;border:1px solid #FCD34D;border-radius:7px;padding:3px 10px"><input type="checkbox" id="scCostPerm" checked onchange="scRenderCost(this.checked)"> 🔑 จำลองสิทธิ์: เห็นต้นทุน</label>
           </div>
           <div class="pane-body grid">
             <table class="sub-tbl">
@@ -372,16 +373,16 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:transparent;colo
                 <th style="width:70px;text-align:right">Disc1</th>
                 <th style="width:100px;text-align:right">ราคาส่ง</th>
                 <th style="width:70px;text-align:right">Disc2</th>
-                <th style="width:100px;text-align:right">ต้นทุน INV</th>
+                <th class="cost-col" style="width:100px;text-align:right">ต้นทุน INV</th>
                 <th style="width:70px;text-align:right">Disc3</th>
-                <th style="width:100px;text-align:right">ต้นทุน ผปย</th>
+                <th class="cost-col" style="width:100px;text-align:right">ต้นทุน ผปย</th>
                 <th style="width:70px;text-align:right">Disc4</th>
                 <th style="width:100px;text-align:right">Price5</th>
                 <th style="width:70px;text-align:right">Disc5</th>
                 <th style="width:100px;text-align:right">Price6</th>
               </tr></thead>
               <tbody>
-                <tr><td>1</td><td>เครื่อง</td><td style="text-align:right;font-weight:700;color:#0F172A">5,990.00</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600">5,450.00</td><td style="text-align:right">—</td><td style="text-align:right;color:#475569">5,636.76</td><td style="text-align:right">—</td><td style="text-align:right;color:#475569">5,268.00</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td></tr>
+                <tr><td>1</td><td>เครื่อง</td><td style="text-align:right;font-weight:700;color:#0F172A">5,990.00</td><td style="text-align:right">—</td><td style="text-align:right;font-weight:600">5,450.00</td><td style="text-align:right">—</td><td class="cost-col cost-inv" style="text-align:right;color:#475569"></td><td style="text-align:right">—</td><td class="cost-col cost-ppy" style="text-align:right;color:#475569"></td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#94A3B8">—</td></tr>
                 <tr class="empty"><td colspan="13">— ไม่มีราคาทางเลือกเพิ่มเติม —</td></tr>
               </tbody>
             </table>
@@ -638,6 +639,20 @@ function toggleHistory(btn){
 </script>
 
 <!-- SWT_LINK_START -->
+<script>
+// SC2 gate ต้นทุน (blocker #3 · grill 2026-07-24 · สิทธิ์ view-cost · ค่าจริงไม่อยู่ใน DOM เมื่อไม่มีสิทธิ์)
+(function(){
+  var SC_COST={inv:'5,636.76',ppy:'5,268.00'};   // ตัวจริง server ส่งเฉพาะคนมีสิทธิ์ — mockup เก็บใน JS ไม่ใส่ HTML
+  window.scRenderCost=function(show){
+    document.querySelectorAll('.cost-col').forEach(function(el){el.style.display=show?'':'none';});
+    var inv=document.querySelector('.cost-inv'),ppy=document.querySelector('.cost-ppy');
+    if(inv)inv.textContent=show?SC_COST.inv:'';
+    if(ppy)ppy.textContent=show?SC_COST.ppy:'';
+  };
+  var t=document.getElementById('scCostPerm');
+  scRenderCost(t?t.checked:true);
+})();
+</script>
 <script src="swt-link.js" defer></script>
 <!-- SWT_LINK_END -->
 
