@@ -636,6 +636,7 @@
             </div>
           </div>
           <button class="role-add-btn">+ เพิ่มกลุ่มสิทธิ์</button>
+          <button class="role-add-btn" style="background:#F0FDF4;color:#166534;border-color:#16A34A;margin-top:6px" onclick="cf1Import()" title="ลอกสิทธิ์ทั้งชุด (เมนู·ฟิลด์·คลัง·กลุ่มเอกสาร) จากกลุ่มที่มีอยู่ มาเป็นจุดตั้งต้นของกลุ่มใหม่ แล้วปรับต่อ — ตามปุ่ม Import หน้า 9.5 ระบบเดิม">📥 คัดลอกสิทธิ์จากกลุ่มอื่น</button>
         </div>
 
         <!-- Permission Matrix -->
@@ -923,6 +924,11 @@
               <td><div class="checkbox-wrapper"><input type="checkbox" class="checkbox-input"></div></td>
               <td style="text-align:left;color:#6B7280">เปิดทะเบียนสินค้าได้ แต่ช่องราคาซื้อ/ราคาขายแก้ไม่ได้</td>
             </tr>
+            <tr>
+              <td><strong>อนุมัติขายต่ำกว่าราคาขั้นต่ำได้</strong> <span style="font-size:11px;color:#059669">(เพิ่มตามระบบเดิม 07-25)</span></td>
+              <td><div class="checkbox-wrapper"><input type="checkbox" class="checkbox-input"></div></td>
+              <td style="text-align:left;color:#B91C1C">ถ้าไม่ติ๊ก = ขายต่ำกว่าราคาขั้นต่ำ/ต่ำกว่าทุนไม่ได้ ระบบบล็อก (กันขายขาดทุน)</td>
+            </tr>
           </tbody>
         </table>
 
@@ -946,6 +952,11 @@
               <td>ดูวงเงินเครดิตลูกค้าได้</td>
               <td><div class="checkbox-wrapper"><input type="checkbox" class="checkbox-input" checked></div></td>
               <td style="text-align:left;color:#6B7280">ช่องวงเงินเครดิต/ยอดค้างของลูกค้าไม่แสดง</td>
+            </tr>
+            <tr>
+              <td>แก้/กำหนดวงเงินเครดิตลูกค้าได้ <span style="font-size:11px;color:#059669">(เพิ่มตามระบบเดิม 07-25)</span></td>
+              <td><div class="checkbox-wrapper"><input type="checkbox" class="checkbox-input"></div></td>
+              <td style="text-align:left;color:#6B7280">ดูได้อย่างเดียว แต่แก้ตัวเลขวงเงิน/เทอมเครดิตไม่ได้ (แยกจากสิทธิ์ "ดู")</td>
             </tr>
             <tr>
               <td>ดูรายงานได้เฉพาะข้อมูลตนเอง</td>
@@ -1020,8 +1031,16 @@
               <td><div class="checkbox-wrapper"><input type="checkbox" class="checkbox-input"></div></td>
               <td style="text-align:left;color:#6B7280">ระหว่างเปิดบิล เพิ่มลูกค้า/สินค้าใหม่ทันทีไม่ได้ ต้องให้คนดูแลข้อมูลหลักสร้างให้ก่อน</td>
             </tr>
+            <tr>
+              <td>คำนวณ/ดูยอดสินค้าคงเหลือได้ <span style="font-size:11px;color:#059669">(เพิ่มตามระบบเดิม 07-25)</span></td>
+              <td><div class="checkbox-wrapper"><input type="checkbox" class="checkbox-input" checked></div></td>
+              <td style="text-align:left;color:#6B7280">ช่องยอดคงเหลือ/พร้อมขายไม่แสดง คำนวณสต็อกเองไม่ได้</td>
+            </tr>
           </tbody>
         </table>
+        <div style="margin-top:14px;padding:9px 13px;background:#F0FDF4;border:1px solid #BBF7D0;border-left:4px solid #16A34A;border-radius:8px;font-size:12px;color:#166534">
+          ✅ <strong>เทียบระบบเดิมแล้ว (07-25):</strong> เติม 3 สิทธิ์ที่ขาด (อนุมัติขายต่ำกว่าราคาขั้นต่ำ · แก้วงเงินเครดิต · คำนวณคงเหลือ) · <strong>ไม่ลอกดิบ 22 ช่อง</strong> — เดิม 10 ช่องเป็น "แจ้งเตือน/เห็นคิว/role ระดับสูง" ซึ่งพอร์ทัลมีที่อยู่แยกอยู่แล้ว (สิทธิ์เข้าเมนู · กลุ่มสิทธิ์ · การแจ้งเตือน)
+        </div>
       </div>
     </div>
 
@@ -1391,6 +1410,13 @@
       };
 
       document.querySelector('.permission-matrix h3').textContent = 'สิทธิ์ของกลุ่ม: ' + roleNames[roleId];
+    }
+
+    // คัดลอกสิทธิ์จากกลุ่มอื่น (mockup) — ตามปุ่ม Import หน้า 9.5 ระบบเดิม
+    function cf1Import() {
+      var groups = [...document.querySelectorAll('.role-item')].map(function(el){ return el.childNodes[0].textContent.trim(); });
+      var from = prompt('คัดลอกสิทธิ์ทั้งชุด (เมนู · ฟิลด์ · คลัง · กลุ่มเอกสาร) มาจากกลุ่มใด?\nพิมพ์ชื่อกลุ่มต้นทาง:\n\n' + groups.join(' · '));
+      if(from) alert('✓ (mockup) จะคัดลอกสิทธิ์จาก "' + from + '" มาเป็นจุดตั้งต้น\nแล้วปรับต่อในแท็บ กลุ่มสิทธิ์/ฟิลด์/ขอบเขต ได้เลย\n\n(ของจริง: server ก๊อป CSMSTRIGHT* ทั้งชุดของกลุ่มต้นทาง → กลุ่มใหม่)');
     }
   </script>
 <!-- SWT_LINK_START -->
