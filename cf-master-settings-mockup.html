@@ -54,6 +54,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       <button class="cat-btn" data-cat="reason" onclick="selMaster(this,'reason')"><span class="ic">📉</span> เหตุผลปรับสต็อก</button>
       <button class="cat-btn" data-cat="sla" onclick="selMaster(this,'sla')"><span class="ic">🗓️</span> SLA งานบริการ</button>
       <button class="cat-btn" data-cat="chk" onclick="selMaster(this,'chk')"><span class="ic">🧪</span> เช็คลิสต์ ตรวจ/ล้าง</button>
+      <button class="cat-btn" data-cat="position" onclick="selMaster(this,'position')"><span class="ic">👤</span> ตำแหน่งพนักงาน</button>
       <a class="cat-link" href="cf2-7-doc-template-mockup.html"><span class="ic">📄</span> แบบฟอร์มเอกสาร (CF-2.7) ↗</a>
 
       <div class="cat-div">🔒 Master บัญชี → ตั้งที่ BC</div>
@@ -69,6 +70,20 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
 <script src="swt-master-editor.js"></script>
 <script>
 var MASTERS = {
+  position: {
+    title:'ตำแหน่งพนักงาน',
+    bcNote:'ใช้ที่ทะเบียนพนักงาน (md4) · สิทธิ์ผูกกับตำแหน่งเป็นหลัก แต่เลือกกลุ่มสิทธิ์แยกอิสระที่ md4 (grill 2026-07-24) · ไม่ผูกกลุ่ม default',
+    columns:[{key:'code',label:'รหัส'},{key:'name',label:'ตำแหน่ง'},{key:'dept',label:'ฝ่าย/แผนก'}],
+    fields:[{key:'code',label:'รหัส'},{key:'name',label:'ชื่อตำแหน่ง'},{key:'dept',label:'ฝ่าย/แผนก'},{key:'active',label:'สถานะ',type:'toggle'}],
+    data:[
+      {code:'WH-SPV',name:'หัวหน้าคลัง',dept:'คลังสินค้า',active:true},
+      {code:'WH-STF',name:'พนักงานคลัง',dept:'คลังสินค้า',active:true},
+      {code:'SALE',name:'พนักงานขาย',dept:'ฝ่ายขาย',active:true},
+      {code:'SALE-MGR',name:'หัวหน้าฝ่ายขาย',dept:'ฝ่ายขาย',active:true},
+      {code:'TECH-IN',name:'ช่างบริการ (ช่างใน)',dept:'ศูนย์บริการ',active:true},
+      {code:'ACC',name:'พนักงานบัญชี',dept:'การเงิน-บัญชี',active:true}
+    ]
+  },
   card: {
     title:'ประเภทบัตร / ช่องทางรับชำระ',
     bcNote:'ป้อน sc-payment โดยตรง — เพิ่มช่องทาง/แก้ %ชาร์จ ที่นี่ มีผลทุกหน้ารับชำระ',
