@@ -487,8 +487,8 @@
                     <b>เหตุผลที่ไม่ผูกกับผู้ขาย:</b> ผู้ขายรายเดียวจ่ายได้หลายประเภท เช่น Daikin จ่ายทั้งค่าสินค้า (ไม่หัก) และค่าติดตั้ง (หัก 3%) — ถ้าผูกอัตราไว้กับผู้ขาย จะหักผิดทันทีที่ประเภทเงินได้เปลี่ยน<br>
                     <b>ตารางอัตรา</b> ตั้งที่หน้าตั้งค่าภาษี · <b>ผังบัญชี</b> ตั้งที่ระบบ Business Central — พอร์ทัลดึงมาแสดงอย่างเดียว
                 </div>
-                <div style="margin-top:10px;font-size:12px;color:#92400E">
-                    อัตราปัจจุบัน: ค่าโฆษณา <b>2%</b> · ค่าขนส่ง <b>1%</b> · ค่าเช่า <b>5%</b> · ค่าบริการ/ค่าจ้างทำของ <b>3%</b> · ค่าวิชาชีพอิสระ <b>3%</b> · ค่าสอบบัญชี <b>3%</b>
+                <div style="margin-top:10px;font-size:12px;color:#92400E" id="incomeBanner">
+                    อัตราปัจจุบัน: (โหลดจากตารางกลาง…)
                 </div>
             </div>
 
@@ -1325,5 +1325,20 @@ document.addEventListener('DOMContentLoaded', function () {
 <!-- SWT_LINK_END -->
 
 <script src="swt-sidebar.js"></script>
+<script src="swt-income.js"></script>
+<script>
+  // อ่านอัตรา WHT จาก swt-income.js (single source · แก้ที่ตารางกลาง fi4/fi12/cf sync ตาม · 2026-07-25)
+  (function(){
+    var inc = window.SWT_INCOME || [];
+    var sel = document.getElementById('expRate');
+    if(sel){ sel.innerHTML = inc.map(function(r){
+      var n = window.SWT_INCOME_WHTNUM(r.wht);
+      return '<option value="'+n+'"'+(r.code==='RENT'?' selected':'')+'>'+r.wht+' — '+r.name+(r.wht==='0%'?' (ไม่หัก)':'')+'</option>';
+    }).join(''); }
+    var b = document.getElementById('incomeBanner');
+    if(b){ b.innerHTML = 'อัตราปัจจุบัน: ' + inc.filter(function(r){return r.wht!=='0%';})
+      .map(function(r){ return r.name.replace(/ \/.*$/,'')+' <b>'+r.wht+'</b>'; }).join(' · '); }
+  })();
+</script>
 </body>
 </html>

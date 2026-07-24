@@ -17,7 +17,8 @@ project_type: "frontend-mockup (HTML + docs)"
 - **✅ Grill+build บล็อกเกอร์ 3 (2026-07-24) — gate ต้นทุน sc2:** Q1 ซ่อนคอลัมน์หาย (ไม่ render DOM) · Q2 คุมรวม 1 สิทธิ์ view-cost · Q3 อุด sc2 shared ก่อน (จุดเดียวครอบทุกหน้า) · build `sc2` ย้ายค่าไป JS + toggle + scRenderCost verified · ราย `master-data-and-settings-backlog.md §3`
 - **🎉 บล็อกเกอร์ master-data ครบ 3/3** (1 บริษัท · md4 สิทธิ์ · gate ต้นทุน) — ปลดล็อกออกแบบข้อมูลหลักต่อได้
 - **✅ ทะเบียนตำแหน่ง (2026-07-24):** schema `position` ใน cf-master-settings (6 ตำแหน่ง) · แยกอิสระไม่ผูกกลุ่ม default · verified
-- **✅ ทะเบียนประเภทเงินได้ (2026-07-24):** schema `income` ใน cf-master-settings (6 ประเภท · VAT/WHT/GL) · grill: schema ไม่ใช่หน้าแยก · GL=อ้างรหัส BC (CF-2.3) · แก้ conflict ค่าโฆษณา→2% · verified · ⏳ ตามต่อ: fi4/fi12 อ่านจากตัวนี้ (ยังมีตารางเอง)
+- **✅ ทะเบียนประเภทเงินได้ (2026-07-24):** schema `income` ใน cf-master-settings (6 ประเภท · VAT/WHT/GL) · grill: schema ไม่ใช่หน้าแยก · GL=อ้างรหัส BC (CF-2.3) · แก้ conflict ค่าโฆษณา→2% · verified
+- **✅ income single-source เสร็จ (2026-07-25):** สร้าง `swt-income.js` (window.SWT_INCOME · 6 ประเภท + field pnd ภ.ง.ด.) = แหล่งอัตราเดียว · wire **cf-master-settings** (income.data→SWT_INCOME) · **fi4** (dropdown+banner gen) · **fi12** (rate-grid gen) — เลิก hardcode 3 ที่ แก้อัตราที่เดียว sync ทั้งหมด · เทียบระบบเดิม: รวม CSWTAXTYPE(WHT)+CSTAXGROUP(VAT)+GL 3 ตาราง→1 (ตั้งใจ · คงไว้) · verified บนเซิร์ฟเวอร์ (6/6/5 · console clean)
 - **✅ กลุ่มสินค้า rebate (2026-07-24):** schema `rebate` ใน cf-master-settings (4 กลุ่ม) · portal ถือ · rebate% แปรตาม vendor/รอบ ที่ PO-7 (ไม่อยู่ register) · verified
 - **✅ กลุ่มลูกค้า = BC เจ้าของ** (md2 อ่าน dropdown แล้ว · ไม่สร้าง portal register)
 - **✅ ที่อยู่ 12 ช่อง (2026-07-24):** `swt-address.js` shared — grill: postal-first (พิมพ์ไปรษณีย์→เด้ง จว./อำเภอ/ตำบล) + อ่านบัตรประชาชน · `swtAddressWire()` ผูกฟอร์มเดิม + `swtRenderAddress()` render เต็ม · wired md2 verified

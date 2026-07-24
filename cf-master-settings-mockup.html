@@ -70,6 +70,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
 </div></div>
 
 <script src="swt-master-editor.js"></script>
+<script src="swt-income.js"></script>
 <script>
 var MASTERS = {
   position: {
@@ -97,14 +98,8 @@ var MASTERS = {
       {key:'gl',label:'รหัสบัญชี BC (อ้าง Chart of Accounts)'},
       {key:'active',label:'สถานะ',type:'toggle'}
     ],
-    data:[
-      {code:'GOODS',name:'ค่าสินค้า',vat:'7%',wht:'0%',gl:'5010 ต้นทุนสินค้า',active:true},
-      {code:'SERVICE',name:'ค่าบริการ / จ้างทำของ',vat:'7%',wht:'3%',gl:'5310 ค่าบริการ',active:true},
-      {code:'RENT',name:'ค่าเช่า',vat:'ยกเว้น',wht:'5%',gl:'5320 ค่าเช่า',active:true},
-      {code:'ADV',name:'ค่าโฆษณา',vat:'7%',wht:'2%',gl:'5330 ค่าโฆษณา',active:true},
-      {code:'TRANSPORT',name:'ค่าขนส่ง',vat:'7%',wht:'1%',gl:'5340 ค่าขนส่ง',active:true},
-      {code:'PROF',name:'ค่าวิชาชีพ / ที่ปรึกษา',vat:'7%',wht:'3%',gl:'5350 ค่าที่ปรึกษา',active:true}
-    ]
+    // อ่านจาก swt-income.js (single source · แก้อัตราที่นั่นที่เดียว fi4/fi12 sync ตาม)
+    data: window.SWT_INCOME.map(function(r){ return Object.assign({active:true}, r); })
   },
   rebate: {
     title:'กลุ่มสินค้า Rebate',

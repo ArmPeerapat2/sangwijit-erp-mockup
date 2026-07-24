@@ -261,15 +261,8 @@
           </div>
         </div>
         <div class="tabset-pane" id="t-rate">
-          <div class="rate-grid">
-            <span class="r">2%</span><span>ค่าโฆษณา — ยื่น ภ.ง.ด.53</span>
-            <span class="r">1%</span><span>ค่าขนส่ง — ยื่น ภ.ง.ด.53</span>
-            <span class="r">5%</span><span>ค่าเช่า (นิติบุคคล) — ยื่น ภ.ง.ด.53</span>
-            <span class="r">5%</span><span>ค่าเช่า (บุคคลธรรมดา) — ยื่น ภ.ง.ด.3</span>
-            <span class="r">3%</span><span>ค่าบริการ/ค่าจ้างทำของ (นิติบุคคล) — ยื่น ภ.ง.ด.53</span>
-            <span class="r">3%</span><span>ค่าบริการ/ค่าจ้างทำของ (บุคคลธรรมดา) — ยื่น ภ.ง.ด.3</span>
-            <span class="r">3%</span><span>ค่าวิชาชีพอิสระ — ยื่น ภ.ง.ด.53</span>
-            <span class="r">3%</span><span>ค่าสอบบัญชี — ยื่น ภ.ง.ด.53</span>
+          <div class="rate-grid" id="rateGrid">
+            <span style="grid-column:1/-1;color:#6B7280">(โหลดจากตารางกลาง…)</span>
           </div>
           <div style="margin-top:8px;font-size:11px;color:#6B7280">🔒 อัตราผูกกับ <b>ประเภทเงินได้</b> ไม่ได้ผูกกับผู้ขาย · ตั้งค่าที่หน้าตั้งค่าภาษีที่เดียว — หน้านี้อ่านอย่างเดียว</div>
         </div>
@@ -415,5 +408,15 @@
 <script src="swt-doc-finder.js"></script>
 <script src="swt-sidebar.js"></script>
 <script src="swt-link.js"></script>
+<script src="swt-income.js"></script>
+<script>
+  // rate-grid อ่านจาก swt-income.js (single source · 2026-07-25) · แสดงเฉพาะประเภทที่หัก WHT
+  (function(){
+    var g = document.getElementById('rateGrid'); if(!g) return;
+    var pnd = function(p){ return p==='3/53' ? 'ภ.ง.ด.3 + 53' : 'ภ.ง.ด.'+p; };
+    g.innerHTML = (window.SWT_INCOME||[]).filter(function(r){return r.wht!=='0%';})
+      .map(function(r){ return '<span class="r">'+r.wht+'</span><span>'+r.name+' — ยื่น '+pnd(r.pnd)+'</span>'; }).join('');
+  })();
+</script>
 </body>
 </html>
