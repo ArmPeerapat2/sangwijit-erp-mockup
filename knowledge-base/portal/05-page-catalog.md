@@ -177,7 +177,7 @@
 - PO-1 Purchase Requisition (detail page)
 - PO-2 RFQ / Vendor Compare
 - PO-3 Vendor Onboarding
-- PO-5 GRN (หน้าแยกจาก WH-1)
+- ~~PO-5 GRN (หน้าแยกจาก WH-1)~~ → ⛔ **ตัดถาวร 2026-06-08** · ไม่มีหน้ารับของแยกฝั่งบัญชี — ใช้ **ใบรับสินค้าของคลัง** หน้าเดียว
 - PO-6 AP Invoice
 - SL-F1 Credit Approval (workflow page)
 - PM-1 ~ PM-5 Promotion/Pricing

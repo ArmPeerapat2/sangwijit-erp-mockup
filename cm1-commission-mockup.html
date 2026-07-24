@@ -860,9 +860,13 @@
                         <tr><td>ช่างสมชาย · TCH-01</td><td><span style="background:#DBEAFE;color:#1E40AF;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">🔧 ช่างใน</span></td><td>18 job</td><td>incentive ตามชิ้น/คะแนน</td><td>฿9,400</td><td>payroll (CM-1)</td></tr>
                         <tr><td>ช่างวิรัตน์ · TCH-04</td><td><span style="background:#DBEAFE;color:#1E40AF;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">🔧 ช่างใน</span></td><td>12 job</td><td>incentive ตามชิ้น/คะแนน</td><td>฿6,100</td><td>payroll (CM-1)</td></tr>
                         <tr><td>ร้านช่างนอก A · EXT-02</td><td><span style="background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">🏭 ช่างนอก</span></td><td>7 job</td><td>เหมา ฿550/job</td><td>฿3,850</td><td>ตั้งเบิก AP</td></tr>
+                        <tr><td>ช่างสมชาย · TCH-01</td><td><span style="background:#FEE2E2;color:#991B1B;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">➖ หัก</span></td><td>2 job</td><td>หัก: งานเปิดซ้ำ-อาการเดิม (rework)</td><td style="color:#DC2626;font-weight:700">−฿1,050</td><td>หักใน payroll (CM-1)</td></tr>
+                        <tr><td>ช่างวิรัตน์ · TCH-04</td><td><span style="background:#FEE2E2;color:#991B1B;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">➖ หัก</span></td><td>1 รายการ</td><td>หัก: อะไหล่ค้างไม่ reconcile (3-Way · เบิก−ใช้จริง≠คืน)</td><td style="color:#DC2626;font-weight:700">−฿680</td><td>หักใน payroll (CM-1)</td></tr>
                     </tbody>
                 </table>
             </div>
+            <div style="margin-top:10px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:9px 13px;font-size:12px;color:#991B1B;line-height:1.5">➖ <b>รายการหัก:</b> งานเปิดซ้ำ-อาการเดิม (rework) → <b>แอดมินเป็นคนตัดสิน</b>ว่าอาการเดิม/อาการใหม่ · อะไหล่ค้างไม่ reconcile ตาม 3-Way (เบิก − ใช้จริง = คืน) → หักช่าง · กฎจาก skill 08 §7</div>
+            <div style="margin-top:10px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:9px 13px;font-size:12px;color:#1E40AF;line-height:1.5">🗓️ <b>รอบจ่ายช่างนอก = ขับด้วยการวางบิล ไม่ใช่ปฏิทินตายตัว</b> (เคาะ 07-20) — <b>ช่าง = เจ้าหนี้</b> · แอดมินศูนย์บริการรวบงานที่ปิดแล้ว → กด "สรุปรายการ job" → <b>"ส่งวางบิลกับบัญชี"</b> = จุดเริ่มรอบ · บัญชีตั้งหนี้ AP + หัก WHT 3% → จ่ายตามเครดิตเทอมในทะเบียนเจ้าหนี้ของช่างรายนั้น · ช่างใน = incentive เข้า payroll (ไม่ผ่านวางบิล)</div>
             <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
                 <button style="padding:8px 14px;background:#2563EB;color:#fff;border:none;border-radius:6px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit">📋 สรุปรายการ job (9.1)</button>
                 <button style="padding:8px 14px;background:#D97706;color:#fff;border:none;border-radius:6px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit">📤 ส่งวางบิลกับบัญชี (9.2)</button>
@@ -1005,6 +1009,100 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- SECTION 5: 2 ฟิลด์คอมมิชชั่น + เงื่อนไขเก็บเงินครบ -->
+        <div class="table-section">
+            <h2 class="section-title">💰 นับคอมมิชชั่น + สถานะจ่ายคอม — รายบิล (ต้องเก็บเงินครบก่อนถึงจ่าย)</h2>
+
+            <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:11px 15px;margin-bottom:14px;font-size:13px;color:#991B1B;line-height:1.6">
+              💰 <b>คอมมิชชั่น = 2 ฟิลด์แยกกัน + เงื่อนไขเก็บเงินครบ</b> (เคาะ 2026-07-21 · ตามที่ระบบเดิมทำ)<br>
+              <b>① นับคอมมิชชั่น</b> = บิลนี้เข้าเงื่อนไขคิดคอมไหม (ตั้งตอนออกบิล)<br>
+              <b>② สถานะจ่ายคอม</b> = จ่ายไปแล้วหรือยัง (ระบบอัปเดตเอง)<br>
+              🔴 <b>จ่ายคอมต่อเมื่อเก็บเงินครบแล้ว</b> — ยอดค้างชำระต้อง = 0 (ระบบเดิมใช้เงื่อนไข <code>DEBTBALANCE &lt;= 0</code>)<br>
+              <b>ทำไม:</b> ขายเชื่อแล้วจ่ายคอมทันทีทั้งที่ยังไม่เก็บเงิน = ถ้าลูกค้าไม่จ่าย <b>บริษัทเสียทั้งของและค่าคอม</b><br>
+              ⚠️ <b>ผู้พัฒนา: ห้ามรวม 2 ฟิลด์เป็นตัวเดียว</b> — จะแยกไม่ออกว่า "ไม่นับคอม" กับ "จ่ายไปแล้ว" → รายงานค้างจ่ายคอมผิด
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>บิลขาย</th>
+                            <th>ลูกค้า</th>
+                            <th>พนักงานขาย</th>
+                            <th class="text-right">ยอดบิล</th>
+                            <th class="text-right">ยอดค้างชำระ</th>
+                            <th>① นับคอมมิชชั่น</th>
+                            <th class="text-right">คอมที่คำนวณได้</th>
+                            <th>② สถานะจ่ายคอม</th>
+                            <th>จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>IV-B01-2604-0128</td>
+                            <td>คุณสมหญิง</td>
+                            <td>นาย สมชาย</td>
+                            <td class="text-right">฿32,900</td>
+                            <td class="text-right" style="color:#059669;font-weight:700">฿0</td>
+                            <td><span class="status-badge status-green">✅ นับคอม</span></td>
+                            <td class="text-right amount">฿658</td>
+                            <td><span class="status-badge status-green">💰 จ่ายแล้ว</span></td>
+                            <td><span style="font-size:12px;color:#6B7280">— จ่ายรอบ เม.ย. 26</span></td>
+                        </tr>
+                        <tr>
+                            <td>IV-B01-2605-0140</td>
+                            <td>ร้านไทยรุ่งเรือง</td>
+                            <td>นาย วิชัย</td>
+                            <td class="text-right">฿185,000</td>
+                            <td class="text-right" style="color:#059669;font-weight:700">฿0</td>
+                            <td><span class="status-badge status-green">✅ นับคอม</span></td>
+                            <td class="text-right amount">฿3,700</td>
+                            <td><span class="status-badge status-amber">✅ พร้อมจ่าย</span></td>
+                            <td><button class="btn btn-primary" style="padding:5px 12px;font-size:12px">จ่ายคอมรอบนี้</button></td>
+                        </tr>
+                        <tr style="background:#FFFBEB">
+                            <td>IV-B01-2605-0147</td>
+                            <td>หจก.บ้านสวยวัสดุ</td>
+                            <td>นาย วิชัย</td>
+                            <td class="text-right">฿240,000</td>
+                            <td class="text-right" style="color:#B91C1C;font-weight:700">฿240,000</td>
+                            <td><span class="status-badge status-green">✅ นับคอม</span></td>
+                            <td class="text-right amount">฿4,800</td>
+                            <td><span class="status-badge status-amber">⏳ รอเก็บเงินครบ</span></td>
+                            <td><button class="btn btn-outline" style="padding:5px 12px;font-size:12px;opacity:0.5;cursor:not-allowed" disabled>จ่ายคอมไม่ได้ — ยังค้าง</button></td>
+                        </tr>
+                        <tr style="background:#FFFBEB">
+                            <td>IV-B02-2605-0033</td>
+                            <td>คุณอรุณี</td>
+                            <td>นาง สมหญิง</td>
+                            <td class="text-right">฿58,400</td>
+                            <td class="text-right" style="color:#B91C1C;font-weight:700">฿18,400</td>
+                            <td><span class="status-badge status-green">✅ นับคอม</span></td>
+                            <td class="text-right amount">฿1,168</td>
+                            <td><span class="status-badge status-amber">⏳ รอเก็บเงินครบ</span></td>
+                            <td><button class="btn btn-outline" style="padding:5px 12px;font-size:12px;opacity:0.5;cursor:not-allowed" disabled>จ่ายคอมไม่ได้ — ยังค้าง</button></td>
+                        </tr>
+                        <tr>
+                            <td>IV-B01-2605-0151</td>
+                            <td>บจก.แสงชัยการช่าง (ขายทุน)</td>
+                            <td>นาง นิชชา</td>
+                            <td class="text-right">฿96,000</td>
+                            <td class="text-right" style="color:#059669;font-weight:700">฿0</td>
+                            <td><span class="status-badge status-red">🚫 ไม่นับคอม</span></td>
+                            <td class="text-right amount">฿0</td>
+                            <td><span class="status-badge status-red">— ไม่เข้าเงื่อนไข</span></td>
+                            <td><span style="font-size:12px;color:#6B7280">ตั้งไว้ตอนออกบิล</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top:10px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:9px 13px;font-size:12px;color:#1E40AF;line-height:1.6">
+              📌 <b>อ่านตารางนี้ยังไง:</b> คอลัมน์ ① บอกว่า "บิลนี้คิดคอมไหม" · คอลัมน์ ② บอกว่า "ถึงคิวจ่ายหรือยัง" — <b>แถวที่ยอดค้างชำระ &gt; 0 จะขึ้น ⏳ รอเก็บเงินครบ และปุ่มจ่ายจะกดไม่ได้</b><br>
+              🔎 บิลที่ตั้งไว้ว่า <b>🚫 ไม่นับคอม</b> (เช่น ขายทุน/ขายพิเศษ) จะไม่เข้ารายงานค้างจ่ายคอมเลย — คนละความหมายกับ "💰 จ่ายแล้ว"
             </div>
         </div>
 

@@ -87,6 +87,7 @@ table.st td{padding:7px 10px;border-bottom:1px solid #F3F4F6}
         <div class="fld"><span class="l">เลขพร้อมเพย์ / E-TAX</span><span class="v ro">099-4-12345-6 · E-TAX ปิด</span></div>
       </div>
       <div class="bc-note">🔒 BC เป็นเจ้าของข้อมูลบริษัท (CF-2.9) — พอร์ทัลอ่านมาโชว์ · แก้ต้องทำที่ BC เพื่อกันข้อมูล 2 ที่ขัดกัน</div>
+      <div class="bc-note">🏢 <b>ระบบนี้ตั้งค่าให้ SWT (แสงวิจิตร เทรดดิ้ง) บริษัทเดียวเท่านั้น</b> (เคาะ 2026-07-21) — <b>ไม่มีตัวสลับนิติบุคคล</b> ในหน้านี้ · หน่วยแบ่งภายในระบบคือ <b>สาขา</b> (ดูทะเบียนที่หน้า ทะเบียนสาขา &amp; คลัง) · ถ้าอนาคตมีหลายบริษัท จะจัดการนอกระบบนี้ ไม่ฟิกนิติบุคคลในรายละเอียดเอกสาร</div>
     </div>
   </div>
 
@@ -96,7 +97,7 @@ table.st td{padding:7px 10px;border-bottom:1px solid #F3F4F6}
       <div class="card-h">⚙️ ค่าระบบ (Options) <span class="lock">🔒 จาก BC</span></div>
       <div class="opt-row">เปิดใช้ระบบสิทธิ์ <span class="on">Open</span></div>
       <div class="opt-row">การบันทึกบัญชีต้นทุน <span class="on">Periodic</span></div>
-      <div class="opt-row">ต้นทุนสินค้าเริ่มต้น <span class="on">FIFO/LOT</span></div>
+      <div class="opt-row">ต้นทุนสินค้าเริ่มต้น <span class="on">ถัวเฉลี่ยเคลื่อนที่ (Moving Average)</span> <span class="opt-tag">🔒 เคาะ 2026-07-20 — ห้ามใช้ FIFO</span></div>
       <div class="opt-row">การคำนวณส่วนลดขาย <span class="on">Price</span></div>
       <div class="opt-row">อนุมัติก่อนถึงพิมพ์ได้ <span class="opt-tag">🔗 พอร์ทัล: gate ปุ่มพิมพ์</span> <span class="on">ON</span></div>
       <div class="opt-row">เช็คในมือกันวงเงิน <span class="opt-tag">🔗 พอร์ทัล: credit check</span> <span class="on">✓</span></div>
@@ -142,14 +143,14 @@ table.st td{padding:7px 10px;border-bottom:1px solid #F3F4F6}
   <!-- ④ เชื่อมธนาคาร (ย้ายจาก cf-bank-status · Q6ก 2026-07-12) -->
   <div class="pane" id="p-bank">
     <div class="card">
-      <div class="card-h">🏦 สถานะเชื่อมต่อธนาคาร (4 นิติบุคคล) <span class="lock">🔒 credential ตั้งที่ BC (Grill A3) · พอร์ทัลแสดง + สั่ง sync</span></div>
+      <div class="card-h">🏦 สถานะเชื่อมต่อธนาคาร (บัญชีของ SWT) <span class="lock">🔒 credential ตั้งที่ BC (Grill A3) · พอร์ทัลแสดง + สั่ง sync</span></div>
       <table class="st">
-        <thead><tr><th>นิติบุคคล</th><th>ธนาคาร / บัญชี</th><th style="width:150px">สถานะ</th><th style="width:150px">sync ล่าสุด</th><th style="width:120px"></th></tr></thead>
+        <thead><tr><th>บัญชี / วัตถุประสงค์</th><th>ธนาคาร / เลขบัญชี</th><th style="width:150px">สถานะ</th><th style="width:150px">sync ล่าสุด</th><th style="width:120px"></th></tr></thead>
         <tbody>
-          <tr><td><b>SWT</b> แสงวิจิตร เทรดดิ้ง</td><td>กสิกรไทย 547-2-55623-9</td><td><span style="color:#166534;font-weight:700">✅ เชื่อมแล้ว</span></td><td>12 ก.ค. 26 08:30</td><td><button class="sel" style="cursor:pointer">🔄 sync ตอนนี้</button></td></tr>
-          <tr><td><b>SWE</b></td><td>กสิกรไทย 547-2-88114-2</td><td><span style="color:#166534;font-weight:700">✅ เชื่อมแล้ว</span></td><td>12 ก.ค. 26 08:30</td><td><button class="sel" style="cursor:pointer">🔄 sync ตอนนี้</button></td></tr>
-          <tr><td><b>VMN</b></td><td>ไทยพาณิชย์ 402-1-33871-5</td><td><span style="color:#B45309;font-weight:700">⚠️ token หมดอายุ</span></td><td>10 ก.ค. 26 17:02</td><td><button class="sel" style="cursor:pointer">แก้ที่ BC ↗</button></td></tr>
-          <tr><td><b>WPS</b></td><td>กรุงเทพ 118-4-22903-7</td><td><span style="color:#6B7280;font-weight:700">⏸️ ยังไม่เปิดใช้</span></td><td>—</td><td></td></tr>
+          <tr><td><b>บัญชีหลัก</b> รับ-จ่ายทั่วไป</td><td>กสิกรไทย 547-2-55623-9</td><td><span style="color:#166534;font-weight:700">✅ เชื่อมแล้ว</span></td><td>12 ก.ค. 26 08:30</td><td><button class="sel" style="cursor:pointer">🔄 sync ตอนนี้</button></td></tr>
+          <tr><td><b>บัญชีรับเงินสาขา</b></td><td>กสิกรไทย 547-2-88114-2</td><td><span style="color:#166534;font-weight:700">✅ เชื่อมแล้ว</span></td><td>12 ก.ค. 26 08:30</td><td><button class="sel" style="cursor:pointer">🔄 sync ตอนนี้</button></td></tr>
+          <tr><td><b>บัญชีขายผ่อน</b></td><td>ไทยพาณิชย์ 402-1-33871-5</td><td><span style="color:#B45309;font-weight:700">⚠️ token หมดอายุ</span></td><td>10 ก.ค. 26 17:02</td><td><button class="sel" style="cursor:pointer">แก้ที่ BC ↗</button></td></tr>
+          <tr><td><b>บัญชีสำรอง</b></td><td>กรุงเทพ 118-4-22903-7</td><td><span style="color:#6B7280;font-weight:700">⏸️ ยังไม่เปิดใช้</span></td><td>—</td><td></td></tr>
         </tbody>
       </table>
       <div class="bc-note">🔄 sync ดึง statement เข้า → รายการเงินเข้าไปที่ <b>FI-1Q คิวจับคู่</b> · กระทบยอดรายเดือน = <b>BC Bank Reconciliation</b> (native · Q5ก cut จาก portal) · treasury/forecast = BC Cash Flow Forecast (Q8ก)</div>

@@ -71,7 +71,7 @@
 | PO-2 | RFQ / Vendor Compare | ✅ | — |
 | PO-3 | Vendor Onboarding | ✅ | — |
 | PO-4 | Purchase Order (PO) | ✅ B5 | 📋 `po4-purchase-order-mockup.html` |
-| PO-5 | GRN (ใบรับสินค้า) | ✅ | — |
+| ~~PO-5~~ | ~~GRN ฝั่งบัญชี~~ | ⛔ ตัดถาวร 2026-06-08 | **ใบรับสินค้าของคลัง (WH-1) = เจ้าเดียวที่รับของ** · บัญชีเข้าดูผ่านสิทธิ์ RBAC |
 | PO-6 | AP Invoice | ✅ | — |
 | PO-7 | Sale-In Accrual | 🆕 | — |
 | PO-8 | สั่งซื้อสินค้าฝาก (Deposit Bill · ชื่อเดิม "บิลฝาก") | 🆕 | 📋 `po8-deposit-bill-mockup.html` |

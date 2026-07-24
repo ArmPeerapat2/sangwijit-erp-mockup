@@ -92,7 +92,7 @@
 | 01 Vendor | PO-3 | po3-vendor-onboarding | ✅ | — | P1 | A |
 | 02 PR | PO-1 | po1-purchase-request | ✅ | — | P1 | A |
 | 03 PO | PO-4 | po4-purchase-order | ✅ | — | P1 | A |
-| 04 Receipt | PO-5 / WH-1 | po5-finance-grn / wh1-grn | ✅ | boundary: ตั้งหนี้-รับ=PO-5 · คลังรับเข้า=WH-1 (ระบุชัดในหน้า) | P1 | V |
+| 04 Receipt | **WH-1 เท่านั้น** | `wh1-receive-mockup.html` | ⚠️ **แก้ 2026-07-21** | ~~boundary PO-5/WH-1~~ **ยกเลิก** — ไม่มีหน้ารับฝั่งบัญชีแล้ว · **ใบรับสินค้าของคลัง = เจ้าเดียวที่รับของ** · บัญชีเข้าดูผ่านสิทธิ์ RBAC · ใบตั้งหนี้อ่านยอดรับสะสมเป็น gate ไม่แตะสต็อก | P1 | V |
 | 05 Invoice (ตั้งหนี้+ภาษี) | PO-6 | po6-ap-invoice | ✅ | — | P1 | A |
 | 06 Deposit bill | PO-8 | po8-deposit-bill | ✅ | — | P1 | A |
 | (RFQ — เสริม) | PO-2 | po2-rfq | ✅ | — | P1 | A |

@@ -142,7 +142,7 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
   </div>
   <div class="swt-mh-right">
     <span class="swt-mh-badge draft">🕓 รอมอบหมาย</span>
-    <button class="swt-mh-btn swt-mh-btn-ghost">💾 บันทึก Draft</button>
+    <button class="swt-mh-btn swt-mh-btn-ghost" onclick="if(svCanSave()) alert('บันทึกร่างแล้ว (ตัวอย่าง)');">💾 บันทึก Draft</button>
     <button class="swt-mh-btn swt-mh-btn-primary">→ ส่งต่อ SV-2</button>
   </div>
 </header>
@@ -151,7 +151,7 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
 <div class="saab">
   <button class="btn btn-secondary">📂 เปิดเอกสารเก่า</button>
   <button class="btn btn-secondary">📋 Copy</button>
-  <button class="btn btn-secondary">🖨️ พิมพ์ใบรับ</button>
+  <button class="btn btn-secondary" title="ใบรับพิมพ์เงื่อนไขท้ายใบ: เกิน 30 วันคิดค่าฝาก 20฿/วัน · เกิน 90 วันถือว่าสละสิทธิ์ (ลูกค้าเซ็นรับทราบ = ฐานตอนตัดจำหน่าย · ปฏิบัติจริงยืดหยุ่น — เคาะ 07-20)">🖨️ พิมพ์ใบรับ ⓘ</button>
   <button class="btn btn-secondary" onclick="location.href='_archive/sir-site-inspection-mockup-2026-07-12.html'">🔍 ขอประเมินหน้างาน (SIR)</button>
   <div class="saab-spacer"></div>
   <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
@@ -235,8 +235,12 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
       <div class="swt-cust-field">
         <div class="swt-cust-label">ช่องทางรับเรื่อง</div>
         <div class="swt-cust-value">
-          <select style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"><option>🏢 ลูกค้านำมาสาขา</option><option>📞 โทรศัพท์</option><option>💚 LINE</option><option>🚶 Walk-in</option><option>🌐 Online</option></select>
+          <select style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"><option>🏢 ลูกค้านำมาสาขา</option><option>📞 โทรศัพท์</option><option>💚 LINE</option><option>🚶 Walk-in</option><option>🌐 Online</option><option>🏭 ศูนย์บริการแบรนด์ส่งงานมา</option><option>📄 สัญญา MA (ตามรอบ)</option><option>🛠️ จากงานขาย/ติดตั้ง</option></select>
         </div>
+      </div>
+      <div class="swt-cust-field">
+        <div class="swt-cust-label">เลขเอกสารศูนย์ <span style="font-weight:400;color:#9CA3AF">(กรณีศูนย์/แบรนด์ส่งมา)</span></div>
+        <div class="swt-cust-value"><input type="text" placeholder="เช่น LG-CASE-2569-08123" style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"><div style="font-size:10px;color:#9CA3AF;margin-top:2px">ใช้อ้างอิงตอนเคลมแบรนด์</div></div>
       </div>
       <div class="swt-cust-field">
         <div class="swt-cust-label">พนักงานรับเรื่อง</div>
@@ -300,6 +304,7 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
       <label class="res-opt" onclick="svRes('E')"><input type="radio" name="svres" value="E"><span class="rc">E</span><span>เจอ S/N แต่ <b>ซื้อจากที่อื่น</b> → เช็คแบรนด์ · เข้าเงื่อนไข → ซ่อม+เคลมอะไหล่/ค่าแรงได้</span><span class="res-drive">→ In (แบรนด์) · เปลี่ยนเครื่องใหม่ไม่ได้</span></label>
     </div>
     <div id="svResC" style="display:none;padding:9px 14px;background:#DBEAFE;border-top:1px solid #93C5FD;font-size:12px;color:#1E40AF">🔗 <b>C · มีงานค้าง:</b> พบ <b>SVJ-260210</b> (เปิด 28/06/26 · รออะไหล่) — <a href="sv5-job-card-mockup.html" style="color:#1E40AF;font-weight:600">เปิดงานเดิมต่อ</a> แทนสร้างใหม่</div>
+    <div style="padding:7px 14px;background:#FFF7ED;border-top:1px solid #FED7AA;font-size:11px;color:#9A3412">🔁 <b>เปิดซ้ำ (rework):</b> อาการเดิมภายในประกันงานซ่อม 30 วัน = ไม่คิดเงินลูกค้า + ตัด incentive ช่างเดิม (หักที่ CM-1) · แอดมินตัดสิน อาการเดิม/อาการใหม่</div>
     <div id="svResD" style="display:none;padding:9px 14px;background:#FEF3C7;border-top:1px solid #FCD34D;font-size:12px;color:#92400E">⚠️ <b>D · ไม่เจอ S/N:</b> กรอกรุ่น/วันซื้อ manual + แนบใบเสร็จ/รูปเครื่อง → สถานะ <b>Release (รอ admin ยืนยัน)</b> ก่อนเข้าเคลม (Maker≠Checker)</div>
   </div>
 
@@ -352,11 +357,46 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
   </div>
 
   <div class="form-grid-2" style="margin-top:14px">
-    <div class="field"><label>อาการที่ลูกค้าแจ้ง <span class="req">*</span></label>
-      <textarea>เปิดแล้วไม่เย็น · มีน้ำหยดจากเครื่องตัวเมียข้างใน · ได้ยินเสียงดังตอนคอมทำงาน</textarea>
+    <div class="field"><label>รหัสอาการเสีย <span class="req">*</span> <span style="font-weight:400;color:#9CA3AF">— เลือกจากรายการ (ตั้งค่าที่แม่แบบเอกสาร)</span></label>
+      <select id="svFaultCode" onchange="svFault()">
+        <option value="F01" selected>F01 · ไม่เย็น / ความเย็นน้อย</option>
+        <option value="F02">F02 · มีน้ำรั่ว / น้ำหยด</option>
+        <option value="F03">F03 · เปิดไม่ติด / ไม่ทำงาน</option>
+        <option value="F04">F04 · เสียงดังผิดปกติ</option>
+        <option value="F05">F05 · มีกลิ่นเหม็น</option>
+        <option value="F06">F06 · ไฟรั่ว / ไฟช็อต</option>
+        <option value="F07">F07 · รีโมทใช้ไม่ได้</option>
+        <option value="F08">F08 · ตัดการทำงานเอง</option>
+        <option value="F09">F09 · ตัวเครื่องชำรุด/แตกหัก</option>
+        <option value="F10">F10 · ติดตั้งไม่ถูกต้อง</option>
+        <option value="F99">F99 · อื่น ๆ (ระบุในช่องบรรยาย)</option>
+      </select>
+      <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">
+        <span class="chip chip-blue" id="svFaultChip">F01 · ไม่เย็น / ความเย็นน้อย</span>
+        <span class="chip chip-gray">อาการรอง (ถ้ามี): F02 · มีน้ำรั่ว / น้ำหยด</span>
+      </div>
+      <div id="svFaultF99" style="display:none;margin-top:6px;font-size:11px;color:#92400E;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:6px 10px">⚠️ เลือก <b>F99 อื่น ๆ</b> — <b>ต้องกรอกช่องบรรยายเพิ่มเติมด้านล่าง</b> ห้ามปล่อยว่าง (ห้ามมี "อื่น ๆ" ปลายเปิดที่ไม่มีรายละเอียด)</div>
     </div>
+    <div class="field"><label>บรรยายอาการเพิ่มเติม (ตามคำลูกค้า) <span id="svFaultReq" style="display:none;color:#DC2626;font-weight:700">*</span></label>
+      <div id="svFaultErr" style="display:none;margin-bottom:5px;font-size:11px;color:#991B1B;background:#FEE2E2;border:1px solid #FCA5A5;border-radius:5px;padding:5px 9px">⛔ เลือก "F99 อื่น ๆ" แล้ว <b>ต้องกรอกช่องนี้</b> — บันทึกไม่ได้ถ้าปล่อยว่าง</div>
+      <textarea id="svFaultNote" oninput="svFaultValidate()">เปิดแล้วไม่เย็น · มีน้ำหยดจากเครื่องตัวเมียข้างใน · ได้ยินเสียงดังตอนคอมทำงาน</textarea>
+    </div>
+  </div>
+
+  <div class="alert alert-info" style="margin:12px 0 0">
+    🔧 <div><strong>อาการเสียเป็นรหัส + ช่องบรรยายเพิ่ม</strong> (เคาะ 2026-07-21)<br>
+    <strong>ทำไมต้องเป็นรหัส:</strong> ถ้าพิมพ์อิสระอย่างเดียว <strong>สิ้นปีจะตอบไม่ได้ว่า "รุ่นไหนเสียเรื่องอะไรบ่อย"</strong> เพราะคนพิมพ์ "ไม่เย็น" กับ "ความเย็นน้อย" คือเรื่องเดียวกันแต่ระบบนับแยก<br>
+    <strong>เลือกรหัสก่อน แล้วพิมพ์รายละเอียดเพิ่มได้</strong> — ได้ทั้งรายงานและรายละเอียดครบ<br>
+    📌 pattern เดียวกับ <strong>ผังเหตุผลปรับสต็อก</strong> ที่เคาะไว้ (รหัสปิด + ช่องบรรยาย · ห้ามมี "อื่น ๆ" ปลายเปิดที่ไม่มีรายละเอียด)<br>
+    📌 รายการรหัสตั้งค่าที่ <a href="cf2-7-doc-template-mockup.html" style="color:#1E40AF;font-weight:700">แม่แบบเอกสาร → ทะเบียนรหัสอาการเสีย ↗</a> · ระบบเดิมมีตารางรหัสอาการเสียทำแบบนี้มาตลอด</div>
+  </div>
+
+  <div class="form-grid-2" style="margin-top:14px">
     <div class="field"><label>การตรวจสอบเบื้องต้น (พนักงานรับเรื่อง)</label>
       <textarea>เปิดลองเย็นเล็กน้อยแต่ไม่เย็นพอ · น่าจะเป็น Compressor หรือน้ำยารั่ว · ต้องส่งช่างตรวจที่บ้าน</textarea>
+    </div>
+    <div class="field"><label>ผู้บันทึกอาการ</label>
+      <input value="คุณปภาวรินทร์ · ADM-002" readonly>
     </div>
   </div>
 
@@ -557,6 +597,44 @@ function svRes(x){
   var w=(x==='A'||x==='E')?'in':(x==='B')?'out':(x==='D')?'release':null;
   if(w){ var r=document.querySelector('input[name="warranty"][value="'+w+'"]'); if(r){ r.checked=true; svWarr(w);
       document.querySelectorAll('input[name="warranty"]').forEach(function(i){ i.closest('.warranty-card').classList.toggle('selected', i.value===w); }); } }
+}
+// รหัสอาการเสีย: อัปเดตชิป + เตือนเมื่อเลือก F99 อื่น ๆ
+function svFault(){
+  var s=document.getElementById('svFaultCode');
+  var chip=document.getElementById('svFaultChip');
+  if(chip) chip.textContent=s.options[s.selectedIndex].text;
+  var w=document.getElementById('svFaultF99');
+  var isOther=(s.value==='F99');
+  if(w) w.style.display=isOther?'block':'none';
+  // F99 = บังคับกรอกช่องบรรยายจริง (ไม่ใช่แค่เตือน) — เคาะ 2026-07-21
+  var req=document.getElementById('svFaultReq');
+  if(req) req.style.display=isOther?'inline':'none';
+  var note=document.getElementById('svFaultNote');
+  if(note){
+    note.required=isOther;
+    note.style.borderColor=isOther?'#F59E0B':'';
+    note.placeholder=isOther?'บังคับกรอก — อธิบายอาการให้ชัด เพราะเลือก "อื่น ๆ" แล้วรายงานจัดกลุ่มไม่ได้':'';
+  }
+  svFaultValidate();
+}
+/* ตรวจตอนกดบันทึก — F99 ต้องมีคำบรรยาย ไม่งั้นบันทึกไม่ได้ */
+function svFaultValidate(){
+  var s=document.getElementById('svFaultCode');
+  var note=document.getElementById('svFaultNote');
+  var msg=document.getElementById('svFaultErr');
+  if(!s||!note) return true;
+  var bad=(s.value==='F99') && note.value.trim()==='';
+  if(msg) msg.style.display=bad?'block':'none';
+  return !bad;
+}
+/* เรียกจากปุ่มบันทึก — คืน false = ไม่ให้บันทึก */
+function svCanSave(){
+  if(!svFaultValidate()){
+    alert('บันทึกไม่ได้ — เลือกอาการ "F99 อื่น ๆ" แล้วต้องกรอกช่องบรรยายอาการด้วย\n\nเหตุผล: ถ้าปล่อยว่าง จะไม่รู้ว่าเสียเรื่องอะไร และรายงาน "รุ่นไหนเสียบ่อย" จะใช้ไม่ได้');
+    var n=document.getElementById('svFaultNote'); if(n) n.focus();
+    return false;
+  }
+  return true;
 }
 function svResolve(){ alert('ตรวจ Serial ใหม่ (mock)\nระบบ query itemLedger (BC) → resolve เมนู A-E อัตโนมัติ · พนักงาน override เลือกเองได้'); }
 // B3: เพิ่มแถวประกันรายชิ้น (manual · scope เฉพาะชิ้นเกี่ยวงาน + เพิ่มได้)

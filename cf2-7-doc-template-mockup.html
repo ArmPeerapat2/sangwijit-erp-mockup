@@ -135,6 +135,8 @@ tbody tr:hover td{background:#F8FAFC}
         <div class="tb on" onclick="switchPanel('doctype',this)">A · ประเภทเอกสาร</div>
         <div class="tb" onclick="switchPanel('group',this)">B · กลุ่มเอกสาร</div>
         <div class="tb" onclick="switchPanel('letter',this)">C · หัวกระดาษ (SWT)</div>
+        <div class="tb" onclick="switchPanel('fault',this)">D · ทะเบียนรหัสอาการเสีย</div>
+        <div class="tb" onclick="switchPanel('dim',this)">E · ทะเบียนมิติเอกสาร</div>
       </div>
     </div>
 
@@ -219,6 +221,110 @@ tbody tr:hover td{background:#F8FAFC}
       </div>
     </div>
 
+    <!-- Panel D: Fault Code Register -->
+    <div class="panel" id="panel-fault">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h2>ทะเบียนรหัสอาการเสีย (Fault Code)</h2>
+            <div class="d">รหัสปิด + ช่องบรรยาย · ใช้ตอนรับงานซ่อม เพื่อให้สรุปได้ว่า "รุ่นไหนเสียเรื่องอะไรบ่อย"</div>
+          </div>
+          <button class="btn b1 btn-sm" onclick="toast('เพิ่มรหัสอาการ (mock)')">+ เพิ่มรหัสอาการ</button>
+        </div>
+        <table>
+          <thead><tr><th style="width:110px">รหัส</th><th>ชื่ออาการ</th><th style="width:130px">เปิดใช้งาน</th><th style="width:90px"></th></tr></thead>
+          <tbody id="fault-table"></tbody>
+        </table>
+        <div class="note-ok" style="margin:14px 18px 18px">
+          <span>🔧</span>
+          <div><b>ตั้งค่าที่นี่ → ไปแสดงเป็น dropdown ที่หน้ารับงานซ่อม</b> (เคาะ 2026-07-21) ·
+          เพิ่ม/ปิดรหัสที่หน้านี้ แล้วช่อง "รหัสอาการเสีย" ที่
+          <a href="sv1-service-intake-mockup.html" style="color:#1D4ED8;font-weight:700;text-decoration:none">ใบรับงานซ่อม ↗</a> จะเปลี่ยนตามทันที<br>
+          <b>F99 อื่น ๆ</b> บังคับให้กรอกช่องบรรยายเพิ่มเติมเสมอ — ห้ามมี "อื่น ๆ" ปลายเปิดที่ไม่มีรายละเอียด ·
+          pattern เดียวกับผังเหตุผลปรับสต็อก · ระบบเดิมมีตารางรหัสอาการเสียทำแบบนี้มาตลอด</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel E: Document Dimension Registers (5 มิติมาตรฐาน) -->
+    <div class="panel" id="panel-dim">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h2>ทะเบียนมิติเอกสาร (5 มิติมาตรฐาน)</h2>
+            <div class="d">กลุ่มเอกสาร · แผนก · โครงการ · การจัดสรร · สาขา — ตรงกับ ERP เดิม (DOCGROUP · DEPARTMENT · PROJECT · ALLOCATECODE · SITECODE)</div>
+          </div>
+        </div>
+
+        <div class="note-ok" style="margin:14px 18px 0;background:#EFF6FF;border-color:#BFDBFE;color:#1E40AF">
+          <span>🗂️</span>
+          <div><b>ตั้งค่าที่นี่ → ไปแสดงเป็น dropdown บนหัวเอกสารทุกใบ</b> (เคาะ 2026-07-21) ·
+          เพิ่ม/ปิดรายการที่หน้านี้ แล้วช่องมิติทั้ง 5 ที่
+          <a href="sl4-invoice-mockup.html" style="color:#1D4ED8;font-weight:700;text-decoration:none">บิลขาย ↗</a> ·
+          <a href="slcn-credit-memo-mockup.html" style="color:#1D4ED8;font-weight:700;text-decoration:none">ใบลดหนี้ ↗</a> ·
+          <a href="sl3-deposit-mockup.html" style="color:#1D4ED8;font-weight:700;text-decoration:none">ใบมัดจำ ↗</a> ·
+          <a href="sqt-service-quotation-mockup.html" style="color:#1D4ED8;font-weight:700;text-decoration:none">ใบเสนอราคางานบริการ ↗</a>
+          จะเปลี่ยนตามทันที · ไม่ hardcode ในหน้าจอ<br>
+          <b>กลุ่มเอกสาร</b> ใช้ทะเบียนเดิมที่แท็บ <b>B · กลุ่มเอกสาร</b> — ไม่ทำซ้ำที่นี่</div>
+        </div>
+
+        <!-- E1 · แผนก (DEPARTMENT) -->
+        <div class="card-head" style="border-top:1px solid #E5E7EB;margin-top:14px">
+          <div>
+            <h2>E1 · แผนก (DEPARTMENT)</h2>
+            <div class="d">แผนกที่รับผิดชอบเอกสาร · ใช้กรองรายงานแยกตามแผนก</div>
+          </div>
+          <button class="btn b1 btn-sm" onclick="toast('เพิ่มแผนก (mock)')">+ เพิ่มรายการ</button>
+        </div>
+        <table>
+          <thead><tr><th style="width:130px">รหัส</th><th>ชื่อ</th><th style="width:130px">เปิดใช้งาน</th><th style="width:90px"></th></tr></thead>
+          <tbody id="dept-table"></tbody>
+        </table>
+
+        <!-- E2 · โครงการ (PROJECT) -->
+        <div class="card-head" style="border-top:1px solid #E5E7EB">
+          <div>
+            <h2>E2 · โครงการ (PROJECT)</h2>
+            <div class="d">โครงการที่เอกสารสังกัด · มีวันเริ่ม-สิ้นสุด + วงเงิน (ตาราง CSPROJECT: STARTDATE · STOPDATE · AMOUNT)</div>
+          </div>
+          <button class="btn b1 btn-sm" onclick="toast('เพิ่มโครงการ (mock)')">+ เพิ่มรายการ</button>
+        </div>
+        <table>
+          <thead><tr><th style="width:120px">รหัส</th><th>ชื่อ</th><th style="width:110px">วันเริ่ม</th><th style="width:110px">วันสิ้นสุด</th><th style="width:130px">วงเงิน</th><th style="width:120px">เปิดใช้งาน</th><th style="width:90px"></th></tr></thead>
+          <tbody id="proj-table"></tbody>
+        </table>
+
+        <!-- E3 · การจัดสรร (ALLOCATECODE) -->
+        <div class="card-head" style="border-top:1px solid #E5E7EB">
+          <div>
+            <h2>E3 · การจัดสรร (ALLOCATECODE)</h2>
+            <div class="d">ป้ายแบ่งกลุ่มอิสระ · ไม่มีตรรกะใด ๆ ผูกอยู่ (ตาราง CSALLOCATE = รหัส · ชื่อ · เปิดใช้งาน)</div>
+          </div>
+          <button class="btn b1 btn-sm" onclick="toast('เพิ่มการจัดสรร (mock)')">+ เพิ่มรายการ</button>
+        </div>
+        <table>
+          <thead><tr><th style="width:130px">รหัส</th><th>ชื่อ</th><th style="width:130px">เปิดใช้งาน</th><th style="width:90px"></th></tr></thead>
+          <tbody id="alloc-table"></tbody>
+        </table>
+
+        <!-- E4 · สาขา (SITECODE) -->
+        <div class="card-head" style="border-top:1px solid #E5E7EB">
+          <div>
+            <h2>E4 · สาขา (SITECODE)</h2>
+            <div class="d">อ้างอิงทะเบียนเดิม — ไม่ทำซ้ำที่นี่</div>
+          </div>
+          <button class="btn b-ghost btn-sm" onclick="location.href='md5-branch-warehouse-mockup-v3.html'">ไปทะเบียนสาขา &amp; คลัง →</button>
+        </div>
+        <div class="note-ok" style="margin:14px 18px 18px">
+          <span>🏢</span>
+          <div><b>สาขาใช้ทะเบียนเดียวกับ</b>
+          <a href="md5-branch-warehouse-mockup-v3.html" style="color:#1D4ED8;font-weight:700;text-decoration:none">ทะเบียนสาขา &amp; คลัง ↗</a> —
+          เพิ่ม/แก้สาขาที่นั่นที่เดียว แล้ว dropdown "สาขา" บนหัวเอกสารทุกใบเปลี่ยนตาม<br>
+          ตัวอย่างที่ใช้อยู่: TPM เทรดดิ้ง (โกดัง) · SWE1 สำนักงานใหญ่ · 07 ศูนย์บริการซ่อม-เคลม · SHO สาขา 10</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </main>
 
@@ -229,7 +335,7 @@ tbody tr:hover td{background:#F8FAFC}
 const GROUPS=[
   {code:'CSSALE',    name:'กลุ่มเอกสารขาย',    desc:'ใบเสนอราคา · ใบสั่งขาย · ใบกำกับภาษี · มัดจำ'},
   {code:'CSPURCHASE',name:'กลุ่มเอกสารซื้อ',    desc:'ใบสั่งซื้อ · ใบรับสินค้า · ตั้งหนี้'},
-  {code:'CSTRANSFER',name:'กลุ่มโอน/เบิก',      desc:'ใบขอเบิก · ใบโอนสินค้าระหว่างสาขา'},
+  {code:'CSTRANSFER',name:'กลุ่มเอกสารคลัง',    desc:'ใบขอเบิก · ใบโอนสินค้าระหว่างสาขา · ใบปรับสต็อก · ใบนับสินค้า · ใบตัดจำหน่าย'},
   {code:'CSSERVICE', name:'กลุ่มเอกสารซ่อม',    desc:'ใบรับงานซ่อม · ใบส่งมอบงาน'},
   {code:'CSFINANCE', name:'กลุ่มการเงิน',       desc:'ใบรับชำระ · ใบลดหนี้ · ใบเพิ่มหนี้'},
 ];
@@ -246,6 +352,9 @@ const DOCTYPES=[
   {code:'AP', name:'ตั้งหนี้ Vendor',   en:'AP Invoice',       grp:'CSPURCHASE',tax:'vat',  rate:'7.00', price:'ex', pay:'credit',kind:'good', on:true,  note:'ภาษีซื้อ · ต้องรับครบก่อนตั้งหนี้'},
   {code:'S',  name:'ใบขอเบิก',          en:'Stock Requisition',grp:'CSTRANSFER',tax:'novat',rate:'0.00', price:'ex', pay:'credit',kind:'good', on:true,  note:'เบิกภายใน · ไม่มีภาษี'},
   {code:'TR', name:'ใบโอนสินค้า',       en:'Stock Transfer',   grp:'CSTRANSFER',tax:'novat',rate:'0.00', price:'ex', pay:'credit',kind:'good', on:true,  note:'โอนระหว่างสาขา/คลัง'},
+  {code:'ADJ',name:'ใบปรับสต็อก',       en:'Stock Adjustment', grp:'CSTRANSFER',tax:'novat',rate:'0.00', price:'ex', pay:'credit',kind:'good', on:true,  note:'ปรับนอกรอบนับ · ลงบัญชีตามผังเหตุผล · ตัดออก (−) ต้องแนบรูป'},
+  {code:'CNT',name:'ใบนับสินค้า',       en:'Stock Count',      grp:'CSTRANSFER',tax:'novat',rate:'0.00', price:'ex', pay:'credit',kind:'good', on:true,  note:'ส่วนต่าง = นับจริง − (ยอดตั้งต้น + เคลื่อนไหวระหว่างนับ)'},
+  {code:'WOF',name:'ใบตัดจำหน่าย',      en:'Write-off',        grp:'CSTRANSFER',tax:'novat',rate:'0.00', price:'ex', pay:'credit',kind:'good', on:true,  note:'เครื่องลูกค้าตกค้าง · บังคับแนบหลักฐานแจ้ง 7/30/60 วัน'},
   {code:'SVC',name:'ใบรับงานซ่อม',      en:'Service Order',    grp:'CSSERVICE', tax:'vat',  rate:'7.00', price:'ex', pay:'both',  kind:'svc',  on:true,  note:'งานบริการ · คิดค่าแรง+อะไหล่'},
   {code:'RV', name:'ใบรับชำระ',         en:'Cash Receipt',     grp:'CSFINANCE', tax:'novat',rate:'0.00', price:'inc',pay:'cash',  kind:'none', on:true,  note:'รับชำระ AR (FI-1)'},
   {code:'CN', name:'ใบลดหนี้',          en:'Credit Note',      grp:'CSFINANCE', tax:'vat',  rate:'7.00', price:'ex', pay:'credit',kind:'good', on:true,  note:'ลดหนี้/คืนสินค้า · ปรับภาษีขาย'},
@@ -346,6 +455,74 @@ function renderGroupTable(){
   }).join('');
 }
 
+/* ===== Fault Codes (Panel D) → dropdown ที่ใบรับงานซ่อม ===== */
+const FAULTS=[
+  {code:'F01', name:'ไม่เย็น / ความเย็นน้อย',    on:true},
+  {code:'F02', name:'มีน้ำรั่ว / น้ำหยด',        on:true},
+  {code:'F03', name:'เปิดไม่ติด / ไม่ทำงาน',     on:true},
+  {code:'F04', name:'เสียงดังผิดปกติ',           on:true},
+  {code:'F05', name:'มีกลิ่นเหม็น',              on:true},
+  {code:'F06', name:'ไฟรั่ว / ไฟช็อต',           on:true},
+  {code:'F07', name:'รีโมทใช้ไม่ได้',            on:true},
+  {code:'F08', name:'ตัดการทำงานเอง',            on:true},
+  {code:'F09', name:'ตัวเครื่องชำรุด/แตกหัก',    on:true},
+  {code:'F10', name:'ติดตั้งไม่ถูกต้อง',         on:true},
+  {code:'F99', name:'อื่น ๆ (ระบุในช่องบรรยาย)', on:true},
+];
+
+function renderFaultTable(){
+  document.getElementById('fault-table').innerHTML=FAULTS.map(f=>`<tr>
+      <td><span class="mono">${f.code}</span></td>
+      <td style="font-weight:600">${f.name}${f.code==='F99'?' <span class="bdg bdg-notax">ต้องกรอกช่องบรรยาย</span>':''}</td>
+      <td><span class="bdg ${f.on?'bdg-on':'bdg-off'}">${f.on?'เปิดใช้งาน':'ปิด'}</span></td>
+      <td><button class="btn b-ghost btn-sm" onclick="toast('แก้ไข ${f.code} (mock)')">แก้ไข</button></td>
+    </tr>`).join('');
+}
+
+/* ===== Panel E: ทะเบียนมิติเอกสาร (5 มิติมาตรฐาน) → dropdown บนหัวเอกสารทุกใบ ===== */
+const DEPTS=[
+  {code:'SALES', name:'ฝ่ายขาย',      on:true},
+  {code:'SVC',   name:'ศูนย์บริการ',   on:true},
+  {code:'WH',    name:'คลังสินค้า',    on:true},
+  {code:'ADMIN', name:'บริหาร',        on:true},
+];
+const PROJECTS=[
+  {code:'PRJ-001', name:'คอนโดสุขุมวิท', start:'01/01/2026', stop:'31/12/2026', amount:'12,000,000.00', on:true},
+  {code:'PRJ-002', name:'โรงแรมหัวหิน',  start:'01/03/2026', stop:'30/09/2026', amount:'8,500,000.00',  on:true},
+];
+const ALLOCATES=[
+  {code:'ALC-01', name:'งบการตลาด',   on:true},
+  {code:'ALC-02', name:'งบซ่อมบำรุง', on:true},
+];
+
+function renderDeptTable(){
+  document.getElementById('dept-table').innerHTML=DEPTS.map(d=>`<tr>
+      <td><span class="mono">${d.code}</span></td>
+      <td style="font-weight:600">${d.name}</td>
+      <td><span class="bdg ${d.on?'bdg-on':'bdg-off'}">${d.on?'เปิดใช้งาน':'ปิด'}</span></td>
+      <td><button class="btn b-ghost btn-sm" onclick="toast('แก้ไข ${d.code} (mock)')">แก้ไข</button></td>
+    </tr>`).join('');
+}
+function renderProjTable(){
+  document.getElementById('proj-table').innerHTML=PROJECTS.map(p=>`<tr>
+      <td><span class="mono">${p.code}</span></td>
+      <td style="font-weight:600">${p.name}</td>
+      <td>${p.start}</td>
+      <td>${p.stop}</td>
+      <td style="text-align:right;font-family:monospace;font-weight:700">${p.amount}</td>
+      <td><span class="bdg ${p.on?'bdg-on':'bdg-off'}">${p.on?'เปิดใช้งาน':'ปิด'}</span></td>
+      <td><button class="btn b-ghost btn-sm" onclick="toast('แก้ไข ${p.code} (mock)')">แก้ไข</button></td>
+    </tr>`).join('');
+}
+function renderAllocTable(){
+  document.getElementById('alloc-table').innerHTML=ALLOCATES.map(a=>`<tr>
+      <td><span class="mono">${a.code}</span></td>
+      <td style="font-weight:600">${a.name}</td>
+      <td><span class="bdg ${a.on?'bdg-on':'bdg-off'}">${a.on?'เปิดใช้งาน':'ปิด'}</span></td>
+      <td><button class="btn b-ghost btn-sm" onclick="toast('แก้ไข ${a.code} (mock)')">แก้ไข</button></td>
+    </tr>`).join('');
+}
+
 /* ---- Panel C: letterhead preview ---- */
 function renderPreview(){
   document.getElementById('p-name-th').textContent=document.getElementById('f-name-th').value;
@@ -373,7 +550,8 @@ let toastT;
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),1800);}
 
 /* init */
-renderDtypeList();renderEditor();renderGroupTable();renderPreview();
+renderDtypeList();renderEditor();renderGroupTable();renderPreview();renderFaultTable();
+renderDeptTable();renderProjTable();renderAllocTable();
 </script>
 
 <!-- SWT_LINK_START -->

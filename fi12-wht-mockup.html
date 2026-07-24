@@ -83,6 +83,25 @@
     <div id="fi12Sc12" class="status-strip"></div>
     <div id="fi12Gate" class="gate-alert"></div>
 
+    <!-- กติกา "ตารางอัตราอยู่ที่เดียว" (เคาะ 2026-07-21) -->
+    <div class="card" style="padding:14px 18px;background:#FFFBEB;border:1.5px solid #FCD34D;border-left:5px solid #F59E0B;flex:none">
+      <div style="font-size:13.5px;font-weight:700;color:#78350F;margin-bottom:6px">🔒 อัตราภาษีหัก ณ ที่จ่าย มาจากตารางกลางที่ผูกกับ “ประเภทเงินได้” — หน้านี้อ่านอย่างเดียว ห้ามพิมพ์อัตราเอง</div>
+      <div style="font-size:12px;color:#78350F;line-height:1.75">
+        <b>เหตุผลที่ไม่ผูกกับผู้ขาย:</b> ผู้ขายรายเดียวจ่ายได้หลายประเภท เช่น Daikin จ่ายทั้งค่าสินค้า (ไม่หัก) และค่าติดตั้ง (หัก 3%) — ถ้าผูกอัตราไว้กับผู้ขาย จะหักผิดทันทีที่ประเภทเงินได้เปลี่ยน<br>
+        <b>ตารางอัตรา</b> ตั้งที่หน้าตั้งค่าภาษี · <b>ผังบัญชี</b> ตั้งที่ระบบ Business Central — พอร์ทัลดึงมาแสดงอย่างเดียว (ดูอัตราทั้งหมดที่แท็บ “อัตรา WHT” ด้านล่าง)
+      </div>
+    </div>
+
+    <!-- เคสช่างนอก (เคาะ Q4) -->
+    <div class="card" style="padding:14px 18px;background:#F0F9FF;border:1.5px solid #BAE6FD;border-left:5px solid #0EA5E9;flex:none">
+      <div style="font-size:13.5px;font-weight:700;color:#075985;margin-bottom:6px">🔧 ช่างนอก = เจ้าหนี้การค้าธรรมดา อยู่ในทะเบียนผู้ขาย ไม่ใช่ประเภทพิเศษ</div>
+      <div style="font-size:12px;color:#0C4A6E;line-height:1.8">
+        แอดมินศูนย์บริการรวบงานที่ปิดแล้ว → ส่งวางบิล → บัญชีตั้งหนี้ (โหมดไม่อ้างใบสั่งซื้อ) → <b>หัก 3% ค่าจ้างทำของ</b> → จ่ายตามเครดิตเทอมของช่างรายนั้น<br>
+        ช่างที่เป็น<b>พนักงานประจำ</b> = เข้าเงินเดือน ไม่ผ่านการวางบิล และไม่โผล่ในหน้านี้<br>
+        <span style="color:#0369A1">ตัวอย่างในตารางด้านล่าง: รายการที่ 3 “นายสมพงษ์ ช่างรับเหมา” — บุคคลธรรมดา · ค่าจ้างทำของ 3% · ยื่น ภ.ง.ด.3</span>
+      </div>
+    </div>
+
     <!-- ④b หัวชุด + สรุปงวด (แทน party) -->
     <div class="row-party">
       <div class="card party-mini">
@@ -111,7 +130,7 @@
                 <option value="3">ภ.ง.ด.3 (บุคคลธรรมดา)</option>
               </select>
             </span>
-            <span style="color:#6B7280;font-size:11px">🤖 WHT สร้างอัตโนมัติจาก <a href="fi2-ap-payment-mockup.html" style="color:#2563EB">FI-2 จ่ายชำระเจ้าหนี้</a> ตาม WHT Category ของ Vendor</span>
+            <span style="color:#6B7280;font-size:11px">🤖 WHT สร้างอัตโนมัติจาก <a href="fi2-ap-payment-mockup.html" style="color:#2563EB">หน้าจ่ายชำระเจ้าหนี้ (FI-2)</a> ตาม <b>ประเภทเงินได้</b> ของรายการ (ไม่ได้ผูกกับผู้ขาย)</span>
           </div>
         </div>
       </div>
@@ -146,7 +165,7 @@
             <tr>
               <th style="width:32px"><input type="checkbox" id="fi12All" checked onchange="fi12ToggleAll(this)"></th>
               <th>#</th><th>เลขที่ WHT</th><th>วันจ่าย</th><th>ผู้รับเงิน</th><th>เลขผู้เสียภาษี</th>
-              <th>ประเภทเงินได้</th><th class="num">ฐานจ่าย</th><th class="num">อัตรา</th><th class="num">WHT หัก</th>
+              <th>ประเภทเงินได้</th><th class="num">ฐานก่อน VAT</th><th class="num">อัตรา</th><th class="num">WHT หัก</th>
               <th>ภ.ง.ด.</th><th>สถานะ</th><th>Cert</th>
             </tr>
           </thead>
@@ -158,7 +177,7 @@
               <td class="mono">12 พ.ค. 26</td>
               <td>บ. ออฟโฟร์ จำกัด</td>
               <td class="mono">0105551023456</td>
-              <td>ค่าบริการ</td>
+              <td>ค่าบริการ (นิติบุคคล)</td>
               <td class="num">50,000.00</td>
               <td class="num">3%</td>
               <td class="num" style="font-weight:700">1,500.00</td>
@@ -188,7 +207,7 @@
               <td class="mono">20 พ.ค. 26</td>
               <td>นายสมพงษ์ ช่างรับเหมา</td>
               <td class="mono">1102003456789</td>
-              <td>ค่าจ้างทำของ</td>
+              <td>ค่าจ้างทำของ (บุคคลธรรมดา · ช่างนอก)</td>
               <td class="num">30,000.00</td>
               <td class="num">3%</td>
               <td class="num" style="font-weight:700">900.00</td>
@@ -203,7 +222,7 @@
               <td class="mono">25 พ.ค. 26</td>
               <td>นางสาวมาลี (ค่าเช่าอาคาร)</td>
               <td class="mono">3102001234567</td>
-              <td>ค่าเช่า</td>
+              <td>ค่าเช่า (บุคคลธรรมดา)</td>
               <td class="num">20,000.00</td>
               <td class="num">5%</td>
               <td class="num" style="font-weight:700">1,000.00</td>
@@ -221,7 +240,8 @@
         </table>
       </div>
       <div style="padding:8px 14px;border-top:1px dashed #E5E7EB;background:#FAFBFC;font-size:11px;color:#6B7280">
-        💡 แสดงเฉพาะ WHT ที่เกิดจาก <b>FI-2 จ่ายชำระเจ้าหนี้</b> งวดนี้ · บุคคลธรรมดา → <b>ภ.ง.ด.3</b> · นิติบุคคล → <b>ภ.ง.ด.53</b> · ที่ Release แล้วแก้ไม่ได้ (ต้อง Reverse)
+        💡 แสดงเฉพาะ WHT ที่เกิดจาก <b>หน้าจ่ายชำระเจ้าหนี้ (FI-2)</b> งวดนี้ · บุคคลธรรมดา → <b>ภ.ง.ด.3</b> · นิติบุคคล → <b>ภ.ง.ด.53</b> · ที่ Release แล้วแก้ไม่ได้ (ต้อง Reverse)<br>
+        🧮 <b>ฐานก่อน VAT</b> = ยอดหลังหักส่วนลด ยังไม่รวม VAT — ระบบคำนวณให้เป็นค่าตั้งต้น <b>แต่ผู้ใช้กรอกทับได้กรณีพิเศษ</b> ก่อน Release (ไม่ล็อกตาย) · <b>อัตรา</b> ล็อกจากตารางกลาง แก้ไม่ได้
       </div>
     </div>
 
@@ -242,12 +262,16 @@
         </div>
         <div class="tabset-pane" id="t-rate">
           <div class="rate-grid">
-            <span class="r">1%</span><span>ค่าขนส่ง</span>
-            <span class="r">2%</span><span>ค่าโฆษณา</span>
-            <span class="r">3%</span><span>ค่าบริการ · ค่าจ้างทำของ · ค่าเช่า (นิติบุคคล)</span>
-            <span class="r">5%</span><span>ค่าเช่า (บุคคลธรรมดา) · ค่าจ้างบางประเภท</span>
+            <span class="r">2%</span><span>ค่าโฆษณา — ยื่น ภ.ง.ด.53</span>
+            <span class="r">1%</span><span>ค่าขนส่ง — ยื่น ภ.ง.ด.53</span>
+            <span class="r">5%</span><span>ค่าเช่า (นิติบุคคล) — ยื่น ภ.ง.ด.53</span>
+            <span class="r">5%</span><span>ค่าเช่า (บุคคลธรรมดา) — ยื่น ภ.ง.ด.3</span>
+            <span class="r">3%</span><span>ค่าบริการ/ค่าจ้างทำของ (นิติบุคคล) — ยื่น ภ.ง.ด.53</span>
+            <span class="r">3%</span><span>ค่าบริการ/ค่าจ้างทำของ (บุคคลธรรมดา) — ยื่น ภ.ง.ด.3</span>
+            <span class="r">3%</span><span>ค่าวิชาชีพอิสระ — ยื่น ภ.ง.ด.53</span>
+            <span class="r">3%</span><span>ค่าสอบบัญชี — ยื่น ภ.ง.ด.53</span>
           </div>
-          <div style="margin-top:8px;font-size:11px;color:#6B7280">อัตราตามประเภทเงินได้ · กำหนดที่ WHT Category ของ Vendor (MD-3 ทะเบียน Vendor)</div>
+          <div style="margin-top:8px;font-size:11px;color:#6B7280">🔒 อัตราผูกกับ <b>ประเภทเงินได้</b> ไม่ได้ผูกกับผู้ขาย · ตั้งค่าที่หน้าตั้งค่าภาษีที่เดียว — หน้านี้อ่านอย่างเดียว</div>
         </div>
         <div class="tabset-pane" id="t-hist">
           <div class="tl">
@@ -261,7 +285,7 @@
       <div class="card">
         <div class="card-header"><div class="card-title"><span class="secno">FI-12.5</span>🧾 สรุปยอด WHT <span class="tpl-zone">SC-11</span></div></div>
         <div class="sum-mini" id="fi12Sc11">
-          <span class="k">ฐานจ่ายรวม</span><span class="v" id="sumBase">฿184,486.00</span>
+          <span class="k">ฐานก่อน VAT รวม</span><span class="v" id="sumBase">฿184,486.00</span>
           <span class="k">WHT · ภ.ง.ด.3</span><span class="v" id="sumP3b">฿1,900.00</span>
           <span class="k">WHT · ภ.ง.ด.53</span><span class="v" id="sumP53b">฿2,344.86</span>
           <span class="sep"></span>

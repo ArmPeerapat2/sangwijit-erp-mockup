@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รวมโปรโมชั่นที่รันอยู่ — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══ หน้ารวมโปรโมชั่นที่รันอยู่ — queue dashboard pattern (ลอกจากคิวงานขาย) ═══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#111827;min-width:1440px;font-size:13px;line-height:1.45;height:100vh;overflow:hidden}
+.layout{display:flex;height:100vh;overflow:hidden}
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;margin-left:240px}
+.topbar-search{display:flex;align-items:center;gap:8px;background:#F3F4F6;border-radius:8px;padding:6px 12px;font-size:13px;color:#9CA3AF;width:220px}
+.topbar-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#F3F4F6;cursor:pointer;font-size:16px}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.branch-sel{background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;font-size:11px;font-weight:600;padding:4px 8px;border-radius:20px;font-family:inherit;cursor:pointer}
+.mh-title{display:flex;align-items:center;gap:10px}
+.mh-title .ico{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+.mh-title h1{font-size:16px;font-weight:700}
+.mh-title p{font-size:11px;color:rgba(255,255,255,0.7);margin-top:1px}
+.mh-right{display:flex;gap:8px}
+.mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit;background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.2)}
+.mh-btn.primary{background:#10B981;border-color:#10B981}
+.content{flex:1;padding:14px 24px;display:flex;flex-direction:column;gap:12px;overflow:hidden;min-height:0}
+.kpi{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;flex:none}
+.kpi .c{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:10px 14px;cursor:pointer}
+.kpi .c:hover{border-color:#BFDBFE;box-shadow:0 2px 8px rgba(37,99,235,.08)}
+.kpi .l{font-size:11px;color:#6B7280;font-weight:600}
+.kpi .v{font-size:24px;font-weight:800;margin-top:2px;font-family:'Inter',monospace}
+.kpi .s{font-size:10px;color:#9CA3AF}
+.kpi .c.warn{border-color:#FECACA;background:#FEF2F2}
+.kpi .c.warn .v{color:#DC2626}
+.kpi .c.warn .l{color:#991B1B}
+.kpi .c.amber .v{color:#B45309}
+.xlink{display:flex;gap:8px;flex:none;flex-wrap:wrap}
+.xlink a{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:#EEF2FF;border:1px solid #C7D2FE;border-radius:20px;font-size:11.5px;font-weight:600;color:#4338CA;text-decoration:none}
+.xlink a:hover{background:#E0E7FF}
+.xlink .lbl{font-size:11px;color:#9CA3AF;font-weight:600;align-self:center;margin-right:2px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;flex:none}
+.chip{padding:5px 12px;border:1px solid #E5E7EB;border-radius:20px;font-size:11.5px;font-weight:600;color:#475569;background:#fff;cursor:pointer}
+.chip.on{background:#2563EB;color:#fff;border-color:#2563EB}
+.chip .n{opacity:.8;margin-left:3px}
+.alertzone{flex:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:10px 14px;font-size:12px;color:#991B1B;line-height:1.75}
+.alertzone .hd{font-weight:700;font-size:12.5px;margin-bottom:4px}
+.alertzone ul{margin:0;padding-left:18px}
+.alertzone li{margin-bottom:2px}
+.alertzone a{color:#991B1B;font-weight:700;text-decoration:underline}
+.tbl-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;flex:1 1 0;min-height:0;display:flex;flex-direction:column}
+.tbl-wrap{overflow:auto;flex:1}
+table.q{width:100%;border-collapse:collapse}
+table.q thead th{position:sticky;top:0;background:#F8FAFC;padding:9px 12px;text-align:left;font-size:10.5px;font-weight:700;color:#6B7280;text-transform:uppercase;border-bottom:2px solid #E5E7EB;white-space:nowrap;z-index:5}
+table.q tbody td{padding:9px 12px;font-size:12.5px;border-bottom:1px solid #F3F4F6;white-space:nowrap;vertical-align:middle}
+table.q tbody tr{cursor:pointer}
+table.q tbody tr:hover{background:#EFF6FF}
+table.q tbody tr.grp{cursor:default}
+table.q tbody tr.grp:hover{background:none}
+table.q tbody tr.grp td{background:#EEF2F7;font-weight:700;color:#1E3A5F;font-size:11px;padding:6px 12px;border-bottom:1px solid #D6E0F5;border-top:1px solid #D6E0F5;letter-spacing:.02em}
+table.q tbody tr.grp td .n{color:#6B7280;font-weight:600;margin-left:6px}
+table.q tbody tr.grp.red td{background:#FEF2F2;color:#991B1B;border-color:#FECACA}
+table.q tbody tr.grp.amber td{background:#FFFBEB;color:#92400E;border-color:#FDE68A}
+.pname{font-weight:700;color:#1D4ED8}
+.psub{display:block;font-size:10px;color:#6B7280;font-weight:500}
+.amt{text-align:right;font-family:'Inter',monospace;font-weight:600}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:10.5px;font-weight:700}
+.b-live{background:#ECFDF5;color:#065F46}
+.b-over{background:#FEE2E2;color:#991B1B}
+.b-soon{background:#FEF3C7;color:#92400E}
+.b-pend{background:#FEF3C7;color:#92400E}
+.b-done{background:#F3F4F6;color:#374151}
+.dtype{display:inline-block;padding:1px 7px;border-radius:4px;font-size:10px;font-weight:700;background:#EFF6FF;color:#1D4ED8}
+.fund{display:inline-block;padding:1px 7px;border-radius:4px;font-size:10px;font-weight:700}
+.fund-brand{background:#EFF6FF;color:#1D4ED8}
+.fund-own{background:#F0FDF4;color:#166534}
+.days{display:block;font-size:10px;font-weight:700;margin-top:1px;color:#6B7280}
+.days.hot{color:#B45309}
+.days.dead{color:#9CA3AF}
+.pbar{width:130px;height:7px;border-radius:4px;background:#E5E7EB;overflow:hidden;margin-top:3px}
+.pfill{display:block;height:100%;border-radius:4px;background:#10B981}
+.pfill.amber{background:#F59E0B}
+.pfill.red{background:#DC2626}
+.pnum{font-size:11px;font-family:'Inter',monospace;font-weight:700;color:#374151}
+.pnum.red{color:#991B1B}
+.pnum.amber{color:#B45309}
+.row-btn{padding:3px 10px;border:1px solid #BFDBFE;background:#EFF6FF;color:#2563EB;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+.rulebox{flex:none;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:11px 14px;font-size:11.5px;line-height:1.8;color:#374151}
+.rulebox .hd{font-size:12.5px;font-weight:700;color:#111827;margin-bottom:5px}
+.rulebox b{color:#111827}
+.rulebox .warn{color:#991B1B}
+</style>
+<link rel="stylesheet" href="swt-patterns.css">
+</head>
+<body>
+<div class="layout">
+<div class="main">
+
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">โปรโมชั่น &amp; ราคา <span class="sep">›</span> <span class="current">รวมโปรโมชั่นที่รันอยู่</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหาโปรโมชั่น… (Ctrl+K)</div>
+        <a href="notification-center-mockup.html" class="topbar-icon" style="text-decoration:none" title="แจ้งเตือน">🔔</a>
+        <select class="branch-sel"><option>🏢 สำนักงานใหญ่ · SWT</option><option>🏢 สาขา 08</option></select>
+        <a href="user-profile-mockup.html" class="topbar-avatar" style="text-decoration:none" title="โปรไฟล์">สว</a>
+      </div>
+    </div>
+    <div class="uh-main">
+      <div class="mh-title"><div class="ico">🎁</div><div><h1>รวมโปรโมชั่นที่รันอยู่</h1><p>ตอนนี้มีโปรฯ อะไรรันอยู่บ้าง · อันไหนกำลังจะมีปัญหา · ข้อมูล ณ 21 ก.ค. 2569 09:40</p></div></div>
+      <div class="mh-right">
+        <button class="mh-btn" onclick="location.href='pm4-promo-quota-mockup.html'">💰 หน้าโควต้าโปรโมชั่น</button>
+        <button class="mh-btn primary" onclick="location.href='pm2-promotion-mockup.html'">+ ตั้งโปรโมชั่นใหม่</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div class="kpi">
+      <div class="c" onclick="filterChip('live')"><div class="l">🟢 กำลังรัน</div><div class="v">6</div><div class="s">นับเฉพาะที่เปิดใช้แล้ว</div></div>
+      <div class="c amber" onclick="filterChip('soon')"><div class="l">⏳ หมดอายุใน 7 วัน</div><div class="v">2</div><div class="s">ต่ออายุ = ต้องสร้างใบใหม่</div></div>
+      <div class="c amber" onclick="filterChip('budget')"><div class="l">📉 งบใกล้หมด (≥80%)</div><div class="v">1</div><div class="s">ซื้อ 3 แถม 1 หลอด LED</div></div>
+      <div class="c warn" onclick="filterChip('over')"><div class="l">🔴 เกินงบแล้ว</div><div class="v">1</div><div class="s">ส่วนเกิน 28,500 บาท</div></div>
+      <div class="c" onclick="filterChip('pend')"><div class="l">🟡 รออนุมัติ</div><div class="v">1</div><div class="s">ตั้งราคาต่ำกว่าทุน</div></div>
+    </div>
+
+    <div class="xlink">
+      <span class="lbl">ไปหน้าที่เกี่ยวข้อง:</span>
+      <a href="pm2-promotion-mockup.html">🎁 หน้าตั้งโปรโมชั่น</a>
+      <a href="pm4-promo-quota-mockup.html">💰 หน้าโควต้าโปรโมชั่น</a>
+      <a href="pm5-price-simulator-mockup.html">🧮 หน้าจำลองราคาขาย</a>
+      <a href="pm1-price-list-mockup.html">🏷️ รายการราคา</a>
+    </div>
+
+    <div class="alertzone">
+      <div class="hd">⚠️ ตอนนี้มี 4 เรื่องที่ต้องจัดการ</div>
+      <ul>
+        <li><b>โปรฯ Haier ล้างสต็อก แถมพัดลม</b> ใช้งบแบรนด์ไปแล้ว <b>119%</b> (178,500 / 150,000) — ส่วนที่เกิน <b>28,500 บาท เคลมคืน Haier ไม่ได้</b> คือขาดทุนจริง ต้องปิดโปรฯ หรือขอวงเงินเพิ่มที่ <a href="pm4-promo-quota-mockup.html">หน้าโควต้าโปรโมชั่น ↗</a></li>
+        <li><b>ซื้อ 3 แถม 1 หลอด LED Philips</b> ใช้เพดานเงินบริษัทไปแล้ว 92% — อีกประมาณ 4 วันจะชนเพดานแล้วโปรฯ จะหยุดเอง</li>
+        <li><b>ชุดแอร์ + ติดตั้งฟรี</b> เหลืออีก <b>3 วัน</b> และ <b>ลด 500 บาท เครื่องซักผ้า LG</b> เหลืออีก 6 วัน — จะต่อต้องสร้างใบใหม่ (โปรฯ ที่เปิดใช้แล้วแก้วันหมดอายุไม่ได้)</li>
+        <li><b>ล้างสต็อก พัดลม Hatari รุ่นเก่า</b> ตั้งราคาต่ำกว่าทุน 380 บาท/ตัว — รอผู้จัดการเซ็นอนุมัติ ยังไม่เริ่มรัน</li>
+      </ul>
+    </div>
+
+    <div class="chips" id="chips">
+      <span class="chip on" onclick="filterChip('all',this)">ทั้งหมด<span class="n">8</span></span>
+      <span class="chip" onclick="filterChip('live',this)">🟢 กำลังรัน<span class="n">6</span></span>
+      <span class="chip" onclick="filterChip('soon',this)">⏳ ใกล้หมดอายุ<span class="n">2</span></span>
+      <span class="chip" onclick="filterChip('budget',this)">📉 งบใกล้หมด<span class="n">1</span></span>
+      <span class="chip" onclick="filterChip('over',this)">🔴 เกินงบ<span class="n">1</span></span>
+      <span class="chip" onclick="filterChip('pend',this)">🟡 รออนุมัติ<span class="n">1</span></span>
+      <span class="chip" onclick="filterChip('done',this)">⚫ จบแล้ว<span class="n">1</span></span>
+    </div>
+
+    <div class="tbl-card">
+      <div class="tbl-wrap">
+        <table class="q">
+          <thead><tr>
+            <th>ชื่อโปรโมชั่น</th>
+            <th>แบบโปรฯ</th>
+            <th>แหล่งงบ</th>
+            <th>ช่วงเวลา</th>
+            <th>ใช้งบไปแล้ว</th>
+            <th style="text-align:right">ยอดขายจากโปรฯ นี้</th>
+            <th>สถานะ</th>
+            <th></th>
+          </tr></thead>
+          <tbody id="qRows">
+
+            <tr class="grp red"><td colspan="8">🔴 เกินงบ / งบใกล้หมด<span class="n">— ต้องตัดสินใจวันนี้ · 2 รายการ</span></td></tr>
+
+            <tr onclick="openPq('Haier ล้างสต็อก แถมพัดลม','ของแถม','🏭 งบแบรนด์ (Haier)','01 มิ.ย. 69 – 31 ส.ค. 69','178,500 / 150,000 บาท (119%)','1,240,800','เกินงบแล้ว')">
+              <td><span class="pname">Haier ล้างสต็อก แถมพัดลม</span><span class="psub">ซื้อแอร์ Haier แถมพัดลม 1 ตัว · ลำดับความสำคัญ 4</span></td>
+              <td><span class="dtype">ของแถม</span></td>
+              <td><span class="fund fund-brand">🏭 งบแบรนด์</span><span class="psub">Haier · เคลมคืนได้</span></td>
+              <td>01 มิ.ย. – 31 ส.ค. 69<span class="days">เหลืออีก 41 วัน</span></td>
+              <td><span class="pnum red">119% · 178,500 / 150,000</span><span class="pbar"><span class="pfill red" style="width:100%"></span></span></td>
+              <td class="amt">1,240,800</td>
+              <td><span class="badge b-over">🔴 เกินงบ</span></td>
+              <td><button class="row-btn" onclick="event.stopPropagation();location.href='pm4-promo-quota-mockup.html'">ขอวงเงินเพิ่ม</button></td>
+            </tr>
+
+            <tr onclick="openPq('ซื้อ 3 แถม 1 หลอดไฟ LED Philips','ซื้อ X แถม Y','🏢 เงินบริษัทเอง','05 ก.ค. 69 – 05 ส.ค. 69','138,000 / 150,000 บาท (92%)','689,400','งบใกล้หมด')">
+              <td><span class="pname">ซื้อ 3 แถม 1 หลอดไฟ LED Philips</span><span class="psub">ซื้อ 3 หลอด แถมฟรี 1 หลอด · ลำดับความสำคัญ 5</span></td>
+              <td><span class="dtype">ซื้อ X แถม Y</span></td>
+              <td><span class="fund fund-own">🏢 เงินบริษัท</span><span class="psub">เพดานที่เราตั้งเอง</span></td>
+              <td>05 ก.ค. – 05 ส.ค. 69<span class="days">เหลืออีก 15 วัน</span></td>
+              <td><span class="pnum amber">92% · 138,000 / 150,000</span><span class="pbar"><span class="pfill amber" style="width:92%"></span></span></td>
+              <td class="amt">689,400</td>
+              <td><span class="badge b-soon">🟠 งบใกล้หมด</span></td>
+              <td><button class="row-btn" onclick="event.stopPropagation();location.href='pm4-promo-quota-mockup.html'">ดูเพดานงบ</button></td>
+            </tr>
+
+            <tr class="grp amber"><td colspan="8">⏳ ใกล้หมดอายุใน 7 วัน<span class="n">— จะต่อต้องสร้างใบใหม่ · 2 รายการ</span></td></tr>
+
+            <tr onclick="openPq('ชุดแอร์ + ติดตั้งฟรี','จัดชุด','🏢 เงินบริษัทเอง','24 มิ.ย. 69 – 24 ก.ค. 69','91,500 / 150,000 บาท (61%)','1,240,000','ใกล้หมดอายุ')">
+              <td><span class="pname">ชุดแอร์ + ติดตั้งฟรี</span><span class="psub">ขายเป็นเซ็ต แอร์ 1 เครื่อง + ค่าติดตั้งมาตรฐาน</span></td>
+              <td><span class="dtype">จัดชุด</span></td>
+              <td><span class="fund fund-own">🏢 เงินบริษัท</span><span class="psub">ค่าติดตั้งเป็นต้นทุนเรา</span></td>
+              <td>24 มิ.ย. – 24 ก.ค. 69<span class="days hot">⏳ เหลืออีก 3 วัน</span></td>
+              <td><span class="pnum">61% · 91,500 / 150,000</span><span class="pbar"><span class="pfill" style="width:61%"></span></span></td>
+              <td class="amt">1,240,000</td>
+              <td><span class="badge b-soon">⏳ ใกล้หมดอายุ</span></td>
+              <td><button class="row-btn" onclick="event.stopPropagation();location.href='pm2-promotion-mockup.html'">สร้างใบใหม่ต่ออายุ</button></td>
+            </tr>
+
+            <tr onclick="openPq('ลด 500 บาท เครื่องซักผ้า LG','ลดเงิน','🏭 งบแบรนด์ (LG)','01 ก.ค. 69 – 27 ก.ค. 69','96,000 / 200,000 บาท (48%)','1,530,000','ใกล้หมดอายุ')">
+              <td><span class="pname">ลด 500 บาท เครื่องซักผ้า LG</span><span class="psub">ลดเงินสด 500 บาท/เครื่อง · ซื้อขั้นต่ำ 1 เครื่อง</span></td>
+              <td><span class="dtype">ลดเงิน</span></td>
+              <td><span class="fund fund-brand">🏭 งบแบรนด์</span><span class="psub">LG · เคลมคืนได้</span></td>
+              <td>01 ก.ค. – 27 ก.ค. 69<span class="days hot">⏳ เหลืออีก 6 วัน</span></td>
+              <td><span class="pnum">48% · 96,000 / 200,000</span><span class="pbar"><span class="pfill" style="width:48%"></span></span></td>
+              <td class="amt">1,530,000</td>
+              <td><span class="badge b-soon">⏳ ใกล้หมดอายุ</span></td>
+              <td><button class="row-btn" onclick="event.stopPropagation();location.href='pm2-promotion-mockup.html'">สร้างใบใหม่ต่ออายุ</button></td>
+            </tr>
+
+            <tr class="grp amber"><td colspan="8">🟡 รออนุมัติ<span class="n">— ยังไม่เริ่มรัน · 1 รายการ</span></td></tr>
+
+            <tr onclick="openPq('ล้างสต็อก พัดลม Hatari รุ่นเก่า','ลด %','🏢 เงินบริษัทเอง','ตั้งไว้ 25 ก.ค. 69 – 31 ส.ค. 69','ยังไม่เริ่มใช้งบ (เพดาน 60,000 บาท)','0','รออนุมัติ')">
+              <td><span class="pname">ล้างสต็อก พัดลม Hatari รุ่นเก่า</span><span class="psub">ลด 35% · ค้างสต็อก 8 เดือน · ตั้งใจขายต่ำกว่าทุน 380 บาท/ตัว</span></td>
+              <td><span class="dtype">ลด %</span></td>
+              <td><span class="fund fund-own">🏢 เงินบริษัท</span><span class="psub">เพดาน 60,000 บาท</span></td>
+              <td>25 ก.ค. – 31 ส.ค. 69<span class="days dead">ยังไม่เริ่ม</span></td>
+              <td><span class="pnum">0% · 0 / 60,000</span><span class="pbar"><span class="pfill" style="width:0%"></span></span></td>
+              <td class="amt">0</td>
+              <td><span class="badge b-pend">🟡 รออนุมัติ<br>ต่ำกว่าทุน</span></td>
+              <td><button class="row-btn" onclick="event.stopPropagation();location.href='ap1-approval-center-mockup.html'">ส่งให้ผู้จัดการเซ็น</button></td>
+            </tr>
+
+            <tr class="grp"><td colspan="8">🟢 กำลังรันปกติ<span class="n">— ไม่มีอะไรต้องทำ · 2 รายการ</span></td></tr>
+
+            <tr onclick="openPq('ซื้อยิ่งเยอะยิ่งลด สายไฟ Bangkok Cable','ขั้นบันได','🏭 งบแบรนด์ (Bangkok Cable)','01 ก.ค. 69 – 30 ก.ย. 69','102,000 / 300,000 บาท (34%)','2,415,000','กำลังรัน')">
+              <td><span class="pname">ซื้อยิ่งเยอะยิ่งลด สายไฟ Bangkok Cable</span><span class="psub">1–5 ม้วน ลด 5% · 6–10 ม้วน ลด 8% · 11 ม้วนขึ้นไป ลด 12%</span></td>
+              <td><span class="dtype">ขั้นบันได</span></td>
+              <td><span class="fund fund-brand">🏭 งบแบรนด์</span><span class="psub">Bangkok Cable · เคลมคืนได้</span></td>
+              <td>01 ก.ค. – 30 ก.ย. 69<span class="days">เหลืออีก 71 วัน</span></td>
+              <td><span class="pnum">34% · 102,000 / 300,000</span><span class="pbar"><span class="pfill" style="width:34%"></span></span></td>
+              <td class="amt">2,415,000</td>
+              <td><span class="badge b-live">🟢 กำลังรัน</span></td>
+              <td><button class="row-btn" onclick="event.stopPropagation();location.href='pm5-price-simulator-mockup.html'">ลองคิดราคา</button></td>
+            </tr>
+
+            <tr onclick="openPq('แถมกระติกน้ำ ซื้อตู้เย็นครบ 15,000','ของแถม','🏢 เงินบริษัทเอง','10 ก.ค. 69 – 31 ส.ค. 69','19,800 / 90,000 บาท (22%)','742,000','กำลังรัน')">
+              <td><span class="pname">แถมกระติกน้ำ ซื้อตู้เย็นครบ 15,000</span><span class="psub">แถมกระติกน้ำร้อน 1 ใบ/บิล · จำกัด 1 ครั้ง/ลูกค้า/เดือน</span></td>
+              <td><span class="dtype">ของแถม</span></td>
+              <td><span class="fund fund-own">🏢 เงินบริษัท</span><span class="psub">ต้นทุนของแถม 330 บาท/ใบ</span></td>
+              <td>10 ก.ค. – 31 ส.ค. 69<span class="days">เหลืออีก 41 วัน</span></td>
+              <td><span class="pnum">22% · 19,800 / 90,000</span><span class="pbar"><span class="pfill" style="width:22%"></span></span></td>
+              <td class="amt">742,000</td>
+              <td><span class="badge b-live">🟢 กำลังรัน</span></td>
+              <td><button class="row-btn" onclick="event.stopPropagation();location.href='pm2-promotion-mockup.html'">ดูรายละเอียด</button></td>
+            </tr>
+
+            <tr class="grp"><td colspan="8">⚫ จบแล้ว<span class="n">— เก็บไว้ดูย้อนหลัง · 1 รายการ</span></td></tr>
+
+            <tr onclick="openPq('โปรฯ สงกรานต์ 2569','ลด %','🏭 งบแบรนด์ (Daikin)','05 เม.ย. 69 – 30 เม.ย. 69','264,000 / 300,000 บาท (88%)','3,120,000','จบแล้ว')">
+              <td><span class="pname">โปรฯ สงกรานต์ 2569</span><span class="psub">ลด 8% ทั้งร้าน · จบตามกำหนด · เคลมคืนแบรนด์ครบแล้ว</span></td>
+              <td><span class="dtype">ลด %</span></td>
+              <td><span class="fund fund-brand">🏭 งบแบรนด์</span><span class="psub">Daikin · เคลมคืนแล้ว</span></td>
+              <td>05 เม.ย. – 30 เม.ย. 69<span class="days dead">จบไปแล้ว 82 วัน</span></td>
+              <td><span class="pnum">88% · 264,000 / 300,000</span><span class="pbar"><span class="pfill" style="width:88%"></span></span></td>
+              <td class="amt">3,120,000</td>
+              <td><span class="badge b-done">⚫ จบแล้ว</span></td>
+              <td><button class="row-btn" onclick="event.stopPropagation();location.href='pm2-promotion-mockup.html'">Copy ไปตั้งใหม่</button></td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="rulebox">
+      <div class="hd">📘 กติกาที่ dev ต้องทำให้ถูก (เคาะ 21 ก.ค. 2569)</div>
+      <b>1. โปรฯ ซ้อนกันได้สูงสุด 2 ชั้น</b> — ระบบหาโปรฯ ที่ลูกค้าเข้าเงื่อนไขทั้งหมด แล้วเลือกชุดที่<b>คุ้มลูกค้าที่สุด</b>ให้อัตโนมัติ · เซลส์ติ๊กแก้เองได้ (เก็บ log ว่าใครแก้) · อยากใช้<b>เกิน 2 ชั้นต้องผู้จัดการอนุมัติ</b> · ช่องลำดับความสำคัญใช้ตัดสินเฉพาะตอนที่ 2 ชุดคุ้มเท่ากันเป๊ะ · กลไกเดียวกับ <a href="pm5-price-simulator-mockup.html">หน้าจำลองราคาขาย ↗</a> ไม่สร้างกลไกใหม่<br>
+      <b>2. ตั้งโปรฯ ต่ำกว่าทุนได้ ถ้ามีสิทธิ์อนุมัติ</b> — บางทีตั้งใจขาดทุนจริงเพื่อล้างสต็อกค้างหรือล่อลูกค้าเข้าร้าน จึงไม่ห้ามเด็ดขาด แต่ต้องมีคนเซ็นรับผิดชอบ<br>
+      <span style="padding-left:14px">⚖️ <b>เส้นแบ่ง:</b> ตอน<b>ตั้งโปรฯ</b> = เตือน + อนุมัติผ่านได้ · ตอน<b>เปิดบิลขาย</b> = ห้ามขายต่ำกว่าทุน — <b class="warn">ยกเว้นบิลที่อ้างโปรฯ ที่อนุมัติแล้ว ต้องผ่านได้</b> ไม่งั้นระบบจะบล็อกโปรฯ ที่ตัวเองเพิ่งอนุมัติ</span><br>
+      <b>3. โปรฯ ที่เปิดใช้ (Live) แล้วแก้ไม่ได้</b> — ต้องปิดแล้วสร้างใบใหม่ เพราะบิลเก่าที่อ้างโปรฯ นั้นต้องคำนวณย้อนหลังได้เหมือนเดิม · ต่ออายุ = สร้างใบใหม่ ไม่ใช่ยืดวันหมดอายุ<br>
+      <b>4. แหล่งงบมี 2 แบบ ความหมายต่างกัน</b> — <span class="fund fund-brand">🏭 งบแบรนด์</span> คือวงเงินที่<b>เคลมคืนได้</b> แจกเกิน = เคลมไม่ได้ = <b class="warn">ขาดทุนจริง</b> ไม่ใช่แค่กำไรน้อยลง · <span class="fund fund-own">🏢 เงินบริษัท</span> คือ<b>เพดานที่เราตั้งเองกันขาดทุน</b> ครบเพดานแล้วโปรฯ หยุดเอง ตั้งได้ที่ <a href="pm4-promo-quota-mockup.html">หน้าโควต้าโปรโมชั่น ↗</a>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+function filterChip(k,el){
+  if(el){document.querySelectorAll('#chips .chip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');}
+  /* mock: ปกติจะกรอง #qRows ตาม k */
+}
+function openPq(name,type,fund,period,budget,sales,status){
+  alert('โปรโมชั่น: '+name
+    +'\nแบบโปรฯ: '+type
+    +'\nแหล่งงบ: '+fund
+    +'\nช่วงเวลา: '+period
+    +'\nใช้งบไปแล้ว: '+budget
+    +'\nยอดขายจากโปรฯ นี้: '+sales+' บาท'
+    +'\nสถานะ: '+status);
+}
+</script>
+<script src="swt-sidebar.js"></script>
+</body></html>

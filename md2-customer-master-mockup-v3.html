@@ -317,7 +317,7 @@
         <table>
           <thead><tr><th style="width:48px">ลำดับ</th><th>ประเภท</th><th>ชื่อผู้รับ</th><th>ที่อยู่</th><th>โทร</th><th style="width:80px">default</th><th style="width:60px">ลบ</th></tr></thead>
           <tbody>
-            <tr>
+            <tr style="cursor:pointer" onclick="pickAddr(1)">
               <td>1</td>
               <td><span class="pill pill-info">🧾 Tax-Invoice</span></td>
               <td>บริษัท ก.ก่อสร้าง 88 จำกัด (มหาชน)</td>
@@ -326,7 +326,7 @@
               <td><input type="radio" name="defTax" checked> หลัก</td>
               <td><button class="mini">🗑️</button></td>
             </tr>
-            <tr>
+            <tr style="cursor:pointer" onclick="pickAddr(2)">
               <td>2</td>
               <td><span class="pill pill-neutral">📮 Billing</span></td>
               <td>ฝ่ายบัญชี · คุณสมหญิง</td>
@@ -335,7 +335,7 @@
               <td><input type="radio" name="defBill" checked> หลัก</td>
               <td><button class="mini">🗑️</button></td>
             </tr>
-            <tr>
+            <tr style="cursor:pointer" onclick="pickAddr(3)">
               <td>3</td>
               <td><span class="pill pill-success">🚚 Delivery</span></td>
               <td>ไซต์ก่อสร้าง รัตนาธิเบศร์ · คุณเก่ง</td>
@@ -344,7 +344,7 @@
               <td><input type="radio" name="defDel" checked> หลัก</td>
               <td><button class="mini">🗑️</button></td>
             </tr>
-            <tr>
+            <tr style="cursor:pointer" onclick="pickAddr(4)">
               <td>4</td>
               <td><span class="pill pill-success">🚚 Delivery</span></td>
               <td>โกดังกลาง · คุณบุญมี</td>
@@ -356,7 +356,63 @@
           </tbody>
         </table>
 
-        <div class="hint" style="margin-top:10px">📌 <b>ที่อยู่หลัก BC</b> (addressLine1/2 · city · state · postalCode · country) = sync อัตโนมัติจาก row ที่ตั้งเป็น <b>default Tax-Invoice</b> ด้านบน · คลิกแถวเพื่อแก้ไข inline</div>
+        <div class="hint" style="margin-top:10px">📌 <b>ที่อยู่หลัก BC</b> (addressLine1/2 · city · state · postalCode · country) = sync อัตโนมัติจาก row ที่ตั้งเป็น <b>default Tax-Invoice</b> ด้านบน · <b>คลิกแถวเพื่อกางฟอร์มแก้ไข 12 ช่องด้านล่าง</b> — ข้อความในตารางเป็นแค่การประกอบร่างจาก 12 ช่องให้อ่านง่าย ไม่ใช่ของที่เก็บจริง</div>
+
+        <!-- ===== ฟอร์มแก้ไขที่อยู่ — ชุดมาตรฐาน 12 ช่อง (เคาะ 2026-07-21) ===== -->
+        <div class="sec-title" style="margin-top:14px">✏️ แก้ไขที่อยู่ รายการที่ <span id="ea_title">1 · 🧾 Tax-Invoice</span></div>
+
+        <div class="grp">
+          <div class="grp-h">🏢 กลุ่มอาคาร <span class="lyr cust">🟠</span> <span style="margin-left:auto;font-weight:400;text-transform:none;color:var(--muted)">กรอกเฉพาะกรณีคอนโด/อาคาร — ไม่บังคับ</span></div>
+          <div class="grid g4">
+            <div class="f"><label>ชื่ออาคาร</label><input id="ea_building" value=""></div>
+            <div class="f"><label>หมู่บ้าน</label><input id="ea_moobaan" value=""></div>
+            <div class="f"><label>เลขห้อง</label><input class="mono" id="ea_room" value=""></div>
+            <div class="f"><label>ชั้น</label><input class="mono" id="ea_floor" value=""></div>
+          </div>
+        </div>
+
+        <div class="grp">
+          <div class="grp-h">📍 กลุ่มที่ตั้ง <span class="lyr cust">🟠</span></div>
+          <div class="grid g4">
+            <div class="f"><label>เลขที่ <span class="req">*</span></label><input class="mono" id="ea_no" value=""></div>
+            <div class="f"><label>หมู่</label><input class="mono" id="ea_moo" value=""></div>
+            <div class="f"><label>ตรอก/ซอย</label><input id="ea_soi" value=""></div>
+            <div class="f"><label>ถนน</label><input id="ea_street" value=""></div>
+          </div>
+        </div>
+
+        <div class="grp">
+          <div class="grp-h">🗺 กลุ่มเขตปกครอง <span class="lyr api">🟢</span> <span style="margin-left:auto;font-weight:400;text-transform:none;color:var(--muted)">ช่องบังคับ — ใช้ออกใบกำกับภาษี</span></div>
+          <div class="grid g4">
+            <div class="f"><label>ตำบล/แขวง <span class="req">*</span></label><input id="ea_tambon" value=""></div>
+            <div class="f"><label>อำเภอ/เขต <span class="req">*</span></label><input id="ea_amphur" value=""></div>
+            <div class="f"><label>จังหวัด <span class="req">*</span></label><input id="ea_province" value=""></div>
+            <div class="f"><label>รหัสไปรษณีย์ <span class="req">*</span></label><input class="mono" id="ea_post" value=""></div>
+          </div>
+        </div>
+
+        <div class="note-box">📍 <b>ที่อยู่แยก 12 ช่อง — ใช้ชุดเดียวกันทุกทะเบียน</b> (เคาะ 2026-07-21)<br>
+          <b>ทำไมไม่เก็บเป็นข้อความเดียว:</b> แยกช่องแล้วกรองตามพื้นที่ได้จริง (เช่น "ลูกค้าอำเภอเมืองมีกี่ราย") · ออกใบกำกับภาษีได้ถูกรูปแบบ · ตรวจซ้ำที่อยู่ได้<br>
+          ⚠️ <b>สำหรับผู้พัฒนา:</b> ระบบ Business Central มาตรฐานมีช่องที่อยู่แค่ 5 ช่อง → <b>ต้องทำ custom field เพิ่ม 7 ช่อง</b> · ใช้โครงเดียวกันทุกทะเบียน (ลูกค้า · ผู้ขาย · สาขา · พนักงาน) → <b>ควรทำเป็น component ตัวเดียวใช้ซ้ำ ไม่ใช่เขียนแยกทีละหน้า</b><br>
+          <b>ทุกรายการในสมุดที่อยู่</b> (Tax-Invoice · Billing · Delivery) เก็บครบ 12 ช่องเหมือนกันหมด ไม่ใช่เฉพาะที่อยู่หลัก
+        </div>
+
+        <script>
+          var SWT_ADDR_12 = {
+            1: {t:'1 · 🧾 Tax-Invoice', building:'', moobaan:'', room:'', floor:'', no:'88/1', moo:'', soi:'', street:'รัชดาภิเษก', tambon:'ดินแดง', amphur:'ดินแดง', province:'กรุงเทพมหานคร', post:'10400'},
+            2: {t:'2 · 📮 Billing', building:'อาคารรัชดาทาวเวอร์', moobaan:'', room:'', floor:'12', no:'88/1', moo:'', soi:'', street:'รัชดาภิเษก', tambon:'ดินแดง', amphur:'ดินแดง', province:'กรุงเทพมหานคร', post:'10400'},
+            3: {t:'3 · 🚚 Delivery', building:'', moobaan:'', room:'', floor:'', no:'123/4', moo:'5', soi:'', street:'รัตนาธิเบศร์', tambon:'บางรักน้อย', amphur:'เมืองนนทบุรี', province:'นนทบุรี', post:'11000'},
+            4: {t:'4 · 🚚 Delivery', building:'', moobaan:'', room:'', floor:'', no:'567', moo:'8', soi:'', street:'กิ่งแก้ว', tambon:'บางพลีใหญ่', amphur:'บางพลี', province:'สมุทรปราการ', post:'10540'}
+          };
+          function pickAddr(n){
+            var a = SWT_ADDR_12[n]; if(!a) return;
+            document.getElementById('ea_title').textContent = a.t;
+            ['building','moobaan','room','floor','no','moo','soi','street','tambon','amphur','province','post'].forEach(function(k){
+              var el = document.getElementById('ea_'+k); if(el) el.value = a[k];
+            });
+          }
+          pickAddr(1);
+        </script>
       </div>
 
       <!-- ===== Tab 3: เครดิต · การค้า · ภาษี/PDPA ===== -->

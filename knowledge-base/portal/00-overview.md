@@ -123,7 +123,7 @@ Threshold สินค้าหมุนช้าแยกตามหมวด�
 | Credit Approval | SL-F1 + PO → CF-2.6 |
 | Dual-Book | CF-9 → PO-6 → FI-13A → FI-13B |
 | Fixed Asset Lifecycle | FI-9 → FI-10 / FI-11 |
-| PO Deposit → AP Settlement | PO-8 → FI-2 → PO-5 |
+| PO Deposit → AP Settlement | PO-8 → FI-2 → **WH-1 ใบรับสินค้า** (เดิมเขียน PO-5 · ตัดถาวรแล้ว) |
 | WHT Auto-Calculate | FI-2 → FI-12 → ภ.ง.ด.3/53 |
 
 ---

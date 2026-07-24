@@ -949,7 +949,8 @@
                             <span class="badge green">Inverter</span>
                             <span class="badge">12,000 BTU</span>
                             <span class="badge green">ประกันคอม 5 ปี</span>
-                            <span class="badge">FIFO Cost</span>
+                            <span class="badge">ต้นทุนถัวเฉลี่ยเคลื่อนที่</span>
+                            <span class="badge" style="background:#FEF3C7; color:#92400E;">ต้นทุน 2 ตัว (INV / ผปย)</span>
                             <span class="badge" style="background:#FEF3C7; color:#92400E;">Hot Price</span>
                             <span class="badge" style="background:#F3E8FF; color:#6B21A8;">Best Buy</span>
                         </div>
@@ -1040,7 +1041,10 @@
 
                         <!-- Section 1.3: Hierarchy -->
                         <div class="section">
-                            <div class="section-title">🗂️ หมวดหมู่สินค้า (5-Level Hierarchy)</div>
+                            <div class="section-title">🗂️ 6 ชั้นหมวดหมู่สินค้า — โครงสินค้าตายตัว <span class="hint">ใช้จัดหมวดสินค้า · ประเภท → หมวด → ยี่ห้อ → รุ่น → รุ่นย่อย/สเปก</span></div>
+                            <div class="info-banner">
+                                💡 <span><b>6 ชั้นหมวดหมู่ ≠ 8 มิติวิเคราะห์</b> — ชั้นหมวดหมู่คือ<b>โครงสินค้าตายตัว</b> ใช้จัดหมวด · ส่วน<b>มิติวิเคราะห์</b> (ดูหัวข้อถัดไป) คือ<b>ป้ายวิเคราะห์ที่เปลี่ยนได้</b> ใช้กรองรายงาน</span>
+                            </div>
                             <div class="hierarchy-tree">
                                 <span class="hierarchy-node"><span class="lvl">L1 Category</span> กลุ่มการขาย · 111x</span>
                                 <span class="hierarchy-arrow">→</span>
@@ -1051,49 +1055,79 @@
                                 <span class="hierarchy-node"><span class="lvl">L4 Brand</span> Daikin · 04-</span>
                                 <span class="hierarchy-arrow">→</span>
                                 <span class="hierarchy-node"><span class="lvl">L5 Class / Model</span> FTKM Series (Inverter)</span>
+                                <span class="hierarchy-arrow">→</span>
+                                <span class="hierarchy-node"><span class="lvl">L6 รุ่นย่อย</span> FTKM35SV2S · 12,000 BTU R32 <span style="font-size:10px;color:#B45309">⏳ ชื่อชั้นยังไม่ฟันธง — ตั้งไว้ก่อนว่า "รุ่นย่อย" (2026-07-21)</span></span>
+                            </div>
+                            <div class="info-banner" style="background:#FFF7ED; border-color:#FED7AA; color:#9A3412; align-items:flex-start; margin-top:10px;">
+                                📦 <span>
+                                    <b>6 ชั้นหมวดหมู่ — ตรงกับ ERP เดิม</b> (<code>MAINGROUP</code> + <code>SUBGROUP1-5</code>) · เคาะ 2026-07-21<br>
+                                    <b>ทำไมต้อง 6:</b> ระบบเดิมมี 6 ชั้นอยู่แล้ว ถ้าทำแค่ 5 ตอนย้ายข้อมูลค่าชั้นสุดท้ายจะไม่มีที่ลง<br>
+                                    <b>อนาคตสินค้าหลากหลายขึ้น</b> ชั้นลึกช่วยแยกรุ่นย่อย/สเปกได้โดยไม่ต้องรื้อโครง<br>
+                                    ⚠️ <b>คนละเรื่องกับ 8 มิติวิเคราะห์</b> — 6 ชั้น = โครงสินค้าตายตัว · 8 มิติ = ป้ายวิเคราะห์ที่ตั้งชื่อเองได้
+                                </span>
                             </div>
                         </div>
 
-                        <!-- Section 1.4: Dimensions (collapsed) -->
-                        <details class="collapse">
-                            <summary>🏷️ มิติ / Tag เสริม (8 Dimensions) <span class="sum-meta">Report · Filter · Analytics · 8/8 ใช้งาน</span></summary>
-                            <div class="collapse-body">
+                        <!-- Section 1.4: มิติวิเคราะห์ (8 มิติ) -->
+                        <div class="section">
+                            <div class="section-title">🏷️ 8 มิติวิเคราะห์ — ป้ายวิเคราะห์ที่ตั้งชื่อเองได้ <span class="hint">ผูกที่ตัวสินค้าเท่านั้น · ใช้กรองรายงาน</span></div>
+
+                            <!-- กล่องกติกา -->
+                            <div class="info-banner" style="background:#F5F3FF; border-color:#DDD6FE; color:#5B21B6; align-items:flex-start;">
+                                🏷️ <span>
+                                    <b>มิติวิเคราะห์ผูกที่ตัวสินค้าเท่านั้น — ไม่ทำที่รายการขาย</b> (เคาะ 2026-07-21)<br>
+                                    <b>6 ชั้นหมวดหมู่</b> = โครงสินค้าตายตัว · <b>8 มิติ</b> = ป้ายวิเคราะห์ที่ตั้งชื่อเองได้<br>
+                                    ⚠️ <b>ห้ามตั้งชื่อมิติซ้ำกับชั้นหมวดหมู่</b> — ระบบเดิมตั้ง “กลุ่มการขาย” ทั้งที่ชั้นหมวดหมู่และมิติที่ 1 ทำให้สับสนว่าหมายถึงตัวไหน<br>
+                                    ✅ ระบบ Business Central รองรับ <b>8 shortcut dimensions</b> พอดี (ตรวจกับเอกสาร Microsoft แล้ว)
+                                </span>
+                            </div>
+
                             <div class="dim-grid">
                                 <div class="dim-box">
-                                    <div class="dim-label">DIM1 · ช่องทาง</div>
+                                    <div class="dim-label">มิติที่ 1 · กลุ่มการขาย</div>
                                     <div class="dim-value">Air — เครื่องปรับอากาศ</div>
+                                    <div class="dim-code">⚠️ ชื่อซ้ำกับชั้นหมวดหมู่ L1 — ต้องเปลี่ยนชื่อตอนย้ายระบบ</div>
+                                </div>
+                                <div class="dim-box" style="opacity:0.6;">
+                                    <div class="dim-label">มิติที่ 2 · (ว่าง)</div>
+                                    <div class="dim-value" style="color:#9CA3AF;">— ยังไม่ได้ใช้ —</div>
+                                    <div class="dim-code">เก็บว่างไว้รองรับการใช้งานภายหลัง</div>
                                 </div>
                                 <div class="dim-box">
-                                    <div class="dim-label">DIM2 · แบรนด์รอง</div>
-                                    <div class="dim-value">Daikin Premium Line</div>
-                                </div>
-                                <div class="dim-box">
-                                    <div class="dim-label">DIM3 · กลุ่มปรับราคา</div>
+                                    <div class="dim-label">มิติที่ 3 · การปรับราคา</div>
                                     <div class="dim-value">Seasonal-AC-2026</div>
+                                    <div class="dim-code">กลุ่มที่ปรับราคาพร้อมกัน</div>
                                 </div>
                                 <div class="dim-box">
-                                    <div class="dim-label">DIM4 · รายละเอียดเทคนิค</div>
+                                    <div class="dim-label">มิติที่ 4 · รายละเอียดสินค้า</div>
                                     <div class="dim-value">12K-Inverter-R32</div>
+                                    <div class="dim-code">สเปกย่อใช้กรองรายงาน</div>
+                                </div>
+                                <div class="dim-box" style="opacity:0.6;">
+                                    <div class="dim-label">มิติที่ 5 · (ว่าง)</div>
+                                    <div class="dim-value" style="color:#9CA3AF;">— ยังไม่ได้ใช้ —</div>
+                                    <div class="dim-code">เก็บว่างไว้รองรับการใช้งานภายหลัง</div>
                                 </div>
                                 <div class="dim-box">
-                                    <div class="dim-label">DIM5 · ประเภทลูกค้า</div>
-                                    <div class="dim-value">B2C-Residential</div>
-                                </div>
-                                <div class="dim-box">
-                                    <div class="dim-label">DIM6 · ขายปลีก</div>
+                                    <div class="dim-label">มิติที่ 6 · ประเภทสินค้าปลีก</div>
                                     <div class="dim-value">Retail-Priority</div>
+                                    <div class="dim-code">ใช้กับรายงานฝั่งค้าปลีก</div>
                                 </div>
                                 <div class="dim-box">
-                                    <div class="dim-label">DIM7 · ขายส่ง</div>
+                                    <div class="dim-label">มิติที่ 7 · รายตัวขายส่ง</div>
                                     <div class="dim-value">WHS-Dealer-Tier-A</div>
+                                    <div class="dim-code">ใช้กับรายงานฝั่งค้าส่ง</div>
                                 </div>
                                 <div class="dim-box">
-                                    <div class="dim-label">DIM8 · สถานะสินค้า</div>
+                                    <div class="dim-label">มิติที่ 8 · สถานะสินค้า</div>
                                     <div class="dim-value">Active-Current</div>
+                                    <div class="dim-code">สถานะวงจรชีวิตสินค้า</div>
                                 </div>
                             </div>
+                            <div style="font-size:12px; color:#6B7280; margin-top:8px;">
+                                📌 ใช้จริง 6 จาก 8 มิติ — มิติที่ 2 และ 5 ยังว่าง
                             </div>
-                        </details>
+                        </div>
 
                         <!-- Section 1.5: Status Flags (collapsed — badges already shown in header) -->
                         <details class="collapse">
@@ -1118,12 +1152,12 @@
 
                         <!-- Section 1.6: System Type Codes (collapsed) -->
                         <details class="collapse">
-                            <summary>⚙️ ประเภทเชิงระบบ (Type Codes) <span class="sum-meta">FIFO · VAT 7% · Posting Group · Import Duty 5%</span></summary>
+                            <summary>⚙️ ประเภทเชิงระบบ (Type Codes) <span class="sum-meta">ถัวเฉลี่ยเคลื่อนที่ · VAT 7% · Posting Group · Import Duty 5%</span></summary>
                             <div class="collapse-body">
                             <div class="fields-grid-4">
                                 <div class="field">
-                                    <div class="field-label">Cost Type</div>
-                                    <div class="field-value">FIFO (First In First Out)</div>
+                                    <div class="field-label">วิธีคิดต้นทุน (Cost Type)</div>
+                                    <div class="field-value">ถัวเฉลี่ยเคลื่อนที่ (Moving Average)</div>
                                 </div>
                                 <div class="field">
                                     <div class="field-label">Tax Type</div>
@@ -1423,16 +1457,27 @@
                 <div id="cost" class="tab-content">
                     <div class="tab-card">
 
-                        <!-- Section 3.1: Cost Summary -->
+                        <!-- Section 3.1: Cost Summary — ต้นทุน 2 ตัว -->
                         <div class="section">
-                            <div class="section-title">💸 ต้นทุน (FIFO)</div>
+                            <div class="section-title">💸 ต้นทุน 2 ตัว — INV (ตามบัญชี) &amp; ผปย (สุทธิ) <span class="hint">วิธีคิดต้นทุน: ถัวเฉลี่ยเคลื่อนที่ (Moving Average)</span></div>
+
+                            <!-- กล่องกติกา -->
+                            <div class="info-banner" style="background:#FFFBEB; border-color:#FDE68A; color:#78350F; align-items:flex-start;">
+                                💰 <span>
+                                    <b>ต้นทุน 2 ตัว — รายงานกำไรใช้ “ต้นทุน ผปย” เท่านั้น</b> (เคาะ 2026-07-21)<br>
+                                    <b>ต้นทุน INV</b> = ตามบัญชี ใช้ลงบัญชี/ปิดงบ · <b>ต้นทุน ผปย</b> = สุทธิหลังหักเงินสนับสนุนแบรนด์ ใช้วัดกำไรจริง<br>
+                                    ⚠️ <b>สำหรับผู้พัฒนา:</b> ระบบ Business Central มาตรฐานมี Unit Cost ตัวเดียว → <b>ต้องทำ custom field เพิ่ม</b> และเชื่อมกับระบบติดตามเงินสนับสนุนแบรนด์<br>
+                                    ⚠️ <b>ห้ามใช้ต้นทุน INV คิดกำไร</b> — จะเห็นว่าขายส่งขาดทุนทั้งที่จริง ๆ กำไร
+                                </span>
+                            </div>
+
                             <div class="fields-grid-4">
                                 <div class="field">
-                                    <div class="field-label">ต้นทุนเฉลี่ย (Avg Cost)</div>
+                                    <div class="field-label">ต้นทุน INV — ถัวเฉลี่ยเคลื่อนที่</div>
                                     <div class="field-value" style="font-size:16px; color:#1E3A5F;">฿21,450.00</div>
                                 </div>
                                 <div class="field">
-                                    <div class="field-label">ต้นทุนล่าสุด (Last Cost)</div>
+                                    <div class="field-label">ต้นทุน INV — ล่าสุด (Last Cost)</div>
                                     <div class="field-value" style="font-size:16px; color:#1E3A5F;">฿21,800.00</div>
                                 </div>
                                 <div class="field">
@@ -1440,9 +1485,84 @@
                                     <div class="field-value">฿21,200.00</div>
                                 </div>
                                 <div class="field">
-                                    <div class="field-label">Margin (Tier 1)</div>
-                                    <div class="field-value" style="color:#047857; font-weight:700;">35.0% (฿9,381)</div>
+                                    <div class="field-label">➖ เงินสนับสนุนแบรนด์ (รีเบท)</div>
+                                    <div class="field-value" style="color:#B45309; font-weight:700;">−฿1,450.00</div>
                                 </div>
+                            </div>
+
+                            <div class="fields-grid-4" style="margin-top:10px">
+                                <div class="field" style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:6px; padding:8px 10px">
+                                    <div class="field-label" style="color:#166534">🎯 ต้นทุน ผปย (สุทธิ) — ใช้คิดกำไร</div>
+                                    <div class="field-value" style="font-size:17px; color:#166534; font-weight:700;">฿20,000.00</div>
+                                </div>
+                                <div class="field" style="grid-column:span 3">
+                                    <div class="field-label">Margin (Tier 1 · คิดจากต้นทุน ผปย · ฐานก่อน VAT)</div>
+                                    <div class="field-value" style="color:#047857; font-weight:700;">35.1% (฿10,831.78)</div>
+                                    <div style="font-size:10.5px;color:#6B7280;line-height:1.6;margin-top:4px">
+                                        ราคา Tier 1 ฿32,990 ÷ 1.07 = <b>฿30,831.78</b> (ก่อน VAT) − ต้นทุน ผปย ฿20,000 = <b>฿10,831.78</b> → 35.1%<br>
+                                        <span style="color:#B45309">⚠️ ถ้าคิดจากต้นทุน INV ฿21,450 จะได้แค่ ฿9,381.78 (30.4%) — <b>ต่ำกว่าความจริง ฿1,450 ทุกเครื่อง</b></span><br>
+                                        <span style="color:#991B1B">⚠️ ผู้พัฒนา: <b>ต้องคิด % จากฐานก่อน VAT เท่านั้น</b> — ถ้าคิดจากราคารวม VAT จะได้ตัวเลขที่ไม่ตรงกับจำนวนเงิน</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 3.1b: ตัวอย่างจริง — ทำไมต้องมีต้นทุน 2 ตัว -->
+                        <div class="section">
+                            <div class="section-title">🧮 ตัวอย่างจริงจากระบบเดิม — เครื่องซักผ้า LG TT10NARG <span class="hint">ตัวเลขจริง ใช้อธิบายว่าทำไมต้องแยกต้นทุน 2 ตัว</span></div>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>รายการ</th>
+                                            <th style="text-align:right;">จำนวนเงิน (บาท)</th>
+                                            <th>คำอธิบาย</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>ราคาปลีก</td>
+                                            <td style="text-align:right;">5,990.00</td>
+                                            <td>ราคาป้ายหน้าร้าน</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ราคาส่ง</td>
+                                            <td style="text-align:right;"><b>5,450.00</b></td>
+                                            <td>ราคาที่ใช้เทียบกำไรด้านล่าง</td>
+                                        </tr>
+                                        <tr style="background:#FEF2F2;">
+                                            <td><b>ต้นทุน INV (ตามบัญชี)</b></td>
+                                            <td style="text-align:right;"><b>5,636.76</b></td>
+                                            <td>ราคาที่ซื้อเข้ามาจริง — <b>สูงกว่าราคาส่ง</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>เงินสนับสนุนแบรนด์ (รีเบท)</td>
+                                            <td style="text-align:right; color:#B91C1C; font-weight:700;">−368.76</td>
+                                            <td>ส่วนที่แบรนด์คืนให้หลังการขาย</td>
+                                        </tr>
+                                        <tr style="background:#ECFDF5;">
+                                            <td><b>ต้นทุน ผปย (สุทธิ)</b></td>
+                                            <td style="text-align:right;"><b>5,268.00</b></td>
+                                            <td>5,636.76 − 368.76 = <b>5,268.00</b> · ต้นทุนจริงที่ใช้วัดกำไร</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="fields-grid-2" style="margin-top:14px;">
+                                <div class="field" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:8px; padding:12px;">
+                                    <div class="field-label">ถ้าคิดกำไรจาก “ต้นทุน INV” (ผิด)</div>
+                                    <div class="field-value" style="font-size:18px; color:#B91C1C; font-weight:800;">ขาดทุน −186.76</div>
+                                    <div style="font-size:12px; color:#991B1B; margin-top:4px;">5,450.00 − 5,636.76 = −186.76 → รายงานจะบอกว่าขายส่งขาดทุน</div>
+                                </div>
+                                <div class="field" style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:12px;">
+                                    <div class="field-label">ถ้าคิดกำไรจาก “ต้นทุน ผปย” (ถูก)</div>
+                                    <div class="field-value" style="font-size:18px; color:#047857; font-weight:800;">กำไร +182.00</div>
+                                    <div style="font-size:12px; color:#065F46; margin-top:4px;">5,450.00 − 5,268.00 = +182.00 → กำไรจริงหลังหักเงินสนับสนุนแบรนด์</div>
+                                </div>
+                            </div>
+                            <div style="font-size:12px; color:#6B7280; margin-top:8px;">
+                                💡 ส่วนต่างระหว่าง 2 มุมมองนี้ = <b>368.76 บาท/เครื่อง</b> — ถ้ามีต้นทุนตัวเดียว รายงานกำไรจะบอกว่าขายส่งขาดทุนทั้งที่จริง ๆ กำไร
                             </div>
                         </div>
 

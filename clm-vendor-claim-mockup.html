@@ -159,7 +159,9 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
   <span class="status-pill">5. รับเงิน/ของแทน</span>
   <span class="status-pill">6. ออกใบลดหนี้ (PO-CN) → รอหักหนี้</span>
   <span class="status-pill clm8" style="display:none">8.5 ส่งสินค้าคืนลูกค้า</span>
+  <span class="status-pill" style="background:#FEE2E2;color:#991B1B;border-color:#FCA5A5">✕ แบรนด์ปฏิเสธ → SWT รับภาระ (write-off)</span>
 </div>
+<div style="font-size:11px;color:#991B1B;margin:2px 2px 0">✕ เส้นทางลบ (จาก 4): ปฏิเสธแล้วต้นทุนอะไหล่/ค่าแรงที่ออกไป = ตัดเป็นค่าใช้จ่าย SWT</div>
 <script>
 function clmMode(m, btn){
   document.querySelectorAll('.clm-mode').forEach(function(b){b.style.background='#fff';b.style.color='#374151';});
@@ -252,13 +254,64 @@ function clmMode(m, btn){
   </div>
 
   <div class="form-grid-2">
-    <div class="field"><label>อาการเสีย <span class="req">*</span></label>
-      <textarea>เปิดแล้วไม่เย็น · มีน้ำหยดจากเครื่อง · เสียงดังตอน Compressor ทำงาน · ใช้งานปกติ · เกิดอาการ ~3 ปี หลังซื้อ</textarea>
+    <div class="field"><label>รหัสอาการเสีย <span class="req">*</span> <span style="font-weight:400;color:#9CA3AF">— ชุดเดียวกับใบรับงานซ่อม</span></label>
+      <select id="clmFaultCode" onchange="clmFault()" disabled style="background:#F9FAFB;color:#374151">
+        <option value="F01" selected>F01 · ไม่เย็น / ความเย็นน้อย</option>
+        <option value="F02">F02 · มีน้ำรั่ว / น้ำหยด</option>
+        <option value="F03">F03 · เปิดไม่ติด / ไม่ทำงาน</option>
+        <option value="F04">F04 · เสียงดังผิดปกติ</option>
+        <option value="F05">F05 · มีกลิ่นเหม็น</option>
+        <option value="F06">F06 · ไฟรั่ว / ไฟช็อต</option>
+        <option value="F07">F07 · รีโมทใช้ไม่ได้</option>
+        <option value="F08">F08 · ตัดการทำงานเอง</option>
+        <option value="F09">F09 · ตัวเครื่องชำรุด/แตกหัก</option>
+        <option value="F10">F10 · ติดตั้งไม่ถูกต้อง</option>
+        <option value="F99">F99 · อื่น ๆ (ระบุในช่องบรรยาย)</option>
+      </select>
+      <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+        <span class="chip chip-blue" id="clmFaultChip">F01 · ไม่เย็น / ความเย็นน้อย</span>
+        <span class="chip chip-gray">อาการรอง: F02 · มีน้ำรั่ว / น้ำหยด</span>
+      </div>
+      <div id="clmFaultLock" style="margin-top:6px;font-size:11px;color:#065F46;background:#D1FAE5;border:1px solid #6EE7B7;border-radius:6px;padding:6px 10px">
+        🔒 <b>ดึงอัตโนมัติจากใบรับงานซ่อม</b> <a href="sv1-service-intake-mockup.html" style="color:#065F46;font-family:monospace;font-weight:700">SV-SV1-2604-0146</a> — ล็อกไว้ให้ตรงกัน
+        <button type="button" onclick="clmFaultUnlock()" style="margin-left:6px;padding:2px 8px;border:1px solid #6EE7B7;border-radius:4px;background:#fff;color:#065F46;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">✏️ ขอแก้</button>
+      </div>
+      <div id="clmFaultWarn" style="display:none;margin-top:6px;font-size:11px;color:#92400E;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:6px 10px">⚠️ <b>แก้แล้วจะไม่ตรงกับใบรับงานซ่อม</b> — ระบบจะบันทึกว่าใครแก้ + เหตุผล และรายงาน "รุ่นไหนเสียเรื่องอะไรบ่อย" จะยึดรหัสในใบเคลมนี้</div>
     </div>
+    <div class="field"><label>บรรยายอาการเพิ่มเติม (ส่งให้แบรนด์อ่าน)</label>
+      <textarea id="clmFaultNote">เปิดแล้วไม่เย็น · มีน้ำหยดจากเครื่อง · เสียงดังตอน Compressor ทำงาน · ใช้งานปกติ · เกิดอาการ ~3 ปี หลังซื้อ</textarea>
+    </div>
+  </div>
+
+  <div class="form-grid-2" style="margin-top:14px">
     <div class="field"><label>วินิจฉัยช่าง · ส่วนที่เสีย</label>
       <textarea>Compressor 2HP จับ Stall (rotor seize) · น้ำยารั่วผ่าน seal · ถาดน้ำทิ้งอุดตัน · เคลมได้ Compressor ใน Comp 7 ปี</textarea>
     </div>
+    <div class="alert alert-info" style="margin:0;align-self:start">
+      🔗 <div><strong>รหัสอาการเสียต้องส่งต่อจากใบรับงานซ่อม → ใบเคลม</strong> (เคาะ 2026-07-21)<br>
+      <strong>ทำไม:</strong> ถ้าใบเคลมใช้ข้อความอิสระ ข้อมูลจะขาดตอน → ตอบไม่ได้ว่า <strong>"รุ่นไหนเสียเรื่องอะไรบ่อย"</strong> ซึ่งเป็นข้อมูลที่ใช้เจรจากับแบรนด์<br>
+      📌 ใช้ชุดรหัสเดียวกับ <a href="sv1-service-intake-mockup.html" style="color:#1E40AF;font-weight:700">ใบรับงานซ่อม ↗</a> — ตั้งค่าที่ <a href="cf2-7-doc-template-mockup.html" style="color:#1E40AF;font-weight:700">ทะเบียนรหัสอาการเสีย (แม่แบบเอกสาร) ↗</a><br>
+      ⚠️ ระบบเดิมทำแยกกัน (ใบซ่อมเป็นรหัส · ใบเคลมเป็นข้อความ) — <strong>เราทำให้ดีกว่าเดิมตรงนี้</strong></div>
+    </div>
   </div>
+
+  <script>
+  function clmFault(){
+    var s=document.getElementById('clmFaultCode');
+    var c=document.getElementById('clmFaultChip');
+    if(s&&c) c.textContent=s.options[s.selectedIndex].textContent;
+    var w=document.getElementById('clmFaultWarn');
+    if(w) w.style.display='';
+  }
+  function clmFaultUnlock(){
+    var s=document.getElementById('clmFaultCode');
+    if(s){s.disabled=false;s.style.background='#fff';}
+    var w=document.getElementById('clmFaultWarn');
+    if(w) w.style.display='';
+    var l=document.getElementById('clmFaultLock');
+    if(l) l.innerHTML='🔓 <b>ปลดล็อกให้แก้ได้แล้ว</b> — เดิมดึงมาจากใบรับงานซ่อม <a href="sv1-service-intake-mockup.html" style="color:#065F46;font-family:monospace;font-weight:700">SV-SV1-2604-0146</a> (F01 · ไม่เย็น / ความเย็นน้อย)';
+  }
+  </script>
 
   <div class="form-grid" style="margin-top:14px">
     <div class="field"><label>Part No. ที่เคลม</label><input value="DAI-COMP-2HP-01"></div>
@@ -369,6 +422,76 @@ function clmMode(m, btn){
   <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
     <a href="po-cn-credit-note-mockup.html" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:linear-gradient(90deg,#7C2D12,#EF4444);color:#fff;border-radius:7px;font-size:13px;font-weight:700;text-decoration:none">↩️ ออกใบลดหนี้เจ้าหนี้ (PO-CN) → เข้าคิวรอหักหนี้</a>
     <span style="font-size:11px;color:#6B7280">เมื่อ Post → PO-6 (ใบตั้งหนี้) ดึงรายการ "รอหักหนี้" นี้ไปตัด AP เจ้าหนี้</span>
+  </div>
+</div>
+
+<!-- CLM-7: ทะเบียนซากอะไหล่ที่ต้องคืนแบรนด์ -->
+<div class="section-card">
+  <div class="section-title">♻️ CLM-7 · ซากอะไหล่ที่ต้องคืนแบรนด์
+    <span class="tag">เรียงตัวที่ค้างนานสุดขึ้นบน</span>
+  </div>
+
+  <div class="alert alert-warn" style="margin-top:0">
+    ⚠️ <div><strong>เคลมในประกัน = แบรนด์ให้อะไหล่ใหม่ แต่เราต้องส่งซาก (ของเก่าที่ถอดออก) คืนแบรนด์ภายในกำหนด</strong> — ถ้าส่งไม่ทัน แบรนด์จะเรียกเก็บเงินค่าอะไหล่ใหม่ชิ้นนั้นจากเรา<br>
+    เงินที่โดนเรียกเก็บ <strong>ตั้งเป็นลูกหนี้ของผู้รับผิดชอบ</strong> (ช่าง/แอดมินที่ถือซากอยู่) — <u>ไม่กลบเป็นค่าใช้จ่ายบริษัท</u> เพื่อให้รับผิดชอบถึงตัวบุคคล จะได้ไม่หลุดซ้ำ</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:150px">เลขซาก</th>
+        <th>ซากที่ต้องคืน</th>
+        <th style="width:170px">ตอนนี้อยู่ที่ไหน</th>
+        <th style="width:150px">ผู้รับผิดชอบ <span style="color:#DC2626">*</span></th>
+        <th style="width:150px">สถานะ</th>
+        <th style="width:150px">อายุการค้าง</th>
+        <th style="width:200px">จัดการ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#FEF2F2">
+        <td style="font-family:monospace;font-weight:600">SCR-SV1-2604-0051</td>
+        <td>แผงวงจรเก่า (PCB) · Daikin FTKM24<div style="font-size:11px;color:#991B1B;margin-top:2px">แบรนด์เรียกเก็บค่าอะไหล่ใหม่แล้ว <strong>4,200 ฿</strong></div></td>
+        <td>รถช่าง (ยังไม่นำเข้าคลัง)</td>
+        <td>ช่างสมศักดิ์ <span style="font-size:11px;color:#6B7280">(TECH-014)</span></td>
+        <td><span class="chip chip-red">ยังไม่ส่ง</span></td>
+        <td><span class="chip chip-red">🔴 เลยกำหนด 9 วัน</span></td>
+        <td><button class="btn btn-secondary" style="background:#B91C1C;color:#fff;border-color:#B91C1C;padding:6px 10px;font-size:12px">💰 ตั้งเป็นลูกหนี้ผู้รับผิดชอบ</button><div style="font-size:10.5px;color:#6B7280;margin-top:4px">ส่งต่อฝ่ายบัญชี · ตั้งลูกหนี้ 4,200 ฿</div></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-weight:600">SCR-SV1-2604-0055</td>
+        <td>Compressor 2HP เก่า · Daikin FTKM24</td>
+        <td>คลังศูนย์ซ่อม · BIN-4</td>
+        <td>แอดมินปภาวรินทร์ <span style="font-size:11px;color:#6B7280">(ADM-003)</span></td>
+        <td><span class="chip chip-yellow">ยังไม่ส่ง</span></td>
+        <td><span class="chip chip-yellow">⏱️ ค้าง 3 วัน</span></td>
+        <td><button class="btn btn-secondary" style="padding:6px 10px;font-size:12px">📦 บันทึกส่งคืนแบรนด์</button></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-weight:600">SCR-SV1-2604-0043</td>
+        <td>มอเตอร์พัดลมเก่า · Daikin FTKM18</td>
+        <td>ระหว่างขนส่ง · Kerry TH-882140</td>
+        <td>แอดมินปภาวรินทร์ <span style="font-size:11px;color:#6B7280">(ADM-003)</span></td>
+        <td><span class="chip chip-blue">ส่งแล้ว · รอแบรนด์รับ</span></td>
+        <td><span class="chip chip-gray">ส่งแล้ว 21 เม.ย. 26</span></td>
+        <td><button class="btn btn-secondary" style="padding:6px 10px;font-size:12px">✅ ยืนยันแบรนด์รับแล้ว</button></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-weight:600">SCR-SV1-2603-0038</td>
+        <td>คอยล์เย็นเก่า · Daikin FTKM24</td>
+        <td>แบรนด์ (Daikin Thailand)</td>
+        <td>แอดมินปภาวรินทร์ <span style="font-size:11px;color:#6B7280">(ADM-003)</span></td>
+        <td><span class="chip chip-green">✓ แบรนด์รับแล้ว</span></td>
+        <td><span class="chip chip-green">ปิดรายการ 18 เม.ย. 26</span></td>
+        <td><span style="font-size:11.5px;color:#6B7280">— ไม่ต้องทำอะไร</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px">
+    <span style="font-size:12px;color:#374151">สรุปซากในใบเคลมชุดนี้: <strong>ยังไม่ส่ง 2</strong> · ส่งแล้วรอแบรนด์รับ 1 · แบรนด์รับแล้ว 1</span>
+    <span style="font-size:12px;color:#991B1B;font-weight:600">· เลยกำหนดจนโดนเรียกเก็บ 1 รายการ (4,200 ฿)</span>
+    <a href="wh-svc-center-mockup.html" style="margin-left:auto;font-size:12px;color:#2563EB;font-weight:600;text-decoration:none">🏬 ดูของจริงที่คลังศูนย์ซ่อม (BIN-4) →</a>
   </div>
 </div>
 

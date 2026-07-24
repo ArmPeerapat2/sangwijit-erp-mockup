@@ -33,7 +33,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 .fchip .n{opacity:.7;margin-left:3px}
 .saab-search{margin-left:auto;background:#F3F4F6;border-radius:8px;padding:6px 12px;font-size:12px;color:#9CA3AF;width:180px}
 .content{flex:1;padding:12px 24px;display:flex;flex-direction:column;gap:10px;overflow:hidden;min-height:0}
-.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;flex:none}
+.kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;flex:none}
 .kpi{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:10px 14px}
 .kpi .lbl{font-size:11px;color:#6B7280}
 .kpi .val{font-size:22px;font-weight:700;color:#1E3A5F;margin-top:2px}
@@ -65,6 +65,15 @@ table.q tbody tr:hover{background:#F8FAFC}
 .st.hold{background:#FEF3C7;color:#92400E}
 .act-btn{font-size:11px;font-weight:600;padding:5px 11px;border-radius:6px;border:1px solid #2563EB;background:#2563EB;color:#fff;cursor:pointer;white-space:nowrap}
 .act-btn.ghost{background:#fff;color:#2563EB}
+/* ── ยอดกันสต็อกหมดอายุ (auto-release) ── */
+.aging{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:10.5px;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.aging.ag-g{color:#047857;background:#ECFDF5}
+.aging.ag-a{color:#B45309;background:#FEF3C7}
+.aging.ag-r{color:#B91C1C;background:#FEF2F2}
+.exp-sub{display:block;font-size:10px;color:#6B7280;margin-top:2px;white-space:nowrap}
+.rel-btn{font-size:11px;font-weight:600;padding:5px 9px;border-radius:6px;border:1px solid #FCA5A5;background:#fff;color:#B91C1C;cursor:pointer;white-space:nowrap;margin-top:4px}
+tr.exp-over{background:#FEF7F7}
+.act-cell{display:flex;flex-direction:column;align-items:stretch;gap:2px}
 </style>
 </head>
 <body>
@@ -93,11 +102,11 @@ table.q tbody tr:hover{background:#F8FAFC}
         <div class="mh-meta">
           <div class="mh-meta-item"><div class="lbl">คลัง</div><div class="val">สาขา 08 นครพนม</div></div>
           <div class="mh-meta-item"><div class="lbl">วันที่</div><div class="val">05 ก.ค. 26</div></div>
-          <div class="mh-meta-item"><div class="lbl">ตั๋วรอจัด</div><div class="val">12 ใบ</div></div>
+          <div class="mh-meta-item"><div class="lbl">ตั๋วรอจัด</div><div class="val">14 ใบ</div></div>
         </div>
       </div>
       <div class="mh-right">
-        <button class="mh-btn mh-btn-ghost" onclick="location.href='_archive/wh-q-dashboard-mockup-2026-07-12.html'">📊 คิวรวม (WH-Q)</button>
+        <button class="mh-btn mh-btn-ghost" onclick="location.href='wh-q1-receive-queue-mockup.html'">📥 คิวรับ (WH-Q1)</button>
         <button class="mh-btn mh-btn-ghost" onclick="location.reload()">🔄 รีเฟรช</button>
       </div>
     </div>
@@ -105,25 +114,30 @@ table.q tbody tr:hover{background:#F8FAFC}
 
   <!-- 2. SAAB — filter by ประเภทตั๋ว -->
   <div class="saab">
-    <button class="fchip on">ทั้งหมด <span class="n">12</span></button>
+    <button class="fchip on">ทั้งหมด <span class="n">14</span></button>
     <button class="fchip">🔵 ขอเบิก <span class="n">7</span></button>
     <button class="fchip">🟣 ขอโอน <span class="n">3</span></button>
-    <button class="fchip">🟡 จอง (ถึงคิว) <span class="n">2</span></button>
+    <button class="fchip">🟡 จอง (ถึงคิว) <span class="n">4</span></button>
     <span style="width:1px;height:22px;background:#E5E7EB;margin:0 4px"></span>
-    <button class="fchip">⏰ ด่วน/เลยกำหนด <span class="n">3</span></button>
+    <button class="fchip">⏰ ด่วน/เลยกำหนด <span class="n">5</span></button>
+    <span style="width:1px;height:22px;background:#E5E7EB;margin:0 4px"></span>
+    <button class="fchip" title="ยอดกันสต็อกใกล้ครบกำหนดปลดคืนสต็อก (เหลือ ≤ 3 วัน)">⏱️ ยอดกันสต็อกใกล้หมดอายุ <span class="n">1</span></button>
+    <button class="fchip" title="เลยกำหนดปลดยอดกันสต็อกแล้ว — ระบบปลดคืนสต็อกอัตโนมัติ + แจ้งพนักงานขายเจ้าของใบ">🔴 ยอดกันสต็อกเลยกำหนดแล้ว <span class="n">1</span></button>
     <div class="saab-search">🔎 ค้นเลขที่ / ลูกค้า / SKU</div>
   </div>
 
   <div class="content">
 
     <div class="rail-note">🍳 <b>รางครัว (Kitchen Rail)</b> — รวมทุกงาน "จ่าย/ออก" ที่คลังต้องทำ ไม่ว่ามาจากเอกสารไหน (ขอเบิก · ขอโอน · จอง) เรียงตามกำหนด · <b>คลิกแถว → เปิดฟอร์มทำจริง</b> (เบิก=WH-2 · โอน=WH-3)</div>
+    <div class="rail-note" style="background:#FFFBEB;border-color:#FDE68A;color:#92400E">⏳ <b>ยอดกันสต็อกหมดอายุเองได้</b> — นับจาก<b>วันนัดรับ</b>ของแต่ละใบ + จำนวนวันที่ตั้งไว้ (ค่าตั้งต้นมาจากการตั้งค่าระบบ · แก้ได้รายใบ) · ครบกำหนดแล้วระบบ<b>ปลดของคืนสต็อกอัตโนมัติ + แจ้งพนักงานขายเจ้าของใบ</b> · ใบที่ใกล้หมดอายุถูกเรียงขึ้นก่อน · ปุ่ม <b>🔓 ปลดของที่กันไว้</b> ใช้ปลดก่อนกำหนด — ต้องมีสิทธิ์ปลดยอดกันสต็อก กำหนดที่ทะเบียนพนักงาน/ตำแหน่ง (⏸️ รอกำหนดผู้มีสิทธิ์) · ปลดแล้วบันทึกผู้ปลด · วันเวลา · เหตุผล</div>
 
     <!-- KPI -->
     <div class="kpi-strip">
-      <div class="kpi"><div class="lbl">ตั๋วรอจัดทั้งหมด</div><div class="val">12</div></div>
-      <div class="kpi"><div class="lbl">ด่วน / เลยกำหนดวันนี้</div><div class="val urgent">3</div></div>
+      <div class="kpi"><div class="lbl">ตั๋วรอจัดทั้งหมด</div><div class="val">14</div></div>
+      <div class="kpi"><div class="lbl">ด่วน / เลยกำหนดวันนี้</div><div class="val urgent">5</div></div>
       <div class="kpi"><div class="lbl">กำลังหยิบอยู่</div><div class="val warn">2</div></div>
-      <div class="kpi"><div class="lbl">จองรอถึงคิว (กันสต๊อกแล้ว)</div><div class="val">2</div></div>
+      <div class="kpi"><div class="lbl">จองรอถึงคิว (กันสต๊อกแล้ว)</div><div class="val">4</div></div>
+      <div class="kpi"><div class="lbl">ยอดกันสต็อกใกล้/เลยหมดอายุ</div><div class="val urgent">2</div></div>
     </div>
 
     <!-- TABLE = รางตั๋ว -->
@@ -131,67 +145,89 @@ table.q tbody tr:hover{background:#F8FAFC}
       <div class="tc-head">
         <span class="t">🎫 ตั๋วงานเบิก/จ่าย</span>
         <span class="spacer"></span>
-        <select class="sortsel"><option>เรียงตาม: กำหนดจัด (ใกล้สุด)</option><option>เรียงตาม: ประเภท</option><option>เรียงตาม: เลขที่</option></select>
+        <select class="sortsel"><option>เรียงตาม: ยอดกันสต็อกใกล้หมดอายุขึ้นก่อน → แล้วกำหนดจัด</option><option>เรียงตาม: กำหนดจัด (ใกล้สุด)</option><option>เรียงตาม: ประเภท</option><option>เรียงตาม: เลขที่</option></select>
       </div>
       <div class="q-wrap">
         <table class="q">
           <thead><tr>
-            <th style="width:34px">#</th><th>เลขที่ตั๋ว</th><th>ประเภท</th><th>อ้างอิงต้นทาง</th><th>ลูกค้า / ปลายทาง</th><th>รายการ</th><th style="width:60px;text-align:center">จำนวน</th><th>กำหนดจัด</th><th>สถานะ</th><th style="width:110px"></th>
+            <th style="width:34px">#</th><th>เลขที่ตั๋ว</th><th>ประเภท</th><th>อ้างอิงต้นทาง</th><th>ลูกค้า / ปลายทาง</th><th>รายการ</th><th style="width:60px;text-align:center">จำนวน</th><th>กำหนดจัด</th><th style="width:150px">ยอดกันสต็อกหมดอายุ</th><th>สถานะ</th><th style="width:150px"></th>
           </tr></thead>
           <tbody>
+            <tr class="exp-over" onclick="location.href='wh2-issue-mockup.html'">
+              <td>1</td><td><span class="tno">RSV-0079</span></td><td><span class="tchip resv">🟡 จอง</span></td>
+              <td><span class="src">SL-2 · จอง</span></td><td><span class="who">ร้านแอร์เย็นสบาย<span class="s">รับเอง (ยังไม่มารับ)</span></span></td>
+              <td>แอร์ Haier 12K</td><td class="qty">3</td><td class="due soon">26 มิ.ย.</td>
+              <td><span class="aging ag-r">🔴 เลยกำหนดแล้ว 2 วัน</span><span class="exp-sub">นัดรับ 26 มิ.ย. + 7 วัน → 03 ก.ค.</span></td>
+              <td><span class="st hold">กันสต๊อกแล้ว</span></td>
+              <td><div class="act-cell"><button class="act-btn ghost">เปิดใบเบิก →</button><button class="rel-btn" onclick="event.stopPropagation();relResv('RSV-0079')" title="ต้องมีสิทธิ์ปลดยอดกันสต็อก — กำหนดที่ทะเบียนพนักงาน/ตำแหน่ง (⏸️ รอกำหนดผู้มีสิทธิ์)">🔓 ปลดของที่กันไว้</button></div></td>
+            </tr>
             <tr onclick="location.href='wh2-issue-mockup.html'">
-              <td>1</td><td><span class="tno">ISR-0039</span></td><td><span class="tchip pick">🔵 ขอเบิก</span></td>
+              <td>2</td><td><span class="tno">RSV-0084</span></td><td><span class="tchip resv">🟡 จอง</span></td>
+              <td><span class="src">SL-2 · จอง</span></td><td><span class="who">คุณประเสริฐ ทองดี<span class="s">รับเอง (เลื่อนแล้ว 1 ครั้ง)</span></span></td>
+              <td>เตาแก๊ส Rinnai x2</td><td class="qty">2</td><td class="due soon">01 ก.ค.</td>
+              <td><span class="aging ag-a">⏱️ เหลือ 3 วัน</span><span class="exp-sub">นัดรับ 01 ก.ค. + 7 วัน → 08 ก.ค.</span></td>
+              <td><span class="st hold">กันสต๊อกแล้ว</span></td>
+              <td><div class="act-cell"><button class="act-btn ghost">เปิดใบเบิก →</button><button class="rel-btn" onclick="event.stopPropagation();relResv('RSV-0084')" title="ต้องมีสิทธิ์ปลดยอดกันสต็อก — กำหนดที่ทะเบียนพนักงาน/ตำแหน่ง (⏸️ รอกำหนดผู้มีสิทธิ์)">🔓 ปลดของที่กันไว้</button></div></td>
+            </tr>
+            <tr onclick="location.href='wh2-issue-mockup.html'">
+              <td>3</td><td><span class="tno">ISR-0039</span></td><td><span class="tchip pick">🔵 ขอเบิก</span></td>
               <td><span class="src">SO-0119</span></td><td><span class="who">ร้านทองมา<span class="s">ส่งหน้าร้าน</span></span></td>
-              <td>ตู้เย็น Toshiba 2 ประตู</td><td class="qty">1</td><td class="due soon">วันนี้</td><td><span class="st doing">กำลังหยิบ</span></td>
+              <td>ตู้เย็น Toshiba 2 ประตู</td><td class="qty">1</td><td class="due soon">วันนี้</td><td><span style="color:#9CA3AF">—</span></td><td><span class="st doing">กำลังหยิบ</span></td>
               <td><button class="act-btn">เปิดใบเบิก →</button></td>
             </tr>
             <tr onclick="location.href='wh3-transfer-mockup.html'">
-              <td>2</td><td><span class="tno">TRR-0031</span></td><td><span class="tchip move">🟣 ขอโอน</span></td>
+              <td>4</td><td><span class="tno">TRR-0031</span></td><td><span class="tchip move">🟣 ขอโอน</span></td>
               <td><span class="src">SO-0125</span></td><td><span class="who">HQ → สาขา 08<span class="s">Inter-Branch</span></span></td>
-              <td>แอร์ Daikin 12K + ท่อทองแดง</td><td class="qty">38</td><td class="due soon">วันนี้</td><td><span class="st wait">รอสร้างใบโอน</span></td>
+              <td>แอร์ Daikin 12K + ท่อทองแดง</td><td class="qty">38</td><td class="due soon">วันนี้</td><td><span style="color:#9CA3AF">—</span></td><td><span class="st wait">รอสร้างใบโอน</span></td>
               <td><button class="act-btn">เปิดใบโอน →</button></td>
             </tr>
             <tr onclick="location.href='wh2-issue-mockup.html'">
-              <td>3</td><td><span class="tno">ISR-0042</span></td><td><span class="tchip pick">🔵 ขอเบิก</span></td>
+              <td>5</td><td><span class="tno">ISR-0042</span></td><td><span class="tchip pick">🔵 ขอเบิก</span></td>
               <td><span class="src">SO-0125</span></td><td><span class="who">คุณวิภา สมบูรณ์<span class="s">ติดตั้ง 06 ก.ค.</span></span></td>
-              <td>แอร์ Daikin 12K + ท่อทองแดง</td><td class="qty">2</td><td class="due">05 ก.ค.</td><td><span class="st wait">รอหยิบ</span></td>
+              <td>แอร์ Daikin 12K + ท่อทองแดง</td><td class="qty">2</td><td class="due">05 ก.ค.</td><td><span class="aging ag-g">⏱️ เหลือ 8 วัน</span><span class="exp-sub">นัดรับ 06 ก.ค. + 7 วัน → 13 ก.ค.</span></td><td><span class="st wait">รอหยิบ</span></td>
               <td><button class="act-btn">เปิดใบเบิก →</button></td>
             </tr>
             <tr onclick="location.href='wh2-issue-mockup.html'">
-              <td>4</td><td><span class="tno">RSV-0088</span></td><td><span class="tchip resv">🟡 จอง</span></td>
+              <td>6</td><td><span class="tno">RSV-0088</span></td><td><span class="tchip resv">🟡 จอง</span></td>
               <td><span class="src">SL-2 · จอง</span></td><td><span class="who">คุณมานี ใจดี<span class="s">รับเอง</span></span></td>
-              <td>พัดลม Hatari 18 นิ้ว</td><td class="qty">5</td><td class="due">07 ก.ค.</td><td><span class="st hold">กันสต๊อกแล้ว</span></td>
-              <td><button class="act-btn ghost">เปิดใบเบิก →</button></td>
+              <td>พัดลม Hatari 18 นิ้ว</td><td class="qty">5</td><td class="due">07 ก.ค.</td>
+              <td><span class="aging ag-g">⏱️ เหลือ 9 วัน</span><span class="exp-sub">นัดรับ 07 ก.ค. + 7 วัน → 14 ก.ค.</span></td>
+              <td><span class="st hold">กันสต๊อกแล้ว</span></td>
+              <td><div class="act-cell"><button class="act-btn ghost">เปิดใบเบิก →</button><button class="rel-btn" onclick="event.stopPropagation();relResv('RSV-0088')" title="ต้องมีสิทธิ์ปลดยอดกันสต็อก — กำหนดที่ทะเบียนพนักงาน/ตำแหน่ง (⏸️ รอกำหนดผู้มีสิทธิ์)">🔓 ปลดของที่กันไว้</button></div></td>
             </tr>
             <tr onclick="location.href='wh2-issue-mockup.html'">
-              <td>5</td><td><span class="tno">ISR-0043</span></td><td><span class="tchip pick">🔵 ขอเบิก</span></td>
+              <td>7</td><td><span class="tno">ISR-0043</span></td><td><span class="tchip pick">🔵 ขอเบิก</span></td>
               <td><span class="src">SO-0127</span></td><td><span class="who">คุณสมพงษ์<span class="s">ส่งด่วน</span></span></td>
-              <td>เครื่องซักผ้า LG 10 kg</td><td class="qty">1</td><td class="due soon">วันนี้</td><td><span class="st wait">รอหยิบ</span></td>
+              <td>เครื่องซักผ้า LG 10 kg</td><td class="qty">1</td><td class="due soon">วันนี้</td><td><span style="color:#9CA3AF">—</span></td><td><span class="st wait">รอหยิบ</span></td>
               <td><button class="act-btn">เปิดใบเบิก →</button></td>
             </tr>
             <tr onclick="location.href='wh2-issue-mockup.html'">
-              <td>6</td><td><span class="tno">ISR-0044</span></td><td><span class="tchip pick">🔵 ขอเบิก</span></td>
+              <td>8</td><td><span class="tno">ISR-0044</span></td><td><span class="tchip pick">🔵 ขอเบิก</span></td>
               <td><span class="src">SV-3 · เบิกอะไหล่</span></td><td><span class="who">งานซ่อม SVJ-0210<span class="s">ช่างเอก</span></span></td>
-              <td>คอมเพรสเซอร์ + แผงบอร์ด</td><td class="qty">2</td><td class="due">08 ก.ค.</td><td><span class="st wait">รอหยิบ</span></td>
+              <td>คอมเพรสเซอร์ + แผงบอร์ด</td><td class="qty">2</td><td class="due">08 ก.ค.</td><td><span style="color:#9CA3AF">—</span></td><td><span class="st wait">รอหยิบ</span></td>
               <td><button class="act-btn">เปิดใบเบิก →</button></td>
             </tr>
             <tr onclick="location.href='wh3-transfer-mockup.html'">
-              <td>7</td><td><span class="tno">TRR-0033</span></td><td><span class="tchip move">🟣 ขอโอน</span></td>
+              <td>9</td><td><span class="tno">TRR-0033</span></td><td><span class="tchip move">🟣 ขอโอน</span></td>
               <td><span class="src">เติมสต๊อก</span></td><td><span class="who">HQ → สาขา 08<span class="s">Replenish</span></span></td>
-              <td>ท่อทองแดง 4 เมตร (ล็อต)</td><td class="qty">40</td><td class="due">09 ก.ค.</td><td><span class="st wait">รอสร้างใบโอน</span></td>
+              <td>ท่อทองแดง 4 เมตร (ล็อต)</td><td class="qty">40</td><td class="due">09 ก.ค.</td><td><span style="color:#9CA3AF">—</span></td><td><span class="st wait">รอสร้างใบโอน</span></td>
               <td><button class="act-btn ghost">เปิดใบโอน →</button></td>
             </tr>
             <tr onclick="location.href='wh2-issue-mockup.html'">
-              <td>8</td><td><span class="tno">ISR-0045</span></td><td><span class="tchip pick">🔵 ขอเบิก</span></td>
+              <td>10</td><td><span class="tno">ISR-0045</span></td><td><span class="tchip pick">🔵 ขอเบิก</span></td>
               <td><span class="src">SO-0130</span></td><td><span class="who">คุณอนงค์<span class="s">ติดตั้ง 09 ก.ค.</span></span></td>
-              <td>แอร์ Mitsubishi 18K</td><td class="qty">1</td><td class="due">08 ก.ค.</td><td><span class="st hold">กันสต๊อกแล้ว</span></td>
-              <td><button class="act-btn ghost">เปิดใบเบิก →</button></td>
+              <td>แอร์ Mitsubishi 18K</td><td class="qty">1</td><td class="due">08 ก.ค.</td>
+              <td><span class="aging ag-g">⏱️ เหลือ 11 วัน</span><span class="exp-sub">นัดรับ 09 ก.ค. + 7 วัน → 16 ก.ค.</span></td>
+              <td><span class="st hold">กันสต๊อกแล้ว</span></td>
+              <td><div class="act-cell"><button class="act-btn ghost">เปิดใบเบิก →</button><button class="rel-btn" onclick="event.stopPropagation();relResv('ISR-0045')" title="ต้องมีสิทธิ์ปลดยอดกันสต็อก — กำหนดที่ทะเบียนพนักงาน/ตำแหน่ง (⏸️ รอกำหนดผู้มีสิทธิ์)">🔓 ปลดของที่กันไว้</button></div></td>
             </tr>
             <tr onclick="location.href='wh2-issue-mockup.html'">
-              <td>9</td><td><span class="tno">RSV-0090</span></td><td><span class="tchip resv">🟡 จอง</span></td>
+              <td>11</td><td><span class="tno">RSV-0090</span></td><td><span class="tchip resv">🟡 จอง</span></td>
               <td><span class="src">SL-2 · จอง</span></td><td><span class="who">ร้านไฟฟ้ารุ่งเรือง<span class="s">รับเอง 10 ก.ค.</span></span></td>
-              <td>หม้อหุงข้าว x10</td><td class="qty">10</td><td class="due">10 ก.ค.</td><td><span class="st hold">กันสต๊อกแล้ว</span></td>
-              <td><button class="act-btn ghost">เปิดใบเบิก →</button></td>
+              <td>หม้อหุงข้าว x10</td><td class="qty">10</td><td class="due">10 ก.ค.</td>
+              <td><span class="aging ag-g">⏱️ เหลือ 19 วัน</span><span class="exp-sub">นัดรับ 10 ก.ค. + 14 วัน (ตั้งรายใบ) → 24 ก.ค.</span></td>
+              <td><span class="st hold">กันสต๊อกแล้ว</span></td>
+              <td><div class="act-cell"><button class="act-btn ghost">เปิดใบเบิก →</button><button class="rel-btn" onclick="event.stopPropagation();relResv('RSV-0090')" title="ต้องมีสิทธิ์ปลดยอดกันสต็อก — กำหนดที่ทะเบียนพนักงาน/ตำแหน่ง (⏸️ รอกำหนดผู้มีสิทธิ์)">🔓 ปลดของที่กันไว้</button></div></td>
             </tr>
           </tbody>
         </table>
@@ -210,6 +246,10 @@ document.querySelectorAll('.fchip').forEach(function(c){
     c.classList.add('on');
   });
 });
+/* ปลดของที่กันไว้ ก่อนครบกำหนด — ต้องมีสิทธิ์ปลดยอดกันสต็อก (กำหนดที่ทะเบียนพนักงาน/ตำแหน่ง) */
+function relResv(no){
+  alert('ปลดของที่กันไว้ — ตั๋ว '+no+' (ตัวอย่าง)\n\n⚠️ ใช้ได้เฉพาะผู้มีสิทธิ์ปลดยอดกันสต็อก — สิทธิ์กำหนดที่ทะเบียนพนักงาน / ตำแหน่ง\n⏸️ รอผู้บริหารกำหนดว่าตำแหน่งใดได้สิทธิ์นี้\n\nระบบจะให้ระบุเหตุผลที่ปลด แล้วบันทึก: ผู้ปลด · วันเวลา · เหตุผล\nจากนั้นคืนของเข้าสต็อก + แจ้งพนักงานขายเจ้าของใบ');
+}
 </script>
 <script src="swt-link.js" defer></script>
 <script src="swt-sidebar.js"></script>

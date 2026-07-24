@@ -190,10 +190,14 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           <button class="card-btn primary" onclick="dfOpenVend()">🔍 เลือก/เปลี่ยน</button>
         </div>
         <div class="field-grid-2">
-          <div class="field"><div class="field-label">รหัส · ชื่อ</div><div class="field-value"><span class="highlight">V-00045</span> · Daikin Industries (TH) Ltd.</div></div>
+          <div class="field"><div class="field-label">เจ้าหนี้ของใบจ่ายนี้ (1 ใบจ่าย = 1 เจ้าหนี้)</div><div class="field-value"><span class="highlight">V-00045</span> · Daikin Industries (TH) Ltd.</div></div>
           <div class="field"><div class="field-label">เลขภาษี</div><div class="field-value mono">0-1055-12345-67-8</div></div>
-          <div class="field"><div class="field-label">WHT Category</div><div class="field-value">สินค้า — ไม่หัก ณ ที่จ่าย</div></div>
-          <div class="field"><div class="field-label">AP คงค้างรวม (Vendor)</div><div class="field-value" style="color:#B45309">฿2,339,836.00</div></div>
+          <div class="field"><div class="field-label">ประเภทเงินได้ · อัตราภาษีหัก ณ ที่จ่าย</div><div class="field-value">🔒 อ่านจากตารางประเภทเงินได้กลาง (อ่านอย่างเดียว)</div></div>
+          <div class="field"><div class="field-label">ยอดค้างชำระในใบจ่ายนี้ (รวม VAT)</div><div class="field-value" style="color:#B45309">฿2,918,176.00</div></div>
+        </div>
+        <div style="font-size:10.5px;color:#6B7280;border-top:1px dashed #E5E7EB;padding-top:6px">
+          💡 <b style="color:#B45309">1 ใบจ่าย ต่อ 1 เจ้าหนี้เท่านั้น</b> — แต่ <b>รวมได้หลายรายการ/หลายใบตั้งหนี้ของเจ้าหนี้รายนั้น</b> · ใบนี้จ่าย Daikin Industries (TH) รวม 2 ใบตั้งหนี้ (ค่าสินค้า + ค่าจ้างติดตั้ง) ในใบเดียว<br>
+          ถ้าเป็นเจ้าหนี้คนละราย ต้อง<b>แยกใบจ่ายคนละใบ</b> — เช่น นายสมพงษ์ ช่างรับเหมา ออกเป็นใบจ่ายอีกใบต่างหาก · <b>ช่างนอกก็เป็นเจ้าหนี้การค้าธรรมดา ไม่ใช่ประเภทพิเศษ จ่ายตามสายปกติ</b>
         </div>
       </div>
       <div class="card compact">
@@ -224,33 +228,65 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       </div>
       <div class="items-wrap">
         <table class="items">
-          <thead><tr><th style="width:32px"><input type="checkbox" checked onchange="toggleAll(this)"></th><th>#</th><th>เลขที่ AP</th><th>ใบแจ้งหนี้ Vendor</th><th>วันครบกำหนด</th><th class="num">ยอดค้าง</th><th class="num">WHT</th><th class="num">จ่ายสุทธิ</th><th>สถานะ</th></tr></thead>
+          <thead><tr><th style="width:32px"><input type="checkbox" checked onchange="toggleAll(this)"></th><th style="width:28px">#</th><th>เลขที่ใบตั้งหนี้</th><th>เจ้าหนี้</th><th>ประเภทเงินได้ · อัตรา 🔒</th><th>แหล่งที่มา / การจับคู่</th><th>ครบกำหนด</th><th class="num">ยอดค้าง (รวม VAT)</th><th class="num">ฐานก่อน VAT</th><th class="num">ภาษีหัก ณ ที่จ่าย ✎</th><th class="num">จ่ายสุทธิ</th></tr></thead>
           <tbody id="apRows">
-            <tr data-amt="2339836" data-wht="0" data-net="2339836">
+            <tr data-amt="2339836" data-base="2186762.62" data-wht="0" data-net="2339836">
               <td><input type="checkbox" checked onchange="recompute()"></td>
               <td>1</td>
-              <td class="item-code"><a href="po6-ap-invoice-mockup.html" target="_blank">AP-2606-0088</a></td>
-              <td class="mono">DKN-INV-25088</td>
+              <td class="item-code"><a href="po6-ap-invoice-mockup.html" target="_blank">AP-2606-0088</a><div class="mono" style="font-size:10px;color:#9CA3AF">DKN-INV-25088</div></td>
+              <td>Daikin Industries (TH)</td>
+              <td>สินค้า — ไม่หัก <b>0%</b></td>
+              <td><span class="due-chip ok">อ้างใบสั่งซื้อ · จับคู่ 3 ทาง ✓</span><div style="font-size:10px;color:#9CA3AF">PO-2606-0042 · GR-2606-0210</div></td>
               <td>24 ส.ค. 26 <span class="due-chip soon">อีก 75 วัน</span></td>
               <td class="num">2,339,836.00</td>
-              <td class="num" style="color:#9CA3AF">0.00</td>
+              <td class="num" style="color:#6B7280">2,186,762.62</td>
+              <td class="num"><input class="pay-sel num" value="0.00" style="width:96px;padding:3px 6px;font-size:12px" onchange="whtEdit(this)"></td>
               <td class="num" style="font-weight:700">2,339,836.00</td>
-              <td><span class="due-chip ok">Posted · ค้างจ่าย</span></td>
             </tr>
-            <tr class="empty-row"><td></td><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td></td><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td></td><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td></td><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td></td><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td></td><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td></td><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td></td><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr class="empty-row"><td></td><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr data-amt="578340" data-base="540504.67" data-wht="16215.14" data-net="562124.86">
+              <td><input type="checkbox" checked onchange="recompute()"></td>
+              <td>2</td>
+              <td class="item-code"><a href="po6-ap-invoice-mockup.html" target="_blank">AP-2606-0091</a><div class="mono" style="font-size:10px;color:#9CA3AF">DKN-INV-25092</div></td>
+              <td>Daikin Industries (TH)</td>
+              <td>ค่าจ้างทำของ (ติดตั้ง) <b>3%</b></td>
+              <td><span class="due-chip ok">อ้างใบสั่งซื้อ · จับคู่ 3 ทาง ✓</span><div style="font-size:10px;color:#9CA3AF">PO-2606-0051 · GR-2606-0233</div></td>
+              <td>05 ก.ย. 26 <span class="due-chip soon">อีก 87 วัน</span></td>
+              <td class="num">578,340.00</td>
+              <td class="num" style="color:#6B7280">540,504.67</td>
+              <td class="num"><input class="pay-sel num" value="16,215.14" style="width:96px;padding:3px 6px;font-size:12px" onchange="whtEdit(this)"></td>
+              <td class="num" style="font-weight:700">562,124.86</td>
+            </tr>
+            <tr class="empty-row"><td></td><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td></td><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td></td><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td></td><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td></td><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td></td><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td></td><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td></td><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
           </tbody>
+          <tfoot>
+            <tr style="background:#F1F5F9;font-weight:700">
+              <td></td><td></td>
+              <td colspan="5">รวมทั้งสิ้น <span id="fi2TotCnt">2</span> ใบตั้งหนี้ · เจ้าหนี้รายเดียว Daikin Industries (TH)</td>
+              <td class="num" id="fi2TotAmt">2,918,176.00</td>
+              <td class="num" id="fi2TotBase">2,727,267.29</td>
+              <td class="num" id="fi2TotWht" style="color:#EF4444">16,215.14</td>
+              <td class="num" id="fi2TotNet">2,901,960.86</td>
+            </tr>
+          </tfoot>
         </table>
       </div>
-      <div style="padding:8px 14px;border-top:1px dashed #E5E7EB;background:#FAFBFC;font-size:11px;color:#6B7280">
-        💡 เลือกใบตั้งหนี้จาก <b>PO-6 (Posted)</b> · จ่ายได้หลายใบใน 1 PV · WHT คำนวณอัตโนมัติตาม Vendor Category → ส่งเข้า <a href="fi12-wht-mockup.html" style="color:#2563EB">FI-12</a> หลัง Post
+      <div style="padding:8px 14px;border-top:1px dashed #E5E7EB;background:#FAFBFC;font-size:11px;color:#6B7280;display:flex;flex-direction:column;gap:4px">
+        <div>🧮 <b style="color:#B45309">ฐานคำนวณภาษีหัก ณ ที่จ่าย = ฐานก่อน VAT เท่านั้น</b> (ไม่ใช่ยอดค้างที่รวม VAT แล้ว) · ฐานก่อน VAT = ยอดรวม VAT ÷ 1.07 · เช่น 578,340.00 ÷ 1.07 = 540,504.67 → หัก 3% = <b>16,215.14</b></div>
+        <div>🔒 <b>อัตราภาษีหัก ณ ที่จ่ายมาจากตารางกลางที่ผูกกับประเภทเงินได้</b> (ค่าบริการ/ค่าจ้างทำของ 3% · ค่าโฆษณา 2% · ค่าขนส่ง 1% · ค่าเช่า 5%) — หน้านี้<b>อ่านอย่างเดียว ห้ามพิมพ์อัตราเอง</b> แก้อัตราได้ที่ตารางกลางเท่านั้น</div>
+        <div>✎ <b>ยอดภาษี: ระบบคำนวณให้เป็นค่าตั้งต้น แต่กรอกทับได้กรณีพิเศษ</b> (ไม่ล็อกตาย — เคาะ 21 ก.ค. 2026) · ถ้ากรอกทับ ระบบจะบันทึกผู้แก้ + เหตุผลไว้ในประวัติ</div>
+        <div>📥 <b>รับใบตั้งหนี้ได้ 2 แบบ</b> — (1) <b>อ้างใบสั่งซื้อ</b> → ต้องผ่านการจับคู่ 3 ทาง (ใบสั่งซื้อ · ใบรับของ · ใบแจ้งหนี้) · (2) <b>ไม่อ้างใบสั่งซื้อ</b> (ช่างนอก · ค่าเช่า · ค่าที่ปรึกษา · ค่าสาธารณูปโภค) → <b>ข้ามการจับคู่ 3 ทาง</b> เพราะไม่มีใบสั่งซื้อให้ match แต่แรก</div>
+        <div>💡 ใบตั้งหนี้ที่อ้างใบสั่งซื้อมาจาก <b>ใบตั้งหนี้เจ้าหนี้ (PO-6, Posted)</b> · <b style="color:#B45309">1 ใบจ่าย = 1 เจ้าหนี้ แต่รวมได้หลายใบตั้งหนี้ของเจ้าหนี้รายนั้น</b> (ใบนี้รวม AP-2606-0088 + AP-2606-0091 ของ Daikin) → ภาษีหัก ณ ที่จ่ายส่งเข้า <a href="fi12-wht-mockup.html" style="color:#2563EB">ทะเบียนภาษีหัก ณ ที่จ่าย (FI-12)</a> หลัง Post</div>
+        <div style="margin-top:2px;padding:7px 9px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;color:#78350F">
+          📄 <b>ใบจ่ายอื่นที่รออนุมัติ (เจ้าหนี้คนละราย → แยกใบ)</b><br>
+          <b>PV แยกใบ</b> · <b>นายสมพงษ์ ช่างรับเหมา</b> · ค่าจ้างทำของ · ฐานก่อน VAT <b class="mono">30,000.00</b> · หัก <b>3%</b> = <b class="mono">900.00</b> · จ่ายจริง <b class="mono">29,100.00</b> · <b>ไม่มี VAT (ช่างไม่จด VAT)</b> · <b>ตั้งหนี้แบบไม่อ้างใบสั่งซื้อ</b> → ข้ามการจับคู่ 3 ทาง
+        </div>
       </div>
     </div>
 
@@ -271,24 +307,28 @@ table.items th:last-child,table.items td:last-child{border-right:none}
         </div>
         <div class="tabset-pane" id="t-wht">
           <div class="tab-grid">
-            <span class="k">ประเภท WHT</span><span class="v">สินค้า — ไม่หัก (0%)</span>
-            <span class="k">ภ.ง.ด.</span><span class="v">— (ไม่มี WHT รายการนี้)</span>
-            <span class="k">หลัง Post</span><span class="v">ถ้ามี WHT → auto เข้า <a href="fi12-wht-mockup.html" style="color:#2563EB">FI-12 WHT List</a> → Release → พิมพ์ใบรับรอง</span>
+            <span class="k">ฐานคำนวณ</span><span class="v"><b style="color:#B45309">ฐานก่อน VAT</b> (ยอดรวม VAT ÷ 1.07) — ไม่ใช่ยอดรวม VAT</span>
+            <span class="k">ประเภทเงินได้ · อัตรา 🔒</span><span class="v">สินค้า 0% · ค่าจ้างทำของ 3% — <b>อ่านจากตารางกลาง หน้านี้อ่านอย่างเดียว</b></span>
+            <span class="k">ยอดหักรวม</span><span class="v">0.00 + 16,215.14 = <b style="color:#EF4444">16,215.14</b> (ฐานก่อน VAT รวม 2,727,267.29)</span>
+            <span class="k">ภ.ง.ด.</span><span class="v">ภ.ง.ด.53 (นิติบุคคล — Daikin Industries) · <b>ใบจ่ายนี้มีเจ้าหนี้รายเดียว จึงออกใบรับรองชุดเดียว</b></span>
+            <span class="k">แก้ยอดได้ไหม</span><span class="v">✎ ระบบคำนวณเป็นค่าตั้งต้น <b>กรอกทับได้กรณีพิเศษ</b> (ไม่ล็อกตาย) · บันทึกผู้แก้ไว้ในประวัติ</span>
+            <span class="k">หลัง Post</span><span class="v">ส่งเข้า <a href="fi12-wht-mockup.html" style="color:#2563EB">ทะเบียนภาษีหัก ณ ที่จ่าย (FI-12)</a> → Release → พิมพ์ใบรับรอง</span>
           </div>
         </div>
         <div class="tabset-pane" id="t-ref">
           <div class="tab-grid">
-            <span class="k">ใบตั้งหนี้ (PO-6)</span><span class="v"><a href="po6-ap-invoice-mockup.html" style="color:#2563EB">AP-2606-0088</a></span>
-            <span class="k">ใบรับ (WH-1)</span><span class="v">GR-2606-0210</span>
-            <span class="k">ใบสั่งซื้อ (PO-4)</span><span class="v">PO-2606-0042</span>
+            <span class="k">ใบตั้งหนี้ (อ้างใบสั่งซื้อ)</span><span class="v"><a href="po6-ap-invoice-mockup.html" style="color:#2563EB">AP-2606-0088</a> · <a href="po6-ap-invoice-mockup.html" style="color:#2563EB">AP-2606-0091</a> — จับคู่ 3 ทาง ✓</span>
+            <span class="k">เจ้าหนี้คนละราย</span><span class="v"><a href="po6-ap-invoice-mockup.html" style="color:#2563EB">AP-2607-0004</a> นายสมพงษ์ ช่างรับเหมา — <b>ไม่อยู่ในใบจ่ายนี้ ต้องแยกใบจ่ายต่างหาก</b> (ข้ามการจับคู่ 3 ทาง)</span>
+            <span class="k">ใบรับของ</span><span class="v">GR-2606-0210 · GR-2606-0233</span>
+            <span class="k">ใบสั่งซื้อ</span><span class="v">PO-2606-0042 · PO-2606-0051</span>
           </div>
         </div>
         <div class="tabset-pane" id="t-hist">
           <div class="tl">
             <div class="tl-item"><span class="tl-dot"></span> PO-6 Post ตั้งหนี้ AP-0088 · 25 มิ.ย. 26 · วิไล (บัญชี)</div>
             <div class="tl-item"><span class="tl-dot pending"></span> สร้าง PV-0042 ร่าง · 10 มิ.ย. 26 · สุดา (การเงิน)</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> รออนุมัติจ่าย (CF-2.6 · Maker ≠ Checker)</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> Post จ่าย → ปิด AP · Bank ออก</div>
+            <div class="tl-item"><span class="tl-dot pending"></span> รออนุมัติจ่ายที่ <a href="ap1-approval-center-mockup.html" style="color:#2563EB">ศูนย์อนุมัติกลาง (AP-1)</a> · ผู้ทำรายการ สุดา (การเงิน) ≠ ผู้อนุมัติ</div>
+            <div class="tl-item"><span class="tl-dot pending"></span> Post จ่าย → ปิดใบตั้งหนี้ · บันทึกเงินออกจากบัญชีธนาคาร</div>
           </div>
         </div>
       </div>
@@ -300,7 +340,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 
     <div class="card" style="padding:8px 12px;display:flex;align-items:center;gap:8px;flex:none">
       <span style="font-size:12px;font-weight:600">🗒️ หมายเหตุ</span>
-      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="จ่ายตามใบตั้งหนี้ AP-0088 · อ้าง GR-0210 · โอน Daikin ตามเครดิต 60 วัน">
+      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="จ่าย Daikin 2 ใบตั้งหนี้ในใบเดียว — AP-0088 (ค่าสินค้า) + AP-0091 (ค่าติดตั้ง) · โอนตามเครดิต 60 วัน">
     </div>
 
   </div>
@@ -313,35 +353,58 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 <!-- Picker: ดึงใบตั้งหนี้ค้างจ่าย -->
 <div class="tpl-modal-bg" id="apPickModal">
   <div class="tpl-modal">
-    <h3>🔗 ดึงใบตั้งหนี้ค้างจ่าย — เจ้าหนี้: <span class="mono" style="color:#2563EB">Daikin (V-00045)</span></h3>
+    <h3>🔗 ดึงใบตั้งหนี้ค้างจ่าย — ใบจ่าย <span class="mono" style="color:#2563EB">PV-2606-0042</span> · เจ้าหนี้ Daikin Industries (TH)</h3>
+    <div style="margin-bottom:8px;font-size:11.5px;color:#78350F;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:7px 10px">
+      🔒 <b>1 ใบจ่าย = 1 เจ้าหนี้</b> — ดึงได้เฉพาะใบตั้งหนี้ของ <b>Daikin Industries (TH)</b> เท่านั้น (รวมได้หลายใบ) · ใบตั้งหนี้ของเจ้าหนี้รายอื่นถูกล็อกไว้ ต้อง<b>เปิดใบจ่ายใหม่แยกตามเจ้าหนี้</b>
+    </div>
     <div style="max-height:280px;overflow:auto;border:1px solid #E5E7EB;border-radius:8px">
       <table class="m-tbl">
-        <thead><tr><th style="width:32px"></th><th>เลขที่ AP</th><th>ใบแจ้งหนี้</th><th>ครบกำหนด</th><th class="num">ยอดค้าง</th><th>สถานะ</th></tr></thead>
+        <thead><tr><th style="width:32px"></th><th>เลขที่ใบตั้งหนี้</th><th>เจ้าหนี้</th><th>แหล่งที่มา</th><th>ครบกำหนด</th><th class="num">ยอดค้าง (รวม VAT)</th><th class="num">ฐานก่อน VAT</th><th class="num">ภาษีหัก ณ ที่จ่าย</th><th>สถานะ</th></tr></thead>
         <tbody>
-          <tr data-no="AP-2606-0088" data-inv="DKN-INV-25088" data-due="24 ส.ค. 26" data-amt="2339836" data-wht="0">
+          <tr data-no="AP-2606-0088" data-inv="DKN-INV-25088" data-due="24 ส.ค. 26" data-amt="2339836" data-base="2186762.62" data-wht="0" data-vend="Daikin Industries (TH)" data-inc="สินค้า — ไม่หัก 0%" data-src="po">
             <td><input type="checkbox" checked disabled></td>
             <td class="mono" style="font-weight:700;color:#2563EB">AP-2606-0088</td>
-            <td>DKN-INV-25088</td><td>24 ส.ค. 26</td>
-            <td class="num">2,339,836.00</td><td>ดึงแล้ว</td>
+            <td>Daikin Industries (TH)</td>
+            <td>อ้างใบสั่งซื้อ · จับคู่ 3 ทาง</td><td>24 ส.ค. 26</td>
+            <td class="num">2,339,836.00</td><td class="num">2,186,762.62</td><td class="num">0.00</td><td>ดึงแล้ว</td>
           </tr>
-          <tr data-no="AP-2606-0091" data-inv="DKN-INV-25092" data-due="05 ก.ย. 26" data-amt="578340" data-wht="17350">
-            <td><input type="checkbox" onchange="apPickCount()"></td>
+          <tr data-no="AP-2606-0091" data-inv="DKN-INV-25092" data-due="05 ก.ย. 26" data-amt="578340" data-base="540504.67" data-wht="16215.14" data-vend="Daikin Industries (TH)" data-inc="ค่าจ้างทำของ (ติดตั้ง) 3%" data-src="po">
+            <td><input type="checkbox" checked disabled></td>
             <td class="mono" style="font-weight:700;color:#2563EB">AP-2606-0091</td>
-            <td>DKN-INV-25092</td><td>05 ก.ย. 26</td>
-            <td class="num">578,340.00</td><td>ค้างจ่าย</td>
+            <td>Daikin Industries (TH)</td>
+            <td>อ้างใบสั่งซื้อ · จับคู่ 3 ทาง</td><td>05 ก.ย. 26</td>
+            <td class="num">578,340.00</td><td class="num">540,504.67</td><td class="num">16,215.14</td><td>ดึงแล้ว</td>
           </tr>
-          <tr data-no="AP-2605-0156" data-inv="MHI-INV-8821" data-due="01 มิ.ย. 26" data-amt="125000" data-wht="3750">
-            <td><input type="checkbox" onchange="apPickCount()"></td>
+          <tr data-no="AP-2607-0004" data-inv="ใบเสร็จรับเงิน/บิลเงินสด" data-due="20 ก.ค. 26" data-amt="30000" data-base="30000" data-wht="900" data-vend="นายสมพงษ์ ช่างรับเหมา" data-inc="ค่าจ้างทำของ 3%" data-src="direct">
+            <td><input type="checkbox" disabled></td>
+            <td class="mono" style="font-weight:700;color:#2563EB">AP-2607-0004</td>
+            <td>นายสมพงษ์ ช่างรับเหมา</td>
+            <td><b>ไม่อ้างใบสั่งซื้อ · ข้ามจับคู่ 3 ทาง</b><div style="font-size:10px;color:#9CA3AF">ไม่มี VAT (ช่างไม่จด VAT)</div></td><td>20 ก.ค. 26</td>
+            <td class="num">30,000.00</td><td class="num">30,000.00</td><td class="num">900.00</td><td><span class="due-chip over">คนละเจ้าหนี้ · ต้องแยกใบจ่าย</span></td>
+          </tr>
+          <tr data-no="AP-2605-0156" data-inv="MHI-INV-8821" data-due="01 มิ.ย. 26" data-amt="125000" data-base="116822.43" data-wht="3504.67" data-vend="Mitsubishi Heavy (TH)" data-inc="ค่าจ้างทำของ 3%" data-src="po">
+            <td><input type="checkbox" disabled></td>
             <td class="mono" style="font-weight:700;color:#2563EB">AP-2605-0156</td>
-            <td>MHI-INV-8821</td><td>01 มิ.ย. 26 <span class="due-chip over">เกินกำหนด</span></td>
-            <td class="num">125,000.00</td><td>เกินกำหนด</td>
+            <td>Mitsubishi Heavy (TH)</td>
+            <td>อ้างใบสั่งซื้อ · จับคู่ 3 ทาง</td><td>01 มิ.ย. 26 <span class="due-chip over">เกินกำหนด</span></td>
+            <td class="num">125,000.00</td><td class="num">116,822.43</td><td class="num">3,504.67</td><td><span class="due-chip over">คนละเจ้าหนี้ · ต้องแยกใบจ่าย</span></td>
+          </tr>
+          <tr data-no="AP-2607-0009" data-inv="สัญญาเช่าโกดัง 07/2569" data-due="31 ก.ค. 26" data-amt="80000" data-base="80000" data-wht="4000" data-vend="นางสุนีย์ (ผู้ให้เช่าโกดัง)" data-inc="ค่าเช่า 5%" data-src="direct">
+            <td><input type="checkbox" disabled></td>
+            <td class="mono" style="font-weight:700;color:#2563EB">AP-2607-0009</td>
+            <td>นางสุนีย์ (ผู้ให้เช่าโกดัง)</td>
+            <td><b>ไม่อ้างใบสั่งซื้อ · ข้ามจับคู่ 3 ทาง</b><div style="font-size:10px;color:#9CA3AF">ค่าเช่าอสังหาริมทรัพย์ · ยกเว้น VAT</div></td><td>31 ก.ค. 26</td>
+            <td class="num">80,000.00</td><td class="num">80,000.00</td><td class="num">4,000.00</td><td><span class="due-chip over">คนละเจ้าหนี้ · ต้องแยกใบจ่าย</span></td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div style="margin-top:8px;font-size:11px;color:#6B7280">💡 แสดงเฉพาะใบตั้งหนี้ <b>Posted</b> จาก PO-6 ที่ยังไม่ปิด · บริการหัก WHT 3% อัตโนมัติ</div>
+    <div style="margin-top:8px;font-size:11px;color:#6B7280;display:flex;flex-direction:column;gap:3px">
+      <div>📥 <b>รับใบตั้งหนี้ 2 แบบ</b> — (1) อ้างใบสั่งซื้อ → ผ่านการจับคู่ 3 ทาง · (2) ไม่อ้างใบสั่งซื้อ (ช่างนอก · ค่าเช่า · ค่าที่ปรึกษา · ค่าสาธารณูปโภค) → <b>ข้ามการจับคู่ 3 ทาง</b> เพราะไม่มีใบสั่งซื้อให้ match</div>
+      <div>🧮 ภาษีหัก ณ ที่จ่ายคำนวณจาก <b>ฐานก่อน VAT</b> เสมอ · อัตรามาจาก<b>ตารางกลางที่ผูกกับประเภทเงินได้</b> (อ่านอย่างเดียว)</div>
+    </div>
     <div class="m-actions" style="justify-content:space-between">
-      <span id="apPickSummary" style="font-size:12px;color:#6B7280">เลือก 1 ใบ · รวม <b class="mono">2,339,836.00</b></span>
+      <span id="apPickSummary" style="font-size:12px;color:#6B7280">เลือก 2 ใบ · รวม <b class="mono">2,918,176.00</b></span>
       <span style="display:flex;gap:8px">
         <button class="btn btn-outline" onclick="closeApPick()">ยกเลิก</button>
         <button class="btn btn-success" onclick="apPickPull()">↩ ดึงเข้ารายการจ่าย</button>
@@ -372,12 +435,14 @@ function fi2InitPatterns(){
     pills:[
       {text:'📄 ร่าง',type:'neutral'},
       {text:'🏦 โอนธนาคาร',type:'info',id:'payMethodPill'},
-      {text:'WHT สินค้า 0%',type:'success'},
-      {text:'⏳ ครบกำหนด 24 ส.ค. 26',type:'warning',id:'duePill'}
+      {text:'🧮 ภาษีหัก ณ ที่จ่ายคิดจากฐานก่อน VAT',type:'success'},
+      {text:'🔒 อัตราจากตารางกลาง (อ่านอย่างเดียว)',type:'info'},
+      {text:'👤 1 ใบจ่าย = 1 เจ้าหนี้ (รวมได้หลายใบตั้งหนี้)',type:'success'},
+      {text:'⏳ ครบกำหนดเร็วสุด 24 ส.ค. 26',type:'warning',id:'duePill'}
     ],
-    makerChecker:{title:'Maker ≠ Checker',nodes:[
-      {role:'บัญชี ✓',step:'เตรียมจ่าย',state:'ok'},
-      {role:'ผู้อนุมัติ ⏱',step:'อนุมัติจ่าย',state:'wait'}
+    makerChecker:{title:'ผู้ทำรายการ ≠ ผู้อนุมัติ',nodes:[
+      {role:'สุดา (การเงิน) ✓',step:'ผู้ทำรายการ',state:'ok'},
+      {role:'บุญยัง (ผจก.การเงิน) ⏱',step:'ผู้อนุมัติ — ต้องคนละคน',state:'wait'}
     ]}});
   if(typeof swtRenderDocChain==='function')swtRenderDocChain('#fi2DcStrip',{label:'Doc Chain',nodes:[
       {label:'PO 0042',href:'po4-purchase-order-mockup.html',state:'done'},
@@ -387,12 +452,12 @@ function fi2InitPatterns(){
       {label:'FI-12 ภาษีหัก ณ ที่จ่าย',href:'fi12-wht-mockup.html'}
     ]});
   swtRenderGateAlert('#fi2Gate',{
-    type:'ok',
-    text:'✅ ใบตั้งหนี้ AP-2606-0088 Posted แล้ว · ยอดค้างจ่าย ฿2,339,836.00 · ครบกำหนด 24 ส.ค. 26 (เครดิต 60 วัน)'
+    type:'warn',
+    text:'🕓 รออนุมัติจ่าย — เจ้าหนี้รายเดียว Daikin Industries (TH) · รวม 2 ใบตั้งหนี้ · ยอดจ่ายสุทธิ ฿2,901,960.86 (ยอดค้างรวม VAT ฿2,918,176.00 − ภาษีหัก ณ ที่จ่าย ฿16,215.14) · ใบจ่ายยอดสูงต้องผ่าน ศูนย์อนุมัติกลาง (AP-1) และผู้ทำรายการกับผู้อนุมัติต้องเป็นคนละคน'
   });
   recompute();
 }
-function recompute(){ swtRecalcPaymentSummary('#apRows tr:not(.empty-row)','#fi2Sc11'); }
+function recompute(){ swtRecalcPaymentSummary('#apRows tr:not(.empty-row)','#fi2Sc11'); updateTotals(); }
 function toggleAll(master){
   document.querySelectorAll('#apRows tr:not(.empty-row) input[type=checkbox]').forEach(function(c){c.checked=master.checked;});
   recompute();
@@ -403,7 +468,7 @@ function apPickCount(){
   var n=0,sum=0;
   document.querySelectorAll('#apPickModal tbody tr').forEach(function(tr){
     var c=tr.querySelector('input[type=checkbox]');
-    if(c&&c.checked&&!c.disabled){ n++; sum+=Number(tr.getAttribute('data-amt')||0); }
+    if(c&&c.checked){ n++; sum+=Number(tr.getAttribute('data-amt')||0); }
   });
   document.getElementById('apPickSummary').innerHTML='เลือก '+n+' ใบ · รวม <b class="mono">'+fmt(sum)+'</b>';
 }
@@ -420,24 +485,59 @@ function apPickPull(){
   picked.forEach(function(src){
     var no=src.getAttribute('data-no');
     if(existing.indexOf(no)>=0) return;
-    var amt=Number(src.getAttribute('data-amt')), wht=Number(src.getAttribute('data-wht')||0), net=amt-wht;
+    var amt=Number(src.getAttribute('data-amt')), base=Number(src.getAttribute('data-base')||0),
+        wht=Number(src.getAttribute('data-wht')||0), net=amt-wht;
+    var direct=(src.getAttribute('data-src')==='direct');
     var row=empties.shift();
     var html='<td><input type="checkbox" checked onchange="recompute()"></td><td></td>'+
-      '<td class="item-code"><a href="po6-ap-invoice-mockup.html" target="_blank">'+no+'</a></td>'+
-      '<td class="mono">'+src.getAttribute('data-inv')+'</td>'+
+      '<td class="item-code"><a href="po6-ap-invoice-mockup.html" target="_blank">'+no+'</a>'+
+        '<div class="mono" style="font-size:10px;color:#9CA3AF">'+src.getAttribute('data-inv')+'</div></td>'+
+      '<td>'+src.getAttribute('data-vend')+'</td>'+
+      '<td>'+src.getAttribute('data-inc')+'</td>'+
+      '<td><span class="due-chip '+(direct?'soon':'ok')+'">'+(direct?'ไม่อ้างใบสั่งซื้อ · ข้ามจับคู่ 3 ทาง':'อ้างใบสั่งซื้อ · จับคู่ 3 ทาง ✓')+'</span></td>'+
       '<td>'+src.getAttribute('data-due')+'</td>'+
       '<td class="num">'+fmt(amt)+'</td>'+
-      '<td class="num" style="color:#9CA3AF">'+fmt(wht)+'</td>'+
-      '<td class="num" style="font-weight:700">'+fmt(net)+'</td>'+
-      '<td><span class="due-chip ok">ค้างจ่าย</span></td>';
-    if(row){ row.className=''; row.setAttribute('data-amt',amt); row.setAttribute('data-wht',wht); row.setAttribute('data-net',net); row.innerHTML=html; }
+      '<td class="num" style="color:#6B7280">'+fmt(base)+'</td>'+
+      '<td class="num"><input class="pay-sel num" value="'+fmt(wht)+'" style="width:96px;padding:3px 6px;font-size:12px" onchange="whtEdit(this)"></td>'+
+      '<td class="num" style="font-weight:700">'+fmt(net)+'</td>';
+    if(row){ row.className=''; row.setAttribute('data-amt',amt); row.setAttribute('data-base',base); row.setAttribute('data-wht',wht); row.setAttribute('data-net',net); row.innerHTML=html; }
     existing.push(no);
   });
   tbody.querySelectorAll('tr:not(.empty-row)').forEach(function(tr,i){ tr.cells[1].textContent=i+1; });
   recompute(); closeApPick();
 }
+/* ✎ ยอดภาษีหัก ณ ที่จ่าย: ระบบคำนวณเป็นค่าตั้งต้น แต่กรอกทับได้กรณีพิเศษ (ไม่ล็อกตาย) */
+function whtEdit(inp){
+  var tr=inp.closest('tr');
+  var amt=Number(tr.getAttribute('data-amt')||0);
+  var wht=Number(String(inp.value).replace(/,/g,''))||0;
+  if(wht<0)wht=0; if(wht>amt)wht=amt;
+  var net=amt-wht;
+  tr.setAttribute('data-wht',wht); tr.setAttribute('data-net',net);
+  inp.value=fmt(wht);
+  tr.cells[10].textContent=fmt(net);
+  recompute();
+}
+/* ยอดรวมท้ายตาราง — บวกจากแถวที่ติ๊กจริง */
+function updateTotals(){
+  var n=0,amt=0,base=0,wht=0,net=0;
+  document.querySelectorAll('#apRows tr:not(.empty-row)').forEach(function(tr){
+    var c=tr.querySelector('input[type=checkbox]');
+    if(!c||!c.checked)return;
+    n++;
+    amt+=Number(tr.getAttribute('data-amt')||0);
+    base+=Number(tr.getAttribute('data-base')||0);
+    wht+=Number(tr.getAttribute('data-wht')||0);
+    net+=Number(tr.getAttribute('data-net')||0);
+  });
+  document.getElementById('fi2TotCnt').textContent=n;
+  document.getElementById('fi2TotAmt').textContent=fmt(amt);
+  document.getElementById('fi2TotBase').textContent=fmt(base);
+  document.getElementById('fi2TotWht').textContent=fmt(wht);
+  document.getElementById('fi2TotNet').textContent=fmt(net);
+}
 function fi2Post(){
-  if(confirm('Post จ่ายชำระ PV-2606-0042 (mock · งานการเงิน):\n\n• Maker ≠ Checker — ผู้อนุมัติจ่ายแล้ว\n• ปิด AP Entry AP-2606-0088\n• บันทึก Bank ออก ฿2,339,836.00\n• WHT 0% (สินค้า) → ไม่สร้าง FI-12\n• สถานะ → จ่ายแล้ว → กลับ FI-Q')){
+  if(confirm('Post จ่ายชำระ PV-2606-0042 (mock · งานการเงิน):\n\n• 1 ใบจ่าย = 1 เจ้าหนี้ → เจ้าหนี้ Daikin Industries (TH) รายเดียว\n• ผู้ทำรายการ ≠ ผู้อนุมัติ — ผ่านศูนย์อนุมัติกลางแล้ว\n• ปิดใบตั้งหนี้ AP-2606-0088 · AP-2606-0091 (2 ใบของเจ้าหนี้รายเดียวกัน)\n• ยอดค้างรวม VAT 2,918,176.00\n• ฐานก่อน VAT 2,727,267.29 (ฐานคำนวณภาษีหัก ณ ที่จ่าย)\n• ภาษีหัก ณ ที่จ่าย 16,215.14 (0.00 + 16,215.14)\n• เงินออกจากบัญชีธนาคารจริง 2,901,960.86\n• สร้างใบรับรองภาษีหัก ณ ที่จ่าย 1 ใบ → ทะเบียนภาษีหัก ณ ที่จ่าย (FI-12)\n• สถานะ → จ่ายแล้ว → กลับคิว AP ค้างจ่าย')){
     location.href='fiq-finance-queue-mockup.html';
   }
 }

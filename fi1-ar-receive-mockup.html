@@ -155,8 +155,8 @@ table.items th:last-child,table.items td:last-child{border-right:none}
     </div>
     <div class="mh-right">
       <span class="mh-badge">🕓 ร่าง — รอประกบบิล</span>
-      <button class="mh-btn mh-btn-ghost" onclick="location.href='fiq-ar-finance-queue-mockup.html'">📋 คิว AR รอรับ</button>
-      <button class="mh-btn mh-btn-ghost" onclick="location.href='fi1q-apply-queue-mockup.html'" style="background:rgba(254,243,199,.25);color:#FDE68D">📥 Apply Queue <b>23</b></button>
+      <button class="mh-btn mh-btn-ghost" onclick="location.href='fiq-finance-queue-mockup.html'">📋 คิว AR รอรับ</button>
+      <button class="mh-btn mh-btn-ghost" onclick="location.href='fi1q-apply-queue-mockup.html'" style="background:rgba(254,243,199,.25);color:#FDE68D">📥 คิวจับคู่เงินเข้ากับบิล <b>20</b></button>
       <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
       <button class="mh-btn mh-btn-accent" onclick="fi1Post()">💰 Post รับชำระ</button>
     </div>
@@ -186,10 +186,16 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       <div class="card party-mini">
         <div class="party-lines">
           <div class="party-line party-hd">
-            <div class="card-title"><span class="secno">FI-1.1</span>👤 ลูกค้า <span class="tpl-zone">SC-1</span></div>
-            <span class="highlight">690603NA-0016</span> · คุณ อดิเทพ ไชยเศรษฐ์
+            <div class="card-title"><span class="secno">FI-1.1</span>👤 คู่สัญญา (ลูกหนี้) <span class="tpl-zone">SC-1</span></div>
+            <span class="ctl"><span class="lbl">ประเภทลูกหนี้</span>
+              <select class="pay-sel" id="fi1DebtorType" onchange="fi1SetDebtorType(this.value)">
+                <option value="cust" selected>ลูกค้า</option>
+                <option value="emp">พนักงาน</option>
+              </select>
+            </span>
+            <span class="highlight" id="fi1PartyCode">690603NA-0016</span> · <span id="fi1PartyName">คุณ อดิเทพ ไชยเศรษฐ์</span>
             <span class="card-spacer"></span>
-            <button class="card-btn primary" onclick="dfOpenCust()">🔍 เลือก</button>
+            <button class="card-btn primary" id="fi1PartyPickBtn" onclick="dfOpenCust()">🔍 เลือกจากทะเบียนลูกค้า</button>
           </div>
           <div class="party-line">
             <span class="lbl">ภาษี</span><span class="mono">1234567891234</span>
@@ -198,6 +204,9 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           </div>
           <div class="party-line" style="color:#6B7280;font-size:11px">
             เกินกำหนด <b style="color:#EF4444">฿0.00</b> · ยังไม่ครบ <b>฿11,140.30</b> · บิลค้าง <b>1</b> ฉบับ
+          </div>
+          <div class="party-line" id="fi1EmpNote" style="color:#6B7280;font-size:11px">
+            👷 <b>ลูกหนี้พนักงาน</b> — เลือกประเภทเป็น "พนักงาน" แล้วเลือกคู่สัญญาจาก<b>ทะเบียนพนักงาน</b> (ไม่ใช่ทะเบียนลูกค้า) · ใช้ตอนพนักงานทำซากอะไหล่คืนแบรนด์ไม่ทันจนแบรนด์เรียกเก็บเงิน → ตั้งเป็นลูกหนี้ของคนที่ทำหลุด ไม่กลบเป็นค่าใช้จ่ายบริษัท · ยอดค้างของพนักงาน<b>เห็นในคิวเหมือนลูกหนี้ทั่วไป</b> ไม่แยกเป็นใบสำคัญต่างหาก (ถ้าแยก ยอดจะหายจากคิว ไม่มีใครตาม) · บัญชีปลายทางเลือกจาก<b>ผังบัญชีของระบบ BC</b> (เคาะ 21 ก.ค. 26)
           </div>
         </div>
       </div>
@@ -281,7 +290,8 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           <div class="tab-grid">
             <span class="k">บัญชีรับเข้า</span><span class="v">KBANK 098-7-65432-1 · ชื่อบัญชี บ.แสงวิจิตร จำกัด (รับเงินขาย)</span>
             <span class="k">ช่องทาง</span><span class="v">โอนจากลูกค้า · Ref 260611-ADTP-8833</span>
-            <span class="k">หลัง Post</span><span class="v">ปิด AR Entry · บันทึก Bank รับเข้า · ออก CRV → <a href="fiq-ar-finance-queue-mockup.html" style="color:#2563EB">FI-Q-AR คิว AR รอรับ</a></span>
+            <span class="k">หลัง Post</span><span class="v">ปิด AR Entry · บันทึก Bank รับเข้า · ออก CRV → <a href="fiq-finance-queue-mockup.html" style="color:#2563EB">คิวงานการเงิน (FI-Q)</a></span>
+            <span class="k">บัญชีปลายทาง</span><span class="v">เลือกจาก<b>ผังบัญชีของระบบ BC</b> — พอร์ทัลดึงมาแสดงอย่างเดียว ไม่มีหน้าผังบัญชีเอง (เคาะ 21 ก.ค. 26)</span>
           </div>
         </div>
         <div class="tabset-pane" id="t-disc">
@@ -326,11 +336,18 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 
 <div class="tpl-modal-bg" id="arPickModal">
   <div class="tpl-modal">
-    <h3>🔗 ดึงบิลขายค้างรับ — ลูกค้า: <span class="mono" style="color:#2563EB">คุณ อดิเทพ ไชยเศรษฐ์</span></h3>
+    <h3>🔗 ดึงรายการค้างรับ — คู่สัญญา: <span class="mono" style="color:#2563EB">คุณ อดิเทพ ไชยเศรษฐ์</span> (ลูกค้า) · รวมลูกหนี้พนักงานในคิวเดียวกัน</h3>
     <div style="max-height:280px;overflow:auto;border:1px solid #E5E7EB;border-radius:8px">
       <table class="m-tbl">
         <thead><tr><th style="width:32px"></th><th>เลขที่ INV</th><th>วันครบกำหนด</th><th class="num">ยอดค้าง</th><th>สถานะ</th></tr></thead>
         <tbody>
+          <tr data-no="EMP-AR-2607-0004" data-due="—" data-amt="4200" data-open="4200">
+            <td><input type="checkbox" onchange="arPickCount()"></td>
+            <td class="mono" style="font-weight:700;color:#2563EB">EMP-AR-2607-0004<div style="font-size:10px;color:#6B7280;font-weight:400">👷 ลูกหนี้พนักงาน · นายวิชัย ช่างเทคนิค (ทะเบียนพนักงาน)</div></td>
+            <td>—<div style="font-size:10px;color:#6B7280">อ้างอิงใบเคลมกับผู้ขาย</div></td>
+            <td class="num">4,200.00</td>
+            <td>ค่าอะไหล่ซากคืนไม่ทัน SLA · Haier เรียกเก็บ</td>
+          </tr>
           <tr data-no="08INV-2606-0221" data-due="18 มิ.ย. 26" data-amt="11140.30" data-open="11140.30">
             <td><input type="checkbox" checked disabled></td>
             <td class="mono" style="font-weight:700;color:#2563EB">08INV-2606-0221</td>
@@ -346,7 +363,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
         </tbody>
       </table>
     </div>
-    <div style="margin-top:8px;font-size:11px;color:#6B7280">💡 แสดงเฉพาะบิลขาย Posted จาก SL-4 บิลขาย ที่ยังไม่ปิด AR</div>
+    <div style="margin-top:8px;font-size:11px;color:#6B7280">💡 แสดงบิลขาย Posted จาก SL-4 บิลขาย ที่ยังไม่ปิด AR · และ<b>ลูกหนี้พนักงาน</b>ที่ตั้งไว้ (โผล่ในคิวเดียวกับลูกหนี้ทั่วไป ไม่แยกเป็นใบสำคัญ)</div>
     <div class="m-actions" style="justify-content:space-between">
       <span id="arPickSummary" style="font-size:12px;color:#6B7280">เลือก 1 ใบ · รวม <b class="mono">11,140.30</b></span>
       <span style="display:flex;gap:8px">
@@ -407,6 +424,22 @@ function autoMatch(){
   });
   document.getElementById('recvAmt').value=fmt(sum);
   recompute();
+}
+/* ประเภทลูกหนี้: ลูกค้า ↔ พนักงาน (เคาะ 21 ก.ค. 26) */
+function fi1SetDebtorType(v){
+  var isEmp = (v==='emp');
+  var btn=document.getElementById('fi1PartyPickBtn');
+  var code=document.getElementById('fi1PartyCode');
+  var name=document.getElementById('fi1PartyName');
+  if(btn) btn.textContent = isEmp ? '🔍 เลือกจากทะเบียนพนักงาน' : '🔍 เลือกจากทะเบียนลูกค้า';
+  if(btn) btn.setAttribute('onclick', isEmp ? "alert('เลือกคู่สัญญาจากทะเบียนพนักงาน (mock) — ตัวอย่าง: นายวิชัย ช่างเทคนิค')" : 'dfOpenCust()');
+  if(isEmp){
+    if(code) code.textContent='EMP-0417';
+    if(name) name.textContent='นายวิชัย ช่างเทคนิค (พนักงาน)';
+  }else{
+    if(code) code.textContent='690603NA-0016';
+    if(name) name.textContent='คุณ อดิเทพ ไชยเศรษฐ์';
+  }
 }
 function openArPick(){ document.getElementById('arPickModal').classList.add('on'); arPickCount(); }
 function closeArPick(){ document.getElementById('arPickModal').classList.remove('on'); }

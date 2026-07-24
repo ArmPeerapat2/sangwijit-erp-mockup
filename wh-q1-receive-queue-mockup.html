@@ -97,7 +97,7 @@ table.q tbody tr:hover{background:#F8FAFC}
         </div>
       </div>
       <div class="mh-right">
-        <button class="mh-btn mh-btn-ghost" onclick="location.href='_archive/wh-q-dashboard-mockup-2026-07-12.html'">📊 คิวรวม (WH-Q)</button>
+        <button class="mh-btn mh-btn-ghost" onclick="location.href='wh-q2-issue-queue-mockup.html'">📤 คิวเบิก (WH-Q2)</button>
         <button class="mh-btn mh-btn-ghost" onclick="location.reload()">🔄 รีเฟรช</button>
       </div>
     </div>
@@ -117,6 +117,8 @@ table.q tbody tr:hover{background:#F8FAFC}
   <div class="content">
 
     <div class="rail-note">🍳 <b>รางครัว (Kitchen Rail)</b> — รวมทุกงาน "เข้า/รับ" ที่คลังต้องทำ ไม่ว่ามาจากเอกสารไหน (รับซื้อ · รับโอน · รับคืน) เรียงตาม ETA · <b>คลิกแถว → เปิด WH-1 ใบรับสินค้า</b> เพื่อตรวจรับ + ลง Serial/Bin</div>
+
+    <div class="rail-note" style="background:#FFFBEB;border-color:#FDE68A;color:#92400E">🔒 <b>ของค้างรับ — คลังปิดรายการค้างเองไม่ได้</b> ถึงจะรู้ว่าผู้ขายไม่ส่งแน่แล้วก็ตาม · ฝ่ายจัดซื้อเป็นคนคุยกับผู้ขายและเป็นคนรับผลกระทบเรื่องยอดสั่งซื้อ → กด <b>“แจ้งจัดซื้อ”</b> ที่ตั๋วนั้น แล้วจัดซื้อจะปิดให้ที่ใบสั่งซื้อ · ของค้างจะถูก<b>ยกเลิก ไม่ยกไปรอบหน้า</b> — ถ้ายังต้องการของ ต้องเปิดใบสั่งซื้อใหม่</div>
 
     <!-- KPI -->
     <div class="kpi-strip">
@@ -142,8 +144,8 @@ table.q tbody tr:hover{background:#F8FAFC}
             <tr onclick="location.href='wh1-receive-mockup.html'">
               <td>1</td><td><span class="tno">GRN-0071</span></td><td><span class="tchip buy">🟢 รับซื้อ</span></td>
               <td><span class="src">PO-0245</span></td><td><span class="who">Daikin (Vendor)<span class="s">ขนส่ง Kerry</span></span></td>
-              <td>แอร์ Daikin 12K (ล็อต)</td><td class="qty">30</td><td class="due soon">วันนี้</td><td><span class="st doing">กำลังตรวจรับ</span></td>
-              <td><button class="act-btn">เปิดใบรับ →</button></td>
+              <td>แอร์ Daikin 12K (ล็อต)<span style="display:block;font-size:10.5px;color:#92400E;font-weight:600">⏳ รับแล้ว 10 · ค้างรับ 20 (ผู้ขายเลื่อนส่ง 3 รอบ)</span></td><td class="qty">30</td><td class="due soon">วันนี้</td><td><span class="st doing">กำลังตรวจรับ</span></td>
+              <td><button class="act-btn">เปิดใบรับ →</button><button class="act-btn ghost" style="margin-top:4px;border-color:#FDE68A;background:#FFFBEB;color:#92400E" onclick="whq1Notify(event,'GRN-0071','PO-0245',20)" title="คลังปิดรายการค้างเองไม่ได้ — ส่งเรื่องให้จัดซื้อปิดที่ใบสั่งซื้อ">📨 แจ้งจัดซื้อปิดค้าง</button></td>
             </tr>
             <tr onclick="location.href='wh1-receive-mockup.html'">
               <td>2</td><td><span class="tno">TRN-0031</span></td><td><span class="tchip trin">🟣 รับโอน</span></td>
@@ -204,6 +206,15 @@ table.q tbody tr:hover{background:#F8FAFC}
 </div><!-- /layout -->
 
 <script>
+/* 📨 แจ้งจัดซื้อให้ปิดรายการค้างรับ — คลังปิดเองไม่ได้ (decision ผู้บริหาร)
+   ของค้างตอนปิด = ยกเลิกทิ้ง ไม่ยกยอดไปรอบหน้า · จัดซื้อกดปิดที่ใบสั่งซื้อพร้อมเหตุผล */
+function whq1Notify(e,ticket,po,openQty){
+  e.stopPropagation();
+  var note=prompt('แจ้งฝ่ายจัดซื้อให้ปิดรายการค้างรับ\n\nตั๋ว '+ticket+' · ใบสั่งซื้อ '+po+' · ค้างรับ '+openQty+' ชิ้น\nเล่าให้จัดซื้อฟังว่าเกิดอะไรขึ้น','ผู้ขายเลื่อนส่งมา 3 รอบแล้ว ยังไม่มีกำหนดส่ง');
+  if(note===null) return;
+  if(!note.trim()){ alert('ต้องเขียนเหตุผลสั้น ๆ ให้จัดซื้อ — ยังไม่ส่งเรื่อง'); return; }
+  alert('ส่งเรื่องให้ฝ่ายจัดซื้อแล้ว (mock)\n\n• เรื่อง: ขอปิดรายการค้างรับ '+openQty+' ชิ้น · ใบสั่งซื้อ '+po+'\n• หมายเหตุจากคลัง: '+note+'\n\n⚠️ คลังปิดเองไม่ได้ — จัดซื้อจะกดปิดที่ใบสั่งซื้อ พร้อมระบุเหตุผล\n• ของค้างจะถูกยกเลิก ไม่ยกไปรอบหน้า — ต้องการของเพิ่มต้องเปิดใบสั่งซื้อใหม่\n• ใบสั่งซื้อจะได้สถานะ "ปิดโดยรับไม่ครบ" เก็บเข้าประวัติผู้ขาย');
+}
 document.querySelectorAll('.fchip').forEach(function(c){
   c.addEventListener('click',function(){
     document.querySelectorAll('.fchip').forEach(function(x){x.classList.remove('on')});

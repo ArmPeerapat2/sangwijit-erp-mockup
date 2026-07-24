@@ -181,7 +181,7 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;font-size:13px}
       <div class="cost-row"><span class="lbl">ทุนล่าสุด (Last GRN)</span><span class="v">฿18,500.00</span></div>
       <div class="cost-row"><span class="lbl">ทุนต่ำสุด</span><span class="v">฿17,800.00</span></div>
       <div class="cost-row"><span class="lbl">ทุนสูงสุด</span><span class="v">฿19,200.00</span></div>
-      <div style="border-top:1px solid #E5E7EB;margin-top:6px;padding-top:6px;font-size:11px;color:#6B7280">FIFO 4 layers · ดูตาราง WH-R-6</div>
+      <div style="border-top:1px solid #E5E7EB;margin-top:6px;padding-top:6px;font-size:11px;color:#6B7280">ของที่เหลือมาจาก 4 ล็อตรับเข้า · ดูตาราง WH-R-6</div>
     </div>
 
     <!-- Block 3: Sell price + stock -->
@@ -230,6 +230,14 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;font-size:13px}
   <div class="section-title">📜 WH-R-4 · บัญชีเคลื่อนไหว (Movement Ledger) <span class="tag">เรียงตามวันที่ · ทุก transaction · 14 รายการ</span></div>
   <div class="alert alert-info">
     💡 <div><b>วิธีอ่าน:</b> ทุก transaction (GRN รับ · Sales ขาย · TR-In/Out โอน · ADJ ปรับ · SVC เบิกบริการ) จะ track <b>cumulative balance</b> ในช่อง "คงเหลือ" · มูลค่าใช้ <b>ทุนเฉลี่ย ณ เวลานั้น</b> (Moving Average) · คลิกเลขเอกสารเพื่อดูต้นทาง</div>
+  </div>
+  <div class="alert alert-warn" style="background:#FEF2F2;border-color:#FECACA;color:#991B1B">
+    🚫 <div><b>กติกากันนับซ้ำ — เอกสารที่สร้างแถวในตารางนี้ได้ มีเฉพาะรายการที่ "ของขยับจริง" เท่านั้น</b> (เคาะ 2026-07-20)<br>
+      <span style="font-size:11.5px;color:#7F1D1D">
+      ✅ <b>สร้างแถวได้:</b> ใบรับสินค้า · ใบขาย · ใบโอน (ออก/เข้า) · ใบปรับสต็อก · ใบนับสินค้า · ใบเบิกอะไหล่บริการ · ฝากขาย (ส่ง/คืน)<br>
+      ❌ <b>ห้ามสร้างแถวเด็ดขาด:</b> ใบตั้งหนี้เจ้าหนี้ · ใบวางบิล · ใบสั่งซื้อ · ใบสั่งขาย · ใบเสนอราคา — เอกสารพวกนี้เป็น<b>เรื่องเงินหรือคำสั่ง ไม่ใช่ของขยับ</b><br>
+      <b>ถ้าปล่อยให้ใบตั้งหนี้สร้างแถวด้วย → ของที่รับเข้าครั้งเดียวจะถูกนับ 2 รอบ สต็อกเกินจริงทันที</b>
+      </span></div>
   </div>
   <table>
     <thead>
@@ -512,10 +520,32 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;font-size:13px}
         <td>10/02 · TR-2602-0011 (+8)</td>
         <td><span class="chip chip-red">🔴 ค้างนาน</span></td>
       </tr>
+      <tr style="background:#FFFBEB">
+        <td><b>🚚 คลังระหว่างโอน</b><br><span style="font-size:10.5px;color:#B45309;font-weight:400">HQ → ภูมิภาค (อีสาน) · ออกแล้วปลายทางยังไม่กดรับ</span></td>
+        <td><span class="chip chip-yellow">คลังพิเศษ</span></td>
+        <td class="num"><b>3</b></td>
+        <td class="num" style="color:#9CA3AF">—</td>
+        <td class="num">฿54,750</td>
+        <td class="num" style="color:#9CA3AF">—</td>
+        <td class="num" style="color:#9CA3AF">—</td>
+        <td>26/04 · <a href="wh3-transfer-mockup.html" style="color:#2563EB">TR-2604-0018 ↗</a></td>
+        <td><span class="chip chip-yellow">⏳ ค้าง 1 วัน</span></td>
+      </tr>
+      <tr style="background:#F0FDF4">
+        <td><b>🤝 คลังฝากขาย</b><br><span style="font-size:10.5px;color:#166534;font-weight:400">ร้านตัวแทน 2 ราย · ยังไม่ขาย = ยังเป็นของเรา</span></td>
+        <td><span class="chip chip-green">คลังพิเศษ</span></td>
+        <td class="num"><b>4</b></td>
+        <td class="num" style="color:#9CA3AF">—</td>
+        <td class="num">฿73,000</td>
+        <td class="num">2</td>
+        <td class="num"><span class="chip chip-yellow">2.0 ด.</span></td>
+        <td>18/04 · CSG-2604-0007</td>
+        <td><span class="chip chip-green">🟢 ปกติ</span></td>
+      </tr>
     </tbody>
     <tfoot>
       <tr style="background:#F9FAFB;font-weight:700">
-        <td colspan="2">รวมทุกสาขา</td>
+        <td colspan="2">รวม <span style="color:#065F46">ของที่ขายได้</span> (4 คลังปกติ)</td>
         <td class="num">62</td>
         <td class="num">100%</td>
         <td class="num">฿1,131,500</td>
@@ -523,15 +553,25 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;font-size:13px}
         <td class="num">2.0 ด.</td>
         <td colspan="2" style="font-size:11.5px;color:#6B7280">⚠ WH-04 ค้าง 7 เดือน → ดู <a href="wh-nm-non-move-report-mockup.html" style="color:#2563EB">WH-NM ↗</a> · เสนอโอนกลับ HQ</td>
       </tr>
+      <tr style="background:#EEF2FF;font-weight:700">
+        <td colspan="2">รวม <span style="color:#3730A3">ของที่บริษัทถือครองทั้งหมด</span> (รวมคลังพิเศษ)</td>
+        <td class="num">69</td>
+        <td class="num">—</td>
+        <td class="num">฿1,259,250</td>
+        <td class="num">—</td>
+        <td class="num">—</td>
+        <td colspan="2" style="font-size:11px;color:#3730A3;font-weight:400">ตัวเลขที่ต้องตรงกับบัญชี · <b>62 ตัวคือที่ขายได้จริง</b> — อีก 7 ตัวเป็นของเราแต่ยังขายจากหน้าร้านไม่ได้</td>
+      </tr>
     </tfoot>
   </table>
 </div>
 
-<!-- ─── WH-R-6 · Cost Layers (FIFO) ─── -->
+<!-- ─── WH-R-6 · ที่มาของของที่เหลือ (lot รับเข้า) — ดูอย่างเดียว ไม่ใช่วิธีคิดต้นทุน ─── -->
 <div class="section-card">
-  <div class="section-title">📊 WH-R-6 · Cost Layers (FIFO) <span class="tag">62 ตัวที่เหลือ · มาจาก 4 lot รับเข้า</span></div>
-  <div class="alert alert-info">
-    💡 <div><b>FIFO (First-In First-Out):</b> ขายตัวที่รับมาก่อนออกก่อน · layer ที่เหลือคือสินค้าจาก GRN ใหม่ๆ · ใช้คำนวณ <b>ทุนเฉลี่ยถ่วงน้ำหนัก (Weighted Average Cost)</b> สำหรับขาย / โอน / นับสต็อก</div>
+  <div class="section-title">📊 WH-R-6 · ที่มาของของที่เหลือ (lot รับเข้า) <span class="tag">62 ตัวที่เหลือ · มาจาก 4 lot รับเข้า</span></div>
+  <div class="alert alert-warn" style="background:#FEF3C7;border-color:#FDE68A">
+    ⚠️ <div><b>ต้นทุนทางการของระบบ = ถัวเฉลี่ยเคลื่อนที่ (Moving Average)</b> เท่านั้น — เคาะ 2026-07-20 · ใช้กับการขาย / โอน / นับสต็อก / ปิดงบ ทั้งหมด<br>
+    <span style="font-size:11.5px">ตารางข้างล่างนี้ <b>ดูอย่างเดียว</b> — บอกว่าของ 62 ตัวที่เหลือมาจากใบรับสินค้าล็อตไหนบ้าง (ไว้ตามรอยของ/เช็คราคาซื้อรายล็อต) · <b>ไม่ได้เอาไปคิดต้นทุนขาย</b> และไม่ใช่ FIFO</span></div>
   </div>
 
   <div style="margin-bottom:14px">
@@ -541,7 +581,7 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;font-size:13px}
       <div class="seg l3" style="width:6.5%">L3: 4</div>
       <div class="seg l4" style="width:64.5%">L4: 40 ตัว (lot ล่าสุด)</div>
     </div>
-    <div style="font-size:11px;color:#6B7280;margin-top:6px">FIFO Order: L1 (เก่าสุด · ขายก่อน) → L4 (ใหม่สุด · ขายหลังสุด)</div>
+    <div style="font-size:11px;color:#6B7280;margin-top:6px">เรียงตามวันรับเข้า: L1 (รับเข้าเก่าสุด) → L4 (ล็อตล่าสุด) — เป็นการเรียงเพื่อดูที่มา ไม่ได้แปลว่าระบบตัดต้นทุนตามลำดับนี้</div>
   </div>
 
   <table>
@@ -606,7 +646,7 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;font-size:13px}
     </tbody>
     <tfoot>
       <tr style="background:#F9FAFB;font-weight:700">
-        <td colspan="3">รวม FIFO Layers</td>
+        <td colspan="3">รวมทุกล็อต</td>
         <td class="num">145</td>
         <td class="num">83</td>
         <td class="num">62</td>
@@ -649,4 +689,13 @@ td{padding:10px;border-bottom:1px solid #F3F4F6;color:#111827;font-size:13px}
   </div>
 
   <div class="alert alert-success" style="margin-top:14px">
-    ✅ <div><b>MOS (Months of Stock) Recommendation:</b> ขายเฉลี่ย <b>30 ตัว/เดือน</b> (90-day base) · สต็อก 62 ตัว → MOS = <b>2.0 เดือน</b> · <b>🟢 ปกติ</b> (ไม่เข้า WH-NM Warning ที่ ≥ 30 วันค้าง) · velocity สูงขึ้นช่วงล่าสุด → <b>ควรสั่งเพิ่ม 1 lot</b> ก่อน summer peak (พ.ค.-
+    ✅ <div><b>MOS (Months of Stock) Recommendation:</b> ขายเฉลี่ย <b>30 ตัว/เดือน</b> (90-day base) · สต็อก 62 ตัว → MOS = <b>2.0 เดือน</b> · <b>🟢 ปกติ</b> (ไม่เข้า WH-NM Warning ที่ ≥ 30 วันค้าง) · velocity สูงขึ้นช่วงล่าสุด → <b>ควรสั่งเพิ่ม 1 lot</b> ก่อน summer peak (พ.ค.-มิ.ย.)</div>
+  </div>
+</div>
+
+</div></div></div>
+
+<script src="swt-link.js"></script>
+<script src="swt-sidebar.js"></script>
+</body>
+</html>

@@ -476,8 +476,20 @@
         <div class="main">
             <!-- Page Header -->
             <div class="page-header">
-                <div class="page-title">FI-4 ค่าใช้จ่าย หัก ณ ที่จ่าย</div>
-                <div class="page-subtitle">บันทึกค่าใช้จ่าย แยกประเภท แยกนิติบุคคล แยกแผนก พร้อมคำนวณหัก ณ ที่จ่าย (WHT) อัตโนมัติ</div>
+                <div class="page-title">ใบสำคัญค่าใช้จ่าย (FI-4)</div>
+                <div class="page-subtitle">บันทึกค่าใช้จ่าย แยกประเภท แยกนิติบุคคล แยกแผนก · ระบบคำนวณภาษีซื้อ (VAT) และภาษีหัก ณ ที่จ่ายให้อัตโนมัติ</div>
+            </div>
+
+            <!-- กติกา "ตารางอัตราอยู่ที่เดียว" (เคาะ 2026-07-21) -->
+            <div style="background:#FFFBEB;border:1.5px solid #FCD34D;border-left:5px solid #F59E0B;border-radius:10px;padding:14px 18px;margin-bottom:24px">
+                <div style="font-size:13.5px;font-weight:700;color:#78350F;margin-bottom:6px">🔒 อัตราภาษีหัก ณ ที่จ่าย มาจากตารางกลางที่ผูกกับ “ประเภทเงินได้” — หน้านี้อ่านอย่างเดียว ห้ามพิมพ์อัตราเอง</div>
+                <div style="font-size:12px;color:#78350F;line-height:1.75">
+                    <b>เหตุผลที่ไม่ผูกกับผู้ขาย:</b> ผู้ขายรายเดียวจ่ายได้หลายประเภท เช่น Daikin จ่ายทั้งค่าสินค้า (ไม่หัก) และค่าติดตั้ง (หัก 3%) — ถ้าผูกอัตราไว้กับผู้ขาย จะหักผิดทันทีที่ประเภทเงินได้เปลี่ยน<br>
+                    <b>ตารางอัตรา</b> ตั้งที่หน้าตั้งค่าภาษี · <b>ผังบัญชี</b> ตั้งที่ระบบ Business Central — พอร์ทัลดึงมาแสดงอย่างเดียว
+                </div>
+                <div style="margin-top:10px;font-size:12px;color:#92400E">
+                    อัตราปัจจุบัน: ค่าโฆษณา <b>2%</b> · ค่าขนส่ง <b>1%</b> · ค่าเช่า <b>5%</b> · ค่าบริการ/ค่าจ้างทำของ <b>3%</b> · ค่าวิชาชีพอิสระ <b>3%</b> · ค่าสอบบัญชี <b>3%</b>
+                </div>
             </div>
 
             <!-- Filter Bar -->
@@ -498,11 +510,13 @@
                         <option>คลัง</option>
                     </select>
                     <select class="filter-select">
-                        <option>ประเภท: ทั้งหมด</option>
-                        <option>ค่าเช่า</option>
-                        <option>ค่าจ้าง</option>
-                        <option>ค่าบริการ</option>
+                        <option>ประเภทเงินได้: ทั้งหมด</option>
+                        <option>ค่าโฆษณา</option>
                         <option>ค่าขนส่ง</option>
+                        <option>ค่าเช่า</option>
+                        <option>ค่าบริการ/ค่าจ้างทำของ</option>
+                        <option>ค่าวิชาชีพอิสระ</option>
+                        <option>ค่าสอบบัญชี</option>
                     </select>
                     <select class="filter-select">
                         <option>เมษายน 2026</option>
@@ -519,20 +533,20 @@
             <!-- KPI Cards -->
             <div class="kpi-container">
                 <div class="kpi-card">
-                    <div class="kpi-label">ค่าใช้จ่ายเดือนนี้</div>
-                    <div class="kpi-value">฿1,245,000</div>
+                    <div class="kpi-label">ฐานก่อน VAT รวมเดือนนี้</div>
+                    <div class="kpi-value">฿251,000</div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-label">WHT ที่ต้องนำส่ง</div>
-                    <div class="kpi-value">฿38,500</div>
+                    <div class="kpi-label">ภาษีซื้อ (VAT 7%) · นับเฉพาะรายการที่มี VAT</div>
+                    <div class="kpi-value">฿11,970</div>
                 </div>
                 <div class="kpi-card warning">
-                    <div class="kpi-label">รอนำส่งกรมสรรพากร</div>
-                    <div class="kpi-value">฿38,500</div>
+                    <div class="kpi-label">รอใบกำกับภาษี (ภาษีซื้อยังใช้ไม่ได้)</div>
+                    <div class="kpi-value">1 รายการ</div>
                 </div>
                 <div class="kpi-card success">
-                    <div class="kpi-label">นำส่งแล้ว</div>
-                    <div class="kpi-value">฿125,000</div>
+                    <div class="kpi-label">ยอดจ่ายจริงรวม</div>
+                    <div class="kpi-value">฿253,235</div>
                 </div>
             </div>
 
@@ -549,7 +563,9 @@
                             <th>นิติบุคคล</th>
                             <th>แผนก</th>
                             <th>ผู้รับเงิน</th>
-                            <th class="amount-col">ยอดก่อน WHT</th>
+                            <th class="amount-col">ฐานก่อน VAT</th>
+                            <th class="percent-col">สถานะ VAT</th>
+                            <th class="amount-col">ภาษีซื้อ (VAT 7%)</th>
                             <th class="percent-col">%WHT</th>
                             <th class="amount-col">WHT</th>
                             <th class="amount-col">ยอดจ่ายจริง</th>
@@ -562,11 +578,13 @@
                             <td>13 เม.ย.</td>
                             <td>EXP-0234</td>
                             <td>ค่าเช่า</td>
-                            <td>ค่าเช่าสำนักงาน เม.ย.</td>
+                            <td>ค่าเช่าโกดัง เม.ย. <span style="color:#92400E;font-size:11px">(อสังหาริมทรัพย์)</span></td>
                             <td>SWE</td>
                             <td>Admin</td>
                             <td>บ.ทรัพย์รุ่งเรือง</td>
                             <td class="amount-col">฿80,000</td>
+                            <td class="percent-col"><span class="status-badge status-pending">ยกเว้น VAT</span></td>
+                            <td class="amount-col">—</td>
                             <td class="percent-col">5%</td>
                             <td class="amount-col">฿4,000</td>
                             <td class="amount-col">฿76,000</td>
@@ -576,15 +594,17 @@
                         <tr>
                             <td>12 เม.ย.</td>
                             <td>EXP-0233</td>
-                            <td>ค่าจ้าง</td>
+                            <td>ค่าจ้างทำของ</td>
                             <td>ค่าจ้างออกแบบ</td>
                             <td>SWT</td>
                             <td>การตลาด</td>
-                            <td>นาย A</td>
+                            <td>นาย A (บุคคลธรรมดา)</td>
                             <td class="amount-col">฿15,000</td>
+                            <td class="percent-col"><span class="status-badge status-completed">มี VAT 7%</span></td>
+                            <td class="amount-col">฿1,050</td>
                             <td class="percent-col">3%</td>
                             <td class="amount-col">฿450</td>
-                            <td class="amount-col">฿14,550</td>
+                            <td class="amount-col">฿15,600</td>
                             <td><span class="status-badge status-completed">✅ บันทึกแล้ว</span></td>
                             <td><a class="action-link">ดู</a></td>
                         </tr>
@@ -597,10 +617,12 @@
                             <td>IT</td>
                             <td>บ.เทคซัพพอร์ต</td>
                             <td class="amount-col">฿25,000</td>
+                            <td class="percent-col"><span class="status-badge status-completed">มี VAT 7%</span></td>
+                            <td class="amount-col">฿1,750</td>
                             <td class="percent-col">3%</td>
                             <td class="amount-col">฿750</td>
-                            <td class="amount-col">฿24,250</td>
-                            <td><span class="status-badge status-pending">🟡 รอ WHT</span></td>
+                            <td class="amount-col">฿26,000</td>
+                            <td><span class="status-badge status-pending">🟡 รอใบกำกับภาษี</span></td>
                             <td><a class="action-link">ดู/แก้</a></td>
                         </tr>
                         <tr>
@@ -612,9 +634,11 @@
                             <td>คลัง</td>
                             <td>บ.ขนส่งไทย</td>
                             <td class="amount-col">฿12,000</td>
+                            <td class="percent-col"><span class="status-badge status-completed">มี VAT 7%</span></td>
+                            <td class="amount-col">฿840</td>
                             <td class="percent-col">1%</td>
                             <td class="amount-col">฿120</td>
-                            <td class="amount-col">฿11,880</td>
+                            <td class="amount-col">฿12,720</td>
                             <td><span class="status-badge status-completed">✅ บันทึกแล้ว</span></td>
                             <td><a class="action-link">ดู</a></td>
                         </tr>
@@ -627,39 +651,45 @@
                             <td>การตลาด</td>
                             <td>Meta Business</td>
                             <td class="amount-col">฿5,500</td>
-                            <td class="percent-col">5%</td>
-                            <td class="amount-col">฿275</td>
-                            <td class="amount-col">฿5,225</td>
+                            <td class="percent-col"><span class="status-badge status-completed">มี VAT 7%</span></td>
+                            <td class="amount-col">฿385</td>
+                            <td class="percent-col">2%</td>
+                            <td class="amount-col">฿110</td>
+                            <td class="amount-col">฿5,775</td>
                             <td><span class="status-badge status-completed">✅ บันทึกแล้ว</span></td>
                             <td><a class="action-link">ดู</a></td>
                         </tr>
                         <tr>
                             <td>08 เม.ย.</td>
                             <td>EXP-0229</td>
-                            <td>ค่าซ่อมบำรุง</td>
+                            <td>ค่าจ้างทำของ</td>
                             <td>ซ่อมเครื่องจักร</td>
                             <td>SWE</td>
                             <td>ผลิตการ</td>
                             <td>บ.ซ่อมเทคนิค</td>
                             <td class="amount-col">฿18,500</td>
+                            <td class="percent-col"><span class="status-badge status-completed">มี VAT 7%</span></td>
+                            <td class="amount-col">฿1,295</td>
                             <td class="percent-col">3%</td>
                             <td class="amount-col">฿555</td>
-                            <td class="amount-col">฿17,945</td>
+                            <td class="amount-col">฿19,240</td>
                             <td><span class="status-badge status-completed">✅ บันทึกแล้ว</span></td>
                             <td><a class="action-link">ดู</a></td>
                         </tr>
                         <tr>
                             <td>07 เม.ย.</td>
                             <td>EXP-0228</td>
-                            <td>ค่าบริการ</td>
-                            <td>ค่าสอบการเงิน</td>
+                            <td>ค่าสอบบัญชี</td>
+                            <td>ค่าสอบบัญชีประจำปี</td>
                             <td>WPS</td>
                             <td>บัญชี</td>
                             <td>บ.บัญชีสากล</td>
                             <td class="amount-col">฿50,000</td>
-                            <td class="percent-col">5%</td>
-                            <td class="amount-col">฿2,500</td>
-                            <td class="amount-col">฿47,500</td>
+                            <td class="percent-col"><span class="status-badge status-completed">มี VAT 7%</span></td>
+                            <td class="amount-col">฿3,500</td>
+                            <td class="percent-col">3%</td>
+                            <td class="amount-col">฿1,500</td>
+                            <td class="amount-col">฿52,000</td>
                             <td><span class="status-badge status-completed">✅ บันทึกแล้ว</span></td>
                             <td><a class="action-link">ดู</a></td>
                         </tr>
@@ -667,19 +697,49 @@
                             <td>06 เม.ย.</td>
                             <td>EXP-0227</td>
                             <td>ค่าเช่า</td>
-                            <td>ค่าเช่าคลังสินค้า</td>
+                            <td>ค่าเช่ารถกระบะขนส่ง <span style="color:#065F46;font-size:11px">(สังหาริมทรัพย์)</span></td>
                             <td>SWT</td>
                             <td>คลัง</td>
                             <td>บ.สินทรัพย์โลจิสติก</td>
                             <td class="amount-col">฿45,000</td>
+                            <td class="percent-col"><span class="status-badge status-completed">มี VAT 7%</span></td>
+                            <td class="amount-col">฿3,150</td>
                             <td class="percent-col">5%</td>
                             <td class="amount-col">฿2,250</td>
-                            <td class="amount-col">฿42,750</td>
+                            <td class="amount-col">฿45,900</td>
                             <td><span class="status-badge status-completed">✅ บันทึกแล้ว</span></td>
                             <td><a class="action-link">ดู</a></td>
                         </tr>
+                        <tr style="background:#EFF6FF;font-weight:700;border-top:2px solid #D1D5DB">
+                            <td colspan="7">รวมทั้งสิ้น (8 รายการ · มี VAT 7 รายการ · ยกเว้น VAT 1 รายการ)</td>
+                            <td class="amount-col">฿251,000</td>
+                            <td class="percent-col">—</td>
+                            <td class="amount-col">฿11,970</td>
+                            <td class="percent-col">—</td>
+                            <td class="amount-col">฿9,735</td>
+                            <td class="amount-col">฿253,235</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     </tbody>
                 </table>
+            </div>
+            <div style="margin:-24px 0 32px;font-size:12px;color:#6B7280;line-height:1.7">
+                💡 <b>ฐานก่อน VAT</b> = ยอดหลังหักส่วนลดแล้ว ยังไม่รวม VAT — เป็นฐานคำนวณทั้ง ภาษีซื้อ (× 7%) และภาษีหัก ณ ที่จ่าย (× อัตราตามประเภทเงินได้)<br>
+                ระบบคำนวณฐานนี้ให้เป็นค่าตั้งต้นจากยอดในเอกสาร <b>แต่ผู้ใช้กรอกทับได้กรณีพิเศษ</b> (ไม่ล็อกตาย) · <b>ยอดจ่ายจริง = ฐานก่อน VAT + ภาษีซื้อ − ภาษีหัก ณ ที่จ่าย</b>
+            </div>
+
+            <!-- กติกา VAT รายบรรทัด (เคาะ 2026-07-21) -->
+            <div style="margin:-16px 0 32px;background:#EFF6FF;border:1.5px solid #BFDBFE;border-left:5px solid #2563EB;border-radius:10px;padding:14px 18px">
+                <div style="font-size:13.5px;font-weight:700;color:#1E3A5F;margin-bottom:6px">🧾 ช่อง “สถานะ VAT” เลือกได้รายบรรทัด — ไม่ใช่ทุกรายการมี VAT 7%</div>
+                <div style="font-size:12px;color:#1E3A5F;line-height:1.75">
+                    <b>ค่าเช่าอสังหาริมทรัพย์ (ที่ดิน · อาคาร · โกดัง) ยกเว้น VAT ตามกฎหมายไทย</b> → ช่องภาษีซื้อเป็น “—” ไม่มีภาษีซื้อให้เครดิต · ตัวอย่าง EXP-0234 ค่าเช่าโกดัง ฿80,000<br>
+                    <b>ค่าเช่าสังหาริมทรัพย์ (รถ · อุปกรณ์ · เครื่องจักร) มี VAT 7%</b> → คิดภาษีซื้อปกติ · ตัวอย่าง EXP-0227 ค่าเช่ารถกระบะขนส่ง ฿45,000 → ภาษีซื้อ ฿3,150<br>
+                    แสงวิจิตรมีค่าเช่าทั้ง 2 แบบ จึง<b>ล็อก VAT ไว้ที่ 7% ทุกบรรทัดไม่ได้</b> — ต้องให้ผู้บันทึกเลือกเองรายบรรทัด
+                </div>
+                <div style="margin-top:10px;font-size:12px;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:8px 10px">
+                    ⚠️ <b>ภาษีหัก ณ ที่จ่ายค่าเช่ายังคง 5% ทั้ง 2 แบบ</b> — หักตามประเภทเงินได้ “ค่าเช่า” ไม่ว่ารายการนั้นจะมี VAT หรือยกเว้น VAT · <b>สถานะ VAT กระทบเฉพาะภาษีซื้อ ไม่กระทบอัตราภาษีหัก ณ ที่จ่าย</b>
+                </div>
             </div>
 
             <!-- Section 3: Form -->
@@ -692,17 +752,20 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">ประเภทค่าใช้จ่าย *</label>
-                        <select class="form-select">
-                            <option>เลือกประเภท</option>
-                            <option selected>ค่าเช่า</option>
-                            <option>ค่าจ้าง</option>
-                            <option>ค่าบริการ</option>
-                            <option>ค่าขนส่ง</option>
+                        <label class="form-label">ประเภทเงินได้ *</label>
+                        <select class="form-select" id="expIncomeType">
+                            <option>เลือกประเภทเงินได้</option>
                             <option>ค่าโฆษณา</option>
-                            <option>ค่าซ่อมบำรุง</option>
-                            <option>อื่นๆ</option>
+                            <option>ค่าขนส่ง</option>
+                            <option selected>ค่าเช่า (นิติบุคคล)</option>
+                            <option>ค่าเช่า (บุคคลธรรมดา)</option>
+                            <option>ค่าบริการ/ค่าจ้างทำของ (นิติบุคคล)</option>
+                            <option>ค่าบริการ/ค่าจ้างทำของ (บุคคลธรรมดา)</option>
+                            <option>ค่าวิชาชีพอิสระ</option>
+                            <option>ค่าสอบบัญชี</option>
+                            <option>ค่าสินค้า (ไม่หัก WHT)</option>
                         </select>
+                        <div class="form-hint">อัตราภาษีหัก ณ ที่จ่าย ผูกกับช่องนี้ ไม่ได้ผูกกับผู้ขาย</div>
                     </div>
 
                     <div class="form-group form-grid-full">
@@ -745,30 +808,48 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">ยอดเงินก่อนภาษี *</label>
-                        <input type="number" class="form-input" placeholder="0" value="80000">
+                        <label class="form-label">ฐานก่อน VAT (ฐานคำนวณภาษี) *</label>
+                        <input type="number" class="form-input" id="expBase" placeholder="0" value="80000">
+                        <div class="form-hint">ยอดหลังหักส่วนลด ยังไม่รวม VAT · ระบบคำนวณให้เป็นค่าตั้งต้น แต่กรอกทับได้ถ้าจำเป็น</div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">อัตราหัก ณ ที่จ่าย (WHT) *</label>
-                        <select class="form-select">
-                            <option>เลือกอัตรา</option>
-                            <option>1%</option>
-                            <option>3%</option>
-                            <option selected>5%</option>
-                            <option>15%</option>
+                        <label class="form-label">อัตราหัก ณ ที่จ่าย (WHT)</label>
+                        <select class="form-select" id="expRate">
+                            <option value="0">0% — ค่าสินค้า (ไม่หัก)</option>
+                            <option value="1">1% — ค่าขนส่ง</option>
+                            <option value="2">2% — ค่าโฆษณา</option>
+                            <option value="3">3% — ค่าบริการ/ค่าจ้างทำของ · ค่าวิชาชีพอิสระ · ค่าสอบบัญชี</option>
+                            <option value="5" selected>5% — ค่าเช่า</option>
                         </select>
-                        <div class="form-hint">auto-suggest ตามประเภท</div>
+                        <div class="form-hint">🔒 ระบบเลือกให้ตามประเภทเงินได้จากตารางกลาง — ห้ามพิมพ์อัตราเอง</div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">ยอด WHT (auto-calc)</label>
-                        <input type="text" class="form-input auto-calc" value="฿4,000" readonly>
+                        <label class="form-label">สถานะ VAT ของรายการนี้ *</label>
+                        <select class="form-select" id="expVatMode">
+                            <option value="7">มี VAT 7% — สินค้า/บริการทั่วไป · ค่าเช่ารถ-อุปกรณ์</option>
+                            <option value="0" selected>ยกเว้น VAT — ค่าเช่าอสังหาริมทรัพย์ (ที่ดิน/อาคาร/โกดัง)</option>
+                        </select>
+                        <div class="form-hint">เลือกได้รายบรรทัด · ค่าเช่าอสังหาริมทรัพย์ยกเว้น VAT ตามกฎหมายไทย แต่ค่าเช่าสังหาริมทรัพย์ (รถ/อุปกรณ์) มี VAT — <b>ไม่กระทบอัตราภาษีหัก ณ ที่จ่าย</b></div>
                     </div>
 
                     <div class="form-group">
+                        <label class="form-label">ภาษีซื้อ VAT (auto-calc)</label>
+                        <input type="text" class="form-input auto-calc" id="expVat" value="฿0" readonly>
+                        <div class="form-hint">= ฐานก่อน VAT × 7% เฉพาะรายการที่มี VAT · รายการยกเว้น VAT จะเป็น ฿0 (ไม่มีภาษีซื้อให้เครดิต)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ยอดภาษีหัก ณ ที่จ่าย (auto-calc)</label>
+                        <input type="text" class="form-input auto-calc" id="expWht" value="฿4,000" readonly>
+                        <div class="form-hint">= ฐานก่อน VAT × อัตราตามประเภทเงินได้ · <b>ค่าเช่าหัก 5% เสมอ ไม่ว่าจะมี VAT หรือยกเว้น VAT</b></div>
+                    </div>
+
+                    <div class="form-group form-grid-full">
                         <label class="form-label">ยอดที่จ่ายจริง (auto-calc)</label>
-                        <input type="text" class="form-input auto-calc" value="฿76,000" readonly>
+                        <input type="text" class="form-input auto-calc" id="expNet" value="฿76,000" readonly>
+                        <div class="form-hint">= ฐานก่อน VAT + ภาษีซื้อ − ภาษีหัก ณ ที่จ่าย · ตัวอย่างนี้ 80,000 + 0 − 4,000 = 76,000 (ค่าเช่าโกดัง ยกเว้น VAT)</div>
                     </div>
 
                     <div class="form-group form-grid-full">
@@ -790,65 +871,44 @@
             </div>
 
             <!-- Section 4: WHT → รวมที่ FI-12 จุดเดียว (consolidation 2026-07-12 · กฎ "WHT ออกที่ FI-12") -->
-            <div class="section-title">สรุป WHT ประจำเดือน</div>
-            <div style="border:1.5px dashed #CBD5E1;border-radius:10px;padding:18px;text-align:center;background:#F8FAFC">
-                <div style="font-size:13.5px;font-weight:700;color:#1E3A5F;margin-bottom:5px">สรุป/นำส่ง WHT ทั้งหมดย้ายไปที่ FI-12 (ศูนย์ WHT จุดเดียว)</div>
-                <div style="font-size:12px;color:#6B7280;margin-bottom:10px">หน้านี้เหลือหน้าที่เดียว: บันทึกค่าใช้จ่ายนอก PO (+หัก WHT ตอนบันทึก) · ยอดจะไหลไปรวมที่ FI-12 เอง — กันตัวเลข 2 ที่ไม่ตรงกัน</div>
-                <a href="fi12-wht-mockup.html" style="display:inline-block;background:#2563EB;color:#fff;font-size:12.5px;font-weight:700;padding:8px 18px;border-radius:8px;text-decoration:none">📄 ไปที่ FI-12 WHT (ภ.ง.ด.3/53) →</a>
-            </div>
-
-            <div class="form-actions" style="margin-top: 24px; margin-bottom: 40px;">
-                <button class="btn btn-primary">สร้างแบบ ภ.ง.ด.53</button>
-                <button class="btn btn-primary">นำส่งกรมสรรพากร</button>
+            <div class="section-title">เรื่องภาษีทำที่หน้าภาษีหัก ณ ที่จ่าย</div>
+            <div style="border:1.5px dashed #CBD5E1;border-radius:10px;padding:18px;text-align:center;background:#F8FAFC;margin-bottom:40px">
+                <div style="font-size:13.5px;font-weight:700;color:#1E3A5F;margin-bottom:5px">สรุปยอด · ออกหนังสือรับรอง · สร้างแบบ ภ.ง.ด.3/53 · นำส่งกรมสรรพากร — ทำที่หน้าภาษีหัก ณ ที่จ่าย (FI-12) ที่เดียว</div>
+                <div style="font-size:12px;color:#6B7280;margin-bottom:10px">หน้านี้เหลือหน้าที่เดียว: <b>บันทึกค่าใช้จ่าย</b> (ฐานก่อน VAT + ภาษีซื้อ + หัก ณ ที่จ่ายตอนบันทึก) · ยอดไหลไปรวมที่หน้าภาษีเอง — กันตัวเลข 2 ที่ไม่ตรงกัน</div>
+                <a href="fi12-wht-mockup.html" style="display:inline-block;background:#2563EB;color:#fff;font-size:12.5px;font-weight:700;padding:8px 18px;border-radius:8px;text-decoration:none">📄 ไปที่หน้าภาษีหัก ณ ที่จ่าย (ภ.ง.ด.3/53) →</a>
             </div>
         </div>
     </div>
 
-    <div class="floating-nav" onclick="toggleFloatingNav()">
-        ☰
-    </div>
-    <div class="floating-nav-menu" id="floatingMenu">
-        <div class="floating-nav-item">📊 แดชบอร์ด</div>
-        <div class="floating-nav-item">📝 บัญชีรับ-จ่าย</div>
-        <div class="floating-nav-item">💰 งบประมาณ</div>
-        <div class="floating-nav-item active">📌 FI-4 ค่าใช้จ่าย</div>
-        <div class="floating-nav-item">📄 ใบเสร็จ</div>
-        <div class="floating-nav-item">🏦 ธนาคาร</div>
-        <div class="floating-nav-item">📊 รายงาน</div>
-    </div>
-
     <script>
-        function toggleFloatingNav() {
-            const menu = document.getElementById('floatingMenu');
-            menu.classList.toggle('show');
+        // Auto-calculate VAT / WHT — ฐานก่อน VAT เป็นตัวตั้ง
+        const amountInput = document.getElementById('expBase');
+        const whtRateSelect = document.getElementById('expRate');
+        const vatModeSelect = document.getElementById('expVatMode');
+        const vatOutput = document.getElementById('expVat');
+        const whtOutput = document.getElementById('expWht');
+        const totalOutput = document.getElementById('expNet');
+
+        function fmtBaht(n) {
+            return '฿' + n.toLocaleString('th-TH', { maximumFractionDigits: 2 });
         }
 
-        // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const nav = document.querySelector('.floating-nav');
-            const menu = document.getElementById('floatingMenu');
-            if (!nav.contains(event.target) && !menu.contains(event.target)) {
-                menu.classList.remove('show');
-            }
-        });
-
-        // Auto-calculate WHT on amount change
-        const amountInput = document.querySelector('input[type="number"][value="80000"]');
-        const whtRateSelect = document.querySelector('select');
-        const whtOutput = document.querySelectorAll('.auto-calc')[0];
-        const totalOutput = document.querySelectorAll('.auto-calc')[1];
-
         function calculateWHT() {
-            const amount = parseFloat(amountInput.value) || 0;
+            const base = parseFloat(amountInput.value) || 0;
             const rate = parseFloat(whtRateSelect.value) || 0;
-            const wht = amount * (rate / 100);
-            const total = amount - wht;
-            whtOutput.value = '฿' + wht.toLocaleString('th-TH', { maximumFractionDigits: 0 });
-            totalOutput.value = '฿' + total.toLocaleString('th-TH', { maximumFractionDigits: 0 });
+            // สถานะ VAT เลือกได้รายบรรทัด — ยกเว้น VAT = 0% (ค่าเช่าอสังหาริมทรัพย์)
+            const vatRate = parseFloat(vatModeSelect?.value ?? 7) || 0;
+            const vat = base * (vatRate / 100);
+            // ภาษีหัก ณ ที่จ่ายคิดจากฐานก่อน VAT เสมอ — ไม่ขึ้นกับสถานะ VAT
+            const wht = base * (rate / 100);
+            vatOutput.value = fmtBaht(vat);
+            whtOutput.value = fmtBaht(wht);
+            totalOutput.value = fmtBaht(base + vat - wht);
         }
 
         amountInput?.addEventListener('input', calculateWHT);
         whtRateSelect?.addEventListener('change', calculateWHT);
+        vatModeSelect?.addEventListener('change', calculateWHT);
     </script>
 <!-- SWT_ITEM_SEARCH_START -->
 <style>

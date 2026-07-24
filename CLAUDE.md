@@ -8,6 +8,21 @@ A **static HTML mockup workspace** for the Sangwijit ERP Web Portal — a single
 
 The portal wraps 91 planned modules (8 groups) across 1 legal entities (SWT). Phase 1 (~34 screens) targets Run-ASAP modules; BC365 is not yet wired up.
 
+## How to open & sync this repo (อ่านก่อนเริ่มทุกครั้ง)
+
+repo นี้เปิดจาก **2 เครื่อง** (username ต่างกัน เช่น `arm99`, `Thinkpad`) และมี **GitHub เป็น source of truth**:
+
+- **Remote:** `github.com/ArmPeerapat2/sangwijit-erp-mockup`
+- **Path (username-neutral):** `%USERPROFILE%\OneDrive\claude\ArmWiki\Design Ai`
+- **กฎเหล็ก:** GitHub คือตัวจริง **ไม่ใช่ OneDrive** — เริ่มงาน `git pull` เสมอ, จบงาน `git commit` + `git push` เสมอ
+  ```powershell
+  cd "$env:USERPROFILE\OneDrive\claude\ArmWiki\Design Ai"
+  git pull                                   # ก่อนเริ่ม — ดึงของล่าสุดจาก GitHub
+  # …ทำงาน…
+  git add -A ; git commit -m "…" ; git push  # จบงาน — ดันขึ้น GitHub ให้อีกเครื่องเห็น
+  ```
+- **ทำไมต้อง pull/push ไม่พึ่ง OneDrive:** `.git` วางอยู่ใน OneDrive และ sync ข้าม 2 เครื่องแบบไม่รู้จัก git → เคยทำไฟล์พังมาแล้ว (ดู `_archive/…-CORRUPT-2026-07-13.html.bak`). ให้ปฏิบัติกับมันเป็น **git repo ไม่ใช่โฟลเดอร์ OneDrive**.
+
 ## Where to read before doing work
 
 The project keeps most rules in dedicated docs — load them on demand, don't duplicate here:

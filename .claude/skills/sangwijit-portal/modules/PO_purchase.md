@@ -203,17 +203,17 @@ MOS = สต๊อกในมือ ÷ (ยอดขาย 2 เดือน ÷
 | PO-Q | Queue Dashboard (คิวจัดซื้อ) | P1 | purchaseOrders | รายการรอดำเนินการ | ✅ มี · ยังไม่ปรับ sl-4 |
 | PO-1 | ใบขอซื้อ PR (Purchase Requisition) | P1 | Custom / purchaseRequests | List + Form | ✅ ปรับ sl-4 + Doc Chain แล้ว |
 | **PO-2** | **บันทึกข้อตกลงงบ (Vendor Commitment)** ⚠️ | P1 | Custom: vendorCommitments | Form | ✅ ปรับเป็น Vendor Commitment (เดิม spec = RFQ · v2.1 rename จาก Trade Agreement) |
-| **PO-3** | Vendor Onboarding (simple form) ⚠️ | P1 | vendors (23) | Form | ❌ ยังไม่มีไฟล์ · per pivot: no KYC, simple |
+| ~~PO-3~~ | ~~Vendor Onboarding (simple form)~~ | — | — | — | ⛔ **ตัดแล้ว** ตอนรวมหน้า 2026-07-12 (อยู่ใน `_archive/`) — ใช้ทะเบียนผู้ขายแทน |
 | PO-4 | ใบสั่งซื้อ PO (Purchase Order) | P1 | purchaseOrders (38/39) | List + Form | ✅ มี · ยังไม่ปรับ sl-4 |
-| **PO-5** | รับสินค้า GRN — ทยอยรับ + full-receive gate ⚠️ | P1 | purchaseReceipts | List + Form | ✅ มี · audit ค้าง ทยอยรับ |
+| ~~PO-5~~ | ~~รับสินค้า GRN ฝั่งบัญชี~~ | — | — | — | ⛔ **ตัดถาวร 2026-06-08 · ยืนยันซ้ำ 2026-07-21** — **ใบรับสินค้าของคลัง = เจ้าเดียวที่รับของ** · บัญชีเข้าดูผ่านสิทธิ์ RBAC |
 | PO-6 | ตั้งหนี้เจ้าหนี้ AP Invoice | P1 | purchaseInvoices (122/123) | List + Form | ✅ ปรับ sl-4 + Doc Chain + mode toggle (Normal/Deposit) |
 | PO-7 | Trade Support 5 Types Tracking | P1 | Custom: vendorObligations | List + Form + Dashboard | ✅ มี (Rebate Dashboard) · ขาด Form view 5 types |
-| **PO-8** | สั่งซื้อสินค้าฝาก (Deposit Bill / Prepayment · ชื่อเดิม "บิลฝาก" — rename 2026-07-02 #6) ⚠️ | P1 | purchaseOrders + generalJournalLines | Form | ❌ ยังไม่มีไฟล์ · per pivot focus |
+| **PO-8** | สั่งซื้อสินค้าฝาก (Deposit Bill / Prepayment · ชื่อเดิม "บิลฝาก" — rename 2026-07-02 #6) | P1 | purchaseOrders + generalJournalLines | Form | ✅ **สร้างแล้ว** `po8-deposit-bill-mockup.html` · ⚠️ **ห้ามสร้างแถวเคลื่อนไหวสต็อก** (เป็นเรื่องเงิน ไม่ใช่ของขยับ) |
 
 > **⚠️ Drift จาก v1.0 (per pivot 2026-04-23/25):**
 > - **PO-2:** เปลี่ยน scope จาก RFQ → Trade Agreement (RFQ ไม่ได้ใช้)
-> - **PO-3:** ตัด KYC heavy ออก · simple create form, no Finance approval (low priority)
-> - **PO-5:** เพิ่ม "ทยอยรับ + full-receive detector" — เป็น gate ของ PO-6
+> - ~~**PO-3:** ตัด KYC heavy ออก · simple create form~~ → ⛔ ตัดทั้งหน้าแล้ว 2026-07-12
+> - ~~**PO-5:** เพิ่ม "ทยอยรับ + full-receive detector" — เป็น gate ของ PO-6~~ → ⛔ **ตัดทั้งหน้าแล้ว** · ความสามารถทยอยรับ + gate ตั้งหนี้ ย้ายไปอยู่ที่ **ใบรับสินค้าของคลัง**
 > - **PO-7:** ขยายจาก Rebate-only → 5 Trade Promotion Types
 > - **PO-8:** focus ใหม่ตาม pivot · ทดแทน RFQ ใน roadmap
 
@@ -523,10 +523,22 @@ GET   /tradeAgreements?vendorId=&active=true        → ดึง TA สำห�
 
 ---
 
-## PO-5 — รับสินค้า GRN (Goods Receipt Note) ⚠️ AUDIT (per pivot)
+## PO-5 — รับสินค้า GRN (Goods Receipt Note) ⛔ ตัดถาวรแล้ว — ห้ามสร้าง
 
-> **Drift Note:** ต้องมี **"ทยอยรับ + full-receive detector"** — เป็น gate ให้ PO-6 (ตั้งหนี้)
+> ## ⛔ หน้านี้ถูกตัดถาวร ห้ามสร้าง (ตัด 2026-06-08 · ยืนยันซ้ำ 2026-07-21)
+>
+> **กติกาปัจจุบัน — "ใบรับสินค้าของคลัง = เจ้าเดียวที่รับของ"**
+> - การรับของเข้าสต็อกเกิดที่ **ใบรับสินค้า** (`wh1-receive-mockup.html`) **ที่เดียวเท่านั้น**
+> - ฝ่ายบัญชี **ไม่มีหน้ารับของแยก** — เข้าดูใบรับสินค้าของคลังผ่าน **สิทธิ์ RBAC** ที่กำหนดตอนสร้างพนักงาน/ตำแหน่ง
+> - เหตุผล: ถ้ามีหน้ารับของ 2 ที่ ของครั้งเดียวจะถูกบันทึกเข้าสต็อก 2 รอบ → สต็อกเกินจริง
+> - gate ตั้งหนี้ (**ใบตั้งหนี้เจ้าหนี้**) อ่านยอดรับสะสมจาก **ใบรับสินค้าของคลัง** ไม่ใช่จากหน้านี้
+> - การจับคู่ 3 ทาง (ใบสั่งซื้อ ↔ รับจริง ↔ ใบวางบิล) เป็น **มุมมองอ่านอย่างเดียว** บนใบรับสินค้าของคลัง ไม่ใช่เอกสารรับใบที่สอง
+>
+> เนื้อหาด้านล่างเก็บไว้เป็น**ประวัติ**เท่านั้น — ถ้าจะดึงความสามารถอะไรไปใช้ ให้เอาไปใส่ที่ **ใบรับสินค้าของคลัง**
+
+> **Drift Note (⛔ ยกเลิกแล้ว):** ต้องมี **"ทยอยรับ + full-receive detector"** — เป็น gate ให้ PO-6 (ตั้งหนี้)
 > User คือคลังหรือแคชเชียร์สาขา (ขึ้นกับมอบหมาย/สิทธิ์)
+> → ความสามารถนี้ย้ายไปอยู่ที่ **ใบรับสินค้าของคลัง** แล้ว
 
 ### Module Brief
 ```
@@ -856,7 +868,10 @@ POST /purchaseOrders/{id}/Microsoft.NAV.invoice        → ตั้งหนี
 **GRN:**
 4. **Serial at GRN:** ต้องลง Serial ครบก่อน Post (ถ้า Item มี Serial Flag)
 5. **GRN Over-receive:** ต้องอนุมัติถ้ารับเกิน PO
-6. **Full-receive Gate (NEW):** PO-5 cumulative qty = PO qty → unlock PO-6 ตั้งหนี้
+6. **Full-receive Gate:** ยอดรับสะสมจาก **ใบรับสินค้าของคลัง (WH-1)** = จำนวนในใบสั่งซื้อ → ปลดล็อกให้ตั้งหนี้ได้
+   - ⚠️ อ่านจากใบรับสินค้าของคลังเท่านั้น (เดิมเขียนว่า PO-5 · **ตัดถาวรแล้ว 2026-06-08**)
+   - **ใบตั้งหนี้ห้ามสร้างแถวเคลื่อนไหวสต็อก** — เป็นเรื่องเงิน ไม่ใช่ของขยับ (กันนับซ้ำ)
+   - ถ้าผู้ขายส่งไม่ครบสักที → **ฝ่ายจัดซื้อ**เท่านั้นที่กด "ปิดรายการค้างรับ" ได้ · ของค้าง = **ยกเลิกทิ้ง ไม่ยกไปรอบหน้า** (เคาะ 2026-07-21)
 
 **VAT & Discount (จาก A1):**
 7. **Case 4 (% บนบิล) เป็น default ทุก PO** — ห้ามรับ Case 1/3 (หลังบิล) โดยไม่อนุมัติ

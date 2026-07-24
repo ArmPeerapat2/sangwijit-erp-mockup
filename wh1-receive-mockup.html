@@ -212,7 +212,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
     </div>
     <div class="mh-right">
       <span class="mh-badge">🕓 รอรับ</span>
-      <button class="mh-btn mh-btn-ghost" onclick="location.href='_archive/wh-q-dashboard-mockup-2026-07-12.html'">📋 คิวรับ</button>
+      <button class="mh-btn mh-btn-ghost" onclick="location.href='wh-q1-receive-queue-mockup.html'">📋 คิวรับ</button>
       <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
       <button class="mh-btn mh-btn-accent" onclick="wh1Post()">📥 Post รับสินค้า</button>
     </div>
@@ -224,6 +224,8 @@ table.items th:last-child,table.items td:last-child{border-right:none}
     <button class="btn btn-outline">💾 Save Draft</button>
     <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบรับสินค้า</button>
     <button class="btn btn-outline" title="จัดวางสินค้าลง Bin หลังรับ">📍 จัดวาง Bin</button>
+    <button class="btn btn-outline" disabled style="opacity:.5;cursor:not-allowed" title="คลังปิดรายการค้างรับเองไม่ได้ — ฝ่ายจัดซื้อเป็นคนคุยกับผู้ขาย รู้ว่าจะได้ของอีกไหม และเป็นคนรับผลกระทบเรื่องยอดสั่งซื้อ · ใช้ปุ่ม 'แจ้งจัดซื้อให้ปิดรายการค้าง' แทน">🔒 ปิดรายการค้างรับ (คลังปิดเองไม่ได้)</button>
+    <button class="btn btn-outline" style="border-color:#FDE68A;background:#FFFBEB;color:#92400E" onclick="wh1NotifyPurchase()" title="ส่งเรื่องให้ฝ่ายจัดซื้อพิจารณาปิดรายการค้างรับที่ใบสั่งซื้อ PO-2606-0042">📨 แจ้งจัดซื้อให้ปิดรายการค้าง</button>
     <button class="btn btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
     <span class="saab-status"><span class="dot"></span>สถานะ: <strong>รอรับ</strong> · ประเภท: จาก Vendor · โหมด: ทยอยรับ · ผู้รับ: ก้องคลัง</span>
   </div>
@@ -395,6 +397,10 @@ table.items th:last-child,table.items td:last-child{border-right:none}
         <div class="summary-row open"><span class="lbl">⏳ ค้างรับ</span><span class="val">90 เครื่อง</span></div>
         <div class="summary-total"><span>ความคืบหน้า</span><span class="val">50% (90/180)</span></div>
         <div class="flag-box open">⏳ ยังรับไม่ครบ → ยังไม่ส่งตั้งหนี้ (PO-6) · เปิดใบรับล็อตถัดไปได้</div>
+        <div style="margin-top:6px;padding:8px 10px;border-radius:6px;background:#FFFBEB;border:1px solid #FDE68A;font-size:10.5px;color:#92400E;line-height:1.5">
+          🔒 <b>ของค้างรับ 90 เครื่อง — คลังปิดรายการค้างเองไม่ได้</b><br>
+          ถ้าผู้ขายส่งไม่ครบสักที ให้ <a href="#" onclick="wh1NotifyPurchase();return false;" style="color:#1D4ED8;font-weight:700">แจ้งจัดซื้อให้ปิดรายการค้าง</a> — ฝ่ายจัดซื้อจะกดปิดที่<a href="po4-purchase-order-mockup.html" style="color:#1D4ED8;font-weight:700">ใบสั่งซื้อ PO-2606-0042</a> พร้อมระบุเหตุผล · ของค้างจะถูกยกเลิก ไม่ยกไปรอบหน้า
+        </div>
       </div>
     </div>
 
@@ -463,6 +469,14 @@ function wh1Mode(m){
     alert('โหมด "ทยอยรับ" (Partial):\n• กรอก "รับครั้งนี้" เอง (≤ ค้างรับ)\n• วนรับหลายล็อตจนครบ\n• รับครบเมื่อไหร่ → 🚩 ส่งตั้งหนี้ (PO-6)');
   }
 }
+/* 📨 แจ้งจัดซื้อให้ปิดรายการค้างรับ — คลังปิดเองไม่ได้ (decision ผู้บริหาร)
+   จัดซื้อเป็นคนคุยกับผู้ขาย + รับผลกระทบเรื่องยอดสั่งซื้อ → ปิดที่ใบสั่งซื้อเท่านั้น */
+function wh1NotifyPurchase(){
+  var note=prompt('แจ้งฝ่ายจัดซื้อให้ปิดรายการค้างรับ — ใบสั่งซื้อ PO-2606-0042\n\nของค้างรับ 90 เครื่อง · เล่าให้จัดซื้อฟังว่าเกิดอะไรขึ้น','ผู้ขายเลื่อนส่งล็อต 2 มา 3 รอบแล้ว ยังไม่มีกำหนด');
+  if(note===null) return;
+  if(!note.trim()){ alert('ต้องเขียนเหตุผลสั้น ๆ ให้จัดซื้อ — ยังไม่ส่งเรื่อง'); return; }
+  alert('ส่งเรื่องให้ฝ่ายจัดซื้อแล้ว (mock)\n\n• เรื่อง: ขอปิดรายการค้างรับ 90 เครื่อง · ใบสั่งซื้อ PO-2606-0042\n• หมายเหตุจากคลัง: '+note+'\n\n⚠️ คลังปิดเองไม่ได้ — ฝ่ายจัดซื้อจะเป็นคนกดปิดที่ใบสั่งซื้อ พร้อมระบุเหตุผล\n• ของค้างจะถูกยกเลิก ไม่ยกไปรอบหน้า — ถ้ายังต้องการของ จัดซื้อต้องเปิดใบสั่งซื้อใหม่');
+}
 /* 📥 Post รับสินค้า — ครบจริง (รับสะสม=สั่ง ทุกไลน์) = flag → PO-6 · ไม่ครบ = ทยอย → WH-Q
    #13: idempotent — Post สำเร็จแล้วปุ่ม disable ทันที กันกดรับซ้ำ (สต๊อกเข้า 2 เท่า) */
 var wh1Posted=false;
@@ -476,7 +490,7 @@ function wh1Post(){
   } else {
     if(confirm('Post รับสินค้า (ทยอยรับ) ล็อตนี้ 90 เครื่อง\n\n• ของเข้าสต็อก BC + ลง Bin/Serial\n• ยังค้างรับ 90 เครื่อง → ยังไม่ส่งตั้งหนี้\n• เปิดใบรับล็อตถัดไป หรือกลับคิวรับ (WH-Q)')){
       wh1Posted=true;
-      location.href='_archive/wh-q-dashboard-mockup-2026-07-12.html';
+      location.href='wh-q1-receive-queue-mockup.html';
     }
   }
 }

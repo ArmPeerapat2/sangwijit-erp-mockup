@@ -62,7 +62,7 @@
 | PO-1 PR | `Purchase Quote` (as requisition) |
 | PO-2 RFQ | (Custom) ต่อยอดจาก Purchase Quote |
 | PO-4 PO | `Purchase Order` |
-| PO-5 GRN | `Posted Purch. Receipt` |
+| **WH-1 ใบรับสินค้า** (เดิมแมป PO-5 · ตัดแล้ว) | `Posted Purch. Receipt` |
 | PO-6 AP Invoice | `Purchase Invoice` + `Posted Purch. Invoice` |
 | PO-7 Sale-In Accrual | (Custom) + `G/L Entry` |
 | PO-8 สั่งซื้อสินค้าฝาก (Deposit Bill) | `Vendor Deposit` (custom) |

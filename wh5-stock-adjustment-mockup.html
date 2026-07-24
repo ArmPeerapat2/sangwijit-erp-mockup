@@ -264,6 +264,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       <div class="tabset">
         <div class="tabset-nav">
           <button class="on" onclick="wh5Tab(event,'w-about')">เกี่ยวกับหน้านี้</button>
+          <button onclick="wh5Tab(event,'w-reason')">📚 ผังเหตุผล → บัญชี</button>
           <button onclick="wh5Tab(event,'w-hist')">ประวัติ</button>
           <button onclick="wh5Tab(event,'w-note')">หมายเหตุ</button>
         </div>
@@ -271,6 +272,32 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           <div><span class="bd-tag bd-5">WH-5 นี้</span> = ปรับ/ตัดจำหน่าย <b>นอกรอบนับ</b> (เหตุการณ์เดี่ยว · ad-hoc) — ของแตก/หาย/หมดอายุ/เจอเกิน ที่เกิดระหว่างวัน</div>
           <div style="margin-top:5px"><span class="bd-tag bd-4">WH-4</span> = ปรับจาก <b>รอบนับ</b> (มี snapshot ทั้งคลัง) — ถ้ามาจากผลนับให้ใช้ WH-4</div>
           <div style="margin-top:6px;color:#92400E">🔒 กด "ส่งอนุมัติ" → เข้า <b>AP-1 ศูนย์อนุมัติรวม</b> (เกณฑ์/ผู้อนุมัติจาก CF-2.6 · Maker≠Checker) → อนุมัติแล้ว Post → BC ปรับสต็อก + ลงค่าใช้จ่าย GL อัตโนมัติ · <b>บรรทัดตัดจำหน่าย (−) ต้องแนบรูป</b></div>
+        </div>
+        <div class="tabset-pane" id="w-reason">
+          <div style="font-size:11.5px;color:#374151;line-height:1.6;margin-bottom:7px">
+            <b>เหตุผลที่เลือกในแต่ละบรรทัด = ตัวกำหนดว่าเงินลงบัญชีตัวไหน</b> — เลือกผิด งบผิด · รายการนี้ตั้งที่ BC (CF-2.3) พอร์ทัลแค่ดึงมาแสดงให้เลือก
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:11px">
+            <thead><tr style="background:#F9FAFB">
+              <th style="text-align:left;padding:4px 6px;border-bottom:1px solid #E5E7EB">เหตุผล</th>
+              <th style="text-align:center;padding:4px 6px;border-bottom:1px solid #E5E7EB;width:38px">ทิศ</th>
+              <th style="text-align:left;padding:4px 6px;border-bottom:1px solid #E5E7EB">ลงบัญชี</th>
+              <th style="text-align:center;padding:4px 6px;border-bottom:1px solid #E5E7EB;width:74px">ต้องแนบรูป</th>
+              <th style="text-align:left;padding:4px 6px;border-bottom:1px solid #E5E7EB;width:150px">ใช้ตอนไหน</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:4px 6px">📦 ของแตก/เสียหาย</td><td style="text-align:center;color:#991B1B;font-weight:700">−</td><td style="padding:4px 6px">ผลขาดทุนจากสินค้าเสียหาย</td><td style="text-align:center">✅ บังคับ</td><td style="padding:4px 6px;color:#6B7280">ขนย้ายแล้วแตก · น้ำท่วม</td></tr>
+              <tr><td style="padding:4px 6px">🕵️ ของหาย</td><td style="text-align:center;color:#991B1B;font-weight:700">−</td><td style="padding:4px 6px">ผลขาดทุนจากสินค้าสูญหาย</td><td style="text-align:center">✅ บังคับ</td><td style="padding:4px 6px;color:#6B7280">หาไม่เจอ · สงสัยถูกขโมย → แจ้งความ</td></tr>
+              <tr><td style="padding:4px 6px">⏳ หมดอายุ/เสื่อมสภาพ</td><td style="text-align:center;color:#991B1B;font-weight:700">−</td><td style="padding:4px 6px">ผลขาดทุนจากสินค้าล้าสมัย</td><td style="text-align:center">✅ บังคับ</td><td style="padding:4px 6px;color:#6B7280">ของค้างนานจนขายไม่ได้</td></tr>
+              <tr><td style="padding:4px 6px">🧾 ตัดจำหน่ายเครื่องลูกค้าตกค้าง</td><td style="text-align:center;color:#991B1B;font-weight:700">−</td><td style="padding:4px 6px">รายได้อื่น (ทรัพย์สินตกค้าง)</td><td style="text-align:center">✅ บังคับ<br><span style="font-size:9.5px;color:#B45309">+ หลักฐานแจ้ง</span></td><td style="padding:4px 6px;color:#6B7280">ลูกค้าไม่มารับเกินกำหนด — ต้องมี log ตามครบก่อน</td></tr>
+              <tr><td style="padding:4px 6px">👷 ขายพนักงาน/ราคาพิเศษ</td><td style="text-align:center;color:#991B1B;font-weight:700">−</td><td style="padding:4px 6px">ต้นทุนขาย + สวัสดิการพนักงาน</td><td style="text-align:center">—</td><td style="padding:4px 6px;color:#6B7280">ต้องมีบิลขายคู่ ไม่ใช่ตัดเปล่า</td></tr>
+              <tr><td style="padding:4px 6px">🔍 เจอเกิน (นับได้มากกว่าระบบ)</td><td style="text-align:center;color:#065F46;font-weight:700">+</td><td style="padding:4px 6px">กำไรจากผลต่างการนับ</td><td style="text-align:center">—</td><td style="padding:4px 6px;color:#6B7280">ต้องผ่านการนับซ้ำก่อนเสมอ</td></tr>
+              <tr><td style="padding:4px 6px">↩️ รับคืนจากคลังฝากขาย</td><td style="text-align:center;color:#065F46;font-weight:700">+</td><td style="padding:4px 6px">โยกระหว่างคลัง (ไม่กระทบกำไรขาดทุน)</td><td style="text-align:center">—</td><td style="padding:4px 6px;color:#6B7280">เรียกของคืนจากร้านตัวแทน</td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:7px;font-size:10.5px;color:#92400E;background:#FEF3C7;border-radius:4px;padding:5px 8px;line-height:1.6">
+            ⚠️ <b>ห้ามมีเหตุผล "อื่น ๆ" แบบปลายเปิด</b> — ถ้าเจอเคสที่ไม่เข้าข้อไหน ให้เพิ่มเหตุผลใหม่พร้อมผูกบัญชีที่ BC ก่อน · ไม่งั้นบัญชีจะมีก้อนที่อธิบายที่มาไม่ได้ตอนปิดงบ
+          </div>
         </div>
         <div class="tabset-pane" id="w-hist" style="color:#9CA3AF">— ยังไม่มีประวัติ (เอกสารร่าง) —</div>
         <div class="tabset-pane" id="w-note"><input style="width:100%;padding:6px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" placeholder="หมายเหตุ เช่น ของแตกจากการขนย้าย"></div>

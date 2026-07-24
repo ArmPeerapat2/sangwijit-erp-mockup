@@ -38,7 +38,21 @@
     'sqt-service-quotation-mockup.html',
     'sc2-item-search-mockup.html',
     'cf2-6-approval-matrix-mockup.html',
-    'cf2-7-doc-template-mockup.html'
+    'cf2-7-doc-template-mockup.html',
+
+    /* ─── เพิ่ม 2026-07-21 · งาน grill+build รอบใหญ่ (ตรวจแล้วทุกไฟล์) ─── */
+    'pm2-promotion-mockup.html',          /* แหล่งงบ · ขั้นบันได · ตรวจกำไร · โปรฯ ชนกัน */
+    'pm4-promo-quota-mockup.html',        /* ใหม่ — โควต้าโปรฯ งบแบรนด์/เพดานบริษัท */
+    'pmq-promo-dashboard-mockup.html',    /* ใหม่ — โปรฯ ที่รันอยู่ */
+    'cm1-commission-mockup.html',         /* คอมมิชชั่น 2 ฟิลด์ + เงื่อนไขเก็บเงินครบ */
+    'wh5-stock-adjustment-mockup.html',   /* ผังเหตุผล → บัญชี 7 เหตุผล */
+    'wh-r-stock-card-mockup.html',        /* ซ่อมไฟล์ + คลังพิเศษ + กติกากันนับซ้ำ */
+    'wh-svc-center-mockup.html',          /* ซากคืนแบรนด์ + ตัดจำหน่ายเครื่องตกค้าง */
+    'fi4-expense-wht-mockup.html',        /* VAT รายบรรทัด + ตัดปุ่มภาษีซ้ำ */
+    'fi12-wht-mockup.html',               /* อัตราภาษีหัก ณ ที่จ่าย ตารางกลาง */
+    'ap1-approval-center-mockup.html',    /* 4 กลุ่มอนุมัติ + ขอบเขตสิทธิ์ + จ่ายเงิน */
+    'cf-company-settings-mockup.html',    /* ถัวเฉลี่ยเคลื่อนที่ + SWT บริษัทเดียว */
+    'cf2-2-number-series-mockup.html'     /* เลขรันแยกตามสาขา */
   ];
 
   /* nav data — canonical (เปลี่ยนเมนูที่นี่ที่เดียว)
@@ -58,7 +72,9 @@
       ['SL-4','sl4-invoice-mockup.html','SL-4 บิลขาย','old'],
       ['SLCN','slcn-credit-memo-mockup.html','SL-CN ใบลดหนี้','old'],
       ['PM-1','pm1-price-list-mockup.html','PM-1 รายการราคา (Price List)','new'],
-      ['PM-2','pm2-promotion-mockup.html','PM-2 โปรโมชั่น (5 แบบ · dynamic)','new'],
+      ['PM-2','pm2-promotion-mockup.html','PM-2 ตั้งโปรโมชั่น (6 แบบ · dynamic)','new'],
+      ['PM-4','pm4-promo-quota-mockup.html','PM-4 โควต้าโปรโมชั่น (งบแบรนด์/เพดานบริษัท)','new'],
+      ['PM-Q','pmq-promo-dashboard-mockup.html','PM-Q โปรโมชั่นที่รันอยู่','new'],
       ['SLF1','slf1-credit-approval-mockup.html','SL-F1 อนุมัติวงเงินขาย','old'],
       ['PM-5','pm5-price-simulator-mockup.html','PM-5 จำลองราคาขาย (ราคา+กำไร+โปร)','new'],
       ['CM-1','cm1-commission-mockup.html','CM-1 Commission','old'],
@@ -184,7 +200,7 @@
   body.sb-mini .swt-sb-lbl,body.sb-mini .swt-sb-cnt,body.sb-mini .swt-sb-chv{display:none}
   body.sb-mini .swt-sb-links{padding-left:0}
   body.sb-mini .swt-sb-links a{justify-content:center;padding:5px 1px;gap:0}
-  body.sb-mini .swt-sb-links a .t,body.sb-mini .swt-sb-links a .m,body.sb-mini .swt-sb-links a .d{display:none}
+  body.sb-mini .swt-sb-links a .t,body.sb-mini .swt-sb-links a .m,body.sb-mini .swt-sb-links a .d,body.sb-mini .swt-sb-links a .u{display:none}
   body.sb-mini .swt-sb-links a .c{min-width:0;text-align:center;font-size:9px}
   .swt-sb-collapse{margin-left:auto;background:rgba(255,255,255,0.08);border:none;color:#94A3B8;width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:inherit;line-height:1}
   .swt-sb-collapse:hover{background:rgba(255,255,255,0.18);color:#fff}
@@ -234,6 +250,9 @@
   .swt-sb-links a.swt-active .m-new{background:rgba(96,165,250,0.24);color:#DBEAFE}
   .swt-sb-links a .d{margin-left:2px;color:#34D399;font-size:11px;flex-shrink:0}
   .swt-sb-links a.swt-active .d{color:#A7F3D0}
+  /* ○ = ยังไม่เสร็จ (คู่กับ ✦ = เสร็จแล้ว) — เพิ่ม 2026-07-21 ให้เห็นทั้ง 2 สถานะ */
+  .swt-sb-links a .u{margin-left:2px;color:#64748B;font-size:11px;flex-shrink:0}
+  .swt-sb-links a.swt-active .u{color:#94A3B8}
   .swt-sb.swt-done-only .swt-sb-links a:not(.is-done){display:none!important}
   .swt-sb-div{font-size:8.5px;font-weight:700;color:#6B7F99;text-transform:uppercase;letter-spacing:.04em;padding:5px 9px 2px;margin-top:3px;border-top:1px dashed rgba(255,255,255,0.12);display:flex;align-items:center;gap:5px}
   .swt-sb-div::before{content:"🗄️"}
@@ -270,7 +289,7 @@
           + '<span class="c">'+esc(code)+'</span>'
           + '<span class="t">'+esc(text)+'</span>'
           + '<span class="m '+markerCls+'">'+markerText+'</span>'
-          + (done?'<span class="d">✦</span>':'')
+          + (done?'<span class="d" title="เสร็จแล้ว — ตรวจแล้ว">✦</span>':'<span class="u" title="ยังไม่เสร็จ / รอ rebuild">○</span>')
           + '</a>';
         if(done) doneHtml+=a; else oldHtml+=a;   /* แยก ✦ (ใช้งาน) / เก่า (รอ rebuild) ในแต่ละกลุ่ม */
       });

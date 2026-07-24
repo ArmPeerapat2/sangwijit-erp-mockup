@@ -226,7 +226,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       </div>
     </div>
     <div class="mh-right">
-      <span class="mh-badge">🕓 รออนุมัติ</span>
+      <span class="mh-badge" id="po4Badge">🕓 รออนุมัติ</span>
       <button class="mh-btn mh-btn-ghost" onclick="location.href='poq-purchase-queue-mockup.html'">📋 คิวงาน</button>
       <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
       <button class="mh-btn mh-btn-accent" onclick="po4Submit()">📤 ส่งขออนุมัติ</button>
@@ -244,6 +244,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="saab-more-menu">
         <button type="button" class="btn btn-outline btn-menu">💾 Save Draft</button>
         <button type="button" class="btn btn-menu btn-success" onclick="po4SendPO()" title="อนุมัติแล้ว → ส่ง PO ให้ Vendor → สถานะ 'ค้างรับ' รอรับของ (WH-1)">📤 Send PO → ค้างรับ</button>
+        <button type="button" class="btn btn-outline btn-menu" id="po4ShortCloseBtn" onclick="po4ShortClose()" title="ผู้ขายส่งไม่ครบ → ตัดของที่ยังไม่ได้รับออกจากใบสั่งซื้อ · ต้องใส่เหตุผล · เฉพาะฝ่ายจัดซื้อ">🔒 ปิดรายการค้างรับ (ผู้ขายส่งไม่ครบ)</button>
         <button type="button" class="btn btn-menu btn-ghost" style="color:#EF4444">❌ ยกเลิก PO</button>
       </div>
     </div>
@@ -374,10 +375,12 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
         </div>
         <div class="tabset-pane" id="t-recv">
           <div class="tab-grid">
-            <span class="k">สถานะการรับ</span><span class="v">ยังไม่รับ (0%) · ค้างรับ 180 เครื่อง</span>
+            <span class="k">สถานะการรับ</span><span class="v" id="po4RecvStatus">ยังไม่รับ (0%) · ค้างรับ 180 เครื่อง</span>
             <span class="k">รับที่</span><span class="v"><a href="wh1-receive-mockup.html" style="color:#2563EB;font-weight:600">WH-1 ใบรับสินค้า (GRN)</a> · ทยอยรับได้</span>
             <span class="k">เงื่อนไขตั้งหนี้</span><span class="v">รับครบบิลก่อน → ตั้งหนี้ AP (PO-6) · ยกเว้นบิลฝาก (PO-8)</span>
+            <span class="k">ผู้ขายส่งไม่ครบ</span><span class="v"><button class="card-btn primary" onclick="po4ShortClose()">🔒 ปิดรายการค้างรับ</button> <span style="color:#6B7280">ฝ่ายจัดซื้อกดได้เท่านั้น · คลังปิดเองไม่ได้ (คลังใช้ปุ่ม "แจ้งจัดซื้อให้ปิดรายการค้าง" ที่ใบรับสินค้า)</span></span>
           </div>
+          <div class="note-link">⚠️ ปิดรายการค้างรับ = ตัดของที่ยังไม่ได้รับออกจากใบสั่งซื้อทันที · <b>ของค้างถูกยกเลิกทิ้ง ไม่ยกยอดไปรอบหน้า</b> (ถ้ายกยอดสะสมข้ามรอบ ตัวเลข "สั่งแล้วรอรับ" จะบวมจนวางแผนสั่งซื้อไม่ได้) — ถ้ายังต้องการของ ให้เปิด<a href="po4-purchase-order-mockup.html">ใบสั่งซื้อใหม่</a> · ใบที่ปิดแบบนี้ได้สถานะ <b>"ปิดโดยรับไม่ครบ"</b> แยกจาก "รับครบแล้ว" เพื่อดูย้อนหลังว่าผู้ขายรายไหนส่งไม่ครบบ่อย</div>
         </div>
         <div class="tabset-pane" id="t-ref">
           <div class="tab-grid">
@@ -461,6 +464,42 @@ function po4SendPO(){
   if(confirm('ส่งใบสั่งซื้อนี้ให้ Vendor?\n\n• สถานะ → Approved → ส่ง PO + Print ใบสั่งซื้อ\n• เปลี่ยนเป็น "ค้างรับ" (รอ Vendor ส่งของ)\n• ไปรับของที่ WH-1 (ใบรับสินค้า / GRN)')){
     location.href='wh1-receive-mockup.html';
   }
+}
+/* 🔒 ปิดรายการค้างรับ (short-close) — จัดซื้อเท่านั้น
+   กติกาผู้บริหาร: ของค้าง = ยกเลิกทิ้ง ไม่ยกยอดไปรอบหน้า (กันยอด "สั่งแล้วรอรับ" บวมจนวางแผนไม่ได้)
+   ต้องใส่เหตุผล + ใบได้สถานะ "ปิดโดยรับไม่ครบ" แยกจาก "รับครบแล้ว" */
+var po4OpenQty=180, po4ShortClosed=false;
+function po4ShortClose(){
+  if(po4ShortClosed){ alert('ใบสั่งซื้อนี้ถูกปิดรายการค้างรับไปแล้ว — ปิดซ้ำไม่ได้'); return; }
+  if(!confirm('ปิดรายการค้างรับ — ใบสั่งซื้อ PO-2606-0042 (Daikin Industries)\n\n'
+    +'⚠️ ของค้างรับ '+po4OpenQty+' ชิ้น จะถูกยกเลิก ไม่ยกไปรอบหน้า\n'
+    +'• ตัดออกจากใบสั่งซื้อนี้ทันที — ต้องการของเพิ่มให้เปิดใบสั่งซื้อใหม่\n'
+    +'• ใบนี้จะได้สถานะ "ปิดโดยรับไม่ครบ" (ไม่ใช่ "รับครบแล้ว")\n'
+    +'• บันทึกเข้าประวัติผู้ขาย — ใช้ดูว่ารายไหนส่งไม่ครบบ่อย\n\nยืนยันปิด?')) return;
+  var reason=prompt('เหตุผลที่ปิดรายการค้างรับ (บังคับกรอก · เก็บลงประวัติเอกสาร + ประวัติผู้ขาย)','ผู้ขายแจ้งของหมดรุ่น ส่งเพิ่มไม่ได้');
+  if(!reason||!reason.trim()){ alert('ต้องระบุเหตุผลก่อน — ยังไม่ปิดรายการค้างรับของใบนี้'); return; }
+  po4ShortClosed=true;
+  var b=document.getElementById('po4Badge');
+  if(b){ b.textContent='🔒 ปิดโดยรับไม่ครบ'; b.style.background='rgba(239,68,68,0.2)'; b.style.color='#FCA5A5'; b.style.borderColor='rgba(239,68,68,0.35)'; }
+  var st=document.getElementById('po4RecvStatus');
+  if(st) st.innerHTML='<b style="color:#991B1B">ปิดโดยรับไม่ครบ</b> · ยกเลิกของค้าง '+po4OpenQty+' ชิ้น (ไม่ยกไปรอบหน้า) · เหตุผล: '+reason;
+  var btn=document.getElementById('po4ShortCloseBtn');
+  if(btn){ btn.disabled=true; btn.textContent='🔒 ปิดรายการค้างรับแล้ว'; btn.style.opacity='0.55'; btn.style.cursor='default'; }
+  var pills=document.querySelector('#po4Sc12 .sc11-pills');
+  if(pills){
+    var p=document.createElement('span');
+    p.className='pill pill-danger';
+    p.textContent='🔒 ปิดโดยรับไม่ครบ · ยกเลิก '+po4OpenQty+' ชิ้น';
+    pills.appendChild(p);
+  }
+  var tl=document.querySelector('#t-hist .tl');
+  if(tl){
+    var d=document.createElement('div');
+    d.className='tl-item';
+    d.innerHTML='<span class="tl-dot"></span> ปิดรายการค้างรับ '+po4OpenQty+' ชิ้น (ยกเลิก ไม่ยกไปรอบหน้า) · จัดซื้อ · เหตุผล: '+reason;
+    tl.appendChild(d);
+  }
+  alert('ปิดรายการค้างรับแล้ว (mock)\n\n• ยกเลิกของค้าง '+po4OpenQty+' ชิ้น — ไม่ยกไปรอบหน้า\n• สถานะใบสั่งซื้อ = "ปิดโดยรับไม่ครบ"\n• คลังจะไม่เห็นใบนี้ในคิวรับของอีก\n• ต้องการของเพิ่ม → เปิดใบสั่งซื้อใหม่');
 }
 function po4InitPatterns(){
   swtRenderStatusStrip('#po4Sc12',{

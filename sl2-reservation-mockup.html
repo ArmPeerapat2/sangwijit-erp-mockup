@@ -148,6 +148,18 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .tpl-modal .m-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
 .ph{color:#9CA3AF;font-style:italic}
 .tpl-zone{font-size:9px;font-weight:700;color:#2563EB;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:4px;padding:1px 6px;margin-left:6px;text-transform:uppercase}
+/* ── ยอดกันสต็อกหมดอายุ (auto-release) ── */
+.resv-exp{margin-top:6px;padding:5px 8px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.resv-exp .l{font-size:9px;font-weight:700;color:#92400E;text-transform:uppercase;letter-spacing:.03em}
+.resv-exp .t{font-size:11px;color:#78350F}
+.resv-exp .t b{color:#111827}
+.resv-exp .num{width:46px;padding:2px 5px;border:1px solid #FDE68A;border-radius:4px;font-size:11.5px;text-align:center;font-family:'Inter',monospace;font-weight:700;background:#fff;color:#92400E}
+.resv-exp .hint{flex-basis:100%;font-size:9.5px;color:#92400E;opacity:.9;line-height:1.5}
+.aging{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:10.5px;padding:2px 7px;border-radius:10px}
+.aging.ag-g{color:#047857;background:#ECFDF5}
+.aging.ag-a{color:#B45309;background:#FEF3C7}
+.aging.ag-r{color:#B91C1C;background:#FEF2F2}
+.btn-release{padding:3px 9px;border-radius:5px;font-size:11px;font-weight:600;background:#fff;border:1px solid #FCA5A5;color:#B91C1C;cursor:pointer;font-family:inherit}
 
 /* marker หน้าใหม่ (rebuild บนเทมเพลตแล้ว) */
 </style>
@@ -249,6 +261,16 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           <div class="field"><div class="field-label">วันที่ส่งสินค้า <span style="color:#EF4444">*</span></div><div class="field-value">13 มิ.ย. 26</div></div>
           <div class="field"><div class="field-label">เงื่อนไขชำระ</div><div class="field-value">เครดิต 7 วัน</div></div>
           <div class="field"><div class="field-label">อ้างอิงใบเสนอราคา</div><div class="field-value"><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 08QT-2606-0047 ↗</a></div></div>
+          <div class="field"><div class="field-label">วันนัดรับสินค้า <span style="color:#2563EB">(ใช้ตั้งต้นนับวันหมดอายุ)</span></div><div class="field-value" id="resvPickDate">13 มิ.ย. 26</div></div>
+        </div>
+        <div class="resv-exp">
+          <span class="l">⏳ ยอดกันสต็อกหมดอายุ</span>
+          <span class="t">นับจากวันนัดรับ <b>13 มิ.ย. 26</b> อีก <input class="num" id="resvHoldDays" value="7" onchange="resvExpCalc()"> วัน</span>
+          <span class="t">→ หมดอายุ <b id="resvExpDate">20 มิ.ย. 26</b></span>
+          <span class="aging ag-a" id="resvAging">⏱️ เหลือ 3 วัน</span>
+          <span class="card-spacer"></span>
+          <button class="btn-release" onclick="resvRelease()" title="ปุ่มนี้ใช้ได้เฉพาะผู้มีสิทธิ์ปลดยอดกันสต็อก — สิทธิ์กำหนดที่ทะเบียนพนักงาน / ตำแหน่ง (⏸️ รอกำหนดผู้มีสิทธิ์)">🔓 ปลดของที่กันไว้</button>
+          <span class="hint">จำนวนวันตั้งต้นมาจากการตั้งค่าระบบ · แก้ได้รายใบ (ลูกค้ารายใหญ่ขอนานกว่าปกติได้) · ครบกำหนดแล้วระบบ<b>ปลดของคืนสต็อกอัตโนมัติ + แจ้งพนักงานขายเจ้าของใบ</b> · ปุ่มปลดก่อนกำหนดต้องมีสิทธิ์ปลดยอดกันสต็อก กำหนดที่ทะเบียนพนักงาน/ตำแหน่ง — ⏸️ รอกำหนดผู้มีสิทธิ์</span>
         </div>
       </div>
     </div>
@@ -370,6 +392,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
             <div class="tl-item"><span class="tl-dot"></span> สร้างจากใบเสนอราคา (Make-to-Order) · 06 มิ.ย. 26 · สัญญาลักษณ์</div>
             <div class="tl-item"><span class="tl-dot"></span> จองสต็อกสำเร็จ · 06 มิ.ย. 26</div>
             <div class="tl-item"><span class="tl-dot pending"></span> ส่งเข้าคิวรอเบิก (WH-2)</div>
+            <div class="tl-item"><span class="tl-dot pending"></span> ครบกำหนดยอดกันสต็อก 20 มิ.ย. 26 → ปลดของคืนสต็อกอัตโนมัติ + แจ้งพนักงานขายเจ้าของใบ (สัญญาลักษณ์)</div>
+            <div class="tl-item"><span class="tl-dot pending"></span> บันทึกการปลดก่อนกำหนด: ผู้ปลด · วันเวลา · เหตุผล (ยังไม่มีการปลด)</div>
           </div>
         </div>
       </div>
@@ -433,6 +457,25 @@ function tplScan(e){
   if(e.key!=='Enter')return; var v=e.currentTarget.value.trim(); if(!v)return;
   var isSN=/^SN|^S\/N|\-SN/i.test(v)||v.length>=10;
   alert((isSN?'อ่านเป็น S/N: ':'อ่านเป็น Barcode: ')+v); e.currentTarget.value='';
+}
+/* ยอดกันสต็อกหมดอายุ — นับจากวันนัดรับ + จำนวนวันที่ตั้งค่า (ตั้งรายใบได้ ไม่ fix 7) */
+var RESV_PICK_DATE=new Date(2026,5,13);   /* วันนัดรับ 13 มิ.ย. 26 */
+var RESV_TODAY=new Date(2026,5,17);       /* วันที่อ้างอิงในตัวอย่าง */
+var TH_M=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+function resvExpCalc(){
+  var d=parseInt(document.getElementById('resvHoldDays').value,10);
+  if(isNaN(d)||d<0){ alert('กรุณากรอกจำนวนวันเป็นตัวเลข 0 ขึ้นไป'); return; }
+  var exp=new Date(RESV_PICK_DATE.getTime()+d*86400000);
+  document.getElementById('resvExpDate').textContent=
+    ('0'+exp.getDate()).slice(-2)+' '+TH_M[exp.getMonth()]+' '+String(exp.getFullYear()+543).slice(-2);
+  var left=Math.round((exp-RESV_TODAY)/86400000);
+  var a=document.getElementById('resvAging');
+  if(left<0){ a.className='aging ag-r'; a.textContent='🔴 เลยกำหนดแล้ว '+Math.abs(left)+' วัน'; }
+  else if(left<=3){ a.className='aging ag-a'; a.textContent='⏱️ เหลือ '+left+' วัน'; }
+  else { a.className='aging ag-g'; a.textContent='⏱️ เหลือ '+left+' วัน'; }
+}
+function resvRelease(){
+  alert('ปลดของที่กันไว้ (ตัวอย่าง)\n\n⚠️ ใช้ได้เฉพาะผู้มีสิทธิ์ปลดยอดกันสต็อก — สิทธิ์กำหนดที่ทะเบียนพนักงาน / ตำแหน่ง\n⏸️ รอผู้บริหารกำหนดว่าตำแหน่งใดได้สิทธิ์นี้\n\nระบบจะบันทึก: ผู้ปลด · วันเวลา · เหตุผลที่ปลด\nแล้วคืนของเข้าสต็อก + แจ้งพนักงานขายเจ้าของใบ');
 }
 /* ประเภทการจอง (per-document) → เปลี่ยน routing pill */
 function resvRoute(){
