@@ -20,7 +20,8 @@ project_type: "frontend-mockup (HTML + docs)"
 - **✅ ทะเบียนประเภทเงินได้ (2026-07-24):** schema `income` ใน cf-master-settings (6 ประเภท · VAT/WHT/GL) · grill: schema ไม่ใช่หน้าแยก · GL=อ้างรหัส BC (CF-2.3) · แก้ conflict ค่าโฆษณา→2% · verified · ⏳ ตามต่อ: fi4/fi12 อ่านจากตัวนี้ (ยังมีตารางเอง)
 - **✅ กลุ่มสินค้า rebate (2026-07-24):** schema `rebate` ใน cf-master-settings (4 กลุ่ม) · portal ถือ · rebate% แปรตาม vendor/รอบ ที่ PO-7 (ไม่อยู่ register) · verified
 - **✅ กลุ่มลูกค้า = BC เจ้าของ** (md2 อ่าน dropdown แล้ว · ไม่สร้าง portal register)
-- **master ขาดต่อไป:** ที่อยู่ 12 ช่อง (component ใช้ซ้ำ ลูกค้า/ผู้ขาย/สาขา/พนักงาน) · นำเข้ายอดยกมา (ตอนขึ้นระบบ) · สร้างรหัสอัตโนมัติ
+- **✅ ที่อยู่ 12 ช่อง (2026-07-24):** `swt-address.js` shared — grill: postal-first (พิมพ์ไปรษณีย์→เด้ง จว./อำเภอ/ตำบล) + อ่านบัตรประชาชน · `swtAddressWire()` ผูกฟอร์มเดิม + `swtRenderAddress()` render เต็ม · wired md2 verified · ⏳ retrofit md3/md5/md4 ตามหลัง
+- **master ขาดต่อไป:** retrofit ที่อยู่ (md3/md5/md4) · นำเข้ายอดยกมา (ตอนขึ้นระบบ) · สร้างรหัสอัตโนมัติ · fi4/fi12 อ่าน income register
 - **⚠️ git ค้าง:** งาน grill 3 บล็อกเกอร์ (md4/sc2/6หน้า relabel/backlog/active) ยังไม่ commit · ทับกอง `06071aa` ที่ยังไม่ push
 
 ## 🔄 SESSION 2026-07-20 — reconcile งานยุค bc365 + grill ปิดท้าย (จัดซื้อ 3-Way · งานศูนย์ · lead)
