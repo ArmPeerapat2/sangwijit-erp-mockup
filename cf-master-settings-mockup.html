@@ -55,6 +55,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       <button class="cat-btn" data-cat="sla" onclick="selMaster(this,'sla')"><span class="ic">🗓️</span> SLA งานบริการ</button>
       <button class="cat-btn" data-cat="chk" onclick="selMaster(this,'chk')"><span class="ic">🧪</span> เช็คลิสต์ ตรวจ/ล้าง</button>
       <button class="cat-btn" data-cat="position" onclick="selMaster(this,'position')"><span class="ic">👤</span> ตำแหน่งพนักงาน</button>
+      <button class="cat-btn" data-cat="income" onclick="selMaster(this,'income')"><span class="ic">🧾</span> ประเภทเงินได้ (WHT)</button>
       <a class="cat-link" href="cf2-7-doc-template-mockup.html"><span class="ic">📄</span> แบบฟอร์มเอกสาร (CF-2.7) ↗</a>
 
       <div class="cat-div">🔒 Master บัญชี → ตั้งที่ BC</div>
@@ -82,6 +83,26 @@ var MASTERS = {
       {code:'SALE-MGR',name:'หัวหน้าฝ่ายขาย',dept:'ฝ่ายขาย',active:true},
       {code:'TECH-IN',name:'ช่างบริการ (ช่างใน)',dept:'ศูนย์บริการ',active:true},
       {code:'ACC',name:'พนักงานบัญชี',dept:'การเงิน-บัญชี',active:true}
+    ]
+  },
+  income: {
+    title:'ประเภทเงินได้ (VAT + WHT + ผังบัญชี)',
+    bcNote:'ตารางกลาง 1 ที่ (การเงิน Q2ข 07-21) · ผูกกับ "ประเภทเงินได้" ห้ามผูกผู้ขาย (ผู้ขายรายเดียวจ่ายได้หลายประเภท) · fi4/fi12 อ่านอย่างเดียว ห้ามพิมพ์อัตราเอง · ผังบัญชี=อ้างรหัส BC (CF-2.3 GL เจ้าของ) · ฐาน WHT=ก่อน VAT',
+    columns:[{key:'code',label:'รหัส'},{key:'name',label:'ประเภทเงินได้'},{key:'vat',label:'VAT',width:'70px'},{key:'wht',label:'WHT',width:'60px'},{key:'gl',label:'บัญชี BC'}],
+    fields:[
+      {key:'code',label:'รหัส'},{key:'name',label:'ชื่อประเภทเงินได้'},
+      {key:'vat',label:'VAT',type:'select',options:[{value:'7%',label:'7%'},{value:'0%',label:'0%'},{value:'ยกเว้น',label:'ยกเว้น'}]},
+      {key:'wht',label:'หัก ณ ที่จ่าย',type:'select',options:[{value:'0%',label:'0% (ไม่หัก)'},{value:'1%',label:'1% ขนส่ง'},{value:'2%',label:'2% โฆษณา'},{value:'3%',label:'3% บริการ/จ้างทำของ'},{value:'5%',label:'5% เช่า'}]},
+      {key:'gl',label:'รหัสบัญชี BC (อ้าง Chart of Accounts)'},
+      {key:'active',label:'สถานะ',type:'toggle'}
+    ],
+    data:[
+      {code:'GOODS',name:'ค่าสินค้า',vat:'7%',wht:'0%',gl:'5010 ต้นทุนสินค้า',active:true},
+      {code:'SERVICE',name:'ค่าบริการ / จ้างทำของ',vat:'7%',wht:'3%',gl:'5310 ค่าบริการ',active:true},
+      {code:'RENT',name:'ค่าเช่า',vat:'ยกเว้น',wht:'5%',gl:'5320 ค่าเช่า',active:true},
+      {code:'ADV',name:'ค่าโฆษณา',vat:'7%',wht:'2%',gl:'5330 ค่าโฆษณา',active:true},
+      {code:'TRANSPORT',name:'ค่าขนส่ง',vat:'7%',wht:'1%',gl:'5340 ค่าขนส่ง',active:true},
+      {code:'PROF',name:'ค่าวิชาชีพ / ที่ปรึกษา',vat:'7%',wht:'3%',gl:'5350 ค่าที่ปรึกษา',active:true}
     ]
   },
   card: {

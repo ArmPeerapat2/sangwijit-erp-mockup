@@ -16,7 +16,9 @@ project_type: "frontend-mockup (HTML + docs)"
 - **✅ Grill+build บล็อกเกอร์ 2 (2026-07-24) — md4 แท็บสิทธิ์:** Q1 สิทธิ์ผ่านกลุ่ม/ตำแหน่งพอ (ไม่มี override รายคน) · Q2 md4 read-only สืบจากกลุ่ม แก้จริงที่ CF-1 · build แท็บ "🔑 สิทธิ์การใช้งาน" (MD-4.6 มอบหมาย + MD-4.7 ตาราง 14 สิทธิ์ 4 หมวด union) verified · relabel 16 จุด (ap1/sl2/wh-q2/wh2r) · ราย `master-data-and-settings-backlog.md §2`
 - **✅ Grill+build บล็อกเกอร์ 3 (2026-07-24) — gate ต้นทุน sc2:** Q1 ซ่อนคอลัมน์หาย (ไม่ render DOM) · Q2 คุมรวม 1 สิทธิ์ view-cost · Q3 อุด sc2 shared ก่อน (จุดเดียวครอบทุกหน้า) · build `sc2` ย้ายค่าไป JS + toggle + scRenderCost verified · ราย `master-data-and-settings-backlog.md §3`
 - **🎉 บล็อกเกอร์ master-data ครบ 3/3** (1 บริษัท · md4 สิทธิ์ · gate ต้นทุน) — ปลดล็อกออกแบบข้อมูลหลักต่อได้
-- **✅ ทะเบียนตำแหน่ง (2026-07-24):** เพิ่ม schema `position` ใน cf-master-settings (swt-master-editor · 6 ตำแหน่ง) · grill: schema ไม่ใช่หน้าใหม่ · แยกอิสระไม่ผูกกลุ่ม default (md4 เลือกเอง) verified · **master ขาดต่อไป:** ประเภทเงินได้ (VAT+WHT+ผังบัญชี · ยาก) · กลุ่มสินค้า rebate · กลุ่มลูกค้า
+- **✅ ทะเบียนตำแหน่ง (2026-07-24):** schema `position` ใน cf-master-settings (6 ตำแหน่ง) · แยกอิสระไม่ผูกกลุ่ม default · verified
+- **✅ ทะเบียนประเภทเงินได้ (2026-07-24):** schema `income` ใน cf-master-settings (6 ประเภท · VAT/WHT/GL) · grill: schema ไม่ใช่หน้าแยก · GL=อ้างรหัส BC (CF-2.3) · แก้ conflict ค่าโฆษณา→2% · verified · ⏳ ตามต่อ: fi4/fi12 อ่านจากตัวนี้ (ยังมีตารางเอง)
+- **master ขาดต่อไป:** กลุ่มสินค้า rebate · กลุ่มลูกค้า (ง่าย) · ที่อยู่ 12 ช่อง component · นำเข้ายอดยกมา
 - **⚠️ git ค้าง:** งาน grill 3 บล็อกเกอร์ (md4/sc2/6หน้า relabel/backlog/active) ยังไม่ commit · ทับกอง `06071aa` ที่ยังไม่ push
 
 ## 🔄 SESSION 2026-07-20 — reconcile งานยุค bc365 + grill ปิดท้าย (จัดซื้อ 3-Way · งานศูนย์ · lead)
