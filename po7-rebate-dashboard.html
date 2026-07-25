@@ -236,13 +236,13 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       <div class="card compact">
         <div class="card-header"><div class="card-title"><span class="secno">PO-7.2</span><span class="ico">📋</span>ข้อมูลสรุปงบ (2-step pull + เอกสารบริษัท)</div>
           <div class="card-spacer"></div>
-          <button class="card-btn" onclick="po7PullPo2()" title="Step 1: ดึงข้อตกลง + เงื่อนไขส่วนลด + ไฟล์หลักฐานจาก PO-2">① ดึงจาก PO-2</button>
-          <button class="card-btn primary" onclick="po7PullActual()" title="Step 2: ดึงยอดจริง — MOU/Sell-in = ยอดซื้อ (WH-1/PO-8) · Sell-out = SL-4 บิลขาย">② ดึงยอดจริง</button>
+          <button class="card-btn" onclick="po7PullPo2()" title="Step 1: ดึงข้อตกลง + เงื่อนไขส่วนลด + ไฟล์หลักฐานจาก PO-2">ขั้น 1 ดึงจาก PO-2</button>
+          <button class="card-btn primary" onclick="po7PullActual()" title="Step 2: ดึงยอดจริง — MOU/Sell-in = ยอดซื้อ (WH-1/PO-8) · Sell-out = SL-4 บิลขาย">ขั้น 2 ดึงยอดจริง</button>
           <button class="card-btn" onclick="po7OpenCompanyDocs()">📎 เอกสารยืนยันยอด</button>
         </div>
         <div class="mini-line"><span class="mini-k">Accrual</span><span class="mono" style="font-weight:700;color:#065F46">ACR-2606-0015</span> · งวด Q2/2026 (เม.ย.–มิ.ย.) · ส่งตั้งหนี้: PO-6 เมื่อ Realized</div>
         <div class="mini-line"><span class="mini-k">ข้อตกลง</span><select id="po7AgreementSelect" onchange="po7ChangeAgreement(this.value)" class="mini-input" style="flex:1;max-width:300px"><option value="AG-MOU-2604-001">AG-MOU-2604-001 · MOU</option><option value="AG-SI-2604-005" selected>AG-SI-2604-005 · Sell-in</option><option value="AG-SO-2604-008">AG-SO-2604-008 · Sell-out</option><option value="AG-CO-2604-012">AG-CO-2604-012 · Co-op</option></select><span class="mini-k" style="min-width:auto">แหล่ง</span><span id="po7SourceLabel" class="src-chip">ยอดซื้อ — WH-1 ใบรับสินค้า / PO-8 บิลฝาก</span></div>
-        <div class="mini-line"><span class="mini-k">ช่วง/สถานะ</span><input id="po7Range" onblur="po7RenderRow(document.getElementById('po7AgreementSelect').value)" value="01/04/26 - 30/06/26" class="mini-input mono" style="width:140px"><input id="po7ItemFilter" onblur="po7RenderRow(document.getElementById('po7AgreementSelect').value)" value="ใช้รายการตาม PO-2 ที่เลือก" class="mini-input" style="flex:1;min-width:110px"><span style="flex:none">①<span id="po7Po2Pull" class="pull-chip wait">รอดึง</span> ②<span id="po7ActualPull" class="pull-chip wait">รอดึง</span></span></div>
+        <div class="mini-line"><span class="mini-k">ช่วง/สถานะ</span><input id="po7Range" onblur="po7RenderRow(document.getElementById('po7AgreementSelect').value)" value="01/04/26 - 30/06/26" class="mini-input mono" style="width:140px"><input id="po7ItemFilter" onblur="po7RenderRow(document.getElementById('po7AgreementSelect').value)" value="ใช้รายการตาม PO-2 ที่เลือก" class="mini-input" style="flex:1;min-width:110px"><span style="flex:none">ขั้น 1 <span id="po7Po2Pull" class="pull-chip wait">รอดึง</span> ขั้น 2 <span id="po7ActualPull" class="pull-chip wait">รอดึง</span></span></div>
       </div>
     </div>
 
@@ -262,7 +262,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
         </table>
       </div>
       <div style="padding:8px 14px;border-top:1px dashed #E5E7EB;background:#F0FDF4;font-size:11px;color:#6B7280">
-        💡 Flow บังคับ 2 ครั้ง: <b>① ดึง PO-2</b> (line สินค้า + เงื่อนไขส่วนลด + เอกสาร) → <b>② ดึงยอดจริง</b> — MOU/Sell-in = <b>ยอดซื้อ</b> (WH-1 ใบรับสินค้า / PO-8 บิลฝาก) · Sell-out = <b>SL-4 บิลขาย</b> · กด 📄 ดูบิลอ้างอิงต่อแถว · สิทธิ์คำนวณตามแบบ ①฿/ตัว ②% ③฿+โควต้า (เกินโควต้า = ตัดสิทธิ์) · กรอก <b>ยอดบริษัทจ่ายจริง</b> เพื่อส่ง PO-6
+        💡 Flow บังคับ 2 ครั้ง: <b>ขั้น 1 ดึง PO-2</b> (line สินค้า + เงื่อนไขส่วนลด + เอกสาร) → <b>ขั้น 2 ดึงยอดจริง</b> — MOU/Sell-in = <b>ยอดซื้อ</b> (WH-1 ใบรับสินค้า / PO-8 บิลฝาก) · Sell-out = <b>SL-4 บิลขาย</b> · กด 📄 ดูบิลอ้างอิงต่อแถว · สิทธิ์คำนวณตามแบบ 1) ฿/ตัว 2) % 3) ฿+โควต้า (เกินโควต้า = ตัดสิทธิ์) · กรอก <b>ยอดบริษัทจ่ายจริง</b> เพื่อส่ง PO-6
       </div>
     </div>
 
@@ -270,6 +270,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
     <div class="row-bottom">
       <div class="tabset">
         <div class="tabset-nav">
+          <span class="secno">PO-7.4</span>
           <button class="on" onclick="swTab(event,'t-agree')">ข้อตกลง (PO-2)</button>
           <button onclick="swTab(event,'t-doc')">เอกสารอ้างอิงประกอบ</button>
           <button onclick="swTab(event,'t-sanction')">Sanction</button>
@@ -485,9 +486,9 @@ function po7SrcChip(cfg){
 }
 /* เงื่อนไขส่วนลดต่อแถว (ดึงจาก PO-2) */
 function po7ModeChip(it){
-  if(it.mode==='m1')return '<span class="mode-chip m1">① ลดบาท/ตัว</span><div class="cond-txt">ลด '+po7Fmt(it.baht).replace('.00','')+' ฿/ตัว</div>';
-  if(it.mode==='m2')return '<span class="mode-chip m2">② ลด %</span><div class="cond-txt">ลด '+it.pct+'% ของยอดจริง</div>';
-  return '<span class="mode-chip m3">③ ลด+โควต้า</span><div class="cond-txt">ลด '+po7Fmt(it.baht).replace('.00','')+' ฿/ตัว · โควต้า '+it.quota+' '+(it.quotaUnit||'ตัว')+'</div>';
+  if(it.mode==='m1')return '<span class="mode-chip m1">แบบ 1 ลดบาท/ตัว</span><div class="cond-txt">ลด '+po7Fmt(it.baht).replace('.00','')+' ฿/ตัว</div>';
+  if(it.mode==='m2')return '<span class="mode-chip m2">แบบ 2 ลด %</span><div class="cond-txt">ลด '+it.pct+'% ของยอดจริง</div>';
+  return '<span class="mode-chip m3">แบบ 3 ลด+โควต้า</span><div class="cond-txt">ลด '+po7Fmt(it.baht).replace('.00','')+' ฿/ตัว · โควต้า '+it.quota+' '+(it.quotaUnit||'ตัว')+'</div>';
 }
 /* สิทธิ์ส่วนลดคำนวณตามแบบ — ①③ = ฿×จำนวนจริง (③ cap โควต้า) · ② = %×ยอดจริง */
 function po7Entitle(it){
@@ -554,7 +555,7 @@ function po7RenderRow(code){
         var entitle=po7Entitle(item);
         var actualCell=po7State.actualLoaded
           ?(item.qty+' ตัว · ฿'+po7Fmt(item.amt)+'<br><button class="bill-btn" onclick="po7ShowBills(\''+code+'\','+i+')">📄 '+item.bills.length+' บิล</button>')
-          :'<span style="color:#9CA3AF">รอดึงยอดจริง (Step ②)</span>';
+          :'<span style="color:#9CA3AF">รอดึงยอดจริง (ขั้น 2)</span>';
         return '<tr data-po7-row="1" data-entitle="'+entitle+'" data-base="'+(po7State.actualLoaded?po7ParseNum(item.amt):0)+'">'
           +'<td>'+(i+1)+'</td>'
           +'<td class="mono">'+item.sku+'</td>'
