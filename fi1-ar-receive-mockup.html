@@ -63,7 +63,16 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 .party-line .pay-sel.w-amt{min-width:96px;max-width:120px}
 .party-line .pay-sel.w-ref{min-width:140px;flex:1;max-width:220px}
 .party-line b{font-family:'Inter',monospace}
-.row-bottom{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+/* row-bottom → compact horizontal สรุปเงิน strip (คงสรุปเงินครบ 100% · items เด่นเต็มจอ) */
+.sum-strip-card{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;padding:8px 14px}
+.sum-strip-card .ss-title{font-size:12px;font-weight:600;color:#374151;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.sum-strip-card .ss-title .secno{font-family:'Inter',monospace;font-weight:700;color:#2563EB;font-size:11px}
+#fi1Sc11{display:flex;align-items:center;gap:5px 14px;flex-wrap:wrap;flex:1}
+#fi1Sc11 .summary-row{display:inline-flex;align-items:center;gap:6px;padding:0!important;border:none!important;font-size:11.5px}
+#fi1Sc11 .summary-row .lbl{color:#6B7280}
+#fi1Sc11 .summary-total{margin:0;padding:5px 12px;font-size:12.5px;gap:8px}
+#fi1Sc11 .summary-total .val{margin-left:2px}
+.sum-strip-card .note-inl{flex:1;min-width:180px;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit}
 .mono{font-family:'Inter',monospace}
 .pay-sel{padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit;background:#fff;width:100%}
 .status-strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:4px 12px;flex:none}
@@ -108,8 +117,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .btn-primary{background:#2563EB;color:#fff}.btn-success{background:#10B981;color:#fff}
 .btn-outline{background:#fff;color:#374151;border-color:#E5E7EB}.btn-ghost{background:transparent;color:#6B7280}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-party,.gate-alert{flex:none}
-.row-bottom{height:158px;font-size:12px}
-.row-bottom .tabset,.row-bottom>.card{overflow:auto}
+.row-bottom{font-size:12px}
 .tpl-zone{font-size:9px;font-weight:700;color:#2563EB;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:4px;padding:1px 6px;margin-left:6px}
 .tpl-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:900;align-items:center;justify-content:center}
 .tpl-modal-bg.on{display:flex}
@@ -179,7 +187,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 
   <div class="content">
 
-    <div id="fi1Sc12" class="status-strip"></div>
+    <!-- status-strip ตัดออก: pills ซ้ำ 100% (📄 ร่าง=mh-badge · 🏦 โอนธนาคาร=วิธีรับ · ✓ ประกบครบ=gate · ⏳ ครบกำหนด=ตารางบิล) · gate คงไว้ (ไม่ซ้ำ) -->
     <div id="fi1Gate" class="gate-alert"></div>
 
     <div class="row-party">
@@ -237,7 +245,11 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">FI-1.3</span>🧾 รายการบิลขายที่รับชำระ (Apply AR)</div>
+        <div class="card-title"><span class="secno">FI-1.3</span>🧾 รายการบิลขายที่รับชำระ (Apply AR) <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="วิธีรับ · ส่วนลด · อ้างอิง · ประวัติ">i<span class="swt-tip-pop" style="max-width:420px">
+          <b>💳 วิธีรับ:</b> บัญชีรับเข้า KBANK 098-7-65432-1 (บ.แสงวิจิตร · รับเงินขาย) · โอนจากลูกค้า Ref 260611-ADTP-8833 · หลัง Post → ปิด AR Entry + Bank รับเข้า + ออก CRV → <a href="fiq-finance-queue-mockup.html">FI-Q คิวงานการเงิน</a> · บัญชีปลายทางเลือกจาก<b>ผังบัญชีของระบบ BC</b> (พอร์ทัลดึงมาแสดง · เคาะ 21 ก.ค. 26)<br>
+          <b>🏷️ ส่วนลดเงินสด:</b> ชำระภายใน 7 วัน ลด 2% (Early Payment) · สถานะ: ไม่ใช้ (ชำระตรงเวลา ไม่พ้นกำหนด) · ส่วนลดเงินสด ฿0.00<br>
+          <b>🔗 อ้างอิง (SC-5):</b> บิลขาย SL-4 <a href="sl4-invoice-mockup.html">08INV-2606-0221</a> · ใบจอง SL-2 <a href="sl2-reservation-mockup.html">SO-2606-0021</a> · มัดจำ SL-3 <a href="sl3-deposit-mockup.html">DP-08DP-2606-0009</a> (หักแล้ว ฿6,290)<br>
+          <b>🕓 ประวัติ (SC-7):</b> ● SL-4 บิลขาย Post 08INV-0221 · 11 มิ.ย. 26 · เก็บปลายทาง ฿11,140.30 · ○ สร้าง RV-0033 ร่าง · วิภา (บัญชี) · ○ Post รับชำระ → ปิด AR · Bank รับเข้า</span></span></div>
         <div class="card-spacer"></div>
         <button class="card-btn primary" onclick="openArPick()">🔗 ดึงบิลขายค้างรับ</button>
         <button class="card-btn" onclick="autoMatch()">⚡ Auto-match</button>
@@ -280,53 +292,14 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       </div>
     </div>
 
+    <!-- row-bottom: สรุปยอดรับชำระ (FI-1.5) → strip แนวนอน compact · คงสรุปเงินครบ 100% · หมายเหตุ inline · วิธีรับ/ส่วนลด/อ้างอิง/ประวัติ → tip ที่ header ตาราง -->
     <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <button class="on" onclick="swTab(event,'t-pay')">วิธีรับ</button>
-          <button onclick="swTab(event,'t-disc')">ส่วนลดเงินสด</button>
-          <button onclick="swTab(event,'t-ref')">อ้างอิง <span class="tpl-zone">SC-5</span></button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ <span class="tpl-zone">SC-7</span></button>
-        </div>
-        <div class="tabset-pane on" id="t-pay">
-          <div class="tab-grid">
-            <span class="k">บัญชีรับเข้า</span><span class="v">KBANK 098-7-65432-1 · ชื่อบัญชี บ.แสงวิจิตร จำกัด (รับเงินขาย)</span>
-            <span class="k">ช่องทาง</span><span class="v">โอนจากลูกค้า · Ref 260611-ADTP-8833</span>
-            <span class="k">หลัง Post</span><span class="v">ปิด AR Entry · บันทึก Bank รับเข้า · ออก CRV → <a href="fiq-finance-queue-mockup.html" style="color:#2563EB">คิวงานการเงิน (FI-Q)</a></span>
-            <span class="k">บัญชีปลายทาง</span><span class="v">เลือกจาก<b>ผังบัญชีของระบบ BC</b> — พอร์ทัลดึงมาแสดงอย่างเดียว ไม่มีหน้าผังบัญชีเอง (เคาะ 21 ก.ค. 26)</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-disc">
-          <div class="tab-grid">
-            <span class="k">เงื่อนไข</span><span class="v">ชำระภายใน 7 วัน ลด 2% (Early Payment)</span>
-            <span class="k">สถานะ</span><span class="v">ไม่ใช้ — ชำระตรงเวลา · ไม่พ้นกำหนด</span>
-            <span class="k">ส่วนลดเงินสด</span><span class="v">฿0.00</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-ref">
-          <div class="tab-grid">
-            <span class="k">บิลขาย (SL-4)</span><span class="v"><a href="sl4-invoice-mockup.html" style="color:#2563EB">08INV-2606-0221</a></span>
-            <span class="k">ใบจอง (SL-2)</span><span class="v"><a href="sl2-reservation-mockup.html" style="color:#2563EB">SO-2606-0021</a></span>
-            <span class="k">มัดจำ (SL-3)</span><span class="v"><a href="sl3-deposit-mockup.html" style="color:#2563EB">DP-08DP-2606-0009</a> · หักแล้ว ฿6,290</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-hist">
-          <div class="tl">
-            <div class="tl-item"><span class="tl-dot"></span> SL-4 บิลขาย Post 08INV-0221 · 11 มิ.ย. 26 · เก็บปลายทาง ฿11,140.30</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> สร้าง RV-0033 ร่าง · 11 มิ.ย. 26 · วิภา (บัญชี)</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> Post รับชำระ → ปิด AR · Bank รับเข้า</div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title"><span class="secno">FI-1.5</span>💰 สรุปยอดรับชำระ <span class="tpl-zone">SC-11</span></div></div>
+      <div class="card sum-strip-card">
+        <span class="ss-title">💰 สรุปยอดรับชำระ <span class="secno">FI-1.5</span> <span class="tpl-zone">SC-11</span></span>
         <div id="fi1Sc11"></div>
+        <span class="ss-title">🗒️ หมายเหตุ</span>
+        <input class="note-inl" value="รับชำระตามบิล 08INV-0221 · อ้าง SO-0021 · โอน KBANK ตามยอดเก็บปลายทาง">
       </div>
-    </div>
-
-    <div class="card" style="padding:8px 12px;display:flex;align-items:center;gap:8px;flex:none">
-      <span style="font-size:12px;font-weight:600">🗒️ หมายเหตุ</span>
-      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="รับชำระตามบิล 08INV-0221 · อ้าง SO-0021 · โอน KBANK ตามยอดเก็บปลายทาง">
     </div>
 
   </div>
@@ -379,14 +352,6 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 <script src="swt-patterns.js"></script>
 <script>
 var AR_OPEN_BEFORE = 11140.30;
-function swTab(e,id){
-  var nav=e.currentTarget.parentElement;
-  nav.querySelectorAll('button').forEach(function(b){b.classList.remove('on');});
-  e.currentTarget.classList.add('on');
-  var set=nav.parentElement;
-  set.querySelectorAll('.tabset-pane').forEach(function(p){p.classList.remove('on');});
-  set.querySelector('#'+id).classList.add('on');
-}
 function fmt(n){return swtFmt(n);}
 function syncRecvMethod(){
   var m=document.getElementById('recvMethod').value;
@@ -485,13 +450,7 @@ function arPickPull(){
   recompute(); closeArPick();
 }
 function fi1InitPatterns(){
-  swtRenderStatusStrip('#fi1Sc12',{
-    pills:[
-      {text:'📄 ร่าง',type:'neutral'},
-      {text:'🏦 โอนธนาคาร',type:'info',id:'recvMethodPill'},
-      {text:'✓ ประกบครบ',type:'success'},
-      {text:'⏳ ครบกำหนด 18 มิ.ย. 26',type:'warning',id:'duePill'}
-    ]});
+  /* status-strip ตัดออก (pills ซ้ำ badge/party/gate) — ไม่ render #fi1Sc12 · recvMethodPill guard ใน syncRecvMethod แล้ว */
   if(typeof swtRenderDocChain==='function')swtRenderDocChain('#fi1DcStrip',{label:'Doc Chain',nodes:[
       {label:'SL-4 บิลขาย 0221',href:'sl4-invoice-mockup.html',state:'done'},
       {label:'FI-1 รับชำระ RV',state:'current'},

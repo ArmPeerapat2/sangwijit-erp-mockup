@@ -132,14 +132,22 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .row-2col .field{margin-bottom:3px}
 .row-2col .field-grid-2{gap:3px 14px}
 .row-2col .credit-line{margin-top:5px;padding:4px 8px}
-.content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
-.row-bottom{font-size:12px;height:158px}
-.row-bottom .tabset,.row-bottom>.card{overflow:auto}
-.row-bottom .tabset-pane{padding:10px;min-height:40px}
-.row-bottom .tabset-nav button{padding:6px 12px;font-size:11px}
-.row-bottom .summary-row{padding:2px 0;font-size:11px}
-.row-bottom .summary-total{font-size:12.5px;padding:6px 10px;margin-top:4px}
-.row-bottom .card-header{padding-bottom:5px;margin-bottom:5px}
+.content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col,.pay-strip{flex:none}
+/* ④d สรุปยอดแนวนอน (แทน row-bottom เดิม) — คงตัวเลขครบ 100% · items-card เด่นเต็มพื้นที่ */
+.pay-strip{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:7px 14px;flex-wrap:wrap}
+.pay-strip .ss-title{font-size:12px;font-weight:600;color:#374151;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.pay-strip .ss-title .secno{font-family:'Inter',monospace;font-weight:700;color:#2563EB;font-size:11px}
+.pay-strip .pchip{display:inline-flex;flex-direction:column;padding:2px 10px;border-radius:6px;background:#F8FAFC;border:1px solid #E5E7EB;line-height:1.35}
+.pay-strip .pchip .l{font-size:8.5px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+.pay-strip .pchip .v{font-size:12.5px;font-weight:700;font-family:'Inter',monospace;color:#111827;display:flex;align-items:center;gap:3px}
+.pay-strip .pchip.g .v{color:#10B981}.pay-strip .pchip.r .v{color:#EF4444}
+.pay-strip .pchip .line-num{width:70px;padding:1px 5px;font-size:11.5px}
+.pay-strip .pchip .vat-sel{padding:1px 3px}
+.pay-strip .net{display:inline-flex;flex-direction:column;padding:3px 13px;border-radius:6px;background:linear-gradient(90deg,#1E3A5F,#2563EB);color:#fff;line-height:1.3}
+.pay-strip .net .l{font-size:8.5px;color:rgba(255,255,255,.72);font-weight:700;text-transform:uppercase}
+.pay-strip .net .v{font-size:14px;font-weight:700;font-family:'Inter',monospace}
+.pay-strip .divx{width:1px;height:30px;background:#E5E7EB;margin:0 2px}
+.pay-strip .note-inl{flex:1;min-width:150px;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit}
 .tpl-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:900;align-items:center;justify-content:center}
 .tpl-modal-bg.on{display:flex}
 .tpl-modal{background:#fff;border-radius:10px;padding:20px;width:360px;box-shadow:0 8px 30px rgba(0,0,0,.2)}
@@ -217,12 +225,12 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       </div>
     </div>
     <div class="saab-spacer"></div>
+    <div class="mkchk" style="display:flex;gap:14px;font-size:11px;color:#6B7280;align-items:center"><span>ผู้จอง (ขาย): <b style="color:#374151">สัญญาลักษณ์</b> ✓</span><span>ออกบิล (INV): <b style="color:#374151">รอออกบิล ⏱</b></span></div>
   </div>
 
   <div class="content">
 
-    <!-- ④a SC-12 Status (pills + maker-checker · ไม่มี doc-chain) -->
-    <div id="sl2Sc12" class="status-strip"></div>
+    <!-- ④a Gate เท่านั้น (status-strip ตัด: pills=ซ้ำ badge/VAT · maker-checker→saab · routing→badge ที่ items header) -->
     <div id="sl2Gate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL -->
@@ -278,7 +286,9 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     <!-- ④c LINE ITEMS -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">SL-2.3</span><span class="ico">📦</span>รายการสินค้า <span class="tpl-zone">SC-2 · SC-8 · SC-9</span></div>
+        <div class="card-title"><span class="secno">SL-2.3</span><span class="ico">📦</span>รายการสินค้า <span class="tpl-zone">SC-2 · SC-8 · SC-9</span>
+          <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="การชำระ · จัดส่ง · อ้างอิง · ประวัติ">i<span class="swt-tip-pop"><b>การชำระ/มัดจำ:</b> เครดิต 7 วัน · มัดจำรับแล้ว 6,290.00 (SL-3 · DP-2606-0009) · <a href="sl3-deposit-mockup.html">💰 รับมัดจำเพิ่ม (SL-3) ↗</a><br><b>จัดส่ง:</b> 86/1 ม.4 ต.นาแก อ.นาแก จ.นครพนม · กำหนดส่ง 13 มิ.ย. 26 · ติดตั้ง → สร้าง Service Order หลังส่ง<br><b>อ้างอิง:</b> <a href="sl1-quotation-mockup.html">QT 08QT-2606-0047 ↗</a> · REF20260606-001<br><b>ประวัติ:</b> 06 มิ.ย. สร้างจากใบเสนอราคา (MTO) · จองสต็อกสำเร็จ · ส่งเข้าคิวรอเบิก (WH-2) · 20 มิ.ย. ครบกำหนดยอดกันสต็อก → ปลดของคืนสต็อกอัตโนมัติ + แจ้งพนักงานขาย (ยังไม่มีการปลด)</span></span></div>
+        <span id="resvRouteBadge" class="stock-chip ok" style="font-size:11px;padding:3px 9px">🔒 จองกันสต๊อก → รอเบิก (คลัง · WH-2)</span>
         <div class="card-spacer"></div>
         <div class="scan-box" title="ยิงได้ทั้ง Barcode และ S/N"><span>📷</span><input id="scanInput" placeholder="ยิงบาร์โค้ด / S/N…" onkeydown="tplScan(event)"></div>
         <button class="card-btn primary" onclick="dfOpenProd()">🔍 เพิ่มสินค้า</button>
@@ -360,65 +370,22 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="add-row-bar" onclick="dfOpenProd()">🔍 + เพิ่มรายการ — สินค้า · ค่าแรง · บริการ</div>
     </div>
 
-    <!-- ④d ROW-BOTTOM -->
-    <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <button class="on" onclick="swTab(event,'t-pay')">การชำระ/มัดจำ</button>
-          <button onclick="swTab(event,'t-ship')">จัดส่ง</button>
-          <button onclick="swTab(event,'t-ref')">อ้างอิง <span class="tpl-zone">SC-5</span></button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ <span class="tpl-zone">SC-7</span></button>
-        </div>
-        <div class="tabset-pane on" id="t-pay">
-          <div class="tab-grid">
-            <span class="k">เงื่อนไขการชำระ</span><span class="v">เครดิต 7 วัน</span>
-            <span class="k">มัดจำที่รับแล้ว</span><span class="v" style="color:#10B981">6,290.00 (SL-3 · DP-2606-0009)</span>
-            <span class="k">รับมัดจำเพิ่ม</span><span class="v"><a href="sl3-deposit-mockup.html" style="color:#2563EB;text-decoration:none">💰 เปิดใบมัดจำ (SL-3) ↗</a></span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-ship">
-          <div class="tab-grid">
-            <span class="k">ที่อยู่จัดส่ง</span><span class="v">86/1 ม.4 ต.นาแก อ.นาแก จ.นครพนม</span>
-            <span class="k">วันกำหนดส่งสินค้า</span><span class="v">13 มิ.ย. 26</span>
-            <span class="k">ติดตั้ง</span><span class="v">ต้องการ → สร้าง Service Order หลังส่ง</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-ref">
-          <div class="tab-grid">
-            <span class="k">ใบเสนอราคาต้นทาง</span><span class="v"><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 08QT-2606-0047 ↗</a></span>
-            <span class="k">หมายเลขอ้างอิง</span><span class="v">REF20260606-001</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-hist">
-          <div class="tl">
-            <div class="tl-item"><span class="tl-dot"></span> สร้างจากใบเสนอราคา (Make-to-Order) · 06 มิ.ย. 26 · สัญญาลักษณ์</div>
-            <div class="tl-item"><span class="tl-dot"></span> จองสต็อกสำเร็จ · 06 มิ.ย. 26</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> ส่งเข้าคิวรอเบิก (WH-2)</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> ครบกำหนดยอดกันสต็อก 20 มิ.ย. 26 → ปลดของคืนสต็อกอัตโนมัติ + แจ้งพนักงานขายเจ้าของใบ (สัญญาลักษณ์)</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> บันทึกการปลดก่อนกำหนด: ผู้ปลด · วันเวลา · เหตุผล (ยังไม่มีการปลด)</div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title"><span class="secno">SL-2.4</span><span class="ico">💰</span>สรุปยอด (Summary) <span class="tpl-zone">SC3 · SC6</span></div></div>
-        <div class="summary-row"><span class="lbl">รวมจำนวนเงิน</span><span class="val">17,089.00</span></div>
-        <div class="summary-row"><span class="lbl">ส่วนลด</span>
-          <span class="disc-input"><input value="799.00"><select><option>฿</option><option>%</option></select></span></div>
-        <div class="summary-row"><span class="lbl">ยอดก่อนภาษี <span style="color:#8B5CF6;font-size:9px">⚖</span></span><span class="val">16,290.00</span></div>
-        <div class="summary-row"><span class="lbl">ภาษีมูลค่าเพิ่ม <select class="vat-sel"><option>7%</option><option>ไม่รวม</option></select></span><span class="val">1,140.30</span></div>
-        <div class="summary-total"><span>รวมเงินทั้งสิ้น</span><span class="val">17,430.30</span></div>
-        <div style="font-size:10px;color:#9CA3AF;margin-top:6px;line-height:1.5">🔒 ยอด/VAT ระบบ BC คำนวณให้ (แก้ไม่ได้) · ⚖ ส่วนลดหักก่อน VAT</div>
-        <div class="dep-box">
-          <div class="b"><div class="l">มัดจำที่รับแล้ว</div><div class="v g">6,290.00</div></div>
-          <div class="b"><div class="l">ยอดคงค้าง</div><div class="v r">11,140.30</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ④e NOTES -->
-    <div class="card" style="padding:8px 12px;display:flex;align-items:center;gap:8px">
-      <span style="font-size:12px;font-weight:600;color:#374151">🗒️ หมายเหตุ</span>
-      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="จองกันสต๊อก · นัดติดตั้ง 13 มิ.ย. · รับมัดจำโอน SCB*6239 แล้ว 6,290.- · คงค้างเก็บปลายทาง">
+    <!-- ④d PAY-STRIP: สรุปยอดแนวนอน (SL-2.4) — ตัวเลขครบ 100% · note inline · การชำระ/จัดส่ง/อ้างอิง/ประวัติ → tip ที่ items header -->
+    <div class="pay-strip">
+      <span class="ss-title"><span class="secno">SL-2.4</span>💰 สรุปยอด
+        <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="ที่มาของยอด">i<span class="swt-tip-pop">🔒 ยอด/VAT ระบบ <b>BC</b> คำนวณให้ (แก้ไม่ได้) · <b>⚖ ส่วนลดหักก่อน VAT</b></span></span>
+      </span>
+      <span class="pchip"><span class="l">รวมจำนวนเงิน</span><span class="v">17,089.00</span></span>
+      <span class="pchip"><span class="l">ส่วนลด ⚖</span><span class="v"><input class="line-num" value="799.00"><select class="vat-sel"><option>฿</option><option>%</option></select></span></span>
+      <span class="pchip"><span class="l">ยอดก่อนภาษี</span><span class="v">16,290.00</span></span>
+      <span class="pchip"><span class="l">VAT <select class="vat-sel"><option>7%</option><option>ไม่รวม</option></select></span><span class="v">1,140.30</span></span>
+      <span class="net"><span class="l">รวมเงินทั้งสิ้น</span><span class="v">17,430.30</span></span>
+      <span class="divx"></span>
+      <span class="pchip g"><span class="l">มัดจำที่รับแล้ว</span><span class="v">6,290.00</span></span>
+      <span class="pchip r"><span class="l">ยอดคงค้าง</span><span class="v">11,140.30</span></span>
+      <span class="divx"></span>
+      <span style="font-size:11.5px;font-weight:600;color:#374151;white-space:nowrap">🗒️ หมายเหตุ</span>
+      <input class="note-inl" value="จองกันสต๊อก · นัดติดตั้ง 13 มิ.ย. · รับมัดจำโอน SCB*6239 แล้ว 6,290.- · คงค้างเก็บปลายทาง">
     </div>
 
   </div><!-- /content -->
@@ -479,23 +446,14 @@ function resvExpCalc(){
 function resvRelease(){
   alert('ปลดของที่กันไว้ (ตัวอย่าง)\n\n⚠️ ใช้ได้เฉพาะผู้มีสิทธิ์ปลดยอดกันสต็อก — สิทธิ์กำหนดที่กลุ่มสิทธิ์ / ตำแหน่ง\n⏸️ รอผู้บริหารกำหนดว่าตำแหน่งใดได้สิทธิ์นี้\n\nระบบจะบันทึก: ผู้ปลด · วันเวลา · เหตุผลที่ปลด\nแล้วคืนของเข้าสต็อก + แจ้งพนักงานขายเจ้าของใบ');
 }
-/* ประเภทการจอง (per-document) → เปลี่ยน routing pill */
+/* ประเภทการจอง (per-document) → เปลี่ยน routing badge ที่หัว items */
 function resvRoute(){
-  var t=document.getElementById('resvType').value;
-  var p=document.getElementById('resvPill')||document.querySelector('#sl2Sc12 .pill-route');
-  if(!p)return;
-  if(t==='po'){ p.textContent='🛒 จองสั่งซื้อล่วงหน้า → รอสั่งซื้อ (จัดซื้อ · PO-Q)'; }
-  else { p.textContent='🔒 จองกันสต๊อก → รอเบิก (คลัง · WH-2)'; }
+  var t=document.getElementById('resvType'), p=document.getElementById('resvRouteBadge');
+  if(!t||!p)return;
+  if(t.value==='po'){ p.className='stock-chip po'; p.textContent='🛒 จองสั่งซื้อล่วงหน้า → รอสั่งซื้อ (จัดซื้อ · PO-Q)'; }
+  else { p.className='stock-chip ok'; p.textContent='🔒 จองกันสต๊อก → รอเบิก (คลัง · WH-2)'; }
+  p.style.fontSize='11px'; p.style.padding='3px 9px';
 }
-document.addEventListener('sc:wired',function(e){
-  if(!e.detail||e.detail.page!=='sl2')return;
-  var pills=document.querySelector('#sl2Sc12 .sc11-pills');
-  if(pills&&!document.getElementById('resvPill')){
-    var s=document.createElement('span');s.className='pill pill-route';s.id='resvPill';
-    s.textContent='🔒 จองกันสต๊อก → รอเบิก (คลัง · WH-2)';
-    pills.appendChild(s);
-  }
-});
 function swtSbFilter(v){
   v=(v||'').toLowerCase();
   document.querySelectorAll('#swtSb .swt-sb-links a').forEach(function(a){

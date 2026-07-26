@@ -61,7 +61,19 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 .row-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .row-bottom{display:grid;grid-template-columns:1.35fr 1fr;gap:10px;font-size:12px;height:150px}
 .row-bottom .tabset,.row-bottom>.card{overflow:auto}
-.content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
+.content>.card:not(.items-card),.row-bottom,.status-strip,.sum-strip,.row-2col{flex:none}
+
+/* ④d SUM-STRIP — คงยอดเงินครบ 100% (แทน row-bottom · money-page pattern wh5) */
+.sum-strip{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:8px 14px;flex-wrap:wrap}
+.sum-strip .ss-title{font-size:12px;font-weight:600;color:#374151;display:flex;align-items:center;gap:6px}
+.sum-strip .ss-title .secno{font-size:10px;font-weight:700;background:#F3F4F6;color:#6B7280;padding:1px 6px;border-radius:4px;font-family:monospace}
+.sum-chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:6px;background:#F3F4F6;color:#374151}
+.sum-chip b{font-family:'Inter',monospace}
+.sum-chip.money{background:#ECFDF5;color:#065F46}
+.sum-chip.use{background:#EFF6FF;color:#1D4ED8}
+.sum-strip .net{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;padding:5px 12px;border-radius:6px;font-size:12.5px;font-weight:700}
+.sum-strip .net b{font-family:'Inter',monospace}
+.sum-strip .note-inl{flex:1;min-width:160px;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit}
 
 /* FIELD */
 .field{display:flex;flex-direction:column;gap:2px;margin-bottom:4px}
@@ -228,12 +240,16 @@ input:disabled,select:disabled{background:#F3F4F6;color:#C2C8D0;cursor:not-allow
       </div>
     </div>
     <div class="saab-spacer"></div>
+    <div class="mkchk" style="display:flex;gap:14px;font-size:11px;color:#6B7280;align-items:center">
+      <span>Maker: <b style="color:#374151">K.อำนาจ</b> ✓</span>
+      <span>Checker: <b style="color:#374151">ผจก.จัดซื้อ</b> ✓</span>
+      <span>เซลเซ็น: <b style="color:#374151">Daikin 16/4</b> ✓</span>
+    </div>
   </div>
 
   <div class="content">
 
-    <!-- ④a SC-12 Status strip + Gate -->
-    <div id="po2Sc12" class="status-strip"></div>
+    <!-- ④a Gate (status-strip ตัดออก: pills ซ้ำ 100% — "1 record=type"→po2-flow-note · "หักก่อน VAT/แบบ2%"→items-note · "CN On-time"→mh-badge · maker/checker→saab) -->
     <div id="po2Gate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL: PO-2.1 Vendor (SC-3) + ข้อมูลสัญญา -->
@@ -289,7 +305,12 @@ input:disabled,select:disabled{background:#F3F4F6;color:#C2C8D0;cursor:not-allow
     <!-- ④c PO-2.3 LINE รายการสินค้า + เงื่อนไขส่วนลด -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">PO-2.3</span><span class="ico">📦</span><span id="po23Title">รายการสินค้า + เงื่อนไขส่วนลด</span> <span class="tpl-zone">SC-2</span></div>
+        <div class="card-title"><span class="secno">PO-2.3</span><span class="ico">📦</span><span id="po23Title">รายการสินค้า + เงื่อนไขส่วนลด</span> <span class="tpl-zone">SC-2</span>
+          <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="หลักฐาน · เซ็นยืนยัน · เอกสารที่ใช้ · ประวัติ">i<span class="swt-tip-pop" style="max-width:520px">
+            <b>📎 หลักฐานอ้างอิง (PO-2.4):</b> main-agreement.pdf ✓ · meeting-note-scope.docx ✓ · promo-announcement-q2.jpg ✓ · sign-photo 01/02 รอตรวจ — <a href="#" onclick="openModal('mPo2UploadedDocs');return false" style="color:#93C5FD">ดูไฟล์ทั้งหมด</a><br>
+            <b>✍️ Approval · เซลเซ็น (PO-2.5):</b> K.อำนาจ (ผจก.จัดซื้อ) อนุมัติ ✓ 15/4 14:20 · Activate ✓ 15/4 16:00 · คุณกฤตธี (Daikin) เซ็นลิงก์ ✓ 16/4 09:30 · สแกนกระดาษรอตรวจ — <a href="#" onclick="openModal('mPo2SignedDocs');return false" style="color:#93C5FD">ดูหลักฐานการเซ็น</a><br>
+            <b>🔗 เอกสารที่ใช้ (PO-2.6):</b> PO-2606-0042 · PO-2606-0051 (ส่วนลด Sell-in 4.5%) · AP-2606-0088 · งบ accrual ACR-2606-0015 — รวม 2 PO ฿1,960,000.00 · Recovery 100%<br>
+            <b>🕓 ประวัติ:</b> 28/03 09:41 K.อำนาจ สร้าง+แนบสัญญา · 15/04 14:20 อนุมัติ→Activate 16:00 · 16/04 09:30 เซลเซ็นผ่านลิงก์ ✓</span></span></div>
         <div class="card-spacer"></div>
         <button class="card-btn primary" onclick="dfOpenProd()" id="btnAddProd">🔍 เพิ่มสินค้า</button>
         <button class="card-btn" onclick="openModal('mPo2Scope')" id="btnAddScope" title="เลือก ประเภท/ยี่ห้อ/หมวด/สินค้า หลายเงื่อนไข → ระบบแตกเป็นรายสินค้า">⚡ เพิ่มจาก Filter Scope</button>
@@ -421,66 +442,17 @@ input:disabled,select:disabled{background:#F3F4F6;color:#C2C8D0;cursor:not-allow
       <div class="items-note" id="po23Note">⚠️ ส่วนลดทุกแบบหักก่อน VAT เสมอ (VAT Golden Rule) · แบบ 2 % เก็บที่ scope แล้วระบบลิสต์เป็นรายสินค้าให้ทั้งหมด · แบบ 3 บังคับกรอกโควต้า (เลือกหน่วย ตัว/บาท)</div>
     </div>
 
-    <!-- ④d ROW-BOTTOM: Tabs (PO-2.4 หลักฐาน · PO-2.5 เซ็นยืนยัน · ประวัติ) + สรุปข้อตกลง -->
-    <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <button class="on" onclick="swTab(event,'t-evidence')">📎 หลักฐานอ้างอิง (PO-2.4)</button>
-          <button onclick="swTab(event,'t-sign')">✍️ Approval · เซลเซ็น (PO-2.5)</button>
-          <button onclick="swTab(event,'t-linked')">🔗 เอกสารที่ใช้ (PO-2.6)</button>
-          <button onclick="swTab(event,'t-hist')">🕓 ประวัติ <span class="tpl-zone">SC-7</span></button>
-        </div>
-        <div class="tabset-pane on" id="t-evidence">
-          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
-            <button class="btn btn-outline sm">➕ แนบภาพ/ประกาศส่งเสริมการขาย</button>
-            <button class="btn btn-outline sm" onclick="openModal('mPo2UploadedDocs')">📁 ดูไฟล์ทั้งหมด (Popup)</button>
-          </div>
-          <span class="doc-chip ok">📄 AG-SI-2604-005-main-agreement.pdf ✓</span>
-          <span class="doc-chip ok">📝 meeting-note-scope.docx ✓</span>
-          <span class="doc-chip ok">📢 promo-announcement-q2.jpg ✓</span>
-          <span class="doc-chip wait">🖼 sign-photo-01.jpg รอตรวจ</span>
-          <span class="doc-chip wait">🖼 sign-photo-02.jpg รอตรวจ</span>
-        </div>
-        <div class="tabset-pane" id="t-sign">
-          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
-            <button class="btn btn-primary sm">📤 ส่งคำขอให้เซลเซ็น</button>
-            <button class="btn btn-outline sm">🖨️ พิมพ์ใบยืนยัน</button>
-            <button class="btn btn-outline sm">🔗 สร้างลิงก์เซ็นในระบบ</button>
-            <button class="btn btn-outline sm">📎 แนบไฟล์ที่เซ็นแล้ว</button>
-            <button class="btn btn-outline sm" onclick="openModal('mPo2SignedDocs')">👁️ ดูหลักฐานการเซ็น</button>
-            <button class="btn btn-outline sm">✅ ยืนยันว่าเซลเซ็นแล้ว</button>
-          </div>
-          <div class="mini-line"><span class="mini-k">อนุมัติภายใน</span>K.อำนาจ (ผจก.จัดซื้อ) ✓ 15/4 14:20 · Activate ✓ 15/4 16:00</div>
-          <div class="mini-line"><span class="mini-k">เซลเซ็น</span>คุณกฤตธี (Daikin) · ลิงก์เซ็น ✓ 16/4 09:30 · สแกนกระดาษรอตรวจ</div>
-        </div>
-        <div class="tabset-pane" id="t-linked">
-          <div style="font-size:11px;color:#6B7280;margin-bottom:6px">เอกสารที่อ้างอิง/ใช้เงื่อนไข VC นี้ (PR/PO/AP + งบ accrual) — Commitment = master · ถูกอ้างจาก transaction</div>
-          <div class="mini-line"><span class="mini-k">ใบสั่งซื้อ (PO-4)</span><a href="po4-purchase-order-mockup.html" style="color:#2563EB">PO-2606-0042</a> · PO-2606-0051 — ใช้ส่วนลด Sell-in 4.5%</div>
-          <div class="mini-line"><span class="mini-k">ตั้งหนี้ (PO-6)</span><a href="po6-ap-invoice-mockup.html" style="color:#2563EB">AP-2606-0088</a> — หักส่วนลดตามเงื่อนไข</div>
-          <div class="mini-line"><span class="mini-k">งบ accrual (PO-7)</span><a href="po7-rebate-dashboard.html" style="color:#2563EB">ACR-2606-0015</a> — Recovery 100% · CN ฿88,200.00</div>
-          <div class="mini-line"><span class="mini-k">รวมใช้สิทธิ์</span>2 PO · ฿1,960,000.00 · เก็บคืนแล้ว 100%</div>
-        </div>
-        <div class="tabset-pane" id="t-hist">
-          <div class="mini-line"><span class="mini-k">28/03 09:41</span>K.อำนาจ สร้างข้อตกลง + แนบ main-agreement.pdf</div>
-          <div class="mini-line"><span class="mini-k">15/04 14:20</span>ผจก.จัดซื้อ อนุมัติ → Activate 16:00</div>
-          <div class="mini-line"><span class="mini-k">16/04 09:30</span>เซลเซ็นผ่านลิงก์ในระบบ ✓</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title"><span class="ico">💰</span>สรุปข้อตกลง</div></div>
-        <div class="summary-row"><span class="lbl">รายการสินค้าในข้อตกลง</span><span class="val" id="sumLines">5 รายการ</span></div>
-        <div class="summary-row"><span class="lbl">โควต้ารวม (แบบ 3)</span><span class="val">50 ตัว</span></div>
-        <div class="summary-row"><span class="lbl">ประมาณการส่วนลดรวม</span><span class="val" style="color:#10B981">฿117,700.00</span></div>
-        <div class="summary-row"><span class="lbl">ยอดใช้สิทธิ์แล้ว (จาก PO)</span><span class="val">฿1,960,000.00</span></div>
-        <div class="summary-row"><span class="lbl">CN รับคืนแล้ว</span><span class="val" style="color:#10B981">฿88,200.00</span></div>
-        <div class="summary-total"><span>Recovery</span><span class="val">100%</span></div>
-      </div>
-    </div>
-
-    <!-- ④e NOTES -->
-    <div class="card" style="padding:6px 12px;display:flex;align-items:center;gap:8px">
-      <span style="font-size:12px;font-weight:600;color:#374151">🗒️ หมายเหตุ</span>
-      <input style="flex:1;padding:4px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" placeholder="หมายเหตุท้ายข้อตกลง…">
+    <!-- ④d SUM-STRIP: สรุปข้อตกลง — คงยอดเงินครบ 100% (ห้ามตัด) · แท็บ หลักฐาน/เซ็น/เอกสารที่ใช้/ประวัติ → tip ที่ items header · note inline -->
+    <div class="sum-strip" id="po2SumStrip">
+      <span class="ss-title">💰 สรุปข้อตกลง <span class="secno">PO-2.4</span></span>
+      <span class="sum-chip" id="po2SumLines">5 รายการ</span>
+      <span class="sum-chip">โควต้ารวม (แบบ 3) 50 ตัว</span>
+      <span class="sum-chip money">ประมาณการส่วนลดรวม <b>฿117,700.00</b></span>
+      <span class="sum-chip use">ยอดใช้สิทธิ์แล้ว <b>฿1,960,000.00</b></span>
+      <span class="sum-chip money">CN รับคืนแล้ว <b>฿88,200.00</b></span>
+      <span class="net">Recovery <b>100%</b></span>
+      <span style="font-size:11.5px;font-weight:600;color:#374151;white-space:nowrap;margin-left:4px">🗒️ หมายเหตุ</span>
+      <input class="note-inl" placeholder="หมายเหตุท้ายข้อตกลง…">
     </div>
 
   </div><!-- /content -->
@@ -606,21 +578,7 @@ function po2CopyDoc(){alert('Copy ข้อตกลง (mock):\n• clone Vendo
 
 /* ═══ ④a SC-12 + Gate + ⑤ Doc Chain ═══ */
 function po2InitPatterns(){
-  if(typeof swtRenderStatusStrip==='function'){
-    swtRenderStatusStrip('#po2Sc12',{
-      pills:[
-        {text:'🤝 1 record = 1 type',type:'info'},
-        {text:'฿ ส่วนลดหักก่อน VAT',type:'info'},
-        {text:'⚡ แบบ 2 % แตก list รายสินค้า',type:'warning'},
-        {text:'🛡 CN On-time',type:'success'}
-      ],
-      makerChecker:{nodes:[
-        {role:'Maker ✓',step:'K.อำนาจ สร้าง',state:'ok'},
-        {role:'Checker ✓',step:'ผจก.จัดซื้อ อนุมัติ',state:'ok'},
-        {role:'เซลเซ็น ✓',step:'Daikin 16/4',state:'ok'}
-      ]}
-    });
-  }
+  /* status-strip ตัดออก (pills ซ้ำ 100% · maker/checker→saab) — เหลือ gate + doc-chain */
   if(typeof swtRenderGateAlert==='function'){
     swtRenderGateAlert('#po2Gate',{type:'ok',compactOk:true,text:'✅ ข้อตกลง Active · หลักฐานครบ'});
   }
@@ -636,16 +594,6 @@ function po2InitPatterns(){
   }
 }
 document.addEventListener('DOMContentLoaded',po2InitPatterns);
-
-/* ═══ ④d tabs ═══ */
-function swTab(e,id){
-  var nav=e.currentTarget.parentElement;
-  nav.querySelectorAll('button').forEach(function(b){b.classList.remove('on');});
-  e.currentTarget.classList.add('on');
-  var set=nav.parentElement;
-  set.querySelectorAll('.tabset-pane').forEach(function(p){p.classList.remove('on');});
-  set.querySelector('#'+id).classList.add('on');
-}
 
 /* ═══ PO-2.2 type switch — MOU/SI/SO = ตารางสินค้า · Co-op = ลิสต์บันทึกความเข้าใจ ═══ */
 var PO2_TYPES={

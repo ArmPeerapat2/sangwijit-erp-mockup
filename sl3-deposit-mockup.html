@@ -116,6 +116,15 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .dep-box .l{font-size:9px;color:#9CA3AF;font-weight:700;text-transform:uppercase}
 .dep-box .v{font-size:13px;font-weight:700;font-family:'Inter',monospace}
 .dep-box .v.g{color:#10B981}.dep-box .v.r{color:#EF4444}
+/* sum-strip — สรุปเงินแนวนอน 1 บรรทัด (pattern wh5) · คงค่าเงินครบทุกตัว · คืนพื้นที่ให้ items */
+.sum-strip{flex:none;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:8px 14px;flex-wrap:wrap}
+.sum-strip .ss-title{font-size:12px;font-weight:600;color:#374151;display:flex;align-items:center;gap:6px}
+.sum-chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:6px;background:#F3F4F6;color:#374151}
+.sum-chip b{font-family:'Inter',monospace}
+.sum-chip.pos{background:#ECFDF5;color:#065F46}.sum-chip.neg{background:#FEF2F2;color:#991B1B}
+.sum-strip .net{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff;padding:5px 12px;border-radius:6px;font-size:12.5px;font-weight:700}
+.sum-strip .net b{font-family:'Inter',monospace}
+.sum-strip .note-inl{flex:1;min-width:140px;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit}
 .dc-node{padding:3px 10px;border-radius:5px;background:#F3F4F6;color:#6B7280;font-weight:600}
 .dc-node.done{background:#ECFDF5;color:#065F46}
 .dc-node.current{background:#EFF6FF;color:#1D4ED8;border:1px solid #93C5FD}
@@ -205,8 +214,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 
   <div class="content">
 
-    <!-- ④a SC-12 Status (pills + maker-checker · ไม่มี doc-chain) -->
-    <div id="sl3Sc12" class="status-strip"></div>
+    <!-- ④a Gate เท่านั้น — status-strip pills ตัดออก (💰มัดจำ=หัวเรื่อง · จาก SO=ซ้ำการ์ดเอกสาร+doc-chain 100%) · sl3 ไม่มี maker-checker -->
     <div id="sl3Gate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL -->
@@ -284,7 +292,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     <!-- ④c รายการมัดจำ (deposit lines · รับได้หลายงวด) -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">SL-3.3</span><span class="ico">💰</span>รายการมัดจำ (รับได้หลายงวด)</div>
+        <div class="card-title"><span class="secno">SL-3.3</span><span class="ico">💰</span>รายการมัดจำ (รับได้หลายงวด) <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="อ้างอิง · การชำระ · ประวัติ">i<span class="swt-tip-pop"><b>อ้างอิง:</b> ใบจอง <a href="sl2-reservation-mockup.html" style="color:#93C5FD;font-weight:700;text-decoration:none">SO 08SO-2606-0021 ↗</a> · ใบเสนอราคา <a href="sl1-quotation-mockup.html" style="color:#93C5FD;font-weight:700;text-decoration:none">QT 08QT-2606-0047 ↗</a><br><b>การชำระ:</b> โอน (SCB) · SCB*6239 · 10:45 · QR PromptPay Biller 099-4-12345-6 · Ref1=DP-0009 · ยอด 6,290.00 (fix)<br><b>ประวัติ:</b> 06 มิ.ย. 26 สร้างจากใบจอง (สัญญาลักษณ์) · รอ Post → บันทึก Customer Ledger (เงินมัดจำ) · รอหักออกจากบิลขายอัตโนมัติ (ตอนออก SL-4)</span></span></div>
         <div class="card-spacer"></div>
         <span class="ph" style="font-size:10px">มัดจำ 1 ใบจอง → รับทีละงวดได้</span>
       </div>
@@ -327,59 +335,17 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="add-row-bar" style="cursor:pointer" onclick="sl3AddDeposit()">➕ + เพิ่มงวดมัดจำ (รับชำระ)</div>
     </div>
 
-    <!-- ④d ROW-BOTTOM -->
-    <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <span class="secno" style="display:flex;align-items:center;padding:0 12px">SL-3.4</span>
-          <button class="on" onclick="swTab(event,'t-pay')">การชำระ <span class="tpl-zone">SC-3</span></button>
-          <button onclick="swTab(event,'t-ref')">อ้างอิง <span class="tpl-zone">SC-5</span></button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ <span class="tpl-zone">SC-7</span></button>
-        </div>
-        <div class="tabset-pane on" id="t-pay">
-          <div class="pay-methods">
-            <span class="m">เงินสด</span><span class="m on">โอน</span><span class="m">เช็ค</span><span class="m">บัตร</span><span class="m">QR PromptPay</span>
-          </div>
-          <div class="qr-box">
-            <div class="qr-img"></div>
-            <div style="font-size:11.5px">
-              <div style="font-weight:700">QR PromptPay (มัดจำ)</div>
-              <div class="ph">Biller 099-4-12345-6 · Ref1=DP-0009 · ยอด 6,290.00 (fix)</div>
-              <div style="margin-top:4px"><button class="btn btn-outline" style="padding:3px 8px;font-size:11px">📥 PNG</button> <button class="btn btn-outline" style="padding:3px 8px;font-size:11px">📤 ส่ง LINE</button></div>
-            </div>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-ref">
-          <div class="tab-grid">
-            <span class="k">ใบจองต้นทาง</span><span class="v"><a href="sl2-reservation-mockup.html" style="color:#2563EB;text-decoration:none">SO 08SO-2606-0021 ↗</a></span>
-            <span class="k">ใบเสนอราคา</span><span class="v"><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 08QT-2606-0047 ↗</a></span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-hist">
-          <div class="tl">
-            <div class="tl-item"><span class="tl-dot"></span> สร้างจากใบจอง · 06 มิ.ย. 26 · สัญญาลักษณ์</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> Post → บันทึก Customer Ledger (เงินมัดจำ)</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> หักออกจากบิลขายอัตโนมัติ (ตอนออก SL-4)</div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title"><span class="secno">SL-3.5</span><span class="ico">💰</span>สรุปมัดจำ <span class="tpl-zone">SC3 · SC6</span></div></div>
-        <div class="summary-row"><span class="lbl">ยอดบิลตามใบจอง</span><span class="val">17,430.30</span></div>
-        <div class="summary-row"><span class="lbl">รับมัดจำสะสม</span><span class="val" style="color:#10B981">6,290.00</span></div>
-        <div class="summary-total"><span>รับมัดจำงวดนี้</span><span class="val">6,290.00</span></div>
-        <div style="font-size:10px;color:#9CA3AF;margin-top:6px;line-height:1.5">🔒 ยอดคำนวณโดยระบบ BC · มัดจำลง G/L ผ่าน BC (แก้ไม่ได้)</div>
-        <div class="dep-box">
-          <div class="b"><div class="l">วิธีชำระ</div><div class="v" style="font-size:11px">โอน SCB*6239</div></div>
-          <div class="b"><div class="l">คงเหลือหลังหัก</div><div class="v r">11,140.30</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ④e NOTES -->
-    <div class="card" style="padding:8px 12px;display:flex;align-items:center;gap:8px">
-      <span style="font-size:12px;font-weight:600;color:#374151">🗒️ หมายเหตุ</span>
-      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="มัดจำ 6,290.- (รวม VAT) · หักจากบิลขายตอนส่งของ · คงเหลือเก็บปลายทาง 11,140.30">
+    <!-- ④d สรุปเงิน (SL-3.5) — sum-strip แนวนอน · คงค่าเงินครบ 100% (บิล · มัดจำสะสม · งวดนี้/VAT · คงเหลือ) · ห้ามตัด -->
+    <div class="sum-strip">
+      <span class="ss-title">💰 สรุปมัดจำ <span class="secno">SL-3.5</span></span>
+      <span class="sum-chip">บิลตามใบจอง <b>17,430.30</b></span>
+      <span class="sum-chip pos">รับมัดจำสะสม <b>6,290.00</b></span>
+      <span class="sum-chip neg">คงเหลือหลังหัก <b>11,140.30</b></span>
+      <span class="net">รับมัดจำงวดนี้ <b>6,290.00</b>
+        <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="ที่มาของยอด">i<span class="swt-tip-pop">🔒 ยอดรวม VAT แล้ว · คำนวณโดยระบบ BC · มัดจำลง G/L 2310 เงินมัดจำรับล่วงหน้า ผ่าน BC (แก้ไม่ได้) · วิธีชำระ: โอน SCB*6239 · หักจากบิลขายตอนออก SL-4</span></span>
+      </span>
+      <span style="font-size:11.5px;font-weight:600;color:#374151;white-space:nowrap;margin-left:4px">🗒️ หมายเหตุ</span>
+      <input class="note-inl" value="มัดจำ 6,290.- (รวม VAT) · หักจากบิลขายตอนส่งของ · คงเหลือเก็บปลายทาง 11,140.30">
     </div>
 
   </div><!-- /content -->
@@ -405,18 +371,9 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 </div>
 
 <script>
-function swTab(e,id){
-  var nav=e.currentTarget.parentElement;
-  nav.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
-  e.currentTarget.classList.add('on');
-  var set=nav.parentElement;
-  set.querySelectorAll('.tabset-pane').forEach(p=>p.classList.remove('on'));
-  set.querySelector('#'+id).classList.add('on');
-}
 function tplCopyDoc(){ alert('ทำสำเนาใบมัดจำ (mock) · เลขใหม่ · สถานะ ร่าง'); }
-function tplOpenPrint(){ document.getElementById('printModal').classList.add('on'); }
-function tplClosePrint(){ document.getElementById('printModal').classList.remove('on'); }
-document.querySelectorAll('.pay-methods .m').forEach(function(m){m.onclick=function(){document.querySelectorAll('.pay-methods .m').forEach(x=>x.classList.remove('on'));m.classList.add('on');};});
+function tplOpenPrint(){ var m=document.getElementById('printModal'); if(m) m.classList.add('on'); }
+function tplClosePrint(){ var m=document.getElementById('printModal'); if(m) m.classList.remove('on'); }
 function swtSbFilter(v){
   v=(v||'').toLowerCase();
   document.querySelectorAll('#swtSb .swt-sb-links a').forEach(function(a){

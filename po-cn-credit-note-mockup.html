@@ -115,6 +115,15 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .summary-total{margin-top:8px;padding:10px 12px;background:linear-gradient(90deg,#7C2D12 0%,#EF4444 100%);border-radius:6px;color:#fff;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700}
 .summary-total .val{color:#fff;font-family:'Inter',monospace}
 .vat-sel{padding:3px 4px;border:1px solid #E5E7EB;border-radius:4px;font-size:11px;font-family:inherit}
+/* PO-CN.5 สรุปลดหนี้ — แถบแนวนอน flex:none (คงยอดครบ 100%: มูลค่าลด · VAT · ยอดสุทธิ) */
+.cn-sumbar{flex:none;display:flex;align-items:center;gap:20px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:8px 14px}
+.cn-sumbar .secno{font-family:'Inter',monospace;font-weight:700;color:#B91C1C;font-size:11px}
+.cn-s{display:flex;flex-direction:column;gap:1px}
+.cn-s .l{font-size:10px;color:#6B7280;display:flex;align-items:center;gap:4px}
+.cn-s .v{font-size:13.5px;font-weight:700;color:#111827;font-family:'Inter',monospace}
+.cn-spacer{flex:1}
+.cn-total{display:flex;align-items:center;gap:16px;background:linear-gradient(90deg,#7C2D12 0%,#EF4444 100%);border-radius:6px;color:#fff;padding:8px 18px;font-size:14px;font-weight:700}
+.cn-total .val{font-family:'Inter',monospace}
 .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
 .btn-primary{background:#2563EB;color:#fff}.btn-outline{background:#fff;color:#374151;border-color:#E5E7EB}.btn-ghost{background:transparent;color:#6B7280}
 .row-2col .card.compact{padding:7px 10px}.row-2col .card-header{padding-bottom:5px;margin-bottom:5px}
@@ -183,8 +192,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 
   <div class="content">
 
-    <!-- ④a SC-12 Status (pills + maker-checker · ไม่มี doc-chain) -->
-    <div id="po_cnSc12" class="status-strip"></div>
+    <!-- ④a Gate เดียว (ไม่ซ้ำ) — status-strip pills ถูกตัด (ซ้ำ header badge/mode-bar/vendor/doc-chain 100%) -->
     <div id="po_cnGate" class="gate-alert"></div>
 
     <!-- ④a2 MODE BAR (3 โหมดลดหนี้) -->
@@ -242,7 +250,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
     <!-- ④c PO-CN.3 รายการลดหนี้ -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">PO-CN.3</span><span class="ico">↩️</span>รายการลดหนี้ <span class="tpl-zone">copy จากใบรับ GR-0210 · ปรับจำนวนคืน</span></div>
+        <div class="card-title"><span class="secno">PO-CN.3</span><span class="ico">↩️</span>รายการลดหนี้ <span class="tpl-zone">copy จากใบรับ GR-0210 · ปรับจำนวนคืน</span> <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="อ้างอิง / ภาษี-GL / ประวัติ">i<span class="swt-tip-pop"><b>อ้างอิงบิลเดิม:</b> ใบสั่งซื้อ PO-2606-0042 · ใบรับของ GR-2606-0210 (คืน 5 จาก 60) · ใบตั้งหนี้ AP-2606-0088 → ตัดยอดหนี้ · เคลม: — (โหมดเคลมมาจาก CLM ใบเคลม Vendor)<br><b>ภาษี/GL:</b> VAT ซื้อ (กลับ) 7% = 3,430.00 (ลดภาษีซื้อ) · ลง GL: Dr เจ้าหนี้การค้า / Cr สินค้า + Cr ภาษีซื้อ<br><b>ประวัติ:</b> พบสินค้าชำรุด 5 เครื่อง (FTKM12) 26 มิ.ย. 26 · เปิดใบลดหนี้ PCN-2606-0007 · (รอ) Post → คืนของ WH-1 ตัดสต็อก + ตัด AP · (รอ) ส่งสัญญาณ "ตัดหนี้" → PO-6 ใบตั้งหนี้</span></span></div>
         <div class="card-spacer"></div>
         <button class="card-btn primary" onclick="dfOpenProd()">🔍 เพิ่มรายการ</button>
       </div>
@@ -276,44 +284,13 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       </div>
     </div>
 
-    <!-- ④d ROW-BOTTOM: PO-CN.4 Tabs + PO-CN.5 Summary -->
-    <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <button class="on" onclick="swTab(event,'t-ref')">อ้างอิง</button>
-          <button onclick="swTab(event,'t-tax')">ภาษี/GL</button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ</button>
-        </div>
-        <div class="tabset-pane on" id="t-ref">
-          <div class="tab-grid">
-            <span class="k">ใบสั่งซื้อ (PO)</span><span class="v">PO-2606-0042</span>
-            <span class="k">ใบรับของ (GRN)</span><span class="v">GR-2606-0210 (คืน 5 จาก 60)</span>
-            <span class="k">ใบตั้งหนี้ (AP)</span><span class="v">AP-2606-0088 → ตัดยอดหนี้</span>
-            <span class="k">อ้างอิงเคลม (CLM)</span><span class="v ph">— (กรณีโหมดเคลม: <a href="clm-vendor-claim-mockup.html" style="color:#2563EB;font-weight:600">มาจาก CLM ใบเคลม Vendor</a>)</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-tax">
-          <div class="tab-grid">
-            <span class="k">มูลค่าลด (ก่อน VAT)</span><span class="v">49,000.00</span>
-            <span class="k">VAT ซื้อ (กลับ)</span><span class="v">7% = 3,430.00 (ลดภาษีซื้อ)</span>
-            <span class="k">ลง GL</span><span class="v">Dr เจ้าหนี้การค้า / Cr สินค้า + Cr ภาษีซื้อ</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-hist">
-          <div class="tl">
-            <div class="tl-item"><span class="tl-dot"></span> พบสินค้าชำรุด 5 เครื่อง (FTKM12) · 26 มิ.ย. 26 · คลัง</div>
-            <div class="tl-item"><span class="tl-dot"></span> เปิดใบลดหนี้ PCN-2606-0007 · จัดซื้อ</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> Post → คืนของ (WH-1 ตัดสต็อก) + ตัด AP · บัญชี</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> ส่งสัญญาณ "ตัดหนี้" → PO-6 ใบตั้งหนี้</div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title"><span class="secno">PO-CN.5</span><span class="ico">💰</span>สรุปลดหนี้</div></div>
-        <div class="summary-row"><span class="lbl">มูลค่าลด (ก่อนภาษี)</span><span class="val">49,000.00</span></div>
-        <div class="summary-row"><span class="lbl">VAT ซื้อ (กลับ) <select class="vat-sel"><option>7%</option></select></span><span class="val">3,430.00</span></div>
-        <div class="summary-total"><span>ลดหนี้สุทธิ (ตัด AP)</span><span class="val">-52,430.00</span></div>
-      </div>
+    <!-- ④d PO-CN.5 สรุปลดหนี้ — แถบแนวนอน (คงยอดครบ 100%) · อ้างอิง/ภาษี/ประวัติ ย้ายไป tip เกาะหัว items -->
+    <div class="cn-sumbar">
+      <span class="secno">PO-CN.5</span>
+      <span class="cn-s"><span class="l">💰 มูลค่าลด (ก่อนภาษี)</span><span class="v">49,000.00</span></span>
+      <span class="cn-s"><span class="l">VAT ซื้อ (กลับ) <select class="vat-sel"><option>7%</option></select></span><span class="v">3,430.00</span></span>
+      <span class="cn-spacer"></span>
+      <span class="cn-total"><span>ลดหนี้สุทธิ (ตัด AP)</span><span class="val">-52,430.00</span></span>
     </div>
 
     <!-- ④e NOTES -->
@@ -331,18 +308,10 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 </div><!-- /layout -->
 
 <script>
-function swTab(e,id){
-  var nav=e.currentTarget.parentElement;
-  nav.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
-  e.currentTarget.classList.add('on');
-  var set=nav.parentElement;
-  set.querySelectorAll('.tabset-pane').forEach(p=>p.classList.remove('on'));
-  set.querySelector('#'+id).classList.add('on');
-}
 function poCnMode(m,label){
   document.querySelectorAll('.mode-seg').forEach(function(s){s.classList.remove('on');});
   event.currentTarget.classList.add('on');
-  document.getElementById('modePill').textContent=label;
+  var mp=document.getElementById('modePill'); if(mp) mp.textContent=label; /* guard: modePill อยู่ใน status-strip ที่ถูกตัด */
 }
 /* ↩️ Post ลดหนี้ → ตัด AP + คืนของ (WH-1) + ส่งสัญญาณ PO-6 */
 function poCnPost(){
@@ -351,15 +320,6 @@ function poCnPost(){
   }
 }
 function poCnInitPatterns(){
-  swtRenderStatusStrip('#po_cnSc12',{
-    pills:[
-      {text:'📄 ร่าง',type:'neutral'},
-      {text:'🔄 โหมด: คืนสินค้า',type:'danger',id:'modePill'},
-      {text:'฿ VAT ซื้อ 7%',type:'info'},
-      {text:'ตัด AP: Daikin V-00045',type:'neutral'},
-      {text:'⏳ รอหักหนี้ (PO-6 ดึงไปตัด)',type:'warning'}
-    ]
-  });
   swtRenderDocChain('#po_cnDcStrip',{label:'Doc Chain',nodes:[
     {label:'รับ GR-0210',href:'wh1-receive-mockup.html',state:'done'},
     {label:'ลดหนี้ PCN-0007',state:'current'},

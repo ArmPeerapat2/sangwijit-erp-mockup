@@ -126,6 +126,18 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .row-2col .field-grid-2{gap:3px 14px}
 .row-2col .credit-line{margin-top:5px;padding:4px 8px}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
+/* สรุปลดหนี้แนวนอน — คงครบทุกตัวเลข · เตี้ย · ให้ items เด่น */
+.cn-summary{display:flex;align-items:center;gap:18px;padding:9px 16px}
+.cn-summary .card-title{flex:none}
+.cn-sum-grid{display:flex;gap:22px;flex:1;flex-wrap:wrap}
+.cn-sum-cell{display:flex;flex-direction:column;gap:0}
+.cn-sum-cell .l{font-size:9px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+.cn-sum-cell .v{font-size:14px;font-weight:700;font-family:'Inter',monospace;color:#111827}
+.cn-sum-cell .v.g{color:#10B981}
+.cn-sum-note{font-size:9.5px;color:#9CA3AF;max-width:180px;line-height:1.4;flex:none}
+.cn-sum-total{display:flex;flex-direction:column;align-items:flex-end;gap:0;background:linear-gradient(90deg,#7C2D12 0%,#DC2626 100%);color:#fff;border-radius:6px;padding:6px 18px;flex:none}
+.cn-sum-total span:first-child{font-size:10px;opacity:.85}
+.cn-sum-total .val{font-size:17px;font-weight:700;font-family:'Inter',monospace;color:#fff}
 .row-bottom{font-size:12px;height:172px}
 .row-bottom .tabset,.row-bottom>.card{overflow:auto}
 .row-bottom .tabset-pane{padding:10px;min-height:40px}
@@ -194,12 +206,12 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       </div>
     </div>
     <div class="saab-spacer"></div>
+    <div class="mkchk" style="display:flex;gap:14px;font-size:11px;color:#6B7280;align-items:center"><span>ผู้ทำ: <b style="color:#374151">สัญญาลักษณ์</b> ✓</span><span>อนุมัติ: <b style="color:#374151">ไม่ต้อง (ยอดลด &lt; เกณฑ์)</b></span></div>
   </div>
 
   <div class="content">
 
-    <!-- ④a SC-12 Status (pills + maker-checker · ไม่มี doc-chain) -->
-    <div id="slcnSc12" class="status-strip"></div>
+    <!-- ④a Gate (คง · ไม่ซ้ำ header) · status-strip ตัดออก — pills ซ้ำ mh-badge · mkchk ย้ายไป saab -->
     <div id="slcnGate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL -->
@@ -300,7 +312,8 @@ table.items th:last-child,table.items td:last-child{border-right:none}
     <!-- ④c LINE ITEMS (copy จากบิล → แก้ราคา/จำนวนที่ลด) -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">SL-CN.3</span><span class="ico">↩️</span>รายการลดหนี้ <span class="tpl-zone">copy จาก INV-0221</span></div>
+        <div class="card-title"><span class="secno">SL-CN.3</span><span class="ico">↩️</span>รายการลดหนี้ <span class="tpl-zone">copy จาก INV-0221</span>
+          <span class="swt-tip info pop-left" onclick="swtTipToggle(this,event)" title="เหตุผล / คืนสินค้า / อ้างอิง / ประวัติ">i<span class="swt-tip-pop"><b>SL-CN.4 เหตุผล/รายละเอียด</b><br>เหตุผล: ขายผิดราคา — แอร์ควรขาย 12,990 (ลง 13,990) · ปรับราคาเฉพาะรายการแอร์ ลด 1,000 + VAT 70<br>อนุมัติ: ยอดลด &lt; threshold → ไม่ต้องขออนุมัติ<br><b>คืนสินค้า (WH):</b> โหมดปรับราคา = ไม่คืนสินค้า · (โหมดคืนบางรายการ/ทั้งบิล → trigger WH Return Receipt) · คลังรับคืน — เมื่อมีการคืนของ<br><b>อ้างอิง:</b> บิลขายต้นทาง <a href="sl4-invoice-mockup.html" style="color:#93C5FD;font-weight:700;text-decoration:none">INV 08INV-2606-0221 ↗</a> · สายเอกสาร QT 0047 → SO 0021 → DP 0009 → INV 0221 → <b>CN 0007</b><br><b>ประวัติ:</b> สร้างจากบิลขาย INV-0221 · 15 มิ.ย. 26 · สัญญาลักษณ์ · (รอ) Post → ลด AR (Customer Ledger) + ปรับ VAT Output · (รอ) เครดิตคงเหลือ → หักบิลถัดไป/คืนเงิน</span></span></div>
         <div class="card-spacer"></div>
         <span class="ph" id="modeHint" style="font-size:10.5px">โหมดปรับราคา: แก้ "ราคาที่ถูกต้อง" → ระบบคิดยอดลด = ส่วนต่าง</span>
       </div>
@@ -350,54 +363,17 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       <div class="add-row-bar" onclick="dfOpen()">🔗 ดึงรายการจากบิลขาย (เลือกบิลต้นทาง)</div>
     </div>
 
-    <!-- ④d ROW-BOTTOM -->
-    <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <span class="card-title" style="padding:0 12px;align-items:center;border-right:1px solid #E5E7EB"><span class="secno">SL-CN.4</span></span>
-          <button class="on" onclick="swTab(event,'t-reason')">เหตุผล/รายละเอียด</button>
-          <button onclick="swTab(event,'t-return')">คืนสินค้า (WH)</button>
-          <button onclick="swTab(event,'t-ref')">อ้างอิง</button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ</button>
-        </div>
-        <div class="tabset-pane on" id="t-reason">
-          <div class="tab-grid">
-            <span class="k">เหตุผลการลดหนี้</span><span class="v">ขายผิดราคา — แอร์ควรขาย 12,990 (ลง 13,990)</span>
-            <span class="k">รายละเอียด</span><span class="v">ปรับราคาเฉพาะรายการแอร์ · ลด 1,000 + VAT 70</span>
-            <span class="k">อนุมัติ</span><span class="v">ยอดลด &lt; threshold → ไม่ต้องขออนุมัติ</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-return">
-          <div class="tab-grid">
-            <span class="k">คืนสินค้าเข้าคลัง</span><span class="v ph">โหมดปรับราคา = ไม่คืนสินค้า · (โหมดคืนบางรายการ/ทั้งบิล → trigger WH Return Receipt)</span>
-            <span class="k">คลังรับคืน</span><span class="v ph">— (เมื่อมีการคืนของ)</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-ref">
-          <div class="tab-grid">
-            <span class="k">บิลขายต้นทาง</span><span class="v"><a href="sl4-invoice-mockup.html" style="color:#2563EB;text-decoration:none">INV 08INV-2606-0221 ↗</a></span>
-            <span class="k">สายเอกสาร</span><span class="v">QT 0047 → SO 0021 → DP 0009 → INV 0221 → <b>CN 0007</b></span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-hist">
-          <div class="tl">
-            <div class="tl-item"><span class="tl-dot"></span> สร้างจากบิลขาย INV-0221 · 15 มิ.ย. 26 · สัญญาลักษณ์</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> Post → ลด AR (Customer Ledger) + ปรับ VAT Output</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> เครดิตคงเหลือ → หักบิลถัดไป/คืนเงิน</div>
-          </div>
-        </div>
+    <!-- ④d สรุปลดหนี้ (คงครบ 100% · ยอดลด · VAT · สุทธิ · เครดิตคงเหลือ) — แนวนอน flex:none · ไม่อยู่ใน .row-bottom เพื่อคงตัวเลขจริง -->
+    <div class="card cn-summary">
+      <div class="card-title" style="white-space:nowrap"><span class="secno">SL-CN.5</span><span class="ico">↩️</span>สรุปลดหนี้</div>
+      <div class="cn-sum-grid">
+        <div class="cn-sum-cell"><span class="l">ยอดลดหนี้ (ก่อน VAT)</span><span class="v">1,000.00</span></div>
+        <div class="cn-sum-cell"><span class="l">VAT ที่ลด 7%</span><span class="v">70.00</span></div>
+        <div class="cn-sum-cell"><span class="l">บิลต้นทาง</span><span class="v">17,430.30</span></div>
+        <div class="cn-sum-cell"><span class="l">เครดิตคงเหลือ</span><span class="v g">1,070.00</span></div>
       </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title"><span class="secno">SL-CN.5</span><span class="ico">↩️</span>สรุปลดหนี้ <span class="tpl-zone">SC3</span></div></div>
-        <div class="summary-row"><span class="lbl">ยอดลดหนี้ (ก่อน VAT)</span><span class="val">1,000.00</span></div>
-        <div class="summary-row"><span class="lbl">VAT ที่ลด 7%</span><span class="val">70.00</span></div>
-        <div class="summary-total"><span>รวมลดหนี้</span><span class="val">1,070.00</span></div>
-        <div style="font-size:10px;color:#9CA3AF;margin-top:6px;line-height:1.5">🔒 ยอด/VAT ที่ลด ระบบ BC คำนวณ (แก้ไม่ได้) · อ้างอิงบิลต้นทางบังคับ</div>
-        <div class="dep-box">
-          <div class="b"><div class="l">บิลต้นทาง</div><div class="v">17,430.30</div></div>
-          <div class="b"><div class="l">เครดิตคงเหลือ</div><div class="v g">1,070.00</div></div>
-        </div>
-      </div>
+      <span class="cn-sum-note">🔒 ยอด/VAT ที่ลด ระบบ BC คำนวณ (แก้ไม่ได้) · อ้างอิงบิลต้นทางบังคับ</span>
+      <div class="cn-sum-total"><span>รวมลดหนี้</span><span class="val">1,070.00</span></div>
     </div>
 
     <!-- ④e NOTES -->
@@ -435,7 +411,7 @@ function swTab(e,id){
   e.currentTarget.classList.add('on');
   var set=nav.parentElement;
   set.querySelectorAll('.tabset-pane').forEach(p=>p.classList.remove('on'));
-  set.querySelector('#'+id).classList.add('on');
+  var pane=set.querySelector('#'+id); if(pane) pane.classList.add('on');
 }
 function tplCopyDoc(){ alert('ทำสำเนาใบลดหนี้ (mock) · เลขใหม่ · สถานะ ร่าง'); }
 function tplOpenPrint(){ document.getElementById('printModal').classList.add('on'); }

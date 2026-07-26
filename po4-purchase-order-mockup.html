@@ -75,7 +75,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 
 /* ROW LAYOUTS */
 .row-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.row-bottom{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+.row-bottom{display:flex;justify-content:flex-end}
 
 /* FIELD */
 .field{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}
@@ -174,8 +174,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .row-2col .field-grid-2{gap:3px 14px}
 .row-2col .credit-line{margin-top:5px;padding:4px 8px}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
-.row-bottom{font-size:12px;height:150px}
-.row-bottom .tabset,.row-bottom>.card{overflow:auto}
+.row-bottom{font-size:12px}
+.row-bottom>.card{overflow:auto;width:520px;max-width:100%}
 .row-bottom .tabset-pane{padding:10px;min-height:40px}
 .row-bottom .tabset-nav button{padding:6px 12px;font-size:11px}
 .row-bottom .summary-row{padding:2px 0;font-size:11px}
@@ -249,12 +249,12 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       </div>
     </div>
     <div class="saab-spacer"></div>
+    <div class="mkchk" style="display:flex;gap:14px;font-size:11px;color:#6B7280;align-items:center"><span>ผู้สั่ง (Maker): <b style="color:#374151">สมศรี</b> ✓</span><span>ผู้อนุมัติ (Checker): <b style="color:#374151">ผจก.จัดซื้อ ⏱</b></span></div>
   </div>
 
   <div class="content">
 
-    <!-- ④a SC-12 Status + Doc Chain -->
-    <div id="po4Sc12" class="status-strip"></div>
+    <!-- ④a Gate (status-strip ตัด: pills ซ้ำ 100% badge/party/gate · mkchk→saab · เหลือ gate ที่ actionable) -->
     <div id="po4Gate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL: PO-4.1 เจ้าหนี้ (SC-3) + PO-4.2 ข้อมูลใบสั่งซื้อ -->
@@ -295,7 +295,21 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     <!-- ④c PO-4.3 LINE ITEMS (SC-2) -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">PO-4.3</span><span class="ico">📦</span>รายการสินค้า <span class="tpl-zone">SC-2</span></div>
+        <div class="card-title"><span class="secno">PO-4.3</span><span class="ico">📦</span>รายการสินค้า <span class="tpl-zone">SC-2</span>
+          <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="เงื่อนไข · รับสินค้า · อ้างอิง · ประวัติ">i<span class="swt-tip-pop" style="max-width:440px">
+            <b>เงื่อนไข:</b> เครดิต 60 วัน (หลัง Invoice) · VAT 7% บนบิล — ส่วนลดก่อน VAT (Golden Rule)<br>
+            💡 ผลประโยชน์ Vendor (Sell-in / Rebate / Co-op) บันทึกที่ <a href="po2-rfq-mockup.html">PO-2 Trade Agreement (ข้อตกลงส่งเสริมการขาย)</a> — ทำข้อตกลงแล้ว ราคา/ส่วนลด/ของแถม ดึงเข้า PO อัตโนมัติ
+            <div style="margin-top:8px"><b>รับสินค้า:</b> <span id="po4RecvStatus">ยังไม่รับ (0%) · ค้างรับ 180 เครื่อง</span> · รับที่ <a href="wh1-receive-mockup.html">WH-1 ใบรับสินค้า (GRN)</a> ทยอยรับได้ · รับครบบิล → ตั้งหนี้ AP (PO-6)</div>
+            <div style="margin-top:5px;color:#FDE68A">⚠️ ผู้ขายส่งไม่ครบ → กด “🔒 ปิดรายการค้างรับ” ที่เมนู ⋯ (ฝ่ายจัดซื้อเท่านั้น · คลังปิดเองไม่ได้) · ของค้างถูกยกเลิก ไม่ยกไปรอบหน้า · ใบได้สถานะ “ปิดโดยรับไม่ครบ”</div>
+            <div style="margin-top:8px"><b>อ้างอิง <span style="color:#93C5FD">SC-5</span>:</b> PR-2606-0019 (อนุมัติ 06 มิ.ย. 26) · จุดสั่งซื้อ DAI-FTKM24 (ต่ำกว่าขั้นต่ำ) · RFQ — (สั่งตรงจาก PR · ไม่ได้เทียบราคา)</div>
+            <div style="margin-top:8px"><b>ประวัติ/อนุมัติ <span style="color:#93C5FD">SC-7</span>:</b></div>
+            <div id="t-hist" style="margin-top:3px"><div class="tl">
+              <div class="tl-item"><span class="tl-dot"></span> สร้าง PO-2606-0042 จาก PR-0019 (Make To) · 07 มิ.ย. 26 09:30 · สมศรี</div>
+              <div class="tl-item"><span class="tl-dot pending"></span> ส่งขออนุมัติ → ผจก.จัดซื้อ (CF-2.6 · Maker ≠ Checker)</div>
+              <div class="tl-item"><span class="tl-dot pending"></span> อนุมัติ (Approved) → Send PO ให้ Vendor → Print ใบสั่งซื้อ</div>
+              <div class="tl-item"><span class="tl-dot pending"></span> ค้างรับ → รับของที่ WH-1 (ใบรับสินค้า GRN)</div>
+            </div></div>
+          </span></span></div>
         <div class="card-spacer"></div>
         <div class="scan-box" title="ยิงบาร์โค้ดเพื่อเพิ่มสินค้าเข้าใบสั่งซื้อ">
           <span>📷</span><input id="scanInput" placeholder="ยิงบาร์โค้ด / รหัสสินค้า…" onkeydown="tplScan(event)">
@@ -357,47 +371,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="add-row-bar" onclick="dfOpenProd()">🔍 + เพิ่มรายการ — จาก PR / จุดสั่งซื้อ หรือค้นหาเอง <span class="tpl-zone">ส่วนลดกรอกเอง · ราคาจาก PO-2 เมื่อทำข้อตกลง Vendor</span></div>
     </div>
 
-    <!-- ④d ROW-BOTTOM: PO-4.4 Tabs + PO-4.5 Summary -->
+    <!-- ④d PO-4.5 Summary (เงิน — ยอดรวม/ส่วนลด/VAT/ยอดสุทธิ คงครบ 100%) · tabs (เงื่อนไข/รับ/อ้างอิง/ประวัติ) → tip ที่ items header -->
     <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <button class="on" onclick="swTab(event,'t-term')">เงื่อนไข</button>
-          <button onclick="swTab(event,'t-recv')">รับสินค้า</button>
-          <button onclick="swTab(event,'t-ref')">อ้างอิง <span class="tpl-zone">SC-5</span></button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ/อนุมัติ <span class="tpl-zone">SC-7</span></button>
-        </div>
-        <div class="tabset-pane on" id="t-term">
-          <div class="tab-grid">
-            <span class="k">เงื่อนไขชำระ</span><span class="v">เครดิต 60 วัน · หลัง Invoice</span>
-            <span class="k">VAT</span><span class="v">7% บนบิล (ส่วนลดก่อน VAT · Golden Rule)</span>
-          </div>
-          <div class="note-link">💡 ผลประโยชน์ Vendor (Sell-in / Rebate / Sell-out / Co-op) บันทึกที่ <a href="po2-rfq-mockup.html">PO-2 Trade Agreement (ข้อตกลงส่งเสริมการขาย)</a> — เมื่อทำข้อตกลงแล้ว ราคา/ส่วนลด/ของแถม จะดึงเข้า PO อัตโนมัติ</div>
-        </div>
-        <div class="tabset-pane" id="t-recv">
-          <div class="tab-grid">
-            <span class="k">สถานะการรับ</span><span class="v" id="po4RecvStatus">ยังไม่รับ (0%) · ค้างรับ 180 เครื่อง</span>
-            <span class="k">รับที่</span><span class="v"><a href="wh1-receive-mockup.html" style="color:#2563EB;font-weight:600">WH-1 ใบรับสินค้า (GRN)</a> · ทยอยรับได้</span>
-            <span class="k">เงื่อนไขตั้งหนี้</span><span class="v">รับครบบิลก่อน → ตั้งหนี้ AP (PO-6) · ยกเว้นบิลฝาก (PO-8)</span>
-            <span class="k">ผู้ขายส่งไม่ครบ</span><span class="v"><button class="card-btn primary" onclick="po4ShortClose()">🔒 ปิดรายการค้างรับ</button> <span style="color:#6B7280">ฝ่ายจัดซื้อกดได้เท่านั้น · คลังปิดเองไม่ได้ (คลังใช้ปุ่ม "แจ้งจัดซื้อให้ปิดรายการค้าง" ที่ใบรับสินค้า)</span></span>
-          </div>
-          <div class="note-link">⚠️ ปิดรายการค้างรับ = ตัดของที่ยังไม่ได้รับออกจากใบสั่งซื้อทันที · <b>ของค้างถูกยกเลิกทิ้ง ไม่ยกยอดไปรอบหน้า</b> (ถ้ายกยอดสะสมข้ามรอบ ตัวเลข "สั่งแล้วรอรับ" จะบวมจนวางแผนสั่งซื้อไม่ได้) — ถ้ายังต้องการของ ให้เปิด<a href="po4-purchase-order-mockup.html">ใบสั่งซื้อใหม่</a> · ใบที่ปิดแบบนี้ได้สถานะ <b>"ปิดโดยรับไม่ครบ"</b> แยกจาก "รับครบแล้ว" เพื่อดูย้อนหลังว่าผู้ขายรายไหนส่งไม่ครบบ่อย</div>
-        </div>
-        <div class="tabset-pane" id="t-ref">
-          <div class="tab-grid">
-            <span class="k">PR (ใบขอสั่งซื้อ)</span><span class="v">PR-2606-0019 (อนุมัติ 06 มิ.ย. 26)</span>
-            <span class="k">จุดสั่งซื้อ (Reorder)</span><span class="v">DAI-FTKM24 (ต่ำกว่าขั้นต่ำ)</span>
-            <span class="k">ใบเสนอราคา Vendor (RFQ)</span><span class="v ph">— (สั่งตรงจาก PR · ไม่ได้เทียบราคา)</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-hist">
-          <div class="tl">
-            <div class="tl-item"><span class="tl-dot"></span> สร้าง PO-2606-0042 จาก PR-0019 (Make To) · 07 มิ.ย. 26 09:30 · สมศรี</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> ส่งขออนุมัติ → ผจก.จัดซื้อ <span style="color:#92400E">· CF-2.6 · Maker ≠ Checker</span></div>
-            <div class="tl-item"><span class="tl-dot pending"></span> อนุมัติ (Approved) → Send PO ให้ Vendor → Print ใบสั่งซื้อ</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> ค้างรับ → รับของที่ WH-1 (ใบรับสินค้า GRN)</div>
-          </div>
-        </div>
-      </div>
       <div class="card">
         <div class="card-header"><div class="card-title"><span class="secno">PO-4.5</span><span class="ico">💰</span>สรุปยอด (Summary) <span class="tpl-zone">SC-11</span></div></div>
         <div id="po4Sc11"></div>
@@ -438,14 +413,6 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 <script src="swt-sidebar.js"></script>
 <script src="swt-patterns.js"></script>
 <script>
-function swTab(e,id){
-  var nav=e.currentTarget.parentElement;
-  nav.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
-  e.currentTarget.classList.add('on');
-  var set=nav.parentElement;
-  set.querySelectorAll('.tabset-pane').forEach(p=>p.classList.remove('on'));
-  set.querySelector('#'+id).classList.add('on');
-}
 function tplCopyDoc(){ alert('ทำสำเนาใบสั่งซื้อ (mock):\n• ข้อมูลเจ้าหนี้ + รายการสินค้าทั้งหมดถูก clone\n• ออกเลขที่ PO ใหม่ · วันที่ = วันนี้ · ลบลายเซ็น/อนุมัติ\n• สถานะเริ่ม "ร่าง" · แก้ไขต่อได้ทันที'); }
 function tplOpenPrint(){ document.getElementById('printModal').classList.add('on'); }
 function tplClosePrint(){ document.getElementById('printModal').classList.remove('on'); }
@@ -502,17 +469,7 @@ function po4ShortClose(){
   alert('ปิดรายการค้างรับแล้ว (mock)\n\n• ยกเลิกของค้าง '+po4OpenQty+' ชิ้น — ไม่ยกไปรอบหน้า\n• สถานะใบสั่งซื้อ = "ปิดโดยรับไม่ครบ"\n• คลังจะไม่เห็นใบนี้ในคิวรับของอีก\n• ต้องการของเพิ่ม → เปิดใบสั่งซื้อใหม่');
 }
 function po4InitPatterns(){
-  swtRenderStatusStrip('#po4Sc12',{
-    pills:[
-      {text:'📄 รออนุมัติ (BC: Open)',type:'neutral'},
-      {text:'฿ VAT 7% (ส่วนลดก่อน VAT)',type:'info'},
-      {text:'✓ Vendor Daikin · CN ตรงเวลา',type:'success'},
-      {text:'⏳ รอ ผจก.จัดซื้อ อนุมัติ',type:'warning'}
-    ],
-    makerChecker:{nodes:[
-      {role:'จัดซื้อ ✓',step:'สร้าง PO',state:'ok'},
-      {role:'ผจก. ⏱',step:'อนุมัติ',state:'wait'}
-    ]}});
+  /* status-strip ตัด (pills ซ้ำ badge/party/gate · maker-checker→saab) · เหลือ gate + docChain + สรุปเงิน */
   if(typeof swtRenderDocChain==='function')swtRenderDocChain('#po4DcStrip',{label:'Doc Chain',nodes:[
       {label:'PR 0019 ✓',href:'po1-purchase-request-mockup.html',state:'done'},
       {label:'PO 0042',state:'current'},

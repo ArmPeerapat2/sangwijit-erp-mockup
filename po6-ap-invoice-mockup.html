@@ -183,6 +183,9 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col,.mode-bar,.gate-alert{flex:none}
 .row-bottom{font-size:12px;height:158px}
 .row-bottom .tabset,.row-bottom>.card{overflow:auto}
+/* summary-only: ตัด tabset แล้ว → การ์ดสรุปเงินเต็มกว้าง สูงตามเนื้อหา (คงครบ ไม่ตัด/scroll) */
+.row-bottom.summary-only{display:block;height:auto}
+.row-bottom.summary-only>.card{overflow:visible}
 .row-bottom .tabset-pane{padding:10px;min-height:40px}
 .row-bottom .tabset-nav button{padding:6px 12px;font-size:11px}
 .row-bottom .summary-row{padding:2px 0;font-size:11px}
@@ -244,12 +247,12 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       </div>
     </div>
     <div class="saab-spacer"></div>
+    <div class="mkchk" style="display:flex;gap:14px;align-items:center;font-size:11px;color:#6B7280"><span>จัดซื้อ (Match+คีย์): <b style="color:#374151">สมศรี</b> ✓</span><span>บัญชี (Post GL): <b style="color:#374151">รอดำเนินการ ⏱</b></span><span style="color:#92400E;font-size:10px;white-space:nowrap">CF-2.6 · Maker ≠ Checker</span></div>
   </div>
 
   <div class="content">
 
-    <!-- ④a STATUS + maker/checker + DOC-CHAIN -->
-    <div id="po6Sc12" class="status-strip"></div>
+    <!-- ④a GATE — status-strip pills ตัด (ซ้ำ gate/summary/vendor 100%) · mkchk→saab · doc-chain=แถบล่าง -->
     <div class="gate-alert ok" id="po6Gate"></div>
 
     <!-- ④b ROW-2COL: PO-6.1 เจ้าหนี้ + PO-6.2 ข้อมูลใบตั้งหนี้ -->
@@ -281,7 +284,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
     <!-- ④c PO-6.3 รายการเจ้าหนี้ — ลิสต์บิลมาตั้งหนี้/หักลบ (ตามเลขที่บิล · โหมดคุมประเภท) -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">PO-6.3</span><span class="ico">🧾</span>รายการเจ้าหนี้ — ดึงบิลมาตั้งหนี้/หักลบ <span class="tpl-zone">ตามเลขที่บิล · โหมดคุมประเภท</span></div>
+        <div class="card-title"><span class="secno">PO-6.3</span><span class="ico">🧾</span>รายการเจ้าหนี้ — ดึงบิลมาตั้งหนี้/หักลบ <span class="tpl-zone">ตามเลขที่บิล · โหมดคุมประเภท</span> <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="กำหนดชำระ · ภาษี/WHT · ส่งเสริม · อ้างอิง · ประวัติ">i<span class="swt-tip-pop" style="max-width:470px"><b>💳 กำหนดชำระ:</b> เครดิต 60 วัน · ครบกำหนด 24 ส.ค. 26 · จ่ายที่ FI-2 จ่ายชำระเจ้าหนี้ (โอน/เช็ค)<br><b>🧮 ภาษี:</b> VAT ซื้อ 7% = 155,036 (ฐานหลังหักส่วนลด · เครดิตภาษีซื้อ) · <b>WHT หัก ณ ที่จ่าย:</b> สินค้า = ไม่หัก (บริการ 3% · ค่าขนส่ง 1%) · ลง GL: Dr สินค้า + ภาษีซื้อ / Cr เจ้าหนี้การค้า<br><b>🎁 ส่งเสริม/ตัดหนี้:</b> Sell-in บนบิล -45,200 (ก่อน VAT) · ใบลดหนี้ APCN-2606-0012 -30,000 (หลังบิล) · Co-op AG-CO-2605-003 รอ <a href="po7-rebate-dashboard.html">PO-7 ส่งเสริมได้จริง ↗</a> ยืนยัน · ที่มา PO-2 → PO-7 → PO-6 net<br><b>🔗 อ้างอิง:</b> PO-2606-0042 · WH-1 GR-2606-0210 (รับครบ 180/180) · ใบแจ้งหนี้ DKN-INV-25088<br><b>🕓 ประวัติ:</b> รับครบ (WH-1) 24 มิ.ย. → จัดซื้อ 3-Way + คีย์ใบแจ้งหนี้ 25 มิ.ย. → บัญชี Post ตั้งหนี้ (GL) รอ · CF-2.6 Maker ≠ Checker → ค้างชำระ FI-2</span></span></div>
         <div class="card-spacer"></div>
         <button class="card-btn primary" onclick="openRefPick('inv')">🔗 ดึงรายการอ้างอิง <span class="tpl-zone">SC-14</span></button>
       </div>
@@ -311,54 +314,8 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       </div>
     </div>
 
-    <!-- ④d ROW-BOTTOM: PO-6.4 Tabs + PO-6.5 Summary -->
-    <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <button class="on" onclick="swTab(event,'t-pay')">กำหนดชำระ</button>
-          <button onclick="swTab(event,'t-tax')">ภาษี</button>
-          <button onclick="swTab(event,'t-promo')">🎁 ส่งเสริม/ตัดหนี้</button>
-          <button onclick="swTab(event,'t-ref')">อ้างอิง <span class="tpl-zone">SC-5</span></button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ <span class="tpl-zone">SC-7</span></button>
-        </div>
-        <div class="tabset-pane on" id="t-pay">
-          <div class="tab-grid">
-            <span class="k">เงื่อนไขชำระ</span><span class="v">เครดิต 60 วัน · ครบกำหนด 24 ส.ค. 26</span>
-            <span class="k">วิธีจ่าย</span><span class="v">โอน / เช็ค · ดำเนินการที่ FI-2 จ่ายชำระ AP</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-tax">
-          <div class="tab-grid">
-            <span class="k">VAT ซื้อ (Input)</span><span class="v">7% = 155,036.00 (ฐานหลังหักส่วนลด · ขอคืน/เครดิตภาษีซื้อ)</span>
-            <span class="k">WHT หัก ณ ที่จ่าย</span><span class="v">สินค้า = ไม่หัก (บริการหัก 3% · ค่าขนส่ง 1%)</span>
-            <span class="k">ลง GL</span><span class="v">Dr สินค้า + Dr ภาษีซื้อ / Cr เจ้าหนี้การค้า</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-promo">
-          <div class="tab-grid">
-            <span class="k">🎁 Sell-in บนบิล (AG-SI-2604-007)</span><span class="v">2% บนบิล → ลดยอดก่อน VAT <b>-45,200</b> (Case 4 · หักทันทีบนบิล)</span>
-            <span class="k">✅ ส่งเสริมได้จริง (PO-7)</span><span class="v">ยอดบริษัทจ่ายจริงที่ PO-7 ยืนยันแล้ว → ส่งเข้า PO-6 เป็นรายการหัก · <a href="po7-rebate-dashboard.html" style="color:#2563EB;font-weight:600">เปิด PO-7 ส่งเสริมได้จริง ↗</a></span>
-            <span class="k">↩️ Rebate/CN ตัดหนี้ (APCN-2606-0012)</span><span class="v">ใบลดหนี้เจ้าหนี้ (จาก PO-7 realize หลังบิล) → หัก AP <b style="color:#059669">-30,000</b></span>
-            <span class="k">🎪 Co-op (AG-CO-2605-003)</span><span class="v ph">งบ event 20,000 · รอ PO-7 ยืนยันยอดจริง → ออกใบลดหนี้</span>
-            <span class="k">ที่มา (2 จังหวะ)</span><span class="v"><a href="po2-rfq-mockup.html" style="color:#2563EB;font-weight:600">PO-2 ข้อตกลง</a> → <a href="po7-rebate-dashboard.html" style="color:#2563EB;font-weight:600">PO-7 ได้จริง</a> → <b>PO-6 net</b></span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-ref">
-          <div class="tab-grid">
-            <span class="k">ใบสั่งซื้อ (PO)</span><span class="v">PO-2606-0042</span>
-            <span class="k">ใบรับสินค้า (WH-1)</span><span class="v">GR-2606-0210 (รับครบ 180/180)</span>
-            <span class="k">ใบแจ้งหนี้ Vendor</span><span class="v">DKN-INV-25088</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-hist">
-          <div class="tl">
-            <div class="tl-item"><span class="tl-dot"></span> รับครบ (WH-1 GR-0210) · 24 มิ.ย. 26 · ก้อง (คลัง)</div>
-            <div class="tl-item"><span class="tl-dot"></span> จัดซื้อ 3-Way Match + คีย์ใบแจ้งหนี้ · 25 มิ.ย. 26 · สมศรี</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> บัญชี Post ตั้งหนี้ (ลง GL) · รอดำเนินการ <span style="color:#92400E">· CF-2.6 · Maker ≠ Checker</span></div>
-            <div class="tl-item"><span class="tl-dot pending"></span> ค้างชำระ → จ่าย (FI-2)</div>
-          </div>
-        </div>
-      </div>
+    <!-- ④d SUMMARY: PO-6.5 สรุปยอดตั้งหนี้ — คงครบ 100% (ยอดรวม·ส่วนลด·VAT·WHT·สุทธิ) · แท็บ note/ประวัติ→tip ที่ items header -->
+    <div class="row-bottom summary-only">
       <div class="card">
         <div class="card-header"><div class="card-title"><span class="secno">PO-6.5</span><span class="ico">💰</span>สรุปยอดตั้งหนี้ <span class="tpl-zone">SC-11</span></div></div>
         <div id="po6Sc11"></div>
@@ -435,17 +392,7 @@ function renumberItems(){
   document.querySelectorAll('table.items tbody tr:not(.empty-row)').forEach(function(tr){ i++; tr.querySelector('td').textContent=i; });
 }
 function po6InitPatterns(){
-  swtRenderStatusStrip('#po6Sc12',{
-    pills:[
-      {text:'📄 Draft',type:'neutral'},
-      {text:'📥 รับครบทุกใบ (3-Way)',type:'success',id:'modePill'},
-      {text:'฿ VAT ซื้อ 7%',type:'info'},
-      {text:'WHT: สินค้า (ไม่หัก)',type:'neutral'}
-    ],
-    makerChecker:{title:'Maker ≠ Checker · CF-2.6 Approval Matrix',nodes:[
-      {role:'จัดซื้อ ✓',step:'Match+คีย์',state:'ok'},
-      {role:'บัญชี ⏱',step:'Post GL',state:'wait'}
-    ]}});
+  /* status-strip ตัดทิ้ง (pills ซ้ำ gate/summary/vendor 100% · mkchk→saab) */
   if(typeof swtRenderDocChain==='function')swtRenderDocChain('#po6DcStrip',{label:'Doc Chain',nodes:[
       {label:'PO 0042',href:'po4-purchase-order-mockup.html',state:'done'},
       {label:'GR-0210',href:'wh1-receive-mockup.html',state:'done'},
@@ -478,14 +425,6 @@ function updateViBadge(){
   el.textContent=first+' · '+invs.length+' ใบ';
 }
 document.addEventListener('DOMContentLoaded',po6InitPatterns);
-function swTab(e,id){
-  var nav=e.currentTarget.parentElement;
-  nav.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
-  e.currentTarget.classList.add('on');
-  var set=nav.parentElement;
-  set.querySelectorAll('.tabset-pane').forEach(p=>p.classList.remove('on'));
-  set.querySelector('#'+id).classList.add('on');
-}
 /* สรุปประเภทรับเข้าอัตโนมัติจากใบแจ้งหนี้ในรายการ PO-6.3 (ไม่มีโหมดรวมทั้งใบแล้ว) */
 function updateModeSummary(){
   var full=0,dep=0;
@@ -494,15 +433,15 @@ function updateModeSummary(){
     if(tr.getAttribute('data-recv')==='deposit') dep++; else full++;
   });
   var pill=document.getElementById('modePill'), gate=document.getElementById('po6Gate');
-  if(!pill||!gate) return;
+  if(!gate) return; /* pill อาจไม่มี (status-strip ตัดแล้ว) — gate ยังต้องอัปเดต */
   if(dep>0 && full>0){
-    pill.className='pill pill-violet'; pill.textContent='🟣 ผสม: รับครบ '+full+' · บิลฝาก '+dep;
+    if(pill){pill.className='pill pill-violet'; pill.textContent='🟣 ผสม: รับครบ '+full+' · บิลฝาก '+dep;}
     gate.className='gate-alert ok'; gate.innerHTML='✅ ตั้งหนี้ผสมได้ — 📥 รับครบ '+full+' ใบ (3-Way) + 🟣 บิลฝาก '+dep+' ใบ (2-Way · ตั้งก่อนรับครบ · ทยอยรับที่ WH-1)';
   } else if(dep>0){
-    pill.className='pill pill-violet'; pill.textContent='🟣 บิลฝากทั้งหมด ('+dep+' · 2-Way)';
+    if(pill){pill.className='pill pill-violet'; pill.textContent='🟣 บิลฝากทั้งหมด ('+dep+' · 2-Way)';}
     gate.className='gate-alert ok'; gate.textContent='🟣 บิลฝาก '+dep+' ใบ: ตั้งหนี้ก่อนรับครบ (2-Way · จับคู่ PO-8 ↔ Invoice) · ทยอยรับที่ WH-1';
   } else {
-    pill.className='pill pill-success'; pill.textContent='📥 รับครบทุกใบ ('+full+' · 3-Way)';
+    if(pill){pill.className='pill pill-success'; pill.textContent='📥 รับครบทุกใบ ('+full+' · 3-Way)';}
     gate.className='gate-alert ok'; gate.textContent='✅ รับครบทุกบิล ('+full+' ใบ · 3-Way Match) → ตั้งหนี้ได้';
   }
 }

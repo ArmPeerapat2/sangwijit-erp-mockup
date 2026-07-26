@@ -180,8 +180,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .row-2col .credit-line{margin-top:5px;padding:4px 8px}
 .content>.items-card{flex:1 1 0;min-height:120px}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
-.row-bottom{font-size:12px;height:150px}
-.row-bottom .tabset,.row-bottom>.card{overflow:auto}
+.row-bottom{font-size:12px}
+.row-bottom>.card{overflow:auto;display:flex;flex-direction:column}
 .row-bottom .tabset-pane{padding:10px;min-height:40px}
 .row-bottom .tabset-nav button{padding:6px 12px;font-size:11px}
 .row-bottom .summary-row{padding:2px 0;font-size:11px}
@@ -255,10 +255,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     <!-- ④a STATUS + DOC-CHAIN รวมแถวเดียว -->
     <div class="status-strip" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <div class="sc11-pills">
-        <span class="pill pill-neutral">📄 ร่าง</span>
-        <span class="pill pill-info">฿ VAT 7%</span>
         <span class="pill pill-success">✓ เครดิตผ่าน</span>
-        <span class="pill pill-warning">⏳ ยืนราคาถึง 06 ก.ค. 26</span>
+        <span class="pill pill-info">฿ VAT 7%</span>
       </div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
         <span class="dc-lbl" style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
@@ -307,7 +305,13 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     <!-- ④c LINE ITEMS (SC-2 + SC-9) -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">SL-1.3</span><span class="ico">📦</span>รายการสินค้า <span class="tpl-zone">SC-2 · SC-9</span></div>
+        <div class="card-title"><span class="secno">SL-1.3</span><span class="ico">📦</span>รายการสินค้า <span class="tpl-zone">SC-2 · SC-9</span>
+          <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="เงื่อนไข · จัดส่ง · เอกสารอ้างอิง · ประวัติ">i<span class="swt-tip-pop">
+            <b>เงื่อนไข:</b> ชำระ เครดิต 7 วัน · เงินสด/โอน · พร้อม QR PromptPay · หมายเหตุท้ายบิล: มัดจำโอน SCB*6239 ยอด 6,290.- · เก็บปลายทางยอด 10,000.-<br>
+            <b>จัดส่ง:</b> 86/1 ม.4 ต.นาแก อ.นาแก จ.นครพนม · กำหนดส่ง 13 มิ.ย. 26 · ต้องการติดตั้ง → สร้าง Service Order หลังขาย<br>
+            <b>เอกสารอ้างอิง <span style="opacity:.7">(SC-5)</span>:</b> เลขอ้างอิง REF20260606-001 · ที่มา (Inquiry): โทรศัพท์ ลูกค้าสอบถามราคาแอร์+ติดตั้ง · เอกสารต้นทาง: — (เริ่มที่ใบเสนอราคา)<br>
+            <b>ประวัติ <span style="opacity:.7">(SC-7)</span>:</b> 06 มิ.ย. 26 10:32 สร้างเอกสาร (สัญญาลักษณ์) · รอส่งให้ลูกค้า · รอลูกค้าตอบรับ → แปลงเป็นใบจอง</span></span>
+        </div>
         <div class="card-spacer"></div>
         <div class="scan-box" title="ยิงได้ทั้ง Barcode และ S/N · ยิง S/N สินค้าตัวเดิม → +จำนวนแถวนั้นทันที">
           <span>📷</span><input id="scanInput" placeholder="ยิงบาร์โค้ด / S/N…" onkeydown="tplScan(event)">
@@ -386,43 +390,11 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="add-row-bar" onclick="dfOpenProd()">🔍 + เพิ่มรายการ — สินค้า · ค่าแรง · บริการ <span class="tpl-zone">SC-2 คอลัมน์ชนิด</span></div>
     </div>
 
-    <!-- ④d ROW-BOTTOM: Tabs + Summary -->
+    <!-- ④d ROW-BOTTOM: หมายเหตุ + สรุปยอด (เงื่อนไข/จัดส่ง/อ้างอิง/ประวัติ ย้ายไป tip เกาะหัวรายการสินค้า) -->
     <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <button class="on" onclick="swTab(event,'t-pay')">เงื่อนไข</button>
-          <button onclick="swTab(event,'t-ship')">จัดส่ง</button>
-          <button onclick="swTab(event,'t-ref')">เอกสารอ้างอิง <span class="tpl-zone">SC-5</span></button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ <span class="tpl-zone">SC-7</span></button>
-        </div>
-        <div class="tabset-pane on" id="t-pay">
-          <div class="tab-grid">
-            <span class="k">เงื่อนไขการชำระ</span><span class="v">เครดิต 7 วัน</span>
-            <span class="k">วิธีการชำระเงิน</span><span class="v">เงินสด / โอน · พร้อม QR PromptPay</span>
-            <span class="k">หมายเหตุท้ายบิล</span><span class="v">มัดจำโอน SCB*6239 ยอด 6,290.- · เก็บปลายทางยอด 10,000.-</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-ship">
-          <div class="tab-grid">
-            <span class="k">ที่อยู่จัดส่ง</span><span class="v">86/1 ม.4 ต.นาแก อ.นาแก จ.นครพนม</span>
-            <span class="k">วันกำหนดส่งสินค้า</span><span class="v">13 มิ.ย. 26</span>
-            <span class="k">ติดตั้ง</span><span class="v">ต้องการติดตั้ง → สร้าง Service Order หลังขาย</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-ref">
-          <div class="tab-grid">
-            <span class="k">หมายเลขอ้างอิง</span><span class="v">REF20260606-001</span>
-            <span class="k">ที่มา (Inquiry)</span><span class="v">โทรศัพท์ · ลูกค้าสอบถามราคาแอร์ + ติดตั้ง</span>
-            <span class="k">เอกสารต้นทาง</span><span class="v ph">— (เริ่มที่ใบเสนอราคา)</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-hist">
-          <div class="tl">
-            <div class="tl-item"><span class="tl-dot"></span> สร้างเอกสาร · 06 มิ.ย. 26 10:32 · สัญญาลักษณ์</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> ส่งให้ลูกค้า · รอดำเนินการ</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> ลูกค้าตอบรับ → แปลงเป็นใบจอง</div>
-          </div>
-        </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><span class="secno">SL-1.4</span><span class="ico">🗒️</span>หมายเหตุ</div></div>
+        <textarea style="width:100%;flex:1;min-height:60px;padding:6px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit;resize:none">ราคารวมติดตั้งและรื้อของเดิม · รับประกันเครื่อง 5 ปี (คอมเพรสเซอร์) · นัดติดตั้ง 13 มิ.ย. 26</textarea>
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title"><span class="secno">SL-1.5</span><span class="ico">💰</span>สรุปยอด (Summary) <span class="tpl-zone">SC3</span></div></div>
@@ -438,12 +410,6 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
         <div class="baht-text">( หนึ่งหมื่นเจ็ดพันสี่ร้อยสามสิบบาทสามสิบสตางค์ )</div>
         <div style="font-size:10px;color:#9CA3AF;margin-top:6px;line-height:1.5">🔒 ยอดรวม/VAT ระบบ BC คำนวณให้ (แก้ไม่ได้) · ⚖ ส่วนลดหักก่อน VAT เสมอ · ถ้าใส่ส่วนลดเป็น % ระบบแปลงเป็นบาทก่อนส่ง BC</div>
       </div>
-    </div>
-
-    <!-- ④e NOTES -->
-    <div class="card" style="padding:8px 12px;display:flex;align-items:center;gap:8px">
-      <span style="font-size:12px;font-weight:600;color:#374151">🗒️ หมายเหตุ</span>
-      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="ราคารวมติดตั้งและรื้อของเดิม · รับประกันเครื่อง 5 ปี (คอมเพรสเซอร์) · นัดติดตั้ง 13 มิ.ย. 26">
     </div>
 
   </div><!-- /content -->
@@ -469,17 +435,31 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 </div>
 
 <script>
-function swTab(e,id){
-  var nav=e.currentTarget.parentElement;
-  nav.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
-  e.currentTarget.classList.add('on');
-  var set=nav.parentElement;
-  set.querySelectorAll('.tabset-pane').forEach(p=>p.classList.remove('on'));
-  set.querySelector('#'+id).classList.add('on');
+/* swt-tip: toggle popover ค้าง (hover เปิดผ่าน CSS) + วางตำแหน่งกันล้นจอ — copy inline (หน้านี้ไม่โหลด swt-patterns.js) */
+function swtTipPlace(el){
+  var pop=el.querySelector('.swt-tip-pop'); if(!pop)return;
+  var ir=el.getBoundingClientRect();
+  var popW=pop.offsetWidth||320, popH=pop.offsetHeight||0;
+  var left=ir.left+ir.width/2-popW/2;
+  left=Math.max(8,Math.min(left,window.innerWidth-popW-8));
+  var top=ir.bottom+7;
+  if(top+popH>window.innerHeight-8) top=ir.top-popH-7;
+  pop.style.left=left+'px'; pop.style.top=top+'px';
 }
+function swtTipToggle(el,ev){
+  if(ev) ev.stopPropagation();
+  document.querySelectorAll('.swt-tip.open').forEach(function(t){ if(t!==el) t.classList.remove('open'); });
+  swtTipPlace(el);
+  el.classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.swt-tip')) document.querySelectorAll('.swt-tip.open').forEach(function(t){ t.classList.remove('open'); });
+});
+document.addEventListener('mouseover',function(e){ var t=e.target.closest&&e.target.closest('.swt-tip'); if(t) swtTipPlace(t); });
+
 function tplCopyDoc(){ alert('ทำสำเนาใบเสนอราคา (mock):\n• ข้อมูลลูกค้า + รายการสินค้าทั้งหมดถูก clone\n• ออกเลขที่เอกสารใหม่ · วันที่ = วันนี้ · ลบลายเซ็น/อนุมัติ\n• สถานะเริ่ม "ร่าง" · แก้ไขต่อได้ทันที'); }
-function tplOpenPrint(){ document.getElementById('printModal').classList.add('on'); }
-function tplClosePrint(){ document.getElementById('printModal').classList.remove('on'); }
+function tplOpenPrint(){ var m=document.getElementById('printModal'); if(m) m.classList.add('on'); }
+function tplClosePrint(){ var m=document.getElementById('printModal'); if(m) m.classList.remove('on'); }
 function tplScan(e){
   if(e.key!=='Enter')return;
   var v=e.currentTarget.value.trim(); if(!v)return;

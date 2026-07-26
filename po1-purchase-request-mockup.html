@@ -74,7 +74,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 
 /* ROW LAYOUTS */
 .row-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.row-bottom{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+.row-bottom{display:flex;justify-content:flex-end;gap:16px}
 
 /* FIELD */
 .field{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}
@@ -179,8 +179,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .row-2col .field-grid-2{gap:3px 14px}
 .row-2col .credit-line{margin-top:5px;padding:4px 8px}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
-.row-bottom{font-size:12px;height:150px}
-.row-bottom .tabset,.row-bottom>.card{overflow:auto}
+.row-bottom{font-size:12px}
+.row-bottom>.card{width:440px;max-width:100%;overflow:auto}
 .row-bottom .tabset-pane{padding:10px;min-height:40px}
 .row-bottom .tabset-nav button{padding:6px 12px;font-size:11px}
 .row-bottom .summary-row{padding:2px 0;font-size:11px}
@@ -253,12 +253,12 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       </div>
     </div>
     <div class="saab-spacer"></div>
+    <div class="mkchk" style="display:flex;gap:14px;font-size:11px;color:#6B7280;align-items:center"><span>ผู้ขอ: <b style="color:#374151">สมศรี ✓</b></span><span>อนุมัติ: <b style="color:#374151">ผจก.จัดซื้อ (CF-2.6) ⏱</b></span></div>
   </div>
 
   <div class="content">
 
-    <!-- ④a SC-12 Status (pills + maker-checker · ไม่มี doc-chain) -->
-    <div id="po1Sc12" class="status-strip"></div>
+    <!-- ④a Gate (คง · non-dup) — pills/maker-checker ย้ายลง saab แล้ว -->
     <div id="po1Gate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL: PO-1.1 เจ้าหนี้ (SC-3) + PO-1.2 ข้อมูลใบขอสั่งซื้อ -->
@@ -306,7 +306,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     <!-- ④c PO-1.3 LINE ITEMS (SC-2 · MOS gating A5) -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">PO-1.3</span><span class="ico">📦</span>รายการสินค้า <span class="tpl-zone">SC-2 · MOS</span></div>
+        <div class="card-title"><span class="secno">PO-1.3</span><span class="ico">📦</span>รายการสินค้า <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="เงื่อนไข · กำหนดรับ · อ้างอิง · ประวัติ/อนุมัติ">i<span class="swt-tip-pop"><b>เงื่อนไข:</b> เครดิต 60 วัน หลัง Invoice · ข้อตกลง PO-2: AG-MOU-2601-001 (Rebate 3%) + AG-SI-2604-007 (Sell-in 2% บนบิล) → auto-apply · VAT 7% (Golden Rule: ส่วนลดก่อน VAT)<br><b>กำหนดรับ:</b> 30 มิ.ย. 26 · WH-01 คลังกลาง บางนา · ที่อยู่รับ (Vendor): โรงงาน Bang Bo ถ.บางนา-ตราด km 27<br><b>อ้างอิง (ต่ำกว่าขั้นต่ำ):</b> DAI-FTKM24 (45/60) · DAI-FTKM18 (60/70) — เลขอ้างอิงผู้ขากรอกเมื่อเปิด PO<br><b>ประวัติ/อนุมัติ:</b> สร้าง PR-2606-0019 06 มิ.ย. 09:18 สมศรี → หน.คลัง อนุมัติ (T1) 11:40 → ผจก.จัดซื้อ (T2) รอ · CF-2.6 Maker ≠ Checker → อนุมัติแล้ว เข้าคิวรอสั่งซื้อ (BC: Approved → Purchase Quote)</span></span> <span class="tpl-zone">SC-2 · MOS</span></div>
         <div class="card-spacer"></div>
         <div class="scan-box" title="ยิงบาร์โค้ดเพื่อเพิ่มสินค้าเข้ารายการขอซื้อ">
           <span>📷</span><input id="scanInput" placeholder="ยิงบาร์โค้ด / รหัสสินค้า…" onkeydown="tplScan(event)">
@@ -374,45 +374,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="add-row-bar" onclick="dfOpenProd()">🔍 + เพิ่มรายการ — เพิ่มจากสินค้าต่ำกว่าขั้นต่ำ หรือค้นหาเอง <span class="tpl-zone">MOS > 4 = warn ก่อน submit</span></div>
     </div>
 
-    <!-- ④d ROW-BOTTOM: PO-1.4 Tabs + PO-1.5 Summary -->
+    <!-- ④d ROW-BOTTOM: PO-1.5 Summary (สรุปเงิน — คงครบ 100%) · แท็บ note/ประวัติ → tip เกาะ items header -->
     <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <button class="on" onclick="swTab(event,'t-term')">เงื่อนไข</button>
-          <button onclick="swTab(event,'t-recv')">กำหนดรับ</button>
-          <button onclick="swTab(event,'t-ref')">อ้างอิง <span class="tpl-zone">SC-5</span></button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ/อนุมัติ <span class="tpl-zone">SC-7</span></button>
-        </div>
-        <div class="tabset-pane on" id="t-term">
-          <div class="tab-grid">
-            <span class="k">เงื่อนไขชำระ</span><span class="v">เครดิต 60 วัน · หลัง Invoice</span>
-            <span class="k">ข้อตกลงส่งเสริมการขาย (PO-2)</span><span class="v">AG-MOU-2601-001 (Rebate 3%) · AG-SI-2604-007 (Sell-in 2% บนบิล) → auto-apply</span>
-            <span class="k">VAT</span><span class="v">7% บนบิล (Golden Rule: ส่วนลดก่อน VAT)</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-recv">
-          <div class="tab-grid">
-            <span class="k">ต้องการรับภายใน</span><span class="v">30 มิ.ย. 26</span>
-            <span class="k">คลังปลายทาง</span><span class="v">WH-01 คลังกลาง บางนา</span>
-            <span class="k">ที่อยู่รับของ (Vendor)</span><span class="v">โรงงาน Bang Bo · ถ.บางนา-ตราด km 27</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-ref">
-          <div class="tab-grid">
-            <span class="k">อ้างอิง (ต่ำกว่าขั้นต่ำ)</span><span class="v">DAI-FTKM24 (45/60) · DAI-FTKM18 (60/70) — เลือกหลายรายการผ่าน 🔗</span>
-            <span class="k">เลขอ้างอิงผู้ขาย</span><span class="v ph">— (กรอกเมื่อเปิด PO)</span>
-            <span class="k">หมายเหตุ PSI</span><span class="v">PSI = แสดงเทียบ 3 ค่าเฉยๆ · ยังไม่มีในระบบ · ตัดสินใจจากขั้นต่ำ</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-hist">
-          <div class="tl">
-            <div class="tl-item"><span class="tl-dot"></span> สร้าง PR-2606-0019 · 06 มิ.ย. 26 09:18 · สมศรี (จัดซื้อ)</div>
-            <div class="tl-item"><span class="tl-dot"></span> หน.คลัง อนุมัติ (T1) · 06 มิ.ย. 26 11:40</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> ผจก.จัดซื้อ อนุมัติ (T2) · รอดำเนินการ <span style="color:#92400E">· CF-2.6 · Maker ≠ Checker</span></div>
-            <div class="tl-item"><span class="tl-dot pending"></span> อนุมัติแล้ว → เข้าคิวรอสั่งซื้อ (BC: Approved → Purchase Quote)</div>
-          </div>
-        </div>
-      </div>
       <div class="card">
         <div class="card-header"><div class="card-title"><span class="secno">PO-1.5</span><span class="ico">💰</span>สรุปยอด (Summary) <span class="tpl-zone">SC3</span></div></div>
         <div class="summary-row"><span class="lbl">รวมจำนวนเงิน</span><span class="val">2,260,000.00</span></div>

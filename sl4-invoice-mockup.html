@@ -229,7 +229,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
         <button type="button" class="btn btn-ghost btn-menu" style="color:#EF4444">❌ ยกเลิก</button>
       </div>
     </div>
-    <div class="saab-spacer"></div>
+    <div class="mkchk" style="margin-left:auto;display:flex;gap:14px;font-size:11px;color:#6B7280"><span>ผู้คีย์บิล (ขาย): <b style="color:#374151">สัญญาลักษณ์</b> ✓</span><span>Post (VAT+AR): <b style="color:#374151">รอ ⏱</b></span></div>
   </div>
 
   <!-- ⚡ HOTBAR — คีย์ลัดยิงเปิดบิลเร็ว -->
@@ -249,8 +249,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 
   <div class="content">
 
-    <!-- ④a SC-12 Status (pills + maker-checker · ไม่มี doc-chain) -->
-    <div id="sl4Sc12" class="status-strip"></div>
+    <!-- ④a Gate เท่านั้น — status-strip เดิมตัดออก (pills ซ้ำ party/gate/items 100% · maker-checker ย้ายขึ้น saab) -->
     <div id="sl4Gate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL -->
@@ -353,7 +352,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     <!-- ④c LINE ITEMS -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">SL-4.3</span><span class="ico">📦</span>รายการสินค้า <span class="tpl-zone">SC-2 · SC-8 · SC-9</span></div>
+        <div class="card-title"><span class="secno">SL-4.3</span><span class="ico">📦</span>รายการสินค้า <span class="tpl-zone">SC-2 · SC-8 · SC-9</span><span class="swt-tip info" onclick="swtTipToggle(this,event)" title="ชำระ · มัดจำ · จัดส่ง · ใบกำกับ · อ้างอิง · ประวัติ" style="margin-left:6px">i<span class="swt-tip-pop"><b>💳 ชำระเงิน:</b> เก็บปลายทาง ฿11,140.30 · รับชำระที่ <a href="fi1-ar-receive-mockup.html" style="color:#93C5FD;font-weight:700;text-decoration:none">FI-1 รับชำระลูกหนี้ ↗</a><br><b>💰 มัดจำ:</b> หักอัตโนมัติ -6,290.00 (จาก <a href="sl3-deposit-mockup.html" style="color:#93C5FD;text-decoration:none">DP 08DP-2606-0009 ↗</a>)<br><b>🚚 จัดส่ง/ติดตั้ง:</b> 86/1 ม.4 ต.นาแก อ.นาแก จ.นครพนม · 13 มิ.ย. 26 · 13:00–16:00 · ติดตั้ง → auto <a href="sv1-service-intake-mockup.html" style="color:#93C5FD;text-decoration:none">งานติดตั้ง SV-Intake ↗</a> หลัง Post<br><b>🧾 ใบกำกับภาษี:</b> คุณ อดิเทพ ไชยเศรษฐ์ · เลขผู้เสียภาษี 1234567891234 (สนง.ใหญ่) · ก่อน VAT 16,290.00 · VAT 7% 1,140.30 · รวม 17,430.30<br><b>🔗 อ้างอิง:</b> QT 0047 → SO 0021 → DP 0009 → INV 0221<br><b>🕓 ประวัติ:</b> สร้างจากใบจอง 13 มิ.ย. 26 (สัญญาลักษณ์) · หักมัดจำ 6,290 อัตโนมัติ · <i>รอ Post → ตัดสต็อก + VAT Output + AR</i></span></span></div>
         <div class="card-spacer"></div>
         <div class="scan-box" id="scanBox" title="ยิงได้ทั้ง Barcode และ S/N · กด F2 เพื่อกลับมาที่ช่องนี้"><span>📷</span><input id="scanInput" placeholder="ยิงบาร์โค้ด / S/N…" onkeydown="tplScan(event)"><span class="scan-hint">F2</span></div>
         <button class="card-btn primary" onclick="dfOpenProd()">🔍 เพิ่มสินค้า</button>
@@ -435,55 +434,9 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="add-row-bar" onclick="dfOpenProd()">🔍 + เพิ่มรายการ — สินค้า · ค่าแรง · บริการ</div>
     </div>
 
-    <!-- ④d ROW-BOTTOM -->
-    <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <span class="secno" style="align-self:center;padding:0 10px">SL-4.4</span>
-          <button class="on" onclick="swTab(event,'t-pay')">ชำระเงิน</button>
-          <button onclick="swTab(event,'t-dep')">มัดจำ</button>
-          <button onclick="swTab(event,'t-ship')">จัดส่ง/ติดตั้ง</button>
-          <button onclick="swTab(event,'t-tax')">ใบกำกับภาษี</button>
-          <button onclick="swTab(event,'t-ref')">อ้างอิง</button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ</button>
-        </div>
-        <div class="tabset-pane on" id="t-pay"><!-- SC-3P compact · wire จาก swt-sc-wire.js --></div>
-        <div class="tabset-pane" id="t-dep">
-          <div class="tab-grid">
-            <span class="k">มัดจำที่หักอัตโนมัติ (SC6)</span><span class="v" style="color:#EF4444">-6,290.00 (จาก DP-0009)</span>
-            <span class="k">อ้างอิงใบมัดจำ</span><span class="v"><a href="sl3-deposit-mockup.html" style="color:#2563EB;text-decoration:none">DP 08DP-2606-0009 ↗</a></span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-ship">
-          <div class="tab-grid">
-            <span class="k">ที่อยู่จัดส่ง</span><span class="v">86/1 ม.4 ต.นาแก อ.นาแก จ.นครพนม</span>
-            <span class="k">วัน-เวลาส่ง</span><span class="v">13 มิ.ย. 26 · 13:00–16:00</span>
-            <span class="k">ติดตั้ง</span><span class="v">→ Auto-create <a href="sv1-service-intake-mockup.html" style="color:#2563EB;text-decoration:none">งานติดตั้ง · SV-Intake ประเภท=ติดตั้ง ↗</a> หลัง Post</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-tax">
-          <div class="tax-preview">
-            <h4>🧾 ตัวอย่างใบกำกับภาษี</h4>
-            คุณ อดิเทพ ไชยเศรษฐ์ · เลขผู้เสียภาษี 1234567891234 (สนง.ใหญ่)<br>
-            มูลค่าก่อน VAT 16,290.00 · VAT 7% 1,140.30 · รวม 17,430.30<br>
-            <span class="ph">Post → ส่ง VAT Output เข้าฐานภาษีอัตโนมัติ · e-Tax XML (Phase 2)</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-ref">
-          <div class="tab-grid">
-            <span class="k">Doc Chain</span><span class="v">QT 0047 → SO 0021 → DP 0009 → INV 0221</span>
-            <span class="k">QR Track</span><span class="v ph">ลูกค้าดูสถานะจัดส่งผ่าน QR บนใบเสร็จ</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-hist">
-          <div class="tl">
-            <div class="tl-item"><span class="tl-dot"></span> สร้างจากใบจอง · 13 มิ.ย. 26 · สัญญาลักษณ์</div>
-            <div class="tl-item"><span class="tl-dot"></span> หักมัดจำ 6,290 อัตโนมัติ</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> Post → ตัดสต็อก + VAT Output + AR</div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
+    <!-- ④d ROW-BOTTOM — เหลือเฉพาะสรุปเงิน (หัวใจบิล · คงครบทุกบรรทัด) · แท็บ ชำระ/มัดจำ/จัดส่ง/ใบกำกับ/อ้างอิง/ประวัติ ยุบเป็น tip ที่หัวตารางสินค้า -->
+    <div class="row-bottom" style="display:flex;justify-content:flex-end">
+      <div class="card" style="width:440px;max-width:100%">
         <div class="card-header"><div class="card-title"><span class="secno">SL-4.5</span><span class="ico">💰</span>สรุปยอด (Summary) <span class="tpl-zone">SC-11</span></div></div>
         <div id="sl4Sc11"></div>
         <div class="baht-text">( หนึ่งหมื่นหนึ่งพันหนึ่งร้อยสี่สิบบาทสามสิบสตางค์ )</div>
@@ -683,18 +636,7 @@ function sl4InitPatterns(){
     {label:'INV 0221',state:'current'},
     {label:'FI-1 รับชำระลูกหนี้',href:'fi1-ar-receive-mockup.html'}
   ];
-  swtRenderStatusStrip('#sl4Sc12',{
-    pills:[
-      {text:'฿ VAT 7%',type:'info'},
-      {text:'🔧 จัดส่ง+ติดตั้ง → เบิก + งานติดตั้ง (SV-Intake ประเภท=ติดตั้ง)',type:'route',id:'recvPill'},
-      {text:'🏷️ โปร ลด 10%',type:'promo'},
-      {text:'💰 หักมัดจำ 6,290',type:'warning'}
-    ],
-    makerChecker:{nodes:[
-      {role:'ขาย ✓',step:'คีย์บิล',state:'ok'},
-      {role:'Post ⏱',step:'VAT+AR',state:'wait'}
-    ]}
-  });
+  /* status-strip ตัดออก — pills ซ้ำ party/gate/items · maker-checker ย้ายขึ้น saab (static) */
   swtRenderDocChain('#sl4DcStrip',{label:'Doc Chain',nodes:chain});
   swtRenderGateAlert('#sl4Gate',{
     type:'ok',
