@@ -106,6 +106,14 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
 .resv-exp .t b{color:#111827}
 .resv-exp .num{width:46px;padding:2px 5px;border:1px solid #FDE68A;border-radius:4px;font-size:11.5px;text-align:center;font-family:inherit;font-weight:700;background:#fff;color:#92400E}
 .resv-exp .hint{flex-basis:100%;font-size:9.5px;color:#92400E;opacity:.9;line-height:1.5}
+/* .swt-tip (copy จาก swt-patterns.css — wh2r ยังไม่โหลด shared · TODO migrate) */
+.swt-tip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-size:10.5px;font-weight:700;line-height:1;cursor:pointer;vertical-align:middle;user-select:none;font-style:normal;background:#EFF6FF;color:#2563EB;border:1px solid #BFDBFE}
+.swt-tip:hover{background:#DBEAFE}
+.swt-tip.warn{background:#FFFBEB;color:#B45309;border-color:#FDE68A}
+.swt-tip.danger{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+.swt-tip .swt-tip-pop{position:fixed;z-index:70;width:max-content;max-width:320px;padding:9px 12px;border-radius:8px;background:#1E293B;color:#E2E8F0;font-size:11.5px;font-weight:400;line-height:1.6;text-align:left;box-shadow:0 8px 24px rgba(0,0,0,.22);white-space:normal;cursor:default;opacity:0;visibility:hidden;transition:opacity .15s}
+.swt-tip:hover .swt-tip-pop,.swt-tip.open .swt-tip-pop{opacity:1;visibility:visible}
+.swt-tip .swt-tip-pop b,.swt-tip .swt-tip-pop strong{color:#fff;font-weight:700}
 .aging{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:10.5px;padding:2px 8px;border-radius:10px}
 .aging.ag-g{color:#047857;background:#ECFDF5}
 .aging.ag-a{color:#B45309;background:#FEF3C7}
@@ -197,8 +205,7 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
           <span class="l">⏳ ยอดกันสต็อกหมดอายุ</span>
           <span class="t">นับจากวันนัดรับ <b>06 ก.ค. 26</b> อีก <input class="num" id="resvHoldDays" value="7" onchange="resvExpCalc()"> วัน</span>
           <span class="t">→ หมดอายุ <b id="resvExpDate">13 ก.ค. 26</b></span>
-          <span class="aging ag-g" id="resvAging2">⏱️ เหลือ 10 วัน</span>
-          <span class="hint">จำนวนวันตั้งต้นมาจากการตั้งค่าระบบ · แก้ได้รายใบ (ลูกค้ารายใหญ่ขอนานกว่าปกติได้) · ครบกำหนดแล้วระบบ<b>ปลดของคืนสต็อกอัตโนมัติ + แจ้งพนักงานขายเจ้าของใบ</b> · ปุ่ม 🔓 ปลดของที่กันไว้ ก่อนกำหนด ต้องมีสิทธิ์ปลดยอดกันสต็อก กำหนดที่กลุ่มสิทธิ์/ตำแหน่ง — ⏸️ รอกำหนดผู้มีสิทธิ์ · ปลดแล้วบันทึกผู้ปลด · วันเวลา · เหตุผล</span>
+          <span class="aging ag-g" id="resvAging2">⏱️ เหลือ 10 วัน <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">จำนวนวันตั้งต้นมาจากการตั้งค่าระบบ · แก้ได้รายใบ (ลูกค้ารายใหญ่ขอนานกว่าปกติได้) · ครบกำหนดแล้วระบบ<b>ปลดของคืนสต็อกอัตโนมัติ + แจ้งพนักงานขายเจ้าของใบ</b> · ปุ่ม 🔓 ปลดของที่กันไว้ ก่อนกำหนด ต้องมีสิทธิ์ปลดยอดกันสต็อก กำหนดที่กลุ่มสิทธิ์/ตำแหน่ง — ⏸️ รอกำหนดผู้มีสิทธิ์ · ปลดแล้วบันทึกผู้ปลด · วันเวลา · เหตุผล</span></span></span>
         </div>
       </div>
     </div>
@@ -325,5 +332,6 @@ function resvRelease(){
 }
 </script>
 <script src="swt-link.js" defer></script>
+<script src="swt-patterns.js"></script>
 <script src="swt-sidebar.js"></script>
 <div style="position:fixed;bottom:12px;right:12px;z-index:9999;background:#1E3A5F;color:#fff;font:600 11px Inter,sans-serif;padding:7px 12px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.25);max-width:360px;line-height:1.5">🔧 DEV: build เป็นโหมด «ใบขอ» ของฟอร์ม WH-2 — ฟอร์มเดียว 2 โหมด · เมนู/เลขเอกสารแยกเดิม · role เซลล์ไม่เห็นปุ่ม Post (Q1ก)</div></body></html>
