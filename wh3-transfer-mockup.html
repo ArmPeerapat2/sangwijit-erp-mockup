@@ -100,6 +100,14 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
 .sum-total{display:flex;justify-content:space-between;padding:10px 0 2px;font-size:15px;font-weight:700;color:#1E3A5F}
 .notes-bar{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px}
 .notes-bar input{flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit}
+/* .swt-tip (copy จาก swt-patterns.css — wh3 ยังไม่โหลด shared css · TODO migrate) */
+.swt-tip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-size:10.5px;font-weight:700;line-height:1;cursor:pointer;vertical-align:middle;user-select:none;font-style:normal;background:#EFF6FF;color:#2563EB;border:1px solid #BFDBFE}
+.swt-tip:hover{background:#DBEAFE}
+.swt-tip.warn{background:#FFFBEB;color:#B45309;border-color:#FDE68A}
+.swt-tip.danger{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+.swt-tip .swt-tip-pop{position:fixed;z-index:70;width:max-content;max-width:320px;padding:9px 12px;border-radius:8px;background:#1E293B;color:#E2E8F0;font-size:11.5px;font-weight:400;line-height:1.6;text-align:left;box-shadow:0 8px 24px rgba(0,0,0,.22);white-space:normal;cursor:default;opacity:0;visibility:hidden;transition:opacity .15s}
+.swt-tip:hover .swt-tip-pop,.swt-tip.open .swt-tip-pop{opacity:1;visibility:visible}
+.swt-tip .swt-tip-pop b,.swt-tip .swt-tip-pop strong{color:#fff;font-weight:700}
 /* 4. DOC-CHAIN */
 .dc-strip{flex:none;display:flex;align-items:center;gap:6px;background:#fff;border-top:1px solid #E5E7EB;padding:8px 24px;font-size:11px}
 .dc-lbl{font-weight:700;color:#7C3AED;text-transform:uppercase;font-size:9px;letter-spacing:.06em;margin-right:6px}
@@ -154,16 +162,14 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
     <button class="btn btn-outline" onclick="alert('พิมพ์ใบโอน (Print Transfer Order)')">🖨️ พิมพ์ใบโอน</button>
     <button class="btn btn-outline">⋯ เพิ่มเติม</button>
     <div class="btn-spacer"></div>
+    <div class="mkchk" style="display:flex;gap:14px;font-size:11px;color:#6B7280"><span>Maker: <b style="color:#374151">คุณจิรา (คลัง HQ)</b> ✓</span><span>Checker: <b style="color:#374151">ผจก.คลัง ⏱</b></span></div>
   </div>
 
   <div class="content">
 
-    <!-- 3a. STATUS -->
+    <!-- 3a. STATUS — เหลือเฉพาะ gate ที่ไม่ซ้ำ mh-badge/party (In-Transit อธิบายสถานะ) -->
     <div class="status-strip">
-      <span class="pill pill-info">🔄 ประเภท: โอนระหว่างสาขา</span>
-      <span class="pill pill-warn">🚚 In-Transit — ตัดต้นทางแล้ว รอรับปลายทาง</span>
-      <span class="pill pill-info">อ้างอิงใบขอโอน WH-3R</span>
-      <div class="mkchk"><span>Maker: <b>คุณจิรา (คลัง HQ)</b> ✓</span><span>Checker: <b>ผจก.คลัง ⏱</b></span></div>
+      <span class="pill pill-warn">🚚 In-Transit — ตัดสต๊อกคลังต้นทางแล้ว รอ Post รับปลายทาง</span>
     </div>
 
     <!-- 3b. ROW-2COL: ต้นทาง→ปลายทาง (WH-3.1) + ข้อมูลเอกสาร (WH-3.2) -->
@@ -191,7 +197,8 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
 
     <!-- 3c. LINE ITEMS (WH-3.3) — จำนวนขอ + จำนวนที่ได้จริง (ต่างจากใบขอโอน WH-3R) -->
     <div class="card items-card">
-      <div class="card-header"><span class="secno">WH-3.3</span><div class="card-title"><span class="ico">📦</span>รายการสินค้าที่โอน</div>
+      <div class="card-header"><span class="secno">WH-3.3</span><div class="card-title"><span class="ico">📦</span>รายการสินค้าที่โอน <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="หมายเหตุ / อ้างอิง / ประวัติ">i<span class="swt-tip-pop"><b>💡 In-Transit:</b> ไม่นับสต๊อกทั้ง 2 คลัง จนกว่าจะ Post รับปลายทาง<br><b>หมายเหตุโอน:</b> เติมสต๊อกสาขา 08 ตามใบขอโอน TRR-0031 (สาขาแจ้งของขาด) · พาหนะ รถบริษัท 8ก-1234 · คุณสมชาย (คนขับ)<br><b>เอกสารอ้างอิง:</b> ต้นทาง WH-3R ใบขอโอน TRR-2607-0031 · ปลายทาง WH-1 รับปลายทาง (สาขา 08) — รอ Post Receive<br><b>ประวัติ:</b> 03 ก.ค. 09:15 สร้างใบโอนจากใบขอโอน TRR-0031 · 03 ก.ค. 14:20 Post โอนออก (Ship) ตัดสต๊อก HQ เข้า In-Transit · รอ Post รับปลายทาง (สาขา 08)</span></span></div>
+        <span style="margin-left:14px;font-size:11.5px;color:#6B7280;white-space:nowrap">SKU <b style="color:#111827">2</b> · ขอโอน <b style="color:#111827">38</b> · ได้จริง <b style="color:#D97706">37</b> · ส่วนต่าง <b style="color:#EF4444">-1</b> (ชำรุด) · 🚚 In-Transit <b style="color:#111827">37 ชิ้น</b></span>
         <div class="card-spacer"></div>
         <div class="scan-box"><span>📷</span><input placeholder="ยิงบาร์โค้ด / S/N…"></div>
         <button class="card-btn primary">🔍 เพิ่มสินค้า</button>
@@ -239,30 +246,7 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
       <div class="add-row-bar">🔍 + เพิ่มรายการสินค้า</div>
     </div>
 
-    <!-- 3d. ROW-BOTTOM: Tabs + สรุปจำนวน -->
-    <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <button class="on" onclick="swTab(event,'t-note')">หมายเหตุโอน</button>
-          <button onclick="swTab(event,'t-ref')">เอกสารอ้างอิง</button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ</button>
-        </div>
-        <div class="tabset-pane on" id="t-note"><div class="tab-grid"><span class="k">เหตุผลโอน</span><span>เติมสต๊อกสาขา 08 · ตามใบขอโอน TRR-0031 (สาขาแจ้งของขาด)</span><span class="k">พาหนะ</span><span>รถบริษัท 8ก-1234 · คุณสมชาย (คนขับ)</span></div></div>
-        <div class="tabset-pane" id="t-ref"><div class="tab-grid"><span class="k">ต้นทาง</span><span><a href="wh3r-transfer-request-mockup.html" style="color:#2563EB;text-decoration:none">WH-3R ใบขอโอน TRR-2607-0031 ↗</a></span><span class="k">ปลายทาง</span><span>WH-1 รับปลายทาง (สาขา 08) — รอ Post Receive</span></div></div>
-        <div class="tabset-pane" id="t-hist"><div class="tab-grid"><span class="k">03 ก.ค. 09:15</span><span>สร้างใบโอนจากใบขอโอน TRR-0031</span><span class="k">03 ก.ค. 14:20</span><span>Post โอนออก (Ship) — ตัดสต๊อก HQ · เข้า In-Transit</span><span class="k">รอ</span><span>Post รับปลายทาง (สาขา 08)</span></div></div>
-      </div>
-      <div class="card sum-card">
-        <div class="card-header"><span class="secno">WH-3.4</span><div class="card-title"><span class="ico">📊</span>สรุปจำนวน</div></div>
-        <div class="sum-row"><span class="lbl">SKU ทั้งหมด</span><span class="val">2 รายการ</span></div>
-        <div class="sum-row"><span class="lbl">จำนวนขอโอนรวม</span><span class="val">38 ชิ้น</span></div>
-        <div class="sum-row"><span class="lbl">ได้จริงรวม</span><span class="val" style="color:#D97706">37 ชิ้น</span></div>
-        <div class="sum-row"><span class="lbl">ส่วนต่าง (ชำรุด/ขาด)</span><span class="val" style="color:#EF4444">-1 ชิ้น</span></div>
-        <div class="sum-total"><span>In-Transit</span><span>37 ชิ้น</span></div>
-        <div style="font-size:10.5px;color:#6B7280;margin-top:6px">💡 In-Transit ไม่นับสต๊อกทั้ง 2 คลัง จนกว่า Post รับปลายทาง</div>
-      </div>
-    </div>
-
-    <!-- 3e. NOTES -->
+    <!-- 3d. NOTES -->
     <div class="notes-bar"><span style="font-size:12px;font-weight:600;color:#374151">🗒️ หมายเหตุ</span>
       <input placeholder="หมายเหตุท้ายใบโอน"></div>
 
@@ -281,16 +265,7 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
 </div><!-- /main -->
 </div><!-- /layout -->
 
-<script>
-function swTab(e,id){
-  var nav=e.currentTarget.parentElement;
-  nav.querySelectorAll('button').forEach(function(b){b.classList.remove('on')});
-  e.currentTarget.classList.add('on');
-  var set=nav.parentElement;
-  set.querySelectorAll('.tabset-pane').forEach(function(p){p.classList.remove('on')});
-  set.querySelector('#'+id).classList.add('on');
-}
-</script>
 <script src="swt-link.js" defer></script>
+<script src="swt-patterns.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>

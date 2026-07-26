@@ -100,6 +100,15 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
 .dc-node.done{background:#DCFCE7;color:#166534}
 .dc-arrow{color:#D1D5DB}
 .doc-note{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:6px 12px;font-size:11.5px;color:#1E40AF}
+.items-count{margin-left:14px;font-size:11.5px;color:#6B7280;white-space:nowrap}.items-count b{color:#111827}
+/* .swt-tip (copy จาก swt-patterns.css '/* ═══ TIP' — wh2 legacy ยังไม่โหลด shared) */
+.swt-tip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-size:10.5px;font-weight:700;line-height:1;cursor:pointer;vertical-align:middle;user-select:none;font-style:normal;background:#EFF6FF;color:#2563EB;border:1px solid #BFDBFE}
+.swt-tip:hover{background:#DBEAFE}
+.swt-tip.warn{background:#FFFBEB;color:#B45309;border-color:#FDE68A}
+.swt-tip.danger{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+.swt-tip .swt-tip-pop{position:fixed;z-index:70;width:max-content;max-width:320px;padding:9px 12px;border-radius:8px;background:#1E293B;color:#E2E8F0;font-size:11.5px;font-weight:400;line-height:1.6;text-align:left;box-shadow:0 8px 24px rgba(0,0,0,.22);white-space:normal;cursor:default;opacity:0;visibility:hidden;transition:opacity .15s}
+.swt-tip:hover .swt-tip-pop,.swt-tip.open .swt-tip-pop{opacity:1;visibility:visible}
+.swt-tip .swt-tip-pop b,.swt-tip .swt-tip-pop strong{color:#fff;font-weight:700}
 </style>
 </head>
 <body>
@@ -147,15 +156,14 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
     <button class="btn btn-outline">🖨️ พิมพ์ Delivery Note</button>
     <button class="btn btn-outline">⋯ เพิ่มเติม</button>
     <div class="btn-spacer"></div>
+    <div class="mkchk" style="display:flex;gap:14px;font-size:11px;color:#6B7280"><span>ผู้ขอ (ฝ่ายขาย): <b style="color:#374151">คุณสมหญิง</b> ✓</span><span>ผู้เบิก (คลัง): <b style="color:#374151">คุณสมชาย</b></span></div>
   </div>
 
   <div class="content">
 
-    <!-- 3a. STATUS -->
+    <!-- 3a. STATUS — เหลือเฉพาะ gate (ไม่ซ้ำ mh-badge/party) · pill-do + mkchk ตัด/ย้าย saab แล้ว -->
     <div class="status-strip">
-      <span class="pill pill-do">🔵 กำลังเบิก (หยิบ + กรอก Serial)</span>
-      <span class="pill pill-warn">รอ Post Shipment → ตัดสต๊อก</span>
-      <div class="mkchk"><span>ผู้ขอ: <b>คุณสมหญิง (ฝ่ายขาย)</b> ✓</span><span>ผู้เบิก: <b>คุณสมชาย (คลัง 08)</b></span></div>
+      <span class="pill pill-warn">⏭️ ขั้นถัดไป: กรอก Serial ครบ → กด Post Shipment (ตัดสต๊อกจริง)</span>
     </div>
 
     <!-- 3b. ROW-2COL: เบิกจากคลัง + ลูกค้า (WH-2.1) + ข้อมูลใบเบิก (WH-2.2) -->
@@ -183,7 +191,8 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
 
     <!-- 3c. LINE ITEMS (WH-2.3) — จำนวนที่ขอเบิก + จำนวนที่เบิกจริง + Serial -->
     <div class="card items-card">
-      <div class="card-header"><span class="secno">WH-2.3</span><div class="card-title"><span class="ico">📦</span>รายการสินค้าที่เบิก</div>
+      <div class="card-header"><span class="secno">WH-2.3</span><div class="card-title"><span class="ico">📦</span>รายการสินค้าที่เบิก <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="เกี่ยวกับ / ประวัติ">i<span class="swt-tip-pop"><b>เกี่ยวกับ:</b> ใบเบิกจริง — หยิบของออกจากคลังจ่าย · กรอก <b>จำนวนเบิกจริง + Serial</b> ต่อบรรทัด · กด Post Shipment ตัดสต๊อกจริง (ก่อนหน้าแค่กันไว้) · อ้างอิงคำขอเบิก WH-2R + ใบขายต้นทาง<br><b>Serial Rule:</b> สินค้าที่ต้องระบุ Serial (แอร์) — ห้าม Post จนกว่าจะกรอก Serial ครบทุกชิ้น (BC บังคับตอน post)<br><b>เบิกไม่ครบ:</b> ถ้าเบิกจริง &lt; ขอเบิก → ส่วนที่เหลือค้างคำขอ WH-2R (backorder)<br><b>Post:</b> กด Post Shipment เพื่อตัดสต๊อกจริง — BC เป็นเจ้าของ posting/numbering<br><b>ประวัติ:</b> 03 ก.ค. 09:15 ระบบสร้างคำขอเบิก WH-2R + กันสต๊อก · 05 ก.ค. 08:40 ขึ้นคิวเบิก → คลังเปิดใบเบิก · กำลังหยิบ</span></span></div>
+        <span class="items-count">SKU <b>2</b> · ขอเบิก <b>2</b> · เบิกจริง <b style="color:#EA580C">2 ชิ้น</b></span>
         <div class="card-spacer"></div>
         <div class="scan-box"><span>📷</span><input placeholder="ยิงบาร์โค้ด / S/N…"></div>
         <button class="card-btn primary">🔍 เพิ่มสินค้า</button>
@@ -232,25 +241,7 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
       <div class="add-row-bar">🔍 + เพิ่มรายการสินค้า</div>
     </div>
 
-    <!-- 3d. ROW-BOTTOM -->
-    <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <button class="on" onclick="swTab(event,'t-note')">รายละเอียดการเบิก</button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ</button>
-        </div>
-        <div class="tabset-pane on" id="t-note"><div class="tab-grid"><span class="k">เกี่ยวกับหน้านี้</span><span>📦 ใบเบิกจริง — หยิบของออกจากคลังจ่าย · กรอก <b>จำนวนเบิกจริง + Serial</b> ต่อบรรทัด · กด Post Shipment ตัดสต๊อกจริง (ก่อนหน้าแค่กันไว้) · อ้างอิงคำขอเบิก WH-2R + ใบขายต้นทาง</span><span class="k">Serial Rule</span><span>สินค้าที่ต้องระบุ Serial (แอร์) — ห้าม Post จนกว่าจะกรอก Serial ครบทุกชิ้น (BC บังคับตอน post)</span><span class="k">เบิกไม่ครบ</span><span>ถ้าเบิกจริง &lt; ขอเบิก → ส่วนที่เหลือค้างคำขอ WH-2R (backorder)</span></div></div>
-        <div class="tabset-pane" id="t-hist"><div class="tab-grid"><span class="k">03 ก.ค. 09:15</span><span>ระบบสร้างคำขอเบิก WH-2R + กันสต๊อก</span><span class="k">05 ก.ค. 08:40</span><span>ขึ้นคิวเบิก → คลังเปิดใบเบิก · กำลังหยิบ</span></div></div>
-      </div>
-      <div class="card sum-card">
-        <div class="card-header"><span class="secno">WH-2.4</span><div class="card-title"><span class="ico">📊</span>สรุปการเบิก</div></div>
-        <div class="sum-row"><span class="lbl">SKU ทั้งหมด</span><span class="val">2 รายการ</span></div>
-        <div class="sum-row"><span class="lbl">ขอเบิกรวม</span><span class="val">2 ชิ้น</span></div>
-        <div class="sum-row"><span class="lbl">เบิกจริงรวม</span><span class="val" style="color:#EA580C">2 ชิ้น</span></div>
-        <div class="sum-total"><span>เบิกจริง</span><span style="color:#EA580C">2 ชิ้น</span></div>
-        <div style="font-size:10.5px;color:#6B7280;margin-top:6px">✅ กด Post Shipment เพื่อตัดสต๊อกจริง — BC เป็นเจ้าของ posting/numbering</div>
-      </div>
-    </div>
+    <!-- 3d. ROW-BOTTOM ยุบแล้ว — สรุปไม่มีเงิน (แค่ SKU/จำนวน) → ยุบเป็น chip ที่หัว items · note/ประวัติ → tip icon -->
 
     <!-- 3e. NOTES -->
     <div class="notes-bar"><span style="font-size:12px;font-weight:600;color:#374151">🗒️ หมายเหตุ</span>
@@ -273,16 +264,7 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
 </div><!-- /main -->
 </div><!-- /layout -->
 
-<script>
-function swTab(e,id){
-  var nav=e.currentTarget.parentElement;
-  nav.querySelectorAll('button').forEach(function(b){b.classList.remove('on')});
-  e.currentTarget.classList.add('on');
-  var set=nav.parentElement;
-  set.querySelectorAll('.tabset-pane').forEach(function(p){p.classList.remove('on')});
-  set.querySelector('#'+id).classList.add('on');
-}
-</script>
 <script src="swt-link.js" defer></script>
+<script src="swt-patterns.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>

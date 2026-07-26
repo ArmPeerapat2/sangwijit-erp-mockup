@@ -96,6 +96,14 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
 .dc-node.current{background:#2563EB;color:#fff}.dc-node.pending{background:#F9FAFB;color:#9CA3AF;border:1px dashed #E5E7EB}
 .dc-arrow{color:#D1D5DB}
 .twin-note{background:#F5F3FF;border:1px solid #DDD6FE;border-radius:6px;padding:6px 12px;font-size:11.5px;color:#5B21B6}
+/* .swt-tip (copy จาก swt-patterns.css — หน้านี้ยังไม่โหลด shared css · ใช้ swtTipToggle จาก swt-patterns.js) */
+.swt-tip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-size:10.5px;font-weight:700;line-height:1;cursor:pointer;vertical-align:middle;user-select:none;font-style:normal;background:#EFF6FF;color:#2563EB;border:1px solid #BFDBFE}
+.swt-tip:hover{background:#DBEAFE}
+.swt-tip.warn{background:#FFFBEB;color:#B45309;border-color:#FDE68A}
+.swt-tip.danger{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+.swt-tip .swt-tip-pop{position:fixed;z-index:70;width:max-content;max-width:340px;padding:9px 12px;border-radius:8px;background:#1E293B;color:#E2E8F0;font-size:11.5px;font-weight:400;line-height:1.6;text-align:left;box-shadow:0 8px 24px rgba(0,0,0,.22);white-space:normal;cursor:default;opacity:0;visibility:hidden;transition:opacity .15s}
+.swt-tip:hover .swt-tip-pop,.swt-tip.open .swt-tip-pop{opacity:1;visibility:visible}
+.swt-tip .swt-tip-pop b,.swt-tip .swt-tip-pop strong{color:#fff;font-weight:700}
 </style>
 </head>
 <body>
@@ -143,15 +151,14 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
     <button class="btn btn-outline">🖨️ พิมพ์ใบเตรียมนับ</button>
     <button class="btn btn-outline">⋯ เพิ่มเติม</button>
     <div class="btn-spacer"></div>
+    <div class="mkchk" style="display:flex;gap:14px;font-size:11px;color:#6B7280"><span>ผู้วางแผน: <b style="color:#374151">คุณสมหญิง (คลัง 08)</b> ✓</span><span>ผู้นับ: <b style="color:#374151">รอมอบหมาย ⏱</b></span></div>
   </div>
 
   <div class="content">
 
-    <!-- 3a. STATUS -->
+    <!-- 3a. STATUS — freeze snapshot (gate ไม่ซ้ำ mh-badge) · pill-info ซ้ำ mh-badge → ตัด · mkchk → saab -->
     <div class="status-strip">
-      <span class="pill pill-info">📋 เตรียมนับ (วางแผน · ยังไม่เริ่มนับ)</span>
       <span class="pill pill-resv">🔒 ยอดตั้งต้นที่แช่ไว้: ณ 03 ก.ค. 08:00</span>
-      <div class="mkchk"><span>ผู้วางแผน: <b>คุณสมหญิง (คลัง 08)</b> ✓</span><span>ผู้นับ: <b>รอมอบหมาย ⏱</b></span></div>
     </div>
 
     <!-- 3b. ROW-2COL: ขอบเขตการนับ (WH-4R.1) + ข้อมูลการวางแผน (WH-4R.2) -->
@@ -182,7 +189,8 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
 
     <!-- 3c. LINE ITEMS (WH-4R.3) — Stock ระบบ (snapshot) · ไม่มี "นับจริง/Variance" -->
     <div class="card items-card">
-      <div class="card-header"><span class="secno">WH-4R.3</span><div class="card-title"><span class="ico">📦</span>รายการสินค้าที่จะนับ (snapshot)</div>
+      <div class="card-header"><span class="secno">WH-4R.3</span><div class="card-title"><span class="ico">📦</span>รายการสินค้าที่จะนับ (snapshot) <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="เกี่ยวกับ / ประวัติ">i<span class="swt-tip-pop"><b>เกี่ยวกับ:</b> ใบเตรียมนับ = วางแผนรอบนับ + freeze snapshot · เมนู/ฟิลด์เหมือนใบนับ WH-4 · <b>ต่างที่ยังไม่มีช่อง "นับจริง/Variance"</b> (กรอกตอนนับจริง) · freeze แล้ว Stock ระบบล็อกไว้เทียบ Variance<br><b>ประเภทนับ:</b> Cycle Count W27 — นับหมุนเวียนตามรอบ (Bin A + C ของสาขา 08)<br><b>Freeze:</b> ล็อก Stock ระบบ ณ ตอนสร้างใบเตรียม → ตอนนับจริงเทียบ Variance กับ snapshot นี้ (กันของขยับระหว่างวัน)<br><b>ประวัติ:</b> 03 ก.ค. 08:00 สร้างใบเตรียมนับ + freeze snapshot 18 SKU · รอถึงวันนับ 06 ก.ค. → ออกใบนับ WH-4 → นับจริง + Variance</span></span></div>
+        <span style="margin-left:14px;font-size:11.5px;color:#6B7280;white-space:nowrap">SKU <b style="color:#111827">18</b> · 2 Bin (A,C) · รวม <b style="color:#111827">312 ชิ้น</b> <span style="color:#B45309">🔒 snapshot</span></span>
         <div class="card-spacer"></div>
         <div class="scan-box"><span>📷</span><input placeholder="ยิงบาร์โค้ด / S/N…"></div>
         <button class="card-btn primary">🔍 เพิ่มสินค้า</button>
@@ -234,24 +242,7 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
       <div class="add-row-bar">🔍 + เพิ่มรายการสินค้า</div>
     </div>
 
-    <!-- 3d. ROW-BOTTOM -->
-    <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <button class="on" onclick="swTab(event,'t-note')">รายละเอียดแผนนับ</button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ</button>
-        </div>
-        <div class="tabset-pane on" id="t-note"><div class="tab-grid"><span class="k">เกี่ยวกับหน้านี้</span><span>💡 ใบเตรียมนับ = วางแผนรอบนับ + freeze snapshot · เมนู/ฟิลด์เหมือนใบนับ WH-4 · <b>ต่างที่ยังไม่มีช่อง "นับจริง/Variance"</b> (กรอกตอนนับจริง) · freeze แล้ว Stock ระบบล็อกไว้เทียบ Variance</span><span class="k">ประเภทนับ</span><span>Cycle Count W27 — นับหมุนเวียนตามรอบ (Bin A + C ของสาขา 08)</span><span class="k">Freeze</span><span>ล็อก Stock ระบบ ณ ตอนสร้างใบเตรียม → ตอนนับจริงเทียบ Variance กับ snapshot นี้ (กันของขยับระหว่างวัน)</span></div></div>
-        <div class="tabset-pane" id="t-hist"><div class="tab-grid"><span class="k">03 ก.ค. 08:00</span><span>สร้างใบเตรียมนับ + freeze snapshot 18 SKU</span><span class="k">รอ</span><span>ถึงวันนับ 06 ก.ค. → ออกใบนับ WH-4 → นับจริง + Variance</span></div></div>
-      </div>
-      <div class="card sum-card">
-        <div class="card-header"><span class="secno">WH-4R.4</span><div class="card-title"><span class="ico">📊</span>สรุปแผนนับ</div></div>
-        <div class="sum-row"><span class="lbl">Bin ที่นับ</span><span class="val">2 Bin (A, C)</span></div>
-        <div class="sum-row"><span class="lbl">SKU ที่นับ</span><span class="val">18 รายการ</span></div>
-        <div class="sum-total"><span>ชิ้นรวม (snapshot)</span><span>312 ชิ้น</span></div>
-        <div style="font-size:10.5px;color:#6B7280;margin-top:6px">🔒 แช่ยอดแล้วออกใบนับสินค้า — กรอกนับจริง → ส่วนต่าง = นับจริง − (ยอดตั้งต้น + เคลื่อนไหวระหว่างนับ)</div>
-      </div>
-    </div>
+    <!-- 3d. ROW-BOTTOM ยุบแล้ว — สรุปแผนนับ (SKU/Bin/จำนวน ไม่มีมูลค่า) → chip บนหัวตาราง · note/ประวัติ → tip icon เกาะ header -->
 
     <!-- 3e. NOTES -->
     <div class="notes-bar"><span style="font-size:12px;font-weight:600;color:#374151">🗒️ หมายเหตุ</span>
@@ -273,14 +264,7 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
 </div><!-- /layout -->
 
 <script>
-function swTab(e,id){
-  var nav=e.currentTarget.parentElement;
-  nav.querySelectorAll('button').forEach(function(b){b.classList.remove('on')});
-  e.currentTarget.classList.add('on');
-  var set=nav.parentElement;
-  set.querySelectorAll('.tabset-pane').forEach(function(p){p.classList.remove('on')});
-  set.querySelector('#'+id).classList.add('on');
-}
+/* ปุ่มประเภทนับ (ctype) — toggle เดี่ยว · tabset ยุบแล้ว (note ย้ายไป swt-tip) */
 document.querySelectorAll('.ctype').forEach(function(c){
   c.addEventListener('click',function(){
     document.querySelectorAll('.ctype').forEach(function(x){x.classList.remove('on')});
@@ -289,5 +273,6 @@ document.querySelectorAll('.ctype').forEach(function(c){
 });
 </script>
 <script src="swt-link.js" defer></script>
+<script src="swt-patterns.js"></script>
 <script src="swt-sidebar.js"></script>
 <div style="position:fixed;bottom:12px;right:12px;z-index:9999;background:#1E3A5F;color:#fff;font:600 11px Inter,sans-serif;padding:7px 12px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.25);max-width:360px;line-height:1.5">🔧 DEV: build เป็นแท็บ «สร้างรอบนับ» ใน WH-4 (C3)</div></body></html>

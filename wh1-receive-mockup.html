@@ -235,10 +235,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
     <!-- ④a STATUS + DOC-CHAIN -->
     <div class="status-strip">
       <div class="sc11-pills">
-        <span class="pill pill-neutral" title="BC Purchase Receipt: รอ Post">📦 รอรับ</span>
-        <span class="pill pill-info">📥 ประเภท: จาก Vendor</span>
-        <span class="pill pill-violet" id="modePill">🟣 โหมด: ทยอยรับ</span>
-        <span class="pill pill-warning">⏳ ค้างรับ 90 เครื่อง (ยังไม่ครบ → ยังไม่ตั้งหนี้)</span>
+        <span class="pill pill-warning">⏳ ค้างรับ 90 เครื่อง (ยังไม่ครบ → ยังไม่ตั้งหนี้) <span class="swt-tip warn" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>🔒 คลังปิดรายการค้างเองไม่ได้</b> — ถ้าผู้ขายส่งไม่ครบสักที ให้ใช้ปุ่ม <b>📨 แจ้งจัดซื้อให้ปิดรายการค้าง</b> (แถบเครื่องมือด้านบน) · ฝ่ายจัดซื้อจะกดปิดที่ใบสั่งซื้อ PO-2606-0042 พร้อมระบุเหตุผล · ของค้างจะถูกยกเลิก ไม่ยกไปรอบหน้า</span></span></span>
       </div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
         <span style="font-weight:700;color:#6B7280;text-transform:uppercase;font-size:9px">Doc Chain</span>
@@ -297,7 +294,8 @@ table.items th:last-child,table.items td:last-child{border-right:none}
     <!-- ④c WH-1.3 LINE ITEMS (SC-2 + SC-8 Serial) -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">WH-1.3</span><span class="ico">📦</span>รายการรับสินค้า <span class="tpl-zone">SC-2 · SC-8 Serial</span></div>
+        <div class="card-title"><span class="secno">WH-1.3</span><span class="ico">📦</span>รายการรับสินค้า <span class="tpl-zone">SC-2 · SC-8 Serial</span> <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="อ้างอิง · Serial · ประวัติ">i<span class="swt-tip-pop"><b>อ้างอิง (SC-5):</b> ใบสั่งซื้อ PO-2606-0042 (อนุมัติ · ส่ง Vendor แล้ว) · ใบขอสั่งซื้อ PR-2606-0019 · รับล็อตก่อนหน้า — (ล็อตแรกของบิลนี้)<br><b>Serial:</b> รับครบ 70/90 ชิ้น (FTKM24 30✓ · FTKM18 40✓ · FTKM12 0/20 ⚠) · วิธีลง: พิมพ์เอง · ยิงบาร์โค้ด · Import CSV · <span style="color:#FCA5A5">ต้องใส่ Serial ครบจำนวน "รับครั้งนี้" ทุกไลน์ก่อน Post</span><br><b>ประวัติการรับ (SC-7):</b> 16 มิ.ย. Vendor แจ้งส่งล็อตแรก · 17 มิ.ย. เปิดใบรับ GR-2606-0210 (ก้อง) · (รอ) Post รับทยอย → ของเข้าสต็อก ยังค้าง 90 · (รอ) รับครบ → 🚩 flag → PO-6 ใบตั้งหนี้</span></span></div>
+        <span style="margin-left:14px;font-size:11.5px;color:#6B7280;white-space:nowrap">สั่ง <b style="color:#111827">180</b> · รับสะสม <b style="color:#111827">90</b> · <span style="color:#B45309">ค้างรับ 90</span> · คืบหน้า <b style="color:#111827">50%</b></span>
         <div class="card-spacer"></div>
         <span style="font-size:11px;color:#6B7280">📷 ยิงบาร์โค้ด/Serial เพื่อรับทีละชิ้น</span>
       </div>
@@ -355,53 +353,6 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       </div>
       <div style="padding:8px 14px;border-top:1px dashed #E5E7EB;background:#FAFBFC;font-size:11px;color:#6B7280">
         💡 ทยอยรับ: ใส่ "รับครั้งนี้" ≤ ค้างรับ · ต้องใส่ Serial ครบจำนวนที่รับก่อน Post · รับสะสม = สั่ง ทุกไลน์ → ปลดล็อกตั้งหนี้ (PO-6)
-      </div>
-    </div>
-
-    <!-- ④d ROW-BOTTOM: WH-1.4 Tabs + WH-1.5 Summary -->
-    <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <span class="secno">WH-1.4</span>
-          <button class="on" onclick="swTab(event,'t-serial')">Serial Summary</button>
-          <button onclick="swTab(event,'t-ref')">อ้างอิง <span class="tpl-zone">SC-5</span></button>
-          <button onclick="swTab(event,'t-hist')">ประวัติการรับ <span class="tpl-zone">SC-7</span></button>
-        </div>
-        <div class="tabset-pane on" id="t-serial">
-          <div class="tab-grid">
-            <span class="k">Serial รับครบ</span><span class="v">70 / 90 ชิ้น (FTKM24: 30✓ · FTKM18: 40✓ · FTKM12: 0/20 ⚠)</span>
-            <span class="k">วิธีลง Serial</span><span class="v">พิมพ์เอง · ยิงบาร์โค้ด (ทีละตัว) · Import CSV (ทีเดียว)</span>
-            <span class="k">เงื่อนไข Post</span><span class="v" style="color:#B45309">ต้องใส่ Serial ให้ครบจำนวน "รับครั้งนี้" ทุกไลน์ก่อน Post</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-ref">
-          <div class="tab-grid">
-            <span class="k">ใบสั่งซื้อ (PO)</span><span class="v">PO-2606-0042 (อนุมัติ · ส่ง Vendor แล้ว)</span>
-            <span class="k">ใบขอสั่งซื้อ (PR)</span><span class="v">PR-2606-0019</span>
-            <span class="k">รับล็อตก่อนหน้า</span><span class="v ph">— (ล็อตแรกของบิลนี้)</span>
-          </div>
-        </div>
-        <div class="tabset-pane" id="t-hist">
-          <div class="tl">
-            <div class="tl-item"><span class="tl-dot"></span> Vendor แจ้งส่งล็อตแรก · 16 มิ.ย. 26</div>
-            <div class="tl-item"><span class="tl-dot"></span> เปิดใบรับ GR-2606-0210 · 17 มิ.ย. 26 · ก้อง (คลัง)</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> Post รับ (ทยอย) → ของเข้าสต็อก + Bin · ยังค้าง 90</div>
-            <div class="tl-item"><span class="tl-dot pending"></span> รับครบ → 🚩 flag → PO-6 ใบตั้งหนี้</div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title"><span class="secno">WH-1.5</span><span class="ico">📊</span>สรุปการรับ</div></div>
-        <div class="summary-row"><span class="lbl">สั่งทั้งบิล</span><span class="val">180 เครื่อง</span></div>
-        <div class="summary-row"><span class="lbl">รับครั้งนี้ (ล็อตนี้)</span><span class="val">90 เครื่อง</span></div>
-        <div class="summary-row"><span class="lbl">รับสะสม</span><span class="val">90 เครื่อง</span></div>
-        <div class="summary-row open"><span class="lbl">⏳ ค้างรับ</span><span class="val">90 เครื่อง</span></div>
-        <div class="summary-total"><span>ความคืบหน้า</span><span class="val">50% (90/180)</span></div>
-        <div class="flag-box open">⏳ ยังรับไม่ครบ → ยังไม่ส่งตั้งหนี้ (PO-6) · เปิดใบรับล็อตถัดไปได้</div>
-        <div style="margin-top:6px;padding:8px 10px;border-radius:6px;background:#FFFBEB;border:1px solid #FDE68A;font-size:10.5px;color:#92400E;line-height:1.5">
-          🔒 <b>ของค้างรับ 90 เครื่อง — คลังปิดรายการค้างเองไม่ได้</b><br>
-          ถ้าผู้ขายส่งไม่ครบสักที ให้ <a href="#" onclick="wh1NotifyPurchase();return false;" style="color:#1D4ED8;font-weight:700">แจ้งจัดซื้อให้ปิดรายการค้าง</a> — ฝ่ายจัดซื้อจะกดปิดที่<a href="po4-purchase-order-mockup.html" style="color:#1D4ED8;font-weight:700">ใบสั่งซื้อ PO-2606-0042</a> พร้อมระบุเหตุผล · ของค้างจะถูกยกเลิก ไม่ยกไปรอบหน้า
-        </div>
       </div>
     </div>
 
@@ -497,5 +448,6 @@ function wh1Post(){
 }
 </script>
 <script src="swt-doc-finder.js"></script>
+<script src="swt-patterns.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>

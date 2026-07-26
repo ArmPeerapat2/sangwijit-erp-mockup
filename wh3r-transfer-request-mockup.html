@@ -153,16 +153,10 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
     <button class="btn btn-outline">🖨️ พิมพ์ใบขอโอน</button>
     <button class="btn btn-outline">⋯ เพิ่มเติม</button>
     <div class="btn-spacer"></div>
+    <div class="mkchk" style="display:flex;gap:14px;font-size:11px;color:#6B7280"><span>ผู้ขอ: <b style="color:#374151">คุณสมหญิง (สาขา 08)</b> ✓</span><span>เจ้าของใบโอน: <b style="color:#374151">คลัง HQ ⏱</b></span></div>
   </div>
 
   <div class="content">
-
-    <!-- 3a. STATUS -->
-    <div class="status-strip">
-      <span class="pill pill-info">📝 คำขอโอน (ยังไม่ตัดสต๊อก)</span>
-      <span class="pill pill-warn">รอเจ้าของใบโอน (WH-3) ออกใบจริง</span>
-      <div class="mkchk"><span>ผู้ขอ: <b>คุณสมหญิง (สาขา 08)</b> ✓</span><span>เจ้าของใบโอน: <b>คลัง HQ ⏱</b></span></div>
-    </div>
 
     <!-- 3b. ROW-2COL: ต้นทาง→ปลายทาง (WH-3R.1) + ข้อมูลคำขอ (WH-3R.2) -->
     <div class="row-2col">
@@ -188,7 +182,8 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
 
     <!-- 3c. LINE ITEMS (WH-3R.3) — จำนวนที่ขอโอน (ไม่มี "จำนวนที่ได้จริง") -->
     <div class="card items-card">
-      <div class="card-header"><span class="secno">WH-3R.3</span><div class="card-title"><span class="ico">📦</span>รายการสินค้าที่ขอโอน</div>
+      <div class="card-header"><span class="secno">WH-3R.3</span><div class="card-title"><span class="ico">📦</span>รายการสินค้าที่ขอโอน <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="เกี่ยวกับ / ประวัติ">i<span class="swt-tip-pop"><b>เกี่ยวกับ:</b> ใบขอโอน = แผน/คำขอ · เมนู/ฟิลด์เหมือนใบโอน WH-3 · <b>ต่างที่ไม่มีช่อง "จำนวนที่ได้จริง"</b> (มีตอนโอนจริง) · ทำโดยตรงไม่ผ่านคำขอก็ได้ ขึ้นกับสิทธิ์<br><b>ยังไม่ตัดสต๊อก:</b> เจ้าของใบโอนออก WH-3 ใบโอน แล้วค่อยตัดสต๊อกจริง<br><b>เหตุผล:</b> สาขา 08 สต๊อกแอร์ขาด — ลูกค้าจองไว้ 15 เครื่อง นัดติดตั้ง 06 ก.ค. · ความเร่งด่วน ปกติ (ต้องการภายใน 05 ก.ค.)<br><b>ประวัติ:</b> 03 ก.ค. 08:30 สาขา 08 สร้างคำขอโอน · รอ ส่งคำขอ → เจ้าของใบโอน (HQ) พิจารณา</span></span></div>
+        <span style="margin-left:14px;font-size:11.5px;color:#6B7280;white-space:nowrap">SKU <b style="color:#111827">2</b> · ขอโอนรวม <b style="color:#111827">38 ชิ้น</b></span>
         <div class="card-spacer"></div>
         <div class="scan-box"><span>📷</span><input placeholder="ยิงบาร์โค้ด / S/N…"></div>
         <button class="card-btn primary">🔍 เพิ่มสินค้า</button>
@@ -233,24 +228,6 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
         </table>
       </div>
       <div class="add-row-bar">🔍 + เพิ่มรายการสินค้า</div>
-    </div>
-
-    <!-- 3d. ROW-BOTTOM -->
-    <div class="row-bottom">
-      <div class="tabset">
-        <div class="tabset-nav">
-          <button class="on" onclick="swTab(event,'t-note')">รายละเอียดคำขอ</button>
-          <button onclick="swTab(event,'t-hist')">ประวัติ</button>
-        </div>
-        <div class="tabset-pane on" id="t-note"><div class="tab-grid"><span class="k">เกี่ยวกับหน้านี้</span><span>💡 ใบขอโอน = แผน/คำขอ · เมนู/ฟิลด์เหมือนใบโอน WH-3 · <b>ต่างที่ไม่มีช่อง "จำนวนที่ได้จริง"</b> (มีตอนโอนจริง) · ทำโดยตรงไม่ผ่านคำขอก็ได้ ขึ้นกับสิทธิ์</span><span class="k">เหตุผล</span><span>สาขา 08 สต๊อกแอร์ขาด — ลูกค้าจองไว้ 15 เครื่อง นัดติดตั้ง 06 ก.ค.</span><span class="k">ความเร่งด่วน</span><span>ปกติ (ต้องการภายใน 05 ก.ค.)</span></div></div>
-        <div class="tabset-pane" id="t-hist"><div class="tab-grid"><span class="k">03 ก.ค. 08:30</span><span>สาขา 08 สร้างคำขอโอน</span><span class="k">รอ</span><span>ส่งคำขอ → เจ้าของใบโอน (HQ) พิจารณา</span></div></div>
-      </div>
-      <div class="card sum-card">
-        <div class="card-header"><span class="secno">WH-3R.4</span><div class="card-title"><span class="ico">📊</span>สรุปคำขอ <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">คำขอนี้<b>ยังไม่ตัดสต๊อก</b> — เจ้าของใบโอนออก <b>WH-3 ใบโอน</b> แล้วค่อยตัดสต๊อกจริง</span></span></div></div>
-        <div class="sum-row"><span class="lbl">SKU ทั้งหมด</span><span class="val">2 รายการ</span></div>
-        <div class="sum-row"><span class="lbl">จำนวนที่ขอโอนรวม</span><span class="val">38 ชิ้น</span></div>
-        <div class="sum-total"><span>ขอโอน</span><span>38 ชิ้น</span></div>
-      </div>
     </div>
 
     <!-- 3e. NOTES -->
