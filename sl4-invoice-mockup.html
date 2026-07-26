@@ -280,22 +280,15 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           <button class="card-btn" onclick="dfOpenRef({docType:'SL',partyName:'คุณ อดิเทพ ไชยเศรษฐ์'})" title="อ้างอิงเอกสารตามลูกหนี้ · เลือกได้หลายใบ (จอง/ขาย/มัดจำ)">🔗 อ้างอิงเอกสาร <span class="tpl-zone">SC-5</span></button>
         </div>
         <div class="field-grid-2">
-          <div class="field"><div class="field-label">ประเภทการรับ</div>
-            <select class="resv-sel" id="recvType" onchange="recvRoute()">
-              <option value="self">🏪 รับเอง (เคาน์เตอร์) — เบิกทันที</option>
-              <option value="ship">🚚 จัดส่งอย่างเดียว</option>
-              <option value="install" selected>🔧 จัดส่ง + ติดตั้ง</option>
-            </select></div>
           <div class="field"><div class="field-label">ประเภท VAT</div>
             <select class="resv-sel"><option>รวม VAT 7%</option><option>แยก VAT 7%</option><option>ไม่มี VAT</option></select></div>
           <div class="field"><div class="field-label">พนักงานขาย</div><div class="field-value">สัญญาลักษณ์ วังคะฮาต</div></div>
-          <div class="field"><div class="field-label">เงื่อนไขชำระ</div><div class="field-value">เครดิต 7 วัน</div></div>
           <div class="field"><div class="field-label">อ้างอิงใบจอง <span style="color:#9CA3AF">(ถ้ามี)</span></div><div class="field-value"><a href="sl2-reservation-mockup.html" style="color:#2563EB;text-decoration:none">SO 0021 ↗</a></div></div>
           <div class="field"><div class="field-label">อ้างอิงใบเสนอราคา</div><div class="field-value"><a href="sl1-quotation-mockup.html" style="color:#2563EB;text-decoration:none">QT 0047 ↗</a></div></div>
         </div>
 
-        <!-- ===== 5 มิติมาตรฐานบนเอกสาร (DOCGROUP · DEPARTMENT · PROJECT · ALLOCATECODE · SITECODE) ===== -->
-        <div style="margin-top:8px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px 8px">
+        <!-- 5 มิติ: กลุ่มเอกสาร + สาขา คงที่นี่ · แผนก/โครงการ/การจัดสรร ย้ายลง row-bottom ซ้าย (SL-4.4) -->
+        <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px 14px">
           <div class="field" style="margin-bottom:0"><div class="field-label">กลุ่มเอกสาร</div>
             <select class="resv-sel" id="dimDocGroup" title="DOCGROUP — ชนิด/กลุ่มของเอกสาร">
               <option selected>ขายปกติ</option>
@@ -303,25 +296,6 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
               <option>ขายพนักงาน</option>
               <option>ขายส่งเสริมการขาย</option>
               <option>โอนภายใน</option>
-            </select></div>
-          <div class="field" style="margin-bottom:0"><div class="field-label">แผนก</div>
-            <select class="resv-sel" id="dimDepartment" title="DEPARTMENT — แผนกที่รับผิดชอบเอกสารนี้">
-              <option selected>ฝ่ายขาย</option>
-              <option>ศูนย์บริการ</option>
-              <option>คลังสินค้า</option>
-              <option>บริหาร</option>
-            </select></div>
-          <div class="field" style="margin-bottom:0"><div class="field-label">โครงการ</div>
-            <select class="resv-sel" id="dimProject" title="PROJECT — โครงการที่เอกสารนี้สังกัด">
-              <option selected>— ไม่ระบุ —</option>
-              <option>PRJ-001 คอนโดสุขุมวิท</option>
-              <option>PRJ-002 โรงแรมหัวหิน</option>
-            </select></div>
-          <div class="field" style="margin-bottom:0"><div class="field-label">การจัดสรร</div>
-            <select class="resv-sel" id="dimAllocate" title="ALLOCATECODE — ป้ายแบ่งกลุ่มอิสระ">
-              <option selected>— ไม่ระบุ —</option>
-              <option>ALC-01 งบการตลาด</option>
-              <option>ALC-02 งบซ่อมบำรุง</option>
             </select></div>
           <div class="field" style="margin-bottom:0"><div class="field-label">สาขา</div>
             <select class="resv-sel" id="dimSite" title="SITECODE — สาขาที่ออกเอกสาร">
@@ -435,8 +409,32 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     </div>
 
     <!-- ④d ROW-BOTTOM — เหลือเฉพาะสรุปเงิน (หัวใจบิล · คงครบทุกบรรทัด) · แท็บ ชำระ/มัดจำ/จัดส่ง/ใบกำกับ/อ้างอิง/ประวัติ ยุบเป็น tip ที่หัวตารางสินค้า -->
-    <div class="row-bottom" style="display:flex;justify-content:flex-end">
-      <div class="card" style="width:440px;max-width:100%">
+    <div class="row-bottom" style="display:grid;grid-template-columns:1fr 440px;gap:16px">
+      <div class="card compact">
+        <div class="card-header"><div class="card-title"><span class="secno">SL-4.4</span><span class="ico">🚚</span>การจัดส่ง · หมวด · การชำระ</div></div>
+        <div class="field-grid-2">
+          <div class="field"><div class="field-label">การจัดส่ง</div>
+            <select class="resv-sel" id="recvType" onchange="recvRoute()">
+              <option value="self">🏪 รับเอง (เคาน์เตอร์) — เบิกทันที</option>
+              <option value="ship">🚚 จัดส่งอย่างเดียว</option>
+              <option value="install" selected>🔧 จัดส่ง + ติดตั้ง</option>
+            </select></div>
+          <div class="field"><div class="field-label">การชำระเงิน</div><div class="field-value">เครดิต 7 วัน</div></div>
+          <div class="field"><div class="field-label">แผนก</div>
+            <select class="resv-sel" id="dimDepartment" title="DEPARTMENT — แผนกที่รับผิดชอบเอกสารนี้">
+              <option selected>ฝ่ายขาย</option><option>ศูนย์บริการ</option><option>คลังสินค้า</option><option>บริหาร</option>
+            </select></div>
+          <div class="field"><div class="field-label">โครงการ</div>
+            <select class="resv-sel" id="dimProject" title="PROJECT — โครงการที่เอกสารนี้สังกัด">
+              <option selected>— ไม่ระบุ —</option><option>PRJ-001 คอนโดสุขุมวิท</option><option>PRJ-002 โรงแรมหัวหิน</option>
+            </select></div>
+          <div class="field"><div class="field-label">การจัดสรร</div>
+            <select class="resv-sel" id="dimAllocate" title="ALLOCATECODE — ป้ายแบ่งกลุ่มอิสระ">
+              <option selected>— ไม่ระบุ —</option><option>ALC-01 งบการตลาด</option><option>ALC-02 งบซ่อมบำรุง</option>
+            </select></div>
+        </div>
+      </div>
+      <div class="card" style="max-width:100%">
         <div class="card-header"><div class="card-title"><span class="secno">SL-4.5</span><span class="ico">💰</span>สรุปยอด (Summary) <span class="tpl-zone">SC-11</span></div></div>
         <div id="sl4Sc11"></div>
         <div class="baht-text">( หนึ่งหมื่นหนึ่งพันหนึ่งร้อยสี่สิบบาทสามสิบสตางค์ )</div>
