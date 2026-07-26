@@ -138,11 +138,12 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 .cn-sum-total{display:flex;flex-direction:column;align-items:flex-end;gap:0;background:linear-gradient(90deg,#7C2D12 0%,#DC2626 100%);color:#fff;border-radius:6px;padding:6px 18px;flex:none}
 .cn-sum-total span:first-child{font-size:10px;opacity:.85}
 .cn-sum-total .val{font-size:17px;font-weight:700;font-family:'Inter',monospace;color:#fff}
-.row-bottom{font-size:12px;height:172px}
-.row-bottom .tabset,.row-bottom>.card{overflow:auto}
-.row-bottom .tabset-pane{padding:10px;min-height:40px}
-.row-bottom .tabset-nav button{padding:6px 12px;font-size:11px}
+.row-bottom{font-size:12px}
+.row-bottom>.card{overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.row-bottom .field{margin-bottom:3px}
+.row-bottom .field-grid-2{gap:3px 14px}
 .row-bottom .summary-row{padding:2px 0;font-size:11px}
+.row-bottom .summary-total{font-size:13px;padding:8px 10px;margin-top:4px}
 .row-bottom .card-header{padding-bottom:5px;margin-bottom:5px}
 .tpl-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:900;align-items:center;justify-content:center}
 .tpl-modal-bg.on{display:flex}
@@ -251,11 +252,10 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           <div class="field"><div class="field-label">ประเภทใบ</div>
             <select class="cn-sel"><option>นอกประกัน (ใบลดหนี้)</option><option>ในประกัน (ใบลดหนี้+ใบกำกับภาษี)</option></select></div>
           <div class="field"><div class="field-label">ผู้ทำรายการ</div><div class="field-value">สัญญาลักษณ์ วังคะฮาต</div></div>
-          <div class="field"><div class="field-label">เครดิตที่ได้ → </div><div class="field-value">หักบิลถัดไป / คืนเงินสด</div></div>
         </div>
 
-        <!-- ===== 5 มิติมาตรฐานบนเอกสาร (DOCGROUP · DEPARTMENT · PROJECT · ALLOCATECODE · SITECODE) ===== -->
-        <div style="margin-top:8px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px 8px">
+        <!-- ===== 5 มิติ: กลุ่มเอกสาร + สาขา คงที่นี่ · แผนก/โครงการ/การจัดสรร ย้ายลง row-bottom ซ้าย (SL-CN.4) ===== -->
+        <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px 14px">
           <div class="field" style="margin-bottom:0"><div class="field-label">กลุ่มเอกสาร <span class="swt-tip warn pop-left" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>🗂️ 5 มิติมาตรฐานบนเอกสาร — ใช้ชุดเดียวกันทุกเอกสาร</b> (เคาะ 2026-07-21)<br><b>กลุ่มเอกสาร · แผนก · โครงการ · การจัดสรร · สาขา</b> — ตรงกับที่ ERP เดิมใช้ (<code>DOCGROUP</code> <code>DEPARTMENT</code> <code>PROJECT</code> <code>ALLOCATECODE</code> <code>SITECODE</code>)<br><b>ใช้ทำอะไร:</b> กรองรายงานได้หลายมุมพร้อมกัน เช่น <i>"ยอดขายโครงการคอนโดสุขุมวิท แยกตามแผนก"</i> · และใช้ระบุว่าบิลนี้นับคอมมิชชั่นไหม<br>⚠️ <b>ผู้พัฒนา: ทุกเอกสารต้องมีครบ 5 ช่องนี้</b> — ถ้าขาดแม้ช่องเดียว รายงานมุมนั้นจะทำไม่ได้ตลอดกาล (ย้อนกลับมาเติมไม่ได้)<br>📌 ตัวเลือกทุกช่องมาจาก<b>ทะเบียน</b>ที่หน้า <a href="cf2-7-doc-template-mockup.html" style="color:#93C5FD;font-weight:700;text-decoration:none">แม่แบบเอกสาร ↗</a> — เพิ่ม/แก้ได้เอง ไม่ hardcode</span></span></div>
             <select class="cn-sel" id="dimDocGroup" title="DOCGROUP — ชนิด/กลุ่มของเอกสาร">
               <option selected>ขายปกติ</option>
@@ -263,25 +263,6 @@ table.items th:last-child,table.items td:last-child{border-right:none}
               <option>ขายพนักงาน</option>
               <option>ขายส่งเสริมการขาย</option>
               <option>โอนภายใน</option>
-            </select></div>
-          <div class="field" style="margin-bottom:0"><div class="field-label">แผนก</div>
-            <select class="cn-sel" id="dimDepartment" title="DEPARTMENT — แผนกที่รับผิดชอบเอกสารนี้">
-              <option selected>ฝ่ายขาย</option>
-              <option>ศูนย์บริการ</option>
-              <option>คลังสินค้า</option>
-              <option>บริหาร</option>
-            </select></div>
-          <div class="field" style="margin-bottom:0"><div class="field-label">โครงการ</div>
-            <select class="cn-sel" id="dimProject" title="PROJECT — โครงการที่เอกสารนี้สังกัด">
-              <option selected>— ไม่ระบุ —</option>
-              <option>PRJ-001 คอนโดสุขุมวิท</option>
-              <option>PRJ-002 โรงแรมหัวหิน</option>
-            </select></div>
-          <div class="field" style="margin-bottom:0"><div class="field-label">การจัดสรร</div>
-            <select class="cn-sel" id="dimAllocate" title="ALLOCATECODE — ป้ายแบ่งกลุ่มอิสระ">
-              <option selected>— ไม่ระบุ —</option>
-              <option>ALC-01 งบการตลาด</option>
-              <option>ALC-02 งบซ่อมบำรุง</option>
             </select></div>
           <div class="field" style="margin-bottom:0"><div class="field-label">สาขา</div>
             <select class="cn-sel" id="dimSite" title="SITECODE — สาขาที่ออกเอกสาร">
@@ -363,17 +344,38 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       <div class="add-row-bar" onclick="dfOpen()">🔗 ดึงรายการจากบิลขาย (เลือกบิลต้นทาง)</div>
     </div>
 
-    <!-- ④d สรุปลดหนี้ (คงครบ 100% · ยอดลด · VAT · สุทธิ · เครดิตคงเหลือ) — แนวนอน flex:none · ไม่อยู่ใน .row-bottom เพื่อคงตัวเลขจริง -->
-    <div class="card cn-summary">
-      <div class="card-title" style="white-space:nowrap"><span class="secno">SL-CN.5</span><span class="ico">↩️</span>สรุปลดหนี้</div>
-      <div class="cn-sum-grid">
-        <div class="cn-sum-cell"><span class="l">ยอดลดหนี้ (ก่อน VAT)</span><span class="v">1,000.00</span></div>
-        <div class="cn-sum-cell"><span class="l">VAT ที่ลด 7%</span><span class="v">70.00</span></div>
-        <div class="cn-sum-cell"><span class="l">บิลต้นทาง</span><span class="v">17,430.30</span></div>
-        <div class="cn-sum-cell"><span class="l">เครดิตคงเหลือ</span><span class="v g">1,070.00</span></div>
+    <!-- ④d ROW-BOTTOM — grid 2 คอลัมน์ [ซ้าย SL-CN.4 หมวด/การจัดสรร/เครดิต | ขวา SL-CN.5 สรุปลดหนี้ · คงครบ 100%] -->
+    <div class="row-bottom" style="display:grid;grid-template-columns:1fr 400px;gap:16px">
+      <div class="card compact">
+        <div class="card-header"><div class="card-title"><span class="secno">SL-CN.4</span><span class="ico">🗂️</span>หมวด · การจัดสรร · เครดิต</div></div>
+        <div class="field-grid-2">
+          <div class="field"><div class="field-label">แผนก</div>
+            <select class="cn-sel" id="dimDepartment" title="DEPARTMENT — แผนกที่รับผิดชอบเอกสารนี้">
+              <option selected>ฝ่ายขาย</option><option>ศูนย์บริการ</option><option>คลังสินค้า</option><option>บริหาร</option>
+            </select></div>
+          <div class="field"><div class="field-label">โครงการ</div>
+            <select class="cn-sel" id="dimProject" title="PROJECT — โครงการที่เอกสารนี้สังกัด">
+              <option selected>— ไม่ระบุ —</option><option>PRJ-001 คอนโดสุขุมวิท</option><option>PRJ-002 โรงแรมหัวหิน</option>
+            </select></div>
+          <div class="field"><div class="field-label">การจัดสรร</div>
+            <select class="cn-sel" id="dimAllocate" title="ALLOCATECODE — ป้ายแบ่งกลุ่มอิสระ">
+              <option selected>— ไม่ระบุ —</option><option>ALC-01 งบการตลาด</option><option>ALC-02 งบซ่อมบำรุง</option>
+            </select></div>
+          <div class="field"><div class="field-label">เครดิตที่ได้ →</div>
+            <select class="cn-sel" id="creditRoute" title="เครดิตคงเหลือนำไปใช้อย่างไร">
+              <option selected>หักบิลถัดไป</option><option>คืนเงินสด</option><option>โอนเข้าบัญชี</option>
+            </select></div>
+        </div>
       </div>
-      <span class="cn-sum-note">🔒 ยอด/VAT ที่ลด ระบบ BC คำนวณ (แก้ไม่ได้) · อ้างอิงบิลต้นทางบังคับ</span>
-      <div class="cn-sum-total"><span>รวมลดหนี้</span><span class="val">1,070.00</span></div>
+      <div class="card" style="max-width:100%">
+        <div class="card-header"><div class="card-title"><span class="secno">SL-CN.5</span><span class="ico">↩️</span>สรุปลดหนี้</div></div>
+        <div class="summary-row"><span class="lbl">ยอดลดหนี้ (ก่อน VAT)</span><span class="val">1,000.00</span></div>
+        <div class="summary-row"><span class="lbl">VAT ที่ลด 7%</span><span class="val">70.00</span></div>
+        <div class="summary-row"><span class="lbl">บิลต้นทาง</span><span class="val">17,430.30</span></div>
+        <div class="summary-row"><span class="lbl">เครดิตคงเหลือ</span><span class="val" style="color:#10B981">1,070.00</span></div>
+        <div class="summary-total"><span>รวมลดหนี้</span><span class="val">1,070.00</span></div>
+        <div style="font-size:9.5px;color:#9CA3AF;margin-top:6px;line-height:1.5">🔒 ยอด/VAT ที่ลด ระบบ BC คำนวณ (แก้ไม่ได้) · อ้างอิงบิลต้นทางบังคับ</div>
+      </div>
     </div>
 
     <!-- ④e NOTES -->

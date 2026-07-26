@@ -141,11 +141,10 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
 .row-2col .field-grid-2{gap:3px 14px}
 .row-2col .credit-line{margin-top:5px;padding:4px 8px}
 .content>.card:not(.items-card),.row-bottom,.status-strip,.row-2col{flex:none}
-.row-bottom{font-size:12px;height:178px}
-.row-bottom .tabset,.row-bottom>.card{overflow:auto}
-.row-bottom .tabset-pane{padding:10px;min-height:40px}
-.row-bottom .tabset-nav button{padding:6px 12px;font-size:11px}
+.row-bottom{font-size:12px}
+.row-bottom>.card{overflow:hidden;display:flex;flex-direction:column;min-height:0}
 .row-bottom .summary-row{padding:2px 0;font-size:11px}
+.row-bottom .summary-total{font-size:13px;padding:8px 10px;margin-top:4px}
 .row-bottom .card-header{padding-bottom:5px;margin-bottom:5px}
 .tpl-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:900;align-items:center;justify-content:center}
 .tpl-modal-bg.on{display:flex}
@@ -249,8 +248,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           <div class="field"><div class="field-label">G/L Account (มัดจำ)</div><div class="field-value">2310 · เงินมัดจำรับล่วงหน้า</div></div>
         </div>
 
-        <!-- ===== 5 มิติมาตรฐานบนเอกสาร (DOCGROUP · DEPARTMENT · PROJECT · ALLOCATECODE · SITECODE) ===== -->
-        <div class="dim-grid">
+        <!-- 5 มิติ: กลุ่มเอกสาร + สาขา คงที่นี่ · แผนก/โครงการ/การจัดสรร ย้ายลง row-bottom ซ้าย (SL-3.4) -->
+        <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px 14px">
           <div class="field" style="margin-bottom:0"><div class="field-label">กลุ่มเอกสาร</div>
             <select class="dim-sel" id="dimDocGroup" title="DOCGROUP — ชนิด/กลุ่มของเอกสาร">
               <option selected>ขายปกติ</option>
@@ -258,25 +257,6 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
               <option>ขายพนักงาน</option>
               <option>ขายส่งเสริมการขาย</option>
               <option>โอนภายใน</option>
-            </select></div>
-          <div class="field" style="margin-bottom:0"><div class="field-label">แผนก</div>
-            <select class="dim-sel" id="dimDepartment" title="DEPARTMENT — แผนกที่รับผิดชอบเอกสารนี้">
-              <option selected>ฝ่ายขาย</option>
-              <option>ศูนย์บริการ</option>
-              <option>คลังสินค้า</option>
-              <option>บริหาร</option>
-            </select></div>
-          <div class="field" style="margin-bottom:0"><div class="field-label">โครงการ</div>
-            <select class="dim-sel" id="dimProject" title="PROJECT — โครงการที่เอกสารนี้สังกัด">
-              <option selected>— ไม่ระบุ —</option>
-              <option>PRJ-001 คอนโดสุขุมวิท</option>
-              <option>PRJ-002 โรงแรมหัวหิน</option>
-            </select></div>
-          <div class="field" style="margin-bottom:0"><div class="field-label">การจัดสรร</div>
-            <select class="dim-sel" id="dimAllocate" title="ALLOCATECODE — ป้ายแบ่งกลุ่มอิสระ">
-              <option selected>— ไม่ระบุ —</option>
-              <option>ALC-01 งบการตลาด</option>
-              <option>ALC-02 งบซ่อมบำรุง</option>
             </select></div>
           <div class="field" style="margin-bottom:0"><div class="field-label">สาขา</div>
             <select class="dim-sel" id="dimSite" title="SITECODE — สาขาที่ออกเอกสาร">
@@ -335,17 +315,39 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="add-row-bar" style="cursor:pointer" onclick="sl3AddDeposit()">➕ + เพิ่มงวดมัดจำ (รับชำระ)</div>
     </div>
 
-    <!-- ④d สรุปเงิน (SL-3.5) — sum-strip แนวนอน · คงค่าเงินครบ 100% (บิล · มัดจำสะสม · งวดนี้/VAT · คงเหลือ) · ห้ามตัด -->
-    <div class="sum-strip">
-      <span class="ss-title">💰 สรุปมัดจำ <span class="secno">SL-3.5</span></span>
-      <span class="sum-chip">บิลตามใบจอง <b>17,430.30</b></span>
-      <span class="sum-chip pos">รับมัดจำสะสม <b>6,290.00</b></span>
-      <span class="sum-chip neg">คงเหลือหลังหัก <b>11,140.30</b></span>
-      <span class="net">รับมัดจำงวดนี้ <b>6,290.00</b>
-        <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="ที่มาของยอด">i<span class="swt-tip-pop">🔒 ยอดรวม VAT แล้ว · คำนวณโดยระบบ BC · มัดจำลง G/L 2310 เงินมัดจำรับล่วงหน้า ผ่าน BC (แก้ไม่ได้) · วิธีชำระ: โอน SCB*6239 · หักจากบิลขายตอนออก SL-4</span></span>
-      </span>
-      <span style="font-size:11.5px;font-weight:600;color:#374151;white-space:nowrap;margin-left:4px">🗒️ หมายเหตุ</span>
-      <input class="note-inl" value="มัดจำ 6,290.- (รวม VAT) · หักจากบิลขายตอนส่งของ · คงเหลือเก็บปลายทาง 11,140.30">
+    <!-- ④d ROW-BOTTOM — grid 2 คอลัมน์ [ซ้าย SL-3.4 หมวดเอกสาร (fields ย้ายจาก SL-3.2) | ขวา SL-3.5 สรุปมัดจำ] · สรุปเงินคงครบ 100% -->
+    <div class="row-bottom" style="display:grid;grid-template-columns:1fr 440px;gap:16px">
+      <div class="card compact">
+        <div class="card-header"><div class="card-title"><span class="secno">SL-3.4</span><span class="ico">🗂️</span>หมวดเอกสาร (แผนก · โครงการ · การจัดสรร)</div></div>
+        <div class="field-grid-2">
+          <div class="field"><div class="field-label">แผนก</div>
+            <select class="dim-sel" id="dimDepartment" title="DEPARTMENT — แผนกที่รับผิดชอบเอกสารนี้">
+              <option selected>ฝ่ายขาย</option><option>ศูนย์บริการ</option><option>คลังสินค้า</option><option>บริหาร</option>
+            </select></div>
+          <div class="field"><div class="field-label">โครงการ</div>
+            <select class="dim-sel" id="dimProject" title="PROJECT — โครงการที่เอกสารนี้สังกัด">
+              <option selected>— ไม่ระบุ —</option><option>PRJ-001 คอนโดสุขุมวิท</option><option>PRJ-002 โรงแรมหัวหิน</option>
+            </select></div>
+          <div class="field"><div class="field-label">การจัดสรร</div>
+            <select class="dim-sel" id="dimAllocate" title="ALLOCATECODE — ป้ายแบ่งกลุ่มอิสระ">
+              <option selected>— ไม่ระบุ —</option><option>ALC-01 งบการตลาด</option><option>ALC-02 งบซ่อมบำรุง</option>
+            </select></div>
+        </div>
+      </div>
+      <div class="card" style="max-width:100%">
+        <div class="card-header"><div class="card-title"><span class="secno">SL-3.5</span><span class="ico">💰</span>สรุปมัดจำ
+          <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="ที่มาของยอด" style="margin-left:4px">i<span class="swt-tip-pop">🔒 ยอดรวม VAT แล้ว · คำนวณโดยระบบ BC · มัดจำลง G/L 2310 เงินมัดจำรับล่วงหน้า ผ่าน BC (แก้ไม่ได้) · วิธีชำระ: โอน SCB*6239 · หักจากบิลขายตอนออก SL-4</span></span></div></div>
+        <div class="summary-row"><span class="lbl">บิลตามใบจอง</span><span class="val">17,430.30</span></div>
+        <div class="summary-row"><span class="lbl">รับมัดจำสะสม</span><span class="val" style="color:#10B981">6,290.00</span></div>
+        <div class="summary-row"><span class="lbl">คงเหลือหลังหักมัดจำ</span><span class="val" style="color:#EF4444">11,140.30</span></div>
+        <div class="summary-total"><span>รับมัดจำงวดนี้ (รวม VAT)</span><span class="val">6,290.00</span></div>
+      </div>
+    </div>
+
+    <!-- ④e NOTES -->
+    <div class="card" style="padding:8px 12px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:12px;font-weight:600;color:#374151;white-space:nowrap">🗒️ หมายเหตุ</span>
+      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="มัดจำ 6,290.- (รวม VAT) · หักจากบิลขายตอนส่งของ · คงเหลือเก็บปลายทาง 11,140.30">
     </div>
 
   </div><!-- /content -->
