@@ -220,16 +220,8 @@ table.items .num{text-align:right;font-family:'Inter',monospace}
           <div class="field"><div class="field-label">ประเภท VAT</div>
             <select id="vatMode"><option selected>แยก VAT 7%</option><option>รวม VAT 7%</option><option>ไม่มี VAT</option></select>
           </div>
-          <div class="field"><div class="field-label">กลุ่มเอกสาร</div>
-            <select id="dimDocGroup" title="DOCGROUP — ชนิด/กลุ่มของเอกสาร">
-              <option>ขายปกติ</option><option selected>งานบริการ</option><option>ขายโครงการ</option><option>ขายพนักงาน</option><option>ขายส่งเสริมการขาย</option>
-            </select>
-          </div>
-          <div class="field"><div class="field-label">สาขา</div>
-            <select id="dimSite" title="SITECODE — สาขาที่ออกเอกสาร">
-              <option>TPM เทรดดิ้ง (โกดัง)</option><option>SWE1 สำนักงานใหญ่</option><option selected>07 ศูนย์บริการซ่อม-เคลม</option><option>SHO สาขา 10</option>
-            </select>
-          </div>
+          <!-- 5 มิติ: กลุ่มเอกสาร + สาขา (render จาก swt-dimensions.js · shared) · แผนก/โครงการ/จัดสรร อยู่ SQT-2.4 -->
+          <span class="swt-dim-grid" data-dims="docGroup,site" data-dim-sel="docGroup=งานบริการ;site=07 ศูนย์บริการซ่อม-เคลม" style="display:contents"></span>
         </div>
       </div>
     </div>
@@ -317,21 +309,8 @@ table.items .num{text-align:right;font-family:'Inter',monospace}
       <div class="card">
         <div class="card-header"><span class="secno">SQT-2.4</span><div class="card-title"><span class="ico">🗂️</span>หมวด · หน้างาน · การชำระ</div></div>
         <div class="field-grid-2">
-          <div class="field"><div class="field-label">แผนก</div>
-            <select id="dimDepartment" title="DEPARTMENT — แผนกที่รับผิดชอบเอกสารนี้">
-              <option>ฝ่ายขาย</option><option selected>ศูนย์บริการ</option><option>คลังสินค้า</option><option>บริหาร</option>
-            </select>
-          </div>
-          <div class="field"><div class="field-label">โครงการ</div>
-            <select id="dimProject" title="PROJECT — โครงการที่เอกสารนี้สังกัด">
-              <option selected>— ไม่ระบุ —</option><option>PRJ-001 คอนโดสุขุมวิท</option><option>PRJ-002 โรงแรมหัวหิน</option>
-            </select>
-          </div>
-          <div class="field"><div class="field-label">การจัดสรร</div>
-            <select id="dimAllocate" title="ALLOCATECODE — ป้ายแบ่งกลุ่มอิสระ">
-              <option selected>— ไม่ระบุ —</option><option>ALC-01 งบการตลาด</option><option>ALC-02 งบซ่อมบำรุง</option>
-            </select>
-          </div>
+          <!-- 5 มิติ: แผนก/โครงการ/จัดสรร (render จาก swt-dimensions.js · shared) · กลุ่มเอกสาร+สาขา อยู่ SQT-1.2 -->
+          <span class="swt-dim-inline" data-dims="department,project,allocate" data-dim-sel="department=ศูนย์บริการ" style="display:contents"></span>
           <div class="field"><div class="field-label">การชำระ</div>
             <select id="payTerm" title="เงื่อนไขการชำระ">
               <option selected>มัดจำ 50% ก่อนเริ่ม · ที่เหลือเมื่อจบงาน</option><option>มัดจำ 30% ก่อนเริ่ม</option><option>เก็บเต็มเมื่อจบงาน (ลูกค้าประจำ)</option>
@@ -391,5 +370,6 @@ table.items .num{text-align:right;font-family:'Inter',monospace}
 
 <script src="swt-link.js" defer></script>
 <script src="swt-patterns.js"></script>
+<script src="swt-dimensions.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>

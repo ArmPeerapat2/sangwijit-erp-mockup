@@ -248,24 +248,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           <div class="field"><div class="field-label">G/L Account (มัดจำ)</div><div class="field-value">2310 · เงินมัดจำรับล่วงหน้า</div></div>
         </div>
 
-        <!-- 5 มิติ: กลุ่มเอกสาร + สาขา คงที่นี่ · แผนก/โครงการ/การจัดสรร ย้ายลง row-bottom ซ้าย (SL-3.4) -->
-        <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px 14px">
-          <div class="field" style="margin-bottom:0"><div class="field-label">กลุ่มเอกสาร</div>
-            <select class="dim-sel" id="dimDocGroup" title="DOCGROUP — ชนิด/กลุ่มของเอกสาร">
-              <option selected>ขายปกติ</option>
-              <option>ขายโครงการ</option>
-              <option>ขายพนักงาน</option>
-              <option>ขายส่งเสริมการขาย</option>
-              <option>โอนภายใน</option>
-            </select></div>
-          <div class="field" style="margin-bottom:0"><div class="field-label">สาขา</div>
-            <select class="dim-sel" id="dimSite" title="SITECODE — สาขาที่ออกเอกสาร">
-              <option selected>TPM เทรดดิ้ง (โกดัง)</option>
-              <option>SWE1 สำนักงานใหญ่</option>
-              <option>07 ศูนย์บริการซ่อม-เคลม</option>
-              <option>SHO สาขา 10</option>
-            </select></div>
-        </div>
+        <!-- 5 มิติ: กลุ่มเอกสาร + สาขา (render จาก swt-dimensions.js · shared) · แผนก/โครงการ/การจัดสรร ย้ายลง row-bottom ซ้าย (SL-3.4) -->
+        <div class="swt-dim-grid" data-dims="docGroup,site" style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px 14px"></div>
       </div>
     </div>
 
@@ -320,18 +304,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="card compact">
         <div class="card-header"><div class="card-title"><span class="secno">SL-3.4</span><span class="ico">🗂️</span>หมวดเอกสาร (แผนก · โครงการ · การจัดสรร)</div></div>
         <div class="field-grid-2">
-          <div class="field"><div class="field-label">แผนก</div>
-            <select class="dim-sel" id="dimDepartment" title="DEPARTMENT — แผนกที่รับผิดชอบเอกสารนี้">
-              <option selected>ฝ่ายขาย</option><option>ศูนย์บริการ</option><option>คลังสินค้า</option><option>บริหาร</option>
-            </select></div>
-          <div class="field"><div class="field-label">โครงการ</div>
-            <select class="dim-sel" id="dimProject" title="PROJECT — โครงการที่เอกสารนี้สังกัด">
-              <option selected>— ไม่ระบุ —</option><option>PRJ-001 คอนโดสุขุมวิท</option><option>PRJ-002 โรงแรมหัวหิน</option>
-            </select></div>
-          <div class="field"><div class="field-label">การจัดสรร</div>
-            <select class="dim-sel" id="dimAllocate" title="ALLOCATECODE — ป้ายแบ่งกลุ่มอิสระ">
-              <option selected>— ไม่ระบุ —</option><option>ALC-01 งบการตลาด</option><option>ALC-02 งบซ่อมบำรุง</option>
-            </select></div>
+          <!-- แผนก · โครงการ · การจัดสรร: render จาก swt-dimensions.js (shared) -->
+          <span class="swt-dim-inline" data-dims="department,project,allocate" style="display:contents"></span>
         </div>
       </div>
       <div class="card" style="max-width:100%">
@@ -406,6 +380,7 @@ function sl3AddDeposit(){
   });
 }
 </script>
+<script src="swt-dimensions.js"></script>
 <script src="swt-sc-wire.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>
