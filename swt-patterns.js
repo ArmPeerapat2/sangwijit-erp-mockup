@@ -864,4 +864,17 @@
   global.swtRecalcArReceiptSummary = swtRecalcArReceiptSummary;
   global.swtRecalcApInvoiceSummary = swtRecalcApInvoiceSummary;
   global.swtMakerCheckerOk = swtMakerCheckerOk;
+
+  // swt-tip: คลิกไอคอน → toggle popover ค้าง (hover เปิดผ่าน CSS อยู่แล้ว) · คลิกที่ว่าง = ปิด
+  function swtTipToggle(el, ev){
+    if (ev) ev.stopPropagation();
+    document.querySelectorAll('.swt-tip.open').forEach(function(t){ if (t !== el) t.classList.remove('open'); });
+    el.classList.toggle('open');
+  }
+  if (typeof document !== 'undefined') {
+    document.addEventListener('click', function(e){
+      if (!e.target.closest('.swt-tip')) document.querySelectorAll('.swt-tip.open').forEach(function(t){ t.classList.remove('open'); });
+    });
+  }
+  global.swtTipToggle = swtTipToggle;
 })(typeof window !== 'undefined' ? window : this);

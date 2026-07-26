@@ -1103,3 +1103,34 @@ table.items tbody tr.empty-row td {
 .dz-zone[open] > summary .dz-chev { transform: rotate(90deg); }
 .dz-zone .dz-sum { font-size: 10.5px; font-weight: 400; color: #94A3B8; margin-left: 8px; }   /* สรุปตอนยุบ */
 .dz-zone[open] .dz-sum { display: none; }
+
+/* ═══════════ TIP / คำแนะนำในหน้า — ไอคอนจิ๋ว hover/คลิกเด้ง · ไม่กินพื้นที่ layout ═══════════ */
+/* ใช้: <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">เนื้อ…</span></span> */
+/* หัวข้อสำคัญ (เตือน/กฎ) วางไอคอนท้าย label · hover=เด้ง · คลิก=ค้างอ่าน · popover ลอยไม่ดัน layout */
+.swt-tip { position: relative; display: inline-flex; align-items: center; justify-content: center;
+  width: 17px; height: 17px; border-radius: 50%; font-size: 10.5px; font-weight: 700; line-height: 1;
+  cursor: pointer; vertical-align: middle; user-select: none; font-style: normal;
+  background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; }
+.swt-tip:hover { background: #DBEAFE; }
+.swt-tip.warn   { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+.swt-tip.danger { background: #FEF2F2; color: #DC2626; border-color: #FECACA; }
+.swt-tip.ok     { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+.swt-tip .swt-tip-pop { position: absolute; top: calc(100% + 7px); left: 50%;
+  transform: translateX(-50%) translateY(-4px); z-index: 70; width: max-content; max-width: 320px;
+  padding: 9px 12px; border-radius: 8px; background: #1E293B; color: #E2E8F0;
+  font-size: 11.5px; font-weight: 400; line-height: 1.6; text-align: left;
+  box-shadow: 0 8px 24px rgba(0,0,0,.22); white-space: normal; cursor: default;
+  opacity: 0; visibility: hidden; transition: opacity .15s, transform .15s; }
+.swt-tip:hover .swt-tip-pop, .swt-tip.open .swt-tip-pop {
+  opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+.swt-tip .swt-tip-pop b, .swt-tip .swt-tip-pop strong { color: #fff; font-weight: 700; }
+.swt-tip .swt-tip-pop::before { content: ''; position: absolute; bottom: 100%; left: 50%;
+  transform: translateX(-50%); border: 6px solid transparent; border-bottom-color: #1E293B; }
+/* ชิดขอบซ้าย — ไอคอนอยู่ต้นบรรทัด (popover ขยายไปขวา) */
+.swt-tip.pop-left .swt-tip-pop { left: 0; transform: translateY(-4px); }
+.swt-tip.pop-left:hover .swt-tip-pop, .swt-tip.pop-left.open .swt-tip-pop { transform: translateY(0); }
+.swt-tip.pop-left .swt-tip-pop::before { left: 7px; transform: none; }
+/* ชิดขอบขวา — ไอคอนอยู่ท้ายบรรทัด (popover ขยายไปซ้าย · กันล้นจอ) */
+.swt-tip.pop-right .swt-tip-pop { left: auto; right: 0; transform: translateY(-4px); }
+.swt-tip.pop-right:hover .swt-tip-pop, .swt-tip.pop-right.open .swt-tip-pop { transform: translateY(0); }
+.swt-tip.pop-right .swt-tip-pop::before { left: auto; right: 7px; transform: none; }
