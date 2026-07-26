@@ -276,7 +276,10 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
   </div>
 
   <!-- Line items -->
-  <div style="margin-top:0;font-size:13px;font-weight:600;color:#374151;margin-bottom:8px">รายการค่าบริการ — <span style="color:#C55A11">เปลี่ยน "ประเภท" (ใน/นอก Comp) → "เก็บจาก" พลิก payer เอง + ยอด 2 ARI คำนวณสด</span> · <span style="color:#92400E;font-weight:500">⚠️ ระบบเทียบประกันรายชิ้น (SV-1.3/B3) — ชิ้นในประกันแต่ตั้งเก็บลูกค้า = flag เตือน (ปิดได้)</span> · <span style="color:#7C3AED;font-weight:500">🏬 เลือก "บริษัทให้ฟรี" = ลดให้ลูกค้าเป็นน้ำใจ (ต้องหัวหน้าอนุมัติ)</span></div>
+  <div style="margin-top:0;font-size:13px;font-weight:600;color:#374151;margin-bottom:8px;display:flex;align-items:center;gap:6px">รายการค่าบริการ
+    <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">เปลี่ยน <b>"ประเภท" (ใน/นอก Comp)</b> → "เก็บจาก" พลิก payer เอง + ยอด 2 ARI คำนวณสด · <b>⚠️ ระบบเทียบประกันรายชิ้น (SV-1.3/B3)</b> — ชิ้นในประกันแต่ตั้งเก็บลูกค้า = flag เตือน (ปิดได้) · <b>🏬 เลือก "บริษัทให้ฟรี"</b> = ลดให้ลูกค้าเป็นน้ำใจ (ต้องหัวหน้าอนุมัติ)</span></span>
+    <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">🚫 <b>จบทาง "ไม่ซ่อม"</b> → มีบรรทัดค่าบริการ <b>"ค่าตรวจ-ประเมิน"</b> default (payer = ลูกค้า) + คืนเครื่อง · 🚗 <b>ค่าเดินทาง:</b> งาน revisit รอบ ≥2 จากเหตุของเรา/งานในประกัน → default = <b>บริษัทออกให้</b> (payer ฟรี/บริษัท ตามกลไก B4b) ไม่คิดลูกค้า</span></span>
+  </div>
   <table>
     <thead>
       <tr>
@@ -333,11 +336,6 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
       </tr>
     </tbody>
   </table>
-
-  <div style="margin-top:8px;display:flex;flex-direction:column;gap:4px;font-size:11.5px">
-    <div style="color:#9A3412;background:#FFF7ED;border:1px solid #FED7AA;border-radius:6px;padding:6px 10px">🚫 <b>จบทาง "ไม่ซ่อม"</b> → มีบรรทัดค่าบริการ <b>"ค่าตรวจ-ประเมิน"</b> default (payer = ลูกค้า) + คืนเครื่อง</div>
-    <div style="color:#1E40AF;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:6px 10px">🚗 <b>ค่าเดินทาง:</b> งาน revisit รอบ ≥2 จากเหตุของเรา/งานในประกัน → ค่าเดินทาง default = <b>บริษัทออกให้</b> (payer ฟรี/บริษัท ตามกลไก B4b) ไม่คิดลูกค้า</div>
-  </div>
 
   <!-- Split summary: 2 ARI post ที่ sv4 (B4) -->
   <div class="form-grid-2" style="margin-top:18px">
@@ -676,6 +674,7 @@ function sendCnReq(){
 }
 </script>
 <script src="swt-link.js"></script>
+<script src="swt-patterns.js"></script>
 <script src="swt-sidebar.js"></script>
 </body>
 </html>

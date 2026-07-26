@@ -94,7 +94,7 @@ tr:hover td{background:#F8FAFC}
 
   <div class="page-header">
     <div>
-      <div class="page-title">CF-2.2 Number Series (Master Data)</div>
+      <div class="page-title">CF-2.2 Number Series (Master Data) <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>ขอบเขตระบบ (เคาะ 2026-07-21):</b> ระบบนี้ทำเพื่อ <b>SWT บริษัทเดียว</b> — เลขรันทั้งหมด<b>แบ่งตามสาขา ไม่แบ่งตามนิติบุคคล</b> ตามที่ ERP เดิมใช้อยู่ (เลขรันประจำสาขา)<br>📌 ถึง dev: รหัสนำหน้าเอกสารเดิม เช่น <code>SWEPO…</code> คือ <b>เลขเอกสารจริงในระบบเก่า ห้ามแก้/ห้าม map เป็นชื่อบริษัท</b></span></span></div>
       <div class="page-sub">ตั้งรหัส auto-running ให้ Master Data · ลูกค้า · ผู้ขาย · สินค้า · พนักงาน · บัญชี · Lot/Serial</div>
     </div>
     <div style="display:flex;gap:8px">
@@ -106,21 +106,12 @@ tr:hover td{background:#F8FAFC}
   <!-- Overlap decision banner -->
   <div class="overlap-banner">
     <div>
-      ⚠️ <strong>CF-2.2 vs CF-2.7 — อาจซ้ำซ้อน:</strong> CF-2.7 จัดการเลขรัน <strong>เอกสาร transaction</strong> (ใบขาย/ซื้อ/โอน) · CF-2.2 จัดการรหัส <strong>Master Data</strong> (ลูกค้า/สินค้า/ผู้ขาย) — ขอบเขตต่างกัน แต่พิจารณารวมเป็นหน้าเดียวได้
+      ⚠️ <strong>CF-2.2 vs CF-2.7 — อาจซ้ำซ้อน:</strong> CF-2.7 จัดการเลขรัน <strong>เอกสาร transaction</strong> (ใบขาย/ซื้อ/โอน) · CF-2.2 จัดการรหัส <strong>Master Data</strong> (ลูกค้า/สินค้า/ผู้ขาย) — ขอบเขตต่างกัน แต่พิจารณารวมเป็นหน้าเดียวได้ <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>ต่างจาก CF-2.7 อย่างไร:</b> ที่นี่ไม่มี Tax Group / GL / ประเภทราคา — แค่รหัสตัวเลขแบบ static (generate ครั้งเดียวตอนสร้าง Master) ไม่มี running ตามเดือน/ปี</span></span>
     </div>
     <div class="action">
       <button class="btn btn-sm">เก็บแยก</button>
       <button class="btn btn-sm">ยุบรวมกับ CF-2.7</button>
     </div>
-  </div>
-
-  <div class="info">
-    <strong>ขอบเขตระบบ (เคาะ 2026-07-21):</strong> ระบบนี้ทำเพื่อ <strong>SWT บริษัทเดียว</strong> — เลขรันทั้งหมด<strong>แบ่งตามสาขา ไม่แบ่งตามนิติบุคคล</strong> ตามที่ ERP เดิมใช้อยู่ (เลขรันประจำสาขา)<br>
-    <span style="font-size:12px">📌 ถึง dev: รหัสนำหน้าเอกสารเดิม เช่น <code>SWEPO…</code> คือ <strong>เลขเอกสารจริงในระบบเก่า ห้ามแก้/ห้าม map เป็นชื่อบริษัท</strong></span>
-  </div>
-
-  <div class="info">
-    <strong>ต่างจาก CF-2.7 อย่างไร:</strong> ที่นี่ไม่มี Tax Group / GL / ประเภทราคา — แค่รหัสตัวเลขแบบ static (generate ครั้งเดียวตอนสร้าง Master) ไม่มี running ตามเดือน/ปี
   </div>
 
   <!-- Category 1: Customer -->
@@ -176,7 +167,7 @@ tr:hover td{background:#F8FAFC}
   <!-- Category 3: Item -->
   <div class="category-card">
     <div class="cat-head">
-      <div class="cat-title"><span class="cat-icon">📦</span> สินค้า (MD-1 Item)</div>
+      <div class="cat-title"><span class="cat-icon">📦</span> สินค้า (MD-1 Item) <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">Item Master ใช้รหัสที่มีความหมาย (ไม่ running) เพราะช่างต้องอ่านออกและจำได้ — ตรวจซ้ำทั่วระบบเพื่อกันรหัสซ้ำข้ามสาขา</span></span></div>
       <div>
         <span class="bdg bdg-manual">Manual / Template</span>
         <button class="btn btn-sm" style="margin-left:8px">แก้ไข</button>
@@ -193,9 +184,6 @@ tr:hover td{background:#F8FAFC}
       <div class="form-field"><label>ตรวจซ้ำ</label><select><option>ทั่วทั้งระบบ</option><option>ต่อสาขา</option></select></div>
       <div class="form-field"><label>อนุญาต Free-form</label><select><option>ได้ (Admin อนุมัติ)</option><option>ไม่ได้</option></select></div>
       <div class="form-field"><label>สถานะ</label><select><option>เปิดใช้งาน</option></select></div>
-    </div>
-    <div class="hint-box">
-      💡 Item Master ใช้รหัสที่มีความหมาย (ไม่ running) เพราะช่างต้องอ่านออกและจำได้ — ตรวจซ้ำทั่วระบบเพื่อกันรหัสซ้ำข้ามสาขา
     </div>
   </div>
 
@@ -229,7 +217,7 @@ tr:hover td{background:#F8FAFC}
   <!-- Category 5: Chart of Accounts -->
   <div class="category-card">
     <div class="cat-head">
-      <div class="cat-title"><span class="cat-icon">📒</span> ผังบัญชี (Chart of Accounts)</div>
+      <div class="cat-title"><span class="cat-icon">📒</span> ผังบัญชี (Chart of Accounts) <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">บัญชีต้องตรงกับ <a href="#">CF-2.3 Posting &amp; GL</a> — เปลี่ยนรหัสบัญชีที่นั่น</span></span></div>
       <div>
         <span class="bdg bdg-manual">Manual (ตามมาตรฐาน)</span>
         <button class="btn btn-sm" style="margin-left:8px">แก้ไข</button>
@@ -244,9 +232,6 @@ tr:hover td{background:#F8FAFC}
       <div class="form-field"><label>อนุญาตสร้างใหม่</label><select><option>เฉพาะบัญชี</option></select></div>
       <div class="form-field"><label>ตรวจสอบ hierarchy</label><select><option>บังคับ</option></select></div>
       <div class="form-field"><label>สถานะ</label><select><option>เปิดใช้งาน</option></select></div>
-    </div>
-    <div class="hint-box">
-      💡 บัญชีต้องตรงกับ <a href="#" style="color:#2563EB">CF-2.3 Posting & GL</a> — เปลี่ยนรหัสบัญชีที่นั่น
     </div>
   </div>
 
@@ -274,7 +259,7 @@ tr:hover td{background:#F8FAFC}
   <!-- Category 7: Serial Number -->
   <div class="category-card">
     <div class="cat-head">
-      <div class="cat-title"><span class="cat-icon">🏷️</span> Serial Number (สินค้า electronics)</div>
+      <div class="cat-title"><span class="cat-icon">🏷️</span> Serial Number (สินค้า electronics) <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">ใช้ร่วมกับ MD-1 Item Master flag "Serial-tracked" — สินค้าที่เปิด flag นี้ต้อง scan ทุกครั้งที่ขาย/ซ่อม/เคลม</span></span></div>
       <div>
         <span class="bdg bdg-manual">Manual (จาก vendor)</span>
         <button class="btn btn-sm" style="margin-left:8px">แก้ไข</button>
@@ -289,9 +274,6 @@ tr:hover td{background:#F8FAFC}
       <div class="form-field"><label>ใช้กับหมวด</label><select><option>แอร์ · ตู้เย็น · ทีวี · เครื่องซักผ้า</option></select></div>
       <div class="form-field"><label>ผูกกับการรับประกัน</label><select><option>บังคับ</option></select></div>
       <div class="form-field"><label>สถานะ</label><select><option>เปิดใช้งาน</option></select></div>
-    </div>
-    <div class="hint-box">
-      💡 ใช้ร่วมกับ MD-1 Item Master flag "Serial-tracked" — สินค้าที่เปิด flag นี้ต้อง scan ทุกครั้งที่ขาย/ซ่อม/เคลม
     </div>
   </div>
 
@@ -328,6 +310,7 @@ tr:hover td{background:#F8FAFC}
 <script src="swt-link.js" defer></script>
 <!-- SWT_LINK_END -->
 
+<script src="swt-patterns.js"></script>
 <script src="swt-sidebar.js"></script>
 </body>
 </html>

@@ -100,17 +100,13 @@ tr:hover td{background:#F8FAFC}
 
   <div class="page-header">
     <div>
-      <div class="page-title">CF-2.6 Approval Matrix</div>
+      <div class="page-title">CF-2.6 Approval Matrix <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>หลักการ:</b> ผูก Workflow กับ <b>ประเภทเอกสาร</b> + <b>วงเงิน</b> + <b>กลุ่มเอกสาร</b> (ระบบนี้ทำเพื่อ SWT บริษัทเดียว — ไม่มีมิตินิติบุคคล) · กำหนด Approver เป็น "ตำแหน่ง" (ไม่ใช่คน) → คนลาออกไม่กระทบ workflow · เชื่อมกับ CF-1 RBAC (role)</span></span></div>
       <div class="page-sub">ใครอนุมัติอะไร · Threshold ตามวงเงิน · Sequential / Parallel · Delegation</div>
     </div>
     <div style="display:flex;gap:8px">
       <button class="btn">ดูประวัติ</button>
       <button class="btn btn-primary">+ สร้าง Workflow ใหม่</button>
     </div>
-  </div>
-
-  <div class="info">
-    <strong>หลักการ:</strong> ผูก Workflow กับ <strong>ประเภทเอกสาร</strong> + <strong>วงเงิน</strong> + <strong>กลุ่มเอกสาร</strong> (ระบบนี้ทำเพื่อ SWT บริษัทเดียว — ไม่มีมิตินิติบุคคล) · กำหนด Approver เป็น "ตำแหน่ง" (ไม่ใช่คน) → คนลาออกไม่กระทบ workflow · เชื่อมกับ CF-1 RBAC (role)
   </div>
 
   <div class="tabs">
@@ -150,7 +146,7 @@ tr:hover td{background:#F8FAFC}
     <div class="section">
       <div class="section-header">
         <div>
-          <div class="section-title">Preview: WF-PO-001 — อนุมัติใบสั่งซื้อ (Sequential 3 ขั้น)</div>
+          <div class="section-title">Preview: WF-PO-001 — อนุมัติใบสั่งซื้อ (Sequential 3 ขั้น) <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">ถ้าใบ PO = 30,000 ฿ → ผ่าน Level 1 ก็จบ · ถ้า 150,000 ฿ → ต้องผ่าน L1 + L2 · ถ้า &gt; 500K → ต้องผ่านทั้ง 3 ขั้น</span></span></div>
           <div class="section-desc">แต่ละขั้นแยกตาม Threshold วงเงิน · ใบที่วงเงินสูงกว่าต้องผ่านทุกขั้น</div>
         </div>
       </div>
@@ -187,9 +183,6 @@ tr:hover td{background:#F8FAFC}
         </div>
       </div>
 
-      <div class="hint-box">
-        💡 ถ้าใบ PO = 30,000 ฿ → ผ่าน Level 1 ก็จบ · ถ้า 150,000 ฿ → ต้องผ่าน L1 + L2 · ถ้า &gt; 500K → ต้องผ่านทั้ง 3 ขั้น
-      </div>
     </div>
   </div>
 
@@ -222,22 +215,12 @@ tr:hover td{background:#F8FAFC}
       <div class="section" style="margin:0">
         <div class="section-header">
           <div>
-            <div class="section-title">ผู้อนุมัติจริงมาจากไหน</div>
+            <div class="section-title">ผู้อนุมัติจริงมาจากไหน <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>🔑 ระบบไม่ผูกชื่อคนไว้ที่หน้านี้</b> (เคาะ 2026-07-21)<br>หน้านี้กำหนดแค่ <b>"เงื่อนไขว่าเอกสารแบบไหน วงเงินเท่าไร ต้องผ่านกี่ขั้น"</b><br>ส่วน <b>"ใครมีสิทธิ์อนุมัติเรื่องไหน วงเงินเท่าไร"</b> ตั้งที่ <a href="md4-employee-master-mockup-v3.html">ทะเบียนพนักงาน ↗</a> และ <a href="cf1-rbac-permission-mockup.html">หน้ากำหนดสิทธิ์ ↗</a><br><br><b>ทำไมไม่เก็บชื่อคนไว้ 2 ที่:</b> ถ้าเก็บทั้งที่นี่และที่ทะเบียนพนักงาน พอคนย้ายตำแหน่งหรือลาออก จะต้องไล่แก้ 2 จุด — <b>พลาดจุดใดจุดหนึ่งแล้วเอกสารจะค้างโดยไม่มีใครรู้</b><br><b>คนลาออก:</b> แก้ที่ทะเบียนพนักงานที่เดียว เงื่อนไขในหน้านี้ไม่ต้องแตะเลย</span></span></div>
             <div class="section-desc">หน้านี้ตั้งได้แค่ "เงื่อนไข" — ตัวคนตั้งที่ทะเบียนพนักงาน</div>
           </div>
         </div>
 
-        <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:14px 16px;line-height:1.8;font-size:13px;color:#1E3A5F">
-          🔑 <b>ระบบไม่ผูกชื่อคนไว้ที่หน้านี้</b> (เคาะ 2026-07-21)<br>
-          <span style="font-size:12.5px;color:#1E40AF">
-          หน้านี้กำหนดแค่ <b>"เงื่อนไขว่าเอกสารแบบไหน วงเงินเท่าไร ต้องผ่านกี่ขั้น"</b><br>
-          ส่วน <b>"ใครมีสิทธิ์อนุมัติเรื่องไหน วงเงินเท่าไร"</b> ตั้งที่ <a href="md4-employee-master-mockup-v3.html" style="color:#2563EB;font-weight:600">ทะเบียนพนักงาน ↗</a> และ <a href="cf1-rbac-permission-mockup.html" style="color:#2563EB;font-weight:600">หน้ากำหนดสิทธิ์ ↗</a><br><br>
-          <b>ทำไมไม่เก็บชื่อคนไว้ 2 ที่:</b> ถ้าเก็บทั้งที่นี่และที่ทะเบียนพนักงาน พอคนย้ายตำแหน่งหรือลาออก จะต้องไล่แก้ 2 จุด — <b>พลาดจุดใดจุดหนึ่งแล้วเอกสารจะค้างโดยไม่มีใครรู้</b><br>
-          <b>คนลาออก:</b> แก้ที่ทะเบียนพนักงานที่เดียว เงื่อนไขในหน้านี้ไม่ต้องแตะเลย
-          </span>
-        </div>
-
-        <div style="margin-top:12px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;padding:9px 12px;font-size:12px;color:#92400E;line-height:1.7">
+        <div style="margin-top:4px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;padding:9px 12px;font-size:12px;color:#92400E;line-height:1.7">
           ⚠️ <b>สำหรับผู้พัฒนา: ห้าม hardcode ชื่อคนหรือตำแหน่งผู้อนุมัติลงในโปรแกรม</b> — โครงสร้างองค์กรเปลี่ยนได้ตลอด · ระบบต้องอ่านผู้มีสิทธิ์จากทะเบียนพนักงานตอนรันเสมอ
         </div>
 
@@ -254,7 +237,7 @@ tr:hover td{background:#F8FAFC}
     <div class="section">
       <div class="section-header">
         <div>
-          <div class="section-title">Threshold Rules — วงเงินอนุมัติ</div>
+          <div class="section-title">Threshold Rules — วงเงินอนุมัติ <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>ตัวอย่างการใช้งาน:</b> ใบ PO 150,000 ฿ → ต้องผ่าน L1 (เกิน 50K) → L2 (อยู่ในช่วง 500K) · Level สูงกว่า override ต่ำกว่าได้ (กรรมการอนุมัติแทน L1/L2 ได้เลย)</span></span></div>
           <div class="section-desc">กำหนดวงเงินแยกตามเอกสาร + กลุ่มเอกสาร + ตำแหน่ง</div>
         </div>
         <button class="btn btn-sm btn-primary">+ เพิ่ม Rule</button>
@@ -272,9 +255,6 @@ tr:hover td{background:#F8FAFC}
           <tr><td class="mono">WF-PM-001</td><td><span class="bdg bdg-lv3">L3</span></td><td>กรรมการ</td><td class="amount-badge">ไม่จำกัด</td><td>—</td><td>กลุ่มการเงิน</td></tr>
         </tbody>
       </table>
-      <div class="hint-box" style="margin-top:12px">
-        💡 <strong>ตัวอย่างการใช้งาน:</strong> ใบ PO 150,000 ฿ → ต้องผ่าน L1 (เกิน 50K) → L2 (อยู่ในช่วง 500K) · Level สูงกว่า override ต่ำกว่าได้ (กรรมการอนุมัติแทน L1/L2 ได้เลย)
-      </div>
     </div>
   </div>
 
@@ -365,6 +345,7 @@ function sw(e,id){
 <script src="swt-link.js" defer></script>
 <!-- SWT_LINK_END -->
 
+<script src="swt-patterns.js"></script>
 <script src="swt-sidebar.js"></script>
 </body>
 </html>
