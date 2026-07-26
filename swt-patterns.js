@@ -865,16 +865,31 @@
   global.swtRecalcApInvoiceSummary = swtRecalcApInvoiceSummary;
   global.swtMakerCheckerOk = swtMakerCheckerOk;
 
-  // swt-tip: คลิกไอคอน → toggle popover ค้าง (hover เปิดผ่าน CSS อยู่แล้ว) · คลิกที่ว่าง = ปิด
+  // swt-tip: วางตำแหน่ง popover เองกันล้นจอ (กาง ซ้าย/ขวา/กลาง ตามพื้นที่) — ครอบทุก tip ไม่ต้องกำหนด pop-left/right เอง
+  function swtTipPlace(el){
+    var pop = el.querySelector('.swt-tip-pop'); if (!pop) return;
+    var ir = el.getBoundingClientRect();
+    var popW = pop.offsetWidth || 320, popH = pop.offsetHeight || 0;
+    var left = ir.left + ir.width / 2 - popW / 2;                        // กลางไอคอน
+    left = Math.max(8, Math.min(left, window.innerWidth - popW - 8));    // clamp ไม่ล้นซ้าย/ขวา
+    var top = ir.bottom + 7;
+    if (top + popH > window.innerHeight - 8) top = ir.top - popH - 7;    // ล่างไม่พอ → เด้งขึ้นบน
+    pop.style.left = left + 'px'; pop.style.top = top + 'px';
+  }
+  // swt-tip: คลิกไอคอน → toggle popover ค้าง (hover เปิดผ่าน CSS) · คลิกที่ว่าง = ปิด
   function swtTipToggle(el, ev){
     if (ev) ev.stopPropagation();
     document.querySelectorAll('.swt-tip.open').forEach(function(t){ if (t !== el) t.classList.remove('open'); });
+    swtTipPlace(el);
     el.classList.toggle('open');
   }
   if (typeof document !== 'undefined') {
     document.addEventListener('click', function(e){
       if (!e.target.closest('.swt-tip')) document.querySelectorAll('.swt-tip.open').forEach(function(t){ t.classList.remove('open'); });
     });
+    // hover: วางตำแหน่งก่อน popover เด้ง (กันล้น)
+    document.addEventListener('mouseover', function(e){ var t = e.target.closest && e.target.closest('.swt-tip'); if (t) swtTipPlace(t); });
   }
   global.swtTipToggle = swtTipToggle;
+  global.swtTipPlace = swtTipPlace;
 })(typeof window !== 'undefined' ? window : this);

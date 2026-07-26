@@ -244,7 +244,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 
         <!-- ===== 5 มิติมาตรฐานบนเอกสาร (DOCGROUP · DEPARTMENT · PROJECT · ALLOCATECODE · SITECODE) ===== -->
         <div style="margin-top:8px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px 8px">
-          <div class="field" style="margin-bottom:0"><div class="field-label">กลุ่มเอกสาร</div>
+          <div class="field" style="margin-bottom:0"><div class="field-label">กลุ่มเอกสาร <span class="swt-tip warn pop-left" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>🗂️ 5 มิติมาตรฐานบนเอกสาร — ใช้ชุดเดียวกันทุกเอกสาร</b> (เคาะ 2026-07-21)<br><b>กลุ่มเอกสาร · แผนก · โครงการ · การจัดสรร · สาขา</b> — ตรงกับที่ ERP เดิมใช้ (<code>DOCGROUP</code> <code>DEPARTMENT</code> <code>PROJECT</code> <code>ALLOCATECODE</code> <code>SITECODE</code>)<br><b>ใช้ทำอะไร:</b> กรองรายงานได้หลายมุมพร้อมกัน เช่น <i>"ยอดขายโครงการคอนโดสุขุมวิท แยกตามแผนก"</i> · และใช้ระบุว่าบิลนี้นับคอมมิชชั่นไหม<br>⚠️ <b>ผู้พัฒนา: ทุกเอกสารต้องมีครบ 5 ช่องนี้</b> — ถ้าขาดแม้ช่องเดียว รายงานมุมนั้นจะทำไม่ได้ตลอดกาล (ย้อนกลับมาเติมไม่ได้)<br>📌 ตัวเลือกทุกช่องมาจาก<b>ทะเบียน</b>ที่หน้า <a href="cf2-7-doc-template-mockup.html" style="color:#93C5FD;font-weight:700;text-decoration:none">แม่แบบเอกสาร ↗</a> — เพิ่ม/แก้ได้เอง ไม่ hardcode</span></span></div>
             <select class="cn-sel" id="dimDocGroup" title="DOCGROUP — ชนิด/กลุ่มของเอกสาร">
               <option selected>ขายปกติ</option>
               <option>ขายโครงการ</option>
@@ -280,19 +280,9 @@ table.items th:last-child,table.items td:last-child{border-right:none}
             </select></div>
         </div>
 
-        <details class="collapse" style="margin-top:8px">
-          <summary style="font-size:11px;color:#78350F;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:6px 10px;cursor:pointer;list-style:none">🗂️ <b>5 มิติมาตรฐานบนเอกสาร — ใช้ชุดเดียวกันทุกเอกสาร</b> (เคาะ 2026-07-21) ▼</summary>
-          <div style="margin-top:4px;padding:7px 10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;font-size:11px;color:#78350F;line-height:1.55">
-            <b>กลุ่มเอกสาร · แผนก · โครงการ · การจัดสรร · สาขา</b> — ตรงกับที่ ERP เดิมใช้ (<code>DOCGROUP</code> <code>DEPARTMENT</code> <code>PROJECT</code> <code>ALLOCATECODE</code> <code>SITECODE</code>)<br>
-            <b>ใช้ทำอะไร:</b> กรองรายงานได้หลายมุมพร้อมกัน เช่น <i>"ยอดขายโครงการคอนโดสุขุมวิท แยกตามแผนก"</i> · และใช้ระบุว่าบิลนี้นับคอมมิชชั่นไหม<br>
-            ⚠️ <b>ผู้พัฒนา: ทุกเอกสารต้องมีครบ 5 ช่องนี้</b> — ถ้าขาดแม้ช่องเดียว รายงานมุมนั้นจะทำไม่ได้ตลอดกาล (ย้อนกลับมาเติมไม่ได้)<br>
-            📌 ตัวเลือกทุกช่องมาจาก<b>ทะเบียน</b>ที่หน้า <a href="cf2-7-doc-template-mockup.html" style="color:#1D4ED8;font-weight:700;text-decoration:none">แม่แบบเอกสาร ↗</a> — เพิ่ม/แก้ได้เอง ไม่ hardcode
-          </div>
-        </details>
-
         <!-- ===== คอมมิชชั่น = 2 ฟิลด์แยกกัน (COMMFLAG / COMMFLAG2) ===== -->
         <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px 14px">
-          <div class="field" style="margin-bottom:0"><div class="field-label">นับคอมมิชชั่น</div>
+          <div class="field" style="margin-bottom:0"><div class="field-label">นับคอมมิชชั่น <span class="swt-tip danger pop-left" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>💰 คอมมิชชั่น = 2 ฟิลด์แยกกัน ห้ามรวมเป็นตัวเดียว</b> (เคาะ 2026-07-21)<br><b>นับคอมมิชชั่น</b> = คุณสมบัติของบิล (บิลนี้เข้าเงื่อนไขคิดคอมไหม) — ตั้งตอนออกบิล<br><b>สถานะจ่ายคอม</b> = สถานะการทำงาน (จ่ายไปแล้วหรือยัง) — ระบบอัปเดตเอง: ⏳ รอเก็บเงินครบ / ✅ พร้อมจ่าย / 💰 จ่ายแล้ว<br>🔴 <b>เงื่อนไขจ่ายคอม: ต้องเก็บเงินครบก่อน</b> (ยอดค้างชำระ = 0) ตามที่ ERP เดิมทำ (<code>DEBTBALANCE &lt;= 0</code>)<br><b>ทำไม:</b> ขายเชื่อแล้วจ่ายคอมทันทีทั้งที่ยังไม่เก็บเงิน = ถ้าลูกค้าไม่จ่าย บริษัทเสียทั้งของและค่าคอม<br>⚠️ <b>ผู้พัฒนา: ถ้ารวม 2 ฟิลด์เป็นตัวเดียว จะแยกไม่ออกว่า "ไม่นับคอม" กับ "จ่ายไปแล้ว"</b> — รายงานค้างจ่ายคอมจะผิด</span></span></div>
             <div class="field-value">
               <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:600;color:#065F46;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:20px;padding:3px 10px">
                 <input type="checkbox" id="billCommission" style="cursor:pointer"> นับคอมมิชชั่นใบนี้ (หักกลับจากบิลต้นทาง)
@@ -304,17 +294,6 @@ table.items th:last-child,table.items td:last-child{border-right:none}
               <span style="font-size:10.5px;color:#9CA3AF;margin-left:6px">อ้างอิงยอดค้างชำระของบิลต้นทาง</span></div>
           </div>
         </div>
-
-        <details class="collapse" style="margin-top:8px">
-          <summary style="font-size:11px;color:#7F1D1D;background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;padding:6px 10px;cursor:pointer;list-style:none">💰 <b>คอมมิชชั่น = 2 ฟิลด์แยกกัน ห้ามรวมเป็นตัวเดียว</b> (เคาะ 2026-07-21) ▼</summary>
-          <div style="margin-top:4px;padding:7px 10px;background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;font-size:11px;color:#7F1D1D;line-height:1.55">
-            <b>นับคอมมิชชั่น</b> = คุณสมบัติของบิล (บิลนี้เข้าเงื่อนไขคิดคอมไหม) — ตั้งตอนออกบิล<br>
-            <b>สถานะจ่ายคอม</b> = สถานะการทำงาน (จ่ายไปแล้วหรือยัง) — ระบบอัปเดตเอง: ⏳ รอเก็บเงินครบ / ✅ พร้อมจ่าย / 💰 จ่ายแล้ว<br>
-            🔴 <b>เงื่อนไขจ่ายคอม: ต้องเก็บเงินครบก่อน</b> (ยอดค้างชำระ = 0) ตามที่ ERP เดิมทำ (<code>DEBTBALANCE &lt;= 0</code>)<br>
-            <b>ทำไม:</b> ขายเชื่อแล้วจ่ายคอมทันทีทั้งที่ยังไม่เก็บเงิน = ถ้าลูกค้าไม่จ่าย บริษัทเสียทั้งของและค่าคอม<br>
-            ⚠️ <b>ผู้พัฒนา: ถ้ารวม 2 ฟิลด์เป็นตัวเดียว จะแยกไม่ออกว่า "ไม่นับคอม" กับ "จ่ายไปแล้ว"</b> — รายงานค้างจ่ายคอมจะผิด
-          </div>
-        </details>
       </div>
     </div>
 

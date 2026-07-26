@@ -83,31 +83,12 @@
     <div id="fi12Sc12" class="status-strip"></div>
     <div id="fi12Gate" class="gate-alert"></div>
 
-    <!-- กติกา "ตารางอัตราอยู่ที่เดียว" (เคาะ 2026-07-21) -->
-    <div class="card" style="padding:14px 18px;background:#FFFBEB;border:1.5px solid #FCD34D;border-left:5px solid #F59E0B;flex:none">
-      <div style="font-size:13.5px;font-weight:700;color:#78350F;margin-bottom:6px">🔒 อัตราภาษีหัก ณ ที่จ่าย มาจากตารางกลางที่ผูกกับ “ประเภทเงินได้” — หน้านี้อ่านอย่างเดียว ห้ามพิมพ์อัตราเอง</div>
-      <div style="font-size:12px;color:#78350F;line-height:1.75">
-        <b>เหตุผลที่ไม่ผูกกับผู้ขาย:</b> ผู้ขายรายเดียวจ่ายได้หลายประเภท เช่น Daikin จ่ายทั้งค่าสินค้า (ไม่หัก) และค่าติดตั้ง (หัก 3%) — ถ้าผูกอัตราไว้กับผู้ขาย จะหักผิดทันทีที่ประเภทเงินได้เปลี่ยน<br>
-        <b>ตารางอัตรา</b> ตั้งที่หน้าตั้งค่าภาษี · <b>ผังบัญชี</b> ตั้งที่ระบบ Business Central — พอร์ทัลดึงมาแสดงอย่างเดียว (ดูอัตราทั้งหมดที่แท็บ “อัตรา WHT” ด้านล่าง)
-      </div>
-    </div>
-
-    <!-- เคสช่างนอก (เคาะ Q4) -->
-    <div class="card" style="padding:14px 18px;background:#F0F9FF;border:1.5px solid #BAE6FD;border-left:5px solid #0EA5E9;flex:none">
-      <div style="font-size:13.5px;font-weight:700;color:#075985;margin-bottom:6px">🔧 ช่างนอก = เจ้าหนี้การค้าธรรมดา อยู่ในทะเบียนผู้ขาย ไม่ใช่ประเภทพิเศษ</div>
-      <div style="font-size:12px;color:#0C4A6E;line-height:1.8">
-        แอดมินศูนย์บริการรวบงานที่ปิดแล้ว → ส่งวางบิล → บัญชีตั้งหนี้ (โหมดไม่อ้างใบสั่งซื้อ) → <b>หัก 3% ค่าจ้างทำของ</b> → จ่ายตามเครดิตเทอมของช่างรายนั้น<br>
-        ช่างที่เป็น<b>พนักงานประจำ</b> = เข้าเงินเดือน ไม่ผ่านการวางบิล และไม่โผล่ในหน้านี้<br>
-        <span style="color:#0369A1">ตัวอย่างในตารางด้านล่าง: รายการที่ 3 “นายสมพงษ์ ช่างรับเหมา” — บุคคลธรรมดา · ค่าจ้างทำของ 3% · ยื่น ภ.ง.ด.3</span>
-      </div>
-    </div>
-
     <!-- ④b หัวชุด + สรุปงวด (แทน party) -->
     <div class="row-party">
       <div class="card party-mini">
         <div class="party-lines">
           <div class="party-line party-hd">
-            <div class="card-title"><span class="secno">FI-12.1</span>🗓️ หัวชุด WHT (นิติบุคคล + งวด)</div>
+            <div class="card-title"><span class="secno">FI-12.1</span>🗓️ หัวชุด WHT (นิติบุคคล + งวด)<span class="swt-tip warn pop-left" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>🔒 อัตรา WHT อ่านอย่างเดียว — ห้ามพิมพ์เอง</b><br>อัตรามาจากตารางกลางที่ผูกกับ <b>ประเภทเงินได้</b> ไม่ได้ผูกกับผู้ขาย — ผู้ขายรายเดียวจ่ายได้หลายประเภท เช่น Daikin จ่ายทั้งค่าสินค้า (ไม่หัก) และค่าติดตั้ง (หัก 3%) ถ้าผูกอัตราไว้กับผู้ขายจะหักผิดทันทีที่ประเภทเงินได้เปลี่ยน<br><b>ตารางอัตรา</b> ตั้งที่หน้าตั้งค่าภาษี · <b>ผังบัญชี</b> ตั้งที่ Business Central — พอร์ทัลดึงมาแสดงอย่างเดียว (ดูอัตราทั้งหมดที่แท็บ “อัตรา WHT” ด้านล่าง)</span></span></div>
             <span class="card-spacer"></span>
             <button class="card-btn primary" onclick="fi12Pull()">🔄 ดึงจาก Payment</button>
           </div>
@@ -155,7 +136,7 @@
     <!-- ④c WHT List — หัวใจ -->
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">FI-12.3</span>📋 รายการภาษีหัก ณ ที่จ่าย (WHT List)</div>
+        <div class="card-title"><span class="secno">FI-12.3</span>📋 รายการภาษีหัก ณ ที่จ่าย (WHT List)<span class="swt-tip info pop-left" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>🔧 ช่างนอก = เจ้าหนี้การค้าธรรมดา</b> อยู่ในทะเบียนผู้ขาย ไม่ใช่ประเภทพิเศษ<br>แอดมินศูนย์บริการรวบงานที่ปิดแล้ว → ส่งวางบิล → บัญชีตั้งหนี้ (โหมดไม่อ้างใบสั่งซื้อ) → <b>หัก 3% ค่าจ้างทำของ</b> → จ่ายตามเครดิตเทอมของช่างรายนั้น<br>ช่างที่เป็น<b>พนักงานประจำ</b> = เข้าเงินเดือน ไม่ผ่านวางบิล และไม่โผล่ในหน้านี้<br>ตัวอย่าง: รายการที่ 3 “นายสมพงษ์ ช่างรับเหมา” — บุคคลธรรมดา · ค่าจ้างทำของ 3% · ยื่น ภ.ง.ด.3</span></span></div>
         <div class="card-spacer"></div>
         <span style="font-size:11px;color:#6B7280">เลือกรายการ → กด <b>🔒 Release</b> ที่ส่วนหัว</span>
       </div>

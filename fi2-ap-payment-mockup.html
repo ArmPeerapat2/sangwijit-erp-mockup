@@ -185,7 +185,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
     <div class="row-2col">
       <div class="card compact">
         <div class="card-header">
-          <div class="card-title"><span class="secno">FI-2.1</span>🏭 เจ้าหนี้ (Vendor) <span class="tpl-zone">SC-3</span></div>
+          <div class="card-title"><span class="secno">FI-2.1</span>🏭 เจ้าหนี้ (Vendor) <span class="tpl-zone">SC-3</span><span class="swt-tip warn pop-left" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>1 ใบจ่าย ต่อ 1 เจ้าหนี้เท่านั้น</b> — แต่รวมได้หลายรายการ/หลายใบตั้งหนี้ของเจ้าหนี้รายนั้น · ใบนี้จ่าย Daikin Industries (TH) รวม 2 ใบตั้งหนี้ (ค่าสินค้า + ค่าจ้างติดตั้ง) ในใบเดียว<br><br>ถ้าเป็นเจ้าหนี้คนละราย ต้อง<b>แยกใบจ่ายคนละใบ</b> — เช่น นายสมพงษ์ ช่างรับเหมา ออกเป็นใบจ่ายอีกใบต่างหาก · <b>ช่างนอกก็เป็นเจ้าหนี้การค้าธรรมดา ไม่ใช่ประเภทพิเศษ จ่ายตามสายปกติ</b></span></span></div>
           <div class="card-spacer"></div>
           <button class="card-btn primary" onclick="dfOpenVend()">🔍 เลือก/เปลี่ยน</button>
         </div>
@@ -194,10 +194,6 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           <div class="field"><div class="field-label">เลขภาษี</div><div class="field-value mono">0-1055-12345-67-8</div></div>
           <div class="field"><div class="field-label">ประเภทเงินได้ · อัตราภาษีหัก ณ ที่จ่าย</div><div class="field-value">🔒 อ่านจากตารางประเภทเงินได้กลาง (อ่านอย่างเดียว)</div></div>
           <div class="field"><div class="field-label">ยอดค้างชำระในใบจ่ายนี้ (รวม VAT)</div><div class="field-value" style="color:#B45309">฿2,918,176.00</div></div>
-        </div>
-        <div style="font-size:10.5px;color:#6B7280;border-top:1px dashed #E5E7EB;padding-top:6px">
-          💡 <b style="color:#B45309">1 ใบจ่าย ต่อ 1 เจ้าหนี้เท่านั้น</b> — แต่ <b>รวมได้หลายรายการ/หลายใบตั้งหนี้ของเจ้าหนี้รายนั้น</b> · ใบนี้จ่าย Daikin Industries (TH) รวม 2 ใบตั้งหนี้ (ค่าสินค้า + ค่าจ้างติดตั้ง) ในใบเดียว<br>
-          ถ้าเป็นเจ้าหนี้คนละราย ต้อง<b>แยกใบจ่ายคนละใบ</b> — เช่น นายสมพงษ์ ช่างรับเหมา ออกเป็นใบจ่ายอีกใบต่างหาก · <b>ช่างนอกก็เป็นเจ้าหนี้การค้าธรรมดา ไม่ใช่ประเภทพิเศษ จ่ายตามสายปกติ</b>
         </div>
       </div>
       <div class="card compact">
@@ -222,7 +218,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 
     <div class="card items-card">
       <div class="card-header">
-        <div class="card-title"><span class="secno">FI-2.3</span>🧾 รายการใบตั้งหนี้ที่จ่าย (Apply AP)</div>
+        <div class="card-title"><span class="secno">FI-2.3</span>🧾 รายการใบตั้งหนี้ที่จ่าย (Apply AP)<span class="swt-tip info pop-left" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">🧮 <b>ฐานคำนวณภาษีหัก ณ ที่จ่าย = ฐานก่อน VAT เท่านั้น</b> (ไม่ใช่ยอดค้างที่รวม VAT แล้ว) · ฐานก่อน VAT = ยอดรวม VAT ÷ 1.07 · เช่น 578,340.00 ÷ 1.07 = 540,504.67 → หัก 3% = <b>16,215.14</b><br><br>🔒 <b>อัตราภาษีหัก ณ ที่จ่ายมาจากตารางกลางที่ผูกกับประเภทเงินได้</b> (ค่าบริการ/ค่าจ้างทำของ 3% · ค่าโฆษณา 2% · ค่าขนส่ง 1% · ค่าเช่า 5%) — หน้านี้<b>อ่านอย่างเดียว ห้ามพิมพ์อัตราเอง</b> แก้อัตราได้ที่ตารางกลางเท่านั้น<br><br>✎ <b>ยอดภาษี: ระบบคำนวณให้เป็นค่าตั้งต้น แต่กรอกทับได้กรณีพิเศษ</b> (ไม่ล็อกตาย — เคาะ 21 ก.ค. 2026) · ถ้ากรอกทับ ระบบจะบันทึกผู้แก้ + เหตุผลไว้ในประวัติ<br><br>📥 <b>รับใบตั้งหนี้ได้ 2 แบบ</b> — (1) <b>อ้างใบสั่งซื้อ</b> → ต้องผ่านการจับคู่ 3 ทาง (ใบสั่งซื้อ · ใบรับของ · ใบแจ้งหนี้) · (2) <b>ไม่อ้างใบสั่งซื้อ</b> (ช่างนอก · ค่าเช่า · ค่าที่ปรึกษา · ค่าสาธารณูปโภค) → <b>ข้ามการจับคู่ 3 ทาง</b><br><br>💡 ใบตั้งหนี้ที่อ้างใบสั่งซื้อมาจาก <b>ใบตั้งหนี้เจ้าหนี้ (PO-6, Posted)</b> · <b>1 ใบจ่าย = 1 เจ้าหนี้ แต่รวมได้หลายใบตั้งหนี้ของเจ้าหนี้รายนั้น</b> (ใบนี้รวม AP-2606-0088 + AP-2606-0091 ของ Daikin) → ภาษีหัก ณ ที่จ่ายส่งเข้า <b>ทะเบียนภาษีหัก ณ ที่จ่าย (FI-12)</b> หลัง Post<br><br>📄 <b>ใบจ่ายอื่นที่รออนุมัติ (เจ้าหนี้คนละราย → แยกใบ)</b> — PV แยกใบ · นายสมพงษ์ ช่างรับเหมา · ค่าจ้างทำของ · ฐานก่อน VAT 30,000.00 · หัก 3% = 900.00 · จ่ายจริง 29,100.00 · <b>ไม่มี VAT (ช่างไม่จด VAT)</b> · ตั้งหนี้แบบไม่อ้างใบสั่งซื้อ → ข้ามการจับคู่ 3 ทาง</span></span></div>
         <div class="card-spacer"></div>
         <button class="card-btn primary" onclick="openApPick()">🔗 ดึงใบตั้งหนี้ค้างจ่าย</button>
       </div>
@@ -281,17 +277,6 @@ table.items th:last-child,table.items td:last-child{border-right:none}
             </tr>
           </tfoot>
         </table>
-      </div>
-      <div style="padding:8px 14px;border-top:1px dashed #E5E7EB;background:#FAFBFC;font-size:11px;color:#6B7280;display:flex;flex-direction:column;gap:4px">
-        <div>🧮 <b style="color:#B45309">ฐานคำนวณภาษีหัก ณ ที่จ่าย = ฐานก่อน VAT เท่านั้น</b> (ไม่ใช่ยอดค้างที่รวม VAT แล้ว) · ฐานก่อน VAT = ยอดรวม VAT ÷ 1.07 · เช่น 578,340.00 ÷ 1.07 = 540,504.67 → หัก 3% = <b>16,215.14</b></div>
-        <div>🔒 <b>อัตราภาษีหัก ณ ที่จ่ายมาจากตารางกลางที่ผูกกับประเภทเงินได้</b> (ค่าบริการ/ค่าจ้างทำของ 3% · ค่าโฆษณา 2% · ค่าขนส่ง 1% · ค่าเช่า 5%) — หน้านี้<b>อ่านอย่างเดียว ห้ามพิมพ์อัตราเอง</b> แก้อัตราได้ที่ตารางกลางเท่านั้น</div>
-        <div>✎ <b>ยอดภาษี: ระบบคำนวณให้เป็นค่าตั้งต้น แต่กรอกทับได้กรณีพิเศษ</b> (ไม่ล็อกตาย — เคาะ 21 ก.ค. 2026) · ถ้ากรอกทับ ระบบจะบันทึกผู้แก้ + เหตุผลไว้ในประวัติ</div>
-        <div>📥 <b>รับใบตั้งหนี้ได้ 2 แบบ</b> — (1) <b>อ้างใบสั่งซื้อ</b> → ต้องผ่านการจับคู่ 3 ทาง (ใบสั่งซื้อ · ใบรับของ · ใบแจ้งหนี้) · (2) <b>ไม่อ้างใบสั่งซื้อ</b> (ช่างนอก · ค่าเช่า · ค่าที่ปรึกษา · ค่าสาธารณูปโภค) → <b>ข้ามการจับคู่ 3 ทาง</b> เพราะไม่มีใบสั่งซื้อให้ match แต่แรก</div>
-        <div>💡 ใบตั้งหนี้ที่อ้างใบสั่งซื้อมาจาก <b>ใบตั้งหนี้เจ้าหนี้ (PO-6, Posted)</b> · <b style="color:#B45309">1 ใบจ่าย = 1 เจ้าหนี้ แต่รวมได้หลายใบตั้งหนี้ของเจ้าหนี้รายนั้น</b> (ใบนี้รวม AP-2606-0088 + AP-2606-0091 ของ Daikin) → ภาษีหัก ณ ที่จ่ายส่งเข้า <a href="fi12-wht-mockup.html" style="color:#2563EB">ทะเบียนภาษีหัก ณ ที่จ่าย (FI-12)</a> หลัง Post</div>
-        <div style="margin-top:2px;padding:7px 9px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;color:#78350F">
-          📄 <b>ใบจ่ายอื่นที่รออนุมัติ (เจ้าหนี้คนละราย → แยกใบ)</b><br>
-          <b>PV แยกใบ</b> · <b>นายสมพงษ์ ช่างรับเหมา</b> · ค่าจ้างทำของ · ฐานก่อน VAT <b class="mono">30,000.00</b> · หัก <b>3%</b> = <b class="mono">900.00</b> · จ่ายจริง <b class="mono">29,100.00</b> · <b>ไม่มี VAT (ช่างไม่จด VAT)</b> · <b>ตั้งหนี้แบบไม่อ้างใบสั่งซื้อ</b> → ข้ามการจับคู่ 3 ทาง
-        </div>
       </div>
     </div>
 
