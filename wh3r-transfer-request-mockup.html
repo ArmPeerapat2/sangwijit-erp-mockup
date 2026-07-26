@@ -96,6 +96,16 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
 .dc-node.current{background:#2563EB;color:#fff}.dc-node.pending{background:#F9FAFB;color:#9CA3AF;border:1px dashed #E5E7EB}
 .dc-arrow{color:#D1D5DB}
 .twin-note{background:#F5F3FF;border:1px solid #DDD6FE;border-radius:6px;padding:6px 12px;font-size:11.5px;color:#5B21B6}
+/* ═══ TIP (copy จาก swt-patterns.css — wh3r standalone ยังไม่โหลด shared css) */
+.swt-tip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-size:10.5px;font-weight:700;line-height:1;cursor:pointer;vertical-align:middle;user-select:none;font-style:normal;background:#EFF6FF;color:#2563EB;border:1px solid #BFDBFE}
+.swt-tip:hover{background:#DBEAFE}
+.swt-tip.warn{background:#FFFBEB;color:#B45309;border-color:#FDE68A}
+.swt-tip.danger{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+.swt-tip.ok{background:#ECFDF5;color:#047857;border-color:#A7F3D0}
+.swt-tip .swt-tip-pop{position:fixed;z-index:70;width:max-content;max-width:320px;padding:9px 12px;border-radius:8px;background:#1E293B;color:#E2E8F0;font-size:11.5px;font-weight:400;line-height:1.6;text-align:left;box-shadow:0 8px 24px rgba(0,0,0,.22);white-space:normal;cursor:default;opacity:0;visibility:hidden;transition:opacity .15s}
+.swt-tip:hover .swt-tip-pop,.swt-tip.open .swt-tip-pop{opacity:1;visibility:visible}
+.swt-tip .swt-tip-pop b,.swt-tip .swt-tip-pop strong{color:#fff;font-weight:700}
+.swt-tip .swt-tip-pop a{color:#93C5FD}
 </style>
 </head>
 <body>
@@ -236,11 +246,10 @@ table.items td{padding:7px 10px;border-bottom:1px solid #F3F4F6;vertical-align:t
         <div class="tabset-pane" id="t-hist"><div class="tab-grid"><span class="k">03 ก.ค. 08:30</span><span>สาขา 08 สร้างคำขอโอน</span><span class="k">รอ</span><span>ส่งคำขอ → เจ้าของใบโอน (HQ) พิจารณา</span></div></div>
       </div>
       <div class="card sum-card">
-        <div class="card-header"><span class="secno">WH-3R.4</span><div class="card-title"><span class="ico">📊</span>สรุปคำขอ</div></div>
+        <div class="card-header"><span class="secno">WH-3R.4</span><div class="card-title"><span class="ico">📊</span>สรุปคำขอ <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">คำขอนี้<b>ยังไม่ตัดสต๊อก</b> — เจ้าของใบโอนออก <b>WH-3 ใบโอน</b> แล้วค่อยตัดสต๊อกจริง</span></span></div></div>
         <div class="sum-row"><span class="lbl">SKU ทั้งหมด</span><span class="val">2 รายการ</span></div>
         <div class="sum-row"><span class="lbl">จำนวนที่ขอโอนรวม</span><span class="val">38 ชิ้น</span></div>
         <div class="sum-total"><span>ขอโอน</span><span>38 ชิ้น</span></div>
-        <div style="font-size:10.5px;color:#6B7280;margin-top:6px">💡 คำขอนี้ยังไม่ตัดสต๊อก — เจ้าของใบโอนออก WH-3 แล้วค่อยตัด</div>
       </div>
     </div>
 
@@ -274,5 +283,6 @@ function swTab(e,id){
 }
 </script>
 <script src="swt-link.js" defer></script>
+<script src="swt-patterns.js"></script>
 <script src="swt-sidebar.js"></script>
 <div style="position:fixed;bottom:12px;right:12px;z-index:9999;background:#1E3A5F;color:#fff;font:600 11px Inter,sans-serif;padding:7px 12px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.25);max-width:360px;line-height:1.5">🔧 DEV: build เป็นโหมด «ใบขอ» ของฟอร์ม WH-3 — ฟอร์มเดียว 2 โหมด · เมนู/เลขเอกสารแยกเดิม (Q1ก)</div></body></html>

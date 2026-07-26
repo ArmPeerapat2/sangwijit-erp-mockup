@@ -791,7 +791,7 @@
     </div>
     <div class="modal-body">
       <div class="field-row">
-        <label class="form-label">เลือกช่าง <span class="required">*</span></label>
+        <label class="form-label">เลือกช่าง <span class="required">*</span> <span class="swt-tip warn" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">🔒 <b>Sticky Assignment</b> — หลังกดมอบหมาย ช่างคนนี้จะถูก lock ติดงาน · ช่างส่งต่อไม่ได้ · admin เท่านั้นที่ reassign ได้</span></span></label>
         <select class="form-select">
           <option value="">-- เลือกช่าง --</option>
           <optgroup label="🏢 ช่างภายใน (Internal)">
@@ -828,9 +828,6 @@
         <label class="form-label">Note (เห็นเฉพาะช่าง)</label>
         <textarea class="form-textarea" placeholder="เช่น โทรก่อนไปถึง · ขึ้นลิฟต์ตัวที่ 2"></textarea>
       </div>
-      <div style="padding:10px 12px;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;font-size:11.5px;color:#92400E">
-        🔒 <b>Sticky Assignment</b> — หลังกดมอบหมาย ช่างคนนี้จะถูก lock ติดงาน · ช่างส่งต่อไม่ได้ · admin เท่านั้นที่ reassign ได้
-      </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeModal('mAssign')">ยกเลิก</button>
@@ -848,7 +845,7 @@
       <button class="modal-close-x" onclick="closeModal('mSplit')">✕</button>
     </div>
     <div class="modal-body">
-      <p style="color:#6B7280;font-size:12px;margin-bottom:12px">แยกงานนี้เป็นหลาย job เพื่อให้ admin มอบหมายช่างต่างคนกันได้ · แต่ละ sub-job จะเป็น sticky อิสระ</p>
+      <p style="color:#6B7280;font-size:12px;margin-bottom:12px">แยกงานนี้เป็นหลาย job เพื่อให้ admin มอบหมายช่างต่างคนกันได้ · แต่ละ sub-job จะเป็น sticky อิสระ <span class="swt-tip warn" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">⚠ หลัง split: JOB-26-0201 จะกลายเป็น <b>JOB-26-0201A</b> และ <b>JOB-26-0201B</b> · stock lock ยังคงอยู่รวม</span></span></p>
       <div style="display:flex;flex-direction:column;gap:8px">
         <div style="padding:10px 12px;border:1px solid #E0E7FF;border-radius:6px;background:#F0F9FF">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
@@ -865,9 +862,6 @@
           <div style="font-size:11.5px;color:#334155"><input type="checkbox" checked> Mitsubishi MSY-GN18 × 1 (INS-AC-18k24k)</div>
         </div>
         <button class="btn btn-outline" style="align-self:flex-start">+ เพิ่ม Sub-job</button>
-      </div>
-      <div style="margin-top:12px;padding:10px 12px;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;font-size:11.5px;color:#92400E">
-        ⚠ หลัง split: JOB-26-0201 จะกลายเป็น <b>JOB-26-0201A</b> และ <b>JOB-26-0201B</b> · stock lock ยังคงอยู่รวม
       </div>
     </div>
     <div class="modal-foot">
@@ -938,7 +932,7 @@
       <button class="modal-close-x" onclick="closeModal('mPartial')">✕</button>
     </div>
     <div class="modal-body">
-      <p style="color:#6B7280;font-size:12.5px;margin-bottom:12px">ระบุว่า item ไหนเสร็จ · ไหนยังไม่เสร็จ · และนัดใหม่วันไหน · <b>Sticky lock ช่างคนเดิม</b> จะยังคงอยู่</p>
+      <p style="color:#6B7280;font-size:12.5px;margin-bottom:12px">ระบุว่า item ไหนเสร็จ · ไหนยังไม่เสร็จ · และนัดใหม่วันไหน · <b>Sticky lock ช่างคนเดิม</b> จะยังคงอยู่ <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">💡 <b>Status จะเปลี่ยน:</b> 🟢 กำลังทำ → ⏳ <b>ค้างส่ง (Partial)</b> · ช่างคนเดิมจะต้องกลับไปทำให้จบ · ค่าแรงจ่ายเมื่อจบทั้งงาน</span></span></p>
       <div class="field-row">
         <label class="form-label">รายการในงาน</label>
         <div style="display:flex;flex-direction:column;gap:6px">
@@ -982,9 +976,6 @@
         <label class="form-label">บันทึกเพิ่มเติม</label>
         <textarea class="form-textarea" placeholder="รายละเอียดที่ต้องทำในวันนัดใหม่..."></textarea>
       </div>
-      <div style="padding:10px 12px;background:#F0F9FF;border:1px solid #BAE6FD;border-radius:6px;font-size:11.5px;color:#0C4A6E">
-        💡 <b>Status จะเปลี่ยน:</b> 🟢 กำลังทำ → ⏳ <b>ค้างส่ง (Partial)</b> · ช่างคนเดิมจะต้องกลับไปทำให้จบ · ค่าแรงจ่ายเมื่อจบทั้งงาน
-      </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeModal('mPartial')">ยกเลิก</button>
@@ -1023,7 +1014,7 @@
         </div>
       </div>
       <div style="padding:12px 14px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:6px">
-        <div style="font-size:10.5px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">💰 ค่าแรงช่าง (หลังบ้าน · ไม่แสดงลูกค้า)</div>
+        <div style="font-size:10.5px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">💰 ค่าแรงช่าง (หลังบ้าน · ไม่แสดงลูกค้า) <span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">📤 <b>หลังกดปิด:</b> ระบบจะ create Payroll entry ให้ TECH-012 ประเสริฐ · รวมในรอบเงินเดือนสิ้นเดือน · 💡 สำหรับช่างนอก (Outsource) จะสร้าง AP Invoice + WHT 3%</span></span></div>
         <div class="form-2col" style="gap:6px 14px;font-size:12px">
           <div><span style="color:#6B7280">ประเภทช่าง:</span> <span class="swt-chip info">Internal</span></div>
           <div><span style="color:#6B7280">Rate:</span> <b>฿500/ชม.</b> (CF-2.5 standard)</div>
@@ -1034,10 +1025,6 @@
             <b style="color:#10B981;font-size:14px;margin-left:6px">฿1,750</b>
           </div>
         </div>
-      </div>
-      <div style="margin-top:12px;padding:10px 12px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;font-size:11.5px;color:#1E40AF">
-        📤 <b>หลังกดปิด:</b> ระบบจะ create Payroll entry ให้ TECH-012 ประเสริฐ · รวมในรอบเงินเดือนสิ้นเดือน
-        <br><span style="font-size:10.5px;color:#2563EB">💡 สำหรับช่างนอก (Outsource) จะสร้าง AP Invoice + WHT 3%</span>
       </div>
     </div>
     <div class="modal-foot">
@@ -1094,6 +1081,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 <!-- SWT_LINK_END -->
 
+<script src="swt-patterns.js"></script>
 <script src="swt-sidebar.js"></script>
 <div style="position:fixed;bottom:12px;right:12px;z-index:9999;background:#1E3A5F;color:#fff;font:600 11px Inter,sans-serif;padding:7px 12px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.25);max-width:360px;line-height:1.5">🔧 DEV: build เป็น view «ปฏิทินช่าง» + chip จัดส่ง/ติดตั้ง ใน SV-Q — ไม่ใช่หน้าแยก (Q3ก)</div></body>
 </html>
