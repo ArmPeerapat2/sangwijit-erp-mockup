@@ -1001,19 +1001,23 @@ html {
   line-height: 1.35;
 }
 .content > .row-bottom {
-  height: 148px;
-  max-height: 148px;
-  min-height: 0;
-  overflow: hidden;
+  flex: none;              /* สูงตามเนื้อการ์ด — ไม่ล็อคความสูง (การ์ดสรุป/ฟิลด์ fit พอดี ไม่ scroll) */
+  overflow: visible;
 }
 .content > .row-bottom .tabset-pane .swt-panel.swt-pay-compact {
   overflow: hidden;
   max-height: 100%;
 }
-.content > .row-bottom .tabset,
-.content > .row-bottom > .card {
+/* tabset (แท็บ) ยังคุมความสูง + scroll ในแท็บ — กันแท็บเนื้อยาวดันจอ */
+.content > .row-bottom .tabset {
   min-height: 0;
-  overflow: auto;
+  max-height: 300px;
+  overflow: hidden;
+}
+/* การ์ดธรรมดา (สรุปยอด/ฟิลด์) = สูงพอดีเนื้อ ไม่ scroll ในช่องเล็ก (มาตรฐาน) */
+.content > .row-bottom > .card {
+  min-height: auto;
+  overflow: visible;
 }
 .content > .items-card {
   flex: 1 1 0 !important;
