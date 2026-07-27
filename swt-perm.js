@@ -29,13 +29,8 @@
     approveOverPo:    { label: 'อนุมัติรับเกิน PO',        def: false }
   };
 
-  // preset role → ชุดสิทธิ์ (flip ทีเดียวเห็นภาพ) · 1=มี 0=ไม่มี · key ที่ไม่ระบุ = ใช้ def
-  var ROLES = {
-    'ผจก.ขาย/ผจก.จัดซื้อ': { editUnitPrice: 1, editLineDiscount: 1, editBillDiscount: 1, setItemPrice: 1, approveBelowMin: 1, viewCost: 1, viewCreditLimit: 1, editCreditLimit: 1, editDocDate: 1, editDocNo: 0, changeCustomer: 1, editPosted: 1, reprintBill: 1, approveOverPo: 1 },
-    'พนักงานขาย': { editUnitPrice: 1, editLineDiscount: 1, editBillDiscount: 0, setItemPrice: 0, approveBelowMin: 0, viewCost: 0, viewCreditLimit: 1, editCreditLimit: 0, editDocDate: 0, editDocNo: 0, changeCustomer: 0, editPosted: 0, reprintBill: 1, approveOverPo: 0 },
-    'แคชเชียร์/คีย์บิล': { editUnitPrice: 0, editLineDiscount: 0, editBillDiscount: 0, setItemPrice: 0, approveBelowMin: 0, viewCost: 0, viewCreditLimit: 0, editCreditLimit: 0, editDocDate: 0, editDocNo: 0, changeCustomer: 0, editPosted: 0, reprintBill: 1, approveOverPo: 0 }
-  };
-
+  // สิทธิ์ผูกที่ "กลุ่มสิทธิ์/ตำแหน่ง" ที่ตั้งเองที่ CF-1 — ไม่มี preset role ตายตัว
+  // def = สถานะติ๊กตั้งต้นของเดโม (แอดมินเปลี่ยนได้จริงที่ CF-1)
   var state = {};
   Object.keys(PERMS).forEach(function (k) { state[k] = PERMS[k].def; });
 
@@ -73,11 +68,6 @@
   }
 
   function setPerm(key, val) { if (key in state) { state[key] = !!val; applyAll(); } }
-  function setRole(name) {
-    var r = ROLES[name]; if (!r) return;
-    Object.keys(PERMS).forEach(function (k) { state[k] = k in r ? !!r[k] : PERMS[k].def; });
-    applyAll(); syncPanel();
-  }
 
   // ───────── แถบจำลองสิทธิ์ (เดโม · โผล่เฉพาะหน้าที่ wire) ─────────
   var panel;
@@ -89,28 +79,31 @@
       + '#swtPermBar .hd .x{margin-left:auto;opacity:.6;font-weight:400}'
       + '#swtPermBar .bd{padding:10px 12px;max-height:52vh;overflow:auto}'
       + '#swtPermBar.min .bd{display:none}'
-      + '#swtPermBar select{width:100%;padding:5px 8px;border-radius:6px;border:none;font:inherit;margin-bottom:8px}'
       + '#swtPermBar label{display:flex;align-items:center;gap:7px;padding:3px 0;cursor:pointer}'
       + '#swtPermBar label input{margin:0}'
       + '#swtPermBar .note{margin-top:8px;font-size:10px;color:#64748B;line-height:1.5}';
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
     panel = document.createElement('div'); panel.id = 'swtPermBar';
-    var roleOpts = Object.keys(ROLES).map(function (r) { return '<option>' + r + '</option>'; }).join('');
-    var rows = Object.keys(PERMS).map(function (k) {
+    // แสดงเฉพาะสิทธิ์ที่หน้านี้ผูกไว้จริง (ติ๊กแล้วเห็นผลทุกช่อง) — สิทธิ์ตั้งจริงที่ CF-1 (กลุ่ม/ตำแหน่ง)
+    var keys = [];
+    document.querySelectorAll('[data-perm]').forEach(function (el) {
+      var k = el.getAttribute('data-perm');
+      if (PERMS[k] && keys.indexOf(k) < 0) keys.push(k);
+    });
+    var rows = keys.map(function (k) {
       return '<label><input type="checkbox" data-permkey="' + k + '">' + PERMS[k].label + '</label>';
     }).join('');
     panel.innerHTML =
-      '<div class="hd">🧪 จำลองสิทธิ์ (เดโม)<span class="x">▾ ย่อ</span></div>'
+      '<div class="hd">🧪 สิทธิ์กลุ่มนี้ (เดโม)<span class="x">▾ ย่อ</span></div>'
       + '<div class="bd">'
-      + '<select id="swtPermRole"><option value="">— เลือก role —</option>' + roleOpts + '</select>'
+      + '<div style="font-size:10.5px;color:#94A3B8;margin-bottom:8px">ติ๊ก = กลุ่ม/ตำแหน่งนี้มีสิทธิ์ · ตั้งจริงที่ CF-1</div>'
       + rows
       + '<div class="note">🔒 mockup จำลองการบังคับสิทธิ์ให้เห็นภาพ · ของจริงต้องบังคับฝั่งเซิร์ฟเวอร์ด้วย</div>'
       + '</div>';
     document.body.appendChild(panel);
 
     panel.querySelector('.hd').addEventListener('click', function () { panel.classList.toggle('min'); });
-    panel.querySelector('#swtPermRole').addEventListener('change', function (e) { if (e.target.value) setRole(e.target.value); });
     panel.querySelectorAll('[data-permkey]').forEach(function (cb) {
       cb.addEventListener('change', function () { setPerm(cb.getAttribute('data-permkey'), cb.checked); });
     });
@@ -129,8 +122,7 @@
     else init();
   }
 
-  global.SWT_PERM = { state: state, perms: PERMS, roles: ROLES };
+  global.SWT_PERM = { state: state, perms: PERMS };
   global.swtApplyPerm = applyAll;
   global.swtSetPerm = setPerm;
-  global.swtSetRole = setRole;
 })(typeof window !== 'undefined' ? window : this);
