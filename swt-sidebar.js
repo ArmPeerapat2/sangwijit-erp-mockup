@@ -29,7 +29,7 @@
     'sv4-service-close-mockup.html','sv5-job-card-mockup.html',
     'sv7-service-delivery-mockup.html','sv6-delivery-install-mockup.html',
     'sv-order-parts-request-mockup.html','clm-vendor-claim-mockup.html',
-    
+
     'md3-vendor-master-mockup-v3.html','md2-customer-master-mockup-v3.html',
     'md1-item-master-mockup-v3.html','md4-employee-master-mockup-v3.html',
     'cf1-rbac-permission-mockup.html',
@@ -55,35 +55,55 @@
     'cf2-2-number-series-mockup.html'     /* เลขรันแยกตามสาขา */
   ];
 
+  /* ── Mode & Role (เพิ่ม 2026-07-25 · UX restructure) ──────────
+     URL params:
+       ?dev          → แสดง dev-only groups (Overview, SC)
+       ?role=sales   → filter เมนูตาม role
+     default: production + admin (เห็นทุก operational group)
+     ─────────────────────────────────────────────────────────── */
+  var MODE = location.search.indexOf('dev')>-1 ? 'dev' : 'production';
+  var ROLE = (function(){ var m=location.search.match(/role=(\w+)/); return m?m[1]:'admin'; })();
+  var ROLE_GROUPS = {
+    sales:    ['ศูนย์กลางระบบ','งานขาย (SL)','ราคา & โปรโมชั่น (PM)','Master Data (MD)'],
+    warehouse:['ศูนย์กลางระบบ','จัดซื้อ (PO)','คลังสินค้า (WH)','Master Data (MD)'],
+    finance:  ['ศูนย์กลางระบบ','จัดซื้อ (PO)','บัญชี/การเงิน (FI)','Master Data (MD)'],
+    service:  ['ศูนย์กลางระบบ','บริการ (SV)','คลังสินค้า (WH)','Master Data (MD)'],
+    tech:     ['ศูนย์กลางระบบ','บริการ (SV)'],
+    admin:    null
+  };
+
   /* nav data — canonical (เปลี่ยนเมนูที่นี่ที่เดียว)
      links item: [code, href, label, marker?]
      marker: 'new' | 'old'
+     ── restructured 2026-07-25: ย้ายรายงาน→RP-1, แยก PM, reorder groups ──
   */
   var GROUPS = [
-    {ico:'🏠', label:'Overview', links:[
-      ['IDX','index.html','Master Index','old'],
-      ['FLOW','module-flow-overview.html','🗺️ Module Flow Overview (spine + per-module + ✦)','new'],
-      ['ARCH','sangwijit-portal-architecture.html','Architecture','old'],['SPEC','dev-handoff-spec.html','Dev Handoff','old']]},
+    /* ── ศูนย์กลาง (cross-module · อยู่บนสุด) ── */
+    {ico:'🚦', label:'ศูนย์กลางระบบ', links:[
+      ['EX-1','ex1-executive-dashboard-mockup.html','EX-1 Dashboard ผู้บริหาร','old'],
+      ['AP-1','ap1-approval-center-mockup.html','AP-1 ศูนย์อนุมัติกลาง','old'],
+      ['RP-1','rp1-report-center-mockup.html','RP-1 Report Center','old'],
+      ['SLF1','slf1-credit-approval-mockup.html','SL-F1 อนุมัติวงเงินขาย','old']]},
+
+    /* ── งานขาย (SL) — 7 items · ย้าย PM→group ใหม่ · ย้ายรายงาน→RP-1 ── */
     {ico:'💼', label:'งานขาย (SL)', links:[
       ['SL-Q','slq-sales-queue-mockup.html','SL-Q คิวงานขาย','old'],
-      ['SL-1','sl1-quotation-mockup.html','SL-1 ใบเสนอราคา (Unified · Item+Service+Charge)','new'],
+      ['SL-1','sl1-quotation-mockup.html','SL-1 ใบเสนอราคา','new'],
       ['SL-2','sl2-reservation-mockup.html','SL-2 ใบจอง','old'],
       ['SL-3','sl3-deposit-mockup.html','SL-3 ใบมัดจำ','old'],
       ['SL-4','sl4-invoice-mockup.html','SL-4 บิลขาย','old'],
       ['SLCN','slcn-credit-memo-mockup.html','SL-CN ใบลดหนี้','old'],
-      ['PM-1','pm1-price-list-mockup.html','PM-1 รายการราคา (Price List)','new'],
-      ['PM-2','pm2-promotion-mockup.html','PM-2 ตั้งโปรโมชั่น (6 แบบ · dynamic)','new'],
-      ['PM-4','pm4-promo-quota-mockup.html','PM-4 โควต้าโปรโมชั่น (งบแบรนด์/เพดานบริษัท)','new'],
-      ['PM-Q','pmq-promo-dashboard-mockup.html','PM-Q โปรโมชั่นที่รันอยู่','new'],
-      ['SLF1','slf1-credit-approval-mockup.html','SL-F1 อนุมัติวงเงินขาย','old'],
-      ['PM-5','pm5-price-simulator-mockup.html','PM-5 จำลองราคาขาย (ราคา+กำไร+โปร)','new'],
-      ['CM-1','cm1-commission-mockup.html','CM-1 Commission','old'],
-      ['SL-R','rp1-report-center-mockup.html','รายงานขาย (แม่)','old'],
-      ['SLR1','rp1-report-center-mockup.html','รายงานขาย > สรุปยอดขาย','new'],
-      ['SLR2','rp1-report-center-mockup.html','รายงานขาย > วิเคราะห์ตามช่วงเวลา','new'],
-      ['SLR3','rp1-report-center-mockup.html','รายงานขาย > วิเคราะห์ตามสินค้า/กลุ่มสินค้า','new'],
-      ['SLR4','rp1-report-center-mockup.html','รายงานขาย > วิเคราะห์ตามลูกค้า/พื้นที่','new'],
-      ['SLR5','rp1-report-center-mockup.html','รายงานขาย > สถานะเอกสารขาย','new']]},
+      ['CM-1','cm1-commission-mockup.html','CM-1 Commission','old']]},
+
+    /* ── ราคา & โปรโมชั่น (PM) — แยกจาก SL เพราะเป็น domain ต่างกัน ── */
+    {ico:'💰', label:'ราคา & โปรโมชั่น (PM)', links:[
+      ['PM-1','pm1-price-list-mockup.html','PM-1 รายการราคา','new'],
+      ['PM-2','pm2-promotion-mockup.html','PM-2 ตั้งโปรโมชั่น','new'],
+      ['PM-4','pm4-promo-quota-mockup.html','PM-4 โควต้าโปรโมชั่น','new'],
+      ['PM-Q','pmq-promo-dashboard-mockup.html','PM-Q โปรฯ ที่รันอยู่','new'],
+      ['PM-5','pm5-price-simulator-mockup.html','PM-5 จำลองราคาขาย','new']]},
+
+    /* ── จัดซื้อ (PO) — 7 items · ย้ายรายงาน→RP-1 ── */
     {ico:'🛒', label:'จัดซื้อ (PO)', links:[
       ['PO-Q','poq-purchase-queue-mockup.html','PO-Q Purchase Queue','old'],
       ['PO-1','po1-purchase-request-mockup.html','PO-1 ใบขอสั่งซื้อ (PR)','old'],
@@ -91,12 +111,9 @@
       ['PO-4','po4-purchase-order-mockup.html','PO-4 ใบสั่งซื้อ (PO)','old'],
       ['PO-7','po7-rebate-dashboard.html','PO-7 ส่งเสริมการขาย (Rebate)','old'],
       ['PO-8','po8-deposit-bill-mockup.html','PO-8 บิลฝาก (Deposit)','old'],
-      ['POCN','po-cn-credit-note-mockup.html','PO-CN ใบลดหนี้เจ้าหนี้','old'],
-      ['PO-R','rp1-report-center-mockup.html','รายงานจัดซื้อ (แม่)','new'],
-      ['POR1','rp1-report-center-mockup.html','รายงานจัดซื้อ > สรุปยอดซื้อ','new'],
-      ['POR2','rp1-report-center-mockup.html','รายงานจัดซื้อ > ยอดซื้อคงค้าง','new'],
-      ['POR3','rp1-report-center-mockup.html','รายงานจัดซื้อ > วิเคราะห์ราคา/ส่วนต่าง','new'],
-      ['POR4','rp1-report-center-mockup.html','รายงานจัดซื้อ > สรุปตาม Vendor','new']]},
+      ['POCN','po-cn-credit-note-mockup.html','PO-CN ใบลดหนี้เจ้าหนี้','old']]},
+
+    /* ── คลังสินค้า (WH) — 10 items · ย้ายรายงาน→RP-1 ── */
     {ico:'📦', label:'คลังสินค้า (WH)', links:[
       ['WHQ1','wh-q1-receive-queue-mockup.html','WH-Q1 คิวรับสินค้า','new'],
       ['WHQ2','wh-q2-issue-queue-mockup.html','WH-Q2 คิวเบิกสินค้า','new'],
@@ -107,69 +124,38 @@
       ['WH3R','wh3r-transfer-request-mockup.html','WH-3R ใบขอโอน','new'],
       ['WH-4','wh4-count-mockup.html','WH-4 ใบนับสินค้า','old'],
       ['WH4R','wh4r-count-prep-mockup.html','WH-4R ใบเตรียมนับ','new'],
-      ['WH-5','wh5-stock-adjustment-mockup.html','WH-5 ปรับ/ตัดจำหน่ายสต็อก','new'],
-      ['WH-R','wh-r-stock-card-mockup.html','รายงานคลัง > Stock Card','old'],
-      ['WHNM','wh-nm-non-move-report-mockup.html','รายงานคลัง > สินค้าไม่เคลื่อนไหว','old'],
-      ['WHR1','wh-r-stock-card-mockup.html','รายงานคลัง > คงเหลือสินค้าแบบรวม','new'],
-      ['WHR2','wh-r-stock-card-mockup.html','รายงานคลัง > ความเคลื่อนไหวสินค้า','new'],
-      ['WHR3','rp1-report-center-mockup.html','รายงานคลัง > รายงานอายุสินค้า','new']]},
+      ['WH-5','wh5-stock-adjustment-mockup.html','WH-5 ปรับ/ตัดจำหน่ายสต็อก','new']]},
+
+    /* ── บัญชี/การเงิน (FI) — 10 items · PO-6→FI-6 · ย้ายรายงาน→RP-1 ── */
     {ico:'💵', label:'บัญชี/การเงิน (FI)', links:[
       ['FIQAR','fiq-finance-queue-mockup.html','FI-Q-AR คิวลูกหนี้','old'],
       ['FIQAP','fiq-finance-queue-mockup.html','FI-Q-AP คิวเจ้าหนี้','old'],
       ['FI-1','fi1-ar-receive-mockup.html','FI-1 รับชำระลูกหนี้ (AR)','old'],
       ['FI1Q','fi1q-apply-queue-mockup.html','FI-1Q คิว Apply','new'],
       ['FI-2','fi2-ap-payment-mockup.html','FI-2 จ่ายชำระเจ้าหนี้ (AP)','old'],
-      ['PO-6','po6-ap-invoice-mockup.html','PO-6 ใบตั้งหนี้เจ้าหนี้ (AP)','old'],
+      ['FI-6','po6-ap-invoice-mockup.html','FI-6 ใบตั้งหนี้เจ้าหนี้ (AP)','old'],
       ['FI-3','fi3-bank-reconciliation-mockup.html','FI-3 กระทบยอดธนาคาร','old'],
       ['FI-7','fi7-vat-report-mockup.html','FI-7 รายงานภาษีขาย/ซื้อ','old'],
       ['FI-4','fi4-expense-wht-mockup.html','FI-4 ค่าใช้จ่าย/WHT','old'],
-      ['FI12','fi12-wht-mockup.html','FI-12 WHT (ภ.ง.ด.3/53)','old'],
-      ['FIR1','rp1-report-center-mockup.html','รายงานการเงิน > AR Aging / AP Aging','new'],
-      ['FIR2','rp1-report-center-mockup.html','รายงานการเงิน > กระแสเงินสด','new'],
-      ['FIR3','rp1-report-center-mockup.html','รายงานการเงิน > รับ-จ่ายประจำวัน','new']]},
+      ['FI12','fi12-wht-mockup.html','FI-12 WHT (ภ.ง.ด.3/53)','old']]},
+
+    /* ── บริการ (SV) — 13 items · ย้ายรายงาน→RP-1 · ย้ายตั้งค่า→CF ── */
     {ico:'🔧', label:'บริการ (SV)', links:[
-      ['SV-Q','sv-q-service-queue-mockup.html','SV-Q คิวงานซ่อม (dashboard ช่าง)','new'],
-      ['SV-1','sv1-service-intake-mockup.html','SV-1 ใบรับงานซ่อม (5 job types)','new'],
+      ['SV-Q','sv-q-service-queue-mockup.html','SV-Q คิวงานซ่อม','new'],
+      ['SV-1','sv1-service-intake-mockup.html','SV-1 ใบรับงานซ่อม','new'],
       ['SV-2','sv2-service-assignment-mockup.html','SV-2 ใบมอบหมายช่าง','new'],
-      ['SV-3','sv3-spare-part-issue-mockup.html','SV-3 เบิกอะไหล่ (จากสต็อก)','new'],
-      ['SVOR','sv-order-parts-request-mockup.html','SV-Order สั่งอะไหล่นอกประกัน (spawn PO)','new'],
-      ['SV-5','sv5-job-card-mockup.html','SV-5 Job Card (ช่างบันทึกงาน)','new'],
-      ['SV-4','sv4-service-close-mockup.html','SV-4 ปิดงาน/QA + บิล (payer/ARI)','new'],
-      ['SV-6','sv6-delivery-install-mockup.html','SV-6 ส่ง+ติดตั้ง (ของขาย)','new'],
+      ['SV-3','sv3-spare-part-issue-mockup.html','SV-3 เบิกอะไหล่','new'],
+      ['SVOR','sv-order-parts-request-mockup.html','SV-Order สั่งอะไหล่นอกประกัน','new'],
+      ['SV-5','sv5-job-card-mockup.html','SV-5 Job Card','new'],
+      ['SV-4','sv4-service-close-mockup.html','SV-4 ปิดงาน/QA + บิล','new'],
+      ['SV-6','sv6-delivery-install-mockup.html','SV-6 ส่ง+ติดตั้ง','new'],
       ['SV-7','sv7-service-delivery-mockup.html','SV-7 ส่งงานคืนลูกค้า','new'],
       ['SQT','sqt-service-quotation-mockup.html','SV-SQT เสนอราคางานบริการ','new'],
-      ['CLM','clm-vendor-claim-mockup.html','CLM ใบเคลม Vendor (product claim)','new'],
-      ['SVWH','wh-svc-center-mockup.html','คลังศูนย์ซ่อม (6 bins)','new'],
-      ['SVMA','sv-ma-contract-mockup.html','สัญญาดูแลรายปี MA (บริการเป็นรอบ)','new'],
-      ['SVCK','cf-master-settings-mockup.html','แบบฟอร์มเช็คลิสต์ ล้าง/ตรวจ','new'],
-      ['SVMB','sv-tech-mobile-mockup.html','📱 หน้าจอมือถือช่างภาคสนาม','new'],
-      ['SVTC','cm1-commission-mockup.html','สรุปงานช่าง → ค่าแรง/ค่าคอม CM-1','new'],
-      ['SVSLA','cf-master-settings-mockup.html','ตั้งค่าเวลามาตรฐาน SLA','new'],
-      ['SVPD','sv-q-service-queue-mockup.html','เอกสารบริการที่โพสต์แล้ว','new'],
-      ['SV-R','rp1-report-center-mockup.html','รายงานบริการ (แม่)','new'],
-      ['SVR1','rp1-report-center-mockup.html','รายงานบริการ > สรุปงานซ่อม','new'],
-      ['SVR2','rp1-report-center-mockup.html','รายงานบริการ > งานค้างซ่อม','new'],
-      ['SVR3','rp1-report-center-mockup.html','รายงานบริการ > SLA/เวลาเฉลี่ยปิดงาน','new'],
-      ['SVR4','rp1-report-center-mockup.html','รายงานบริการ > สรุปการใช้อะไหล่','new']]},
-    {ico:'🚦', label:'ศูนย์กลางระบบ', links:[
-      ['AP-1','ap1-approval-center-mockup.html','AP-1 ศูนย์อนุมัติกลาง','old'],
-      ['EX-1','ex1-executive-dashboard-mockup.html','EX-1 Dashboard ผู้บริหาร','old'],
-      ['RP-1','rp1-report-center-mockup.html','RP-1 Report Center (สำรอง)','old']]},
-    {ico:'🔗', label:'Integration (IA)', links:[
-      ['IA-Q','iaq-bc-sync-monitor-mockup.html','IA-Q BC Sync Monitor','old']]},
-    {ico:'⚙️', label:'ตั้งค่าระบบ (CF)', links:[
-      ['CF-1','cf1-rbac-permission-mockup.html','CF-1 ทะเบียนตำแหน่ง (Position + RBAC)','new'],
-      ['CF-3','cf-master-settings-mockup.html','CF-3 Payment Hub (stub · Terms/Methods/Shipment)','new'],
-      ['CF-5','cf-company-settings-mockup.html','CF-5 Bank Master (stub · ทะเบียนธนาคาร)','new'],
-      ['CF-2','cf2-config-hub-mockup.html','CF-2 Config Hub','old'],
-      ['CFCO','cf-company-settings-mockup.html','CF ตั้งค่าบริษัท + ค่าเริ่มต้น','new'],
-      ['CFMS','cf-master-settings-mockup.html','CF ตั้งค่า Master (บัตร·สี·เหตุผลสต็อก)','new'],
-      ['CF21','cf2-1-tax-setup-mockup.html','CF-2.1 Tax Setup (VAT + WHT Thai loc)','new'],
-      ['CF22','cf2-2-number-series-mockup.html','CF-2.2 Running No.','old'],
-      ['CF25','cf2-5-tech-template-mockup.html','CF-2.5 Template ช่าง','old'],
-      ['CF26','cf2-6-approval-matrix-mockup.html','CF-2.6 Approval Matrix (12 WF · 6 tabs · CF-1 sync)','new'],
-      ['CF27','cf2-7-doc-template-mockup.html','CF-2.7 Doc Template (22 doc · 3-pane · live preview)','new'],
-      ['CF29','cf2-9-general-parameter-mockup.html','CF-2.9 ค่าตั้งต้น','old']]},
+      ['CLM','clm-vendor-claim-mockup.html','CLM ใบเคลม Vendor','new'],
+      ['SVWH','wh-svc-center-mockup.html','คลังศูนย์ซ่อม','new'],
+      ['SVMA','sv-ma-contract-mockup.html','สัญญาดูแลรายปี MA','new']]},
+
+    /* ── Master Data (MD) — ไม่เปลี่ยน ── */
     {ico:'📚', label:'Master Data (MD)', links:[
       ['MD-1','md1-item-master-mockup-v3.html','MD-1 ทะเบียนสินค้า (BC365)','new'],
       ['MD-2','md2-customer-master-mockup-v3.html','MD-2 ทะเบียนลูกค้า','new'],
@@ -177,10 +163,35 @@
       ['MD-4','md4-employee-master-mockup-v3.html','MD-4 ทะเบียนพนักงาน','new'],
       ['MD5a','md5-branch-warehouse-mockup-v3.html','MD-5a ทะเบียนสาขา','new'],
       ['MD5b','md5-branch-warehouse-mockup-v3.html','MD-5b ทะเบียนคลัง','new']]},
-    {ico:'🧩', label:'Shared Components (SC)', links:[
-      ['SCCT','sc-shared-catalog-mockup.html','SC-CAT SC Catalog คู่มือทด API','old'],
+
+    /* ── ตั้งค่าระบบ (CF) — admin only · รวม IA + SV config ── */
+    {ico:'⚙️', label:'ตั้งค่าระบบ (CF)', links:[
+      ['CF-1','cf1-rbac-permission-mockup.html','CF-1 ทะเบียนตำแหน่ง (RBAC)','new'],
+      ['CF-2','cf2-config-hub-mockup.html','CF-2 Config Hub','old'],
+      ['CF-3','cf-master-settings-mockup.html','CF-3 Payment Hub','new'],
+      ['CF-5','cf-company-settings-mockup.html','CF-5 Bank Master','new'],
+      ['IA-Q','iaq-bc-sync-monitor-mockup.html','IA-Q BC Sync Monitor','old'],
+      ['CFCO','cf-company-settings-mockup.html','CF ตั้งค่าบริษัท','new'],
+      ['CFMS','cf-master-settings-mockup.html','CF ตั้งค่า Master','new'],
+      ['CF21','cf2-1-tax-setup-mockup.html','CF-2.1 Tax Setup','new'],
+      ['CF22','cf2-2-number-series-mockup.html','CF-2.2 Running No.','old'],
+      ['CF25','cf2-5-tech-template-mockup.html','CF-2.5 Template ช่าง','old'],
+      ['CF26','cf2-6-approval-matrix-mockup.html','CF-2.6 Approval Matrix','new'],
+      ['CF27','cf2-7-doc-template-mockup.html','CF-2.7 Doc Template','new'],
+      ['CF29','cf2-9-general-parameter-mockup.html','CF-2.9 ค่าตั้งต้น','old'],
+      ['SVCK','cf-master-settings-mockup.html','CF เช็คลิสต์ ล้าง/ตรวจ (from SV)','new'],
+      ['SVSLA','cf-master-settings-mockup.html','CF ตั้งค่า SLA (from SV)','new']]},
+
+    /* ── dev-only groups (ซ่อนใน production · เปิดด้วย ?dev) ── */
+    {ico:'🏠', label:'Overview', devOnly:true, links:[
+      ['IDX','index.html','Master Index','old'],
+      ['FLOW','module-flow-overview.html','🗺️ Module Flow Overview','new'],
+      ['ARCH','sangwijit-portal-architecture.html','Architecture','old'],
+      ['SPEC','dev-handoff-spec.html','Dev Handoff','old']]},
+    {ico:'🧩', label:'Shared Components (SC)', devOnly:true, links:[
+      ['SCCT','sc-shared-catalog-mockup.html','SC-CAT SC Catalog','old'],
       ['SC-1','sc1-customer-search-mockup.html','SC-1 ค้นหาลูกค้า','old'],
-      ['SC-2','sc2-item-search-mockup.html','SC-2 ค้นหาสินค้า (v2 · 3-type filter · 8-tab detail · 6 stock cols · FX)','new'],
+      ['SC-2','sc2-item-search-mockup.html','SC-2 ค้นหาสินค้า','new'],
       ['SC-3','sc3-vendor-search-mockup.html','SC-3 ค้นหาเจ้าหนี้','old'],
       ['SC-7','sc7-timeline-mockup.html','SC-7 Timeline','old']]}
   ];
@@ -271,6 +282,9 @@
       + '<div class="swt-sb-tools"><div class="swt-sb-legend"><span class="o">เก่า</span><span class="n">ใหม่</span></div><button type="button" id="swtSbToggleDone" class="swt-sb-toggle" onclick="swtSbToggleDoneOnly()" aria-pressed="false">ซ่อนไม่มี✦</button></div>'
       + '<a class="swt-sb-home" href="index.html">🏠 Master Index</a>';
     GROUPS.forEach(function(g){
+      if(g.devOnly && MODE!=='dev') return;
+      var rg = ROLE_GROUPS[ROLE];
+      if(rg && rg.indexOf(g.label)===-1) return;
       var hasActive = g.links.some(function(l){return !activeUsed && l[1].toLowerCase().split('/').pop()===cur;});
       html += '<details'+(hasActive?' open':'')+'><summary><span class="swt-sb-ico">'+g.ico+'</span>'
         + '<span class="swt-sb-lbl">'+esc(g.label)+'</span><span class="swt-sb-cnt">'+g.links.length+'</span>'
