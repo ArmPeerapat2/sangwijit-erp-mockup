@@ -29,6 +29,7 @@
     'sv4-service-close-mockup.html','sv5-job-card-mockup.html',
     'sv7-service-delivery-mockup.html','sv6-delivery-install-mockup.html',
     'sv-order-parts-request-mockup.html','clm-vendor-claim-mockup.html',
+    'sv-ma-contract-mockup.html',
 
     'md3-vendor-master-mockup-v3.html','md2-customer-master-mockup-v3.html',
     'md1-item-master-mockup-v3.html','md4-employee-master-mockup-v3.html',
