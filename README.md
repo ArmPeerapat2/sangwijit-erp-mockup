@@ -514,6 +514,8 @@ BC365 Database (System of Record)
 
 ### Code Quality Rules
 
+> ⚠️ **เป็น target stack ของ production (Phase 2+) — ยังไม่มีใน repo ตอนนี้.** เฟส mockup ปัจจุบันเป็น static HTML ล้วน ไม่มี TypeScript/ESLint/Jest ให้รัน. dev เฟสนี้ verify ด้วยการเปิดเบราว์เซอร์ดูหน้าจริง (ดู [`dev-start.html`](dev-start.html))
+
 | Rule | รายละเอียด |
 |------|-----------|
 | TypeScript | Strict mode, No any |
@@ -526,34 +528,31 @@ BC365 Database (System of Record)
 
 ## 🚀 Getting Started
 
+> 🚀 **เริ่มที่นี่:** เปิด [`dev-start.html`](dev-start.html) — คู่มือ onboarding + ลำดับการอ่านทั้งหมดสำหรับ dev ใหม่
+
 ### Prerequisites
 
-- Node.js >= 18.x
-- npm >= 9.x
-- Access to BC365 Sandbox
-- Service Account credentials
+- เว็บเบราว์เซอร์ (Chrome / Edge) — เปิด mockup ได้เลย
+- Git — repo อยู่บน OneDrive แต่ **GitHub คือ source of truth**
+- **ไม่ต้องใช้ Node.js / npm** — โปรเจกต์นี้เป็น **static HTML mockup** ไม่มี build system / package manager / test runner
 
-### Installation
+### เปิดดู & เริ่มงาน
 
 ```bash
-# Clone repository
-git clone https://github.com/sangwijit/erp-web-portal.git
-cd erp-web-portal
+# ดึงของล่าสุดก่อนเริ่มเสมอ
+git pull
 
-# Install dependencies
-npm install
+# เปิดดูระบบ — ดับเบิลคลิกไฟล์ หรือ (Windows)
+start index.html
 
-# Copy environment file
-cp .env.example .env
+# แก้ mockup = เปิดไฟล์ *.html แก้ในตัว → เซฟ → refresh เบราว์เซอร์ (ไม่มี dev server)
+# ของกลางอยู่ที่ swt-*.js / swt-patterns.css (แก้ที่เดียวกระทบทุกหน้า)
 
-# Configure BC365 credentials in .env
-# BC365_BASE_URL=https://api.businesscentral.dynamics.com/v2.0/...
-# BC365_CLIENT_ID=xxx
-# BC365_CLIENT_SECRET=xxx
-
-# Run development server
-npm run dev
+# จบงาน — ทยอย commit + push ให้อีกเครื่อง/GitHub เห็น
+git add -A ; git commit -m "…" ; git push
 ```
+
+> ℹ️ **Phase 1 ยังไม่ wire BC365** — mockup ทำงานแบบ static ล้วน (ยังไม่มี `.env` / API / service account). ส่วน BC365 API ด้านบนคือแผนสำหรับ Phase ต่อไป
 
 ### Before Development
 
@@ -579,8 +578,9 @@ npm run dev
 [ ] ตรวจสอบ Shared Components ที่ต้องใช้
 [ ] ดู Workflow Diagram (PDF)
 [ ] พัฒนาตาม Design Pattern
-[ ] เขียน Unit Test
-[ ] Self-review ก่อน PR
+[ ] เปิดเบราว์เซอร์ตรวจหน้าจริง (ไม่มี test runner — verify by observation)
+[ ] ถ้าแตะ shared component → เช็ค chain regression
+[ ] Self-review ก่อน commit/push
 ```
 
 ---
