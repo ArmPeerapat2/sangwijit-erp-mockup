@@ -27,8 +27,6 @@
       panels: { 't-ship': { kind: 'delivery', opts: { address: '86/1 ม.4 ต.นาแก อ.นาแก จ.นครพนม', shipDate: '13/06/26', receiver: 'คุณอดิเทพ 081-xxx-xxxx' } } },
       migrate: {
         status: '.status-strip',
-        summaryCard: '.row-bottom > .card:last-child',
-        sc11: { template: 'sales-invoice', interactive: true, calc: { subtotal: 17089, lineDiscount: 799 }, discountInput: 799, vatMode: 'exclusive', vatRate: 7 },
         sc12: { pills: [{ text: '📄 ร่าง', type: 'neutral' }, { text: '฿ VAT 7%', type: 'info' }, { text: 'เครดิต 7 วัน', type: 'success' }], makerChecker: { nodes: [{ role: 'ขาย ✓', step: 'เสนอราคา', state: 'ok' }, { role: 'ลูกค้า ⏱', step: 'ตอบรับ', state: 'wait' }] }, docChain: [{ label: 'QT 0047', state: 'current' }, { label: 'SO', href: 'sl2-reservation-mockup.html' }] }
       }
     },
@@ -40,8 +38,6 @@
       },
       migrate: {
         status: '.status-strip',
-        summaryCard: '.row-bottom > .card:last-child',
-        sc11: { template: 'sales-invoice', interactive: true, calc: { subtotal: 17089, lineDiscount: 799 }, discountInput: 799, vatMode: 'exclusive', vatRate: 7 },
         sc12: { pills: [{ text: '📄 จองแล้ว', type: 'neutral' }, { text: '฿ VAT 7%', type: 'info' }], makerChecker: { nodes: [{ role: 'ขาย ✓', step: 'จอง', state: 'ok' }, { role: 'INV ⏱', step: 'ออกบิล', state: 'wait' }] }, docChain: [{ label: 'QT 0047 ✓', href: 'bc365/sl1-quotation-mockup.html', state: 'done' }, { label: 'SO 0021', state: 'current' }, { label: 'INV', href: 'sl4-invoice-mockup.html' }] }
       }
     },
@@ -50,8 +46,6 @@
       panels: { 't-pay': { kind: 'payment', opts: { total: 6290, creditRemaining: 500000, showCredit: false, compact: true } } },
       migrate: {
         status: '.status-strip',
-        summaryCard: '.row-bottom > .card:last-child',
-        sc11: { template: 'sales-invoice', interactive: false, calc: { subtotal: 6290 }, vatMode: 'exclusive', vatRate: 7 },
         sc12: { pills: [{ text: '💰 มัดจำ', type: 'warning' }, { text: 'จาก SO 0021', type: 'info' }], docChain: [{ label: 'SO 0021 ✓', href: 'sl2-reservation-mockup.html', state: 'done' }, { label: 'DP 0009', state: 'current' }, { label: 'INV', href: 'sl4-invoice-mockup.html' }] }
       }
     },
@@ -68,8 +62,6 @@
       print: { docType: 'CN', docNo: 'CN-2606-0012' },
       migrate: {
         status: '.status-strip',
-        summaryCard: '.row-bottom > .card:last-child',
-        sc11: { template: 'sales-invoice', interactive: true, calc: { subtotal: 12000 }, discountInput: 0, vatMode: 'exclusive', vatRate: 7 },
         sc12: { pills: [{ text: '📄 ร่าง CN', type: 'neutral' }], docChain: [{ label: 'INV 0221 ✓', href: 'sl4-invoice-mockup.html', state: 'done' }, { label: 'CN', state: 'current' }] }
       }
     },
@@ -78,8 +70,6 @@
       panels: { 't-hist': { kind: 'approval', opts: { steps: [{ label: 'ขอสั่ง', state: 'done', who: 'สมศรี' }, { label: 'ผจก.จัดซื้อ', state: 'current', who: 'ก้อง' }, { label: 'อนุมัติ', state: 'wait', who: '—' }] } } },
       migrate: {
         status: '.status-strip',
-        summaryCard: '.row-bottom > .card:last-child',
-        sc11: { template: 'sales-invoice', interactive: false, calc: { subtotal: 2260000 }, vatMode: 'exclusive', vatRate: 7 },
         sc12: { pills: [{ text: '📄 ร่าง PR', type: 'neutral' }], makerChecker: { nodes: [{ role: 'ผู้ขอ ✓', step: 'PR', state: 'ok' }, { role: 'อนุมัติ ⏱', step: 'CF-2.6', state: 'wait' }] } }
       }
     },
@@ -96,11 +86,7 @@
       print: { docType: 'DEP-POOL', docNo: 'POOL-2606-0089' }
     },
     'po-cn': {
-      print: { docType: 'PO-CN', docNo: 'PCN-2606-0007' },
-      migrate: {
-        summaryCard: '.row-bottom > .card:last-child',
-        sc11: { template: 'sales-invoice', interactive: true, calc: { subtotal: 49000 }, discountInput: 0, vatMode: 'exclusive', vatRate: 7 }
-      }
+      print: { docType: 'PO-CN', docNo: 'PCN-2606-0007' }
     },
     wh1: {
       print: { docType: 'GR', docNo: 'GR-2606-0210' },
@@ -318,24 +304,6 @@
     });
   }
 
-  function migrateSummary(cardSel, mountId, sc11) {
-    if (!global.swtRenderSummary) return;
-    var card = document.querySelector(cardSel);
-    if (!card || card.querySelector('#' + mountId)) return;
-    card.querySelectorAll('.summary-row, .summary-total').forEach(function (n) { n.remove(); });
-    var baht = card.querySelector('.baht-text');
-    var mount = document.createElement('div');
-    mount.id = mountId;
-    if (baht) card.insertBefore(mount, baht);
-    else card.appendChild(mount);
-    var hdr = card.querySelector('.card-title, .card-header');
-    if (hdr) {
-      var zone = hdr.querySelector('.tpl-zone');
-      if (zone) zone.textContent = 'SC-11';
-    }
-    global.swtRenderSummary('#' + mountId, sc11);
-  }
-
   function stripOptsFromSc12(sc12) {
     if (!sc12) return {};
     return { pills: sc12.pills, makerChecker: sc12.makerChecker };
@@ -395,8 +363,6 @@
 
   function runMigrate(key, m) {
     if (!m) return;
-    var id11 = keyId(key) + 'Sc11';
-    if (m.summaryCard && m.sc11) migrateSummary(m.summaryCard, id11, m.sc11);
     if (m.status && m.sc12) migrateStatus(m.status, keyId(key) + 'Sc12', m.sc12);
     if (m.sc12) wireStandardMounts(key, m.sc12, GATE_DEFAULTS[key]);
   }
