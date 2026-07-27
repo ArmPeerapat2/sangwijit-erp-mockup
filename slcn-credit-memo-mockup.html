@@ -221,13 +221,13 @@ table.items th:last-child,table.items td:last-child{border-right:none}
         <div class="card-header">
           <div class="card-title"><span class="secno">SL-CN.1</span><span class="ico">👤</span>ลูกค้า (Customer) <span class="tpl-zone">SC-1</span></div>
           <div class="card-spacer"></div>
-          <button class="card-btn primary" onclick="dfOpenCust()">🔍 เลือก/เปลี่ยน</button>
+          <button class="card-btn primary" onclick="dfOpenCust()" data-perm="changeCustomer">🔍 เลือก/เปลี่ยน</button>
         </div>
         <div class="field-grid-2">
           <div class="field"><div class="field-label">รหัส · ชื่อ</div><div class="field-value"><span class="highlight">690603NA-0016</span> · คุณ อดิเทพ ไชยเศรษฐ์</div></div>
           <div class="field"><div class="field-label">เลขผู้เสียภาษี</div><div class="field-value">1234567891234</div></div>
         </div>
-        <div class="credit-line">
+        <div class="credit-line" data-perm="viewCreditLimit" data-perm-mode="hide">
           <div class="cell"><span class="lbl">ยอดบิลต้นทาง</span><span class="val">17,430.30</span></div>
           <div class="cell"><span class="lbl">ลดหนี้ครั้งนี้</span><span class="val r">1,070.00</span></div>
           <div class="cell"><span class="lbl">คงเหลือบิล</span><span class="val">16,360.30</span></div>
@@ -423,5 +423,16 @@ function swtSbFilter(v){
 <script src="swt-panels.js"></script>
 <script src="swt-dimensions.js"></script>
 <script src="swt-sc-wire.js"></script>
+<!-- สิทธิ์ระดับฟิลด์ (demo · swt-perm.js) — tag ราคา/ส่วนลดรายบรรทัดตามคอลัมน์ -->
+<script>
+(function(){
+  document.querySelectorAll('table.items tbody tr').forEach(function(tr){
+    var nums=tr.querySelectorAll('input.line-num');
+    if(nums[0])nums[0].setAttribute('data-perm','editUnitPrice');
+    if(nums[1])nums[1].setAttribute('data-perm','editLineDiscount');
+  });
+})();
+</script>
+<script src="swt-perm.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>
