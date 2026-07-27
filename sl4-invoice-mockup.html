@@ -259,7 +259,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           <div class="card-title"><span class="secno">SL-4.1</span><span class="ico">👤</span>ลูกค้า (Customer) <span class="tpl-zone">SC-1</span></div>
           <div class="card-spacer"></div>
           <span class="toggle-tax">🧾 ต้องการใบกำกับภาษี: ใช่</span>
-          <button class="card-btn primary" onclick="dfOpenCust()">🔍 เลือก/เปลี่ยน</button>
+          <button class="card-btn primary" onclick="dfOpenCust()" data-perm="changeCustomer">🔍 เลือก/เปลี่ยน</button>
         </div>
         <div class="field-grid-2">
           <div class="field"><div class="field-label">รหัส · ชื่อ</div><div class="field-value"><span class="highlight">690603NA-0016</span> · คุณ อดิเทพ ไชยเศรษฐ์</div></div>
@@ -267,7 +267,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           <div class="field"><div class="field-label">ที่อยู่ออกใบกำกับ</div><div class="field-value">86/1 ม.4 ต.นาแก อ.นาแก จ.นครพนม</div></div>
           <div class="field"><div class="field-label">ที่อยู่จัดส่ง</div><div class="field-value">เดียวกับที่อยู่ออกบิล</div></div>
         </div>
-        <div class="credit-line">
+        <div class="credit-line" data-perm="viewCreditLimit" data-perm-mode="hide">
           <div class="cell"><span class="lbl">วงเงิน</span><span class="val">500,000</span></div>
           <div class="cell"><span class="lbl">ใช้ไป</span><span class="val m">180,000</span></div>
           <div class="cell"><span class="lbl">คงเหลือ</span><span class="val g">320,000</span></div>
@@ -639,5 +639,16 @@ function swtSbFilter(v){
 <script src="swt-panels.js"></script>
 <script src="swt-dimensions.js"></script>
 <script src="swt-sc-wire.js"></script>
+<!-- สิทธิ์ระดับฟิลด์ (demo · swt-perm.js) — tag ราคา/ส่วนลด รายบรรทัดตามคอลัมน์ แล้วบังคับสิทธิ์ -->
+<script>
+(function(){
+  document.querySelectorAll('table.items tbody tr').forEach(function(tr){
+    var nums=tr.querySelectorAll('input.line-num');
+    if(nums[0])nums[0].setAttribute('data-perm','editUnitPrice');    // หน่วยละ
+    if(nums[1])nums[1].setAttribute('data-perm','editLineDiscount'); // ส่วนลด
+  });
+})();
+</script>
+<script src="swt-perm.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>
