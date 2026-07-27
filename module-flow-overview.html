@@ -73,6 +73,16 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
 .uc .step.ext{border-style:dashed;opacity:.92}
 .uc .sep{color:#CBD5E1;font-size:12px;font-weight:700}
 .uc .div{font-size:10px;font-weight:700;color:#94A3B8;padding:0 6px;white-space:nowrap}
+.ac{margin-top:8px;background:#F0F9FF;border:1px solid #BAE6FD;border-radius:8px;padding:8px 11px;font-size:11.5px;line-height:1.6}
+.ac .t{font-weight:700;color:#0369A1;margin-bottom:3px}
+.ac b{color:#0C4A6E}
+.ac .fail{margin-top:3px;color:#B45309}
+.ac .alt{margin-top:3px;padding-left:14px;position:relative}
+.ac .alt::before{content:"↳";position:absolute;left:0;color:#0EA5E9;font-weight:700}
+.ac table{width:100%;border-collapse:collapse;margin-top:5px;font-size:11px}
+.ac th{background:#E0F2FE;color:#075985;text-align:left;padding:3px 8px;font-weight:700;border:1px solid #BAE6FD}
+.ac td{padding:3px 8px;border:1px solid #E0F2FE}
+.ac .note{color:#92400E;background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;padding:5px 9px;margin-top:5px}
 .grid-mods{display:flex;flex-direction:column}
 @media(max-width:1100px){.main{margin-left:0}}
 </style>
@@ -139,6 +149,11 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         <span class="sep">→</span>
         <a class="step" href="fi1-ar-receive-mockup.html"><span class="c">FI-1</span><span class="n">รับเงินคงเหลือ</span></a>
       </div>
+      <div class="ac">
+        <div class="t">✅ เกณฑ์ตรวจ (A · Given-When-Then)</div>
+        <div><b>กำหนดให้</b> ใบจอง SL-2 รับมัดจำแล้ว 6,290 · ยอดขายรวม 17,430 &nbsp; <b>เมื่อ</b> ออกบิล SL-4 &nbsp; <b>แล้วจะ</b> ยอดสุทธิ = 17,430 − 6,290 (มัดจำ) = 11,140 · เก็บส่วนที่เหลือที่ FI-1 หลังส่งของ (WH-2)</div>
+        <div class="fail"><b>⚠️ ทางพลาด:</b> ยังไม่รับมัดจำ (SL-3) → ออกบิลได้แต่ไม่มียอดหัก · ส่วนลดต้องหักก่อน VAT เสมอ</div>
+      </div>
     </div>
 
     <div class="uc" style="border-left-color:#2563EB">
@@ -155,10 +170,10 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         <span class="sep">→</span>
         <a class="step" href="fi1-ar-receive-mockup.html"><span class="c">FI-1</span><span class="n">รับเงิน</span></a>
       </div>
-      <div style="margin-top:8px;background:#F0F9FF;border:1px solid #BAE6FD;border-radius:8px;padding:8px 12px;font-size:12px;line-height:1.65">
-        <div style="font-weight:700;color:#0369A1;margin-bottom:3px">✅ เกณฑ์ตรวจ (Acceptance / กรณีทดสอบ)</div>
+      <div class="ac">
+        <div class="t">✅ เกณฑ์ตรวจ (A · Given-When-Then)</div>
         <div><b>กำหนดให้</b> ลูกค้าวงเงิน 500,000 · ใช้ไป 480,000 &nbsp; <b>เมื่อ</b> เปิดบิลเชื่อ 50,000 (เกินวงเงิน 30,000) &nbsp; <b>แล้วจะ</b> ระบบบล็อกออกบิล → เด้ง SL-F1 ขออนุมัติ → ผ่าน CF-2.6 (Maker ≠ Checker) ก่อน จึงออก SL-4 ได้</div>
-        <div style="margin-top:3px;color:#B45309"><b>⚠️ ทางพลาด:</b> อนุมัติไม่ผ่าน → บิลค้างสถานะ "รออนุมัติ" · ออก SL-4 / รับเงินไม่ได้</div>
+        <div class="fail"><b>⚠️ ทางพลาด:</b> อนุมัติไม่ผ่าน → บิลค้างสถานะ "รออนุมัติ" · ออก SL-4 / รับเงินไม่ได้</div>
       </div>
     </div>
 
@@ -171,6 +186,13 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         <a class="step" href="slcn-credit-memo-mockup.html"><span class="c">SL-CN</span><span class="n">ใบลดหนี้</span></a>
         <span class="sep">→</span>
         <a class="step" href="fi1q-apply-queue-mockup.html"><span class="c">FI-1Q</span><span class="n">apply / คืนเงิน</span></a>
+      </div>
+      <div class="ac">
+        <div class="t">✅ เกณฑ์ตรวจ (C · ทางหลัก + ทางแตก)</div>
+        <div><b>ทางหลัก:</b> ใบลดหนี้ต้อง<b>อ้างบิลต้นทาง (SL-4) เสมอ</b> · ยอด/VAT ที่ลด ระบบคำนวณ (แก้ไม่ได้)</div>
+        <div class="alt"><b>ปลายทาง 1 — หักบิลถัดไป:</b> เครดิตค้างเข้า ledger ลูกหนี้ → ตัดกับบิลหน้า</div>
+        <div class="alt"><b>ปลายทาง 2 — คืนเงิน:</b> โอน/เงินสด → ตั้งจ่ายที่ FI</div>
+        <div class="fail"><b>⚠️ ทางพลาด:</b> ไม่อ้างบิลต้นทาง → ออกใบลดหนี้ไม่ได้ (บังคับอ้างอิง)</div>
       </div>
     </div>
 
@@ -190,6 +212,11 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         <span class="sep">→</span>
         <a class="step" href="fi2-ap-payment-mockup.html"><span class="c">FI-2</span><span class="n">จ่าย</span></a>
       </div>
+      <div class="ac">
+        <div class="t">✅ เกณฑ์ตรวจ (A · 3-Way Match)</div>
+        <div><b>กำหนดให้</b> PO-4 สั่ง 100 ชิ้น @ ราคาตกลง &nbsp; <b>เมื่อ</b> รับของ WH-1 + วางบิล vendor &nbsp; <b>แล้วจะ</b> จับคู่ 3 ทาง (PO = ใบรับ = ใบวางบิล) ผ่าน → ตั้งหนี้ PO-6 · <b>ยึดราคา PO เสมอ</b></div>
+        <div class="fail"><b>⚠️ ทางพลาด:</b> รับเกินจำนวน PO / ราคาใบวางบิล ≠ PO → ระบบบล็อก (ส่วนต่างแก้ที่ PO หรือออก PO-CN)</div>
+      </div>
     </div>
 
     <div class="uc" style="border-left-color:#D97706">
@@ -204,6 +231,11 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         <span class="div">/ หัก</span>
         <a class="step ext" href="po6-ap-invoice-mockup.html"><span class="c">PO-6</span><span class="n">net AP</span></a>
       </div>
+      <div class="ac">
+        <div class="t">✅ เกณฑ์ตรวจ (A · Given-When-Then)</div>
+        <div><b>กำหนดให้</b> ข้อตกลง PO-2 กับ vendor มีเป้ายอดซื้อ &nbsp; <b>เมื่อ</b> PO-7 วัดยอดจริงถึงเป้า &nbsp; <b>แล้วจะ</b> เคลมได้ → ออก PO-CN หักลดหนี้ฝั่งซื้อ (net ที่ PO-6)</div>
+        <div class="fail"><b>⚠️ ทางพลาด:</b> ยอดซื้อจริงไม่ถึงเป้า → เคลมไม่ได้ (rebate = 0) · เคลมต้องผูกข้อตกลง PO-2</div>
+      </div>
     </div>
 
     <div class="uc" style="border-left-color:#16A34A">
@@ -215,6 +247,11 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         <a class="step" href="wh3-transfer-mockup.html"><span class="c">WH-3</span><span class="n">โอนออก</span></a>
         <span class="sep">→</span>
         <a class="step" href="wh1-receive-mockup.html"><span class="c">WH-1</span><span class="n">รับปลายทาง</span></a>
+      </div>
+      <div class="ac">
+        <div class="t">✅ เกณฑ์ตรวจ (A · In-Transit)</div>
+        <div><b>กำหนดให้</b> ปลายทางขาดของ ขอโอน WH-3R &nbsp; <b>เมื่อ</b> ต้นทางโอนออก WH-3 &nbsp; <b>แล้วจะ</b> ตัดสต็อกต้นทางทันที · ของอยู่สถานะ <b>In-Transit</b> · เข้าสต็อกปลายทางเมื่อ WH-1 รับ</div>
+        <div class="fail"><b>⚠️ ทางพลาด:</b> ปลายทางยังไม่รับ → ของค้าง In-Transit (ไม่นับเป็นสต็อกปลายทาง · ไม่หายจากระบบ)</div>
       </div>
     </div>
 
@@ -230,6 +267,14 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         <span class="div">ที่ขาด +</span>
         <a class="step" href="po1-purchase-request-mockup.html"><span class="c">PO-1</span><span class="n">③ สั่งซื้อ</span></a>
       </div>
+      <div class="ac">
+        <div class="t">✅ เกณฑ์ตรวจ (C · ทางแตกตามลำดับ · ทุกใบอ้างใบขายเดียวกัน)</div>
+        <div><b>ทางหลัก:</b> 1 บรรทัดขาย คลังจ่ายมีไม่พอ → เกลี่ยตามลำดับ (ไม่ข้ามขั้น)</div>
+        <div class="alt"><b>① เบิกคลังจ่าย (WH-2R):</b> เท่าที่มีในคลังจ่าย</div>
+        <div class="alt"><b>② ขอโอนคลังอื่น (WH-3R):</b> ส่วนที่คลังอื่นมี</div>
+        <div class="alt"><b>③ สั่งซื้อ (PO-1):</b> ส่วนที่ไม่มีเลยทั้งระบบ</div>
+        <div class="fail"><b>⚠️ ทางพลาด:</b> ยอดรวม 3 ใบ ≠ ยอดขาย → ไม่ครบ/เกิน · ทุกใบต้องอ้าง SL ใบเดียวกัน</div>
+      </div>
     </div>
 
     <div class="uc" style="border-left-color:#DB2777">
@@ -241,6 +286,20 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         <a class="step ext" href="fi4-expense-wht-mockup.html"><span class="c">FI-4</span><span class="n">หัก (pending)</span></a>
         <span class="sep">→</span>
         <a class="step" href="fi12-wht-mockup.html"><span class="c">FI-12</span><span class="n">Release + พิมพ์ ภ.ง.ด.3/53</span></a>
+      </div>
+      <div class="ac">
+        <div class="t">✅ เกณฑ์ตรวจ (B · Decision Table — อัตราตามประเภทค่าใช้จ่าย)</div>
+        <table>
+          <thead><tr><th>ประเภทค่าใช้จ่าย</th><th>VAT ซื้อ</th><th>หัก ณ ที่จ่าย</th></tr></thead>
+          <tbody>
+            <tr><td>ค่าสินค้า</td><td>7%</td><td>— ไม่หัก</td></tr>
+            <tr><td>ค่าบริการ / ติดตั้ง</td><td>7%</td><td>3%</td></tr>
+            <tr><td>ค่าเช่าโกดัง (อสังหาฯ)</td><td>ยกเว้น</td><td>5%</td></tr>
+            <tr><td>ค่าเช่ารถ (สังหาฯ)</td><td>7%</td><td>5%</td></tr>
+            <tr><td>ค่าโฆษณา</td><td>7%</td><td>2%</td></tr>
+          </tbody>
+        </table>
+        <div class="note">⚠️ ค่าเช่า 2 แบบ VAT ต่างกัน (ยกเว้น/7%) แต่ WHT เท่ากัน 5% — สถานะ VAT กระทบเฉพาะภาษีซื้อ ไม่กระทบอัตราหัก · อัตราตั้งที่ทะเบียนประเภทเงินได้ (swt-income)</div>
       </div>
     </div>
 
@@ -260,6 +319,11 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         <span class="sep">→</span>
         <a class="step" href="wh4-count-mockup.html"><span class="c">WH-4</span><span class="n">นับจริง</span></a>
       </div>
+      <div class="ac">
+        <div class="t">✅ เกณฑ์ตรวจ (A · คิวรวมงาน)</div>
+        <div><b>กำหนดให้</b> มีงานคลังเข้าหลายทิศ (รับ/เบิก/นับ) &nbsp; <b>เมื่อ</b> เปิดคิว WH-Q &nbsp; <b>แล้วจะ</b> ตั๋วจัดกลุ่มตามงาน · คลิกตั๋ว → เปิดฟอร์มทำจริง (WH-1/WH-2/WH-4) · คิวแค่รวบ+นำทาง ไม่ทำรายการเอง</div>
+        <div class="fail"><b>⚠️ ทางพลาด:</b> ทำรายการที่ฟอร์มแล้วคิวไม่อัปเดต → ตั๋วค้างซ้ำ (คิวต้อง sync สถานะจากเอกสารจริง)</div>
+      </div>
     </div>
 
     <div class="uc" style="border-left-color:#7C3AED;grid-column:1 / -1">
@@ -277,6 +341,11 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         <a class="step" href="clm-vendor-claim-mockup.html"><span class="c">CLM</span><span class="n">เคลม vendor</span></a>
         <span class="sep">→</span>
         <a class="step" href="po-cn-credit-note-mockup.html"><span class="c">PO-CN</span><span class="n">ลดหนี้ซื้อ</span></a>
+      </div>
+      <div class="ac">
+        <div class="t">✅ เกณฑ์ตรวจ (A · Given-When-Then)</div>
+        <div><b>กำหนดให้</b> เครื่องอยู่ในประกัน (SV-1 In-Warranty) &nbsp; <b>เมื่อ</b> ซ่อมเสร็จปิดงาน SV-4 &nbsp; <b>แล้วจะ</b> ค่าอะไหล่/ค่าแรงเรียกคืน vendor (CLM) → ปลายทางเป็น PO-CN ลดหนี้ซื้อ · ลูกค้าไม่จ่าย</div>
+        <div class="fail"><b>⚠️ ทางพลาด:</b> นอกประกัน → ลูกค้าจ่ายเอง (ไม่เข้า CLM/PO-CN) · เบิกอะไหล่ SV-3 ต้อง เหลือ − ใช้ = คืน</div>
       </div>
     </div>
 
