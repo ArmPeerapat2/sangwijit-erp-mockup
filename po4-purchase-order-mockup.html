@@ -263,7 +263,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
         <div class="card-header">
           <div class="card-title"><span class="secno">PO-4.1</span><span class="ico">🏭</span>เจ้าหนี้ / ผู้ขาย (Vendor) <span class="tpl-zone">SC-3</span></div>
           <div class="card-spacer"></div>
-          <button class="card-btn primary" onclick="dfOpenVend()">🔍 เลือก/เปลี่ยน</button>
+          <button class="card-btn primary" onclick="dfOpenVend()" data-perm="changeCustomer">🔍 เลือก/เปลี่ยน</button>
         </div>
         <div class="field-grid-2">
           <div class="field"><div class="field-label">รหัส · ชื่อ</div><div class="field-value"><span class="highlight">V-00045</span> · Daikin Industries (TH) Ltd.</div></div>
@@ -503,5 +503,16 @@ function swtSbFilter(v){
 <script src="swt-sc-modals.js"></script>
 <script src="swt-panels.js"></script>
 <script src="swt-sc-wire.js"></script>
+<!-- สิทธิ์ระดับฟิลด์ (demo · swt-perm.js) — tag ราคา/ส่วนลดรายบรรทัดตามคอลัมน์ แล้วบังคับสิทธิ์ -->
+<script>
+(function(){
+  document.querySelectorAll('table.items tbody tr').forEach(function(tr){
+    var nums=tr.querySelectorAll('input.line-num');
+    if(nums[0])nums[0].setAttribute('data-perm','editUnitPrice');    // ราคา/หน่วย
+    if(nums[1])nums[1].setAttribute('data-perm','editLineDiscount'); // ส่วนลด
+  });
+})();
+</script>
+<script src="swt-perm.js"></script>
 <script src="swt-link.js"></script>
 </body></html>
