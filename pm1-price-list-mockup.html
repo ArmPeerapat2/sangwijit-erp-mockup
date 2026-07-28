@@ -90,6 +90,13 @@ td input,td select{width:100%;padding:5px 7px;border:1px solid #E5E7EB;border-ra
   ℹ️ <div><strong>ราคาที่ตั้งที่นี่ = ราคาก่อน VAT เสมอ</strong> (VAT บวกทีหลัง) · Posted แล้วแก้ไม่ได้ → ต้องสร้างรายการใหม่ · ราคานี้เป็นฐานให้ทั้งฝ่ายขาย (SL) และบริการ (SV) ผ่าน SC9</div>
 </div>
 
+<div style="display:flex;gap:10px;align-items:center;background:#F0FDF4;border:1px solid #86EFAC;border-radius:8px;padding:9px 14px;margin-bottom:12px;font-size:12.5px;color:#065F46;flex-wrap:wrap">
+  <span style="font-weight:700">⚖️ ลำดับราคาตอนขาย (Price Priority)</span>
+  <span class="chip chip-g">1) โปรโมชั่น (ช่วงเวลา active)</span> <span style="color:#9CA3AF">→</span>
+  <span class="chip chip-b">2) ราคามาตรฐานตามกลุ่มลูกค้า (default)</span>
+  <span style="color:#9CA3AF">·</span> <span>🔒 ทำ<b>ใบจอง</b>แล้ว = <b>ล็อกราคา</b> อ้างอิงราคาเดิมได้แม้ลิสต์เปลี่ยน</span>
+</div>
+
 <div class="section-card">
   <div class="section-title">🏷️ PM-1.1 · ข้อมูลรายการราคา</div>
   <div class="form-grid">
@@ -154,8 +161,34 @@ td input,td select{width:100%;padding:5px 7px;border:1px solid #E5E7EB;border-ra
     <span>✅ มีผล: <b>ทั้งหมด</b></span>
     <span>⏳ อนุมัติ: <span class="chip chip-b">รอส่ง</span></span>
     <div style="flex:1"></div>
-    <a href="#" style="font-size:12px;color:#2563EB">📜 ดูประวัติการแก้ไข (PM-1.3)</a>
+    <a href="#pm13" onclick="document.getElementById('pm13').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:#2563EB">📜 ดูประวัติราคา (PM-1.3) ↓</a>
   </div>
+</div>
+
+<div class="section-card" id="pm13">
+  <div class="section-title">📜 PM-1.3 · ประวัติราคา (Timeline ต่อสินค้า) <span class="tag">เก็บทุกเวอร์ชัน · SUB</span></div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap">
+    <label style="font-size:12px;color:#6B7280;font-weight:600">เลือกสินค้า:</label>
+    <select id="pm13Sku" onchange="pm13Render()" style="padding:7px 10px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;font-family:inherit;min-width:300px">
+      <option value="DAI-FTKM24">DAI-FTKM24 · แอร์ Daikin FTKM24 24000 BTU</option>
+      <option value="MIT-MSY13">MIT-MSY13 · แอร์ Mitsubishi MSY-13 13000 BTU</option>
+    </select>
+    <span id="pm13Latest" class="chip chip-g" style="font-size:12px;padding:5px 11px"></span>
+  </div>
+  <table>
+    <thead><tr>
+      <th style="width:64px">เวอร์ชัน</th>
+      <th style="width:110px">มีผลตั้งแต่</th>
+      <th style="width:110px" class="num">ราคา (ก่อน VAT)</th>
+      <th style="width:150px" class="num">เปลี่ยนแปลง</th>
+      <th style="width:100px">กลุ่มลูกค้า</th>
+      <th style="width:150px">ใบขอเปลี่ยน (PM-3)</th>
+      <th>เหตุผล / ผู้อนุมัติ</th>
+      <th style="width:96px">สถานะ</th>
+    </tr></thead>
+    <tbody id="pm13Rows"></tbody>
+  </table>
+  <div style="margin-top:8px;font-size:11.5px;color:#6B7280">💡 <b>ทุกการเปลี่ยนราคาต้องผ่านใบขอเปลี่ยนราคา (PM-3)</b> → อนุมัติ CF-2.6 → ลงเวอร์ชันใหม่ที่นี่อัตโนมัติ · ✅ ราคาล่าสุด = ราคาที่ระบบใช้ตอนขาย (ถ้าไม่มีโปรฯ active) · เก็บครบทุกเวอร์ชัน (แก้ปัญหาระบบเดิมที่ไม่เก็บประวัติ)</div>
 </div>
 
 <!-- irreversible warning (safety) — ปุ่ม action อยู่บนหัวที่เดียว -->
@@ -172,6 +205,39 @@ function addPl(){
   tr.innerHTML='<td><input placeholder="รหัส..." style="'+i+';font-family:monospace"></td><td><input placeholder="ชื่อสินค้า..." style="'+i+'"></td><td><input value="เครื่อง" style="'+i+'"></td><td class="num"><input placeholder="1 - ..." style="'+i+';text-align:center"></td><td class="num"><input placeholder="0.00" style="'+i+';text-align:right"></td><td class="num"><span class="hidecost">🔒 ซ่อน</span></td><td><input placeholder="กลุ่ม" style="'+i+'"></td>';
   tb.appendChild(tr);
 }
+
+/* PM-1.3 ประวัติราคา (timeline ต่อสินค้า · เก็บทุกเวอร์ชัน SUB) */
+var PM13={
+  'DAI-FTKM24':{name:'แอร์ Daikin FTKM24 24000 BTU', rows:[
+    {v:'v3',date:'01/07/26',price:'18,900.00',chg:'▼ จาก 19,500 (−3.1%)',chgc:'#B45309',grp:'ตัวแทน',req:'PCR-2607-0012',reason:'โปรฤดูร้อน Q3/2569',by:'คุณสมชาย (Pricing Mgr)',cur:true},
+    {v:'v2',date:'01/04/26',price:'19,500.00',chg:'▼ จาก 20,000 (−2.5%)',chgc:'#B45309',grp:'ตัวแทน',req:'PCR-2604-0007',reason:'ปรับตามต้นทุนนำเข้าลดลง',by:'คุณสมชาย (Pricing Mgr)',cur:false},
+    {v:'v1',date:'01/01/26',price:'20,000.00',chg:'— ตั้งครั้งแรก',chgc:'#6B7280',grp:'ตัวแทน',req:'PCR-2601-0001',reason:'ตั้งราคาเริ่มต้นปี 2569',by:'คุณสมชาย (Pricing Mgr)',cur:false}
+  ]},
+  'MIT-MSY13':{name:'แอร์ Mitsubishi MSY-13 13000 BTU', rows:[
+    {v:'v2',date:'01/05/26',price:'13,500.00',chg:'▲ จาก 13,200 (+2.3%)',chgc:'#065F46',grp:'ตัวแทน',req:'PCR-2605-0009',reason:'ปรับขึ้นตามค่าเงินเยน',by:'คุณสมชาย (Pricing Mgr)',cur:true},
+    {v:'v1',date:'01/01/26',price:'13,200.00',chg:'— ตั้งครั้งแรก',chgc:'#6B7280',grp:'ตัวแทน',req:'PCR-2601-0002',reason:'ตั้งราคาเริ่มต้นปี 2569',by:'คุณสมชาย (Pricing Mgr)',cur:false}
+  ]}
+};
+function pm13Render(){
+  var sku=document.getElementById('pm13Sku').value, d=PM13[sku];
+  var tb=document.getElementById('pm13Rows'); tb.innerHTML='';
+  d.rows.forEach(function(r){
+    var tr=document.createElement('tr');
+    if(r.cur) tr.style.background='#F0FDF4';
+    tr.innerHTML='<td style="font-weight:700;font-family:monospace">'+r.v+'</td>'+
+      '<td>'+r.date+'</td>'+
+      '<td class="num" style="font-weight:600">'+r.price+'</td>'+
+      '<td class="num" style="color:'+r.chgc+';font-weight:600">'+r.chg+'</td>'+
+      '<td>'+r.grp+'</td>'+
+      '<td><a href="pm3-price-change-request-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:600">'+r.req+'</a> <span class="chip chip-g" style="font-size:9px">✓ อนุมัติ</span></td>'+
+      '<td style="font-size:12px">'+r.reason+'<div style="font-size:10.5px;color:#9CA3AF">'+r.by+'</div></td>'+
+      '<td>'+(r.cur?'<span class="chip chip-g">✅ ใช้อยู่</span>':'<span class="chip" style="background:#F3F4F6;color:#9CA3AF">⚪ เก่า</span>')+'</td>';
+    tb.appendChild(tr);
+  });
+  var cur=d.rows.find(function(x){return x.cur;});
+  document.getElementById('pm13Latest').textContent='ราคาล่าสุด: '+cur.price+' ฿ (มีผล '+cur.date+')';
+}
+pm13Render();
 </script>
 </body>
 </html>
