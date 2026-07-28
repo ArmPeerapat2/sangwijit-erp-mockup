@@ -1115,3 +1115,9 @@ flow-understanding: `.agents/topics/finance-flow-understanding.md` (user confirm
 - **DEV-HANDOFF:** +§Consolidation (กติกาอ่าน mockup: archive=ไม่ build · badge=โหมด/แท็บ · cut=BC)
 
 **📋 Status Lifecycle ทุกโมดูล (ฟอร์แมต service.pdf · 2026-07-12):** flow-wh/sl/po/fi-status.html — ตาราง step × บทบาท × สถานะ × surface (A/P/M) · ชื่อสถานะดึงจาก mockup จริง · surface SV ครบ 9 (A1-A5+P1-2+M1-2 · spec §13.4) · **รอเคาะ: W1-3 (WH) · S1-4 (SL) · Q1-4 (PO) · F1-4 (FI)** — คำถามฝังท้ายแต่ละไฟล์
+
+## ✅ PM reconcile + QA-review (2026-07-28)
+- **PM ไม่ใช่ stub — build ครบแล้ว** (grill 07-04+07-21) · tracker หลอก (placeholder attr + flow-overview ค้าง) ทำผมเข้าใจผิดว่าต้อง grill/build
+- **reconcile (04fa914):** DONE[] +pm1/pm5 (PM ครบ 5) · flow-overview PM 0✦/3-stub→5✦/5 +node pm4/pmq · index SL-6→PM-2 (2 UI จุด · เหลือ 2 ตารางอ้างอิงตั้งใจไม่แตะ)
+- **QA-review ผ่าน:** 5 หน้า mojibake 0 · วงกลม UI 0 (grep false-positive · innerText ยืนยัน) · section badge ครบ · shared 1/1 · pm2/pm5 JS+console clean
+- **⚠️ meta-lesson:** เจาะ 3 รอบ (sv-ma-contract, PM) พบ **mockup แทบเสร็จหมด · งานจริงคือ status tracker drift** ไม่ใช่ build โมดูล · อย่าเชื่อ flow-overview ✦/grep "stub|placeholder" — เปิดไฟล์/render จริงก่อน
