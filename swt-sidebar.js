@@ -14,7 +14,7 @@
     'sl3-deposit-mockup.html','sl4-invoice-mockup.html','slcn-credit-memo-mockup.html',
     'po1-purchase-request-mockup.html','po2-rfq-mockup.html','po4-purchase-order-mockup.html','sc3-vendor-search-mockup.html',
     'wh1-receive-mockup.html','po6-ap-invoice-mockup.html','po-cn-credit-note-mockup.html',
-    'po7-rebate-dashboard.html','po8-deposit-bill-mockup.html',
+    'po7-rebate-dashboard.html','po8-deposit-bill-mockup.html','po-dp-deposit-payment-mockup.html',
     'fi2-ap-payment-mockup.html','fi1-ar-receive-mockup.html',
     'poq-purchase-queue-mockup.html',
     'fiq-finance-queue-mockup.html','fiq-finance-queue-mockup.html',
@@ -106,12 +106,13 @@
       ['PM-Q','pmq-promo-dashboard-mockup.html','PM-Q โปรฯ ที่รันอยู่','new'],
       ['PM-5','pm5-price-simulator-mockup.html','PM-5 จำลองราคาขาย','new']]},
 
-    /* ── จัดซื้อ (PO) — 7 items · ย้ายรายงาน→RP-1 ── */
+    /* ── จัดซื้อ (PO) — 8 items · ย้ายรายงาน→RP-1 ── */
     {ico:'🛒', label:'จัดซื้อ (PO)', links:[
       ['PO-Q','poq-purchase-queue-mockup.html','PO-Q Purchase Queue','old'],
       ['PO-1','po1-purchase-request-mockup.html','PO-1 ใบขอสั่งซื้อ (PR)','old'],
       ['PO-2','po2-rfq-mockup.html','PO-2 Trade Agreement / Vendor','old'],
       ['PO-4','po4-purchase-order-mockup.html','PO-4 ใบสั่งซื้อ (PO)','old'],
+      ['PODP','po-dp-deposit-payment-mockup.html','PO-DP ใบมัดจำจ่าย','new'],
       ['PO-7','po7-rebate-dashboard.html','PO-7 ส่งเสริมการขาย (Rebate)','old'],
       ['PO-8','po8-deposit-bill-mockup.html','PO-8 บิลฝาก (Deposit)','old'],
       ['POCN','po-cn-credit-note-mockup.html','PO-CN ใบลดหนี้เจ้าหนี้','old']]},

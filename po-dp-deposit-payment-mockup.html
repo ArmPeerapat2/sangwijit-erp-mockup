@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PO-DP ใบมัดจำจ่าย (Deposit Payment) — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══ PO-DP ใบมัดจำจ่าย — mirror SL-3 (ฝั่งซื้อ) · build บน _form-template · SAAB-in-header (มาตรฐาน 2026-07-28) ═══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#111827;min-width:1440px;font-size:13px;line-height:1.45;height:100vh;overflow:hidden}
+.layout{display:flex;height:100vh;overflow:hidden}
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;margin-left:240px}
+.topbar-search{display:flex;align-items:center;gap:8px;background:#F3F4F6;border-radius:8px;padding:6px 12px;font-size:13px;color:#9CA3AF;width:220px}
+.topbar-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#F3F4F6;cursor:pointer;font-size:16px}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.branch-sel{background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;font-size:11px;font-weight:600;padding:4px 8px;border-radius:20px;font-family:inherit;cursor:pointer}
+.mh-left{display:flex;align-items:center;gap:18px}
+.mh-title{display:flex;align-items:center;gap:10px}
+.mh-title .ico{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px}
+.mh-title h1{font-size:16px;font-weight:700;letter-spacing:-0.01em;line-height:1.15}
+.mh-title p{font-size:11px;color:rgba(255,255,255,0.7);margin-top:1px}
+.mh-divider{width:1px;height:32px;background:rgba(255,255,255,0.2)}
+.mh-meta{display:flex;gap:20px}
+.mh-meta-item .lbl{font-size:10px;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em}
+.mh-meta-item .val{font-size:12px;font-weight:600;margin-top:1px;font-family:'Inter',monospace}
+.mh-right{display:flex;align-items:center;gap:8px}
+.mh-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(251,191,36,0.2);color:#FCD34D;border:1px solid rgba(251,191,36,0.3)}
+.mh-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
+.mh-btn-ghost{background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.2)}
+.mh-btn-primary{background:#10B981;color:#fff}
+.mh-btn-accent{background:#B45309;color:#fff}
+.content{flex:1;padding:12px 24px;display:flex;flex-direction:column;gap:12px;overflow:hidden;min-height:0}
+.card{background:#fff;border-radius:8px;border:1px solid #E5E7EB;padding:14px;overflow:hidden}
+.card-header{display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid #F3F4F6;margin-bottom:10px}
+.card-title{font-size:12px;font-weight:600;color:#374151;display:flex;align-items:center;gap:6px}
+.card-title .ico{font-size:14px}
+.card-title .secno{font-family:'Inter',monospace;font-weight:700;color:#2563EB;font-size:11px}
+.card-spacer{flex:1}
+.card-btn{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;background:transparent;border:1px solid #E5E7EB;color:#6B7280;cursor:pointer;font-family:inherit}
+.card-btn.primary{background:#EFF6FF;border-color:#BFDBFE;color:#2563EB}
+.card.compact{padding:10px 12px}
+.row-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.row-bottom{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+.field{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}
+.field-label{font-size:10px;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.03em}
+.field-value{font-size:12.5px;color:#111827;font-weight:500}
+.field-value.highlight{font-weight:700;color:#2563EB;font-family:'Inter',monospace}
+.field-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.credit-line{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;padding:6px 8px;background:#F8FAFC;border-radius:5px;border:1px solid #E2E8F0}
+.credit-line .cell{display:flex;flex-direction:column}
+.credit-line .lbl{font-size:8.5px;color:#9CA3AF;font-weight:700;text-transform:uppercase}
+.credit-line .val{font-size:11px;font-weight:700;font-family:'Inter',monospace}
+.credit-line .val.g{color:#10B981}.credit-line .val.r{color:#EF4444}.credit-line .val.m{color:#6B7280}
+.items-card{padding:0;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0}
+.items-card .card-header{padding:12px 14px;margin:0;border-bottom:1px solid #E5E7EB}
+.items-wrap{overflow-y:auto;flex:1}
+table.items{width:100%;border-collapse:collapse;background:#fff}
+table.items thead{position:sticky;top:0;background:#F8FAFC;z-index:5}
+table.items thead th{padding:9px 12px;font-size:10.5px;font-weight:600;color:#6B7280;text-align:left;border-bottom:2px solid #E5E7EB;text-transform:uppercase;white-space:nowrap}
+table.items tbody td{padding:10px 12px;font-size:12.5px;color:#111827;border-bottom:1px solid #F3F4F6;vertical-align:top}
+table.items tbody tr:hover{background:#FAFBFC}
+table.items tbody tr.empty-row td{height:30px;color:#9CA3AF}
+table.items th,table.items td{border-right:1px solid #EDEFF2}
+table.items th:last-child,table.items td:last-child{border-right:none}
+.item-code{font-size:10.5px;color:#6B7280;font-family:'Inter',monospace;font-weight:600}
+.item-name{font-weight:500}
+.ref-chip{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:3px;font-size:10px;font-weight:600;background:#FFFBEB;color:#92400E;margin-top:3px}
+.line-num{width:118px;padding:3px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;text-align:right;font-family:'Inter',monospace}
+.add-row-bar{padding:10px 14px;border-top:1px dashed #E5E7EB;display:flex;align-items:center;gap:6px;color:#B45309;font-size:12px;font-weight:600;cursor:pointer;background:#FFFBEB}
+.ctx-bar{display:flex;gap:18px;padding:8px 14px;background:#F8FAFC;border-bottom:1px solid #E5E7EB;font-size:11.5px}
+.ctx-bar .k{color:#9CA3AF;font-weight:600}.ctx-bar .v{font-weight:700;font-family:'Inter',monospace;margin-left:5px}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px}
+.summary-row .lbl{color:#6B7280}
+.summary-row .val{color:#111827;font-weight:600;font-family:'Inter',monospace}
+.summary-total{margin-top:8px;padding:12px;background:linear-gradient(90deg,#7C2D12 0%,#B45309 100%);border-radius:6px;color:#fff;display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:700}
+.summary-total .val{color:#fff;font-family:'Inter',monospace}
+.dc-node{padding:3px 10px;border-radius:5px;background:#F3F4F6;color:#6B7280;font-weight:600}
+.dc-node.done{background:#ECFDF5;color:#065F46}
+.dc-node.current{background:#FFFBEB;color:#92400E;border:1px solid #FDE68A}
+.dc-arrow{color:#CBD5E1}
+a.dc-node{text-decoration:none;cursor:pointer}
+a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:inherit}
+.btn-primary{background:#2563EB;color:#fff}.btn-success{background:#10B981;color:#fff}
+.btn-outline{background:#fff;color:#374151;border-color:#E5E7EB}
+.row-2col .card.compact{padding:7px 10px}
+.row-2col .card-header{padding-bottom:5px;margin-bottom:5px}
+.row-2col .field{margin-bottom:3px}
+.row-2col .field-grid-2{gap:3px 14px}
+.row-2col .credit-line{margin-top:5px;padding:4px 8px}
+.content>.card:not(.items-card),.row-bottom,.row-2col{flex:none}
+.row-bottom{font-size:12px}
+.row-bottom>.card{overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.row-bottom .summary-row{padding:2px 0;font-size:11px}
+.row-bottom .summary-total{font-size:13px;padding:8px 10px;margin-top:4px}
+.row-bottom .card-header{padding-bottom:5px;margin-bottom:5px}
+.tpl-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:900;align-items:center;justify-content:center}
+.tpl-modal-bg.on{display:flex}
+.tpl-modal{background:#fff;border-radius:10px;padding:20px;width:360px;box-shadow:0 8px 30px rgba(0,0,0,.2)}
+.tpl-modal h3{font-size:14px;margin-bottom:12px}
+.tpl-modal label{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;margin-bottom:6px;font-size:12.5px;cursor:pointer}
+.tpl-modal .m-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+.ph{color:#9CA3AF;font-style:italic}
+.tpl-zone{font-size:9px;font-weight:700;color:#2563EB;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:4px;padding:1px 6px;margin-left:6px;text-transform:uppercase}
+</style>
+  <link rel="stylesheet" href="swt-patterns.css">
+</head>
+<body>
+<div class="layout">
+<div class="main">
+
+  <!-- ①② UNIFIED HEADER -->
+  <header class="unified-header">
+    <div class="uh-utility">
+      <div class="uh-breadcrumb">จัดซื้อ <span class="sep">›</span> ใบมัดจำจ่าย <span class="sep">›</span> <span class="current">DP-2607-0001</span></div>
+      <div class="uh-tools">
+        <div class="topbar-search">🔍 ค้นหา… (Ctrl+K)</div>
+        <a href="notification-center-mockup.html" class="topbar-icon" style="text-decoration:none" title="แจ้งเตือน">🔔</a>
+        <select class="branch-sel"><option>🏢 HQ สนง.ใหญ่</option><option>🏢 สาขา 08</option></select>
+        <a href="user-profile-mockup.html" class="topbar-avatar" style="text-decoration:none" title="โปรไฟล์">สว</a>
+      </div>
+    </div>
+    <div class="uh-main">
+      <div class="mh-left">
+      <div class="mh-title">
+        <div class="ico">💳</div>
+        <div><h1>ใบมัดจำจ่าย</h1><p>Deposit Payment (PO-DP)</p></div>
+      </div>
+      <div class="mh-divider"></div>
+      <div class="mh-meta">
+        <div class="mh-meta-item"><div class="lbl">เลขที่มัดจำ</div><div class="val">DP-2607-0001</div></div>
+        <div class="mh-meta-item"><div class="lbl">วันที่จ่าย</div><div class="val">12 มิ.ย. 26</div></div>
+        <div class="mh-meta-item"><div class="lbl">ยอดมัดจำ</div><div class="val">725,460.00</div></div>
+      </div>
+    </div>
+    <div class="mh-right">
+      <span class="mh-badge">🕓 ร่าง · รอจ่าย</span>
+      <button class="mh-btn mh-btn-ghost" onclick="location.href='fiq-finance-queue-mockup.html'">📋 คิวงาน</button>
+      <button class="mh-btn mh-btn-ghost" title="เปิดเอกสารเก่า" onclick="dfOpen()" style="padding:6px 9px">📂</button>
+      <button class="mh-btn mh-btn-ghost" title="Copy / ทำสำเนา" onclick="tplCopyDoc()" style="padding:6px 9px">📋</button>
+      <button class="mh-btn mh-btn-ghost" title="พิมพ์ใบมัดจำจ่าย" onclick="tplOpenPrint()" style="padding:6px 9px">🖨️</button>
+      <span style="width:1px;height:22px;background:rgba(255,255,255,0.2);margin:0 4px"></span>
+      <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
+      <button class="mh-btn mh-btn-accent" onclick="podpAddDeposit()">💳 จ่ายมัดจำ (SC-3P)</button>
+      <button class="mh-btn mh-btn-ghost" title="ยกเลิก" style="color:#FCA5A5;padding:6px 9px">❌</button>
+    </div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <div id="podpGate" class="gate-alert"></div>
+
+    <!-- ROW-2COL -->
+    <div class="row-2col">
+      <div class="card compact">
+        <div class="card-header">
+          <div class="card-title"><span class="secno">PO-DP.1</span><span class="ico">🏭</span>เจ้าหนี้ (Vendor) <span class="tpl-zone">SC-3</span></div>
+          <div class="card-spacer"></div>
+          <button class="card-btn primary" onclick="dfOpenVend()">🔍 เลือก/เปลี่ยน</button>
+        </div>
+        <div class="field-grid-2">
+          <div class="field"><div class="field-label">รหัส · ชื่อ</div><div class="field-value"><span class="highlight">V-00045</span> · Daikin Industries (TH) Ltd.</div></div>
+          <div class="field"><div class="field-label">เลขภาษี</div><div class="field-value">0-1055-12345-67-8</div></div>
+        </div>
+        <div class="credit-line">
+          <div class="cell"><span class="lbl">ยอดสั่งซื้อ (รวม VAT)</span><span class="val">2,418,200.00</span></div>
+          <div class="cell"><span class="lbl">มัดจำงวดนี้</span><span class="val g">725,460.00</span></div>
+          <div class="cell"><span class="lbl">คงเหลือ (จ่ายตอนตั้งหนี้)</span><span class="val r">1,692,740.00</span></div>
+        </div>
+      </div>
+      <div class="card compact">
+        <div class="card-header"><div class="card-title"><span class="secno">PO-DP.2</span><span class="ico">📋</span>ข้อมูลเอกสาร</div>
+          <div class="card-spacer"></div>
+          <button class="card-btn" onclick="dfOpenRef({docType:'PO',partyName:'Daikin Industries (TH) Ltd.'})" title="อ้างอิงใบสั่งซื้อ / ใบลดหนี้">🔗 อ้างอิงเอกสาร <span class="tpl-zone">SC-5</span></button>
+        </div>
+        <div class="field-grid-2">
+          <div class="field"><div class="field-label">อ้างอิงใบสั่งซื้อ (PO)</div>
+            <div class="field-value"><a href="po4-purchase-order-mockup.html" style="color:#2563EB;text-decoration:none">PO 08PO-2606-0042 ↗</a></div></div>
+          <div class="field"><div class="field-label">วันที่จ่ายมัดจำ</div><div class="field-value">12 มิ.ย. 26</div></div>
+          <div class="field"><div class="field-label">ผู้ทำรายการ (การเงิน)</div><div class="field-value">สุดา จันทร์เพ็ญ</div></div>
+          <div class="field"><div class="field-label">G/L Account (มัดจำจ่าย)</div><div class="field-value">1160 · เงินมัดจำจ่ายล่วงหน้า (สินทรัพย์)</div></div>
+        </div>
+        <div class="swt-dim-grid" data-dims="docGroup,site" style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px 14px"></div>
+      </div>
+    </div>
+
+    <!-- รายการจ่ายมัดจำ (จ่ายได้หลายงวด) -->
+    <div class="card items-card">
+      <div class="card-header">
+        <div class="card-title"><span class="secno">PO-DP.3</span><span class="ico">💳</span>รายการจ่ายมัดจำ (จ่ายได้หลายงวด)
+          <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="อ้างอิง · การจ่าย · ประวัติ">i<span class="swt-tip-pop"><b>อ้างอิง:</b> ใบสั่งซื้อ <a href="po4-purchase-order-mockup.html" style="color:#93C5FD;font-weight:700;text-decoration:none">PO 08PO-2606-0042 ↗</a><br><b>การจ่าย:</b> ผ่านจอจ่าย (SC-3P ฝั่งจ่าย · swt-payout) — โอน/เงินสด/เช็ค + ทะเบียนเช็ค 7.1.2 · แนบเอกสารอ้างอิงได้<br><b>ตัดคืน:</b> พอของเข้า+ตั้งหนี้ (PO-6) → <a href="fi2-ap-payment-mockup.html" style="color:#93C5FD;font-weight:700;text-decoration:none">FI-2 ➖ ดึงมัดจำ</a> มาหักยอดจ่ายจริง<br><b>ประวัติ:</b> 12 มิ.ย. 26 สร้างจากใบสั่งซื้อ (สุดา การเงิน) · รอจ่าย → Post ลง G/L 1160 เงินมัดจำจ่ายล่วงหน้า</span></span></div>
+        <div class="card-spacer"></div>
+        <span class="ph" style="font-size:10px">มัดจำ 1 ใบสั่งซื้อ → จ่ายทีละงวดได้</span>
+      </div>
+      <div class="ctx-bar">
+        <span><span class="k">ยอดสั่งซื้อ:</span><span class="v">2,418,200.00</span></span>
+        <span><span class="k">จ่ายมัดจำสะสม:</span><span class="v" style="color:#B45309">725,460.00</span></span>
+        <span><span class="k">คงเหลือ (จ่ายตอนตั้งหนี้):</span><span class="v" style="color:#EF4444">1,692,740.00</span></span>
+      </div>
+      <div class="items-wrap">
+        <table class="items">
+          <thead><tr><th>งวด</th><th>รายการ</th><th>วันที่จ่าย</th><th>วิธีจ่าย</th><th>อ้างอิงการจ่าย</th><th style="text-align:right">จำนวนเงิน</th><th></th></tr></thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><div class="item-name">มัดจำ 30% ตามใบสั่งซื้อ 08PO-2606-0042</div>
+                  <div><span class="ref-chip">↩ PO-0042 · แอร์ Daikin ล็อตผลิต</span></div></td>
+              <td>12 มิ.ย. 26</td>
+              <td>โอน (BBL)</td>
+              <td><div class="item-code">SLIP-8811 · 11:20</div></td>
+              <td style="text-align:right"><input class="line-num" value="725,460.00"></td>
+              <td><button style="background:none;border:none;color:#EF4444;cursor:pointer">🗑</button></td>
+            </tr>
+            <tr class="empty-row"><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr class="empty-row"><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="add-row-bar" onclick="podpAddDeposit()">➕ + เพิ่มงวดจ่ายมัดจำ (จ่ายผ่าน SC-3P)</div>
+    </div>
+
+    <!-- ROW-BOTTOM -->
+    <div class="row-bottom" style="display:grid;grid-template-columns:1fr 440px;gap:16px">
+      <div class="card compact">
+        <div class="card-header"><div class="card-title"><span class="secno">PO-DP.4</span><span class="ico">🗂️</span>หมวดเอกสาร (แผนก · โครงการ · การจัดสรร)</div></div>
+        <div class="field-grid-2">
+          <span class="swt-dim-inline" data-dims="department,project,allocate" style="display:contents"></span>
+        </div>
+      </div>
+      <div class="card" style="max-width:100%">
+        <div class="card-header"><div class="card-title"><span class="secno">PO-DP.5</span><span class="ico">💳</span>สรุปมัดจำจ่าย
+          <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="ที่มาของยอด" style="margin-left:4px">i<span class="swt-tip-pop">🔒 มัดจำจ่ายลง G/L 1160 เงินมัดจำจ่ายล่วงหน้า (สินทรัพย์) ผ่าน BC · จ่ายผ่านจอจ่าย SC-3P · ตัดคืนตอนตั้งหนี้ที่ FI-2 (➖ ดึงมัดจำ)</span></span></div></div>
+        <div class="summary-row"><span class="lbl">ยอดสั่งซื้อ (รวม VAT)</span><span class="val">2,418,200.00</span></div>
+        <div class="summary-row"><span class="lbl">จ่ายมัดจำสะสม</span><span class="val" style="color:#B45309">725,460.00</span></div>
+        <div class="summary-row"><span class="lbl">คงเหลือ (จ่ายตอนตั้งหนี้)</span><span class="val" style="color:#EF4444">1,692,740.00</span></div>
+        <div class="summary-total"><span>จ่ายมัดจำงวดนี้</span><span class="val">725,460.00</span></div>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="card" style="padding:8px 12px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:12px;font-weight:600;color:#374151;white-space:nowrap">🗒️ หมายเหตุ</span>
+      <input style="flex:1;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit" value="มัดจำ 30% ก่อนผลิต (Daikin) · จ่ายโอน BBL · ตัดคืนตอนตั้งหนี้ PO-6 → หักที่ FI-2">
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- ⑤ DOC-CHAIN -->
+  <div id="podpDcStrip" class="dc-strip"></div>
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<!-- PRINT MODAL -->
+<div class="tpl-modal-bg" id="printModal">
+  <div class="tpl-modal">
+    <h3>🖨️ เลือกแบบฟอร์มก่อนพิมพ์</h3>
+    <label><input type="radio" name="prnForm" checked> ใบมัดจำจ่าย (เจ้าหนี้)</label>
+    <label><input type="radio" name="prnForm"> สำเนา (บริษัท)</label>
+    <div class="m-actions">
+      <button class="btn btn-outline" onclick="tplClosePrint()">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="window.print();tplClosePrint()">พิมพ์</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function tplCopyDoc(){ alert('ทำสำเนาใบมัดจำจ่าย (mock) · เลขใหม่ · สถานะ ร่าง'); }
+function tplOpenPrint(){ var m=document.getElementById('printModal'); if(m) m.classList.add('on'); }
+function tplClosePrint(){ var m=document.getElementById('printModal'); if(m) m.classList.remove('on'); }
+</script>
+<script src="swt-doc-finder.js"></script>
+<script src="swt-patterns.js"></script>
+<script src="swt-payout.js"></script>
+<script>
+swtRenderDocChain('#podpDcStrip',{label:'Doc Chain',nodes:[
+  {label:'PO ใบสั่งซื้อ',href:'po4-purchase-order-mockup.html',state:'done'},
+  {label:'DP มัดจำจ่าย',state:'current'},
+  {label:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html'},
+  {label:'PO-6 ใบตั้งหนี้',href:'po6-ap-invoice-mockup.html'},
+  {label:'FI-2 จ่าย (หักมัดจำ)',href:'fi2-ap-payment-mockup.html'}
+]});
+if(typeof swtRenderGateAlert==='function')swtRenderGateAlert('#podpGate',{type:'warn',
+  text:'🕓 ร่าง · รอจ่ายมัดจำ — มัดจำ 30% ก่อนผลิต (Daikin) · จ่ายผ่านจอจ่าย SC-3P → ตัดคืนตอนตั้งหนี้ที่ FI-2 (➖ ดึงมัดจำ) · เงินออกจริงต้องผ่านผู้อนุมัติ (Maker ≠ Checker)'});
+/* จ่ายมัดจำงวดใหม่ผ่านจอจ่าย (SC-3P ฝั่งจ่าย · swt-payout) + เอกสารอ้างอิง */
+function podpAddDeposit(){
+  if(typeof swtOpenPayout!=='function')return;
+  swtOpenPayout({
+    total:725460.00, ref:'มัดจำจ่าย · DP-2607-0001 · Daikin Industries (TH)',
+    accounts:['BBL · 123-4-56789-0 (SWT หลัก)','KBANK · 098-7-65432-1'],
+    chequeBooks:['BBL สมุดเช็ค · 123-4-56789-0','KBANK สมุดเช็ค · 098-7-65432-1'],
+    refDocs:[{label:'ใบสั่งซื้อ PO-2606-0042'},{label:'มัดจำ 30% ของยอดสั่งซื้อ',amount:725460}],
+    onConfirm:function(paid){ alert('จ่ายมัดจำ '+paid.reduce(function(s,p){return s+p.amount;},0).toFixed(2)+' ฿ → เพิ่มงวดในตาราง + Post ลง G/L 1160 (mock)'); }
+  });
+}
+</script>
+<script src="swt-dimensions.js"></script>
+<script src="swt-sc-modals.js"></script>
+<script src="swt-panels.js"></script>
+<script src="swt-sc-wire.js"></script>
+<script src="swt-sidebar.js"></script>
+</body></html>
