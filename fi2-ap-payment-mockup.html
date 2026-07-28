@@ -156,30 +156,24 @@ table.items th:last-child,table.items td:last-child{border-right:none}
     <div class="mh-right">
       <span class="mh-badge">🕓 รออนุมัติจ่าย</span>
       <button class="mh-btn mh-btn-ghost" onclick="location.href='fiq-finance-queue-mockup.html'">📋 คิว AP ค้างจ่าย</button>
+      <button class="mh-btn mh-btn-ghost" title="เปิดเอกสารเก่า" onclick="dfOpen()" style="padding:6px 9px">📂</button>
+      <button class="mh-btn mh-btn-ghost" title="พิมพ์ PV / ภ.ง.ด." onclick="tplOpenPrint()" style="padding:6px 9px">🖨️</button>
+      <button class="mh-btn mh-btn-ghost" title="ใบรับรองภาษีหัก ณ ที่จ่าย (FI-12)" onclick="location.href='fi12-wht-mockup.html'" style="padding:6px 9px">📄</button>
+      <span style="width:1px;height:22px;background:rgba(255,255,255,0.2);margin:0 4px"></span>
       <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
       <button class="mh-btn mh-btn-accent" onclick="fi2Post()">💳 Post จ่ายชำระ</button>
+      <button class="mh-btn mh-btn-ghost" title="ยกเลิก" style="color:#FCA5A5;padding:6px 9px">❌</button>
     </div>
     </div>
   </header>
 
-    <!-- ③ SAAB ย่อ — ปุ่มหลัก + ⋯ (action เด่นอยู่ main-header เท่านั้น) -->
-  <div class="saab saab-compact">
-    <button class="btn btn-outline" onclick="dfOpen()">📂 เปิดเอกสารเก่า</button>
-    <button class="btn btn-outline">💾 Save Draft</button>
-    <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ PV / ภ.ง.ด.</button>
-    <div class="saab-more-wrap">
-      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
-      <div class="saab-more-menu">
-        <button type="button" class="btn btn-menu btn-outline" onclick="location.href='fi12-wht-mockup.html'">📄 ใบรับรอง WHT (FI-12)</button>
-        <button type="button" class="btn btn-menu btn-ghost" style="color:#EF4444">❌ ยกเลิก</button>
-      </div>
-    </div>
-    <div class="saab-spacer"></div>
-    <div class="mkchk" style="display:flex;gap:14px;font-size:11px;color:#6B7280"><span>ผู้ทำรายการ (การเงิน): <b style="color:#374151">สุดา</b> ✓</span><span>ผู้อนุมัติ — ต้องคนละคน: <b style="color:#374151">บุญยัง (ผจก.การเงิน) ⏱</b></span></div>
-  </div>
-
   <div class="content">
 
+    <div style="display:flex;gap:14px;font-size:11px;color:#6B7280;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:6px 12px;align-items:center;flex:none">
+      <span style="font-weight:700;color:#374151">🔒 Maker ≠ Checker</span>
+      <span>ผู้ทำรายการ (การเงิน): <b style="color:#374151">สุดา</b> ✓</span>
+      <span>ผู้อนุมัติ — ต้องคนละคน: <b style="color:#374151">บุญยัง (ผจก.การเงิน) ⏱</b></span>
+    </div>
     <div id="fi2Gate" class="gate-alert"></div>
 
     <div class="row-2col">
@@ -194,6 +188,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           <div class="field"><div class="field-label">เลขภาษี</div><div class="field-value mono">0-1055-12345-67-8</div></div>
           <div class="field"><div class="field-label">ประเภทเงินได้ · อัตราภาษีหัก ณ ที่จ่าย</div><div class="field-value">🔒 อ่านจากตารางประเภทเงินได้กลาง (อ่านอย่างเดียว)</div></div>
           <div class="field"><div class="field-label">ยอดค้างชำระในใบจ่ายนี้ (รวม VAT)</div><div class="field-value" style="color:#B45309">฿2,918,176.00</div></div>
+          <div class="field"><div class="field-label">รอบจ่าย · วิธีวางบิล<span class="swt-tip info pop-left" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>รอบจ่าย/วิธีวางบิลต่างกันตามกลุ่มเจ้าหนี้</b> (ตั้งค่าที่ <a href="md3-vendor-master-mockup-v3.html" style="color:#93C5FD;font-weight:700">MD-3 ทะเบียนผู้ขาย ↗</a>):<br>• <b>LG / SAMSUNG</b> → ดูวันครบกำหนดใน <b>ระบบ EPP เอง</b> (ไม่มีใบแจ้งหนี้ส่งมา)<br>• <b>เจ้าหนี้ในเมือง</b> (อาทิตย์แอร์ · สมบูรณ์โกดัง/ไลท์ติ้ง/หน้าร้าน · โรงกลึงพัฒนาการช่าง) → จ่าย<b>ทุกสิ้นเดือนของเดือนถัดไป</b><br>• <b>เจ้าหนี้อื่น (เช่น Daikin)</b> → มี<b>ใบวางบิลส่งมา</b> (ตัวจริง + วางบิลในไลน์ก่อนเอกสารถึง) · จ่ายตามวันครบกำหนดในบิล</span></span></div><div class="field-value">📄 ใบวางบิลส่งมา (ตัวจริง+ไลน์) · เครดิต 60 วันตามบิล</div></div>
         </div>
       </div>
       <div class="card compact">
