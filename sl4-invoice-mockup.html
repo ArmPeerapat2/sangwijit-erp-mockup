@@ -210,28 +210,18 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="mh-right">
         <span class="mh-badge">🕓 ร่าง · รอ Post</span>
         <button class="mh-btn mh-btn-ghost">📋 คิวงาน</button>
+        <button class="mh-btn mh-btn-ghost" title="เปิดเอกสารเก่า" onclick="dfOpen()" style="padding:6px 9px">📂</button>
+        <button class="mh-btn mh-btn-ghost" title="Copy" onclick="tplCopyDoc()" style="padding:6px 9px">📋</button>
+        <button class="mh-btn mh-btn-ghost" title="พิมพ์ใบกำกับ" onclick="tplOpenPrint()" style="padding:6px 9px">🖨️</button>
+        <button class="mh-btn mh-btn-ghost" title="รับชำระเงิน (SC-3P)" onclick="sl4OpenPay()" style="padding:6px 9px">💳</button>
+        <button class="mh-btn mh-btn-ghost" title="ไป FI-1 รับชำระลูกหนี้ (ฝั่งบัญชี)" onclick="location.href='fi1-ar-receive-mockup.html'" style="padding:6px 9px">📥</button>
+        <span style="width:1px;height:22px;background:rgba(255,255,255,0.2);margin:0 4px"></span>
         <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
         <button class="mh-btn mh-btn-accent">📥 Post Invoice</button>
+        <button class="mh-btn mh-btn-ghost" title="ยกเลิก" style="color:#FCA5A5;padding:6px 9px">❌</button>
       </div>
     </div>
   </header>
-
-  <!-- ③ SAAB ย่อ — ปุ่มหลัก + ⋯ (Post อยู่ main-header เท่านั้น) -->
-  <div class="saab saab-compact">
-    <button class="btn btn-outline" onclick="dfOpen()">📂 เปิดเอกสารเก่า</button>
-    <button class="btn btn-outline" onclick="tplCopyDoc()">📋 Copy</button>
-    <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบกำกับ</button>
-    <div class="saab-more-wrap">
-      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
-      <div class="saab-more-menu">
-        <button type="button" class="btn btn-outline btn-menu">💾 Save Draft</button>
-        <button type="button" class="btn btn-outline btn-menu" onclick="sl4OpenPay()" title="เด้งจอรับชำระเงิน SC-3P · เก็บเงินหน้าร้าน/ปลายทางได้เลย">💳 รับชำระเงิน (SC-3P)</button>
-        <button type="button" class="btn btn-outline btn-menu" onclick="location.href='fi1-ar-receive-mockup.html'">📥 ไป FI-1 รับชำระลูกหนี้ (ฝั่งบัญชี)</button>
-        <button type="button" class="btn btn-ghost btn-menu" style="color:#EF4444">❌ ยกเลิก</button>
-      </div>
-    </div>
-    <div class="mkchk" style="margin-left:auto;display:flex;gap:14px;font-size:11px;color:#6B7280"><span>ผู้คีย์บิล (ขาย): <b style="color:#374151">สัญญาลักษณ์</b> ✓</span><span>Post (VAT+AR): <b style="color:#374151">รอ ⏱</b></span></div>
-  </div>
 
   <!-- ⚡ HOTBAR — คีย์ลัดยิงเปิดบิลเร็ว -->
   <div class="hotbar">
@@ -249,6 +239,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
   </div>
 
   <div class="content">
+
+    <div style="display:flex;gap:14px;font-size:11px;color:#6B7280;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:6px 12px;align-items:center;flex:none"><span style="font-weight:700;color:#374151">🔒 Maker ≠ Checker</span><span>ผู้คีย์บิล (ขาย): <b style="color:#374151">สัญญาลักษณ์</b> ✓</span><span>Post (VAT+AR): <b style="color:#374151">รอ ⏱</b></span></div>
 
     <!-- ④a Gate เท่านั้น — status-strip เดิมตัดออก (pills ซ้ำ party/gate/items 100% · maker-checker ย้ายขึ้น saab) -->
     <div id="sl4Gate" class="gate-alert"></div>
