@@ -16,6 +16,11 @@ project_type: "frontend-mockup (HTML + docs)"
 - **✅ roll ครบ 18 หน้า** (5 agent ขนาน · commit 6a5eb5a→7c923db): sv1-7·sv-order · clm · pm1/2/4 · sl1 · wh1/2/2r/3/3r/4r/5 — verify browser (ปุ่มไม่ล้น · onclick ครบ · console 0)
 - **⏭️ ข้ามไว้ก่อน (Peerapat 2026-07-28) 4 หน้า:** md2/md3 (ไม่มีแถวปุ่ม header) · wh-q1/wh-q2 (`.saab`=แถบกรอง filter chip ไม่ใช่ปุ่มแอ็กชัน)
 - **SV-1 รับเรื่องซ่อม (sv1-service-intake) กระชับ:** SV-1.3 collapse+dense (1370→806px) · แยกฟิลด์อ้างอิง (บิลขาย/วันซื้อ/ใบรับประกัน แทนสตริงมัดรวม) · **เพิ่มรูปแบบซ่อมใน/ออกนอกสถานที่ + ระยะทาง** (คุมค่าเดินทาง auto: ≤30กม 300·31-60 500·>60 500+10/กม) · ตัดข้อมูลซ้ำ (Serial·ADM-002·SLA·เลขบิล)
+- **💰 FI-2 จ่ายชำระเจ้าหนี้ — อุดช่องว่าง legacy AP payment ครบ ①②③** (อ้างอิง `.agents/topics/legacy-ap-payment.md` · grill 2 รอบ):
+  - **① CN offset** — ปุ่ม "➖ ดึงใบลดหนี้ (PO-CN)" → แถวลบหักยอด (reuse data-amt/net · swtCalcPaymentFromRows รับลบ) · grill: หักได้ทั้ง PO-6/FI-2
+  - **② จอจ่ายเงิน (SC-3P ฝั่งจ่าย)** — `swt-payout.js` mirror swt-payment.js · split จ่าย โอน/เงินสด/เช็ค · **เช็ค=ทะเบียน 7.1.2 ฝังในจอ** (เลข·สมุด/บัญชีตัด·ครบกำหนด·สถานะขึ้นเงิน) · FI-2.2 ปุ่ม "💳 ระบุการจ่าย"
+  - **③ จ่ายมัดจำ (ฝั่งซื้อ · คู่ SL-3 รับมัดจำ)** — ③a swt-payout +refDocs · ③b PO-4 ช่องมัดจำ+ปุ่มสร้าง · ③c **หน้าใหม่ po-dp-deposit-payment** (G/L 1160 มัดจำจ่ายล่วงหน้า · จ่ายผ่าน SC-3P) · ③d FI-2 "➖ ดึงมัดจำ"→แถวลบ
+  - **shared ใหม่:** `swt-payout.js` (SC-3P ฝั่งจ่าย) · **หน้าใหม่:** po-dp (กลุ่ม PO · register sidebar/index/flow-overview แล้ว)
 
 ## 🧹 SESSION 2026-07-24 — QA ปิด loose end + กู้ไฟล์เสีย (handoff-ready)
 
