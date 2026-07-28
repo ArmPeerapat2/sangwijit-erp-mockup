@@ -7,7 +7,7 @@
 /* ═══════════════════════════════════════════════════════════════
    SWT TRANSACTION FORM TEMPLATE  (canonical · ทุกฟอร์ม SL/PO/SV/FI ยึดตามนี้)
    ยึด design จาก sl4/sl1 · รวม CSS ศูนย์เดียว · เปลี่ยนแค่ข้อมูล+section ตามฟอร์ม
-   โซน: ① topbar ② main-header ③ SAAB ④ content(status·2col·items·tabs+summary·notes) ⑤ doc-chain
+   โซน: ① topbar ② main-header (badge + utility icons + ปุ่ม action รวมแถวเดียว · ยุบ SAAB เข้าที่นี่แล้ว · locked 2026-07-28) ③ content(status·2col·items·tabs+summary·notes) ④ doc-chain
    ═══════════════════════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#111827;min-width:1440px;font-size:13px;line-height:1.45;height:100vh;overflow:hidden}
@@ -261,27 +261,19 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <div class="mh-right">
         <span class="mh-badge">🕓 ‹สถานะ›</span>
         <button class="mh-btn mh-btn-ghost">📋 คิวงาน</button>
+        <!-- utility (ยุบ SAAB เข้า header → ไอคอน + tooltip · มาตรฐาน locked 2026-07-28) -->
+        <button class="btn btn-outline" onclick="dfOpen()" title="ค้นหา/เปิดเอกสารเก่า (shared swt-doc-finder.js) — 3 แท็บ + ผลลัพธ์สีตามสถานะ" style="padding:6px 9px">📂</button>
+        <button class="btn btn-outline" onclick="tplCopyDoc()" title="Copy / ทำสำเนา — clone ข้อมูล → เอกสารใหม่ · เลขใหม่ · reset วันที่/ลายเซ็น" style="padding:6px 9px">📋</button>
+        <button class="btn btn-outline" onclick="tplOpenPrint()" title="พิมพ์ PDF" style="padding:6px 9px">🖨️</button>
+        <span style="width:1px;height:22px;background:#D1D5DB;margin:0 4px"></span>
+        <!-- primary (คงข้อความ) -->
+        <button class="mh-btn mh-btn-ghost">💾 Save Draft</button>
         <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
-        <button class="mh-btn mh-btn-accent">📤 ‹action เด่น›</button>
+        <button class="mh-btn mh-btn-accent">📤 ‹action เด่น / ↪ แปลงเป็นเอกสารถัดไป›</button>
+        <button class="mh-btn mh-btn-ghost" title="ยกเลิก" style="color:#EF4444;padding:6px 9px">❌</button>
       </div>
     </div>
   </header>
-
-  <!-- ③ SAAB ย่อ — ปุ่มหลัก + ⋯ (action เด่นอยู่ main-header เท่านั้น · ไม่มี saab-status) -->
-  <div class="saab saab-compact">
-    <button class="btn btn-outline" onclick="dfOpen()" title="ค้นหา/เปิดเอกสารเก่า (shared swt-doc-finder.js) — 3 แท็บ + ผลลัพธ์สีตามสถานะ">📂 เปิดเอกสารเก่า</button>
-    <button class="btn btn-outline" onclick="tplCopyDoc()" title="clone ข้อมูลทั้งหมด → เอกสารใหม่ · เลขใหม่ · reset วันที่/ลายเซ็น">📋 Copy / ทำสำเนา</button>
-    <button class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ PDF</button>
-    <div class="saab-more-wrap">
-      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
-      <div class="saab-more-menu">
-        <button type="button" class="btn btn-outline btn-menu">💾 Save Draft</button>
-        <button type="button" class="btn btn-success btn-menu">↪ ‹แปลงเป็นเอกสารถัดไป›</button>
-        <button type="button" class="btn btn-ghost btn-menu" style="color:#EF4444">❌ ยกเลิก</button>
-      </div>
-    </div>
-    <div class="saab-spacer"></div>
-  </div>
 
   <div class="content">
 

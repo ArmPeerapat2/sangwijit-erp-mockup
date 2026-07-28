@@ -6,6 +6,17 @@ branch: "main"
 project_type: "frontend-mockup (HTML + docs)"
 ---
 
+## 🎯 SESSION 2026-07-28 — SV-1 กระชับ + มาตรฐาน SAAB-in-header (locked)
+
+- **🔒 มาตรฐานใหม่ (locked 2026-07-28): ยุบ SAAB เข้า header แถวเดียว** — เลิกใช้แถบ SAAB แยก · ย้ายปุ่มเข้า `mh-right`/`swt-mh-right`:
+  - ปุ่มรอง (📂 เปิดเก่า·📋 Copy·🖨️ พิมพ์·❌ ยกเลิก) → **ไอคอน + tooltip** (`style="padding:6px 9px"` · ข้อความเดิมย้ายไป title · คง onclick/อีโมจิเป๊ะ)
+  - ปุ่มหลัก (💾 Save·✔ บันทึก·forward CTA) → **คงข้อความเต็ม** · มี `<span>` เส้นคั่น (width:1px·#D1D5DB) ระหว่าง utility กับ primary
+  - ปุ่ม action สื่อความหมาย+count (📸 รูป(4)·⏸️ รออะไหล่·Vendor) = คงข้อความ ไม่ย่อ · `saab-status`/`mkchk` ที่ไม่ซ้ำ header → ย้ายท้าย mh-right ไม่ทิ้ง
+  - อัปเดต `_form-template.html` แล้ว (มาตรฐาน) · ตัด "สาขา" ใน header meta ถ้าซ้ำ topbar branch-tag
+- **✅ roll ครบ 18 หน้า** (5 agent ขนาน · commit 6a5eb5a→7c923db): sv1-7·sv-order · clm · pm1/2/4 · sl1 · wh1/2/2r/3/3r/4r/5 — verify browser (ปุ่มไม่ล้น · onclick ครบ · console 0)
+- **⏭️ ข้ามไว้ก่อน (Peerapat 2026-07-28) 4 หน้า:** md2/md3 (ไม่มีแถวปุ่ม header) · wh-q1/wh-q2 (`.saab`=แถบกรอง filter chip ไม่ใช่ปุ่มแอ็กชัน)
+- **SV-1 รับเรื่องซ่อม (sv1-service-intake) กระชับ:** SV-1.3 collapse+dense (1370→806px) · แยกฟิลด์อ้างอิง (บิลขาย/วันซื้อ/ใบรับประกัน แทนสตริงมัดรวม) · **เพิ่มรูปแบบซ่อมใน/ออกนอกสถานที่ + ระยะทาง** (คุมค่าเดินทาง auto: ≤30กม 300·31-60 500·>60 500+10/กม) · ตัดข้อมูลซ้ำ (Serial·ADM-002·SLA·เลขบิล)
+
 ## 🧹 SESSION 2026-07-24 — QA ปิด loose end + กู้ไฟล์เสีย (handoff-ready)
 
 - **poq เสีย → กู้แล้ว:** `poq-purchase-queue-mockup.html` โดน null-byte corruption **74,141 ตัว** (OneDrive sync / save พัง · `file` มองเป็น binary) → strip null · เนื้อ HTML จริง 214 บรรทัดครบ (`</body></html>` ปิด · JS ครบ) · สำรองตัวเสีย `_archive/poq-purchase-queue-mockup-CORRUPT-2026-07-13.html.bak`
