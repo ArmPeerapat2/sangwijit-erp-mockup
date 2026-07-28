@@ -225,7 +225,8 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
       <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
       <div class="saab-more-menu">
         <button type="button" class="btn btn-outline btn-menu">💾 Save Draft</button>
-        <button type="button" class="btn btn-outline btn-menu" onclick="location.href='fi1-ar-receive-mockup.html'">💳 รับชำระ (FI-1 รับชำระลูกหนี้)</button>
+        <button type="button" class="btn btn-outline btn-menu" onclick="sl4OpenPay()" title="เด้งจอรับชำระเงิน SC-3P · เก็บเงินหน้าร้าน/ปลายทางได้เลย">💳 รับชำระเงิน (SC-3P)</button>
+        <button type="button" class="btn btn-outline btn-menu" onclick="location.href='fi1-ar-receive-mockup.html'">📥 ไป FI-1 รับชำระลูกหนี้ (ฝั่งบัญชี)</button>
         <button type="button" class="btn btn-ghost btn-menu" style="color:#EF4444">❌ ยกเลิก</button>
       </div>
     </div>
@@ -648,7 +649,21 @@ function swtSbFilter(v){
     if(nums[1])nums[1].setAttribute('data-perm','editLineDiscount'); // ส่วนลด
   });
 })();
+/* SC-3P รับชำระเงิน — มาตรฐานทุกจุดรับเงิน (มัดจำ/บิลขาย/บริการ · เคาะ 07-28) · เก็บหน้าร้าน/ปลายทางจากบิลนี้ได้เลย */
+function sl4OpenPay(){
+  if(typeof swtOpenPayment!=='function'){ alert('SC-3P รับชำระเงิน (mock)'); return; }
+  swtOpenPayment({
+    total:11140.30, ref:'INV 08INV-2606-0221 · เก็บปลายทาง (หักมัดจำ 6,290 แล้ว) · คุณ อดิเทพ ไชยเศรษฐ์',
+    accounts:['KBANK · 098-7-65432-1 (SWT)','BBL · 123-4-56789-0 (SWT)'],
+    promptpay:{biller:'SWT 099-4-12345-6', ref1:'08INV-2606-0221', ref2:'690603NA-0016'},
+    onConfirm:function(paid){
+      var t=paid.reduce(function(s,p){return s+p.amount;},0);
+      alert('💳 รับชำระ '+paid.length+' วิธี · รวม '+t.toLocaleString('en-US',{minimumFractionDigits:2})+' ฿\n→ สร้าง RV + ปิด AR ที่ FI-1 รับชำระลูกหนี้ (บัญชีตรวจ/Post)');
+    }
+  });
+}
 </script>
+<script src="swt-payment.js"></script>
 <script src="swt-perm.js"></script>
 <script src="swt-sidebar.js"></script>
 </body></html>
