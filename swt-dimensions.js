@@ -5,7 +5,7 @@
 // เดิม hardcode 5 มิติ 4 หน้า → ตอนนี้แก้ options ที่เดียว sync ทุกหน้า
 (function(global){
   var DIM = {
-    docGroup:   { label:'กลุ่มเอกสาร', id:'dimDocGroup',   code:'DOCGROUP',     opts:['ขายปกติ','ขายโครงการ','ขายพนักงาน','ขายส่งเสริมการขาย','งานบริการ','โอนภายใน'] },
+    docGroup:   { label:'กลุ่มเอกสาร', id:'dimDocGroup',   code:'DOCGROUP',     opts:['ขายปกติ','ขายโครงการ','ขายพนักงาน','ขายส่งเสริมการขาย','งานบริการ','โอนภายใน','ใบรับชำระหนี้'] },
     department: { label:'แผนก',        id:'dimDepartment', code:'DEPARTMENT',   opts:['ฝ่ายขาย','ศูนย์บริการ','คลังสินค้า','บริหาร'] },
     project:    { label:'โครงการ',      id:'dimProject',    code:'PROJECT',      opts:['— ไม่ระบุ —','PRJ-001 คอนโดสุขุมวิท','PRJ-002 โรงแรมหัวหิน'] },
     allocate:   { label:'การจัดสรร',    id:'dimAllocate',   code:'ALLOCATECODE', opts:['— ไม่ระบุ —','ALC-01 งบการตลาด','ALC-02 งบซ่อมบำรุง'] },

@@ -323,13 +323,23 @@
       };
     },
     'ar-receipt': function (c) {
+      var rows = [
+        { id: 'sumRecv', label: 'ยอดรับชำระครั้งนี้', value: c.recv }
+      ];
+      // ลูกค้าหัก ณ ที่จ่าย — นับรวมเป็นการชำระ (ได้หนังสือรับรอง = เครดิตภาษีเรา) · โชว์เมื่อมีค่า
+      if (c.wht) rows.push({ id: 'sumWht', label: 'ภาษีถูกหัก ณ ที่จ่าย (ลูกค้าหัก)', value: c.wht });
+      rows.push(
+        { id: 'sumApply', label: 'จัดสรรประกบ Invoice', value: -c.apply, cls: 'disc' },
+        { id: 'sumDisc', label: 'ส่วนลดเงินสด', value: -c.cashDisc, cls: 'disc' },
+        { id: 'sumUnapplied', label: 'ยอดส่วนเกิน (Unapplied)', value: c.unapplied }
+      );
+      // ค่าธรรมเนียมโอน — เงินเข้าธนาคารจริง = ยอดรับ − fee (ใช้กระทบยอด FI-3) · โชว์เมื่อมีค่า
+      if (c.fee) {
+        rows.push({ id: 'sumFee', label: 'ค่าธรรมเนียมโอน (ธนาคารหัก)', value: -c.fee, cls: 'disc' });
+        rows.push({ id: 'sumNetBank', label: 'เงินเข้าธนาคารจริง (ไป FI-3)', value: c.netBank });
+      }
       return {
-        rows: [
-          { id: 'sumRecv', label: 'ยอดรับชำระครั้งนี้', value: c.recv },
-          { id: 'sumApply', label: 'จัดสรรประกบ Invoice', value: -c.apply, cls: 'disc' },
-          { id: 'sumDisc', label: 'ส่วนลดเงินสด', value: -c.cashDisc, cls: 'disc' },
-          { id: 'sumUnapplied', label: 'ยอดส่วนเกิน (Unapplied)', value: c.unapplied }
-        ],
+        rows: rows,
         total: { id: 'sumArRemain', label: 'AR ค้างหลัง Post', value: c.arRemain }
       };
     },
@@ -789,7 +799,7 @@
     return calc;
   }
 
-  function swtCalcArReceiptFromRows(rowSelector, recvAmt, cashDisc, arOpenBefore) {
+  function swtCalcArReceiptFromRows(rowSelector, recvAmt, cashDisc, arOpenBefore, whtAmt, feeAmt) {
     var apply = 0;
     document.querySelectorAll(rowSelector || '#arRows tr:not(.empty-row)').forEach(function (tr) {
       var c = tr.querySelector('input[type=checkbox]');
@@ -798,14 +808,17 @@
     });
     recvAmt = Number(recvAmt != null ? recvAmt : apply);
     cashDisc = Number(cashDisc || 0);
-    var unapplied = Math.max(0, recvAmt - apply - cashDisc);
+    whtAmt = Number(whtAmt || 0);   // ลูกค้าหัก ณ ที่จ่าย — เงินรับน้อยลง แต่ตัดหนี้ได้ (ได้หนังสือรับรองแทน = เครดิตภาษีเรา)
+    feeAmt = Number(feeAmt || 0);   // ค่าธรรมเนียมโอน — เงินเข้าธนาคารจริง = ยอดรับ − fee (ไม่กระทบการตัดหนี้)
+    var unapplied = Math.max(0, recvAmt + whtAmt - apply - cashDisc);
     var arRemain = Math.max(0, Number(arOpenBefore || 0) - apply - cashDisc);
-    return { recv: recvAmt, apply: apply, cashDisc: cashDisc, unapplied: unapplied, arRemain: arRemain };
+    var netBank = Math.max(0, recvAmt - feeAmt);
+    return { recv: recvAmt, apply: apply, cashDisc: cashDisc, unapplied: unapplied, arRemain: arRemain, wht: whtAmt, fee: feeAmt, netBank: netBank };
   }
 
   function swtRecalcArReceiptSummary(rowSelector, mountSelector, opts) {
     opts = opts || {};
-    var calc = swtCalcArReceiptFromRows(rowSelector, opts.recvAmt, opts.cashDisc, opts.arOpenBefore);
+    var calc = swtCalcArReceiptFromRows(rowSelector, opts.recvAmt, opts.cashDisc, opts.arOpenBefore, opts.whtAmt, opts.feeAmt);
     var mount = mountSelector ? document.querySelector(mountSelector) : null;
     if (mount) {
       swtRenderSummary(mount, { template: 'ar-receipt', calc: calc });

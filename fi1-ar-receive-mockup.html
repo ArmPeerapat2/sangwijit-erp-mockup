@@ -67,6 +67,11 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F3F4F6;color:#1
 .sum-strip-card{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;padding:8px 14px}
 .sum-strip-card .ss-title{font-size:12px;font-weight:600;color:#374151;display:flex;align-items:center;gap:6px;white-space:nowrap}
 .sum-strip-card .ss-title .secno{font-family:'Inter',monospace;font-weight:700;color:#2563EB;font-size:11px}
+/* มิติเอกสาร (swt-dimensions.js render .field/.resv-sel) — scoped เฉพาะแถบมิติ */
+[data-dims] .field{display:flex;flex-direction:column;gap:1px;margin-bottom:0}
+[data-dims] .field-label{font-size:10px;color:#6B7280}
+[data-dims] select.resv-sel{width:100%;padding:4px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:11.5px;font-family:inherit;background:#fff}
+.due-chip.late{background:#FEF2F2;color:#B91C1C;border-color:#FECACA}
 #fi1Sc11{display:flex;align-items:center;gap:5px 14px;flex-wrap:wrap;flex:1}
 #fi1Sc11 .summary-row{display:inline-flex;align-items:center;gap:6px;padding:0!important;border:none!important;font-size:11.5px}
 #fi1Sc11 .summary-row .lbl{color:#6B7280}
@@ -234,13 +239,32 @@ table.items th:last-child,table.items td:last-child{border-right:none}
             <span class="ctl" id="chequeField" style="display:none"><span class="lbl">เช็ค</span><input class="pay-sel" placeholder="เลขที่เช็ค" style="min-width:100px"></span>
           </div>
           <div class="party-line">
-            <span class="ctl"><span class="lbl">วันที่รับ</span><input class="pay-sel" type="date" value="2026-06-11" style="min-width:128px"></span>
+            <span class="ctl"><span class="lbl">วันที่รับ</span><input class="pay-sel" type="date" id="recvDate" value="2026-06-11" style="min-width:128px" onchange="recompute()"></span>
             <span class="ctl"><span class="lbl">ยอดรับ</span><input class="pay-sel mono w-amt" id="recvAmt" value="11140.30" oninput="recompute()"></span>
             <span class="ctl"><span class="lbl">Ref</span><input class="pay-sel w-ref" placeholder="สลิป/Ref" value="260611-ADTP-8833"></span>
+          </div>
+          <div class="party-line">
+            <span class="ctl"><span class="lbl">ลูกค้าหัก ณ ที่จ่าย</span>
+              <select class="pay-sel" id="whtRate" onchange="fi1WhtSuggest()">
+                <option value="0" selected>ไม่หัก</option>
+                <option value="3">บริการ 3%</option>
+                <option value="1">ขนส่ง 1%</option>
+              </select>
+            </span>
+            <span class="ctl"><span class="lbl">ยอดหัก</span><input class="pay-sel mono" id="whtAmt" value="0.00" style="min-width:88px;text-align:right" oninput="recompute()"></span>
+            <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="ลูกค้าหักภาษี ณ ที่จ่าย">i<span class="swt-tip-pop"><b>🧾 ลูกค้านิติบุคคลหักภาษี ณ ที่จ่าย</b> (บริการ 3% · ขนส่ง 1%) → เงินโอนมาน้อยกว่าหนี้ แต่<b>ตัดหนี้ได้เต็ม</b> เพราะได้หนังสือรับรองหักฯ มาแทน = เครดิตภาษีของเรา<br>💡 ระบบประมาณยอดหักจาก ยอดบิล ÷ 1.07 × อัตรา (ฐานจริง = ค่าบริการก่อน VAT) — <b>กรอกทับได้</b>ตามหนังสือรับรองจริง</span></span>
+            <span class="ctl"><span class="lbl">ค่าธรรมเนียมโอน</span><input class="pay-sel mono" id="feeAmt" value="0.00" style="min-width:78px;text-align:right" oninput="recompute()"></span>
+            <span class="swt-tip warn" onclick="swtTipToggle(this,event)" title="ค่าธรรมเนียมโอน">i<span class="swt-tip-pop"><b>🏦 ค่าธรรมเนียมโอน (ธนาคารหัก)</b> — เงินเข้าบัญชีจริง = ยอดรับ − ค่าธรรมเนียม · ต้องแยกบันทึก ไม่งั้น<b>กระทบยอดธนาคาร FI-3 จะไม่ตรง</b> · fee ลง GL ค่าธรรมเนียมธนาคาร</span></span>
           </div>
           <div class="party-line" style="color:#6B7280;font-size:11px">Post → Bank รับเข้า · ปิด AR · CRV · <a href="fiq-finance-queue-mockup.html" style="color:#2563EB">FI-Q คิวงานการเงิน</a></div>
         </div>
       </div>
+    </div>
+
+    <!-- มิติเอกสาร (ตรง footer จอ 5.8 ระบบเดิม: กลุ่มเอกสาร/สาขา/แผนก/โครงการ/จัดสรร) · render จาก swt-dimensions.js -->
+    <div class="card" style="padding:7px 14px;display:flex;align-items:center;gap:14px">
+      <span style="font-size:11.5px;font-weight:600;color:#374151;white-space:nowrap">🗂️ มิติ</span>
+      <div data-dims="docGroup,department,project,allocate,site" data-dim-sel="docGroup=ใบรับชำระหนี้;department=บริหาร" style="flex:1;display:grid;grid-template-columns:repeat(5,1fr);gap:2px 12px"></div>
     </div>
 
     <div class="card items-card">
@@ -335,6 +359,12 @@ table.items th:last-child,table.items td:last-child{border-right:none}
             <td>05 ก.ค. 26</td>
             <td class="num">45,200.00</td><td>ค้างรับ</td>
           </tr>
+          <tr data-no="08INV-2605-0142" data-due="28 พ.ค. 26" data-amt="8560" data-open="8560">
+            <td><input type="checkbox" onchange="arPickCount()"></td>
+            <td class="mono" style="font-weight:700;color:#2563EB">08INV-2605-0142</td>
+            <td>28 พ.ค. 26 <span class="due-chip late" style="margin-left:4px">เกินกำหนด</span></td>
+            <td class="num">8,560.00</td><td style="color:#B91C1C">ค้างรับ · เกินกำหนด</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -350,6 +380,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 </div>
 
 <script src="swt-patterns.js"></script>
+<script src="swt-dimensions.js"></script>
 <script>
 var AR_OPEN_BEFORE = 11140.30;
 function fmt(n){return swtFmt(n);}
@@ -371,7 +402,40 @@ function syncApply(inp){
 }
 function recompute(){
   var recv=document.getElementById('recvAmt').value.replace(/,/g,'');
-  swtRecalcArReceiptSummary('#arRows tr:not(.empty-row)','#fi1Sc11',{recvAmt:recv,cashDisc:0,arOpenBefore:AR_OPEN_BEFORE});
+  var wht=Number((document.getElementById('whtAmt')||{value:0}).value.toString().replace(/,/g,''))||0;
+  var fee=Number((document.getElementById('feeAmt')||{value:0}).value.toString().replace(/,/g,''))||0;
+  swtRecalcArReceiptSummary('#arRows tr:not(.empty-row)','#fi1Sc11',{recvAmt:recv,cashDisc:0,arOpenBefore:AR_OPEN_BEFORE,whtAmt:wht,feeAmt:fee});
+  fi1LateChips();
+}
+/* ลูกค้าหัก ณ ที่จ่าย — แนะยอดจาก ยอดตัดหนี้ ÷1.07 × อัตรา (ฐาน = ก่อน VAT) · กรอกทับได้ */
+function fi1WhtSuggest(){
+  var rate=Number(document.getElementById('whtRate').value)||0;
+  var apply=0;
+  document.querySelectorAll('#arRows tr:not(.empty-row)').forEach(function(tr){
+    var c=tr.querySelector('input[type=checkbox]');
+    if(c&&c.checked) apply+=Number(tr.getAttribute('data-apply')||0);
+  });
+  var wht=rate?Number((apply/1.07*rate/100).toFixed(2)):0;
+  document.getElementById('whtAmt').value=wht?fmt(wht):'0.00';
+  /* หักแล้วเงินโอนจริงลดลง → ปรับยอดรับให้ = ตัดหนี้ − WHT */
+  if(rate){ document.getElementById('recvAmt').value=fmt(Math.max(0,apply-wht)); }
+  recompute();
+}
+/* ป้ายวันล่าช้า auto — เทียบวันที่รับ vs ครบกำหนด (ตรงจอ 5.8 เดิมที่คำนวณ "ล่าช้า N วัน" ให้เอง) */
+var TH_M={'ม.ค.':0,'ก.พ.':1,'มี.ค.':2,'เม.ย.':3,'พ.ค.':4,'มิ.ย.':5,'ก.ค.':6,'ส.ค.':7,'ก.ย.':8,'ต.ค.':9,'พ.ย.':10,'ธ.ค.':11};
+function fi1ThDate(s){var m=(s||'').trim().match(/(\d{1,2})\s+(\S+)\s+(\d{2})\b/);if(!m||!(m[2] in TH_M))return null;return new Date(2000+ +m[3],TH_M[m[2]],+m[1]);}
+function fi1LateChips(){
+  var rd=document.getElementById('recvDate'); if(!rd||!rd.value) return;
+  var recv=new Date(rd.value);
+  document.querySelectorAll('#arRows tr:not(.empty-row)').forEach(function(tr){
+    var cell=tr.cells[4]; if(!cell) return;
+    var due=fi1ThDate(cell.textContent); if(!due) return;
+    var late=Math.round((recv-due)/86400000);
+    var chip=cell.querySelector('.due-chip');
+    if(!chip){ chip=document.createElement('span'); chip.className='due-chip'; cell.appendChild(document.createTextNode(' ')); cell.appendChild(chip); }
+    if(late>0){ chip.className='due-chip late'; chip.textContent='ล่าช้า '+late+' วัน'; }
+    else{ chip.className='due-chip ok'; chip.textContent='On-time'; }
+  });
 }
 function toggleAll(master){
   document.querySelectorAll('#arRows tr:not(.empty-row) input[type=checkbox]').forEach(function(c){c.checked=master.checked;});
