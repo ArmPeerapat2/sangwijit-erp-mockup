@@ -19,7 +19,6 @@
         .main-content {
             margin-left: 240px;
             padding: 32px;
-            padding-bottom: 120px;
             min-height: 100vh;
         }
 
@@ -210,23 +209,6 @@
             cursor: not-allowed !important; box-shadow: none !important;
         }
 
-        /* STICKY ACTION BAR */
-        .sticky-action-bar {
-            position: fixed; bottom: 0; left: 240px; right: 0; height: 84px;
-            background: #fff; border-top: 1px solid #E5E7EB;
-            padding: 14px 32px; display: flex; align-items: center;
-            justify-content: space-between; box-shadow: 0 -2px 8px rgba(0,0,0,0.08); z-index: 90;
-        }
-        .sab-left { display: flex; flex-direction: column; gap: 3px; }
-        .sab-title { font-size: 14px; font-weight: 700; color: #1F2937; }
-        .sab-info { font-size: 12px; color: #6B7280; }
-        .sab-info .red { color: #EF4444; font-weight: 600; }
-        .sab-buttons { display: flex; align-items: center; gap: 12px; }
-        .sab-note {
-            font-size: 11px; color: #92400E; background: #FEF3C7;
-            padding: 4px 10px; border-radius: 6px; max-width: 240px; line-height: 1.4;
-        }
-
         .bc-note {
             font-size: 11.5px; color: #6B7280; background: #F3F4F6;
             border-left: 3px solid #9CA3AF; padding: 10px 14px; border-radius: 6px;
@@ -256,13 +238,17 @@
         </div>
         <div class="mh-right">
             <span class="mh-docno">BR-2605-0007</span>
-            <span class="mh-status matched">● จับคู่แล้ว (Matched)</span>
+            <span class="mh-status matched">● จับคู่ 22/24 · ผลต่าง ฿1,750.00</span>
+            <button class="act btn-danger">🗑️ Delete</button>
+            <button class="act btn-secondary">💾 บันทึกร่าง</button>
+            <button class="act btn-primary btn-disabled" disabled title="เปิดเมื่อผลต่าง = 0 · Post / Bank Ledger Entry / เลขที่เอกสาร ทำโดย BC365">✅ Post</button>
+            <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="Portal เป็น UI layer">i<span class="swt-tip-pop"><b>ℹ️ Portal เป็น UI layer เท่านั้น</b> — การ Post Bank Reconciliation, การสร้าง Bank Ledger Entry และการออกเลขเอกสาร ทำโดย <b>BC365</b> · หน้านี้แสดงสถานะและส่งคำสั่งเท่านั้น ไม่เก็บข้อมูลในเครื่อง<br>⚠️ <b>ปุ่ม Post เปิดเมื่อผลต่าง = ฿0.00</b> (ตอนนี้ค้าง Adjust 2 รายการ)</span></span>
         </div>
     </div>
 
     <!-- ===== FI-3.2 · ส่วนหัวเอกสาร / ตัวกรอง ===== -->
     <div class="card">
-        <h3 class="card-title"><span class="secno">FI-3.2</span>🏦 ส่วนหัวเอกสาร (Doc Header)</h3>
+        <h3 class="card-title"><span class="secno">FI-3.2</span>🏦 ส่วนหัวเอกสาร (Doc Header) <span class="swt-tip warn" onclick="swtTipToggle(this,event)" title="ทำได้ทีละ 1 บัญชี">i<span class="swt-tip-pop"><b>⚠ กระทบยอดทำได้ทีละ 1 บัญชี</b> — เลือก Bank Code เดียวต่อการกระทบยอด 1 ครั้ง · บัญชีธนาคารเป็นของบริษัท (SWT บริษัทเดียว) ไม่แยกตามสาขา</span></span></h3>
         <div class="filter-bar">
             <div class="filter-group">
                 <label class="filter-label">เลือก Bank Code (ทีละ 1 บัญชี) *</label>
@@ -274,29 +260,23 @@
                 </select>
             </div>
             <div class="filter-group">
-                <label class="filter-label">นิติบุคคล *</label>
-                <select style="min-width:160px">
-                    <option>SWT — แสงวิจิตรเทรดดิ้ง</option>
-                    <option>SWE — แสงวิจิตรอีเล็คทริค</option>
-                    <option>VMN — วีมันนี่ พาร์ทเนอร์ชิพ</option>
-                    <option>WPS — วีพาวเวอร์ซัพพลาย</option>
-                </select>
+                <label class="filter-label">บริษัท</label>
+                <input type="text" value="SWT — แสงวิจิตรเทรดดิ้ง" disabled style="min-width:200px;background:#F3F4F6;color:#6B7280">
             </div>
             <div class="filter-group">
                 <label class="filter-label">ช่วงวันที่ Statement</label>
-                <input type="text" value="01 พ.ค. 2026 – 31 พ.ค. 2026" style="min-width:210px">
+                <input type="text" value="01 พ.ค. 26 – 31 พ.ค. 26" style="min-width:210px">
             </div>
             <div class="filter-group">
                 <label class="filter-label">ยอดยกมา (Opening Balance)</label>
                 <input type="text" value="2,184,650.00" style="min-width:160px;text-align:right">
             </div>
         </div>
-        <div class="filter-note">⚠ ทำได้ทีละ 1 บัญชี — เลือก Bank Code เดียวต่อการกระทบยอด 1 ครั้ง</div>
     </div>
 
     <!-- ===== FI-3.3 · นำเข้า Statement (Import File) ===== -->
     <div class="card">
-        <h3 class="card-title"><span class="secno">FI-3.3</span>📥 นำเข้า Statement <span class="hint">รองรับ .csv / .xlsx / .ofx จากธนาคาร</span></h3>
+        <h3 class="card-title"><span class="secno">FI-3.3</span>📥 นำเข้า Statement <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="ไฟล์ที่รองรับ">i<span class="swt-tip-pop"><b>📥 รองรับไฟล์:</b> .csv / .xlsx / .ofx จากธนาคาร · ระบบอ่านรายการเดินบัญชีแล้วเตรียมเข้าขั้นตอน Matching อัตโนมัติ</span></span></h3>
         <div class="dropzone">
             <div class="dz-ico">📄</div>
             <div class="dz-main">ลากไฟล์ statement มาวาง หรือ เลือกไฟล์</div>
@@ -305,7 +285,7 @@
         <div class="imported-file">
             <span style="font-size:18px">📑</span>
             <span class="if-name">SCB_Statement_202605.csv</span>
-            <span class="if-meta">นำเข้าเมื่อ 29 พ.ค. 2026 14:05 · 24 รายการ</span>
+            <span class="if-meta">นำเข้าเมื่อ 29 พ.ค. 26 14:05 · 24 รายการ</span>
             <span class="if-badge">นำเข้า 24 รายการ ✓</span>
         </div>
         <div style="margin-top:16px;display:flex;gap:12px">
@@ -321,7 +301,7 @@
             <div class="sum-card">
                 <div class="sum-label">ยอดตาม Statement</div>
                 <div class="sum-value">฿3,512,480.00</div>
-                <div class="sum-sub">ยอดปิด ณ 31 พ.ค. 2026</div>
+                <div class="sum-sub">ยอดปิด ณ 31 พ.ค. 26</div>
             </div>
             <div class="sum-card">
                 <div class="sum-label">ยอดตาม Bank Ledger</div>
@@ -378,96 +358,96 @@
             <tbody>
                 <tr>
                     <td><input type="checkbox" class="chk" checked></td>
-                    <td>03 พ.ค. 2026</td>
+                    <td>03 พ.ค. 26</td>
                     <td>รับโอน — หจก.สกลนครศรีเจริญ</td>
                     <td class="amount">485,000.00</td>
                     <td class="col-mid">↔</td>
                     <td><span class="doc-code">RV-2605-0021</span></td>
-                    <td>03 พ.ค. 2026</td>
+                    <td>03 พ.ค. 26</td>
                     <td class="amount">485,000.00</td>
                     <td><span class="status-green">✓ จับคู่แล้ว</span></td>
                     <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" class="chk" checked></td>
-                    <td>06 พ.ค. 2026</td>
+                    <td>06 พ.ค. 26</td>
                     <td>จ่ายเช็ค — บ.แอลจี อีเลคทรอนิคส์</td>
                     <td class="amount">-1,240,000.00</td>
                     <td class="col-mid">↔</td>
                     <td><span class="doc-code">PV-2605-0044</span></td>
-                    <td>05 พ.ค. 2026</td>
+                    <td>05 พ.ค. 26</td>
                     <td class="amount">-1,240,000.00</td>
                     <td><span class="status-green">✓ จับคู่แล้ว</span></td>
                     <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" class="chk" checked></td>
-                    <td>09 พ.ค. 2026</td>
+                    <td>09 พ.ค. 26</td>
                     <td>รับโอน — ร้าน ก.เจริญการไฟฟ้า</td>
                     <td class="amount">312,500.00</td>
                     <td class="col-mid">↔</td>
                     <td><span class="doc-code">RV-2605-0028</span></td>
-                    <td>11 พ.ค. 2026</td>
+                    <td>11 พ.ค. 26</td>
                     <td class="amount">312,500.00</td>
                     <td><span class="status-green">✓ จับคู่แล้ว</span></td>
                     <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" class="chk" checked></td>
-                    <td>13 พ.ค. 2026</td>
+                    <td>13 พ.ค. 26</td>
                     <td>จ่ายโอน — บ.ฮิตาชิ เซลส์ (ประเทศไทย)</td>
                     <td class="amount">-678,900.00</td>
                     <td class="col-mid">↔</td>
                     <td><span class="doc-code">PV-2605-0051</span></td>
-                    <td>13 พ.ค. 2026</td>
+                    <td>13 พ.ค. 26</td>
                     <td class="amount">-678,900.00</td>
                     <td><span class="status-green">✓ จับคู่แล้ว</span></td>
                     <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" class="chk" checked></td>
-                    <td>16 พ.ค. 2026</td>
+                    <td>16 พ.ค. 26</td>
                     <td>รับโอน — บ.ทวีศักดิ์ธาดา จำกัด</td>
                     <td class="amount">156,800.00</td>
                     <td class="col-mid">↔</td>
                     <td><span class="doc-code">RV-2605-0033</span></td>
-                    <td>15 พ.ค. 2026</td>
+                    <td>15 พ.ค. 26</td>
                     <td class="amount">156,800.00</td>
                     <td><span class="status-green">✓ จับคู่แล้ว</span></td>
                     <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" class="chk" checked></td>
-                    <td>20 พ.ค. 2026</td>
+                    <td>20 พ.ค. 26</td>
                     <td>รับโอน — บ.อุดมทรัพย์ อิเล็คทริค</td>
                     <td class="amount">94,200.00</td>
                     <td class="col-mid">↔</td>
                     <td><span class="doc-code">RV-2605-0039</span></td>
-                    <td>22 พ.ค. 2026</td>
+                    <td>22 พ.ค. 26</td>
                     <td class="amount">94,200.00</td>
                     <td><span class="status-green">✓ จับคู่แล้ว</span></td>
                     <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" class="chk" checked></td>
-                    <td>23 พ.ค. 2026</td>
+                    <td>23 พ.ค. 26</td>
                     <td>จ่ายค่าขนส่ง — บ.เคอรี่ เอ็กซ์เพรส</td>
                     <td class="amount">-42,150.00</td>
                     <td class="col-mid">↔</td>
                     <td><span class="doc-code">PV-2605-0058</span></td>
-                    <td>23 พ.ค. 2026</td>
+                    <td>23 พ.ค. 26</td>
                     <td class="amount">-42,150.00</td>
                     <td><span class="status-green">✓ จับคู่แล้ว</span></td>
                     <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" class="chk" checked></td>
-                    <td>27 พ.ค. 2026</td>
+                    <td>27 พ.ค. 26</td>
                     <td>รับโอน — ร้าน เซกาการไฟฟ้า</td>
                     <td class="amount">208,000.00</td>
                     <td class="col-mid">↔</td>
                     <td><span class="doc-code">RV-2605-0045</span></td>
-                    <td>27 พ.ค. 2026</td>
+                    <td>27 พ.ค. 26</td>
                     <td class="amount">208,000.00</td>
                     <td><span class="status-green">✓ จับคู่แล้ว</span></td>
                     <td><button class="mini-btn unlink">ยกเลิกคู่</button></td>
@@ -475,7 +455,7 @@
                 <!-- UNMATCHED 1: ค่าธรรมเนียมธนาคาร -->
                 <tr class="row-unmatched">
                     <td><input type="checkbox" class="chk"></td>
-                    <td>31 พ.ค. 2026</td>
+                    <td>31 พ.ค. 26</td>
                     <td>ค่าธรรมเนียมธนาคาร (Bank Charge)</td>
                     <td class="amount status-red">-1,250.00</td>
                     <td class="col-mid">⚠</td>
@@ -488,7 +468,7 @@
                 <!-- UNMATCHED 2: ดอกเบี้ยรับ -->
                 <tr class="row-unmatched">
                     <td><input type="checkbox" class="chk"></td>
-                    <td>31 พ.ค. 2026</td>
+                    <td>31 พ.ค. 26</td>
                     <td>ดอกเบี้ยรับ (Interest Income)</td>
                     <td class="amount status-green">+3,000.00</td>
                     <td class="col-mid">⚠</td>
@@ -504,11 +484,11 @@
 
     <!-- ===== FI-3.6 · Adjust Bank (รายการที่ไม่จับคู่) ===== -->
     <div class="card">
-        <h3 class="card-title"><span class="secno">FI-3.6</span>🛠️ ปรับปรุงรายการ (Adjust Bank) <span class="hint">สร้าง adjusting entry แล้ววนกลับไป Matching</span></h3>
+        <h3 class="card-title"><span class="secno">FI-3.6</span>🛠️ ปรับปรุงรายการ (Adjust Bank) <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="Adjust แล้ววนกลับ Matching">i<span class="swt-tip-pop"><b>🛠️ หลังกด Adjust Bank</b> ระบบสร้างรายการปรับปรุงฝั่ง Bank Ledger แล้ววนกลับไป Matching อีกครั้ง · จับคู่ครบ → ผลต่าง ฿0.00 → ปุ่ม Post เปิด<br><b>เคสนี้:</b> ปรับ 2 รายการ (-1,250.00 + 3,000.00 = +1,750.00) หักผลต่าง ฿1,750.00 ให้เหลือ ฿0.00</span></span></h3>
         <div class="adjust-row">
             <div class="adj-stmt">
                 <span class="adj-desc">ค่าธรรมเนียมธนาคาร (Bank Charge)</span>
-                <span class="adj-meta">31 พ.ค. 2026 · ฝั่ง Statement -1,250.00 · ยังไม่มีใน Bank Ledger</span>
+                <span class="adj-meta">31 พ.ค. 26 · ฝั่ง Statement -1,250.00 · ยังไม่มีใน Bank Ledger</span>
             </div>
             <div class="adj-field">
                 <label>ประเภทการปรับปรุง</label>
@@ -534,7 +514,7 @@
         <div class="adjust-row">
             <div class="adj-stmt">
                 <span class="adj-desc">ดอกเบี้ยรับ (Interest Income)</span>
-                <span class="adj-meta">31 พ.ค. 2026 · ฝั่ง Statement +3,000.00 · ยังไม่มีใน Bank Ledger</span>
+                <span class="adj-meta">31 พ.ค. 26 · ฝั่ง Statement +3,000.00 · ยังไม่มีใน Bank Ledger</span>
             </div>
             <div class="adj-field">
                 <label>ประเภทการปรับปรุง</label>
@@ -557,34 +537,8 @@
                 <button class="btn-adjust">🛠️ Adjust Bank</button>
             </div>
         </div>
-        <div class="bc-note">
-            หลังกด <b>Adjust Bank</b> ระบบจะสร้างรายการปรับปรุงในฝั่ง Bank Ledger แล้ววนกลับไป Matching อีกครั้ง
-            เมื่อจับคู่ครบ → ผลต่างเป็น ฿0.00 → ปุ่ม Post จะเปิดให้ใช้งาน
-            (ปรับปรุงครบทั้ง 2 รายการ: -1,250.00 + 3,000.00 = +1,750.00 → หักผลต่าง ฿1,750.00 ให้เหลือ ฿0.00)
-        </div>
     </div>
 
-    <!-- ===== FI-3.7 · BC Note (อ้างอิงท้ายหน้า) ===== -->
-    <div class="bc-note" style="margin-top:0">
-        ℹ️ <b>Portal เป็น UI layer เท่านั้น</b> — การ <b>Post Bank Reconciliation</b>, การสร้าง <b>Bank Ledger Entry</b>
-        และการออกเลขเอกสาร (Numbering) ดำเนินการโดย <b>Microsoft Dynamics 365 Business Central (BC365)</b>
-        หน้านี้แสดงสถานะและส่งคำสั่งเท่านั้น ไม่มีการ Post หรือเก็บข้อมูลในเครื่อง
-    </div>
-
-</div>
-
-<!-- ===== STICKY ACTION BAR ===== -->
-<div class="sticky-action-bar">
-    <div class="sab-left">
-        <div class="sab-title">BR-2605-0007 · SCB 123-4-56789-0</div>
-        <div class="sab-info">จับคู่ 22/24 · ผลต่าง <span class="red">฿1,750.00</span> · ต้อง Adjust 2 รายการก่อน Post</div>
-    </div>
-    <div class="sab-buttons">
-        <span class="sab-note">⚠ ปุ่ม Post เปิดเมื่อผลต่าง = 0 (Post / Bank Ledger Entry / เลขที่เอกสาร ทำโดย BC365)</span>
-        <button class="act btn-danger">🗑️ Delete</button>
-        <button class="act btn-secondary">💾 บันทึกร่าง</button>
-        <button class="act btn-primary btn-disabled" disabled title="เปิดเมื่อผลต่าง = 0">✅ Post Bank Reconciliation</button>
-    </div>
 </div>
 
 <script>
@@ -620,7 +574,7 @@ window.addEventListener('DOMContentLoaded', function () {
     { action: 'เลือก Bank Code · SCB 123-4-56789-0 (กระแสรายวัน)', time: '2026-05-29 14:00',
       sub: 'นิติบุคคล SWT · ยอดยกมา 2,184,650.00 · ทำได้ทีละ 1 บัญชี', color: 'gray' },
     { action: 'นำเข้า Statement · SCB_Statement_202605.csv', time: '2026-05-29 14:05',
-      sub: 'นำเข้า 24 รายการ · ช่วง 01–31 พ.ค. 2026', color: 'blue' },
+      sub: 'นำเข้า 24 รายการ · ช่วง 01–31 พ.ค. 26', color: 'blue' },
     { action: 'Auto-match (จำนวนเงิน + วันที่ ±3 วัน) → จับคู่ 22 / ค้าง 2', time: '2026-05-29 14:06',
       sub: 'ค้าง: ค่าธรรมเนียมธนาคาร -1,250.00 · ดอกเบี้ยรับ +3,000.00', color: 'amber' },
     { action: 'ผลต่างปัจจุบัน ฿1,750.00 → ต้อง Adjust Bank ก่อน Post', time: '2026-05-29 14:07',
@@ -632,6 +586,7 @@ window.addEventListener('DOMContentLoaded', function () {
 </script>
 <!-- SWT_LINK_END -->
 
+<script src="swt-patterns.js"></script>
 <script src="swt-sidebar.js"></script>
 </body>
 </html>
