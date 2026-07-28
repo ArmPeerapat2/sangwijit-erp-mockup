@@ -19,7 +19,6 @@
         .main-content {
             margin-left: 240px;
             padding: 32px;
-            padding-bottom: 120px;
             min-height: 100vh;
         }
 
@@ -163,23 +162,6 @@
             cursor: not-allowed !important; box-shadow: none !important;
         }
 
-        /* STICKY ACTION BAR */
-        .sticky-action-bar {
-            position: fixed; bottom: 0; left: 240px; right: 0; height: 84px;
-            background: #fff; border-top: 1px solid #E5E7EB;
-            padding: 14px 32px; display: flex; align-items: center;
-            justify-content: space-between; box-shadow: 0 -2px 8px rgba(0,0,0,0.08); z-index: 90;
-        }
-        .sab-left { display: flex; flex-direction: column; gap: 3px; }
-        .sab-title { font-size: 14px; font-weight: 700; color: #1F2937; }
-        .sab-info { font-size: 12px; color: #6B7280; }
-        .sab-info .blue { color: #2563EB; font-weight: 700; }
-        .sab-buttons { display: flex; align-items: center; gap: 12px; }
-        .sab-note {
-            font-size: 11px; color: #92400E; background: #FEF3C7;
-            padding: 4px 10px; border-radius: 6px; max-width: 260px; line-height: 1.4;
-        }
-
         .bc-note {
             font-size: 11.5px; color: #6B7280; background: #F3F4F6;
             border-left: 3px solid #9CA3AF; padding: 10px 14px; border-radius: 6px;
@@ -209,33 +191,30 @@
         </div>
         <div class="mh-right">
             <span class="mh-docno">VAT-2605-SWT</span>
-            <span class="mh-status matched">● รอ Release</span>
+            <span class="mh-status matched">● รอ Release · สุทธิ ฿48,967.28</span>
+            <button class="act btn-secondary">🖨️ พิมพ์ภาษีขาย/ซื้อ</button>
+            <button class="act btn-primary">🧾 สรุป ภ.พ.30</button>
+            <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="Portal เป็น UI layer">i<span class="swt-tip-pop"><b>ℹ️ Portal เป็น UI layer เท่านั้น</b> — การ Release รายงาน · ออกเลขเอกสาร · ข้อมูล VAT (vatEntries) · การปิดงวด/Lock Period ทำโดย <b>BC365</b> · หน้านี้ List → Release → Print เท่านั้น<br>📅 ยื่น ภ.พ.30 ภายในวันที่ 15 ของเดือนถัดไป</span></span>
         </div>
     </div>
 
     <!-- ===== FI-7.2 · ส่วนหัวรายงาน / ตัวกรอง ===== -->
     <div class="card">
-        <h3 class="card-title"><span class="secno" style="font-size:10px;font-weight:700;color:#fff;background:#1E3A5F;padding:2px 7px;border-radius:5px;letter-spacing:.3px">FI-7.2</span>🗓️ ส่วนหัวรายงาน (เลือกนิติบุคคล + งวดภาษี)</h3>
+        <h3 class="card-title"><span class="secno" style="font-size:10px;font-weight:700;color:#fff;background:#1E3A5F;padding:2px 7px;border-radius:5px;letter-spacing:.3px">FI-7.2</span>🗓️ ส่วนหัวรายงาน (งวดภาษี) <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="ดึงข้อมูลอะไร">i<span class="swt-tip-pop">ℹ ดึงเฉพาะ <b>Posted Sales / Purchase Invoice</b> ที่มีรายการ VAT ในงวดที่เลือก (Get VAT Data ผ่าน API BC365) · บริษัทเดียว SWT ไม่ต้องเลือกนิติบุคคล</span></span></h3>
         <div class="filter-bar">
             <div class="filter-group">
-                <label class="filter-label">นิติบุคคล *</label>
-                <select>
-                    <option>SWT — แสงวิจิตรเทรดดิ้ง</option>
-                    <option>SWE — แสงวิจิตรอีเล็คทริค</option>
-                    <option>VMN — วีมันนี่ พาร์ทเนอร์ชิพ</option>
-                    <option>WPS — วีพาวเวอร์ซัพพลาย</option>
-                </select>
+                <label class="filter-label">บริษัท</label>
+                <input type="text" value="SWT — แสงวิจิตรเทรดดิ้ง" disabled style="min-width:200px;background:#F3F4F6;color:#6B7280">
             </div>
             <div class="filter-group">
                 <label class="filter-label">งวดภาษี (เดือน)</label>
-                <input type="text" value="พฤษภาคม 2026" style="min-width:180px">
+                <input type="text" value="พฤษภาคม 26" style="min-width:180px">
             </div>
             <div class="filter-group">
                 <label class="filter-label">&nbsp;</label>
                 <button class="act btn-primary">🔄 ดึง VAT Data จาก BC365</button>
             </div>
         </div>
-        <div class="filter-note">ℹ ดึงเฉพาะ Posted Sales / Purchase Invoice ที่มีรายการ VAT ในงวดที่เลือก (Get VAT Data ผ่าน API)</div>
     </div>
 
     <!-- ===== FI-7.3 · รายงานภาษีขาย (Output VAT) ===== -->
@@ -260,7 +239,7 @@
             <tbody>
                 <tr>
                     <td><span class="doc-code">INV-2605-0042</span></td>
-                    <td>03 พ.ค. 2026</td>
+                    <td>03 พ.ค. 26</td>
                     <td>หจก. สกลนครศรีเจริญ</td>
                     <td class="tax-id">0473558000XXX</td>
                     <td class="amount">453,271.03</td>
@@ -269,7 +248,7 @@
                 </tr>
                 <tr>
                     <td><span class="doc-code">INV-2605-0051</span></td>
-                    <td>09 พ.ค. 2026</td>
+                    <td>09 พ.ค. 26</td>
                     <td>ร้าน ก.เจริญการไฟฟ้า</td>
                     <td class="tax-id">3100200XXX</td>
                     <td class="amount">292,056.07</td>
@@ -278,7 +257,7 @@
                 </tr>
                 <tr>
                     <td><span class="doc-code">INV-2605-0066</span></td>
-                    <td>16 พ.ค. 2026</td>
+                    <td>16 พ.ค. 26</td>
                     <td>บ. ทวีศักดิ์ธาดา จำกัด</td>
                     <td class="tax-id">0105549000XXX</td>
                     <td class="amount">146,542.06</td>
@@ -287,7 +266,7 @@
                 </tr>
                 <tr>
                     <td><span class="doc-code">INV-2605-0078</span></td>
-                    <td>27 พ.ค. 2026</td>
+                    <td>27 พ.ค. 26</td>
                     <td>ร้าน เซกาการไฟฟ้า</td>
                     <td class="tax-id">3409900XXX</td>
                     <td class="amount">1,514,018.69</td>
@@ -326,7 +305,7 @@
             <tbody>
                 <tr>
                     <td><span class="doc-code">VIN-2605-0103</span></td>
-                    <td>05 พ.ค. 2026</td>
+                    <td>05 พ.ค. 26</td>
                     <td>บ. แอลจี อีเลคทรอนิคส์ (ปท.)</td>
                     <td class="tax-id">0105536000XXX</td>
                     <td><span class="tag-pill">1 · SWT</span></td>
@@ -335,7 +314,7 @@
                 </tr>
                 <tr>
                     <td><span class="doc-code">VIN-2605-0118</span></td>
-                    <td>13 พ.ค. 2026</td>
+                    <td>13 พ.ค. 26</td>
                     <td>บ. ฮิตาชิ เซลส์ (ปท.)</td>
                     <td class="tax-id">0105520000XXX</td>
                     <td><span class="tag-pill">1 · SWT</span></td>
@@ -344,7 +323,7 @@
                 </tr>
                 <tr>
                     <td><span class="doc-code">VIN-2605-0125</span></td>
-                    <td>23 พ.ค. 2026</td>
+                    <td>23 พ.ค. 26</td>
                     <td>บ. เคอรี่ เอ็กซ์เพรส</td>
                     <td class="tax-id">0107556000XXX</td>
                     <td><span class="tag-pill">1 · SWT</span></td>
@@ -376,7 +355,7 @@
             <div class="sum-card">
                 <div class="sum-label">ภาษีขาย (Output VAT)</div>
                 <div class="sum-value">฿168,412.15</div>
-                <div class="sum-sub">4 ใบกำกับ · งวด พ.ค. 2026</div>
+                <div class="sum-sub">4 ใบกำกับ · งวด พ.ค. 26</div>
             </div>
             <div class="sum-card">
                 <div class="sum-label">ภาษีซื้อ (Input VAT)</div>
@@ -390,7 +369,7 @@
             </div>
             <div class="sum-card">
                 <div class="sum-label">กำหนดยื่น ภ.พ.30</div>
-                <div class="sum-value" style="font-size:18px">15 มิ.ย. 2026</div>
+                <div class="sum-value" style="font-size:18px">15 มิ.ย. 26</div>
                 <div class="sum-sub">ภายในวันที่ 15 ของเดือนถัดไป</div>
             </div>
         </div>
@@ -399,28 +378,10 @@
         </div>
     </div>
 
-    <!-- ===== FI-7.6 · BC Note (อ้างอิงท้ายหน้า) ===== -->
-    <div class="bc-note" style="margin-top:0">
-        ℹ️ <b>Portal เป็น UI layer เท่านั้น</b> — การ <b>Release รายงาน</b>, การออกเลขเอกสาร และข้อมูล VAT (vatEntries)
-        ดำเนินการ/เป็นเจ้าของโดย <b>Microsoft Dynamics 365 Business Central (BC365)</b> ·
-        การ <b>ปิดงวด / Lock Period</b> ทำที่ BC โดยตรง (ไม่ใช่หน้านี้) · หน้านี้ List → Release → Print เท่านั้น
-    </div>
 
 </div>
 
-<!-- ===== STICKY ACTION BAR ===== -->
-<div class="sticky-action-bar">
-    <div class="sab-left">
-        <div class="sab-title">VAT-2605-SWT · งวด พ.ค. 2026</div>
-        <div class="sab-info">ภาษีขาย ฿168,412.15 − ภาษีซื้อ ฿119,444.87 = ชำระสุทธิ <span class="blue">฿48,967.28</span></div>
-    </div>
-    <div class="sab-buttons">
-        <span class="sab-note">⚠ Release / เลขเอกสาร / ปิดงวด ทำโดย BC365</span>
-        <button class="act btn-secondary">🖨️ พิมพ์รายงานภาษีขาย/ซื้อ</button>
-        <button class="act btn-primary">🧾 สรุป ภ.พ.30</button>
-    </div>
-</div>
-
+<script src="swt-patterns.js"></script>
 <script>
     document.querySelectorAll('.rel-btn').forEach(function(btn){
         btn.addEventListener('click', function(){
@@ -430,7 +391,7 @@
             alert('Demo · Release รายงาน VAT — การ Release จริงและออกเลขเอกสารทำบน BC365');
         });
     });
-    document.querySelectorAll('.sab-buttons .act').forEach(function(btn){
+    document.querySelectorAll('.mh-right .act').forEach(function(btn){
         btn.addEventListener('click', function(){
             alert('Demo · ' + btn.textContent.trim() + ' — ดำเนินการบน BC365');
         });
@@ -450,15 +411,15 @@ window.addEventListener('DOMContentLoaded', function () {
     ]);
   }
   if (typeof swtAppendTimeline !== 'function') return;
-  swtAppendTimeline('Doc Chain — VAT-2605-SWT (รายงานภาษีขาย/ซื้อ · งวด พ.ค. 2026)', [
-    { action: 'เลือกนิติบุคคล SWT + งวด พ.ค. 2026', time: '2026-06-01 09:00',
+  swtAppendTimeline('Doc Chain — VAT-2605-SWT (รายงานภาษีขาย/ซื้อ · งวด พ.ค. 26)', [
+    { action: 'เลือกนิติบุคคล SWT + งวด พ.ค. 26', time: '2026-06-01 09:00',
       sub: 'ดึงเฉพาะ Posted Invoice ที่มี VAT', color: 'gray' },
     { action: 'ดึง VAT Data จาก BC365 (Get VAT Data)', time: '2026-06-01 09:01',
       sub: 'ภาษีขาย 4 ใบ · ภาษีซื้อ 3 ใบ (ไม่รวม novat)', color: 'blue' },
     { action: 'ตรวจรายงาน → รอ Release ภาษีขาย/ภาษีซื้อ', time: '2026-06-01 09:05',
       sub: 'ภาษีขาย ฿168,412.15 · ภาษีซื้อ ฿119,444.87', color: 'amber' },
     { action: 'Release + Print → สรุป ภ.พ.30 = ชำระสุทธิ ฿48,967.28', time: 'รอดำเนินการ',
-      sub: 'Release / เลขเอกสาร / Lock Period ทำโดย BC365 · ยื่นภายใน 15 มิ.ย. 2026', color: 'gray' }
+      sub: 'Release / เลขเอกสาร / Lock Period ทำโดย BC365 · ยื่นภายใน 15 มิ.ย. 26', color: 'gray' }
   ], { meta: 'เลือกงวด → Get VAT → Release → Print → ภ.พ.30 (BC365)' });
 });
 </script>
