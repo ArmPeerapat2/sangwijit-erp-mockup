@@ -228,33 +228,23 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
     <div class="mh-right">
       <span class="mh-badge" id="po4Badge">🕓 รออนุมัติ</span>
       <button class="mh-btn mh-btn-ghost" onclick="location.href='poq-purchase-queue-mockup.html'">📋 คิวงาน</button>
+      <button class="mh-btn mh-btn-ghost" title="ค้นหา/เปิดเอกสารเก่า — 3 แท็บ + ผลลัพธ์สีตามสถานะ" onclick="dfOpen()" style="padding:6px 9px">📂</button>
+      <button class="mh-btn mh-btn-ghost" title="Copy / ทำสำเนา — clone ข้อมูลทั้งหมด → PO ใหม่ · เลขใหม่ · reset วันที่/ลายเซ็น" onclick="tplCopyDoc()" style="padding:6px 9px">📋</button>
+      <button class="mh-btn mh-btn-ghost" title="พิมพ์ใบสั่งซื้อ" onclick="tplOpenPrint()" style="padding:6px 9px">🖨️</button>
+      <button class="mh-btn mh-btn-ghost" title="Send PO → ค้างรับ — อนุมัติแล้ว → ส่ง PO ให้ Vendor → สถานะ 'ค้างรับ' รอรับของ (WH-1)" onclick="po4SendPO()" style="padding:6px 9px">📤</button>
+      <button type="button" id="po4ShortCloseBtn" class="mh-btn mh-btn-ghost" title="ปิดรายการค้างรับ (ผู้ขายส่งไม่ครบ) — ตัดของที่ยังไม่ได้รับออกจากใบสั่งซื้อ · ต้องใส่เหตุผล · เฉพาะฝ่ายจัดซื้อ" onclick="po4ShortClose()" style="padding:6px 9px">🔒</button>
+      <span style="width:1px;height:22px;background:rgba(255,255,255,0.2);margin:0 4px"></span>
       <button class="mh-btn mh-btn-primary">✔ บันทึก</button>
       <button class="mh-btn mh-btn-accent" onclick="po4Submit()">📤 ส่งขออนุมัติ</button>
+      <button class="mh-btn mh-btn-ghost" title="ยกเลิก PO" style="color:#FCA5A5;padding:6px 9px">❌</button>
     </div>
     </div>
   </header>
 
-  <!-- ③ SAAB ย่อ — ปุ่มหลัก + ⋯ (action เด่นอยู่ main-header เท่านั้น) -->
-  <div class="saab saab-compact">
-    <button class="btn btn-outline" onclick="dfOpen()" title="ค้นหา/เปิดเอกสารเก่า — 3 แท็บ + ผลลัพธ์สีตามสถานะ">📂 เปิดเอกสารเก่า</button>
-    <button class="btn btn-outline" onclick="tplCopyDoc()" title="clone ข้อมูลทั้งหมด → PO ใหม่ · เลขใหม่ · reset วันที่/ลายเซ็น">📋 Copy / ทำสำเนา</button>
-    <button type="button" class="btn btn-outline" onclick="tplOpenPrint()">🖨️ พิมพ์ใบสั่งซื้อ</button>
-    <div class="saab-more-wrap">
-      <button type="button" class="btn btn-outline saab-more-btn" onclick="swtSaabMoreToggle(this)">⋯ เพิ่มเติม</button>
-      <div class="saab-more-menu">
-        <button type="button" class="btn btn-outline btn-menu">💾 Save Draft</button>
-        <button type="button" class="btn btn-menu btn-success" onclick="po4SendPO()" title="อนุมัติแล้ว → ส่ง PO ให้ Vendor → สถานะ 'ค้างรับ' รอรับของ (WH-1)">📤 Send PO → ค้างรับ</button>
-        <button type="button" class="btn btn-outline btn-menu" id="po4ShortCloseBtn" onclick="po4ShortClose()" title="ผู้ขายส่งไม่ครบ → ตัดของที่ยังไม่ได้รับออกจากใบสั่งซื้อ · ต้องใส่เหตุผล · เฉพาะฝ่ายจัดซื้อ">🔒 ปิดรายการค้างรับ (ผู้ขายส่งไม่ครบ)</button>
-        <button type="button" class="btn btn-menu btn-ghost" style="color:#EF4444">❌ ยกเลิก PO</button>
-      </div>
-    </div>
-    <div class="saab-spacer"></div>
-    <div class="mkchk" style="display:flex;gap:14px;font-size:11px;color:#6B7280;align-items:center"><span>ผู้สั่ง (Maker): <b style="color:#374151">สมศรี</b> ✓</span><span>ผู้อนุมัติ (Checker): <b style="color:#374151">ผจก.จัดซื้อ ⏱</b></span></div>
-  </div>
-
   <div class="content">
 
-    <!-- ④a Gate (status-strip ตัด: pills ซ้ำ 100% badge/party/gate · mkchk→saab · เหลือ gate ที่ actionable) -->
+    <div style="display:flex;gap:14px;font-size:11px;color:#6B7280;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:6px 12px;align-items:center;flex:none"><span style="font-weight:700;color:#374151">🔒 Maker ≠ Checker</span><span>ผู้สั่ง (Maker): <b style="color:#374151">สมศรี</b> ✓</span><span>ผู้อนุมัติ (Checker): <b style="color:#374151">ผจก.จัดซื้อ ⏱</b></span></div>
+
     <div id="po4Gate" class="gate-alert"></div>
 
     <!-- ④b ROW-2COL: PO-4.1 เจ้าหนี้ (SC-3) + PO-4.2 ข้อมูลใบสั่งซื้อ -->
