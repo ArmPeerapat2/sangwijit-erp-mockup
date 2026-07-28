@@ -31,6 +31,10 @@
   .pm-add:hover{background:#059669}
   .pm-transfer{background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
   .pm-transfer.chq{background:#FFFBEB;border-color:#FDE68A}
+  .pm-ref{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:8px 12px}
+  .pm-ref .tt{font-size:11px;font-weight:700;color:#1E40AF;text-transform:uppercase;margin-bottom:5px}
+  .pm-ref-list{display:flex;gap:6px;flex-wrap:wrap}
+  .ref-chip{background:#fff;border:1px solid #BFDBFE;border-radius:14px;padding:3px 10px;font-size:11.5px;color:#1E40AF;font-weight:600}
   .pm-transfer .tt{font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase}
   .pm-mini{display:grid;grid-template-columns:100px 1fr;gap:6px 8px;align-items:center;font-size:12px}
   .pm-mini label{color:#6B7280;font-weight:500}
@@ -64,6 +68,8 @@
       +'<div class="box remain" data-el="remainbox"><div class="lbl">คงเหลือ (Remain)</div><div class="amt" data-el="remain">'+fmt(total)+'</div></div>'
     +'</div>'
     +'<div class="pay-methods">'
+      // เอกสารอ้างอิง (ใบลดหนี้/มัดจำ ฯลฯ) — โชว์เมื่อส่ง opts.refDocs
+      +((o.refDocs&&o.refDocs.length)?('<div class="pm-ref"><div class="tt">📎 เอกสารอ้างอิง</div><div class="pm-ref-list">'+o.refDocs.map(function(d){return '<span class="ref-chip">'+esc(d.label)+(d.amount!=null?' <b>'+fmt(d.amount)+'</b>':'')+(d.note?' · '+esc(d.note):'')+'</span>';}).join('')+'</div></div>'):'')
       // เงินสด
       +'<div class="pm-row"><div class="plbl">💵 เงินสด</div><input class="pm-in" data-el="cash" placeholder="0.00" inputmode="decimal"><button class="pm-add" data-act="cash" title="เพิ่ม">+</button></div>'
       +'<div class="pm-row" style="margin-top:-4px"><div class="plbl" style="font-weight:400;color:#9CA3AF">↳ หมายเหตุ</div><input class="pm-in" data-el="cashnote" style="text-align:left;font-weight:400" placeholder="เช่น เบิกเงินสดค่าอุปกรณ์ศูนย์บริการ"></div>'
