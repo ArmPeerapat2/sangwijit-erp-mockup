@@ -280,6 +280,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
         <div class="card-header"><div class="card-title"><span class="secno">PO-4.2</span><span class="ico">📋</span>ข้อมูลใบสั่งซื้อ</div>
           <div class="card-spacer"></div>
           <button class="card-btn" onclick="dfOpenRef({docType:'PO',partyName:'Daikin Industries (TH) Ltd.'})" title="อ้างอิง PR / RFQ / PO เดิม · เลือกได้หลายรายการ">🔗 อ้างอิงเอกสาร <span class="tpl-zone">SC-5</span></button>
+          <button class="card-btn" onclick="po4MakeDeposit()" title="สั่งซื้อบางรายต้องวางมัดจำก่อนผลิต/ส่ง — สร้างใบมัดจำจ่าย (PO-DP) แล้วจ่ายผ่านจอจ่าย (SC-3P) · ตัดคืนตอนตั้งหนี้ที่ FI-2">💰 จ่ายมัดจำ (PO-DP)</button>
         </div>
         <div class="field-grid-2">
           <div class="field"><div class="field-label">อ้างอิง PR</div><div class="field-value"><span class="highlight">PR-2606-0019</span> (อนุมัติ)</div></div>
@@ -288,6 +289,7 @@ a.dc-node:hover{filter:brightness(.96);text-decoration:underline}
           <div class="field"><div class="field-label">สถานที่จัดส่ง (Ship-to)</div><div class="field-value">WH-01 คลังกลาง บางนา</div></div>
           <div class="field"><div class="field-label">เงื่อนไขชำระ</div><div class="field-value">เครดิต 60 วัน</div></div>
           <div class="field"><div class="field-label">สกุลเงิน</div><div class="field-value">THB · 1.00</div></div>
+          <div class="field"><div class="field-label">มัดจำจ่าย (Deposit)</div><div class="field-value"><span id="po4DepChip" style="display:inline-block;background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600">30% · ยังไม่สร้างใบมัดจำ</span></div></div>
         </div>
       </div>
     </div>
@@ -468,11 +470,18 @@ function po4ShortClose(){
   }
   alert('ปิดรายการค้างรับแล้ว (mock)\n\n• ยกเลิกของค้าง '+po4OpenQty+' ชิ้น — ไม่ยกไปรอบหน้า\n• สถานะใบสั่งซื้อ = "ปิดโดยรับไม่ครบ"\n• คลังจะไม่เห็นใบนี้ในคิวรับของอีก\n• ต้องการของเพิ่ม → เปิดใบสั่งซื้อใหม่');
 }
+/* ③b มัดจำจ่าย — สร้างใบมัดจำจ่าย (PO-DP) จากใบสั่งซื้อ (mirror SL-2→SL-3 ฝั่งซื้อ) */
+function po4MakeDeposit(){
+  var chip=document.getElementById('po4DepChip');
+  if(chip){ chip.textContent='✓ ใบมัดจำจ่าย DP-2607-0001 (รอจ่าย)'; chip.style.background='#DCFCE7'; chip.style.color='#166534'; chip.style.borderColor='#86EFAC'; }
+  if(confirm('สร้างใบมัดจำจ่าย (PO-DP) จากใบสั่งซื้อ PO-0042 (mock):\n\n• เจ้าหนี้ Daikin Industries (TH)\n• มัดจำ 30% ของยอดสั่งซื้อ = 725,460.00 ฿\n• ไปหน้าใบมัดจำจ่าย → ระบุยอด + จ่ายผ่านจอจ่าย (SC-3P ฝั่งจ่าย)\n• ตัดคืนตอนตั้งหนี้ที่ FI-2\n\nไปหน้าใบมัดจำจ่าย?')) location.href='po-dp-deposit-payment-mockup.html';
+}
 function po4InitPatterns(){
   /* status-strip ตัด (pills ซ้ำ badge/party/gate · maker-checker→saab) · เหลือ gate + docChain + สรุปเงิน */
   if(typeof swtRenderDocChain==='function')swtRenderDocChain('#po4DcStrip',{label:'Doc Chain',nodes:[
       {label:'PR 0019 ✓',href:'po1-purchase-request-mockup.html',state:'done'},
       {label:'PO 0042',state:'current'},
+      {label:'ใบมัดจำจ่าย DP',href:'po-dp-deposit-payment-mockup.html'},
       {label:'WH-1 ใบรับสินค้า',href:'wh1-receive-mockup.html'},
       {label:'PO-6 ใบตั้งหนี้เจ้าหนี้',href:'po6-ap-invoice-mockup.html'},
       {label:'FI-2 จ่ายชำระเจ้าหนี้',href:'fi2-ap-payment-mockup.html'}
