@@ -128,9 +128,9 @@ body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B;min-width:1
   <div class="topbar-logo">ส</div>
   <h1>Dev Handoff Spec — Sangwijit ERP Portal</h1>
   <div class="topbar-meta">
-    <span>v2.0</span>
-    <span>44 Pages</span>
-    <span>16 เม.ย. 2569</span>
+    <span>v2.1</span>
+    <span>45+ Pages</span>
+    <span>อัพเดท 29 ก.ค. 2569</span>
     <span><a href="portal-mockup-index.html" style="color:#93C5FD;text-decoration:none">← กลับ Index</a></span>
   </div>
 </div>
@@ -822,7 +822,14 @@ body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B;min-width:1
       <div class="comp-desc">Document Chain + Activity Log + Approval Flow — 3 display variants. Tracks status changes, user actions, system events</div>
       <div class="comp-used">ใช้ใน: SL-4, SL-5, PO-4, WH-3, FI-1, FI-2, AP-1</div>
     </a>
+    <a href="fi2-ap-payment-mockup.html" class="comp-card" style="text-decoration:none;color:inherit;border-left:3px solid #10B981">
+      <div class="comp-id">SC-3P 🆕</div>
+      <div class="comp-name">SharedPayment / Payout (รับ + จ่าย)</div>
+      <div class="comp-desc">จอรับ/จ่ายเงิน split payment (Total/Remain) · รับ=โอน/สด/บัตร/QR/เช็ค · <b>จ่าย(ใหม่)=โอนออก/สด/เช็ค+ทะเบียนเช็ค 7.1.2 + refDocs</b> · API: <span class="code">swtOpenPayment()</span> / <span class="code">swtOpenPayout()</span></div>
+      <div class="comp-used">ใช้ใน: SL-3, SL-4 (รับ) · FI-2, PO-DP (จ่าย)</div>
+    </a>
   </div>
+  <p style="font-size:12px;color:#6B7280;margin:6px 0 0">💡 <b>Shared JS จริงมีมากกว่า 3</b> (doc นี้ list เดิม) — ปัจจุบัน: <span class="code">swt-patterns.js/.css</span> · <span class="code">swt-payment.js</span> · <span class="code">swt-payout.js</span> 🆕 · <span class="code">swt-doc-finder.js</span> · <span class="code">swt-dimensions.js</span> · <span class="code">swt-perm.js</span> (สิทธิ์ field-level) · <span class="code">swt-sidebar.js</span> · <span class="code">swt-sc-modals.js</span> · <span class="code">swt-panels.js</span></p>
 
   <div class="arch-card">
     <h4>Additional Shared Patterns (ไม่มี Mockup แยก — อยู่ในแต่ละ Page)</h4>
@@ -980,6 +987,17 @@ WPS: companies('wps-guid-here')
   <h2><span class="emoji">🎨</span> Design System & Standards</h2>
   <p class="section-sub">ทุก Mockup ใช้ standards เดียวกัน — dev ควรสร้าง component library ตามนี้</p>
 
+  <div class="arch-card" style="border-left:4px solid #2563EB">
+    <h4>🆕 Header + Action Bar มาตรฐาน — SAAB-in-header (locked 2026-07-28)</h4>
+    <table class="mod-table">
+      <tr><th>เดิม</th><th>ใหม่ (มาตรฐาน)</th></tr>
+      <tr><td>2 แถบ: main-header (badge+ปุ่มหลัก) + แถบ SAAB แยกใต้หัว (ปุ่มรอง)</td><td><strong>แถวเดียวบน header</strong>: badge → nav → utility(ไอคอน+tooltip) → เส้นคั่น → primary(ข้อความ ✔บันทึก/Post) → ❌(ไอคอน)</td></tr>
+      <tr><td>SAAB มี saab-status / mkchk (Maker≠Checker)</td><td>mkchk ย้ายเข้าแถบใน <span class="code">content</span> (พื้นขาว อ่านออก) · status ซ้ำ badge = ตัด</td></tr>
+    </table>
+    <p style="margin-top:6px;font-size:12px;color:#374151"><strong>action dev:</strong> ทำ 34 หน้าแล้ว · หน้าใหม่ยึด <span class="code">_form-template.html</span> (มี mh-right แบบ merged) · <strong>ยกเว้น</strong> wh-q1/wh-q2 (<span class="code">.saab</span> = filter chip bar ไม่ใช่ปุ่มแอ็กชัน — คงไว้)</p>
+    <p style="margin-top:4px;font-size:12px;color:#6B7280">Status badge: Draft(เทา) · Pending(เหลือง) · Approved(น้ำเงิน) · Posted(เขียว) · Rejected(แดง) — ทุกเอกสาร · Maker ≠ Checker บังคับทุกจุดที่มี approval</p>
+  </div>
+
   <div class="arch-card">
     <h4>Layout</h4>
     <table class="mod-table">
@@ -1054,7 +1072,21 @@ WPS: companies('wps-guid-here')
 <div class="section">
   <span class="section-anchor" id="dev-notes"></span>
   <h2><span class="emoji">📝</span> Dev Notes & Priority</h2>
-  <p class="section-sub">ข้อสังเกตสำหรับทีม dev — ลำดับพัฒนา, ข้อควรระวัง</p>
+  <p class="section-sub">ข้อสังเกตสำหรับทีม dev — ลำดับพัฒนา, ข้อควรระวัง · <strong>baseline ด้านล่างบางส่วนเก่า (เช่น "4 นิติบุคคล" → เคาะใหม่ = 1 บริษัท SWT + สาขา) — ยึด Changelog + .agents/active.md เป็นล่าสุด</strong></p>
+
+  <div class="arch-card" style="border-left:4px solid #10B981">
+    <h4>🆕 Changelog — อัพเดทล่าสุด 29 ก.ค. 2569</h4>
+    <table class="mod-table">
+      <tr><th>งาน</th><th>รายละเอียด (สถานะ · action)</th><th>ไฟล์/หน้า</th></tr>
+      <tr><td><strong>FI-2 จ่ายเจ้าหนี้ (AP) ครบ ①②③④</strong></td><td>✅ CN offset (ดึง PO-CN เป็นแถวลบหักยอด) · จอจ่าย SC-3P ฝั่งจ่าย + ทะเบียนเช็ค 7.1.2 · ดึงมัดจำหักยอด · vendor payment terms (EPP/สิ้นเดือน/ใบวางบิล)</td><td><span class="code">fi2-ap-payment-mockup.html</span></td></tr>
+      <tr><td><strong>SC-3P ฝั่งจ่าย (component ใหม่)</strong></td><td>✅ shared "จ่ายชำระเงิน" — split จ่าย โอน/เงินสด/เช็ค(+ทะเบียน) · refDocs · mirror swt-payment.js · API: <span class="code">swtOpenPayout(opts)</span></td><td><span class="code">swt-payout.js</span></td></tr>
+      <tr><td><strong>PO-DP ใบมัดจำจ่าย (หน้าใหม่)</strong></td><td>✅ จ่ายมัดจำก่อนรับของ (mirror SL-3 ฝั่งซื้อ · G/L 1160) · PO-4 เพิ่มช่องมัดจำ+ปุ่มสร้างใบ · doc-chain: PO-4→DP→WH-1→PO-6→FI-2 ดึงตัด</td><td><span class="code">po-dp-deposit-payment-mockup.html</span> · po4</td></tr>
+      <tr><td><strong>SAAB-in-header (มาตรฐานใหม่ · locked 2026-07-28)</strong></td><td>✅ ยุบแถบ SAAB เข้า header แถวเดียว <strong>34 หน้า</strong> · utility=ไอคอน+tooltip · primary คงข้อความ · mkchk (Maker≠Checker) ย้ายเข้า content · ยกเว้น wh-q1/q2 (filter bar). <strong>action dev:</strong> หน้าใหม่ทำตาม _form-template</td><td><span class="code">_form-template.html</span> · ทุกหน้าฟอร์ม</td></tr>
+      <tr><td><strong>PM-1 ระบบราคา (Aราคา)</strong></td><td>✅ PM-1.3 ประวัติราคา timeline (เก็บทุกเวอร์ชัน SUB · แก้ปัญหาเดิมไม่เก็บประวัติ) · priority โปรฯ(ช่วงเวลา)→กลุ่มลูกค้า + ล็อกราคาที่ใบจอง · PM-1.2 ค้นกลุ่ม(หมวด/ยี่ห้อ)+ปรับราคาชุด · <strong>ทุกการเปลี่ยนราคาต้องผ่านใบขอเปลี่ยน→CF-2.6</strong></td><td><span class="code">pm1-price-list-mockup.html</span></td></tr>
+      <tr><td>SV-1 รับเรื่องซ่อม</td><td>✅ กระชับ SV-1.3 · เพิ่มรูปแบบซ่อมใน/ออกนอกสถานที่+ระยะทาง(คุมค่าเดินทาง auto) · ตัดข้อมูลซ้ำ</td><td><span class="code">sv1-service-intake-mockup.html</span></td></tr>
+    </table>
+    <p style="margin-top:8px;font-size:12px;color:#B45309">⏳ <strong>ค้างทำต่อ (active):</strong> โปรฯ multi-model (PM-2) · <span class="code">pm3-price-change-request</span> ใบขอเปลี่ยนราคา (ยังไม่สร้าง — timeline PM-1.3 มี forward link รอ) · ขายทันราคา SL-1/2/4 (resolve โปรฯ→กลุ่ม + snapshot ราคาตั้ง/ขายจริง/ลด ต่อบรรทัด + ล็อกที่ใบจอง)</p>
+  </div>
 
   <div class="arch-card">
     <h4>Recommended Build Order</h4>
