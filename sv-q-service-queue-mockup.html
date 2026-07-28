@@ -901,7 +901,23 @@
         .wq-foot{padding:14px 24px;border-top:1px solid #E5E7EB;background:#fff;border-radius:0 0 8px 8px;display:flex;align-items:center;gap:8px}
         .wq-foot .spacer{flex:1}
         .wq-foot .hint{font-size:11.5px;color:#6B7280}
-    </style>
+    
+        /* ── สถานะหลายแกน (multi-axis · locked 07-28 §13.5) ── */
+        .svax-stack{display:flex;flex-wrap:wrap;gap:3px;max-width:180px}
+        .svax{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;border:1px solid}
+        .svax .ai{font-size:9px}
+        .svax.job{background:#F5F3FF;color:#5B21B6;border-color:#C4B5FD}
+        .svax.ar{background:#FDF2F8;color:#9D174D;border-color:#FBCFE8}
+        .svax.wage{background:#FFFBEB;color:#92400E;border-color:#FDE68A}
+        .svax.parts,.svax.core{background:#F0FDF4;color:#166534;border-color:#A7F3D0}
+        .svax.claim{background:#ECFEFF;color:#155E75;border-color:#A5F3FC}
+        .svax.wclaim{background:#EFF6FF;color:#1E40AF;border-color:#BFDBFE}
+        .svax.goods{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+        .qf-axrow{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:-6px 2px 12px}
+        .qf-axrow .lb{font-size:11px;color:#64748B;font-weight:700}
+        .qf-ax{padding:4px 9px;border-radius:12px;font-size:11px;font-weight:700;border:1px solid #E5E7EB;background:#fff;cursor:pointer;font-family:inherit}
+        .qf-ax.active{background:#0F766E;color:#fff;border-color:#0F766E}
+</style>
   <link rel="stylesheet" href="swt-patterns.css">
 </head>
 <body>
@@ -984,6 +1000,16 @@
                 <button class="qf-chip" data-sv="clm">♻️ เคลมสินค้าใหม่ (stage 8) <span class="cnt">1</span></button>
                 <button class="qf-chip" data-sv="posted">📁 โพสต์แล้ว (BC) <span class="cnt">6</span></button>
             </div>
+                        <div class="qf-axrow">
+                <span class="lb">🧭 กรองตามแกน:</span>
+                <button class="qf-ax active" data-ax="all">ทุกแกน</button>
+                <button class="qf-ax" data-ax="ar">💰 รับเงิน</button>
+                <button class="qf-ax" data-ax="parts">🔩 อะไหล่</button>
+                <button class="qf-ax" data-ax="core">↩ ซากคืน</button>
+                <button class="qf-ax" data-ax="wage">💸 ค่าแรงช่าง</button>
+                <button class="qf-ax" data-ax="claim">♻️ เคลม</button>
+                <button class="qf-ax" data-ax="wclaim">🧾 เบิกประกัน</button>
+            </div>
             <div style="font-size:11px;color:#6B7280;margin:6px 2px 0">📌 วางบิลบริษัท (stage 7) = ฝั่งบัญชี · จ่ายค่าแรงช่าง (stage 9) = cm1 แท็บบริการ (ช่างใน incentive / ช่างนอก เหมา)</div>
 
             <table class="q-table">
@@ -1001,7 +1027,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="q-row" data-svtype="intake" onclick="openWqDetail('SV-2604-0145','intake')">
+                    <tr class="q-row" data-svtype="intake" data-ax="job:รับงาน" onclick="openWqDetail('SV-2604-0145','intake')">
                         <td><span class="type-badge tb-intake">🆕 New Intake</span></td>
                         <td class="mono">SV-2604-0145</td>
                         <td>คุณสมชาย · แอร์ Daikin FTKM12</td>
@@ -1012,7 +1038,7 @@
                         <td><span class="sla-indicator"><span class="sla-dot normal"></span>ปกติ</span></td>
                         <td><button class="q-action-btn" onclick="event.stopPropagation();openWqDetail('SV-2604-0145','intake')">🆕 ดู</button></td>
                     </tr>
-                    <tr class="q-row" data-svtype="intake" onclick="openWqDetail('SV-2604-0146','intake')">
+                    <tr class="q-row" data-svtype="intake" data-ax="job:รับงาน|ar:ค้างชำระ" onclick="openWqDetail('SV-2604-0146','intake')">
                         <td><span class="type-badge tb-intake">🆕 New Intake</span></td>
                         <td class="mono">SV-2604-0146</td>
                         <td>นายวิชัย · แอร์ติดตั้งใหม่ (3 ตัว)</td>
@@ -1023,7 +1049,7 @@
                         <td><span class="sla-indicator"><span class="sla-dot normal"></span>ปกติ</span></td>
                         <td><button class="q-action-btn" onclick="event.stopPropagation();openWqDetail('SV-2604-0146','intake')">🆕 ดู</button></td>
                     </tr>
-                    <tr class="q-row" data-svtype="sir" onclick="openWqDetail('SIR-SV1-2604-0023','sir')">
+                    <tr class="q-row" data-svtype="sir" data-ax="job:ประเมินหน้างาน" onclick="openWqDetail('SIR-SV1-2604-0023','sir')">
                         <td><span class="type-badge tb-sir">🔍 Site Inspection</span></td>
                         <td class="mono">SIR-SV1-2604-0023</td>
                         <td>นายวิชัย (รามอินทรา) · ติดตั้งโครงการ</td>
@@ -1034,7 +1060,7 @@
                         <td><span class="sla-indicator"><span class="sla-dot normal"></span>ปกติ</span></td>
                         <td><button class="q-action-btn" onclick="event.stopPropagation();openWqDetail('SIR-SV1-2604-0023','sir')">🔍 ดู SIR</button></td>
                     </tr>
-                    <tr class="q-row" data-svtype="sqt" onclick="openWqDetail('SQT-SV1-2604-0019','sqt')">
+                    <tr class="q-row" data-svtype="sqt" data-ax="job:รอลูกค้ายืนยัน|ar:ค้างชำระ" onclick="openWqDetail('SQT-SV1-2604-0019','sqt')">
                         <td><span class="type-badge tb-sqt">💵 SQT</span></td>
                         <td class="mono">SQT-SV1-2604-0019</td>
                         <td>นายวิชัย · เสนอราคาติดตั้ง 3 ตัว ฿89,500</td>
@@ -1045,7 +1071,7 @@
                         <td><span class="sla-indicator"><span class="sla-dot normal"></span>เพิ่งส่ง · 2 วัน</span></td>
                         <td><button class="q-action-btn" onclick="event.stopPropagation();openWqDetail('SQT-SV1-2604-0019','sqt')">💵 ดู SQT</button></td>
                     </tr>
-                    <tr class="q-row" data-svtype="assign" onclick="openWqDetail('SV-2604-0140','assign')">
+                    <tr class="q-row" data-svtype="assign" data-ax="job:รอมอบหมาย|ar:ค้างชำระ" onclick="openWqDetail('SV-2604-0140','assign')">
                         <td><span class="type-badge tb-assign">👷 Assignment</span></td>
                         <td class="mono">SV-2604-0140</td>
                         <td>คุณวิภา · ตู้เย็น Hitachi R-V450</td>
@@ -1056,7 +1082,7 @@
                         <td><span class="sla-indicator"><span class="sla-dot warning"></span>ใกล้ครบ · 3 วัน</span></td>
                         <td><button class="q-action-btn" onclick="event.stopPropagation();openWqDetail('SV-2604-0140','assign')">👷 มอบหมาย</button></td>
                     </tr>
-                    <tr class="q-row" data-svtype="assign" onclick="openWqDetail('SV-2604-0141','assign')">
+                    <tr class="q-row" data-svtype="assign" data-ax="job:รอมอบหมาย|wclaim:รอวางบิล" onclick="openWqDetail('SV-2604-0141','assign')">
                         <td><span class="type-badge tb-assign">👷 Assignment</span></td>
                         <td class="mono">SV-2604-0141</td>
                         <td>คุณนภา · เครื่องซักผ้า LG TT10</td>
@@ -1067,7 +1093,7 @@
                         <td><span class="sla-indicator"><span class="sla-dot normal"></span>ปกติ</span></td>
                         <td><button class="q-action-btn" onclick="event.stopPropagation();openWqDetail('SV-2604-0141','assign')">👷 มอบหมาย</button></td>
                     </tr>
-                    <tr class="q-row" data-svtype="assign" onclick="openWqDetail('SV-2604-0142','assign')">
+                    <tr class="q-row" data-svtype="assign" data-ax="job:รอมอบหมาย|ar:ค้างชำระ" onclick="openWqDetail('SV-2604-0142','assign')">
                         <td><span class="type-badge tb-assign">👷 Assignment</span></td>
                         <td class="mono">SV-2604-0142</td>
                         <td>หจก.ABC · ระบบแอร์โรงงาน 5 ตัว</td>
@@ -1078,7 +1104,7 @@
                         <td><span class="sla-indicator"><span class="sla-dot normal"></span>ปกติ</span></td>
                         <td><button class="q-action-btn" onclick="event.stopPropagation();openWqDetail('SV-2604-0142','assign')">👷 มอบหมาย</button></td>
                     </tr>
-                    <tr class="q-row" data-svtype="progress" onclick="openWqDetail('SV-2604-0143','progress')">
+                    <tr class="q-row" data-svtype="progress" data-ax="job:กำลังซ่อม|wclaim:รอวางบิล" onclick="openWqDetail('SV-2604-0143','progress')">
                         <td><span class="type-badge tb-progress">🛠️ In Progress</span></td>
                         <td class="mono">SV-2604-0143</td>
                         <td>คุณสมชาย · แอร์ Daikin (ซ่อมล้าง)</td>
@@ -1089,7 +1115,7 @@
                         <td><span class="sla-indicator"><span class="sla-dot normal"></span>ปกติ</span></td>
                         <td><button class="q-action-btn" onclick="event.stopPropagation();openWqDetail('SV-2604-0143','progress')">🛠️ ดู Job</button></td>
                     </tr>
-                    <tr class="q-row" data-svtype="progress" onclick="openWqDetail('SV-2604-0144','progress')">
+                    <tr class="q-row" data-svtype="progress" data-ax="job:ติดตั้งหน้างาน|ar:รับมัดจำ" onclick="openWqDetail('SV-2604-0144','progress')">
                         <td><span class="type-badge tb-progress">🛠️ In Progress</span></td>
                         <td class="mono">SV-2604-0144</td>
                         <td>คุณนภา · แอร์ Mitsubishi (ติดตั้ง)</td>
@@ -1100,7 +1126,7 @@
                         <td><span class="sla-indicator"><span class="sla-dot normal"></span>ปกติ</span></td>
                         <td><button class="q-action-btn" onclick="event.stopPropagation();openWqDetail('SV-2604-0144','progress')">🛠️ ดู Job</button></td>
                     </tr>
-                    <tr class="q-row" data-svtype="progress" onclick="openWqDetail('SV-2604-0148','progress')">
+                    <tr class="q-row" data-svtype="progress" data-ax="job:กำลังซ่อม|ar:รับมัดจำ|parts:รอรับ" onclick="openWqDetail('SV-2604-0148','progress')">
                         <td><span class="type-badge tb-progress">🛠️ In Progress</span></td>
                         <td class="mono">SV-2604-0148</td>
                         <td>คุณสุภา · ตู้เย็น Samsung</td>
@@ -1111,7 +1137,7 @@
                         <td><span class="sla-indicator"><span class="sla-dot normal"></span>ปกติ</span></td>
                         <td><button class="q-action-btn" onclick="event.stopPropagation();openWqDetail('SV-2604-0148','progress')">🛠️ ดู Job</button></td>
                     </tr>
-                    <tr class="q-row" data-svtype="parts" onclick="openWqDetail('SV-2604-0089','parts')">
+                    <tr class="q-row" data-svtype="parts" data-ax="job:กำลังซ่อม|parts:รับอะไหล่|core:รับซากเก่า" onclick="openWqDetail('SV-2604-0089','parts')">
                         <td><span class="type-badge tb-parts">🔧 Awaiting Parts</span></td>
                         <td class="mono">SV-2604-0089</td>
                         <td>คุณสมพร · แอร์ Daikin (เปลี่ยน Compressor)</td>
@@ -1122,7 +1148,7 @@
                         <td><span class="sla-indicator"><span class="sla-dot normal"></span>ปกติ</span></td>
                         <td><button class="q-action-btn" onclick="event.stopPropagation();openWqDetail('SV-2604-0089','parts')">🔧 ดู SV-3</button></td>
                     </tr>
-                    <tr class="q-row" data-svtype="parts" onclick="openWqDetail('SV-2604-0095','parts')">
+                    <tr class="q-row" data-svtype="parts" data-ax="job:กำลังซ่อม|parts:สั่งอะไหล่|ar:รับมัดจำ" onclick="openWqDetail('SV-2604-0095','parts')">
                         <td><span class="type-badge tb-parts">🔧 Awaiting Parts</span></td>
                         <td class="mono">SV-2604-0095</td>
                         <td>คุณนิรันดร์ · ตู้เย็น Hitachi (อะไหล่ใหม่)</td>
@@ -1133,7 +1159,7 @@
                         <td><span class="sla-indicator"><span class="sla-dot warning"></span>รอ 5 วัน</span></td>
                         <td><button class="q-action-btn" onclick="event.stopPropagation();openWqDetail('SV-2604-0095','parts')">🔧 ดู SV-O</button></td>
                     </tr>
-                    <tr class="q-row" data-svtype="delivery" onclick="openWqDetail('SV-2604-0142D','delivery')">
+                    <tr class="q-row" data-svtype="delivery" data-ax="job:รอลูกค้ารับ|wage:ทำเบิกค่าแรง|wclaim:รอวางบิล" onclick="openWqDetail('SV-2604-0142D','delivery')">
                         <td><span class="type-badge tb-delivery">✅ Ready Delivery</span></td>
                         <td class="mono">SV-2604-0142D</td>
                         <td>คุณสิรี · แอร์ LG (ล้างเสร็จ)</td>
@@ -1144,7 +1170,7 @@
                         <td><span class="sla-indicator"><span class="sla-dot normal"></span>ปกติ</span></td>
                         <td><button class="q-action-btn" onclick="event.stopPropagation();openWqDetail('SV-2604-0142D','delivery')">✅ ส่งคืน</button></td>
                     </tr>
-                    <tr class="q-row" data-svtype="clm" onclick="openWqDetail('CLM-SV1-2604-0089','clm')">
+                    <tr class="q-row" data-svtype="clm" data-ax="job:ดำเนินการ|claim:ส่งคืนบริษัท" onclick="openWqDetail('CLM-SV1-2604-0089','clm')">
                         <td><span class="type-badge tb-clm">🎫 Vendor Claim</span></td>
                         <td class="mono">CLM-SV1-2604-0089</td>
                         <td>คุณสมพร · Compressor Daikin (เคลม Vendor)</td>
@@ -1863,5 +1889,38 @@ window.addEventListener('DOMContentLoaded', function () {
 <!-- SWT_LINK_END -->
 
 <script src="swt-sidebar.js"></script>
+
+<script>
+/* multi-axis status (§13.5) — render badge stack ในช่องสถานะ + filter ต่อแกน */
+(function(){
+  var MAP={job:{i:'🔧',n:'งาน'},ar:{i:'💰',n:'รับเงินลูกค้า'},wage:{i:'💸',n:'จ่ายค่าแรงช่าง'},
+    parts:{i:'🔩',n:'อะไหล่'},core:{i:'↩',n:'ซากคืนบริษัท'},claim:{i:'♻️',n:'เคลมสินค้า'},
+    wclaim:{i:'🧾',n:'เบิกค่าแรงประกัน'},goods:{i:'📦',n:'รับส่งสินค้า'}};
+  function render(){
+    document.querySelectorAll('.q-row[data-ax]').forEach(function(tr){
+      var cell=tr.querySelector('.q-status'); if(!cell) return;
+      var td=cell.closest('td');
+      var parts=tr.getAttribute('data-ax').split('|').map(function(p){
+        var k=p.split(':')[0],v=p.split(':')[1]||'',m=MAP[k]||{i:'•',n:k};
+        return '<span class="svax '+k+'" title="แกน: '+m.n+'"><span class="ai">'+m.i+'</span>'+v+'</span>';
+      }).join('');
+      td.innerHTML='<div class="svax-stack">'+parts+'</div>';
+    });
+  }
+  function axFilter(ax){
+    document.querySelectorAll('.qf-ax').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-ax')===ax);});
+    document.querySelectorAll('.q-row[data-ax]').forEach(function(tr){
+      var has=ax==='all'||tr.getAttribute('data-ax').split('|').some(function(p){return p.split(':')[0]===ax;});
+      tr.style.display=has?'':'none';
+    });
+    /* reset stage chip เป็น all (2 filter ไม่ชนกัน) */
+    document.querySelectorAll('#svChips .qf-chip').forEach(function(c){c.classList.toggle('active',c.getAttribute('data-sv')==='all');});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    render();
+    document.querySelectorAll('.qf-ax').forEach(function(b){b.addEventListener('click',function(){axFilter(b.getAttribute('data-ax'));});});
+  });
+})();
+</script>
 </body>
 </html>
