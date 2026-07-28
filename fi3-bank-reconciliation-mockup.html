@@ -174,6 +174,15 @@
         .mini-btn.link { border-color: #FCD34D; background: #FEF9E7; color: #92400E; }
         .mini-btn.unlink { border-color: #FECACA; background: #FEF2F2; color: #B91C1C; }
 
+        /* โหมดนำเข้า/กรอกเอง + จับคู่เอง */
+        .mode-pill { padding: 7px 14px; border: none; background: #fff; color: #6B7280;
+            font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .mode-pill.on { background: #2563EB; color: #fff; }
+        .row-ledger-open { background: #EFF6FF; }
+        .row-ledger-open:hover { background: #DBEAFE; }
+        .match-pick { display: flex; gap: 6px; align-items: center; }
+        .match-pick select { min-width: 0; width: 100%; font-size: 12px; padding: 5px 8px; }
+
         /* ADJUST PANEL */
         .adjust-row {
             display: grid; grid-template-columns: 1fr 200px 220px 120px 140px;
@@ -276,21 +285,42 @@
 
     <!-- ===== FI-3.3 · นำเข้า Statement (Import File) ===== -->
     <div class="card">
-        <h3 class="card-title"><span class="secno">FI-3.3</span>📥 นำเข้า Statement <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="ไฟล์ที่รองรับ">i<span class="swt-tip-pop"><b>📥 รองรับไฟล์:</b> .csv / .xlsx / .ofx จากธนาคาร · ระบบอ่านรายการเดินบัญชีแล้วเตรียมเข้าขั้นตอน Matching อัตโนมัติ</span></span></h3>
-        <div class="dropzone">
-            <div class="dz-ico">📄</div>
-            <div class="dz-main">ลากไฟล์ statement มาวาง หรือ เลือกไฟล์</div>
-            <div class="dz-sub">ระบบจะอ่านรายการเดินบัญชีและเตรียมเข้าสู่ขั้นตอน Matching</div>
+        <h3 class="card-title"><span class="secno">FI-3.3</span>📥 รายการ Statement <span class="swt-tip info" onclick="swtTipToggle(this,event)" title="2 วิธีเอารายการเข้า">i<span class="swt-tip-pop"><b>เอารายการเดินบัญชีเข้าได้ 2 วิธี:</b><br><b>📥 นำเข้าไฟล์</b> — .csv / .xlsx / .ofx จากธนาคาร → เข้า Matching อัตโนมัติ<br><b>✍️ กรอกเอง</b> — ธนาคารที่ไม่มีไฟล์ / รายการตกหล่น · กรอกทีละบรรทัด แล้วเลือกได้ว่าจะจับคู่เอง หรือส่งตรงไป Adjust <b>โดยไม่ผ่านการจับคู่</b> ก็ได้</span></span>
+            <span style="margin-left:auto;display:flex;gap:0;border:1px solid #D1D5DB;border-radius:8px;overflow:hidden">
+                <button type="button" class="mode-pill on" id="modeFile" onclick="fi3Mode('file')">📥 นำเข้าไฟล์</button>
+                <button type="button" class="mode-pill" id="modeManual" onclick="fi3Mode('manual')">✍️ กรอกเอง</button>
+            </span>
+        </h3>
+        <!-- โหมดนำเข้าไฟล์ -->
+        <div id="paneFile">
+            <div class="dropzone">
+                <div class="dz-ico">📄</div>
+                <div class="dz-main">ลากไฟล์ statement มาวาง หรือ เลือกไฟล์</div>
+                <div class="dz-sub">ระบบจะอ่านรายการเดินบัญชีและเตรียมเข้าสู่ขั้นตอน Matching</div>
+            </div>
+            <div class="imported-file">
+                <span style="font-size:18px">📑</span>
+                <span class="if-name">SCB_Statement_202605.csv</span>
+                <span class="if-meta">นำเข้าเมื่อ 29 พ.ค. 26 14:05 · 24 รายการ</span>
+                <span class="if-badge">นำเข้า 24 รายการ ✓</span>
+            </div>
+            <div style="margin-top:16px;display:flex;gap:12px">
+                <button class="act btn-primary">📥 นำเข้า Statement</button>
+                <button class="act btn-secondary">🔄 นำเข้าใหม่</button>
+            </div>
         </div>
-        <div class="imported-file">
-            <span style="font-size:18px">📑</span>
-            <span class="if-name">SCB_Statement_202605.csv</span>
-            <span class="if-meta">นำเข้าเมื่อ 29 พ.ค. 26 14:05 · 24 รายการ</span>
-            <span class="if-badge">นำเข้า 24 รายการ ✓</span>
-        </div>
-        <div style="margin-top:16px;display:flex;gap:12px">
-            <button class="act btn-primary">📥 นำเข้า Statement</button>
-            <button class="act btn-secondary">🔄 นำเข้าใหม่</button>
+        <!-- โหมดกรอกเอง (ไม่มีไฟล์ / รายการตกหล่น) -->
+        <div id="paneManual" style="display:none">
+            <div style="display:grid;grid-template-columns:150px 1fr 170px 160px auto;gap:12px;align-items:end;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:14px">
+                <div class="adj-field"><label>วันที่</label><input type="text" id="meDate" value="31 พ.ค. 26"></div>
+                <div class="adj-field"><label>รายละเอียด</label><input type="text" id="meDesc" placeholder="เช่น รับโอน — ลูกค้าหน้าร้าน"></div>
+                <div class="adj-field"><label>จำนวนเงิน (+รับ / −จ่าย)</label><input type="text" id="meAmt" placeholder="0.00" style="text-align:right"></div>
+                <div class="adj-field"><label>หลังเพิ่มแล้ว</label>
+                    <select id="meNext"><option value="match">ไปจับคู่ (Matching)</option><option value="adjust">ส่งตรงไป Adjust — ไม่จับคู่</option></select>
+                </div>
+                <button class="act btn-primary" onclick="fi3AddManual()">➕ เพิ่มรายการ</button>
+            </div>
+            <div class="gl-hint" style="margin-top:8px">✍️ ใช้เมื่อธนาคารไม่มีไฟล์ หรือรายการตกหล่นจากไฟล์ · เพิ่มแล้วเลือกได้ว่าเข้าตารางจับคู่ หรือข้ามไป Adjust เลยโดยไม่จับคู่</div>
         </div>
     </div>
 
@@ -328,8 +358,9 @@
         </h3>
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
             <span class="legend-chip">🤖 จับคู่อัตโนมัติ: จำนวนเงิน + วันที่ ±3 วัน</span>
-            <span class="legend-chip" style="background:#F0FDF4;color:#065F46;border-color:#A7F3D0">✓ จับคู่แล้ว 22</span>
-            <span class="legend-chip" style="background:#FFFBEB;color:#92400E;border-color:#FDE68A">⚠ ยังไม่จับคู่ 2</span>
+            <span class="legend-chip" style="background:#F0FDF4;color:#065F46;border-color:#A7F3D0" id="chipMatched">✓ จับคู่แล้ว 22</span>
+            <span class="legend-chip" style="background:#FFFBEB;color:#92400E;border-color:#FDE68A" id="chipOpen">⚠ ยังไม่จับคู่ 2</span>
+            <span class="legend-chip" style="background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE" id="chipLedgerOpen">⏳ ค้างฝั่ง BC 1 (รอธนาคาร)</span>
             <button class="act btn-secondary" style="margin-left:auto;padding:7px 14px;font-size:12.5px">🤖 Auto-match อีกครั้ง</button>
         </div>
         <table>
@@ -478,8 +509,22 @@
                     <td><span class="status-yellow">⚠ ยังไม่จับคู่</span></td>
                     <td><button class="mini-btn link">จับคู่เอง</button></td>
                 </tr>
+                <!-- UNMATCHED ฝั่ง Ledger: เช็คสั่งจ่ายยังไม่ขึ้นเงิน (ไม่ต้อง Adjust · รอธนาคารเดือนถัดไป) -->
+                <tr class="row-ledger-open" data-ledger-open data-doc="PV-2605-0060" data-date="30 พ.ค. 26" data-amt="-85,000.00">
+                    <td></td>
+                    <td class="muted">—</td>
+                    <td class="muted">— ยังไม่ปรากฏใน Statement —</td>
+                    <td class="amount muted">—</td>
+                    <td class="col-mid">⏳</td>
+                    <td><span class="doc-code">PV-2605-0060</span> <span class="gl-hint">เช็คสั่งจ่ายยังไม่ขึ้นเงิน</span></td>
+                    <td>30 พ.ค. 26</td>
+                    <td class="amount">-85,000.00</td>
+                    <td><span style="color:#2563EB;font-weight:600">⏳ รอธนาคาร</span></td>
+                    <td><span class="gl-hint">ยกไปเดือนถัดไป · ไม่ Adjust</span></td>
+                </tr>
             </tbody>
         </table>
+        <div class="gl-hint" style="margin-top:10px">💡 ค้างได้ 2 ฝั่ง — <b>ฝั่ง Statement</b> (ค่าธรรมเนียม/ดอกเบี้ย ที่ BC ยังไม่มี) → Adjust Bank · <b>ฝั่ง Bank Ledger</b> (เช็คยังไม่ขึ้นเงิน/เงินฝากระหว่างทาง) → ไม่ต้อง Adjust รอกระทบเดือนถัดไป · หรือกด "จับคู่เอง" เมื่อ auto-match พลาด (ยอด/วันที่คลาดกัน)</div>
     </div>
 
     <!-- ===== FI-3.6 · Adjust Bank (รายการที่ไม่จับคู่) ===== -->
@@ -542,18 +587,89 @@
 </div>
 
 <script>
-    // จับคู่เอง / ยกเลิกคู่ (mock affordance)
-    document.querySelectorAll('.mini-btn').forEach(function(btn){
-        btn.addEventListener('click', function(){
-            alert('Demo · ' + btn.textContent.trim() + ' — การจับคู่จริงและ Post ดำเนินการบน BC365');
+    /* ── โหมดนำเข้า: ไฟล์ | กรอกเอง ── */
+    function fi3Mode(m){
+        document.getElementById('paneFile').style.display = m==='file' ? '' : 'none';
+        document.getElementById('paneManual').style.display = m==='manual' ? '' : 'none';
+        document.getElementById('modeFile').classList.toggle('on', m==='file');
+        document.getElementById('modeManual').classList.toggle('on', m==='manual');
+    }
+
+    /* ── นับสถานะใหม่ (chip legend) ── */
+    var fi3N = { matched:22, open:2, ledgerOpen:1 };
+    function fi3Chips(){
+        document.getElementById('chipMatched').textContent  = '✓ จับคู่แล้ว ' + fi3N.matched;
+        document.getElementById('chipOpen').textContent     = '⚠ ยังไม่จับคู่ ' + fi3N.open;
+        document.getElementById('chipLedgerOpen').textContent = '⏳ ค้างฝั่ง BC ' + fi3N.ledgerOpen + ' (รอธนาคาร)';
+    }
+
+    /* ── จับคู่เอง (manual match): เลือกรายการฝั่ง BC ที่ยังว่าง แล้วยืนยัน ── */
+    function fi3LedgerPool(){
+        return Array.prototype.map.call(document.querySelectorAll('[data-ledger-open]'), function(tr){
+            return { tr:tr, doc:tr.getAttribute('data-doc'), date:tr.getAttribute('data-date'), amt:tr.getAttribute('data-amt') };
         });
-    });
-    // Adjust Bank (mock)
-    document.querySelectorAll('.btn-adjust').forEach(function(btn){
+    }
+    function fi3WireLink(btn){
         btn.addEventListener('click', function(){
-            alert('Demo · สร้างรายการปรับปรุง (Adjust Bank) แล้ววนกลับไป Matching — Bank Ledger Entry สร้างโดย BC365');
+            var tr = btn.closest('tr');
+            var pool = fi3LedgerPool();
+            if(!pool.length){ alert('ไม่มีรายการฝั่ง Bank Ledger ที่ว่างให้จับคู่ — ใช้ Adjust Bank แทน'); return; }
+            var cell = tr.cells[5]; // ช่อง "— ไม่มีคู่ —"
+            var opts = pool.map(function(p,i){ return '<option value="'+i+'">'+p.doc+' · '+p.amt+' · '+p.date+'</option>'; }).join('');
+            cell.innerHTML = '<div class="match-pick"><select>'+opts+'</select><button class="mini-btn link" type="button">✓</button></div>';
+            cell.querySelector('button').addEventListener('click', function(){
+                var p = pool[cell.querySelector('select').value|0];
+                tr.cells[5].innerHTML = '<span class="doc-code">'+p.doc+'</span>';
+                tr.cells[6].textContent = p.date;
+                tr.cells[7].textContent = p.amt; tr.cells[7].className='amount';
+                tr.cells[8].innerHTML = '<span class="status-green">✓ จับคู่เอง</span>';
+                tr.cells[9].innerHTML = '<button class="mini-btn unlink" type="button">ยกเลิกคู่</button>';
+                tr.cells[4].textContent = '↔'; tr.classList.remove('row-unmatched');
+                p.tr.remove();  // เอาแถวค้างฝั่ง BC ออก (ถูกจับคู่แล้ว)
+                fi3N.matched++; fi3N.open--; fi3N.ledgerOpen--; fi3Chips();
+            });
         });
+    }
+    document.querySelectorAll('.mini-btn.link').forEach(fi3WireLink);
+    document.querySelectorAll('.mini-btn.unlink').forEach(function(btn){
+        btn.addEventListener('click', function(){ alert('Demo · ยกเลิกคู่ — การจับคู่จริงและ Post ดำเนินการบน BC365'); });
     });
+
+    /* ── กรอกเอง: เพิ่มรายการเข้า Matching หรือส่งตรงไป Adjust (ไม่จับคู่) ── */
+    function fi3AddManual(){
+        var d = document.getElementById('meDate').value || '31 พ.ค. 26';
+        var desc = document.getElementById('meDesc').value || 'รายการกรอกเอง';
+        var amt = document.getElementById('meAmt').value || '0.00';
+        var next = document.getElementById('meNext').value;
+        if(next === 'match'){
+            var tb = document.querySelector('table tbody');
+            var tr = document.createElement('tr'); tr.className = 'row-unmatched';
+            tr.innerHTML = '<td><input type="checkbox" class="chk"></td><td>'+d+'</td><td>'+desc+' <span class="gl-hint">✍️ กรอกเอง</span></td>'
+                + '<td class="amount">'+amt+'</td><td class="col-mid">⚠</td><td class="muted">— ไม่มีคู่ —</td><td class="muted">—</td>'
+                + '<td class="amount muted">—</td><td><span class="status-yellow">⚠ ยังไม่จับคู่</span></td>'
+                + '<td><button class="mini-btn link" type="button">จับคู่เอง</button></td>';
+            tb.appendChild(tr);
+            fi3WireLink(tr.querySelector('.mini-btn.link'));
+            fi3N.open++; fi3Chips();
+        } else {
+            var card = document.querySelector('.btn-adjust').closest('.card');
+            var row = document.createElement('div'); row.className = 'adjust-row';
+            row.innerHTML = '<div class="adj-stmt"><span class="adj-desc">'+desc+' <span class="gl-hint">✍️ กรอกเอง · ไม่ผ่านจับคู่</span></span>'
+                + '<span class="adj-meta">'+d+' · ฝั่ง Statement '+amt+' · ยังไม่มีใน Bank Ledger</span></div>'
+                + '<div class="adj-field"><label>ประเภทการปรับปรุง</label><select><option>ปรับปรุงอื่นๆ (Other)</option><option>ค่าธรรมเนียม (Bank Charge)</option><option>ดอกเบี้ย (Interest)</option></select></div>'
+                + '<div class="adj-field"><label>บัญชี GL</label><input type="text" placeholder="เลือกบัญชี GL ปลายทาง"><span class="gl-hint">GL Account ปลายทางของรายการปรับปรุง</span></div>'
+                + '<div class="adj-field"><label>จำนวนเงิน</label><input type="text" value="'+amt+'" style="text-align:right"></div>'
+                + '<div style="display:flex;align-items:flex-end;height:100%"><button class="btn-adjust" type="button">🛠️ Adjust Bank</button></div>';
+            card.appendChild(row);
+            row.querySelector('.btn-adjust').addEventListener('click', fi3AdjustDemo);
+            row.scrollIntoView({behavior:'smooth', block:'center'});
+        }
+        document.getElementById('meDesc').value=''; document.getElementById('meAmt').value='';
+    }
+
+    /* ── Adjust Bank (mock) ── */
+    function fi3AdjustDemo(){ alert('Demo · สร้างรายการปรับปรุง (Adjust Bank) แล้ววนกลับไป Matching — Bank Ledger Entry สร้างโดย BC365'); }
+    document.querySelectorAll('.btn-adjust').forEach(function(btn){ btn.addEventListener('click', fi3AdjustDemo); });
 </script>
 
 <!-- SWT_LINK_START -->
