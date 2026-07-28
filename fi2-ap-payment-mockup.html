@@ -197,7 +197,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
         </div>
       </div>
       <div class="card compact">
-        <div class="card-header"><div class="card-title"><span class="secno">FI-2.2</span>📋 ข้อมูลการจ่าย</div></div>
+        <div class="card-header"><div class="card-title"><span class="secno">FI-2.2</span>📋 ข้อมูลการจ่าย</div><div class="card-spacer"></div><button class="card-btn primary" onclick="fi2OpenPayout()" title="เปิดจอจ่ายเงิน (SC-3P ฝั่งจ่าย) — ระบุวิธีจ่าย/แยกจ่าย + ทะเบียนเช็ค">💳 ระบุการจ่าย</button></div>
         <div class="field-grid-2">
           <div class="field"><div class="field-label">วิธีจ่าย</div>
             <select class="pay-sel" id="payMethod" onchange="syncMethod()">
@@ -213,6 +213,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           <div class="field"><div class="field-label">วันที่จ่าย</div><input class="pay-sel" type="date" value="2026-06-10"></div>
           <div class="field"><div class="field-label">เลขที่อ้างอิงภายนอก</div><input class="pay-sel" placeholder="เลขสลิปโอน / เลขเช็คธนาคาร"></div>
         </div>
+        <div id="fi2PayResult"></div>
       </div>
     </div>
 
@@ -416,7 +417,32 @@ table.items th:last-child,table.items td:last-child{border-right:none}
 </div>
 
 <script src="swt-patterns.js"></script>
+<script src="swt-payout.js"></script>
 <script>
+/* ② จอ "จ่ายเงิน" (SC-3P ฝั่งจ่าย) — ระบุวิธีจ่าย/แยกจ่าย + ทะเบียนเช็ค 7.1.2 */
+function fi2OpenPayout(){
+  var net=Number(String(document.getElementById('fi2TotNet').textContent).replace(/,/g,''))||0;
+  swtOpenPayout({
+    total: net,
+    ref: 'PV-2606-0042 · Daikin Industries (TH)',
+    accounts:['BBL · 123-4-56789-0 (SWT หลัก)','KBANK · 098-7-65432-1'],
+    chequeBooks:['BBL สมุดเช็ค · 123-4-56789-0','KBANK สมุดเช็ค · 098-7-65432-1'],
+    onConfirm: fi2RenderPay
+  });
+}
+function fi2RenderPay(paid){
+  var el=document.getElementById('fi2PayResult'); if(!el)return;
+  var tot=paid.reduce(function(s,p){return s+p.amount;},0);
+  el.innerHTML='<div style="margin-top:10px;padding:9px 12px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:12px">'
+    +'<b style="color:#92400E">✓ ระบุการจ่ายแล้ว · '+paid.length+' รายการ · รวม '+fmt(tot)+' ฿</b>'
+    +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">'
+    +paid.map(function(p){
+        var extra=p.method==='cheque'?(' · '+(p.meta.book||'').split('·')[0].trim()+' · '+(p.meta.status||'')):(p.method==='transfer'?(p.meta.ref?' · สลิป '+p.meta.ref:''):(p.meta.note?' · '+p.meta.note:''));
+        return '<span style="background:#fff;border:1px solid #FDE68A;border-radius:14px;padding:3px 10px;color:#92400E;font-weight:600">'+p.label+' '+fmt(p.amount)+extra+'</span>';
+      }).join('')
+    +'</div></div>';
+  if(paid[0]){ var sel=document.getElementById('payMethod'); if(sel){ sel.value=paid[0].method; syncMethod(); } }
+}
 function swTab(e,id){
   var nav=e.currentTarget.parentElement;
   nav.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
