@@ -199,6 +199,44 @@
     return { getLines: function () { return pays.slice(); }, getRemain: remain };
   }
 
+  /* SC-3P เปิดเป็น modal — ห่อ swtRenderPayment (amount-first · ตัว canonical ในแคตตาล็อก) ด้วย overlay + ปุ่มตกลง/ปิด
+     ทุกจุดรับเงิน (FI-1/SL-3/SL-4/SV-7) เรียก swtOpenPayment(opts) เหมือนเดิม → เด้งจอนี้ · opts.onConfirm(paid[]) */
+  function swtOpenPayment(opts) {
+    injectPanelCss();
+    opts = opts || {};
+    if (!document.getElementById('swtPayModalCss')) {
+      var st = document.createElement('style'); st.id = 'swtPayModalCss';
+      st.textContent = '.swt-pay-bg{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:9998;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}'
+        + '.swt-pay-modal{background:#fff;border-radius:12px;max-width:780px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.3);overflow:hidden}'
+        + '.swt-pay-modal .swt-pay-mhd{background:linear-gradient(90deg,#1E3A5F,#2563EB);color:#fff;padding:11px 16px;display:flex;align-items:center;gap:10px;font-weight:700}'
+        + '.swt-pay-modal .swt-pay-mhd .ref{font-size:11px;color:rgba(255,255,255,.75);font-family:monospace;flex:1}'
+        + '.swt-pay-modal .swt-pay-mhd .x{cursor:pointer;font-size:18px;opacity:.85}'
+        + '.swt-pay-modal .swt-pay-mbd{padding:16px}'
+        + '.swt-pay-modal .swt-pay-mact{display:flex;justify-content:flex-end;gap:10px;padding:12px 16px;border-top:1px solid #E5E7EB;background:#F9FAFB}'
+        + '.swt-pay-modal .swt-pay-mact button{padding:9px 18px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;border:1px solid #D1D5DB;background:#fff;color:#374151}'
+        + '.swt-pay-modal .swt-pay-mact .ok{background:#10B981;color:#fff;border-color:#10B981}';
+      document.head.appendChild(st);
+    }
+    var bg = document.createElement('div'); bg.className = 'swt-pay-bg';
+    bg.innerHTML = '<div class="swt-pay-modal"><div class="swt-pay-mhd"><span>💵 รับชำระเงิน</span>'
+      + '<span class="ref">' + esc(opts.ref || '') + '</span><span class="x" data-x>✕</span></div>'
+      + '<div class="swt-pay-mbd"><div data-host></div></div>'
+      + '<div class="swt-pay-mact"><button data-x>ปิดหน้าจอ</button><button class="ok" data-ok>✓ ตกลง (รับชำระ)</button></div></div>';
+    document.body.appendChild(bg);
+    var api = swtRenderPayment(bg.querySelector('[data-host]'), opts);
+    function close() { bg.remove(); if (opts.onCancel) opts.onCancel(); }
+    bg.querySelectorAll('[data-x]').forEach(function (b) { b.onclick = close; });
+    bg.addEventListener('click', function (e) { if (e.target === bg) close(); });
+    bg.querySelector('[data-ok]').onclick = function () {
+      var lines = api.getLines();
+      if (!lines.length) { alert('ยังไม่ได้ระบุวิธีรับชำระ'); return; }
+      var paid = lines.map(function (p) { return { method: (p.method || '').replace(/^[^ก-๙A-Za-z]+/, '').trim() || p.method, label: p.method, ref: p.ref, amount: p.amt }; });
+      bg.remove();
+      if (opts.onConfirm) opts.onConfirm(paid);
+    };
+    return api;
+  }
+
   /** SC-6 — Deposit apply */
   var DEP_MODES = {
     apply: { title: 'ตัดมัดจำ', cols: ['', 'เลขที่มัดจำ', 'วันที่', 'คงเหลือ', 'ตัดครั้งนี้'], event: 'deposit:applied' },
@@ -478,6 +516,7 @@
   }
 
   global.swtRenderPayment = swtRenderPayment;
+  global.swtOpenPayment = swtOpenPayment;   /* SC-3P modal (amount-first · canonical) — retire swt-payment.js */
   global.swtRenderDeposit = swtRenderDeposit;
   global.swtRenderDelivery = swtRenderDelivery;
   global.swtRenderApproval = swtRenderApproval;
