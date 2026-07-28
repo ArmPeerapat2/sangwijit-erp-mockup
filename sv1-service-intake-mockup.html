@@ -372,9 +372,9 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
       <input value="เช็คกับ Daikin โทร. 02-xxx · คอมเพรสเซอร์ Comp 7 ปี (เหลือ 5 ปี 2 ด.)">
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px 12px">
-      <div class="field"><label>อ้างอิง (itemLedger)</label><input value="SN 1234567890"></div>
-      <div class="field"><label>เลขที่บิล/ใบเสนอราคา</label><input value="SQ-2406-0112"></div>
+      <div class="field"><label>บิลขายต้นทาง</label><input value="IV-B01-2406-0128"></div>
       <div class="field"><label>วันที่ซื้อ</label><input value="10 มิ.ย. 24" type="text"></div>
+      <div class="field"><label>ใบรับประกัน</label><input value="WRT-2406-0128 · 7 ปี"></div>
     </div>
   </div>
 
@@ -405,13 +405,8 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
     </div>
   </div>
 
-  <div class="form-grid-2" style="margin-top:14px">
-    <div class="field"><label>การตรวจสอบเบื้องต้น (พนักงานรับเรื่อง)</label>
-      <textarea>เปิดลองเย็นเล็กน้อยแต่ไม่เย็นพอ · น่าจะเป็น Compressor หรือน้ำยารั่ว · ต้องส่งช่างตรวจที่บ้าน</textarea>
-    </div>
-    <div class="field"><label>ผู้บันทึกอาการ</label>
-      <input value="คุณปภาวรินทร์ · ADM-002" readonly>
-    </div>
+  <div class="field" style="margin-top:14px"><label>การตรวจสอบเบื้องต้น (พนักงานรับเรื่อง) <span style="font-weight:400;color:#9CA3AF">— ผู้บันทึก = พนักงานรับเรื่องใน SV-1.2</span></label>
+    <textarea>เปิดลองเย็นเล็กน้อยแต่ไม่เย็นพอ · น่าจะเป็น Compressor หรือน้ำยารั่ว · ต้องส่งช่างตรวจที่บ้าน</textarea>
   </div>
 
   <!-- B3: per-component warranty (manual · reference) — collapse 07-28 -->
@@ -448,11 +443,27 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
     <div style="margin-top:8px;font-size:11px;color:#92400E;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:6px 10px;display:flex;align-items:center;gap:8px">📎 <b>แนบสแกนใบประกัน</b> (manual ต้องมีหลักฐาน = audit trail) <button class="btn btn-secondary" style="padding:2px 8px;font-size:11px">📷 แนบไฟล์</button></div>
   </div></details>
 
+  <!-- รูปแบบงานซ่อม: ในศูนย์ / ออกนอกสถานที่ (+ ระยะทาง → คุมค่าเดินทาง) -->
+  <div style="margin-top:14px;border:1px solid #E5E7EB;border-radius:8px;padding:9px 12px;background:#F8FAFC">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <span style="font-size:12px;font-weight:700;color:#1E3A5F">🔧 รูปแบบงานซ่อม <span class="req">*</span></span>
+      <label style="display:flex;align-items:center;gap:5px;font-size:12.5px;cursor:pointer"><input type="radio" name="rmode" value="in" onclick="svRMode('in')"> 🏢 ซ่อมในศูนย์ (ลูกค้านำเข้ามา)</label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:12.5px;cursor:pointer"><input type="radio" name="rmode" value="site" checked onclick="svRMode('site')"> 🚚 ออกนอกสถานที่ (on-site)</label>
+      <div style="flex:1"></div>
+      <span id="svRMHint" style="font-size:11px;color:#6B7280">on-site → คิดค่าเดินทางตามระยะทาง/โซน</span>
+    </div>
+    <div id="svSiteBox" class="form-grid" style="margin-top:9px">
+      <div class="field"><label>ระยะทาง (กม. ไป-กลับ)</label><input id="svKm" value="24" oninput="svRMcalc()"></div>
+      <div class="field"><label>พื้นที่/โซนเดินทาง</label><input value="สุขุมวิท 71 · เขตวัฒนา (โซนกรุงเทพชั้นใน)"></div>
+      <div class="field"><label>เรตค่าเดินทาง (auto)</label><input id="svRate" value="เหมาโซนชั้นใน 300฿ (≤30 กม.)" readonly></div>
+    </div>
+  </div>
+
   <div class="form-grid-4" style="margin-top:14px">
-    <div class="field"><label>ประมาณค่าอะไหล่</label><input value="8,500.00 ฿"></div>
-    <div class="field"><label>ประมาณค่าแรง</label><input value="1,500.00 ฿"></div>
-    <div class="field"><label>ประมาณค่าเดินทาง</label><input value="300.00 ฿"></div>
-    <div class="field"><label>รวมประมาณ</label><input value="10,300.00 ฿" readonly style="font-weight:700;color:#111827"></div>
+    <div class="field"><label>ประมาณค่าอะไหล่</label><input id="svParts" value="8,500.00 ฿" oninput="svSum()"></div>
+    <div class="field"><label>ประมาณค่าแรง</label><input id="svLabor" value="1,500.00 ฿" oninput="svSum()"></div>
+    <div class="field"><label>ประมาณค่าเดินทาง</label><input id="svTravel" value="300.00 ฿" oninput="svSum()"></div>
+    <div class="field"><label>รวมประมาณ</label><input id="svTotal" value="10,300.00 ฿" readonly style="font-weight:700;color:#111827"></div>
   </div>
 </div>
 
@@ -485,9 +496,6 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
       </div>
       <div class="field"><label>สาขาที่รับผิดชอบ</label>
         <select><option>BKK-Service (ใกล้ลูกค้า)</option><option>HQ</option><option>รังสิต</option><option>บางนา</option></select>
-      </div>
-      <div class="field"><label>SLA Target</label>
-        <input value="ต้องมอบหมาย ≤ 24 ชม. · ซ่อมเสร็จ ≤ 3 วันทำการ" readonly>
       </div>
     </div>
     <div class="alert alert-warn" style="margin-top:14px">
@@ -601,6 +609,24 @@ document.querySelectorAll('.warranty-card').forEach(function(c){
 });
 function svWarr(v){ var b=document.getElementById('svClaimBox'); if(b) b.style.display=(v==='in')?'block':'none'; }
 function svClaimRes(v){ var b=document.getElementById('svReplaceBox'); if(b) b.style.display=(v==='replace')?'block':'none'; }
+function svNum(v){ return parseFloat(String(v).replace(/[^0-9.]/g,''))||0; }
+function svMoney(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' ฿'; }
+function svSum(){ var t=svNum(document.getElementById('svParts').value)+svNum(document.getElementById('svLabor').value)+svNum(document.getElementById('svTravel').value); document.getElementById('svTotal').value=svMoney(t); }
+function svRMode(m){
+  var box=document.getElementById('svSiteBox'), hint=document.getElementById('svRMHint'), tv=document.getElementById('svTravel');
+  if(m==='in'){ box.style.display='none'; hint.textContent='ในศูนย์ → ไม่มีค่าเดินทาง'; tv.value='0.00 ฿'; tv.readOnly=true; }
+  else { box.style.display='grid'; hint.textContent='on-site → คิดค่าเดินทางตามระยะทาง/โซน'; tv.readOnly=false; svRMcalc(); }
+  svSum();
+}
+function svRMcalc(){
+  var km=svNum(document.getElementById('svKm').value), rate, tier;
+  if(km<=30){ rate=300; tier='เหมาโซนชั้นใน 300฿ (≤30 กม.)'; }
+  else if(km<=60){ rate=500; tier='โซนรอบนอก 500฿ (31–60 กม.)'; }
+  else { rate=500+Math.ceil(km-60)*10; tier='ไกลพิเศษ 500฿ + 10฿/กม. ส่วนเกิน 60'; }
+  document.getElementById('svRate').value=tier;
+  document.getElementById('svTravel').value=svMoney(rate);
+  svSum();
+}
 // B2: Resolve Serial A-E → ขับ Warranty Status (A/E→in · B→out · C/D→banner)
 function svRes(x){
   document.querySelectorAll('#svResBox .res-opt').forEach(function(o){o.classList.remove('selected');});
