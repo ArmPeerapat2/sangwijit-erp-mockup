@@ -42,6 +42,7 @@
     'cf2-7-doc-template-mockup.html',
 
     /* ─── เพิ่ม 2026-07-21 · งาน grill+build รอบใหญ่ (ตรวจแล้วทุกไฟล์) ─── */
+    'ex1-executive-dashboard-mockup.html','rp1-report-center-mockup.html','fi3-bank-reconciliation-mockup.html','fi7-vat-report-mockup.html','cf2-config-hub-mockup.html','cf-master-settings-mockup.html','iaq-bc-sync-monitor-mockup.html','cf2-5-tech-template-mockup.html','sc1-customer-search-mockup.html','sc7-timeline-mockup.html','sc-shared-catalog-mockup.html',   /* reconcile 07-28: built แต่ tracker ค้าง */
     'pm1-price-list-mockup.html','pm5-price-simulator-mockup.html',
     'pm2-promotion-mockup.html',          /* แหล่งงบ · ขั้นบันได · ตรวจกำไร · โปรฯ ชนกัน */
     'pm4-promo-quota-mockup.html',        /* ใหม่ — โควต้าโปรฯ งบแบรนด์/เพดานบริษัท */
