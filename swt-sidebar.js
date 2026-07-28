@@ -42,6 +42,7 @@
     'cf2-7-doc-template-mockup.html',
 
     /* ─── เพิ่ม 2026-07-21 · งาน grill+build รอบใหญ่ (ตรวจแล้วทุกไฟล์) ─── */
+    'pm1-price-list-mockup.html','pm5-price-simulator-mockup.html',
     'pm2-promotion-mockup.html',          /* แหล่งงบ · ขั้นบันได · ตรวจกำไร · โปรฯ ชนกัน */
     'pm4-promo-quota-mockup.html',        /* ใหม่ — โควต้าโปรฯ งบแบรนด์/เพดานบริษัท */
     'pmq-promo-dashboard-mockup.html',    /* ใหม่ — โปรฯ ที่รันอยู่ */
