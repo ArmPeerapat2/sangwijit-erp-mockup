@@ -646,6 +646,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       <button class="srt-tab" onclick="srtTab(event,'srt-po')">🛒 จัดซื้อ (PO)</button>
       <button class="srt-tab" onclick="srtTab(event,'srt-wh')">🏭 คลัง (WH)</button>
       <button class="srt-tab" onclick="srtTab(event,'srt-fi')">💰 การเงิน (FI)</button>
+      <button class="srt-tab" onclick="srtTab(event,'srt-delivery')">🚚 จัดส่ง (DL)</button>
     </div>
 
     <!-- ══ SV ══ -->
@@ -787,6 +788,29 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         </tbody>
       </table>
       <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-29: บัญชี=ออก/รับ RV · การเงิน=จ่าย+ภาษี+กระทบยอด (ตำแหน่งจริง CF-1) · FI-1 รับ=ต้องอนุมัติ (เหมือนฝั่งจ่าย) · เพิ่ม FI-4 ใบสำคัญค่าใช้จ่าย (ไม่ผ่าน PO)</div>
+    </div>
+    <div class="srt-pane" id="srt-delivery">
+      <table>
+        <thead><tr><th style="width:150px">ขั้นตอน</th><th>🗂️ แอดมินจัดคิว</th><th>🚚 ทีมส่ง</th><th>🔧 ช่าง / 🏭 คลัง</th><th>👤 ลูกค้า</th><th>→ ถัดไป</th><th>สถานะ</th><th>Menu</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="8">รับงาน + แยกประเภท (จาก SL-4 บิลขาย / งานซ่อมเสร็จ)</td></tr>
+          <tr><td class="stp">1.1 รับงานจัดส่ง</td><td>รับเข้าคิว SV-6 · แยก: ส่งเฉยๆ / ส่ง+ติดตั้ง / ส่งงานซ่อมคืน</td><td></td><td></td><td></td><td class="nx">2.1</td><td class="stt">รอมอบหมาย</td><td class="mn">sv6</td></tr>
+          <tr class="grp"><td colspan="8">คิว + มอบหมาย (SV-6)</td></tr>
+          <tr><td class="stp">2.1 รอมอบหมาย</td><td>เรียงคิว · เลือกงาน</td><td></td><td></td><td></td><td class="nx">2.2</td><td class="stt">รอมอบหมาย</td><td class="mn">sv6</td></tr>
+          <tr><td class="stp">2.2 มอบหมาย+จัดรถ</td><td>เลือกทีม/ช่าง · จัดรถ/route · นัดวัน · lock ช่าง</td><td>กดรับงาน</td><td>กดรับงาน (ถ้าติดตั้ง)</td><td></td><td class="nx">3.1</td><td class="stt">มอบหมายแล้ว</td><td class="mn">sv6</td></tr>
+          <tr class="grp"><td colspan="8">ออกส่ง (+ ติดตั้ง)</td></tr>
+          <tr><td class="stp">3.1 เบิก+ออกส่ง</td><td></td><td>รับของ · เดินทาง/ส่ง</td><td>🏭 เบิก WH-2 ให้ทีมส่ง</td><td></td><td class="nx">3.2 หรือ 4.1</td><td class="stt">กำลังส่ง</td><td class="mn">wh2·sv5</td></tr>
+          <tr><td class="stp">3.2 ติดตั้ง+QA (ถ้ามี)</td><td></td><td></td><td>🔧 ติดตั้งหน้างาน · ถ่ายรูป · ผ่าน QA</td><td></td><td class="nx">4.1</td><td class="stt">ติดตั้งเสร็จ</td><td class="mn">sv5</td></tr>
+          <tr class="grp"><td colspan="8">ส่งมอบ + POD + ชำระ (SV-7)</td></tr>
+          <tr><td class="stp">4.1 สรุปส่งมอบ</td><td></td><td>สรุปรายการ + ยอดต้องจ่าย (ถ้า COD)</td><td></td><td>ตรวจรับ</td><td class="nx">4.2</td><td class="stt">รอลูกค้ารับ</td><td class="mn">sv7</td></tr>
+          <tr><td class="stp">4.2 เซ็นรับ POD + ชำระ</td><td></td><td>เก็บเงินปลายทาง SC-3P (ถ้ามี)</td><td></td><td>✍️ เซ็นรับ (POD)</td><td class="nx">4.3</td><td class="stt">รับของแล้ว</td><td class="mn">sv7</td></tr>
+          <tr><td class="stp">4.3 ปิดงานจัดส่ง</td><td>ปิดงาน · อัปเดตบิล/งานซ่อม</td><td></td><td></td><td></td><td class="nx fin">🏁</td><td class="stt fin">ส่งมอบแล้ว</td><td class="mn">sv7</td></tr>
+          <tr class="grp"><td colspan="8">แขนง (option)</td></tr>
+          <tr><td class="stp">5.1 ส่งไม่สำเร็จ</td><td>รับเรื่อง · นัดส่งใหม่</td><td>ลูกค้าไม่รับ/ไม่อยู่ → บันทึกเหตุ</td><td></td><td></td><td class="nx">→ 2.2</td><td class="stt">นัดส่งใหม่</td><td class="mn">sv6</td></tr>
+          <tr><td class="stp">5.2 ของเสีย/ส่งผิด</td><td></td><td>ของเสียระหว่างส่ง</td><td>🏭 คืนคลัง WH-1</td><td></td><td class="nx">→ CLM/WH-1</td><td class="stt">คืน/เคลม</td><td class="mn">clm·wh1</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:10.5px;color:#B45309;margin-top:6px">🟡 DRAFT 07-29 (derived จาก sv6/sv7/wh2 · รอเคาะ): จัดส่ง = flow ข้ามโมดูล ต่อจากขาย SL / บริการ SV · เบิกจาก WH · ❓ ค่าเที่ยวทีมส่ง (CM?) · ❓ เพดานนัดส่งใหม่ · ❓ สิทธิ์มอบหมาย (CF-1) · ❓ จ้างขนส่งภายนอก+tracking</div>
     </div>
   </div>
   <script>
