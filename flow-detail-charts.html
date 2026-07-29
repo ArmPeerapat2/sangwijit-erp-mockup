@@ -36,7 +36,23 @@ table.tc .no{color:#CBD5E1}
 .note.warn{border-left-color:#F59E0B;background:#FFFBEB;color:#92400E}.note.warn b{color:#7C2D12}
 .legend-src{font-size:11px;color:#94A3B8;margin-top:8px}
 .legend-src a{color:#2563EB;text-decoration:none}
+.btn-print{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#166534;background:#DCFCE7;border:1px solid #86EFAC;border-radius:7px;padding:7px 12px;cursor:pointer;font-family:inherit}
+.btn-print:hover{background:#BBF7D0}
 @media(max-width:1100px){.main{margin-left:0}}
+@media print{
+  @page{size:A4 landscape;margin:8mm}
+  body{background:#fff}
+  .main{margin-left:0 !important;padding:0 !important}
+  .swt-sb,.tabs,.back,.btn-print{display:none !important}
+  .panel{display:block !important;page-break-after:always}
+  .panel:last-of-type{page-break-after:auto}
+  .card{border:none;box-shadow:none;padding:0;margin:0}
+  .card h2{font-size:15px}
+  .chart-box{border:none;background:#fff;overflow:visible;padding:0}
+  .mermaid svg{max-width:100% !important;height:auto !important}
+  table.tc,.note{break-inside:avoid}
+  .page-head{margin-bottom:6px}
+}
 </style>
 </head>
 <body>
@@ -48,6 +64,7 @@ table.tc .no{color:#CBD5E1}
       <p>เคสที่ 1 ใบต้นทางแตกเป็นหลายเอกสารตามเงื่อนไข · คลิกโหนดในผังหลักเพื่อดูภาพรวม</p>
     </div>
     <div class="sp"></div>
+    <button type="button" class="btn-print" onclick="printCharts()">🖨️ พิมพ์ทุกผัง</button>
     <a class="back" href="module-flow-overview.html">← กลับ Module Flow Overview</a>
   </div>
 
@@ -317,6 +334,15 @@ flowchart TD
   function initFirst(){ renderPanel(document.querySelector('.panel.active')); }
   if(document.readyState==='complete') initFirst();
   else window.addEventListener('load', initFirst);
+  // พิมพ์: render ทุกผังให้ครบก่อน (lazy-render → panel ที่ยังไม่เปิดจะเป็นโค้ดดิบ) แล้วค่อยเปิด print
+  async function printCharts(){
+    var active=document.querySelector('.panel.active');
+    for(var p of document.querySelectorAll('.panel')){
+      var nodes=[...p.querySelectorAll('.mermaid:not([data-processed])')];
+      if(nodes.length){ p.classList.add('active'); await mermaid.run({nodes:nodes}); if(p!==active) p.classList.remove('active'); }
+    }
+    window.print();
+  }
 </script>
 <script src="swt-sidebar.js"></script>
 </body>

@@ -84,7 +84,23 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
 .ac td{padding:3px 8px;border:1px solid #E0F2FE}
 .ac .note{color:#92400E;background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;padding:5px 9px;margin-top:5px}
 .grid-mods{display:flex;flex-direction:column}
+.btn-print{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#166534;background:#DCFCE7;border:1px solid #86EFAC;border-radius:8px;padding:9px 14px;cursor:pointer;font-family:inherit;align-self:center}
+.btn-print:hover{background:#BBF7D0}
 @media(max-width:1100px){.main{margin-left:0}}
+@media print{
+  @page{size:A4 landscape;margin:8mm}
+  body{background:#fff;font-size:10px}
+  .main{margin-left:0 !important;padding:0 !important}
+  .swt-sb,.btn-print{display:none !important}
+  .page-head a[href="flow-detail-charts.html"]{display:none !important}
+  .mod,.legend,.srt-sec{break-inside:avoid}
+  .srt-tabs{display:none !important}
+  .srt-pane{display:block !important;overflow:visible !important;break-inside:avoid;margin-bottom:10px}
+  .srt-pane table{font-size:9px}
+  .srt-pane::before{content:attr(data-label);display:block;font-weight:700;font-size:11px;color:#1E3A5F;margin:6px 0 3px}
+  .node{break-inside:avoid}
+  .kpi{display:none !important}
+}
 </style>
 </head>
 <body>
@@ -96,6 +112,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       <p>ผังการไหลของเอกสารทุกหมวด · status flow + จุด BC Post + doc-chain · คลิกกล่องเพื่อเปิดหน้าจริง · upd 2026-07-29 (+ AP: PO-DP มัดจำจ่าย→FI-2 ตัด · FI-2 CN/มัดจำ หักยอด · SAAB-in-header 34 หน้า · PM-1 ประวัติราคา)</p>
     </div>
     <div class="sp"></div>
+    <button type="button" class="btn-print" onclick="window.print()">🖨️ พิมพ์</button>
     <a href="flow-detail-charts.html" style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:#fff;background:#1E3A5F;border-radius:8px;padding:9px 15px;text-decoration:none;align-self:center">🔀 Flowchart เคสแตกสาขา <span style="font-weight:500;opacity:.85">(waterfall · เคลม)</span></a>
     <div class="kpi">
       <div class="box"><div class="n">8</div><div class="l">หมวด</div></div>
@@ -650,7 +667,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
     </div>
 
     <!-- ══ SV ══ -->
-    <div class="srt-pane on" id="srt-sv">
+    <div class="srt-pane on" id="srt-sv" data-label="🔧 บริการ (SV)">
       <table>
         <thead><tr><th style="width:150px">ขั้นตอน</th><th>🧑‍💼 ขาย</th><th>🔧 ช่าง</th><th>🗂️ แอดมิน</th><th>→ ถัดไป</th><th>สถานะเปลี่ยนเป็น</th><th>Menu</th></tr></thead>
         <tbody>
@@ -687,7 +704,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
     </div>
 
     <!-- ══ SL ══ -->
-    <div class="srt-pane" id="srt-sl">
+    <div class="srt-pane" id="srt-sl" data-label="🧑‍💼 ขาย (SL)">
       <table>
         <thead><tr><th style="width:150px">ขั้นตอน</th><th>🧑‍💼 ขาย</th><th>🏭 คลัง</th><th>🛒 จัดซื้อ</th><th>💰 บัญชี/การเงิน</th><th>🔧 ช่าง</th><th>→ ถัดไป</th><th>สถานะ</th><th>Menu</th></tr></thead>
         <tbody>
@@ -716,7 +733,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
     </div>
 
     <!-- ══ PO ══ -->
-    <div class="srt-pane" id="srt-po">
+    <div class="srt-pane" id="srt-po" data-label="🛒 จัดซื้อ (PO)">
       <table>
         <thead><tr><th style="width:150px">ขั้นตอน</th><th>📋 ผู้ขอ</th><th>🛒 จัดซื้อ</th><th>🏭 คลัง</th><th>💰 บัญชี/การเงิน</th><th>🚚 vendor</th><th>→ ถัดไป</th><th>สถานะ</th><th>Menu</th></tr></thead>
         <tbody>
@@ -743,7 +760,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
     </div>
 
     <!-- ══ WH ══ -->
-    <div class="srt-pane" id="srt-wh">
+    <div class="srt-pane" id="srt-wh" data-label="🏭 คลัง (WH)">
       <table>
         <thead><tr><th style="width:150px">ขั้นตอน</th><th>🏭 คลัง</th><th>🧑‍💼 ผู้ขอ (ขาย/svc)</th><th>🛒 จัดซื้อ</th><th>🚚 vendor</th><th>✅ อนุมัติ</th><th>→ ถัดไป</th><th>สถานะ</th><th>Menu</th></tr></thead>
         <tbody>
@@ -768,7 +785,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
     </div>
 
     <!-- ══ FI ══ -->
-    <div class="srt-pane" id="srt-fi">
+    <div class="srt-pane" id="srt-fi" data-label="💰 การเงิน (FI)">
       <table>
         <thead><tr><th style="width:150px">ขั้นตอน</th><th>📗 บัญชี</th><th>💰 การเงิน</th><th>👤/🚚 คู่ค้า</th><th>✅ อนุมัติ/BC</th><th>→ ถัดไป</th><th>สถานะ</th><th>Menu</th></tr></thead>
         <tbody>
@@ -789,7 +806,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       </table>
       <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-29: บัญชี=ออก/รับ RV · การเงิน=จ่าย+ภาษี+กระทบยอด (ตำแหน่งจริง CF-1) · FI-1 รับ=ต้องอนุมัติ (เหมือนฝั่งจ่าย) · เพิ่ม FI-4 ใบสำคัญค่าใช้จ่าย (ไม่ผ่าน PO)</div>
     </div>
-    <div class="srt-pane" id="srt-delivery">
+    <div class="srt-pane" id="srt-delivery" data-label="🚚 จัดส่ง (DL)">
       <table>
         <thead><tr><th style="width:150px">ขั้นตอน</th><th>🗂️ แอดมินขาย</th><th>🚚 ทีมส่ง / 📦 3PL</th><th>🔧 ช่าง / 🏭 คลัง</th><th>👤 ลูกค้า</th><th>→ ถัดไป</th><th>สถานะ</th><th>Menu</th></tr></thead>
         <tbody>
