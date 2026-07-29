@@ -664,6 +664,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       <button class="srt-tab" onclick="srtTab(event,'srt-wh')">🏭 คลัง (WH)</button>
       <button class="srt-tab" onclick="srtTab(event,'srt-fi')">💰 การเงิน (FI)</button>
       <button class="srt-tab" onclick="srtTab(event,'srt-delivery')">🚚 จัดส่ง (DL)</button>
+      <button class="srt-tab" onclick="srtTab(event,'srt-clm')">♻️ เคลมสินค้า (CLM)</button>
     </div>
 
     <!-- ══ SV ══ -->
@@ -828,6 +829,28 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         </tbody>
       </table>
       <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-29: จัดส่ง = flow ข้ามโมดูล (ขาย SL → บริการ SV → เบิก WH) · ① ค่าเที่ยวทีมส่ง = CM แยก scheme จากช่าง · ② ส่งไม่สำเร็จ = ยกเลิกงานเลย · ③ แอดมินฝั่งขายมอบหมาย (CF-1) · ④ รองรับทั้งทีมส่งเอง + ขนส่งภายนอก 3PL (field ช่องทางส่ง+tracking · API carrier เฟสหลัง)</div>
+    </div>
+    <div class="srt-pane" id="srt-clm" data-label="♻️ เคลมสินค้า (CLM)">
+      <table>
+        <thead><tr><th style="width:150px">ขั้นตอน</th><th>🏢 แอดมินเคลม</th><th>🔵 vendor/แบรนด์</th><th>🏭 คลัง</th><th>🛒 จัดซื้อ/FI/✅</th><th>→ ถัดไป</th><th>สถานะ</th><th>Menu</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="8">① เคลมสินค้า (ของเราซื้อมาเสีย → คืน vendor) · ② เคลมงานบริการ อยู่ตาราง SV แล้ว</td></tr>
+          <tr class="grp"><td colspan="8">เปิดเคลม (entry)</td></tr>
+          <tr><td class="stp">1.1 ลูกค้าเอาของในประกันมา</td><td>เปลี่ยนเครื่องใหม่ (S2) · เครื่องเก่าเข้าเคลม · <b>ไม่ออก SL-CN</b></td><td></td><td>🏭 เบิกเครื่องใหม่ WH-2 (warranty)</td><td></td><td class="nx">2.1</td><td class="stt">รอส่งเรื่อง</td><td class="mn">clm·wh2</td></tr>
+          <tr><td class="stp">1.2 pre-sale/DOA (ไม่มีลูกค้า)</td><td>ของเราเองเสียก่อนขาย · อ้างบิลซื้อ/รับเข้าเราเอง</td><td></td><td></td><td></td><td class="nx">2.1</td><td class="stt">รอส่งเรื่อง</td><td class="mn">clm</td></tr>
+          <tr class="grp"><td colspan="8">ส่งคืน vendor</td></tr>
+          <tr><td class="stp">2.1 ส่งคืน vendor</td><td>ส่งคืน + tracking · <b>guard: reply ≤7 วัน → ทวงอัตโนมัติ</b></td><td>รับของคืน</td><td>🏭 bin 6 (ของคืนทั้งชิ้น/ซาก)</td><td></td><td class="nx">3.x</td><td class="stt">ส่งเรื่องแล้ว · รอ vendor</td><td class="mn">clm</td></tr>
+          <tr class="grp"><td colspan="8">vendor ตอบ S1-S4 (แตก 4 branch · ปลายทางต่างกัน)</td></tr>
+          <tr><td class="stp">3.S1 ส่วนลด CN (ส่วนมาก)</td><td>เข้าคิวรอหักหนี้</td><td>✅ ให้ CN</td><td></td><td>PO-CN → PO-6 ดึงตัด</td><td class="nx">4.1</td><td class="stt">รับ CN · รอหักหนี้</td><td class="mn">pocn·po6</td></tr>
+          <tr><td class="stp">3.S2 ส่งของใหม่ทดแทน</td><td>รอ→ยืม loaner WH-3</td><td>✅ ส่งใหม่</td><td>🏭 รับที่ WH-1</td><td></td><td class="nx">4.2</td><td class="stt">รอรับของใหม่</td><td class="mn">wh1·wh3</td></tr>
+          <tr><td class="stp">3.S3 ซ่อมส่งกลับ</td><td></td><td>✅ ซ่อมคืน</td><td>🏭 รับที่ WH-1</td><td></td><td class="nx">4.2</td><td class="stt">รอรับของซ่อม</td><td class="mn">wh1</td></tr>
+          <tr><td class="stp">3.S4 ปฏิเสธ → SWT รับภาระ</td><td>ออก VRA + เหตุผล</td><td>❌ ปฏิเสธ</td><td></td><td>✅ <b>อนุมัติตาม tier + เหตุผล</b> (เหมือน goodwill)</td><td class="nx fin">🏁</td><td class="stt">SWT รับภาระ</td><td class="mn">clm</td></tr>
+          <tr class="grp"><td colspan="8">หักกลบ + ปิด</td></tr>
+          <tr><td class="stp">4.1 หักกลบลูกหนี้↔เจ้าหนี้</td><td>(เฉพาะในประกันมี ARI ด้วย)</td><td></td><td></td><td>💰 Net C/V · Maker≠Checker (post=FI/BC)</td><td class="nx">4.2</td><td class="stt">รอหักกลบ</td><td class="mn">fi</td></tr>
+          <tr><td class="stp">4.2 ปิดเคลม / คืนลูกค้า</td><td>บันทึกคืน/ส่วนลด · ปิดเคลม</td><td></td><td></td><td></td><td class="nx fin">🏁</td><td class="stt fin">ปิดเคลม</td><td class="mn">clm</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-29: ① สาย vendor เป็นแกนหลัก (② อยู่ตาราง SV) · S1-S4 แตก 4 branch · S4 ปฏิเสธ→SWT รับภาระ = ต้องอนุมัติ tier+เหตุผล · หักกลบ Net C/V = step อ้างอิง (post จริง FI/BC §13.1a) · doc-chain CLM→PO-CN</div>
     </div>
   </div>
   <script>
