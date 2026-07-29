@@ -759,8 +759,8 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
           <tr><td class="stp">5.1–5.3 โอน→รับ</td><td>ต้นทาง Ship→In-Transit · ปลายทางกดรับ (ไม่ครบ→ยอดค้าง · ของหาย→ขั้นตรวจนับ)</td><td></td><td></td><td></td><td>ผจก.คลัง (ไม่ CF-2.6)</td><td class="nx">รับปลายทาง (=WH-1 TR-In)</td><td class="stt">In-Transit→รับแล้ว</td><td class="mn">wh3</td></tr>
           <tr class="grp"><td colspan="9">นับ+ปรับยอด (WH-4R→WH-4→WH-5) — แกนควบคุม</td></tr>
           <tr><td class="stp">6R เตรียมนับ+แช่ยอด</td><td>เลือก SKU · freeze snapshot</td><td></td><td></td><td></td><td></td><td class="nx">WH-4 นับจริง</td><td class="stt">แช่ยอดแล้ว</td><td class="mn">wh4r</td></tr>
-          <tr><td class="stp">6 นับจริง</td><td>นับ · Variance (ผู้นับ สิทธิ์ CF-1)</td><td></td><td></td><td></td><td></td><td class="nx">ต่าง→เปิด WH-5 ขออนุมัติ</td><td class="stt">นับเสร็จ</td><td class="mn">wh4</td></tr>
-          <tr><td class="stp">7.1–7.3 ปรับยอด</td><td>เหตุผล→+/− (แนบรูปถ้าตัดจำหน่าย)</td><td></td><td></td><td></td><td>AP-1 (CF-2.6 · Maker≠Checker)</td><td class="nx fin">🏁 Post→ledger+GL</td><td class="stt">Posted</td><td class="mn">wh5</td></tr>
+          <tr><td class="stp">6 นับจริง+ปรับ (WH-4)</td><td>นับ · ส่วนต่าง≠0 → <b>Recount บังคับทุกกรณี</b> → Submit</td><td></td><td></td><td></td><td>หัวหน้าอนุมัติ → BC post Stock Adj</td><td class="nx fin">🏁 ปรับจากรอบนับ</td><td class="stt">นับ→อนุมัติ→Posted</td><td class="mn">wh4</td></tr>
+          <tr><td class="stp">7 ปรับยอด ad-hoc (WH-5)</td><td>นอกรอบนับ · เหตุผล→+/− (แนบรูปถ้าตัดจำหน่าย)</td><td></td><td></td><td></td><td>AP-1 (CF-2.6 · Maker≠Checker)</td><td class="nx fin">🏁 Post→ledger+GL</td><td class="stt">Posted</td><td class="mn">wh5</td></tr>
         </tbody>
       </table>
       <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-29: ใบโอนไม่ต้อง CF-2.6 (maker-checker คลัง · รับไม่ครบ→ยอดค้าง · ของหาย→ขั้นตรวจนับ) · ของมีปัญหา→เปิด job SV · สิทธิ์ทั้งหมด=CF-1 · นับเจอส่วนต่าง→เปิด WH-5 ขออนุมัติ · ขอโอน≈ขอเบิก</div>
