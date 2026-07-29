@@ -353,10 +353,18 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
     </div>
     <!-- Replace detail (flow 06: ไม่มีของคืน / เปลี่ยนใหม่) -->
     <div id="svReplaceBox" style="display:none;margin-top:12px;padding:12px;background:#fff;border:1px solid #FECACA;border-radius:8px">
-      <div style="font-size:12px;font-weight:700;color:#991B1B;margin-bottom:8px">♻️ เปลี่ยนเครื่องใหม่ (Replace · S2)<span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>ไม่ออก SL-CN</b> (ลูกค้าไม่จ่าย — warranty) · เครื่องใหม่เบิกผ่าน <b>WH-2</b> · เครื่องเดิมไล่เคลม Vendor ผ่าน <b>CLM → PO-CN</b> (เงิน vendor) · ตรง decision "② เปลี่ยนตัวใหม่ = SV/WH → CLM/PO-CN"</span></span></div>
+      <div style="font-size:12px;font-weight:700;color:#991B1B;margin-bottom:8px">♻️ เปลี่ยนเครื่องใหม่ (Replace · เปลี่ยนเครื่อง)<span class="swt-tip info" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop"><b>ไม่ออก SL-CN</b> (ลูกค้าไม่จ่าย — warranty) · เครื่องใหม่เบิกผ่าน <b>WH-2</b> (ใบขอเบิก WH-2R อ้างเลข job) · เครื่องเดิมไล่เคลม Vendor ผ่าน <b>CLM → PO-CN</b> (เงิน vendor) · ตรง decision "② เปลี่ยนตัวใหม่ = SV/WH → CLM/PO-CN" · ⚠️ <b>"เปลี่ยนเครื่อง" นี้ = การแก้ไขให้ลูกค้า · คนละตัวกับ settlement S1-S4 (vendor ตอบเคลม)</b></span></span></div>
+      <div style="font-size:11.5px;font-weight:600;color:#374151;margin-bottom:5px">แหล่งเครื่องทดแทน</div>
+      <div class="warranty-group" style="grid-template-columns:1fr 1fr;margin-bottom:10px">
+        <label class="warranty-card selected"><input type="radio" name="repsrc" value="stock" checked onclick="svRepSrc('stock')"><div><div class="wc-title">📦 มีสต็อก warranty</div><div class="wc-desc">เบิกเครื่องใหม่ให้ลูกค้า<b>เลย</b> (WH-2) · เครื่องเดิม→คืน Vendor (S1-S4 ตามหลัง)</div></div></label>
+        <label class="warranty-card"><input type="radio" name="repsrc" value="wait" onclick="svRepSrc('wait')"><div><div class="wc-title">⏳ ไม่มีสต็อก → รอ Vendor</div><div class="wc-desc">รอ Vendor ส่งใหม่/ซ่อมกลับ · <b>ยืมเครื่องสำรอง (loaner)</b> ให้ลูกค้าระหว่างรอ</div></div></label>
+      </div>
       <div class="form-grid-2">
-        <div class="field"><label>เบิกเครื่องใหม่ให้ลูกค้า</label><div class="swt-search-combo"><input value="AC-DAI-FTKM24 · เครื่องใหม่ (warranty · ลูกค้าไม่จ่าย)"><button class="swt-search-btn" onclick="location.href='wh2-issue-mockup.html'" title="เบิก WH-2">📤</button></div></div>
+        <div class="field"><label>ใบขอเบิกเครื่องทดแทน <span style="font-weight:400;color:#9CA3AF">— อ้างเลข job</span></label><div class="swt-search-combo"><input value="WH-2R-2604-0089 · AC-DAI-FTKM24 (warranty) · Ref JOB SV-2604-0089"><button class="swt-search-btn" onclick="location.href='wh2-issue-mockup.html'" title="เบิก WH-2 (ใบขอเบิก WH-2R อ้างเลข job)">📤</button></div></div>
         <div class="field"><label>เครื่องเดิม (ของเสีย)</label><select><option>รับคืนจากลูกค้า → ส่ง Vendor (CLM)</option><option>ยังไม่รับคืน (ลูกค้าถือไว้)</option><option>ซาก/ไม่รับคืน</option></select></div>
+      </div>
+      <div id="svLoanerBox" style="display:none;margin-top:10px;padding:10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px">
+        <div class="field"><label>ยืมเครื่องสำรอง (loaner) <span style="font-weight:400;color:#9CA3AF">— ใบขอเบิกอ้างเลข job · คืนเมื่อของจริงมา</span></label><div class="swt-search-combo"><input value="WH-2R-2604-0089L · loaner · Ref JOB SV-2604-0089 · คืนเมื่อ Vendor ส่งของ"><button class="swt-search-btn" onclick="location.href='wh2-issue-mockup.html'" title="เบิก loaner (ใบขอเบิกอ้างเลข job)">📤</button></div></div>
       </div>
     </div>
     </div></details>
@@ -604,6 +612,7 @@ document.querySelectorAll('.warranty-card').forEach(function(c){
 });
 function svWarr(v){ var b=document.getElementById('svClaimBox'); if(b) b.style.display=(v==='in')?'block':'none'; }
 function svClaimRes(v){ var b=document.getElementById('svReplaceBox'); if(b) b.style.display=(v==='replace')?'block':'none'; }
+function svRepSrc(v){ var b=document.getElementById('svLoanerBox'); if(b) b.style.display=(v==='wait')?'block':'none'; }
 function svNum(v){ return parseFloat(String(v).replace(/[^0-9.]/g,''))||0; }
 function svMoney(n){ return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' ฿'; }
 function svSum(){ var t=svNum(document.getElementById('svParts').value)+svNum(document.getElementById('svLabor').value)+svNum(document.getElementById('svTravel').value); document.getElementById('svTotal').value=svMoney(t); }
