@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Flowchart รายละเอียด — เคสแตกสาขา (Waterfall · เคลม)</title>
+<title>Flowchart รายละเอียด — เคสแตกสาขา (Waterfall · เคลม · ขนส่ง)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -54,6 +54,7 @@ table.tc .no{color:#CBD5E1}
   <div class="tabs">
     <div class="tab active" data-p="wf">🟩 Waterfall — ขายเกินสต๊อก</div>
     <div class="tab" data-p="clm">🟪 เคลม/บริการ — S/N → A-E → settlement</div>
+    <div class="tab" data-p="dl">🚚 ขนส่ง — ช่องทาง · ติดตั้ง · COD · ยกเลิก</div>
   </div>
 
   <!-- ═══════════ WATERFALL ═══════════ -->
@@ -159,6 +160,65 @@ flowchart TD
       <div class="note warn"><b>⛔ Gate ปิดงาน:</b> ค้างคืนอะไหล่ในประกันแม้ line เดียว → SV-4/SV-7 ปิดงานไม่ได้ (หลักเดียวกับ "ของก่อนเงิน") · อะไหล่ในประกัน = ต้องคืนของเก่าให้ vendor · นอกประกัน (ซื้อ PO) = ไม่ต้องคืน</div>
       <div class="note"><b>① เคลมสินค้า (ไม่มีลูกค้า):</b> ของเสียตอนยังเป็นสต๊อกเรา (incoming QC / DOA แกะกล่อง / pre-sale) → อ้างบิลซื้อของเราเอง → CLM → PO-CN (S1-S4) ตรง ไม่ผ่านลูกค้า</div>
       <div class="legend-src">ที่มา: <a href=".agents/svc-claim-jobtype-spec.md">svc-claim-jobtype-spec.md</a> · <a href="sv1-service-intake-mockup.html">SV-1 Intake</a> · <a href="clm-vendor-claim-mockup.html">CLM</a> · <a href="sv4-service-close-mockup.html">SV-4</a></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ DELIVERY / ขนส่ง ═══════════ -->
+  <div class="panel" id="p-dl">
+    <div class="card">
+      <h2>🚚 ขนส่งสินค้า — ช่องทาง (ทีมเอง/3PL) · ติดตั้ง · COD · ยกเลิก</h2>
+      <div class="lead">งานจัดส่งเริ่มจาก <b>บิลขาย SL-4</b> (หรืองานซ่อมเสร็จ SV-4) → เข้าคิว <b>SV-6</b> · <b>แอดมินฝั่งขาย</b>มอบหมาย เลือก <b>ช่องทางส่ง</b> (🚚 ทีมเอง / 📦 ขนส่งภายนอก 3PL) · เบิกของ WH-2 → ส่ง → (ติดตั้ง+QA ถ้ามี) → ส่งมอบ <b>SV-7</b> (POD + ชำระ COD) → ปิดงาน · ทุกใบอ้างอิงกลับบิลขายเดิม (SC-5 doc-ref)</div>
+      <div class="chart-box">
+<pre class="mermaid">
+flowchart TD
+  A["บิลขาย SL-4 ยืนยัน / งานซ่อมเสร็จ SV-4"] --> B{"ประเภทงาน"}
+  B --> C1["เข้าคิวจัดส่ง SV-6"]
+  C1 --> M{"ช่องทางส่ง<br/>(แอดมินขายเลือก)"}
+  M -->|"🚚 ทีมเอง · TC-1/2/3/8"| T1["จัดรถ/route · นัดวัน"]:::doc
+  M -->|"📦 3PL · TC-4/5"| T2["เลือกเจ้าขนส่ง · แพ็ค · เลข tracking"]:::vend
+  T1 --> W["เบิก WH-2"]
+  T2 --> W
+  W --> INST{"มีติดตั้ง?"}
+  INST -->|"มี · ช่าง · TC-2"| I1["ช่างติดตั้งหน้างาน + QA"]
+  INST -->|"ไม่มี"| D["ส่งมอบ SV-7"]
+  I1 --> D
+  D --> POD{"POD ตามช่องทาง"}
+  POD -->|"🚚 ทีมเอง"| P1["ลูกค้าเซ็นในแอป"]
+  POD -->|"📦 3PL"| P2["สถานะ delivered / แนบสลิป"]
+  P1 --> COD{"เก็บเงินปลายทาง?"}
+  P2 --> COD
+  COD -->|"🚚 รับสด · TC-3"| CS["SC-3P รับชำระ"]:::post
+  COD -->|"📦 COD เข้ารอบ · TC-5"| CR["กระทบยอด FI-3"]:::post
+  COD -->|"ไม่มี COD"| CL["ปิดงานจัดส่ง"]:::done
+  CS --> CL
+  CR --> CL
+  C1 -.->|"ลูกค้าไม่รับ · TC-6"| X1["ยกเลิกงาน · คืนคลัง WH-1 · แจ้ง SL"]:::stop
+  D -.->|"ของเสีย/ส่งผิด · TC-7"| X2["คืนคลัง WH-1 / เปิดเคลม CLM"]:::stop
+  classDef doc fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F,font-weight:600;
+  classDef vend fill:#F3E8FF,stroke:#7C3AED,color:#5B21B6,font-weight:600;
+  classDef post fill:#FEF3C7,stroke:#F59E0B,color:#92400E,font-weight:600;
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
+  classDef stop fill:#FEE2E2,stroke:#DC2626,color:#991B1B;
+</pre>
+      </div>
+
+      <table class="tc">
+        <thead><tr><th>TC</th><th>ช่องทาง</th><th>ประเภท</th><th>COD</th><th>ผลส่ง</th><th>ขั้นตอน / ผลลัพธ์คาด</th></tr></thead>
+        <tbody>
+          <tr><td>TC-1</td><td>🚚 ทีมเอง</td><td>ส่งเฉยๆ</td><td class="no">–</td><td>สำเร็จ</td><td>เบิก WH-2 → ส่ง → ลูกค้าเซ็น POD → ปิดงาน</td></tr>
+          <tr><td>TC-2</td><td>🚚 ทีมเอง</td><td>ส่ง+ติดตั้ง</td><td class="no">–</td><td>สำเร็จ</td><td>เบิก → ส่ง → ช่างติดตั้ง+QA → POD → ปิดงาน</td></tr>
+          <tr><td>TC-3</td><td>🚚 ทีมเอง</td><td>ส่งเฉยๆ</td><td>มี</td><td>สำเร็จ</td><td>…POD + รับสด SC-3P → ปิดงาน</td></tr>
+          <tr><td>TC-4</td><td>📦 3PL</td><td>ส่งเฉยๆ</td><td class="no">–</td><td>สำเร็จ</td><td>เบิก+แพ็ค → carrier+tracking → <code>delivered</code> → ปิดงาน</td></tr>
+          <tr><td>TC-5</td><td>📦 3PL</td><td>ส่งเฉยๆ</td><td>มี</td><td>สำเร็จ</td><td>…COD เข้ารอบ → กระทบยอด FI-3 → ปิดงาน</td></tr>
+          <tr><td>TC-6</td><td colspan="3">ลูกค้าไม่รับ / ไม่อยู่</td><td>❌ ยกเลิก</td><td>ยกเลิกงานเลย (ไม่นัดใหม่) · ของคืนคลัง WH-1 · แจ้งขาย SL</td></tr>
+          <tr><td>TC-7</td><td colspan="3">ของเสียหาย / ส่งผิด</td><td>คืน/เคลม</td><td>คืนคลัง WH-1 / เปิดเคลม CLM</td></tr>
+          <tr><td>TC-8</td><td>🚚 ทีมเอง</td><td>ส่งงานซ่อมคืน</td><td>อาจมี</td><td>สำเร็จ</td><td>จาก SV-4 ซ่อมเสร็จ → ส่งคืน SV-7 → POD → ปิดงานซ่อม</td></tr>
+          <tr><td>TC-9</td><td>📦 3PL</td><td>ส่ง+ติดตั้ง</td><td class="no">–</td><td>edge</td><td>3PL ส่งอย่างเดียว → ช่างเราตามไปติดตั้งแยก (2 เที่ยว) หรือใช้ทีมเองทั้งงาน</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>ช่องทางส่ง = 1 field branch พฤติกรรม</b> (ไม่แตกหน้า): 🚚 ทีมเอง → POD เซ็นในแอป · COD รับสด SC-3P · ค่าเที่ยว = CM (แยกสูตรจากช่าง) · 📦 3PL (Kerry/Flash/J&T/ปณ.) → POD = <code>delivered</code>/สลิป · COD เข้าเป็นรอบ→FI-3 · ค่าส่งเป็นต้นทุน (ใบวางบิล 3PL → FI-2) · เฟสนี้มี field+tracking+สถานะ — <b>API carrier ต่อจริงเฟสหลัง</b></div>
+      <div class="note warn"><b>⛔ ส่งไม่สำเร็จ = ยกเลิกงานเลย</b> (เคาะ 07-29) ไม่มีการนัดส่งใหม่ · ของกลับคืนคลัง WH-1 แล้วแจ้งฝั่งขาย SL ให้จัดการต่อ (นัดใหม่ = เปิดงานจัดส่งใบใหม่)</div>
+      <div class="legend-src">ที่มา: <a href=".agents/topics/dl-status-transition-table.md">dl-status-transition-table.md (เคาะ 4 จุด 07-29)</a> · <a href="sv6-delivery-install-mockup.html">SV-6 คิวจัดส่ง&ติดตั้ง</a> · <a href="sv7-service-delivery-mockup.html">SV-7 ส่งมอบ</a> · <a href="wh2-issue-mockup.html">WH-2 เบิก</a></div>
     </div>
   </div>
 
