@@ -226,18 +226,31 @@ flowchart TD
 
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script>
-  mermaid.initialize({startOnLoad:true, securityLevel:'loose', theme:'base',
+  // startOnLoad:false — mermaid ไม่ render diagram ที่อยู่ใน panel display:none (getBBox=0 → "Syntax error")
+  // แทนด้วย: render เฉพาะ panel ที่กำลังโชว์ (visible) ตอนโหลด + ตอนคลิก tab
+  mermaid.initialize({startOnLoad:false, securityLevel:'loose', theme:'base',
     themeVariables:{fontFamily:"'Inter','Noto Sans Thai',sans-serif", fontSize:'13px',
       primaryColor:'#F8FAFC', primaryBorderColor:'#94A3B8', primaryTextColor:'#111827',
       lineColor:'#94A3B8', tertiaryColor:'#fff'}});
+  function renderPanel(panel){
+    if(!panel) return;
+    var nodes=[...panel.querySelectorAll('.mermaid:not([data-processed])')];
+    if(nodes.length) mermaid.run({nodes:nodes});
+  }
   document.querySelectorAll('.tab').forEach(function(t){
     t.addEventListener('click', function(){
       document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active')});
       document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active')});
       t.classList.add('active');
-      document.getElementById('p-'+t.dataset.p).classList.add('active');
+      var panel=document.getElementById('p-'+t.dataset.p);
+      panel.classList.add('active');
+      renderPanel(panel);           // panel โชว์แล้วค่อย render → getBBox ถูกต้อง
     });
   });
+  // โหลดครั้งแรก: render เฉพาะ panel ที่ active (โชว์อยู่) · เผื่อ load fire ไปแล้ว → เรียกทันที
+  function initFirst(){ renderPanel(document.querySelector('.panel.active')); }
+  if(document.readyState==='complete') initFirst();
+  else window.addEventListener('load', initFirst);
 </script>
 <script src="swt-sidebar.js"></script>
 </body>
