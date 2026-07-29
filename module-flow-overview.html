@@ -748,7 +748,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         <tbody>
           <tr class="grp"><td colspan="9">รับของ (WH-1 GR) — แกนของเข้า</td></tr>
           <tr><td class="stp">1.1 รอรับ</td><td>เปิดใบ · ประเภท Vendor/รับโอน/ฝาก</td><td></td><td></td><td>ส่งของ</td><td></td><td class="nx">1.2</td><td class="stt">รอรับ</td><td class="mn">wh1</td></tr>
-          <tr><td class="stp">1.2 ตรวจรับ</td><td>กรอกรับ · Bin · Serial · QC ❓</td><td></td><td></td><td></td><td></td><td class="nx">Serial ครบ→1.3</td><td class="stt">กำลังตรวจรับ</td><td class="mn">wh1</td></tr>
+          <tr><td class="stp">1.2 ตรวจรับ</td><td>กรอกรับ · Bin · Serial · QC เอง · ของมีปัญหา→เปิด job SV</td><td></td><td></td><td></td><td></td><td class="nx">Serial ครบ→1.3</td><td class="stt">กำลังตรวจรับ</td><td class="mn">wh1</td></tr>
           <tr><td class="stp">1.3 Post รับ</td><td>Post→ledger (กัน Post ซ้ำ)</td><td></td><td></td><td></td><td></td><td class="nx">ครบ→PO-6 · ทยอย→1.1</td><td class="stt">รับครบ 🏁ฝั่งคลัง</td><td class="mn">wh1→po6</td></tr>
           <tr><td class="stp">1.4 ปิดค้างรับ</td><td>แจ้ง (คลังปิดเองไม่ได้)</td><td></td><td>ปิดที่ PO + เหตุผล</td><td></td><td></td><td class="nx">ของค้าง=ยกเลิก</td><td class="stt">ปิดรับไม่ครบ</td><td class="mn">po4</td></tr>
           <tr class="grp"><td colspan="9">เบิก/จ่ายออก (WH-2R→WH-2) — ผู้ขอ ≠ ผู้เบิก</td></tr>
@@ -756,14 +756,14 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
           <tr><td class="stp">3.1–3.2 เบิก/Post</td><td>หยิบ · Serial · Post ตัดสต๊อก</td><td>(ขอ · ไม่เห็นปุ่ม Post)</td><td></td><td></td><td></td><td class="nx">SL-6 จัดส่ง/ติดตั้ง</td><td class="stt">เบิกแล้ว</td><td class="mn">wh2</td></tr>
           <tr class="grp"><td colspan="9">โอนสาขา (WH-3R→WH-3)</td></tr>
           <tr><td class="stp">4R ขอโอน</td><td>คลังปลายทางขอ</td><td></td><td></td><td></td><td></td><td class="nx">5.1</td><td class="stt">รอเจ้าของใบโอน</td><td class="mn">wh3r</td></tr>
-          <tr><td class="stp">5.1–5.3 โอน→รับ</td><td>ต้นทาง Ship→In-Transit · ปลายทางรับ</td><td></td><td></td><td></td><td>ผจก.คลัง ❓CF-2.6</td><td class="nx">รับปลายทาง (=WH-1 TR-In)</td><td class="stt">In-Transit→รับแล้ว</td><td class="mn">wh3</td></tr>
+          <tr><td class="stp">5.1–5.3 โอน→รับ</td><td>ต้นทาง Ship→In-Transit · ปลายทางกดรับ (ไม่ครบ→ยอดค้าง · ของหาย→ขั้นตรวจนับ)</td><td></td><td></td><td></td><td>ผจก.คลัง (ไม่ CF-2.6)</td><td class="nx">รับปลายทาง (=WH-1 TR-In)</td><td class="stt">In-Transit→รับแล้ว</td><td class="mn">wh3</td></tr>
           <tr class="grp"><td colspan="9">นับ+ปรับยอด (WH-4R→WH-4→WH-5) — แกนควบคุม</td></tr>
           <tr><td class="stp">6R เตรียมนับ+แช่ยอด</td><td>เลือก SKU · freeze snapshot</td><td></td><td></td><td></td><td></td><td class="nx">WH-4 นับจริง</td><td class="stt">แช่ยอดแล้ว</td><td class="mn">wh4r</td></tr>
-          <tr><td class="stp">6 นับจริง ❓</td><td>นับ · Variance</td><td></td><td></td><td></td><td></td><td class="nx">ต่าง→ปรับยอด</td><td class="stt">นับเสร็จ ❓</td><td class="mn">wh4</td></tr>
+          <tr><td class="stp">6 นับจริง</td><td>นับ · Variance (ผู้นับ สิทธิ์ CF-1)</td><td></td><td></td><td></td><td></td><td class="nx">ต่าง→เปิด WH-5 ขออนุมัติ</td><td class="stt">นับเสร็จ</td><td class="mn">wh4</td></tr>
           <tr><td class="stp">7.1–7.3 ปรับยอด</td><td>เหตุผล→+/− (แนบรูปถ้าตัดจำหน่าย)</td><td></td><td></td><td></td><td>AP-1 (CF-2.6 · Maker≠Checker)</td><td class="nx fin">🏁 Post→ledger+GL</td><td class="stt">Posted</td><td class="mn">wh5</td></tr>
         </tbody>
       </table>
-      <div style="font-size:10.5px;color:#94A3B8;margin-top:6px">❓ รอเคาะ: อนุมัติใบโอน (CF-2.6?) · QC ใครตัดสิน · สิทธิ์ปลดยอดกันสต็อก · WH-4 นับจริง (ยังไม่อ่าน mockup)</div>
+      <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-29: ใบโอนไม่ต้อง CF-2.6 (maker-checker คลัง · รับไม่ครบ→ยอดค้าง · ของหาย→ขั้นตรวจนับ) · ของมีปัญหา→เปิด job SV · สิทธิ์ทั้งหมด=CF-1 · นับเจอส่วนต่าง→เปิด WH-5 ขออนุมัติ · ขอโอน≈ขอเบิก</div>
     </div>
 
     <!-- ══ FI ══ -->
