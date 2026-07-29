@@ -698,7 +698,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
           <tr class="grp"><td colspan="7">6 · อะไหล่ · 7 · วางบิลบริษัท · 8 · เคลม · 9 · ค่าแรงช่าง (แกนหลังบ้าน · แอดมิน)</td></tr>
           <tr><td class="stp">6.1–6.5 อะไหล่</td><td></td><td></td><td>มัดจำ→สั่ง(ใน/นอกประกัน)→รับ→คืนบริษัท</td><td class="nx">6.4 รับอะไหล่→2.1 นัด/3.1 เบิก · 6.5 คืน→5.1 ปิด</td><td class="stt">รอสั่ง/รอรับอะไหล่</td><td class="mn">A2 · sv3</td></tr>
           <tr><td class="stp">7.1–7.3 วางบิล</td><td></td><td></td><td>สรุป job → วางบิล vendor → รับชำระ</td><td class="nx">7.3 รับชำระ→5.4 จบงาน</td><td class="stt"></td><td class="mn">A3</td></tr>
-          <tr><td class="stp">8.1–8.5 เคลมใหม่</td><td></td><td></td><td>ส่งเรื่อง→รอรถ(กรอกจาก 1.1)→ลดหนี้/รับใหม่→คืนลูกค้า</td><td class="nx">8.5 คืนลูกค้า 🏁</td><td class="stt">ส่งเรื่องบริษัทแล้ว</td><td class="mn">A4 · clm</td></tr>
+          <tr><td class="stp">8.1–8.5 เคลมใหม่</td><td></td><td></td><td>ส่งเรื่อง→รอรถ(กรอกจาก 1.1)→ลดหนี้/รับใหม่→คืนลูกค้า · <b>fast-replace (มีสต็อก)=ข้าม 8.3–8.5 (ลูกค้าได้ของแล้ว) · wait+loaner=เดินเต็ม</b></td><td class="nx">8.5 คืนลูกค้า 🏁</td><td class="stt">ส่งเรื่องบริษัทแล้ว</td><td class="mn">A4 · clm</td></tr>
           <tr><td class="stp">9.1–9.2 ค่าแรงช่าง</td><td></td><td></td><td>สรุปช่าง+เรท (ใน→incentive · นอก→เหมา) → วางบิลบัญชี</td><td class="nx fin">🏁 วางบิลบัญชี</td><td class="stt"></td><td class="mn">A5 · cm1</td></tr>
         </tbody>
       </table>
@@ -836,8 +836,9 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         <tbody>
           <tr class="grp"><td colspan="8">① เคลมสินค้า (ของเราซื้อมาเสีย → คืน vendor) · ② เคลมงานบริการ อยู่ตาราง SV แล้ว</td></tr>
           <tr class="grp"><td colspan="8">เปิดเคลม (entry)</td></tr>
-          <tr><td class="stp">1.1 ลูกค้าเอาของในประกันมา</td><td>เปลี่ยนเครื่องใหม่ (S2) · เครื่องเก่าเข้าเคลม · <b>ไม่ออก SL-CN</b></td><td></td><td>🏭 เบิกเครื่องใหม่ WH-2 (warranty)</td><td></td><td class="nx">2.1 ส่งคืน vendor</td><td class="stt">รอส่งเรื่อง</td><td class="mn">clm·wh2</td></tr>
-          <tr><td class="stp">1.2 pre-sale/DOA (ไม่มีลูกค้า)</td><td>ของเราเองเสียก่อนขาย · อ้างบิลซื้อ/รับเข้าเราเอง</td><td></td><td></td><td></td><td class="nx">2.1 ส่งคืน vendor</td><td class="stt">รอส่งเรื่อง</td><td class="mn">clm</td></tr>
+          <tr><td class="stp">1.1a มีสต็อก → เปลี่ยนเลย (fast)</td><td>เปลี่ยนเครื่องให้ลูกค้าทันที · เครื่องเก่าเข้าเคลม · <b>ไม่ออก SL-CN</b></td><td></td><td>🏭 ใบขอเบิก WH-2R (อ้างเลข job)</td><td></td><td class="nx">2.1 ส่งคืน vendor</td><td class="stt">รอส่งเรื่อง (ข้าม SV 8.3–8.5)</td><td class="mn">clm·wh2</td></tr>
+          <tr><td class="stp">1.1b ไม่มีสต็อก → รอ vendor (wait)</td><td>ยืมเครื่องสำรอง (loaner) ให้ลูกค้าระหว่างรอ</td><td></td><td>🏭 ใบขอเบิก loaner (อ้างเลข job) · รอ S2/S3</td><td></td><td class="nx">2.1 ส่งคืน vendor</td><td class="stt">รอส่งเรื่อง · ยืม loaner</td><td class="mn">clm·wh2</td></tr>
+          <tr><td class="stp">1.2 pre-sale/DOA (ไม่มีลูกค้า)</td><td>ของเราเองเสียก่อนขาย · อ้างบิลซื้อ/รับเข้าเราเอง · ไม่ส่งคืนลูกค้า</td><td></td><td></td><td></td><td class="nx">2.1 ส่งคืน vendor</td><td class="stt">รอส่งเรื่อง</td><td class="mn">clm</td></tr>
           <tr class="grp"><td colspan="8">ส่งคืน vendor</td></tr>
           <tr><td class="stp">2.1 ส่งคืน vendor</td><td>ส่งคืน + tracking · <b>guard: reply ≤7 วัน → ทวงอัตโนมัติ</b></td><td>รับของคืน</td><td>🏭 bin 6 (ของคืนทั้งชิ้น/ซาก)</td><td></td><td class="nx">3.x vendor ตอบ (S1-S4)</td><td class="stt">ส่งเรื่องแล้ว · รอ vendor</td><td class="mn">clm</td></tr>
           <tr class="grp"><td colspan="8">vendor ตอบ S1-S4 (แตก 4 branch · ปลายทางต่างกัน)</td></tr>
@@ -850,7 +851,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
           <tr><td class="stp">4.2 ปิดเคลม / คืนลูกค้า</td><td>บันทึกคืน/ส่วนลด · ปิดเคลม</td><td></td><td></td><td></td><td class="nx fin">🏁</td><td class="stt fin">ปิดเคลม</td><td class="mn">clm</td></tr>
         </tbody>
       </table>
-      <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-29: ① สาย vendor เป็นแกนหลัก (② อยู่ตาราง SV) · S1-S4 แตก 4 branch · S4 ปฏิเสธ→SWT รับภาระ = ต้องอนุมัติ tier+เหตุผล · หักกลบ Net C/V = step อ้างอิง (post จริง FI/BC §13.1a) · doc-chain CLM→PO-CN</div>
+      <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-29: ① สาย vendor เป็นแกนหลัก (② อยู่ตาราง SV) · S1-S4 แตก 4 branch · S4 ปฏิเสธ→SWT รับภาระ = ต้องอนุมัติ tier+เหตุผล · หักกลบ Net C/V = step อ้างอิง (post จริง FI/BC §13.1a) · doc-chain CLM→PO-CN · <b>เปลี่ยนเครื่อง 2 sub-case: 1.1a มีสต็อก→เบิกเลย (ใบขอเบิกอ้าง job) · 1.1b ไม่มี→รอ vendor+ยืม loaner</b></div>
     </div>
   </div>
   <script>
