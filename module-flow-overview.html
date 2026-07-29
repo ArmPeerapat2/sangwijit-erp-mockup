@@ -774,18 +774,19 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
           <tr class="grp"><td colspan="8">รับชำระลูกหนี้ AR (FI-1) — แกนรับ</td></tr>
           <tr><td class="stp">1.1 ร่าง RV</td><td>เลือกคู่สัญญา (ลูกค้า/พนักงาน) · วิธีรับ SC-3P</td><td></td><td>ลูกค้าจ่าย</td><td></td><td class="nx">1.2</td><td class="stt">ร่าง</td><td class="mn">fi1</td></tr>
           <tr><td class="stp">1.2–1.3 ประกบบิล</td><td>ดึงบิลค้าง (SL-4) · หักมัดจำ/WHT/fee · gate ครบ</td><td></td><td></td><td></td><td class="nx">1.4</td><td class="stt">รอประกบครบ</td><td class="mn">fi1</td></tr>
-          <tr><td class="stp">1.4 Post</td><td>Post</td><td></td><td></td><td>BC: Bank เข้า · ปิด AR</td><td class="nx fin">🏁</td><td class="stt fin">รับชำระแล้ว</td><td class="mn">fi1</td></tr>
+          <tr><td class="stp">1.4 อนุมัติ+Post</td><td>Post (Maker)</td><td></td><td></td><td>Maker≠Checker (เหมือนฝั่งจ่าย) · BC: Bank เข้า·ปิด AR</td><td class="nx fin">🏁</td><td class="stt fin">รับชำระแล้ว</td><td class="mn">fi1</td></tr>
           <tr class="grp"><td colspan="8">จ่ายเจ้าหนี้ AP (FI-2) — แกนจ่าย</td></tr>
           <tr><td class="stp">2.1 ดึงใบตั้งหนี้</td><td></td><td>เลือกเจ้าหนี้ · ดึง PO-6 (1 ใบ=1 เจ้าหนี้)</td><td>เจ้าหนี้วางบิล</td><td></td><td class="nx">2.2</td><td class="stt">ร่าง</td><td class="mn">fi2</td></tr>
           <tr><td class="stp">2.2–2.3 หัก+ระบุจ่าย</td><td></td><td>หัก มัดจำ/CN/WHT · SC-3P (โอน/สด/เช็ค+ทะเบียน)</td><td></td><td></td><td class="nx">2.4</td><td class="stt">รอจ่าย</td><td class="mn">fi2</td></tr>
           <tr><td class="stp">2.4–2.5 อนุมัติ+Post</td><td></td><td>เตรียมจ่าย</td><td></td><td>Maker≠Checker (AP-1/CF-2.6) · BC จ่ายออก</td><td class="nx fin">🏁 → WHT FI-12</td><td class="stt fin">จ่ายแล้ว</td><td class="mn">fi2</td></tr>
           <tr class="grp"><td colspan="8">กระทบยอด + ภาษี</td></tr>
           <tr><td class="stp">FI-3 กระทบยอดธนาคาร</td><td></td><td>นำเข้า statement · จับคู่</td><td></td><td>Post เมื่อผลต่าง=0 (BC)</td><td class="nx">🏁</td><td class="stt">กระทบยอดแล้ว</td><td class="mn">fi3</td></tr>
-          <tr><td class="stp">FI-12 WHT (ภ.ง.ด.3/53)</td><td>Release · พิมพ์ Cert · Export</td><td></td><td></td><td>auto จาก FI-2</td><td class="nx">🏁 ยื่น ~วันที่ 7</td><td class="stt">Released</td><td class="mn">fi12</td></tr>
-          <tr><td class="stp">FI-7 VAT (ภ.พ.30)</td><td>ดึง VAT · Release ขาย/ซื้อ · สรุป</td><td></td><td></td><td></td><td class="nx">🏁 ยื่นวันที่ 15</td><td class="stt">ภาษีขาย−ซื้อ</td><td class="mn">fi7</td></tr>
+          <tr><td class="stp">FI-12 WHT (ภ.ง.ด.3/53)</td><td></td><td>Release · พิมพ์ Cert · Export</td><td></td><td>auto จาก FI-2</td><td class="nx">🏁 ยื่น ~วันที่ 7</td><td class="stt">Released</td><td class="mn">fi12</td></tr>
+          <tr><td class="stp">FI-7 VAT (ภ.พ.30)</td><td></td><td>ดึง VAT · Release ขาย/ซื้อ · สรุป</td><td></td><td></td><td class="nx">🏁 ยื่นวันที่ 15</td><td class="stt">ภาษีขาย−ซื้อ</td><td class="mn">fi7</td></tr>
+          <tr><td class="stp">FI-4 ใบสำคัญค่าใช้จ่าย</td><td></td><td>บันทึก (ไม่ผ่าน PO · ค่าเช่า/น้ำไฟ/ที่ปรึกษา) · จ่าย</td><td>ผู้รับ</td><td>อนุมัติ CF-2.6 · WHT→FI-12</td><td class="nx fin">🏁</td><td class="stt">จ่ายแล้ว</td><td class="mn">fi4</td></tr>
         </tbody>
       </table>
-      <div style="font-size:10.5px;color:#94A3B8;margin-top:6px">❓ รอเคาะ: Maker แต่ละใบ (บัญชีออก vs การเงินจ่าย) · FI-1 ต้องอนุมัติไหม · actor FI-3/7/12</div>
+      <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-29: บัญชี=ออก/รับ RV · การเงิน=จ่าย+ภาษี+กระทบยอด (ตำแหน่งจริง CF-1) · FI-1 รับ=ต้องอนุมัติ (เหมือนฝั่งจ่าย) · เพิ่ม FI-4 ใบสำคัญค่าใช้จ่าย (ไม่ผ่าน PO)</div>
     </div>
   </div>
   <script>
