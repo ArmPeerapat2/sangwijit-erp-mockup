@@ -146,6 +146,14 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
   <button onclick="clmMode('return',this)" class="clm-mode" style="padding:6px 13px;border:1px solid #D1D5DB;border-radius:7px;background:#fff;color:#374151;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">① เคลมสินค้าใหม่ทั้งชิ้น (stage 8 · คืนสินค้า)</button>
 </div>
 
+<!-- ที่มาเคลม ① (pre-sale/DOA = ไม่มีลูกค้า) · เฉพาะโหมด ① -->
+<div class="clm8" style="display:none;align-items:center;gap:12px;margin-bottom:10px;font-size:12px;padding:7px 12px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px">
+  <span style="color:#6B7280;font-weight:700">ที่มาเคลม ①:</span>
+  <label style="display:inline-flex;align-items:center;gap:5px;cursor:pointer"><input type="radio" name="clmsrc" value="cust" checked onclick="clmSrc('cust')"> 👤 ลูกค้าในประกัน (เปลี่ยนเครื่อง → เครื่องเก่าคืน vendor)</label>
+  <label style="display:inline-flex;align-items:center;gap:5px;cursor:pointer"><input type="radio" name="clmsrc" value="presale" onclick="clmSrc('presale')"> 📦 pre-sale/DOA — <b>ไม่มีลูกค้า</b> (ของเราเสียก่อนขาย · อ้างบิลซื้อ/รับเข้าเราเอง)</label>
+  <span id="clmPresaleNote" style="display:none;color:#92400E;background:#FEF3C7;border:1px solid #FDE68A;border-radius:5px;padding:2px 8px;font-size:11px">ไม่ต้องมีลูกค้า/ไม่ส่งคืนลูกค้า · เข้า CLM→PO-CN ตรง (ไม่ผ่าน SV intake)</span>
+</div>
+
 <!-- Status pills (Vendor claim flow · .clm8 = เฉพาะโหมด ① stage 8) -->
 <div class="status-pills">
   <span class="status-pill done">1. ตั้งเคลม (CLM Draft)</span>
@@ -158,7 +166,7 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
   <span class="status-pill clm8" style="display:none">8.5 ส่งสินค้าคืนลูกค้า</span>
   <span class="status-pill" style="background:#FEE2E2;color:#991B1B;border-color:#FCA5A5">✕ แบรนด์ปฏิเสธ → SWT รับภาระ (write-off)</span>
 </div>
-<div style="font-size:11px;color:#991B1B;margin:2px 2px 0">✕ เส้นทางลบ (จาก 4): ปฏิเสธแล้วต้นทุนอะไหล่/ค่าแรงที่ออกไป = ตัดเป็นค่าใช้จ่าย SWT</div>
+<div style="font-size:11px;color:#991B1B;margin:2px 2px 0">✕ เส้นทางลบ (S4 · จาก 4): ปฏิเสธแล้วต้นทุนอะไหล่/ค่าแรงที่ออกไป = ตัดเป็นค่าใช้จ่าย SWT · <b>⚠️ ต้องอนุมัติตาม tier + ระบุเหตุผล ก่อน write-off</b> (เหมือน goodwill — เงินหายจริง)</div>
 <script>
 function clmMode(m, btn){
   document.querySelectorAll('.clm-mode').forEach(function(b){b.style.background='#fff';b.style.color='#374151';});
@@ -167,6 +175,7 @@ function clmMode(m, btn){
   document.querySelectorAll('.clm8').forEach(function(e){e.style.display = show?'':'none';});
   var rs=document.getElementById('clmReturnSec'); if(rs) rs.style.display = show?'':'none';
 }
+function clmSrc(v){ var n=document.getElementById('clmPresaleNote'); if(n) n.style.display=(v==='presale')?'block':'none'; }
 </script>
 
 <!-- Row 2: Customer (SL-4 compact pattern) + Doc extras -->
@@ -394,10 +403,11 @@ function clmMode(m, btn){
     <div class="field"><label>ผลเคลม (เมื่อ Vendor ตอบ)</label>
       <select>
         <option selected>⏳ รอตอบ</option>
-        <option>✓ อนุมัติเต็ม · เคลมเงิน</option>
-        <option>✓ อนุมัติเต็ม · ส่งของแทน</option>
+        <option>✓ S1 · อนุมัติเต็ม · เคลมเงิน (CN)</option>
+        <option>✓ S2 · อนุมัติเต็ม · ส่งของแทน</option>
+        <option>✓ S3 · อนุมัติเต็ม · ซ่อมส่งกลับ</option>
         <option>⚠️ อนุมัติบางส่วน (ระบุ %)</option>
-        <option>❌ ปฏิเสธ (ระบุเหตุผล)</option>
+        <option>❌ S4 · ปฏิเสธ (ระบุเหตุผล · ต้องอนุมัติก่อน write-off)</option>
       </select>
     </div>
     <div class="field"><label>วันที่ Vendor ตอบ</label><input type="text" placeholder="—" value=""></div>
