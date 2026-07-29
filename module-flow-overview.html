@@ -644,6 +644,8 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       <button class="srt-tab on" onclick="srtTab(event,'srt-sv')">🔧 บริการ (SV)</button>
       <button class="srt-tab" onclick="srtTab(event,'srt-sl')">🧑‍💼 ขาย (SL)</button>
       <button class="srt-tab" onclick="srtTab(event,'srt-po')">🛒 จัดซื้อ (PO)</button>
+      <button class="srt-tab" onclick="srtTab(event,'srt-wh')">🏭 คลัง (WH)</button>
+      <button class="srt-tab" onclick="srtTab(event,'srt-fi')">💰 การเงิน (FI)</button>
     </div>
 
     <!-- ══ SV ══ -->
@@ -737,6 +739,53 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
           <tr><td class="stp">Vendor Portal V0–V7</td><td></td><td>ด่านตรวจ/อนุมัติ</td><td></td><td></td><td>เสนอ PR/ราคา/โอน/โปรฯ/สินค้าใหม่ · อ่าน สต๊อก/ยอดขาย/ค้างเคลม</td><td class="nx">เข้าคิวอนุมัติเรา</td><td class="stt">SM-3 (P2)</td><td class="mn">—</td></tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- ══ WH ══ -->
+    <div class="srt-pane" id="srt-wh">
+      <table>
+        <thead><tr><th style="width:150px">ขั้นตอน</th><th>🏭 คลัง</th><th>🧑‍💼 ผู้ขอ (ขาย/svc)</th><th>🛒 จัดซื้อ</th><th>🚚 vendor</th><th>✅ อนุมัติ</th><th>→ ถัดไป</th><th>สถานะ</th><th>Menu</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="9">รับของ (WH-1 GR) — แกนของเข้า</td></tr>
+          <tr><td class="stp">1.1 รอรับ</td><td>เปิดใบ · ประเภท Vendor/รับโอน/ฝาก</td><td></td><td></td><td>ส่งของ</td><td></td><td class="nx">1.2</td><td class="stt">รอรับ</td><td class="mn">wh1</td></tr>
+          <tr><td class="stp">1.2 ตรวจรับ</td><td>กรอกรับ · Bin · Serial · QC ❓</td><td></td><td></td><td></td><td></td><td class="nx">Serial ครบ→1.3</td><td class="stt">กำลังตรวจรับ</td><td class="mn">wh1</td></tr>
+          <tr><td class="stp">1.3 Post รับ</td><td>Post→ledger (กัน Post ซ้ำ)</td><td></td><td></td><td></td><td></td><td class="nx">ครบ→PO-6 · ทยอย→1.1</td><td class="stt">รับครบ 🏁ฝั่งคลัง</td><td class="mn">wh1→po6</td></tr>
+          <tr><td class="stp">1.4 ปิดค้างรับ</td><td>แจ้ง (คลังปิดเองไม่ได้)</td><td></td><td>ปิดที่ PO + เหตุผล</td><td></td><td></td><td class="nx">ของค้าง=ยกเลิก</td><td class="stt">ปิดรับไม่ครบ</td><td class="mn">po4</td></tr>
+          <tr class="grp"><td colspan="9">เบิก/จ่ายออก (WH-2R→WH-2) — ผู้ขอ ≠ ผู้เบิก</td></tr>
+          <tr><td class="stp">2R ขอเบิก/กันสต็อก</td><td></td><td>auto จากใบขาย · ส่งคิว WH-Q2</td><td></td><td></td><td></td><td class="nx">3.1</td><td class="stt">กันสต๊อกแล้ว</td><td class="mn">wh2r</td></tr>
+          <tr><td class="stp">3.1–3.2 เบิก/Post</td><td>หยิบ · Serial · Post ตัดสต๊อก</td><td>(ขอ · ไม่เห็นปุ่ม Post)</td><td></td><td></td><td></td><td class="nx">SL-6 จัดส่ง/ติดตั้ง</td><td class="stt">เบิกแล้ว</td><td class="mn">wh2</td></tr>
+          <tr class="grp"><td colspan="9">โอนสาขา (WH-3R→WH-3)</td></tr>
+          <tr><td class="stp">4R ขอโอน</td><td>คลังปลายทางขอ</td><td></td><td></td><td></td><td></td><td class="nx">5.1</td><td class="stt">รอเจ้าของใบโอน</td><td class="mn">wh3r</td></tr>
+          <tr><td class="stp">5.1–5.3 โอน→รับ</td><td>ต้นทาง Ship→In-Transit · ปลายทางรับ</td><td></td><td></td><td></td><td>ผจก.คลัง ❓CF-2.6</td><td class="nx">รับปลายทาง (=WH-1 TR-In)</td><td class="stt">In-Transit→รับแล้ว</td><td class="mn">wh3</td></tr>
+          <tr class="grp"><td colspan="9">นับ+ปรับยอด (WH-4R→WH-4→WH-5) — แกนควบคุม</td></tr>
+          <tr><td class="stp">6R เตรียมนับ+แช่ยอด</td><td>เลือก SKU · freeze snapshot</td><td></td><td></td><td></td><td></td><td class="nx">WH-4 นับจริง</td><td class="stt">แช่ยอดแล้ว</td><td class="mn">wh4r</td></tr>
+          <tr><td class="stp">6 นับจริง ❓</td><td>นับ · Variance</td><td></td><td></td><td></td><td></td><td class="nx">ต่าง→ปรับยอด</td><td class="stt">นับเสร็จ ❓</td><td class="mn">wh4</td></tr>
+          <tr><td class="stp">7.1–7.3 ปรับยอด</td><td>เหตุผล→+/− (แนบรูปถ้าตัดจำหน่าย)</td><td></td><td></td><td></td><td>AP-1 (CF-2.6 · Maker≠Checker)</td><td class="nx fin">🏁 Post→ledger+GL</td><td class="stt">Posted</td><td class="mn">wh5</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:10.5px;color:#94A3B8;margin-top:6px">❓ รอเคาะ: อนุมัติใบโอน (CF-2.6?) · QC ใครตัดสิน · สิทธิ์ปลดยอดกันสต็อก · WH-4 นับจริง (ยังไม่อ่าน mockup)</div>
+    </div>
+
+    <!-- ══ FI ══ -->
+    <div class="srt-pane" id="srt-fi">
+      <table>
+        <thead><tr><th style="width:150px">ขั้นตอน</th><th>📗 บัญชี</th><th>💰 การเงิน</th><th>👤/🚚 คู่ค้า</th><th>✅ อนุมัติ/BC</th><th>→ ถัดไป</th><th>สถานะ</th><th>Menu</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="8">รับชำระลูกหนี้ AR (FI-1) — แกนรับ</td></tr>
+          <tr><td class="stp">1.1 ร่าง RV</td><td>เลือกคู่สัญญา (ลูกค้า/พนักงาน) · วิธีรับ SC-3P</td><td></td><td>ลูกค้าจ่าย</td><td></td><td class="nx">1.2</td><td class="stt">ร่าง</td><td class="mn">fi1</td></tr>
+          <tr><td class="stp">1.2–1.3 ประกบบิล</td><td>ดึงบิลค้าง (SL-4) · หักมัดจำ/WHT/fee · gate ครบ</td><td></td><td></td><td></td><td class="nx">1.4</td><td class="stt">รอประกบครบ</td><td class="mn">fi1</td></tr>
+          <tr><td class="stp">1.4 Post</td><td>Post</td><td></td><td></td><td>BC: Bank เข้า · ปิด AR</td><td class="nx fin">🏁</td><td class="stt fin">รับชำระแล้ว</td><td class="mn">fi1</td></tr>
+          <tr class="grp"><td colspan="8">จ่ายเจ้าหนี้ AP (FI-2) — แกนจ่าย</td></tr>
+          <tr><td class="stp">2.1 ดึงใบตั้งหนี้</td><td></td><td>เลือกเจ้าหนี้ · ดึง PO-6 (1 ใบ=1 เจ้าหนี้)</td><td>เจ้าหนี้วางบิล</td><td></td><td class="nx">2.2</td><td class="stt">ร่าง</td><td class="mn">fi2</td></tr>
+          <tr><td class="stp">2.2–2.3 หัก+ระบุจ่าย</td><td></td><td>หัก มัดจำ/CN/WHT · SC-3P (โอน/สด/เช็ค+ทะเบียน)</td><td></td><td></td><td class="nx">2.4</td><td class="stt">รอจ่าย</td><td class="mn">fi2</td></tr>
+          <tr><td class="stp">2.4–2.5 อนุมัติ+Post</td><td></td><td>เตรียมจ่าย</td><td></td><td>Maker≠Checker (AP-1/CF-2.6) · BC จ่ายออก</td><td class="nx fin">🏁 → WHT FI-12</td><td class="stt fin">จ่ายแล้ว</td><td class="mn">fi2</td></tr>
+          <tr class="grp"><td colspan="8">กระทบยอด + ภาษี</td></tr>
+          <tr><td class="stp">FI-3 กระทบยอดธนาคาร</td><td></td><td>นำเข้า statement · จับคู่</td><td></td><td>Post เมื่อผลต่าง=0 (BC)</td><td class="nx">🏁</td><td class="stt">กระทบยอดแล้ว</td><td class="mn">fi3</td></tr>
+          <tr><td class="stp">FI-12 WHT (ภ.ง.ด.3/53)</td><td>Release · พิมพ์ Cert · Export</td><td></td><td></td><td>auto จาก FI-2</td><td class="nx">🏁 ยื่น ~วันที่ 7</td><td class="stt">Released</td><td class="mn">fi12</td></tr>
+          <tr><td class="stp">FI-7 VAT (ภ.พ.30)</td><td>ดึง VAT · Release ขาย/ซื้อ · สรุป</td><td></td><td></td><td></td><td class="nx">🏁 ยื่นวันที่ 15</td><td class="stt">ภาษีขาย−ซื้อ</td><td class="mn">fi7</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:10.5px;color:#94A3B8;margin-top:6px">❓ รอเคาะ: Maker แต่ละใบ (บัญชีออก vs การเงินจ่าย) · FI-1 ต้องอนุมัติไหม · actor FI-3/7/12</div>
     </div>
   </div>
   <script>
