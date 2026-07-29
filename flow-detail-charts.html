@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Flowchart รายละเอียด — เคสแตกสาขา (Waterfall · เคลม · ขนส่ง)</title>
+<title>Flowchart รายละเอียด — เคสแตกสาขา (Waterfall · เคลม · ขนส่ง · บริการ)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -55,6 +55,7 @@ table.tc .no{color:#CBD5E1}
     <div class="tab active" data-p="wf">🟩 Waterfall — ขายเกินสต๊อก</div>
     <div class="tab" data-p="clm">🟪 เคลม/บริการ — S/N → A-E → settlement</div>
     <div class="tab" data-p="dl">🚚 ขนส่ง — ช่องทาง · ติดตั้ง · COD · ยกเลิก</div>
+    <div class="tab" data-p="sv">🔧 บริการ — job lifecycle + 4 แกนหลังบ้าน</div>
   </div>
 
   <!-- ═══════════ WATERFALL ═══════════ -->
@@ -219,6 +220,71 @@ flowchart TD
       <div class="note"><b>ช่องทางส่ง = 1 field branch พฤติกรรม</b> (ไม่แตกหน้า): 🚚 ทีมเอง → POD เซ็นในแอป · COD รับสด SC-3P · ค่าเที่ยว = CM (แยกสูตรจากช่าง) · 📦 3PL (Kerry/Flash/J&T/ปณ.) → POD = <code>delivered</code>/สลิป · COD เข้าเป็นรอบ→FI-3 · ค่าส่งเป็นต้นทุน (ใบวางบิล 3PL → FI-2) · เฟสนี้มี field+tracking+สถานะ — <b>API carrier ต่อจริงเฟสหลัง</b></div>
       <div class="note warn"><b>⛔ ส่งไม่สำเร็จ = ยกเลิกงานเลย</b> (เคาะ 07-29) ไม่มีการนัดส่งใหม่ · ของกลับคืนคลัง WH-1 แล้วแจ้งฝั่งขาย SL ให้จัดการต่อ (นัดใหม่ = เปิดงานจัดส่งใบใหม่)</div>
       <div class="legend-src">ที่มา: <a href=".agents/topics/dl-status-transition-table.md">dl-status-transition-table.md (เคาะ 4 จุด 07-29)</a> · <a href="sv6-delivery-install-mockup.html">SV-6 คิวจัดส่ง&ติดตั้ง</a> · <a href="sv7-service-delivery-mockup.html">SV-7 ส่งมอบ</a> · <a href="wh2-issue-mockup.html">WH-2 เบิก</a></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SERVICE / บริการ ═══════════ -->
+  <div class="panel" id="p-sv">
+    <div class="card">
+      <h2>🔧 งานบริการ — Job Lifecycle + 4 แกนหลังบ้านขนาน</h2>
+      <div class="lead">งานซ่อม 1 ใบวิ่งบน <b>แกนหลัก (job)</b>: รับงาน → นัด → ช่างทำ → ส่งงาน → ปิด → จบ · พร้อมแตกไป <b>4 แกนหลังบ้านขนาน</b> ตามเงื่อนไข: <b>อะไหล่ (6)</b> · <b>เคลม vendor (8)</b> · <b>วางบิล/รับชำระ (7)</b> · <b>ค่าแรงช่าง (9)</b> · จุดตัดสินหลัก = <b>ประเภทงาน</b> · <b>ใน/นอกประกัน</b> (แยกคนจ่าย) · <b>ต้องสั่งอะไหล่ไหม</b></div>
+      <div class="chart-box">
+<pre class="mermaid">
+flowchart TD
+  A["A1 รับงาน · แอดมิน<br/>ตรวจ S/N + เงื่อนไขประกัน"] --> TYPE{"ประเภทงาน"}
+  TYPE -->|"ซ่อม ใน/นอกประกัน · TC-1/2"| N["2 นัดหมาย · เลือกช่าง"]
+  TYPE -->|"ติดตั้ง · TC-3"| N
+  TYPE -->|"ล้าง / ตรวจเช็ค"| N
+  TYPE -->|"ซ่อมซ้ำ (รับประกันงาน) · TC-7"| N
+  TYPE -->|"เคลมคืนสินค้าใหม่ · TC-6"| N
+  N --> N2{"ได้วันนัด + ช่างกดรับ?"}
+  N2 -->|"ยังไม่ได้"| N
+  N2 -->|"ได้ · ช่างรับงาน"| T1["3 ช่างรับสินค้า + เริ่มงาน<br/>(Mobile)"]:::doc
+  T1 --> T2["4 ช่างส่งงาน · ภาพ + รายงาน"]:::doc
+  T2 --> R{"ผลหลังตรวจหน้างาน"}
+  R -->|"เสร็จ · TC-1/2"| CLOSE["5 ปิดงาน"]
+  R -->|"ต้องสั่งอะไหล่ · TC-4"| PART{"อะไหล่ ใน/นอกประกัน"}
+  R -->|"นัดครั้งถัดไป · TC-7"| N
+  R -->|"ยกเลิก · TC-5"| X["4.4 ยกเลิก (บังคับเหตุผล)"]:::stop
+  R -->|"ยืนยันเคลมสินค้าใหม่ · TC-6"| CLM["8 สายเคลม vendor"]:::vend
+  PART -->|"ในประกัน"| P2["6.2 เบิก/ยืมอะไหล่บริษัท"]
+  PART -->|"นอกประกัน · รับมัดจำก่อน"| P3["6.3 ซื้อจาก vendor"]
+  P2 --> P4["6.4 รับอะไหล่"]
+  P3 --> P4
+  P4 -.->|"↺ กลับช่างทำต่อ"| T1
+  CLOSE --> PAY{"คนจ่าย (ใน/นอกประกัน)"}
+  PAY -->|"ในประกัน · TC-1"| B1["5.1 ตั้งหนี้ในระบบ"]:::vend
+  PAY -->|"นอกประกัน · TC-2"| B2["5.2 เก็บเงินลูกค้า"]:::cust
+  B1 --> BILL["7 วางบิล vendor → 7.3 รับชำระ"]
+  B2 --> BILL
+  BILL --> DONE["5.4 ปิดงานสมบูรณ์ · ชำระครบ 🏁"]:::done
+  CLM --> C8["8.1→8.5 ส่งเรื่อง → รับลดหนี้/ของใหม่ → คืนลูกค้า 🏁<br/>(รายละเอียด: tab เคลม)"]:::vend
+  T2 -.->|"ทุกงานเสร็จ · ขนาน · TC-8"| WAGE["9 ค่าแรงช่าง<br/>ช่างใน = incentive · ช่างนอก = เหมา → วางบิลบัญชี 🏁"]:::post
+  classDef doc fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F,font-weight:600;
+  classDef cust fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F,font-weight:600;
+  classDef vend fill:#F3E8FF,stroke:#7C3AED,color:#5B21B6,font-weight:600;
+  classDef post fill:#FEF3C7,stroke:#F59E0B,color:#92400E,font-weight:600;
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
+  classDef stop fill:#FEE2E2,stroke:#DC2626,color:#991B1B;
+</pre>
+      </div>
+
+      <table class="tc">
+        <thead><tr><th>TC</th><th>ประเภทงาน</th><th>ประกัน</th><th>อะไหล่</th><th>ผล</th><th>ขั้นตอน / ผลลัพธ์คาด</th></tr></thead>
+        <tbody>
+          <tr><td>TC-1</td><td>ซ่อม</td><td>ในประกัน</td><td class="no">–</td><td>เสร็จ</td><td>รับงาน→นัด→ช่างทำ→ส่งงาน→5.1 ตั้งหนี้→7 วางบิล vendor→5.4 จบ</td></tr>
+          <tr><td>TC-2</td><td>ซ่อม</td><td>นอกประกัน</td><td class="no">–</td><td>เสร็จ</td><td>…→5.2 เก็บเงินลูกค้า→7.3 รับชำระ→5.4 จบ</td></tr>
+          <tr><td>TC-3</td><td>ติดตั้ง</td><td class="no">–</td><td class="no">–</td><td>เสร็จ</td><td>รับงาน(ติดตั้ง)→นัด→ช่างติดตั้ง→ส่งงาน→ปิด</td></tr>
+          <tr><td>TC-4</td><td>ซ่อม</td><td>ใน/นอก</td><td>ต้องสั่ง</td><td>รออะไหล่</td><td>ส่งงาน→6 สั่ง (ใน=เบิก/ยืม · นอก=ซื้อ vendor+มัดจำ)→รับอะไหล่ ↺ ช่างทำต่อ→ปิด</td></tr>
+          <tr><td>TC-5</td><td colspan="3">งานใดก็ได้ → ยกเลิก</td><td>❌ ยกเลิก</td><td>4.4 ยกเลิก · บังคับใส่เหตุผล 🏁</td></tr>
+          <tr><td>TC-6</td><td>เคลมคืนสินค้า</td><td>ในประกัน</td><td>เปลี่ยนเครื่อง</td><td>เคลม vendor</td><td>4.5 ยืนยันเคลม→8 ส่งเรื่อง vendor→รับลดหนี้/ของใหม่→คืนลูกค้า 🏁</td></tr>
+          <tr><td>TC-7</td><td>ซ่อมซ้ำ</td><td>รับประกันงาน</td><td class="no">–</td><td>นัดใหม่</td><td>4.3 นัดครั้งถัดไป → กลับ 2.1 (ไม่คิดเงินซ้ำ)</td></tr>
+          <tr><td>TC-8</td><td colspan="3">ขนาน · ทุกงานที่ช่างส่งเสร็จ</td><td>ค่าแรง</td><td>9 สรุป job → ช่างใน=incentive/ช่างนอก=เหมา → วางบิลบัญชี 🏁</td></tr>
+        </tbody>
+      </table>
+      <div class="note warn"><b>⛔ Gate ในประกัน:</b> งานในประกันต้อง <b>ส่งคืนอะไหล่เก่า</b> (ข้อ 4.1) — ค้างคืนแม้ชิ้นเดียว → ปิดงานไม่ได้ (หลักเดียวกับ "ของก่อนเงิน" ใน tab เคลม)</div>
+      <div class="note"><b>4 แกนหลังบ้านขนาน</b> (ไม่ใช่เส้นเดียว): <b>อะไหล่ 6</b> (4.2→6.x ↺ กลับ 3.1) · <b>เคลม vendor 8</b> (4.5→8.1-8.5) · <b>วางบิล/AR 7</b> (5.1/5.2→7.x→5.4 จบ) · <b>ค่าแรงช่าง 9</b> (4.1→9.x จบ) · <b>คนจ่ายแยก:</b> ในประกัน→บริษัท/vendor · นอกประกัน→ลูกค้า</div>
+      <div class="legend-src">ที่มา: <a href=".agents/topics/sv-status-transition-table.md">sv-status-transition-table.md (เคาะ 5 จุด 07-29)</a> · <a href="sv1-service-intake-mockup.html">SV-1 รับงาน</a> · <a href="sv2-service-assignment-mockup.html">SV-2 มอบหมาย</a> · <a href="sv5-job-card-mockup.html">SV-5 Job Card</a> · <a href="sv3-spare-part-issue-mockup.html">SV-3 เบิกอะไหล่</a> · <a href="sv4-service-close-mockup.html">SV-4 ปิดงาน</a></div>
     </div>
   </div>
 
