@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Flowchart รายละเอียด — เคสแตกสาขา (Waterfall · เคลม · ขนส่ง · บริการ)</title>
+<title>Flowchart รายละเอียด — เคสแตกสาขา (Waterfall · เคลม · ขนส่ง · บริการ · ส่งเสริมการขาย)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -73,6 +73,7 @@ table.tc .no{color:#CBD5E1}
     <div class="tab" data-p="clm">🟪 เคลม/บริการ — S/N → A-E → settlement</div>
     <div class="tab" data-p="dl">🚚 ขนส่ง — ช่องทาง · ติดตั้ง · COD · ยกเลิก</div>
     <div class="tab" data-p="sv">🔧 บริการ — job lifecycle + 4 แกนหลังบ้าน</div>
+    <div class="tab" data-p="pm">🎁 ส่งเสริมการขาย — type · stack · GP guard</div>
   </div>
 
   <!-- ═══════════ WATERFALL ═══════════ -->
@@ -303,6 +304,62 @@ flowchart TD
       <div class="note warn"><b>⛔ Gate ในประกัน:</b> งานในประกันต้อง <b>ส่งคืนอะไหล่เก่า</b> (ข้อ 4.1) — ค้างคืนแม้ชิ้นเดียว → ปิดงานไม่ได้ (หลักเดียวกับ "ของก่อนเงิน" ใน tab เคลม)</div>
       <div class="note"><b>4 แกนหลังบ้านขนาน</b> (ไม่ใช่เส้นเดียว): <b>อะไหล่ 6</b> (4.2→6.x ↺ กลับ 3.1) · <b>เคลม vendor 8</b> (4.5→8.1-8.5) · <b>วางบิล/AR 7</b> (5.1/5.2→7.x→5.4 จบ) · <b>ค่าแรงช่าง 9</b> (4.1→9.x จบ) · <b>คนจ่ายแยก:</b> ในประกัน→บริษัท/vendor · นอกประกัน→ลูกค้า</div>
       <div class="legend-src">ที่มา: <a href=".agents/topics/sv-status-transition-table.md">sv-status-transition-table.md (เคาะ 5 จุด 07-29)</a> · <a href="sv1-service-intake-mockup.html">SV-1 รับงาน</a> · <a href="sv2-service-assignment-mockup.html">SV-2 มอบหมาย</a> · <a href="sv5-job-card-mockup.html">SV-5 Job Card</a> · <a href="sv3-spare-part-issue-mockup.html">SV-3 เบิกอะไหล่</a> · <a href="sv4-service-close-mockup.html">SV-4 ปิดงาน</a></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PROMOTION / ส่งเสริมการขาย ═══════════ -->
+  <div class="panel" id="p-pm">
+    <div class="card">
+      <h2>🎁 ส่งเสริมการขาย (ฝั่งขาย) — Type · Stack · GP Guard</h2>
+      <div class="lead">สร้างโปร <b>PM-2</b> (เลือก type + scope + priority) → อนุมัติ → Live · เวลาขาย <b>SC9</b> (เครื่องคิดราคา) โชว์โปร+ราคา<b>ตอนเลือกสินค้า</b> ตั้งแต่ใบเสนอราคา · ซ้อนโปรได้ <b>≤2 ชั้น</b> (ชั้น 3 ต้องอนุมัติ) · <b>GP guard</b> กันขาดทุน · ของแถมตัดสต็อกจริง (gate เช็คของ) · <b>VAT บวกท้ายสุดเสมอ</b> (Golden Rule)</div>
+      <div class="chart-box">
+<pre class="mermaid">
+flowchart TD
+  A["สร้างโปร PM-2<br/>type + scope + priority · อนุมัติ (conflict check) → Live"] --> TYPE{"ประเภทโปร"}
+  TYPE -->|"%ลด · TC-1"| D1["ลด % (มี cap)"]
+  TYPE -->|"ลดคงที่ · TC-2"| D2["ลดจำนวนเงิน (min qty)"]
+  TYPE -->|"ของแถม · TC-3/6"| G1["Free Gift"]:::stock
+  TYPE -->|"bundle · TC-4"| B1["ราคาชุด (ถูกกว่ารวมเดี่ยว)"]
+  TYPE -->|"Buy X Get Y · TC-5"| X1["ซื้อ X แถม/ลด Y"]:::stock
+  G1 --> GATE{"ของแถมพอ?"}
+  X1 --> GATE
+  GATE -->|"ไม่พอ · TC-6"| STOP["❌ ตัดสต็อก WH-2 ไม่ได้ → apply/activate ไม่ได้"]:::stop
+  GATE -->|"พอ · ตัด WH-2"| APP
+  D1 --> APP
+  D2 --> APP
+  B1 --> APP["Live → เลือกสินค้าตอนขาย · SC9 โชว์โปร+ราคาทันที (ตั้งแต่ QT)"]
+  APP --> STK{"ซ้อนโปร (stack)?"}
+  STK -->|"1–2 ชั้น"| GP{"GP guard"}
+  STK -->|"ชั้น 3+ · TC-7"| APV["Sales Mgr อนุมัติก่อน"]:::appr
+  APV --> GP
+  GP -->|"GP ผ่าน 10% ขึ้นไป"| LOCK["ล็อกตอน post (SO/บิล)<br/>หักส่งเสริมการขายตอนวางบิล SL-4"]:::done
+  GP -->|"GP ต่ำกว่า 10% · TC-8"| WARN["🟡 เตือน (ผ่านได้)"]
+  GP -->|"GP ติดลบ · TC-9"| BLOCK["🔴 GM block"]:::stop
+  WARN --> LOCK
+  classDef stock fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F,font-weight:600;
+  classDef appr fill:#F3E8FF,stroke:#7C3AED,color:#5B21B6,font-weight:600;
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
+  classDef stop fill:#FEE2E2,stroke:#DC2626,color:#991B1B;
+</pre>
+      </div>
+
+      <table class="tc">
+        <thead><tr><th>TC</th><th>ประเภท/เคส</th><th>เงื่อนไข</th><th>ผลลัพธ์คาด</th></tr></thead>
+        <tbody>
+          <tr><td>TC-1</td><td>%ลด</td><td>GP ok</td><td>ลด % (ไม่เกิน cap) → ล็อกตอน post</td></tr>
+          <tr><td>TC-2</td><td>ลดคงที่</td><td>ถึง min qty</td><td>ลดจำนวนเงิน → ล็อก</td></tr>
+          <tr><td>TC-3</td><td>ของแถม (Free Gift)</td><td>ของพอ</td><td>ตัดสต็อกของแถม WH-2 (นับต้นทุน) → ล็อก</td></tr>
+          <tr><td>TC-4</td><td>bundle</td><td>ราคาชุด < รวมเดี่ยว</td><td>ใช้ราคาชุด → ล็อก</td></tr>
+          <tr><td>TC-5</td><td>Buy X Get Y</td><td>สต็อก 2 ตัวพอ</td><td>เช็คทั้ง buy+get → ล็อก</td></tr>
+          <tr><td>TC-6</td><td colspan="2">ของแถม/get-item ไม่พอ</td><td>❌ activate/apply ไม่ได้ (gate เช็คของ)</td></tr>
+          <tr><td>TC-7</td><td colspan="2">ซ้อนโปรชั้นที่ 3+</td><td>Sales Mgr อนุมัติก่อน (stack ปกติ ≤2)</td></tr>
+          <tr><td>TC-8</td><td colspan="2">หลัง stack GP < 10%</td><td>🟡 เตือน — ผ่านได้</td></tr>
+          <tr><td>TC-9</td><td colspan="2">หลัง stack GP < 0%</td><td>🔴 GM block — ขายขาดทุน</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>โปรมากับการเลือกสินค้า</b> (ไม่มีปุ่มใส่โปรแยก): เลือกสินค้า → SC9 โชว์ติดโปรไหน + ราคาหลังโปรทันที ตั้งแต่ QT · ล็อกตอน post · <b>stack ≤2 ชั้น</b> (priority สูงก่อน · ชั้น 3 อนุมัติ) · <b>VAT บวกท้ายสุด</b> (ส่วนลดทุกชั้นคิดจากราคาก่อน VAT)</div>
+      <div class="note warn"><b>rebate ฝั่งซื้อ = คนละฝั่ง:</b> PO-2 Trade Agreement → PO-7 Sale-In Accrual → ได้ใบลดหนี้ vendor → <b>หักตอนตั้งหนี้ PO-6 / รับวางบิล</b> (PO-CN) เพื่อทำจ่าย · ไม่อยู่ในผังนี้ (ดูตาราง PO/FI)</div>
+      <div class="legend-src">ที่มา: <a href=".agents/topics/pm-status-transition-table.md">pm-status-transition-table.md (เคาะ 4 จุด 07-30)</a> · <a href="pm2-promotion-mockup.html">PM-2 สร้างโปร</a> · <a href="pm4-promo-quota-mockup.html">PM-4 โควตา</a> · <a href="pm5-price-simulator-mockup.html">PM-5 จำลอง</a> · <a href="pmq-promo-dashboard-mockup.html">PM-Q Dashboard</a></div>
     </div>
   </div>
 

@@ -665,6 +665,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       <button class="srt-tab" onclick="srtTab(event,'srt-fi')">💰 การเงิน (FI)</button>
       <button class="srt-tab" onclick="srtTab(event,'srt-delivery')">🚚 จัดส่ง (DL)</button>
       <button class="srt-tab" onclick="srtTab(event,'srt-clm')">♻️ เคลมสินค้า (CLM)</button>
+      <button class="srt-tab" onclick="srtTab(event,'srt-pm')">🎁 ส่งเสริมการขาย (PM)</button>
     </div>
 
     <!-- ══ SV ══ -->
@@ -852,6 +853,28 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         </tbody>
       </table>
       <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-29: ① สาย vendor เป็นแกนหลัก (② อยู่ตาราง SV) · S1-S4 แตก 4 branch · S4 ปฏิเสธ→SWT รับภาระ = ต้องอนุมัติ tier+เหตุผล · หักกลบ Net C/V = step อ้างอิง (post จริง FI/BC §13.1a) · doc-chain CLM→PO-CN · <b>เปลี่ยนเครื่อง 2 sub-case: 1.1a มีสต็อก→เบิกเลย (ใบขอเบิกอ้าง job) · 1.1b ไม่มี→รอ vendor+ยืม loaner</b></div>
+    </div>
+    <div class="srt-pane" id="srt-pm" data-label="🎁 ส่งเสริมการขาย (PM)">
+      <table>
+        <thead><tr><th style="width:150px">ขั้นตอน</th><th>🎁 Promo Mgr</th><th>🧑‍💼 Sales</th><th>✅ อนุมัติ</th><th>🏭 คลัง</th><th>→ ถัดไป</th><th>สถานะ</th><th>Menu</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="8">ฝั่งขาย (PM) · rebate ฝั่งซื้อ = คนละฝั่ง (PO-2/PO-7→PO-CN) · SC9 = เครื่องคิดราคา+โปร (VAT ท้ายสุด)</td></tr>
+          <tr class="grp"><td colspan="8">สร้าง/คุมโปร (lifecycle · PM-2)</td></tr>
+          <tr><td class="stp">1.1 ร่างโปร</td><td></td><td>สร้างร่าง · type (%ลด/ลดคงที่/ของแถม/bundle/BuyXGetY) · scope · period · priority</td><td></td><td></td><td class="nx">1.2 อนุมัติ</td><td class="stt">Draft</td><td class="mn">pm2</td></tr>
+          <tr><td class="stp">1.2 อนุมัติ</td><td>อนุมัติ · <b>conflict check</b> (ห้ามซ้ำ item+ลูกค้า+ช่วง)</td><td></td><td></td><td></td><td class="nx">1.3 Live</td><td class="stt">Confirmed</td><td class="mn">pm2</td></tr>
+          <tr><td class="stp">1.3 Live</td><td>activate + โชว์ impact · <b>Live แก้ไม่ได้ → deactivate+สร้างใหม่</b></td><td></td><td></td><td></td><td class="nx">ใช้ขาย 2.1 · 1.4/1.5</td><td class="stt">Live</td><td class="mn">pm2</td></tr>
+          <tr><td class="stp">1.4 หมดอายุ</td><td>auto พ้น Valid To (batch)</td><td></td><td></td><td></td><td class="nx fin">🏁</td><td class="stt fin">Expired</td><td class="mn">pm2</td></tr>
+          <tr><td class="stp">1.5 ยกเลิก/พัก</td><td>ยกเลิก+เหตุ / พัก (reactivate ได้ถ้ายังใน period)</td><td></td><td></td><td></td><td class="nx">🏁 / กลับ Live</td><td class="stt">ยกเลิก/พัก</td><td class="mn">pm2</td></tr>
+          <tr class="grp"><td colspan="8">ใช้โปรตอนขาย (SC9 · ที่ SL-1/SL-2/SL-4)</td></tr>
+          <tr><td class="stp">2.1 เลือกสินค้า→โชว์โปร</td><td></td><td>เลือกสินค้า (ตั้งแต่ QT) → <b>SC9 โชว์ติดโปรไหน + ราคาหลังโปรทันที</b> (โปรมากับการเลือก ไม่มีปุ่มแยก)</td><td></td><td></td><td class="nx">2.2 stack</td><td class="stt">แสดงราคาโปร</td><td class="mn">sc9</td></tr>
+          <tr><td class="stp">2.2 stack ซ้อนโปร</td><td></td><td><b>stack ≤2 ชั้น</b> (priority สูงก่อน→คิดต่อจากชั้นแรก)</td><td>ชั้น 3+ → Sales Mgr อนุมัติ</td><td></td><td class="nx">2.3 GP guard</td><td class="stt">stack แล้ว</td><td class="mn">sc9</td></tr>
+          <tr><td class="stp">2.3 GP guard</td><td></td><td>GP<10% → 🟡 เตือน</td><td>GP<0% → 🔴 GM block</td><td></td><td class="nx">2.4 ล็อก</td><td class="stt">ผ่าน guard</td><td class="mn">sc9</td></tr>
+          <tr><td class="stp">2.4 ล็อกราคา/โปร</td><td></td><td>ล็อกตอน <b>post (SO/บิล)</b> · snapshot โปร · <b>หักส่งเสริมการขายตอนวางบิล (SL 4.2)</b></td><td></td><td></td><td class="nx fin">🏁</td><td class="stt fin">ล็อกแล้ว</td><td class="mn">sl4</td></tr>
+          <tr class="grp"><td colspan="8">ของแถม / bundle / Buy X Get Y</td></tr>
+          <tr><td class="stp">3.1 ตัดสต็อกของแถม</td><td></td><td></td><td></td><td>เบิก WH-2 <b>ตัดสต็อกจริง</b> (นับต้นทุน) · <b>gate เช็คของพอก่อน apply/activate</b> · BuyXGetY เช็ค 2 ตัว</td><td class="nx">→ 2.4 ล็อก</td><td class="stt">ตัดของแถม</td><td class="mn">wh2</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-30: ① ฝั่งขายเท่านั้น (rebate ซื้อ→PO/FI) · ② rebate ซื้อ = ได้ใบลดหนี้ vendor→หักตอนตั้งหนี้ PO-6/รับวางบิล · ③ โปรมากับการเลือกสินค้า (SC9 · ล็อกตอน post) · ④ ของแถมตัดสต็อกจริง+gate · conflict stack≤2/ชั้น3 อนุมัติ · GP<0% GM block (locked spec)</div>
     </div>
   </div>
   <script>
