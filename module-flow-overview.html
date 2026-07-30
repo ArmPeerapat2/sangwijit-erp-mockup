@@ -666,6 +666,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       <button class="srt-tab" onclick="srtTab(event,'srt-delivery')">🚚 จัดส่ง (DL)</button>
       <button class="srt-tab" onclick="srtTab(event,'srt-clm')">♻️ เคลมสินค้า (CLM)</button>
       <button class="srt-tab" onclick="srtTab(event,'srt-pm')">🎁 ส่งเสริมการขาย (PM)</button>
+      <button class="srt-tab" onclick="srtTab(event,'srt-price')">💵 ราคา (PM-1)</button>
     </div>
 
     <!-- ══ SV ══ -->
@@ -875,6 +876,29 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         </tbody>
       </table>
       <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-30: ① ฝั่งขายเท่านั้น (rebate ซื้อ→PO/FI) · ② rebate ซื้อ = ได้ใบลดหนี้ vendor→หักตอนตั้งหนี้ PO-6/รับวางบิล · ③ โปรมากับการเลือกสินค้า (SC9 · ล็อกตอน post) · ④ ของแถมตัดสต็อกจริง+gate · <b>⑤ อนุมัติโปร=ตอนสร้าง (1.2) เปิดบิลไม่ขออนุมัติซ้ำ · เข้าเงื่อนไข (สาขา/กลุ่มลูกค้า/จำนวน) → เลือกใช้โปรหรือราคามาตรฐานได้เอง · stack≤2/GP guard = ด่านกันพลาด ไม่ใช่อนุมัติโปร</b></div>
+    </div>
+    <div class="srt-pane" id="srt-price" data-label="💵 ราคา (PM-1)">
+      <table>
+        <thead><tr><th style="width:150px">ขั้นตอน</th><th>🏷️ Pricing Mgr</th><th>✅ อนุมัติ</th><th>🧑‍💼 Sales</th><th>💰 Finance</th><th>→ ถัดไป</th><th>สถานะ</th><th>Menu</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="8">โมเดลระบบเก่า (erpHero): 1 สินค้า = หลายคอลัมน์ราคาต่อช่องทาง (ปลีก/ส่ง/ออนไลน์/ส่งออก) + Disc ต่อช่อง · ลูกค้ามี "ระดับราคา" ชี้คอลัมน์</td></tr>
+          <tr class="grp"><td colspan="8">สร้าง/แก้ราคา (lifecycle + PCR · PM-1)</td></tr>
+          <tr><td class="stp">1.1 ร่างรายการราคา</td><td>เลือกประเภท (มาตรฐาน/Seasonal) · ช่วงมีผล · กรอกราคา<b>ต่อช่องทาง</b>+Disc · ต้นทุน auto MD-1</td><td></td><td></td><td>ต้นทุน 🔒 (เห็นเฉพาะ finance)</td><td class="nx">ใหม่→1.3 อนุมัติ · แก้→1.2 PCR</td><td class="stt">Draft</td><td class="mn">pm1</td></tr>
+          <tr><td class="stp">1.2 PCR แก้ราคาที่มีผล</td><td>ราคาใหม่ + <b>เหตุผล</b> (ต้นทุนเปลี่ยน ฯลฯ)</td><td></td><td></td><td></td><td class="nx">1.3 อนุมัติ</td><td class="stt">รออนุมัติ PCR</td><td class="mn">pm1</td></tr>
+          <tr><td class="stp">1.3 อนุมัติ</td><td>(ผู้ทำ)</td><td><b>Maker≠Checker</b> · guard <b>ราคา &lt; ทุน (cost floor) → เตือน/บล็อก</b></td><td></td><td></td><td class="nx">1.4 Post</td><td class="stt">Confirmed</td><td class="mn">pm1</td></tr>
+          <tr><td class="stp">1.4 Post (มีผล+sync BC)</td><td>ราคาเข้า BC salesPriceList · เป็นฐาน SC9 · <b>Posted แก้ไม่ได้</b></td><td></td><td></td><td></td><td class="nx">1.5</td><td class="stt fin">Posted (มีผล)</td><td class="mn">pm1</td></tr>
+          <tr><td class="stp">1.5 เวอร์ชันใหม่/ยกเลิก</td><td>แก้ = สร้าง<b>เวอร์ชันใหม่</b> (PCR) · history เก็บทุกเวอร์ชัน (PM-1.3 + เหตุผล/ผู้อนุมัติ)</td><td></td><td></td><td></td><td class="nx">กลับ 1.2 / 🏁</td><td class="stt">เวอร์ชันใหม่</td><td class="mn">pm1</td></tr>
+          <tr class="grp"><td colspan="8">มิติราคา (ตามระบบเก่า)</td></tr>
+          <tr><td class="stp">2.1 หลายคอลัมน์ช่องทาง</td><td>1 item × <b>ปลีก/ส่ง/ออนไลน์/ส่งออก</b> (+spare) · Disc ต่อช่อง · ก่อน VAT · versioned · <b>ไม่มี qty</b> · ทุกสาขาราคาเดียว</td><td></td><td></td><td>ต้นทุน INV/ผปย 🔒</td><td class="nx">(โครงข้อมูล)</td><td class="stt">—</td><td class="mn">pm1</td></tr>
+          <tr class="grp"><td colspan="8">ใช้ราคาตอนขาย (SC9 · determination)</td></tr>
+          <tr><td class="stp">3.1 ลูกค้า→ระดับราคา→ช่องทาง</td><td></td><td></td><td>อ่าน <b>ระดับราคา</b> ลูกค้า (MD-2) → เลือกคอลัมน์ช่องทาง</td><td></td><td class="nx">3.2 เจาะจงสุด</td><td class="stt">เลือกช่อง</td><td class="mn">sc9</td></tr>
+          <tr><td class="stp">3.2 เจาะจงสุดชนะ</td><td></td><td></td><td><b>ลูกค้าเฉพาะราย &gt; ระดับ/ช่องทาง &gt; มาตรฐาน</b> → ราคาฐาน+Disc</td><td></td><td class="nx">3.3 โปร→VAT</td><td class="stt">ได้ราคาฐาน</td><td class="mn">sc9</td></tr>
+          <tr><td class="stp">3.3 → โปร → VAT</td><td></td><td></td><td>เข้าโปร PM-2 → step/gift → <b>VAT บวกท้ายสุด</b> (Golden Rule)</td><td></td><td class="nx fin">🏁</td><td class="stt fin">ราคาสุทธิ</td><td class="mn">sc9</td></tr>
+          <tr class="grp"><td colspan="8">Simulator + cost floor (PM-5)</td></tr>
+          <tr><td class="stp">4.1 จำลองราคา (preview)</td><td></td><td></td><td>net cost / <b>reverse-calc</b> (หากำไรเป้า) → save draft quote</td><td>cost (เฉพาะ finance) · <b>GP&lt;10% 🟡 · GP&lt;0% 🔴 block</b></td><td class="nx">→ draft quote SL-1</td><td class="stt">จำลอง</td><td class="mn">pm5</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-30 (จาก db ระบบเก่า): ① ราคา = รายสินค้า × ช่องทาง (ปลีก/ส่ง/ออนไลน์/ส่งออก) × รอบ · <b>multi-price-column + Disc ต่อช่อง</b> · ไม่มี qty · สาขาเดียว · ② เจาะจงสุดชนะ (ลูกค้ามี "ระดับราคา") · ③ PCR→อนุมัติ (Maker≠Checker)→Post · history ทุกเวอร์ชัน · ④ simulator+GP guard · ⑤ <b>cost floor: ราคา&lt;ทุน เตือน/บล็อก</b> (legacy "ราคาขั้นต่ำจากการซื้อ ON") · ⚠️ mockup pm1 ต้องแก้เป็น multi-column</div>
     </div>
   </div>
   <script>
