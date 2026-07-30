@@ -190,6 +190,7 @@
     {ico:'🏠', label:'Overview', devOnly:true, links:[
       ['IDX','index.html','Master Index','old'],
       ['FLOW','module-flow-overview.html','🗺️ Module Flow Overview','new'],
+      ['FLOWD','flow-detail-charts.html','🔀 Flowchart เคสแตกสาขา','new'],
       ['ARCH','sangwijit-portal-architecture.html','Architecture','old'],
       ['SPEC','dev-handoff-spec.html','Dev Handoff','old']]},
     {ico:'🧩', label:'Shared Components (SC)', devOnly:true, links:[
