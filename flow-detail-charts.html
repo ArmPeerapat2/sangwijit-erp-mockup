@@ -327,15 +327,20 @@ flowchart TD
   GATE -->|"พอ · ตัด WH-2"| APP
   D1 --> APP
   D2 --> APP
-  B1 --> APP["Live → เลือกสินค้าตอนขาย · SC9 โชว์โปร+ราคาทันที (ตั้งแต่ QT)"]
-  APP --> STK{"ซ้อนโปร (stack)?"}
-  STK -->|"1–2 ชั้น"| GP{"GP guard"}
-  STK -->|"ชั้น 3+ · TC-7"| APV["Sales Mgr อนุมัติก่อน"]:::appr
+  B1 --> APP["Live (อนุมัติแล้วตอนสร้าง) → เลือกสินค้าตอนขาย"]
+  APP --> COND{"เข้าเงื่อนไข?<br/>สาขา / กลุ่มลูกค้า / จำนวน"}
+  COND -->|"ไม่เข้า"| STD["ราคามาตรฐาน (ไม่มีโปร)"]
+  COND -->|"เข้า · SC9 โชว์โปร+ราคา"| PICK{"พนักงานเลือก<br/>(ไม่ขออนุมัติโปรอีก)"}
+  PICK -->|"ใช้ราคามาตรฐาน"| STD
+  PICK -->|"ใช้โปร"| STK{"ซ้อนโปร (stack)?"}
+  STK -->|"1–2 ชั้น"| GP{"GP guard · safety net"}
+  STK -->|"ชั้น 3+ · TC-7"| APV["Sales Mgr (safety · ไม่ใช่อนุมัติโปร)"]:::appr
   APV --> GP
   GP -->|"GP ผ่าน 10% ขึ้นไป"| LOCK["ล็อกตอน post (SO/บิล)<br/>หักส่งเสริมการขายตอนวางบิล SL-4"]:::done
   GP -->|"GP ต่ำกว่า 10% · TC-8"| WARN["🟡 เตือน (ผ่านได้)"]
   GP -->|"GP ติดลบ · TC-9"| BLOCK["🔴 GM block"]:::stop
   WARN --> LOCK
+  STD --> LOCK
   classDef stock fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F,font-weight:600;
   classDef appr fill:#F3E8FF,stroke:#7C3AED,color:#5B21B6,font-weight:600;
   classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
@@ -355,9 +360,10 @@ flowchart TD
           <tr><td>TC-7</td><td colspan="2">ซ้อนโปรชั้นที่ 3+</td><td>Sales Mgr อนุมัติก่อน (stack ปกติ ≤2)</td></tr>
           <tr><td>TC-8</td><td colspan="2">หลัง stack GP < 10%</td><td>🟡 เตือน — ผ่านได้</td></tr>
           <tr><td>TC-9</td><td colspan="2">หลัง stack GP < 0%</td><td>🔴 GM block — ขายขาดทุน</td></tr>
+          <tr><td>TC-10</td><td colspan="2">ไม่เข้าเงื่อนไข / พนักงานเลือกราคามาตรฐาน</td><td>ใช้ราคามาตรฐาน (ไม่มีโปร) → ล็อกตอน post · ไม่ต้องอนุมัติ</td></tr>
         </tbody>
       </table>
-      <div class="note"><b>โปรมากับการเลือกสินค้า</b> (ไม่มีปุ่มใส่โปรแยก): เลือกสินค้า → SC9 โชว์ติดโปรไหน + ราคาหลังโปรทันที ตั้งแต่ QT · ล็อกตอน post · <b>stack ≤2 ชั้น</b> (priority สูงก่อน · ชั้น 3 อนุมัติ) · <b>VAT บวกท้ายสุด</b> (ส่วนลดทุกชั้นคิดจากราคาก่อน VAT)</div>
+      <div class="note"><b>🔑 อนุมัติโปร = ตอนสร้าง (PM-2) · เปิดบิลไม่ขออนุมัติโปรซ้ำ:</b> เลือกสินค้า → SC9 เช็คเงื่อนไข (สาขา/กลุ่มลูกค้า/จำนวน) → เข้าเงื่อนไข = โปรขึ้นให้เลือก · <b>พนักงานเลือกเอง: ใช้โปร หรือ ราคามาตรฐานปกติ</b> · ล็อกตอน post · <b>VAT บวกท้ายสุด</b> (ส่วนลดทุกชั้นคิดจากราคาก่อน VAT) · stack ≤2 ชั้น + GP guard = ด่านกันพลาด (ไม่ใช่การอนุมัติตัวโปร)</div>
       <div class="note warn"><b>rebate ฝั่งซื้อ = คนละฝั่ง:</b> PO-2 Trade Agreement → PO-7 Sale-In Accrual → ได้ใบลดหนี้ vendor → <b>หักตอนตั้งหนี้ PO-6 / รับวางบิล</b> (PO-CN) เพื่อทำจ่าย · ไม่อยู่ในผังนี้ (ดูตาราง PO/FI)</div>
       <div class="legend-src">ที่มา: <a href=".agents/topics/pm-status-transition-table.md">pm-status-transition-table.md (เคาะ 4 จุด 07-30)</a> · <a href="pm2-promotion-mockup.html">PM-2 สร้างโปร</a> · <a href="pm4-promo-quota-mockup.html">PM-4 โควตา</a> · <a href="pm5-price-simulator-mockup.html">PM-5 จำลอง</a> · <a href="pmq-promo-dashboard-mockup.html">PM-Q Dashboard</a></div>
     </div>

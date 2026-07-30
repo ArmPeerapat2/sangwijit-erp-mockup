@@ -865,16 +865,16 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
           <tr><td class="stp">1.3 Live</td><td>activate + โชว์ impact · <b>Live แก้ไม่ได้ → deactivate+สร้างใหม่</b></td><td></td><td></td><td></td><td class="nx">ใช้ขาย 2.1 · 1.4/1.5</td><td class="stt">Live</td><td class="mn">pm2</td></tr>
           <tr><td class="stp">1.4 หมดอายุ</td><td>auto พ้น Valid To (batch)</td><td></td><td></td><td></td><td class="nx fin">🏁</td><td class="stt fin">Expired</td><td class="mn">pm2</td></tr>
           <tr><td class="stp">1.5 ยกเลิก/พัก</td><td>ยกเลิก+เหตุ / พัก (reactivate ได้ถ้ายังใน period)</td><td></td><td></td><td></td><td class="nx">🏁 / กลับ Live</td><td class="stt">ยกเลิก/พัก</td><td class="mn">pm2</td></tr>
-          <tr class="grp"><td colspan="8">ใช้โปรตอนขาย (SC9 · ที่ SL-1/SL-2/SL-4)</td></tr>
-          <tr><td class="stp">2.1 เลือกสินค้า→โชว์โปร</td><td></td><td>เลือกสินค้า (ตั้งแต่ QT) → <b>SC9 โชว์ติดโปรไหน + ราคาหลังโปรทันที</b> (โปรมากับการเลือก ไม่มีปุ่มแยก)</td><td></td><td></td><td class="nx">2.2 stack</td><td class="stt">แสดงราคาโปร</td><td class="mn">sc9</td></tr>
-          <tr><td class="stp">2.2 stack ซ้อนโปร</td><td></td><td><b>stack ≤2 ชั้น</b> (priority สูงก่อน→คิดต่อจากชั้นแรก)</td><td>ชั้น 3+ → Sales Mgr อนุมัติ</td><td></td><td class="nx">2.3 GP guard</td><td class="stt">stack แล้ว</td><td class="mn">sc9</td></tr>
-          <tr><td class="stp">2.3 GP guard</td><td></td><td>GP<10% → 🟡 เตือน</td><td>GP<0% → 🔴 GM block</td><td></td><td class="nx">2.4 ล็อก</td><td class="stt">ผ่าน guard</td><td class="mn">sc9</td></tr>
+          <tr class="grp"><td colspan="8">ใช้โปรตอนขาย (SC9) — 🔑 โปรอนุมัติแล้วตอนสร้าง (1.2) · <b>เปิดบิลไม่ขออนุมัติโปรซ้ำ</b></td></tr>
+          <tr><td class="stp">2.1 เลือกสินค้า→เช็คเงื่อนไข</td><td></td><td>เลือกสินค้า (ตั้งแต่ QT) → <b>SC9 เช็คเงื่อนไข: สาขา (SITECODE) / กลุ่มลูกค้า / จำนวน / ช่วง</b> → เข้าเงื่อนไข = โปรขึ้นให้เลือก + ราคาหลังโปร</td><td></td><td></td><td class="nx">2.2 เลือก</td><td class="stt">โปร eligible</td><td class="mn">sc9</td></tr>
+          <tr><td class="stp">2.2 เลือกใช้โปร/ราคามาตรฐาน</td><td></td><td><b>พนักงานเลือกเอง: ใช้โปร หรือ ราคามาตรฐานปกติ</b></td><td>(อนุมัติแล้วที่ 1.2 · ไม่ขอซ้ำ)</td><td></td><td class="nx">2.3 safety</td><td class="stt">เลือกแล้ว</td><td class="mn">sc9</td></tr>
+          <tr><td class="stp">2.3 safety net (เคสผิดปกติ)</td><td></td><td>stack ≤2 ชั้น (priority สูงก่อน)</td><td>ชั้น 3+ → Sales Mgr · GP<0% → 🔴 GM block — <b>ด่านกันพลาด ไม่ใช่อนุมัติตัวโปร</b></td><td></td><td class="nx">2.4 ล็อก</td><td class="stt">ปกติผ่านเลย</td><td class="mn">sc9</td></tr>
           <tr><td class="stp">2.4 ล็อกราคา/โปร</td><td></td><td>ล็อกตอน <b>post (SO/บิล)</b> · snapshot โปร · <b>หักส่งเสริมการขายตอนวางบิล (SL 4.2)</b></td><td></td><td></td><td class="nx fin">🏁</td><td class="stt fin">ล็อกแล้ว</td><td class="mn">sl4</td></tr>
           <tr class="grp"><td colspan="8">ของแถม / bundle / Buy X Get Y</td></tr>
           <tr><td class="stp">3.1 ตัดสต็อกของแถม</td><td></td><td></td><td></td><td>เบิก WH-2 <b>ตัดสต็อกจริง</b> (นับต้นทุน) · <b>gate เช็คของพอก่อน apply/activate</b> · BuyXGetY เช็ค 2 ตัว</td><td class="nx">→ 2.4 ล็อก</td><td class="stt">ตัดของแถม</td><td class="mn">wh2</td></tr>
         </tbody>
       </table>
-      <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-30: ① ฝั่งขายเท่านั้น (rebate ซื้อ→PO/FI) · ② rebate ซื้อ = ได้ใบลดหนี้ vendor→หักตอนตั้งหนี้ PO-6/รับวางบิล · ③ โปรมากับการเลือกสินค้า (SC9 · ล็อกตอน post) · ④ ของแถมตัดสต็อกจริง+gate · conflict stack≤2/ชั้น3 อนุมัติ · GP<0% GM block (locked spec)</div>
+      <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-30: ① ฝั่งขายเท่านั้น (rebate ซื้อ→PO/FI) · ② rebate ซื้อ = ได้ใบลดหนี้ vendor→หักตอนตั้งหนี้ PO-6/รับวางบิล · ③ โปรมากับการเลือกสินค้า (SC9 · ล็อกตอน post) · ④ ของแถมตัดสต็อกจริง+gate · <b>⑤ อนุมัติโปร=ตอนสร้าง (1.2) เปิดบิลไม่ขออนุมัติซ้ำ · เข้าเงื่อนไข (สาขา/กลุ่มลูกค้า/จำนวน) → เลือกใช้โปรหรือราคามาตรฐานได้เอง · stack≤2/GP guard = ด่านกันพลาด ไม่ใช่อนุมัติโปร</b></div>
     </div>
   </div>
   <script>
