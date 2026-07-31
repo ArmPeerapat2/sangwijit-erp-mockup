@@ -919,16 +919,16 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
           <tr><td class="stp">2.S2 Sell-out</td><td>จ่ายเมื่อ<b>ขายออกสำเร็จ</b> — พิสูจน์ serial/SL-4 match</td><td></td><td></td><td></td><td class="nx">3.1 Accrued</td><td class="stt">รอ match ขายออก</td><td class="mn">po7</td></tr>
           <tr><td class="stp">2.M MOU / Co-op</td><td>ซื้อถึงเป้า / Event → accrue</td><td></td><td></td><td></td><td class="nx">3.1 Accrued</td><td class="stt">เข้า accrual</td><td class="mn">po7</td></tr>
           <tr class="grp"><td colspan="8">lifecycle: Accrued → Doc Received → Realized → Recon</td></tr>
-          <tr><td class="stp">3.1 Accrued</td><td>Confirm & Send</td><td></td><td>GL: Dr.Accrued Revenue / Cr.Vendor Obligation</td><td></td><td class="nx">3.2 Doc Received</td><td class="stt">Accrued</td><td class="mn">po7</td></tr>
+          <tr><td class="stp">3.1 Accrued</td><td>Confirm & Send</td><td></td><td><b>บันทึกความจำ (tracking) · ยังไม่ลง GL</b> (v2.1)</td><td></td><td class="nx">3.2 Doc Received</td><td class="stt">Accrued (memo)</td><td class="mn">po7</td></tr>
           <tr><td class="stp">3.2 Doc Received</td><td>รับเอกสาร · <b>audit + Category (1/2/3)</b> · match Agreement</td><td></td><td></td><td>ออก CN/Invoice/Statement</td><td class="nx">3.3 Realized</td><td class="stt">ได้เอกสารแล้ว</td><td class="mn">po7</td></tr>
-          <tr><td class="stp">3.3 Realized (offset)</td><td></td><td></td><td><b>Record Payment ที่ PO-7 เท่านั้น</b> 🔒 · Reverse Accrual · <b>offset CN → PO-6 AP (ตัดหนี้)</b> หรือ รับเงิน</td><td></td><td class="nx">3.4 Recon</td><td class="stt">Realized</td><td class="mn">po7·po6</td></tr>
+          <tr><td class="stp">3.3 Realized (offset · ลง GL)</td><td></td><td></td><td><b>Record Payment ที่ PO-7 เท่านั้น</b> 🔒 · <b>ลง GL ที่นี่ (Dr.Bank/Cr.รายได้)</b> · <b>offset CN → PO-6 AP (ตัดหนี้)</b> หรือ รับเงิน</td><td></td><td class="nx">3.4 Recon</td><td class="stt">Realized</td><td class="mn">po7·po6</td></tr>
           <tr><td class="stp">3.4 Monthly Recon (กระทบยอด)</td><td></td><td></td><td><b>reconcile Accrual vs รับจริง</b> ทุกเดือน · netting ห้าง (ลูกหนี้↔เจ้าหนี้ §13.1a)</td><td></td><td class="nx fin">🏁</td><td class="stt fin">กระทบยอดแล้ว</td><td class="mn">fi8</td></tr>
           <tr class="grp"><td colspan="8">แขนง (sanction/aging)</td></tr>
           <tr><td class="stp">4.1 Aging alert</td><td>เกิน 30 วันไม่ได้เอกสาร → reminder · <b>60 วัน → STOP NEW PO</b></td><td></td><td></td><td></td><td class="nx">ทวง</td><td class="stt">ค้างเกิน SLA</td><td class="mn">po7·fi8</td></tr>
           <tr><td class="stp">4.2 ยอดไม่ตรง (Adjust)</td><td>รับจริง &lt; Agreement เกิน 10% → <b>Flag สอบสวน</b> + แก้ + อนุมัติ</td><td></td><td></td><td></td><td class="nx">→ 3.2</td><td class="stt">Adjust</td><td class="mn">po7</td></tr>
         </tbody>
       </table>
-      <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-31: หลัก = แจ้ง/เอกสารก่อน → งบตามหลัง (accrue→realized) · <b>Sell-in 2 โหมด: ลดบนบิล (ส่วนลด PO ทันที Case 4) / ลดตามหลัง (accrue→CN)</b> · Sell-out=match SL-4 · รับปาก=accrue+flag🟡 · Realized offset เข้า PO-6 AP (ตัดหนี้) · 🔒 Record Payment ที่ PO-7 เท่านั้น (FI-8 read-only) · Monthly Recon+netting · ⏭️ po7 Form view 5 types</div>
+      <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-31: หลัก = แจ้ง/เอกสารก่อน → งบตามหลัง · <b>Sell-in 2 โหมด: ลดบนบิล (ส่วนลด PO ทันที Case 4) / ลดตามหลัง (accrue→CN)</b> · Sell-out=match SL-4 · รับปาก=accrue+flag🟡 · <b>Accrued = บันทึกความจำ ไม่ลง GL · GL ลงตอน Realized (v2.1)</b> · Realized offset เข้า PO-6 AP (ตัดหนี้) · 🔒 Record Payment ที่ PO-7 เท่านั้น · Recon+netting · ⏭️ po7 Form view 5 types</div>
     </div>
   </div>
   <script>

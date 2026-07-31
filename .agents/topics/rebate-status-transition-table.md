@@ -40,9 +40,9 @@ doc-chain: **PO-2 Trade Agreement (ข้อตกลงงบ) → PO-7 Accrual
 ## 3 · lifecycle: Accrued → Doc Received → Realized → Recon
 | # | State | → ถัดไป | Actor | Action | สถานะใหม่ |
 |---|---|---|---|---|---|
-| 3.1 | Accrued (บัญชีรับรู้หนี้) | → 3.2 | 💰 Finance | GL: **Dr. Accrued Revenue / Cr. Vendor Obligation Liability** · (Confirm & Send โดยจัดซื้อ) | Accrued |
+| 3.1 | Accrued (**บันทึกความจำ · ยังไม่ลง GL**) | → 3.2 | 📋 จัดซื้อ | **บันทึกความจำ/ติดตาม (tracking) · ไม่ลง GL** (v2.1 · A6 Semantic — กันบันทึกรายได้ลอย · รับปากเสี่ยง) · Confirm & Send | Accrued (memo) |
 | 3.2 | Doc Received (ได้เอกสารจากห้าง) | → 3.3 | 🏢 ห้าง · 📋 จัดซื้อ | รับ **CN / Invoice / Statement** · **audit checklist + ระบุ Category (1/2/3)** · match Agreement | Doc Received |
-| 3.3 | Realized (offset / รับเงิน) | → 3.4 | 💰 Finance | **Record Payment ที่ PO-7 เท่านั้น** (🔒 Single Payment Point) · Reverse Accrual · **offset CN → forward เข้า PO-6 AP** (ตัดหนี้จัดซื้อ) หรือ Dr.Bank | Realized |
+| 3.3 | Realized (**ลง GL** / offset / รับเงิน) | → 3.4 | 💰 Finance | **Record Payment ที่ PO-7 เท่านั้น** (🔒 Single Payment Point) · **ลง GL ที่นี่: Dr.Bank / Cr.รายได้ (Other Income) หรือ offset CN → forward เข้า PO-6 AP** (ตัดหนี้จัดซื้อ) | Realized |
 | 3.4 | Monthly Recon (กระทบยอด) | **🏁** | 💰 Finance | **reconcile Accrual vs รับจริง ทุกเดือน** · **netting ห้าง (ลูกหนี้↔เจ้าหนี้ · §13.1a)** ถ้าห้างเป็นทั้งคู่ | ✅ กระทบยอดแล้ว (terminal) |
 
 ## 4 · แขนง (sanction / aging)
@@ -74,6 +74,7 @@ doc-chain: **PO-2 Trade Agreement (ข้อตกลงงบ) → PO-7 Accrual
 4. ✅ **รับปาก** = accrue+flag🟡 (confidence · ต้องมีหลักฐานตามมา)
 5. ✅ **Realized** = offset เข้า PO-6 AP (ตัดหนี้) · Record Payment ที่ PO-7 เท่านั้น
 6. ✅ **Monthly Recon** = กระทบยอด Accrual vs จริง + netting ห้าง
+7. ✅ **GL timing (v2.1 · แก้ 07-31):** Accrued = **บันทึกความจำ ไม่ลง GL** · ลง GL จริง**ตอน Realized เท่านั้น** (ยึด A6 Semantic บรรทัด 674 · ทับ rule #5 บรรทัด 742 ที่ขัดกัน) — เดิมผังลง GL ตอน Accrued (ผิด) แก้แล้ว · ⚠️ spec ควร reconcile บรรทัด 742
 
 ## แผน
 1. ✅ ตารางสถานะ RB (บันทึกนี้)

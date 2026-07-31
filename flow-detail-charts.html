@@ -435,11 +435,11 @@ flowchart TD
   TYPE -->|"MOU / Co-op · TC-4"| MOU["ซื้อถึงเป้า / Event → accrue"]
   WAIT --> ACCR
   SO --> ACCR
-  MOU --> ACCR["Accrued<br/>Dr.Accrued Rev / Cr.Vendor Obligation"]
+  MOU --> ACCR["Accrued = บันทึกความจำ (tracking)<br/>⚠️ ยังไม่ลง GL (v2.1)"]:::wait
   ACCR --> DOC{"ได้เอกสารจากห้าง?"}
   DOC -->|"เกิน 30/60 วันไม่ได้ · TC-6"| AGING["Day-0 reminder · 60 วัน STOP NEW PO"]:::stop
   DOC -->|"ยอดไม่ตรง เกิน 10% · TC-5"| ADJ["Flag สอบสวน + แก้ + อนุมัติ"]:::stop
-  DOC -->|"ได้ CN/Invoice · audit + Category (1/2/3)"| REAL["Realized · Record Payment ที่ PO-7 เท่านั้น 🔒"]
+  DOC -->|"ได้ CN/Invoice · audit + Category (1/2/3)"| REAL["Realized · Record Payment ที่ PO-7 เท่านั้น 🔒<br/>ลง GL ที่นี่: Dr.Bank / Cr.รายได้ (หรือ offset CN)"]
   REAL --> OFFSET["offset CN → PO-6 AP (ตัดหนี้จัดซื้อ) / รับเงิน"]:::done
   OFFSET --> RECON["Monthly Recon: Accrual vs จริง + netting ห้าง (§13.1a)"]:::done
   classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
