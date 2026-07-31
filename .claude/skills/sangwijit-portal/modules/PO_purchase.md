@@ -739,7 +739,7 @@ GET  /vendorObligations/sanctionStatus?vendorId=    → Day-0/7/15/30 (ใหม
 2. **VAT Trap (A1):** Sell-in ต้องคำนวณ Case 4 (% บนบิล) เท่านั้น · ห้ามรับ Case 1, 3 (หลังบิล) เป็น default
 3. **Yods ไม่ตรง:** ถ้ายอดรับจริง < Agreement เกิน 10% → Flag สอบสวน
 4. **Aging Alert (A3):** Accrued เกิน 30 วันยังไม่ได้เอกสาร → Day-0 reminder · 60 วัน → Day-30 STOP NEW PO
-5. **GL Posting:** Accrued → Dr. Accrued Revenue / Cr. Vendor Obligation Liability
+5. **GL Posting (v2.1 · reconciled 07-31):** **Accrued = บันทึกความจำ ไม่ลง GL** (ตาม A6 Semantic บรรทัด 674) · **GL ลงตอน Realized เท่านั้น:** Dr.Bank / Cr.รายได้ (Other Income — Vendor Rebate) หรือ offset CN → PO-6 AP · *(เดิมเขียน "Accrued → Dr.Accrued Revenue / Cr.Vendor Obligation" — ขัด 674 · แก้แล้ว)*
 6. **Realized:** Reverse Accrual + Dr. Bank / Cr. Revenue (หรือ offset CN)
 7. **Monthly Recon:** Finance reconcile Accrual vs รับจริง ทุกเดือน
 8. **⚠️ Rebate ≠ Discount Rule:** Rebate book เข้า "Other Income — Vendor Rebate" (CF-4) · ห้ามดั๊มพ์เป็นส่วนลดราคาขาย
