@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MD · ช่องทางการขาย (Sales Channel) — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+/* MD Sales Channel Master — พอร์ทัลถือเอง (extensible) · editor = swt-master-editor.js · seed จาก erpHero กลุ่มลูกค้าหลัก */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
+.app-container{display:flex;min-height:100vh}
+.main-content{flex:1;margin-left:240px}
+.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.breadcrumb{font-size:13px;color:#6B7280}.breadcrumb strong{color:#111827}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.search-box{width:260px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;background:#F9FAFB}
+.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.content-wrapper{padding:16px 24px;max-width:1040px}
+.page-title{font-size:20px;font-weight:700;margin-bottom:2px}
+.page-sub{font-size:12.5px;color:#6B7280;margin-bottom:14px}
+.link-box{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.link-card{flex:1;min-width:260px;background:#fff;border:1px solid #E5E7EB;border-radius:9px;padding:10px 13px;font-size:11.5px;color:#6B7280;line-height:1.55}
+.link-card b{color:#374151}
+.link-card .h{font-size:12px;font-weight:700;color:#1E3A5F;margin-bottom:3px;display:flex;align-items:center;gap:6px}
+</style>
+</head>
+<body>
+<div class="app-container"><div class="main-content">
+<div class="topbar">
+  <div class="breadcrumb">ข้อมูลหลัก (MD) › <strong>ช่องทางการขาย (Sales Channel)</strong></div>
+  <div class="topbar-right"><input class="search-box" placeholder="ค้นหา… (Ctrl+K)"><span>🔔</span><span class="branch-tag">Admin</span><div class="avatar">P</div></div>
+</div>
+<div class="content-wrapper">
+  <div class="page-title">🛒 ช่องทางการขาย (Sales Channel)</div>
+  <div class="page-sub">มาสเตอร์ช่องทางการขาย — <b>เพิ่มช่องทางใหม่ได้ (extensible)</b> · ราค (PM-1) ตั้งราคาต่อช่องทางจากรายการนี้ · ลูกค้า (MD-2) เลือกช่องทาง/ระดับราคาชี้มาที่นี่</div>
+
+  <!-- ③ ส่วนเชื่อมโยง -->
+  <div class="link-box">
+    <div class="link-card"><div class="h">💵 → PM-1 รายการราคา</div>ช่องทางที่ <b>ใช้งาน (active)</b> จะกลายเป็น <b>คอลัมน์ราคา + ส่วนลด</b> ในหน้า PM-1 อัตโนมัติ · เพิ่มช่องทางที่นี่ = คอลัมน์ราคาเพิ่มเอง (ไม่ hard-code)</div>
+    <div class="link-card"><div class="h">👤 → MD-2 ลูกค้า</div>ลูกค้าแต่ละรายมีฟิลด์ <b>"ช่องทาง/ระดับราคา"</b> ชี้มาที่รหัสในตารางนี้ → ตอนขาย SC9 หยิบราคามาตรฐานตามช่องทางของลูกค้า</div>
+    <div class="link-card"><div class="h">🗄️ ที่มา (ระบบเก่า erpHero)</div>seed จาก <b>"กลุ่มลูกค้าหลัก"</b> เดิม (ProJect ปลีก · CA/CR ส่ง · LA ออนไลน์ · EXPORT ส่งออก ฯลฯ) — พอร์ทัลถือเอง ไม่ผูก BC</div>
+  </div>
+
+  <!-- editor host -->
+  <div id="chHost"></div>
+</div>
+</div></div>
+
+<script src="swt-master-editor.js"></script>
+<script>
+var CHANNEL = {
+  title:'ช่องทางการขาย',
+  bcNote:'พอร์ทัลถือเอง (extensible · BC ไม่มี logic ช่องทางราคาแบบนี้) · เพิ่ม/แก้ที่นี่ มีผลทุกหน้าราคา (PM-1) + การเลือกช่องทางที่ลูกค้า (MD-2) · "ประเภท" ใช้จัดกลุ่ม+รายงาน · รหัส = อ้างอิงจาก pm1/ลูกค้า (ห้ามเปลี่ยนรหัสที่มีสินค้าตั้งราคาแล้ว)',
+  columns:[
+    {key:'code',label:'รหัส'},
+    {key:'name',label:'ชื่อช่องทาง'},
+    {key:'type',label:'ประเภท',width:'96px'},
+    {key:'seq',label:'ลำดับ',width:'60px'}
+  ],
+  fields:[
+    {key:'code',label:'รหัส'},
+    {key:'name',label:'ชื่อช่องทาง (TH)'},
+    {key:'nameEn',label:'ชื่อ (EN)'},
+    {key:'type',label:'ประเภท',type:'select',options:[
+      {value:'ปลีก',label:'🛍️ ปลีก'},
+      {value:'ส่ง',label:'📦 ส่ง'},
+      {value:'ออนไลน์',label:'💻 ออนไลน์'},
+      {value:'ส่งออก',label:'🌏 ส่งออก'},
+      {value:'อื่น',label:'อื่น ๆ'}
+    ]},
+    {key:'seq',label:'ลำดับแสดง',type:'number'},
+    {key:'note',label:'หมายเหตุ'},
+    {key:'active',label:'ใช้งาน',type:'toggle'}
+  ],
+  data:[
+    {code:'ProJect',name:'ปลีก / B2B',nameEn:'Retail / Project',type:'ปลีก',seq:1,note:'หน้าร้าน + โครงการ',active:true},
+    {code:'CA',name:'ส่งตรง / ล็อต',nameEn:'Wholesale (direct)',type:'ส่ง',seq:2,note:'ลูกค้าส่งตรง สั่งเป็นล็อต',active:true},
+    {code:'CR',name:'ส่ง (ราย sub)',nameEn:'Wholesale (sub)',type:'ส่ง',seq:3,note:'ตัวแทนย่อย',active:true},
+    {code:'AirCon',name:'ร้านแอร์ (dealer)',nameEn:'AC Dealer',type:'ส่ง',seq:4,note:'ร้านแอร์ตัวแทน',active:true},
+    {code:'LA',name:'ออนไลน์ (Lazada/Shopee)',nameEn:'Online Marketplace',type:'ออนไลน์',seq:5,note:'มาร์เก็ตเพลส',active:true},
+    {code:'EXPORT',name:'ส่งออก',nameEn:'Export',type:'ส่งออก',seq:6,note:'ต่างประเทศ',active:true},
+    {code:'GV',name:'ราชการ / รัฐวิสาหกิจ',nameEn:'Government',type:'อื่น',seq:7,note:'ราคางานราชการ',active:true},
+    {code:'SR',name:'ช่าง / ผู้รับเหมา',nameEn:'Contractor',type:'อื่น',seq:8,note:'ช่างรับเหมา',active:true},
+    {code:'AC',name:'ลูกค้าทางบัญชี',nameEn:'Account Customer',type:'อื่น',seq:9,note:'เครดิตทางบัญชี',active:true},
+    {code:'INTER',name:'ระหว่างบริษัท (Inter)',nameEn:'Inter-company',type:'อื่น',seq:10,note:'โอนภายใน',active:true}
+  ]
+};
+swtRenderMasterEditor(document.getElementById('chHost'), CHANNEL);
+</script>
+<script src="swt-sidebar.js"></script>
+</body>
+</html>

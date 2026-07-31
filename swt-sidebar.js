@@ -43,7 +43,7 @@
 
     /* ─── เพิ่ม 2026-07-21 · งาน grill+build รอบใหญ่ (ตรวจแล้วทุกไฟล์) ─── */
     'ex1-executive-dashboard-mockup.html','rp1-report-center-mockup.html','fi3-bank-reconciliation-mockup.html','fi7-vat-report-mockup.html','cf2-config-hub-mockup.html','cf-master-settings-mockup.html','iaq-bc-sync-monitor-mockup.html','cf2-5-tech-template-mockup.html','sc1-customer-search-mockup.html','sc7-timeline-mockup.html','sc-shared-catalog-mockup.html',   /* reconcile 07-28: built แต่ tracker ค้าง */
-    'pm1-price-list-mockup.html','pm5-price-simulator-mockup.html',
+    'pm1-price-list-mockup.html','pm5-price-simulator-mockup.html','md-sales-channel-mockup.html',
     'pm2-promotion-mockup.html',          /* แหล่งงบ · ขั้นบันได · ตรวจกำไร · โปรฯ ชนกัน */
     'pm4-promo-quota-mockup.html',        /* ใหม่ — โควต้าโปรฯ งบแบรนด์/เพดานบริษัท */
     'pmq-promo-dashboard-mockup.html',    /* ใหม่ — โปรฯ ที่รันอยู่ */
@@ -166,7 +166,8 @@
       ['MD-3','md3-vendor-master-mockup-v3.html','MD-3 ทะเบียน Vendor','new'],
       ['MD-4','md4-employee-master-mockup-v3.html','MD-4 ทะเบียนพนักงาน','new'],
       ['MD5a','md5-branch-warehouse-mockup-v3.html','MD-5a ทะเบียนสาขา','new'],
-      ['MD5b','md5-branch-warehouse-mockup-v3.html','MD-5b ทะเบียนคลัง','new']]},
+      ['MD5b','md5-branch-warehouse-mockup-v3.html','MD-5b ทะเบียนคลัง','new'],
+      ['MD-CH','md-sales-channel-mockup.html','MD ช่องทางการขาย','new']]},
 
     /* ── ตั้งค่าระบบ (CF) — admin only · รวม IA + SV config ── */
     {ico:'⚙️', label:'ตั้งค่าระบบ (CF)', links:[
