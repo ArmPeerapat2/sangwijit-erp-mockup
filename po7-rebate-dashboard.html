@@ -263,6 +263,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           <button class="on" onclick="swTab(event,'t-agree')">ข้อตกลง (PO-2)</button>
           <button onclick="swTab(event,'t-doc')">เอกสารอ้างอิงประกอบ</button>
           <button onclick="swTab(event,'t-sanction')">Sanction</button>
+          <button onclick="swTab(event,'t-recon')">Recon/กระทบยอด</button>
           <button onclick="swTab(event,'t-hist')">ประวัติ</button>
         </div>
         <div class="tabset-pane on" id="t-agree">
@@ -292,7 +293,19 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           <div class="tab-grid">
             <span class="k">Co-op AG-CO-2604-012</span><span class="v">ครบกำหนดส่ง CN: เกิน 15 วัน</span>
           </div>
-          <div class="sanction">⚠ Sanction Day 15: Escalate ผจก.บัญชี + Formal Letter · ถ้าเกิน Day 30 → STOP NEW PO กับ Vendor</div>
+          <div class="sanction">⚠ Sanction ตาม<b>อายุ/กรอบยืนที่ระบุใน PO-2</b> (ไม่ fix 30/60): ครบกำหนดส่ง CN → Escalate ผจก.บัญชี + Formal Letter · เกินกำหนด → STOP NEW PO กับ Vendor อัตโนมัติ</div>
+        </div>
+        <div class="tabset-pane" id="t-recon">
+          <div class="tab-grid">
+            <span class="k">รอบกระทบยอด</span><span class="v">Q2/2026 (เม.ย.–มิ.ย.) · Finance ทำทุกเดือน</span>
+            <span class="k">Accrual (ตั้งไว้)</span><span class="v">฿1,960,000 · Sell-in 4.5%</span>
+            <span class="k">รับจริง (CN/เงิน)</span><span class="v" style="color:#065F46;font-weight:700">฿88,200 · Recovery 100%</span>
+            <span class="k">ผลต่าง</span><span class="v"><span class="chip" style="background:#D1FAE5;color:#065F46">0 · ตรง</span> <span style="color:#9CA3AF">(ต่าง &gt;10% → Flag สอบสวน)</span></span>
+          </div>
+          <div style="margin-top:10px;padding:9px 12px;background:#EFF6FF;border:1px solid #93C5FD;border-radius:7px;font-size:12px;color:#1E40AF">
+            🔗 <b>Netting ห้าง (ลูกหนี้↔เจ้าหนี้ · §13.1a):</b> ถ้าห้างเป็นทั้ง Customer (ARI ค่าซ่อม) + Vendor (rebate/AP) → <b>Net C/V ที่ Payment Journal · Maker≠Checker</b> · post จริงที่ <a href="fi3-bank-reconciliation-mockup.html" style="color:#2563EB;font-weight:700">FI</a> · PO-7 อ้างอิงเฉยๆ
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:#6B7280">💡 FI-8 Accrual Monitor = read-only aging view (การเงินเห็น) · <b>Record Payment/Realize กดที่ PO-7 เท่านั้น</b> (กัน GL ซ้ำ)</div>
         </div>
         <div class="tabset-pane" id="t-hist">
           <div class="tl">
