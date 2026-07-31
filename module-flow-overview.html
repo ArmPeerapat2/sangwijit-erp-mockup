@@ -938,6 +938,27 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
     e.currentTarget.classList.add('on');
     document.getElementById(id).classList.add('on');
   }
+  /* Menu column → คลิกไปหน้าจริง (map code→ไฟล์ · linkify อัตโนมัติ · surface label เช่น A1/Popup/Mobile/sc9/fi8 = ไม่มีหน้า) */
+  var MN_MAP={
+    sv1:'sv1-service-intake-mockup.html',sv2:'sv2-service-assignment-mockup.html',sv3:'sv3-spare-part-issue-mockup.html',sv4:'sv4-service-close-mockup.html',sv5:'sv5-job-card-mockup.html',sv6:'sv6-delivery-install-mockup.html',sv7:'sv7-service-delivery-mockup.html',
+    dl:'dl-goods-delivery-mockup.html',clm:'clm-vendor-claim-mockup.html',cm1:'cm1-commission-mockup.html',
+    wh1:'wh1-receive-mockup.html',wh2:'wh2-issue-mockup.html',wh2r:'wh2r-issue-request-mockup.html',wh3:'wh3-transfer-mockup.html',wh3r:'wh3r-transfer-request-mockup.html',wh4:'wh4-count-mockup.html',wh4r:'wh4r-count-prep-mockup.html',wh5:'wh5-stock-adjustment-mockup.html',
+    po1:'po1-purchase-request-mockup.html',po2:'po2-rfq-mockup.html',po4:'po4-purchase-order-mockup.html',po6:'po6-ap-invoice-mockup.html',po7:'po7-rebate-dashboard.html','po-cn':'po-cn-credit-note-mockup.html',pocn:'po-cn-credit-note-mockup.html','po-dp':'po-dp-deposit-payment-mockup.html',
+    pm1:'pm1-price-list-mockup.html',pm2:'pm2-promotion-mockup.html',pm5:'pm5-price-simulator-mockup.html',
+    fi1:'fi1-ar-receive-mockup.html',fi2:'fi2-ap-payment-mockup.html',fi3:'fi3-bank-reconciliation-mockup.html',fi4:'fi4-expense-wht-mockup.html',fi7:'fi7-vat-report-mockup.html',fi12:'fi12-wht-mockup.html',
+    sl1:'sl1-quotation-mockup.html',sl2:'sl2-reservation-mockup.html',sl3:'sl3-deposit-mockup.html',sl4:'sl4-invoice-mockup.html',slcn:'slcn-credit-memo-mockup.html',slf1:'slf1-credit-approval-mockup.html','CF-2.6':'cf2-6-approval-matrix-mockup.html'
+  };
+  function linkifyMn(){
+    document.querySelectorAll('td.mn').forEach(function(td){
+      if(td.dataset.linked) return; td.dataset.linked='1';
+      var parts=td.textContent.split(/([·/→\s]+)/);
+      td.innerHTML=parts.map(function(t){
+        var k=t.trim();
+        return MN_MAP[k]?'<a href="'+MN_MAP[k]+'" style="color:#2563EB;text-decoration:none;font-weight:600" title="เปิด '+MN_MAP[k]+'">'+t+'</a>':t;
+      }).join('');
+    });
+  }
+  linkifyMn();
   </script>
 
   <div style="text-align:center;font-size:11px;color:#94A3B8;margin-top:24px">
