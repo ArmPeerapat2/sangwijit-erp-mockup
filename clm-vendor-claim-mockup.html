@@ -54,10 +54,6 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
 .chip-yellow{background:#FEF3C7;color:#92400E}
 .chip-blue{background:#DBEAFE;color:#1E40AF}
 .chip-gray{background:#F3F4F6;color:#374151}
-.status-pills{display:flex;gap:8px;margin-bottom:4px;flex-wrap:wrap}
-.status-pill{padding:6px 12px;border-radius:16px;font-size:12px;font-weight:600;border:1px solid #E5E7EB;background:#F9FAFB;color:#6B7280}
-.status-pill.active{background:#2563EB;color:#fff;border-color:#2563EB}
-.status-pill.done{background:#D1FAE5;color:#065F46;border-color:#86EFAC}
 .alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
 .alert-warn{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
 .alert-info{background:#DBEAFE;color:#1E40AF;border:1px solid #93C5FD}
@@ -94,6 +90,45 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
 .photo-slot.filled{border:1px solid #93C5FD;background:#EFF6FF;color:#1E40AF}
 /* Sticky footer */
 .action-tag{font-size:10px;background:#FEE2E2;color:#B91C1C;padding:1px 6px;border-radius:3px;font-weight:700;margin-left:6px}
+/* ── Mini-stepper (4 ขั้นหลัก · แทน status-pills) ── */
+.clm-stepper{display:flex;align-items:center;background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:12px 18px;margin-bottom:12px}
+.clm-step{display:flex;align-items:center;gap:9px;flex-shrink:0}
+.clm-step .dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:#F3F4F6;color:#9CA3AF;border:2px solid #E5E7EB;flex-shrink:0}
+.clm-step .lbl{font-size:12.5px;font-weight:600;color:#9CA3AF;line-height:1.15}
+.clm-step.done .dot{background:#D1FAE5;color:#065F46;border-color:#86EFAC}
+.clm-step.done .lbl{color:#065F46}
+.clm-step.active .dot{background:#2563EB;color:#fff;border-color:#2563EB;box-shadow:0 0 0 4px rgba(37,99,235,.15)}
+.clm-step.active .lbl{color:#1E40AF}
+.clm-bar{flex:1;height:2px;background:#E5E7EB;margin:0 12px;min-width:24px}
+.clm-bar.done{background:#86EFAC}
+/* ── Status control strip (แสดงสถานะบางส่วน + ปุ่มเปลี่ยนสถานะ) ── */
+.clm-ctrl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:10px;padding:11px 16px;margin-bottom:14px}
+.clm-ctrl .now{font-size:12.5px;color:#374151}
+.clm-ctrl .now b{color:#92400E}
+.clm-ctrl .spacer{flex:1;min-width:8px}
+.clm-cbtn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:7px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;border:1px solid #D1D5DB;background:#fff;color:#374151}
+.clm-cbtn:hover{border-color:#2563EB;color:#2563EB}
+.clm-cbtn.primary{background:#2563EB;color:#fff;border-color:#2563EB}
+.clm-cbtn.primary:hover{background:#1D4ED8;color:#fff}
+.clm-cbtn.danger{background:#fff;color:#B91C1C;border-color:#FCA5A5}
+.clm-cbtn.danger:hover{background:#FEF2F2;border-color:#DC2626}
+/* ── read-only summary rows (section = ผลลัพธ์ล่าสุด) ── */
+.clm-sum{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.clm-sum .it{display:flex;flex-direction:column;gap:3px}
+.clm-sum .it .k{font-size:11px;color:#6B7280;font-weight:600}
+.clm-sum .it .v{font-size:13px;color:#111827;font-weight:600}
+/* ── Modal (reuse po7 pattern) ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.55);display:none;align-items:center;justify-content:center;z-index:1100;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{width:min(620px,96vw);max-height:88vh;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #E5E7EB;box-shadow:0 24px 48px rgba(15,23,42,.35);display:flex;flex-direction:column}
+.modal-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(90deg,#1E3A5F 0%,#2563EB 100%);color:#fff}
+.modal-head .ttl{font-size:13px;font-weight:700;flex:1}
+.modal-head .sub{font-size:10.5px;color:rgba(255,255,255,.85)}
+.modal-close-x{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.16);color:#fff;border-radius:6px;padding:3px 9px;cursor:pointer;font-size:12px;font-family:inherit}
+.modal-close-x:hover{background:rgba(255,255,255,.25)}
+.modal-body{padding:14px;overflow:auto;background:#F8FAFC;flex:1}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:10px 14px;border-top:1px solid #E5E7EB;background:#fff}
+.modal-note{font-size:11.5px;padding:8px 11px;border-radius:7px;margin-bottom:12px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -152,19 +187,25 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
   <span id="clmPresaleNote" style="display:none;color:#92400E;background:#FEF3C7;border:1px solid #FDE68A;border-radius:5px;padding:2px 8px;font-size:11px">ไม่ต้องมีลูกค้า/ไม่ส่งคืนลูกค้า · เข้า CLM→PO-CN ตรง (ไม่ผ่าน SV intake)</span>
 </div>
 
-<!-- Status pills (Vendor claim flow · .clm8 = เฉพาะโหมด ① stage 8) -->
-<div class="status-pills">
-  <span class="status-pill done">1. ตั้งเคลม (CLM Draft)</span>
-  <span class="status-pill done">2. ส่งให้ Vendor</span>
-  <span class="status-pill clm8" style="display:none">8.2 รอรถมารับ (ของคืน)</span>
-  <span class="status-pill active">3. รอ Vendor ตอบ (ปัจจุบัน)</span>
-  <span class="status-pill">4. Vendor อนุมัติ/ปฏิเสธ</span>
-  <span class="status-pill">5. รับเงิน/ของแทน</span>
-  <span class="status-pill">6. ออกใบลดหนี้ (PO-CN) → รอหักหนี้</span>
-  <span class="status-pill clm8" style="display:none">8.5 ส่งสินค้าคืนลูกค้า</span>
-  <span class="status-pill" style="background:#FEE2E2;color:#991B1B;border-color:#FCA5A5">✕ แบรนด์ปฏิเสธ → SWT รับภาระ (write-off)</span>
+<!-- Mini-stepper (4 ขั้นหลัก · ย่อจาก 8 pills) -->
+<div class="clm-stepper" id="clmStepper">
+  <div class="clm-step done"><span class="dot">✓</span><span class="lbl">ตั้งเคลม</span></div>
+  <div class="clm-bar done"></div>
+  <div class="clm-step done"><span class="dot">✓</span><span class="lbl">ส่งคืน vendor</span></div>
+  <div class="clm-bar"></div>
+  <div class="clm-step active"><span class="dot">3</span><span class="lbl">รอ vendor ตอบ</span></div>
+  <div class="clm-bar"></div>
+  <div class="clm-step"><span class="dot">4</span><span class="lbl">ปิดเคลม</span></div>
 </div>
-<div style="font-size:11px;color:#991B1B;margin:2px 2px 0">✕ เส้นทางลบ (S4 · จาก 4): ปฏิเสธแล้วต้นทุนอะไหล่/ค่าแรงที่ออกไป = ตัดเป็นค่าใช้จ่าย SWT · <b>⚠️ ต้องอนุมัติตาม tier + ระบุเหตุผล ก่อน write-off</b> (เหมือน goodwill — เงินหายจริง)</div>
+
+<!-- Status control strip · แสดงสถานะปัจจุบัน + ปุ่มเปลี่ยนสถานะ (popup) -->
+<div class="clm-ctrl">
+  <span class="now">สถานะ: <b>🟠 รอ vendor ตอบ</b> · SLA ครบ 4 พ.ค. 26 (D+2)</span>
+  <span class="spacer"></span>
+  <button class="clm-cbtn" onclick="clmOpen('mSend')">🚚 บันทึกส่งคืน vendor</button>
+  <button class="clm-cbtn primary" onclick="clmOpen('mResult')">📥 บันทึกผล Vendor</button>
+  <button class="clm-cbtn" onclick="clmOpen('mPocn')">↩️ ออก PO-CN</button>
+</div>
 <script>
 function clmMode(m, btn){
   document.querySelectorAll('.clm-mode').forEach(function(b){b.style.background='#fff';b.style.color='#374151';});
@@ -174,7 +215,14 @@ function clmMode(m, btn){
   var rs=document.getElementById('clmReturnSec'); if(rs) rs.style.display = show?'':'none';
 }
 function clmSrc(v){ var n=document.getElementById('clmPresaleNote'); if(n) n.style.display=(v==='presale')?'block':'none'; }
-function clmResult(sel){ var b=document.getElementById('clmS4Box'); if(b) b.style.display=/S4/.test(sel.value)?'block':'none'; }
+/* modal open/close */
+function clmOpen(id){ var m=document.getElementById(id); if(m) m.classList.add('open'); }
+function clmClose(id){ var m=document.getElementById(id); if(m) m.classList.remove('open'); }
+/* Popup B: field โผล่ตามผลที่เลือก S1-S4 */
+function clmResultPick(v){
+  ['clmrS1','clmrS2','clmrS3','clmrS4'].forEach(function(k){var e=document.getElementById(k);if(e)e.style.display='none';});
+  var e=document.getElementById('clmr'+v); if(e) e.style.display='';
+}
 </script>
 
 <!-- Row 2: Customer (SL-4 compact pattern) + Doc extras -->
@@ -389,62 +437,30 @@ function clmResult(sel){ var b=document.getElementById('clmS4Box'); if(b) b.styl
 <div class="section-card">
   <div class="section-title">📊 CLM-4 · ติดตาม Vendor + ผลเคลม <span class="tag">Async · Vendor ตอบใน 7 วันทำการ</span></div>
 
-  <div class="form-grid-2" style="margin-bottom:14px">
-    <div class="field"><label>สถานะปัจจุบัน</label>
-      <div class="value"><span class="chip chip-yellow">⏳ ส่งแล้ว 25 เม.ย. 26 · รอ Vendor ตอบ (D+2)</span></div>
-    </div>
-    <div class="field"><label>Vendor SLA</label>
-      <div class="value">7 วันทำการ · ครบกำหนด <strong>4 พ.ค. 26</strong></div>
-    </div>
+  <div class="clm-sum">
+    <div class="it"><span class="k">สถานะ Vendor</span><span class="v"><span class="chip chip-yellow">⏳ รอ vendor ตอบ (D+2)</span></span></div>
+    <div class="it"><span class="k">ส่งเคลม</span><span class="v">25 เม.ย. 26</span></div>
+    <div class="it"><span class="k">SLA · ครบกำหนด</span><span class="v">7 วันทำการ · 4 พ.ค. 26</span></div>
+    <div class="it"><span class="k">ผลเคลม</span><span class="v" style="color:#92400E">— ยังไม่ตอบ</span></div>
   </div>
-
-  <div class="form-grid">
-    <div class="field"><label>ผลเคลม (เมื่อ Vendor ตอบ)</label>
-      <select onchange="clmResult(this)">
-        <option selected>⏳ รอตอบ</option>
-        <option>✓ S1 · อนุมัติเต็ม · เคลมเงิน (CN)</option>
-        <option>✓ S2 · อนุมัติเต็ม · ส่งของแทน</option>
-        <option>✓ S3 · อนุมัติเต็ม · ซ่อมส่งกลับ</option>
-        <option>⚠️ อนุมัติบางส่วน (ระบุ %)</option>
-        <option>❌ S4 · ปฏิเสธ (ระบุเหตุผล · ต้องอนุมัติก่อน write-off)</option>
-      </select>
-    </div>
-    <div class="field"><label>วันที่ Vendor ตอบ</label><input type="text" placeholder="—" value=""></div>
-    <div class="field"><label>หมายเหตุ Vendor</label><input type="text" placeholder="ระบุเมื่อมีการตอบ" value=""></div>
-  </div>
-  <!-- S4 ปฏิเสธ → write-off ต้องอนุมัติก่อน (Maker≠Checker) -->
-  <div id="clmS4Box" style="display:none;margin-top:12px;padding:12px 14px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px">
-    <div style="font-size:12.5px;font-weight:700;color:#991B1B;margin-bottom:9px">❌ S4 · Vendor ปฏิเสธ → SWT รับภาระ (write-off) — <b>ต้องอนุมัติก่อน</b></div>
-    <div class="form-grid">
-      <div class="field"><label>เลข VRA (Vendor Rejection Ack)</label><input value="VRA-2607-0009" style="font-family:monospace"></div>
-      <div class="field"><label>เหตุผลที่ถูกปฏิเสธ <span style="color:#DC2626">*</span></label><input placeholder="เช่น เกินระยะเวลาเคลม / S/N ไม่ตรง"></div>
-      <div class="field"><label>มูลค่ารับภาระ (ต้นทุน)</label><input value="8,900.00" style="text-align:right"></div>
-      <div class="field"><label>ระดับอนุมัติ (tier)</label><select><option>≤10,000 — หัวหน้าศูนย์บริการ</option><option>≤50,000 — ผจก.</option><option>&gt;50,000 — GM</option></select></div>
-      <div class="field"><label>ผู้ขออนุมัติ (Maker)</label><input value="แอดมินเคลม · นภา" readonly style="background:#F9FAFB"></div>
-      <div class="field"><label>ผู้อนุมัติ (Checker ≠ Maker)</label><input placeholder="เลือกผู้อนุมัติ (คนละคนกับ Maker)"></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
-      <button class="swt-mh-btn swt-mh-btn-primary" style="background:#DC2626;border-color:#DC2626" onclick="alert('ส่งขออนุมัติ write-off ตาม tier · รออนุมัติ (Maker≠Checker) ก่อนตัดเป็นค่าใช้จ่าย SWT')">✓ ส่งขออนุมัติ write-off</button>
-      <span style="font-size:11.5px;color:#991B1B;background:#FEE2E2;border:1px solid #FCA5A5;border-radius:5px;padding:3px 9px">🔒 เงินหายจริง — เหมือน goodwill · ยังตัดค่าใช้จ่ายไม่ได้จนกว่าอนุมัติ</span>
-    </div>
+  <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <button class="clm-cbtn primary" onclick="clmOpen('mResult')">📥 บันทึกผล Vendor (S1-S4)</button>
+    <span style="font-size:11px;color:#6B7280">เปลี่ยนสถานะผ่าน popup — ผลลัพธ์จะมาแสดงตรงนี้</span>
   </div>
 </div>
 
 <!-- CLM-5: Settlement → ใบลดหนี้เจ้าหนี้ (PO-CN) → รอหักหนี้ -->
 <div class="section-card">
   <div class="section-title">🚀 CLM-5 · ออกใบลดหนี้เจ้าหนี้ (PO-CN) เมื่อรับเงิน → รอหักหนี้ <span class="tag">Hand-off → AP / บัญชี</span></div>
-  <div class="alert alert-info" style="margin-top:0">
-    ✓ <div><strong>ขั้นตอน:</strong> Vendor อนุมัติ → รับเงิน/ของแทน → ออก <strong>ใบลดหนี้เจ้าหนี้ (PO-CN)</strong> → เข้าคิว <strong>"รอหักหนี้"</strong> → PO-6 (ใบตั้งหนี้) ดึงไปตัด AP เจ้าหนี้</div>
+  <div style="margin-top:0;padding:9px 12px;background:#EFF6FF;border:1px solid #93C5FD;border-radius:7px;font-size:11.5px;color:#1E40AF">🔗 <b>หักกลบ Net C/V (§13.1a · reference):</b> ถ้าแบรนด์เป็นทั้ง <b>ลูกหนี้ (ARI ค่าซ่อม · AR)</b> + <b>เจ้าหนี้ (PO-CN เคลม · AP)</b> → หักกลบที่ Payment Journal · <b>Maker≠Checker</b> · post จริงที่ FI/BC (CLM แสดง step อ้างอิงเฉยๆ) · + <b>bin 6</b> = ของคืน vendor ทั้งชิ้น/ซาก (track ที่คลัง WH bin 6)</div>
+  <div class="clm-sum" style="margin-top:10px">
+    <div class="it"><span class="k">ผลเคลม</span><span class="v"><span class="chip chip-gray">⏳ ยังไม่ตอบ</span></span></div>
+    <div class="it"><span class="k">ใบลดหนี้ (PO-CN)</span><span class="v"><span class="chip chip-gray">⏳ PCN-{TBD} · รอหักหนี้</span></span></div>
+    <div class="it"><span class="k">อ้างอิงงานซ่อม (ARI)</span><span class="v"><a href="_archive/sv-posted-docs-mockup-2026-07-12.html" style="color:#2563EB;font-family:monospace">ARI-SV1-2604-0089</a> · 11,877 ฿</span></div>
   </div>
-  <div style="margin-top:8px;padding:9px 12px;background:#EFF6FF;border:1px solid #93C5FD;border-radius:7px;font-size:11.5px;color:#1E40AF">🔗 <b>หักกลบ Net C/V (§13.1a · reference):</b> ถ้าแบรนด์เป็นทั้ง <b>ลูกหนี้ (ARI ค่าซ่อม · AR)</b> + <b>เจ้าหนี้ (PO-CN เคลม · AP)</b> → หักกลบที่ Payment Journal · <b>Maker≠Checker</b> · post จริงที่ FI/BC (CLM แสดง step อ้างอิงเฉยๆ) · + <b>bin 6</b> = ของคืน vendor ทั้งชิ้น/ซาก (track ที่คลัง WH bin 6)</div>
-  <div class="form-grid">
-    <div class="field"><label>ผลเคลม</label><div class="value"><span style="display:inline-block;padding:6px 12px;border-radius:8px;background:#D1FAE5;color:#065F46;font-size:12px;font-weight:600">✓ เคลมเงิน 11,877 ฿</span></div></div>
-    <div class="field"><label>ใบลดหนี้ที่ออก (PO-CN)</label><div class="value"><span class="chip chip-gray">⏳ PCN-{TBD} · รอหักหนี้</span></div></div>
-    <div class="field"><label>อ้างอิงงานซ่อม (ARI)</label><div class="value"><a href="_archive/sv-posted-docs-mockup-2026-07-12.html" style="color:#2563EB;font-family:monospace;font-weight:700">ARI-SV1-2604-0089</a> · 11,877 ฿</div></div>
-  </div>
-  <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-    <a href="po-cn-credit-note-mockup.html" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:linear-gradient(90deg,#7C2D12,#EF4444);color:#fff;border-radius:7px;font-size:13px;font-weight:700;text-decoration:none">↩️ ออกใบลดหนี้เจ้าหนี้ (PO-CN) → เข้าคิวรอหักหนี้</a>
-    <span style="font-size:11px;color:#6B7280">เมื่อ Post → PO-6 (ใบตั้งหนี้) ดึงรายการ "รอหักหนี้" นี้ไปตัด AP เจ้าหนี้</span>
+  <div style="margin-top:12px">
+    <button class="clm-cbtn" onclick="clmOpen('mPocn')">↩️ ออก PO-CN / หักกลบ</button>
+    <span style="font-size:11px;color:#6B7280;margin-left:8px">Post แล้ว → PO-6 (ใบตั้งหนี้) ดึง "รอหักหนี้" ไปตัด AP เจ้าหนี้</span>
   </div>
 </div>
 
@@ -573,6 +589,104 @@ function clmResult(sel){ var b=document.getElementById('clmS4Box'); if(b) b.styl
 <div style="font-size:12px;color:#92400E;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:8px 12px;margin-top:10px">🔒 กด <strong>"ตั้ง APCN"</strong> (บนขวา) = สร้างใบลดหนี้เจ้าหนี้ (APCN-SV1-2604-0089) ตัด ARI ของ SV-4 · ส่ง AP post entry · <strong>ปิดเคลม</strong></div>
 
 </div></div></div>
+
+<!-- ══════════ POPUPS เปลี่ยนสถานะ ══════════ -->
+
+<!-- Popup A · ส่งคืน vendor (2.1) -->
+<div class="modal-overlay" id="mSend" onclick="clmClose('mSend')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head"><span class="ttl">🚚 บันทึกส่งคืน Vendor</span><span class="sub">ขั้น 2.1 · เก็บ bin 6 → ส่งคืน + tracking</span><button class="modal-close-x" onclick="clmClose('mSend')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid-2">
+        <div class="field"><label>ช่องทางส่งคืน <span class="req">*</span></label><select><option>ทีมขนส่งเราเอง</option><option>ขนส่ง 3PL (Kerry/Flash/ไปรษณีย์)</option><option>Vendor มารับเอง</option></select></div>
+        <div class="field"><label>เลข tracking / ใบส่ง</label><input placeholder="เช่น TH-882140"></div>
+        <div class="field"><label>ที่เก็บของคืน (bin 6)</label><input value="คลังศูนย์ซ่อม · BIN-6" readonly></div>
+        <div class="field"><label>วันส่งคืน <span class="req">*</span></label><input type="text" placeholder="เช่น 28 เม.ย. 26"></div>
+      </div>
+      <div class="modal-note" style="background:#EFF6FF;color:#1E40AF;border:1px solid #93C5FD;margin-top:12px">🔗 <b>bin 6</b> = ของคืน vendor ทั้งชิ้น/ซาก (track ที่คลัง) · SLA vendor ตอบ ≤ 7 วัน → ทวงอัตโนมัติ</div>
+    </div>
+    <div class="modal-foot"><button class="clm-cbtn" onclick="clmClose('mSend')">ยกเลิก</button><button class="clm-cbtn primary" onclick="clmClose('mSend')">✓ บันทึกส่งคืน → รอ vendor ตอบ</button></div>
+  </div>
+</div>
+
+<!-- Popup B · รับผล Vendor S1-S4 (3.x) -->
+<div class="modal-overlay" id="mResult" onclick="clmClose('mResult')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head"><span class="ttl">📥 บันทึกผลจาก Vendor</span><span class="sub">ขั้น 3 · Vendor ตอบ S1-S4 (แตก 4 ทาง)</span><button class="modal-close-x" onclick="clmClose('mResult')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid-2">
+        <div class="field"><label>ผล Vendor <span class="req">*</span></label>
+          <select onchange="clmResultPick(this.value)">
+            <option value="" selected disabled>— เลือกผล —</option>
+            <option value="S1">S1 · ส่วนลด (CN) — ส่วนมากได้อันนี้</option>
+            <option value="S2">S2 · ส่งสินค้าใหม่ทดแทน</option>
+            <option value="S3">S3 · สินค้าเดิมซ่อมส่งกลับ</option>
+            <option value="S4">S4 · ปฏิเสธ</option>
+          </select>
+        </div>
+        <div class="field"><label>วันที่ Vendor ตอบ</label><input type="text" placeholder="เช่น 2 พ.ค. 26"></div>
+      </div>
+      <!-- field ตามผลที่เลือก -->
+      <div id="clmrS1" style="display:none;margin-top:12px" class="form-grid-2">
+        <div class="field"><label>ยอดส่วนลด CN ที่ได้ <span class="req">*</span></label><input value="11,877.00" style="text-align:right"></div>
+        <div class="field"><label>→ ถัดไป</label><div class="value" style="font-size:12.5px;color:#065F46;padding-top:8px">เข้าคิว <b>"รอหักหนี้"</b> → ออก PO-CN → PO-6 ดึงตัด</div></div>
+      </div>
+      <div id="clmrS2" style="display:none;margin-top:12px" class="form-grid-2">
+        <div class="field"><label>เลขรับของใหม่ (WH-1) <span class="req">*</span></label><input placeholder="เช่น RC-SVWH-2605-00xx"></div>
+        <div class="field"><label>→ ถัดไป</label><div class="value" style="font-size:12.5px;color:#1E40AF;padding-top:8px">รับที่ <b>WH-1</b> → ปิดเคลมเมื่อของเข้า</div></div>
+      </div>
+      <div id="clmrS3" style="display:none;margin-top:12px" class="form-grid-2">
+        <div class="field"><label>เลขรับของซ่อมกลับ (WH-1) <span class="req">*</span></label><input placeholder="เช่น RC-SVWH-2605-00xx"></div>
+        <div class="field"><label>→ ถัดไป</label><div class="value" style="font-size:12.5px;color:#1E40AF;padding-top:8px">vendor ซ่อมแล้วส่งคืน → รับ <b>WH-1</b> → ปิดเคลม</div></div>
+      </div>
+      <div id="clmrS4" style="display:none;margin-top:12px">
+        <div class="modal-note" style="background:#FEF2F2;color:#991B1B;border:1px solid #FECACA">❌ <b>Vendor ปฏิเสธ</b> → SWT รับภาระต้นทุน (write-off) · <b>เงินหายจริง เหมือน goodwill — ต้องอนุมัติตาม tier ก่อน</b></div>
+        <button class="clm-cbtn danger" onclick="clmClose('mResult');clmOpen('mWriteoff')">→ ไปขั้นขออนุมัติ write-off</button>
+      </div>
+      <div class="field" style="margin-top:12px"><label>หมายเหตุ Vendor</label><input placeholder="ระบุรายละเอียดที่ vendor แจ้ง"></div>
+    </div>
+    <div class="modal-foot"><button class="clm-cbtn" onclick="clmClose('mResult')">ยกเลิก</button><button class="clm-cbtn primary" onclick="clmClose('mResult')">✓ บันทึกผล</button></div>
+  </div>
+</div>
+
+<!-- Popup C · ออก PO-CN / หักกลบ (4.1) -->
+<div class="modal-overlay" id="mPocn" onclick="clmClose('mPocn')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head"><span class="ttl">↩️ ออกใบลดหนี้เจ้าหนี้ (PO-CN)</span><span class="sub">ขั้น 4.1 · เมื่อรับเงิน → เข้าคิวรอหักหนี้</span><button class="modal-close-x" onclick="clmClose('mPocn')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid-2">
+        <div class="field"><label>เลข PO-CN</label><input value="PCN-SV1-2605-{TBD}" style="font-family:monospace"></div>
+        <div class="field"><label>ยอดใบลดหนี้ <span class="req">*</span></label><input value="11,877.00" style="text-align:right"></div>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:14px;font-size:12.5px;font-weight:600;color:#374151;cursor:pointer"><input type="checkbox"> หักกลบ Net C/V (ARI ค่าซ่อม AR ↔ PO-CN เคลม AP)</label>
+      <div class="form-grid-2" style="margin-top:10px">
+        <div class="field"><label>ผู้ทำรายการ (Maker)</label><input value="แอดมินเคลม · นภา" readonly></div>
+        <div class="field"><label>ผู้อนุมัติหักกลบ (Checker ≠ Maker)</label><input placeholder="เลือกผู้อนุมัติ (คนละคน)"></div>
+      </div>
+      <div class="modal-note" style="background:#EFF6FF;color:#1E40AF;border:1px solid #93C5FD;margin-top:12px">🔗 Post จริงที่ <b>FI/BC</b> (Payment Journal) · CLM แสดง step อ้างอิง · Post แล้ว → PO-6 ดึง "รอหักหนี้" ตัด AP</div>
+    </div>
+    <div class="modal-foot"><button class="clm-cbtn" onclick="clmClose('mPocn')">ยกเลิก</button><a href="po-cn-credit-note-mockup.html" class="clm-cbtn primary" style="text-decoration:none">↩️ ออก PO-CN → รอหักหนี้</a></div>
+  </div>
+</div>
+
+<!-- Popup D · Write-off S4 (3.S4a · ต้องอนุมัติ) -->
+<div class="modal-overlay" id="mWriteoff" onclick="clmClose('mWriteoff')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head" style="background:linear-gradient(90deg,#7C2D12,#DC2626)"><span class="ttl">⚠️ ขออนุมัติ Write-off (S4 ปฏิเสธ)</span><span class="sub">SWT รับภาระ · เงินหายจริง · Maker≠Checker</span><button class="modal-close-x" onclick="clmClose('mWriteoff')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid-2">
+        <div class="field"><label>เลข VRA (Vendor Rejection Ack)</label><input value="VRA-2607-0009" style="font-family:monospace"></div>
+        <div class="field"><label>เหตุผลที่ถูกปฏิเสธ <span class="req">*</span></label><input placeholder="เช่น เกินระยะเวลาเคลม / S/N ไม่ตรง"></div>
+        <div class="field"><label>มูลค่ารับภาระ (ต้นทุน)</label><input value="8,900.00" style="text-align:right"></div>
+        <div class="field"><label>ระดับอนุมัติ (tier)</label><select><option>≤10,000 — หัวหน้าศูนย์บริการ</option><option>≤50,000 — ผจก.</option><option>&gt;50,000 — GM</option></select></div>
+        <div class="field"><label>ผู้ขออนุมัติ (Maker)</label><input value="แอดมินเคลม · นภา" readonly></div>
+        <div class="field"><label>ผู้อนุมัติ (Checker ≠ Maker)</label><input placeholder="เลือกผู้อนุมัติ (คนละคนกับ Maker)"></div>
+      </div>
+      <div class="modal-note" style="background:#FEE2E2;color:#991B1B;border:1px solid #FCA5A5;margin-top:12px">🔒 เงินหายจริง — เหมือน goodwill (§12.1) · ยังตัดค่าใช้จ่ายไม่ได้จนกว่าอนุมัติตาม tier</div>
+    </div>
+    <div class="modal-foot"><button class="clm-cbtn" onclick="clmClose('mWriteoff')">ยกเลิก</button><button class="clm-cbtn danger" onclick="clmClose('mWriteoff')">✓ ส่งขออนุมัติ write-off</button></div>
+  </div>
+</div>
 
 <script>
 function switchTab(e,id){
