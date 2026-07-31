@@ -119,6 +119,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
   <div class="form-grid">
     <div class="field"><label>ใช้กับสินค้า</label><select><option>สินค้าทุกรายการ</option><option selected>หมวด: แอร์ Daikin</option><option>สินค้าเฉพาะ</option></select></div>
     <div class="field"><label>ใช้กับลูกค้า</label><select><option selected>ลูกค้าทุกราย</option><option>กลุ่ม: ตัวแทน</option><option>ลูกค้าเฉพาะ</option></select></div>
+    <div class="field"><label>ขอบเขตสาขา (SITECODE)</label><select><option selected>ทุกสาขา</option><option>SWT · บางนา</option><option>SWE · สาขา 2</option><option>เฉพาะช่องออนไลน์</option></select></div>
     <div class="field"><label>ซื้อขั้นต่ำ (จำนวน)</label><input value="1" type="number"></div>
     <div class="field"><label>ซื้อขั้นต่ำ (ยอดเงิน)</label><input value="0.00"></div>
     <div class="field"><label>จำกัดต่อลูกค้า</label><select><option>ไม่จำกัด</option><option selected>1 ครั้ง/เดือน</option><option>1 ครั้ง/โปรฯ</option></select></div>
@@ -162,7 +163,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         <div class="field"><label>จำนวนแถม</label><input value="1" type="number"></div>
         <div class="field"><label>ซื้อขั้นต่ำถึงได้แถม</label><input value="1" type="number"></div>
       </div>
-      <div style="margin-top:8px;font-size:11.5px;color:#92400E;background:#FEF3C7;border-radius:6px;padding:6px 10px">⚠️ ของแถมต้องไม่ติดโปรลดราคาในช่วงเดียวกัน</div>
+      <div style="margin-top:8px;font-size:11.5px;color:#065F46;background:#F0FDF4;border:1px solid #86EFAC;border-radius:6px;padding:6px 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">🎁 <b>เช็คสต็อกของแถม (gate):</b> <span class="chip" style="background:#D1FAE5;color:#065F46">DAI-REMOTE คงเหลือ 45 ✓ พอ</span> · <b>ถ้าไม่พอ → block เปิดใช้</b> · BuyXGetY เช็คทั้ง 2 ตัว (buy+get) · <span style="color:#92400E">ของแถมต้องไม่ติดโปรลดราคาช่วงเดียวกัน</span></div>
     </div>
     <!-- Bundle -->
     <div class="pd" id="pd-bundle">
@@ -214,6 +215,21 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
 </div>
 
 <!-- irreversible warning (safety) — ปุ่ม action อยู่บนหัวที่เดียว -->
+<!-- PM-2.6 ตรวจโปรซ้ำ ก่อนเปิดใช้ (creation-time conflict · ต่างจาก PM-2.5 ที่เป็น stacking ตอนขาย) -->
+<div class="section-card">
+  <div class="section-title">🚦 PM-2.6 · ตรวจโปรซ้ำ (ก่อนเปิดใช้) <span class="tag">ห้ามซ้ำ สินค้า+ลูกค้า+ช่วงเดียวกัน</span></div>
+  <div id="pm2ConflictBox" style="font-size:12.5px;padding:9px 12px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;color:#991B1B">
+    ⚠️ <b>พบโปรทับซ้อน 1 รายการ</b> (สินค้า+ลูกค้า+ช่วงเดียวกัน) — ต้องแก้ขอบเขต หรือปิดตัวเก่าก่อน:
+    <table style="margin-top:8px;background:#fff;border-radius:6px">
+      <thead><tr><th>โปรฯ</th><th>สินค้า/หมวด</th><th>ลูกค้า</th><th>ช่วง</th><th>สถานะ</th><th></th></tr></thead>
+      <tbody>
+        <tr><td class="mono">PROMO-2606-018</td><td>หมวด แอร์ Daikin</td><td>ลูกค้าทุกราย</td><td>1–31 ก.ค. 26</td><td><span class="chip" style="background:#D1FAE5;color:#065F46">Live</span></td><td><a href="#" style="color:#2563EB">ดู/ปิด ↗</a></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:8px;font-size:11.5px">🔒 <b>เปิดใช้ (Activate) ถูกบล็อกจนแก้โปรซ้ำ</b> · แก้ขอบเขต (เช่น จำกัดสาขา/กลุ่มลูกค้า) → ตรวจใหม่ = ไม่ทับ → เปิดใช้ได้</div>
+  </div>
+</div>
+
 <!-- PM-2.4 เช็คกำไร (เคาะ 2026-07-21) -->
 <div class="section-card">
   <div class="section-title">💰 PM-2.4 · ตรวจกำไรก่อนเปิดใช้ <span class="tag">คิดจากต้นทุนถัวเฉลี่ยเคลื่อนที่ ณ ตอนนี้</span></div>
