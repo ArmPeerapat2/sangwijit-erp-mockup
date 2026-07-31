@@ -193,6 +193,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
       </div>
       <div class="mh-right">
         <span class="mh-badge">🕓 Accrued</span>
+        <span class="mh-badge" id="po7Conf" data-conf="signed" title="ระดับหลักฐาน (confidence) — รับปาก=🟡 บล็อก Realize จนมีเอกสาร/เซ็น" style="cursor:pointer" onclick="po7ToggleConf()">✍️ เซ็นแล้ว</span>
         <button class="mh-btn mh-btn-ghost" onclick="location.href='po2-rfq-mockup.html'">📑 ข้อตกลง+หลักฐาน PO-2</button>
         <button class="mh-btn mh-btn-ghost" title="เปิดเอกสารเก่า" onclick="dfOpen()" style="padding:6px 9px">📂</button>
         <button class="mh-btn mh-btn-ghost" title="แนบ CN/เอกสารจากห้าง" style="padding:6px 9px">📎</button>
@@ -622,6 +623,11 @@ function po7ChangeAgreement(code){
 }
 /* ✅ Confirm & Realize → เปลี่ยนสถานะ Accrued→Realized + ส่งยอดได้จริงเข้า PO-6 ตั้งหนี้ */
 function po7Realize(){
+  var cf=document.getElementById('po7Conf');
+  if(cf && cf.getAttribute('data-conf')==='verbal'){
+    alert('🟡 หลักฐานยังเป็น "รับปาก" (verbal · เสี่ยง)\n\nยัง Realize ไม่ได้ — ต้องมีเอกสาร/เซ็นยืนยันจากห้างก่อน (กันบันทึกรายได้ลอย · rebate ตกหล่น)\n\n(กด badge ระดับหลักฐานเพื่อสลับสถานะ demo)');
+    return;
+  }
   if(!po7State.po2Loaded || !po7State.actualLoaded){
     alert('ต้องดึงข้อมูลให้ครบ 2 ขั้นก่อน (ดึงจาก PO-2 และดึงยอดจริง)');
     return;
@@ -633,6 +639,13 @@ function po7Realize(){
     location.href='po6-ap-invoice-mockup.html';
   }
 }
+function po7ToggleConf(){
+  var cf=document.getElementById('po7Conf');
+  var v=cf.getAttribute('data-conf')==='signed'?'verbal':'signed';
+  cf.setAttribute('data-conf',v);
+  if(v==='verbal'){ cf.textContent='🟡 รับปาก (เสี่ยง)'; cf.style.background='rgba(251,191,36,0.4)'; }
+  else { cf.textContent='✍️ เซ็นแล้ว'; cf.style.background='rgba(255,255,255,0.25)'; }
+}
 function po7OpenCompanyDocs(){
   alert('แนบเอกสารยืนยันยอดจริงของบริษัท (mock):\n- หนังสือยืนยันยอดจากบริษัท\n- ใบแจ้งยอดส่งเสริมการขาย\n- เอกสารอนุมัติจ่ายจริงภายใน');
 }
@@ -640,7 +653,7 @@ function po7InitPatterns(){
   swtRenderStatusStrip('#po7Sc12',{
     pills:[
       {text:'✓ Draft',type:'success'},
-      {text:'● Accrued (commit·รับรู้)',type:'info'},
+      {text:'● Accrued (บันทึกความจำ·ยังไม่ลง GL)',type:'info'},
       {text:'Doc Received',type:'neutral'},
       {text:'Realized (ได้จริง)',type:'neutral'}
     ]

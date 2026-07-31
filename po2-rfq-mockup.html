@@ -285,6 +285,19 @@ input:disabled,select:disabled{background:#F3F4F6;color:#C2C8D0;cursor:not-allow
         <span class="po2-kpi-chip ok">Recovery 100% · CN ฿88,200.00</span>
         <span class="po2-flow-note">1 record = 1 type · แบบส่วนลด <b>เลือกรายบรรทัด</b> ใน PO-2.3</span>
       </div>
+      <!-- Sell-in 2 โหมด (หักบนบิล / accrue ตามหลัง) -->
+      <div id="po2SellinMode" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:9px;padding:8px 12px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:7px;font-size:12px">
+        <span style="font-weight:700;color:#374151">วิธีให้ส่วนลด (Sell-in):</span>
+        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="siMode" value="onbill" onclick="po2SiMode('onbill')"> 🧾 หักบนบิล PO (Case 4)</label>
+        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="siMode" value="accrue" checked onclick="po2SiMode('accrue')"> ⏳ accrue ตามหลัง (→ PO-7)</label>
+        <span id="po2SiHint" style="font-size:11px;color:#92400E;background:#FEF3C7;border:1px solid #FDE68A;border-radius:5px;padding:2px 8px">แจ้งก่อน → งบตามหลัง · ได้ CN → offset เข้า PO-6 AP</span>
+      </div>
+      <!-- อายุ/กรอบยืนข้อตกลง → เกณฑ์ sanction (ไม่ fix 30/60) -->
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px;padding:8px 12px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:7px;font-size:12px">
+        <span style="font-weight:700;color:#374151">⏳ อายุ/กรอบยืนข้อตกลง:</span>
+        <input value="31 ก.ค. 26 – 30 ก.ย. 26" style="width:180px;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit">
+        <span style="color:#6B7280">ครบกำหนดส่ง CN: <input value="30" style="width:44px;text-align:center;padding:5px;border:1px solid #E5E7EB;border-radius:5px;font-size:12px;font-family:inherit"> วันหลังรอบ · <b>ระบุในใบเลย</b> (ใช้เป็นเกณฑ์ sanction ที่ PO-7 · ไม่ fix 30/60)</span>
+      </div>
     </div>
 
     <!-- ④c PO-2.3 LINE รายการสินค้า + เงื่อนไขส่วนลด -->
@@ -560,6 +573,10 @@ document.addEventListener('keydown',function(e){
 });
 function po2OpenPrint(){openModal('mPo2Print');}
 function po2CopyDoc(){alert('Copy ข้อตกลง (mock):\n• clone Vendor + รายการสินค้า + เงื่อนไขส่วนลดทั้งหมด\n• ออกเลขที่ AG ใหม่ · วันที่ = วันนี้ · ลบลายเซ็น/อนุมัติ\n• สถานะเริ่ม "ร่าง"');}
+function po2SiMode(v){
+  var h=document.getElementById('po2SiHint');
+  if(h) h.textContent=(v==='onbill')?'ลดต้นทุนทันทีบนบิล PO · Case 4 (%บนบิล) เท่านั้น · terminal · ไม่ดึงเข้า PO-7':'แจ้งก่อน → งบตามหลัง · ได้ CN → offset เข้า PO-6 AP';
+}
 
 /* ═══ ④a SC-12 + Gate + ⑤ Doc Chain ═══ */
 function po2InitPatterns(){
@@ -602,6 +619,7 @@ function po2TypeChange(type){
   document.getElementById('memoTableWrap').style.display=cfg.memo?'':'none';
   document.getElementById('btnAddProd').style.display=cfg.memo?'none':'';
   document.getElementById('btnAddScope').style.display=cfg.memo?'none':'';
+  var sm=document.getElementById('po2SellinMode'); if(sm) sm.style.display=(type==='si')?'flex':'none';
   document.getElementById('addRowBar').innerHTML=cfg.memo
     ?'<span class="lnk">📝 + เพิ่มบันทึกความเข้าใจ</span>'
     :'<span class="lnk" onclick="dfOpenProd()">🔍 + เพิ่มสินค้า (SC-2 product picker)</span><span class="lnk" onclick="openModal(\'mPo2Scope\')" style="color:#92400E">⚡ + เพิ่มจาก Filter Scope — แตกเป็นรายสินค้า</span>';
