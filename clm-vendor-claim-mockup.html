@@ -154,6 +154,19 @@ td{padding:6px 9px;font-size:12.5px}
 .chip{font-size:10.5px;padding:2px 7px}
 .clm-sum{gap:16px}
 .alert{padding:9px 12px;font-size:12px;margin-bottom:12px}
+/* ── #3 · zone + step state + collapse (focus/ลำดับ) ── */
+.clm-zone{display:flex;align-items:center;gap:10px;margin:14px 2px 8px;font-size:12.5px;font-weight:700;color:#374151}
+.clm-zone::after{content:'';flex:1;height:1px;background:#E5E7EB}
+.sec-state{font-size:10px;font-weight:700;padding:1px 8px;border-radius:10px;white-space:nowrap}
+.sec-state.done{background:#D1FAE5;color:#065F46}
+.sec-state.active{background:#DBEAFE;color:#1E40AF}
+.sec-state.wait{background:#F3F4F6;color:#6B7280}
+details.collapse>summary{list-style:none;cursor:pointer;user-select:none}
+details.collapse>summary::-webkit-details-marker{display:none}
+details.collapse>summary .tag{margin-left:8px}
+details.collapse>summary::after{content:'▼';margin-left:auto;font-size:10px;color:#9CA3AF;transition:transform .15s;flex-shrink:0}
+details.collapse[open]>summary::after{transform:rotate(180deg)}
+details.collapse:not([open])>summary{margin-bottom:0}
 </style>
 </head>
 <body>
@@ -250,6 +263,9 @@ function clmResultPick(v){
 }
 </script>
 
+<!-- Zone A: ข้อมูลเคลม (กรอกตอนสร้าง) -->
+<div class="clm-zone">📝 ข้อมูลเคลม (กรอกตอนสร้าง) <span class="sec-state done">✓ เสร็จแล้ว</span></div>
+
 <!-- Row 2: Customer (SL-4 compact pattern) + Doc extras -->
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
 
@@ -326,10 +342,10 @@ function clmResultPick(v){
 </div>
 
 <!-- CLM-2: Symptom + Diagnosis + Evidence -->
-<div class="section-card">
-  <div class="section-title">🔧 CLM-2 · อาการ · วินิจฉัย · หลักฐาน
+<details class="section-card collapse">
+  <summary class="section-title">🔧 CLM-2 · อาการ · วินิจฉัย · หลักฐาน <span class="sec-state done">✓ เสร็จ</span>
     <span class="tag">ส่งให้ Vendor ตรวจสอบ</span>
-  </div>
+  </summary>
 
   <div class="form-grid-2">
     <div class="field"><label>รหัสอาการเสีย <span class="req">*</span> <span style="font-weight:400;color:#9CA3AF">— ชุดเดียวกับใบรับงานซ่อม</span></label>
@@ -405,13 +421,13 @@ function clmResultPick(v){
     <div class="photo-slot filled"><div class="ico">📷</div>ใบเสร็จ IV-B01-2406-0128</div>
     <div class="photo-slot"><div class="ico">+</div>เพิ่มรูป</div>
   </div>
-</div>
+</details>
 
 <!-- CLM-3: Items + Amount Claimed -->
-<div class="section-card">
-  <div class="section-title">💵 CLM-3 · รายการที่เคลม + ยอดเคลม Vendor
+<details class="section-card collapse">
+  <summary class="section-title">💵 CLM-3 · รายการที่เคลม + ยอดเคลม Vendor <span class="sec-state done">✓ เสร็จ</span>
     <span class="tag">ใช้ตั้ง ARI เรียกเงิน Vendor (sync จาก SV-4)</span>
-  </div>
+  </summary>
 
   <table>
     <thead>
@@ -456,11 +472,14 @@ function clmResultPick(v){
       <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#1E40AF;padding:6px 0;border-top:1px solid #93C5FD;margin-top:4px"><span>เคลม Vendor</span><span>฿11,877.00</span></div>
     </div>
   </div>
-</div>
+</details>
+
+<!-- Zone B: สถานะ & ดำเนินการ -->
+<div class="clm-zone">🔄 สถานะ &amp; ดำเนินการ <span class="sec-state active">👉 ทำอยู่: บันทึกผล Vendor</span></div>
 
 <!-- CLM-4: Vendor response tracking + result -->
 <div class="section-card">
-  <div class="section-title">📊 CLM-4 · ติดตาม Vendor + ผลเคลม <span class="tag">Async · Vendor ตอบใน 7 วันทำการ</span></div>
+  <div class="section-title">📊 CLM-4 · ติดตาม Vendor + ผลเคลม <span class="sec-state active">👉 ทำอยู่</span> <span class="tag">Async · Vendor ตอบใน 7 วันทำการ</span></div>
 
   <div class="clm-sum">
     <div class="it"><span class="k">สถานะ Vendor</span><span class="v"><span class="chip chip-yellow">⏳ รอ vendor ตอบ (D+2)</span></span></div>
@@ -476,7 +495,7 @@ function clmResultPick(v){
 
 <!-- CLM-5: Settlement → ใบลดหนี้เจ้าหนี้ (PO-CN) → รอหักหนี้ -->
 <div class="section-card">
-  <div class="section-title">🚀 CLM-5 · ออกใบลดหนี้เจ้าหนี้ (PO-CN) เมื่อรับเงิน → รอหักหนี้ <span class="tag">Hand-off → AP / บัญชี</span></div>
+  <div class="section-title">🚀 CLM-5 · ออกใบลดหนี้เจ้าหนี้ (PO-CN) เมื่อรับเงิน → รอหักหนี้ <span class="sec-state wait">○ รอ</span> <span class="tag">Hand-off → AP / บัญชี</span></div>
   <div style="margin-top:0;padding:9px 12px;background:#EFF6FF;border:1px solid #93C5FD;border-radius:7px;font-size:11.5px;color:#1E40AF">🔗 <b>หักกลบ Net C/V (§13.1a · reference):</b> ถ้าแบรนด์เป็นทั้ง <b>ลูกหนี้ (ARI ค่าซ่อม · AR)</b> + <b>เจ้าหนี้ (PO-CN เคลม · AP)</b> → หักกลบที่ Payment Journal · <b>Maker≠Checker</b> · post จริงที่ FI/BC (CLM แสดง step อ้างอิงเฉยๆ) · + <b>bin 6</b> = ของคืน vendor ทั้งชิ้น/ซาก (track ที่คลัง WH bin 6)</div>
   <div class="clm-sum" style="margin-top:10px">
     <div class="it"><span class="k">ผลเคลม</span><span class="v"><span class="chip chip-gray">⏳ ยังไม่ตอบ</span></span></div>
@@ -490,10 +509,10 @@ function clmResultPick(v){
 </div>
 
 <!-- CLM-7: ทะเบียนซากอะไหล่ที่ต้องคืนแบรนด์ -->
-<div class="section-card">
-  <div class="section-title">♻️ CLM-7 · ซากอะไหล่ที่ต้องคืนแบรนด์
+<details class="section-card collapse">
+  <summary class="section-title">♻️ CLM-7 · ซากอะไหล่ที่ต้องคืนแบรนด์ <span class="sec-state wait">○ อ้างอิง</span>
     <span class="tag">เรียงตัวที่ค้างนานสุดขึ้นบน</span>
-  </div>
+  </summary>
 
   <div class="alert alert-warn" style="margin-top:0">
     ⚠️ <div><strong>เคลมในประกัน = แบรนด์ให้อะไหล่ใหม่ แต่เราต้องส่งซาก (ของเก่าที่ถอดออก) คืนแบรนด์ภายในกำหนด</strong> — ถ้าส่งไม่ทัน แบรนด์จะเรียกเก็บเงินค่าอะไหล่ใหม่ชิ้นนั้นจากเรา<br>
@@ -557,7 +576,7 @@ function clmResultPick(v){
     <span style="font-size:12px;color:#991B1B;font-weight:600">· เลยกำหนดจนโดนเรียกเก็บ 1 รายการ (4,200 ฿)</span>
     <a onclick="clmDoc('whbin')" style="margin-left:auto;font-size:12px;color:#2563EB;font-weight:600;text-decoration:none;cursor:pointer">🏬 ดูของจริงที่คลังศูนย์ซ่อม (BIN-4) →</a>
   </div>
-</div>
+</details>
 
 <!-- CLM-8: Customer return (stage 8.5 · โหมด ① เท่านั้น) -->
 <div class="section-card" id="clmReturnSec" style="display:none">
