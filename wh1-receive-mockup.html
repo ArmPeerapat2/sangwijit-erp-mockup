@@ -265,9 +265,10 @@ table.items th:last-child,table.items td:last-child{border-right:none}
           <div class="field"><div class="field-label">วันที่รับ</div><div class="field-value">17 มิ.ย. 26</div></div>
           <div class="field"><div class="field-label">คลังรับ (ปลายทาง)</div><div class="field-value"><span class="highlight">WH-01</span> คลังกลาง บางนา</div></div>
           <div class="field"><div class="field-label">ประเภทรับ</div>
-            <select class="recv-sel" title="TR-In: ต้อง match Transfer Order status=Shipped จาก WH-3 · ยืนยันรับได้ครั้งเดียว (รับแล้ว status→Received ปุ่ม disable — กันสต๊อกเข้าซ้ำ 2 เท่า · decision 2026-07-02 #13)"><option>📥 จาก Vendor (PO)</option><option>🔄 รับโอน (Transfer In · WH-3)</option><option>🟣 เรียกจากสั่งซื้อสินค้าฝาก (PO-8)</option></select>
+            <select class="recv-sel" onchange="wh1RecvType(this)" title="TR-In: ต้อง match Transfer Order status=Shipped จาก WH-3 · ยืนยันรับได้ครั้งเดียว (รับแล้ว status→Received ปุ่ม disable — กันสต๊อกเข้าซ้ำ 2 เท่า · decision 2026-07-02 #13) · รับเคลม (S2/S3): อ้างใบเคลม CLM · กดรับ = ปิดเคลม"><option>📥 จาก Vendor (PO)</option><option>🔄 รับโอน (Transfer In · WH-3)</option><option>🟣 เรียกจากสั่งซื้อสินค้าฝาก (PO-8)</option><option value="clm-s2">♻️ รับเคลม — ของแทน (S2 · จาก CLM)</option><option value="clm-s3">🔧 รับเคลม — ซ่อมส่งกลับ (S3 · จาก CLM)</option></select>
           </div>
           <div class="field"><div class="field-label">ผู้รับสินค้า</div><div class="field-value">ก้อง · แผนกคลัง</div></div>
+          <div class="field" id="wh1ClmRef" style="display:none;grid-column:span 2"><div class="field-label">อ้างใบเคลม (CLM)</div><div class="field-value" style="display:flex;align-items:center;gap:8px"><input id="wh1ClmNo" value="CLM-2607-0031" style="width:170px;padding:5px 8px;border:1px solid #E5E7EB;border-radius:5px;font-family:monospace;font-size:12.5px"><a href="clm-vendor-claim-mockup.html" style="color:#2563EB;font-size:12px">เปิด CLM ↗</a><span style="font-size:11.5px;color:#B45309;background:#FEF3C7;border:1px solid #FDE68A;border-radius:5px;padding:2px 8px">💡 กด Post รับ = ปิดเคลมใบนี้อัตโนมัติ</span></div></div>
         </div>
       </div>
     </div>
@@ -406,6 +407,10 @@ function wh1Serial(sku,qty){
   document.getElementById('serialModal').classList.add('on');
 }
 /* โหมดการรับ: full = auto-fill รับครั้งนี้ = ค้างรับ ทุกไลน์ */
+function wh1RecvType(sel){
+  var isClm=(sel.value==='clm-s2'||sel.value==='clm-s3');
+  var box=document.getElementById('wh1ClmRef'); if(box) box.style.display=isClm?'':'none';
+}
 function wh1Mode(m){
   document.querySelectorAll('.mode-seg').forEach(function(s){s.classList.remove('on');});
   document.querySelector('.mode-seg.'+m).classList.add('on');
