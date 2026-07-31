@@ -667,6 +667,7 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
       <button class="srt-tab" onclick="srtTab(event,'srt-clm')">♻️ เคลมสินค้า (CLM)</button>
       <button class="srt-tab" onclick="srtTab(event,'srt-pm')">🎁 ส่งเสริมการขาย (PM)</button>
       <button class="srt-tab" onclick="srtTab(event,'srt-price')">💵 ราคา (PM-1)</button>
+      <button class="srt-tab" onclick="srtTab(event,'srt-rb')">🤝 rebate ฝั่งซื้อ (PO-7)</button>
     </div>
 
     <!-- ══ SV ══ -->
@@ -902,6 +903,32 @@ body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#1
         </tbody>
       </table>
       <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-30 (รอบ 2): <b>ราคา 2 ส่วน</b> — ① มาตรฐาน (base/fallback + เกณฑ์ตั้งโปร · สร้างทีละสินค้า หลายช่องทาง) ‖ ② โปร (PM-2 · เงื่อนไข รุ่น/ยี่ห้อ/หมวด/โควต้า/จำนวน/งบ) · <b>ช่องทาง extensible (channel master · เพิ่มได้ · ไม่ fix column)</b> · ใช้: มาตรฐานก่อน→โปรเข้าเงื่อนไข→ไม่เข้ากลับมาตรฐาน · PCR→อนุมัติ (Maker≠Checker)→Post · cost floor (ราคา&lt;ทุน บล็อก) · ⚠️ mockup pm1 + <b>ต้องมี channel master table</b></div>
+    </div>
+    <div class="srt-pane" id="srt-rb" data-label="🤝 rebate ฝั่งซื้อ (PO-7)">
+      <table>
+        <thead><tr><th style="width:150px">ขั้นตอน</th><th>📋 จัดซื้อ</th><th>🧑‍💼 Sales</th><th>💰 Finance</th><th>🏢 ห้าง/Vendor</th><th>→ ถัดไป</th><th>สถานะ</th><th>Menu</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="8">4 types: ① MOU ② Sell-in ③ Sell-out ④ Co-op · รับปาก=accrue+flag🟡 · หลัก: แจ้ง/เอกสารก่อน → งบตามหลัง · ⚠️ Rebate≠Discount (Other Income CF-4)</td></tr>
+          <tr class="grp"><td colspan="8">ข้อตกลง + บันทึกงบ (declare-first)</td></tr>
+          <tr><td class="stp">1.1 Trade Agreement (PO-2)</td><td>เจรจา vendor · <b>บันทึกข้อตกลงงบ (Vendor Commitment)</b> · ไม่มีผลภาษี</td><td></td><td></td><td></td><td class="nx">1.3 Accrual</td><td class="stt">ข้อตกลงบันทึกแล้ว</td><td class="mn">po2</td></tr>
+          <tr><td class="stp">1.2 รับปาก (verbal)</td><td></td><td><b>เซลรับปาก/เซ็นรับทราบ</b> ผลประโยชน์</td><td></td><td></td><td class="nx">1.3 Accrual</td><td class="stt">🟡 รับปาก (เสี่ยง · flag confidence)</td><td class="mn">po7</td></tr>
+          <tr><td class="stp">1.3 บันทึก Accrual (PO-7 Draft)</td><td>เลือก <b>type (MOU/Sell-in/Sell-out/Co-op)</b> · อ้าง PO-2 · งวด claim</td><td></td><td></td><td></td><td class="nx">2.x ตาม type</td><td class="stt">Draft (ยังไม่มี GL)</td><td class="mn">po7</td></tr>
+          <tr class="grp"><td colspan="8">แยกตาม type (⭐ Sell-in 2 โหมด)</td></tr>
+          <tr><td class="stp">2.S1a Sell-in ลดบนบิล</td><td><b>ใส่เป็นส่วนลดบนบิลซื้อ (PO) เลย</b> → ลดต้นทุนทันที · ⚠️ Case 4 (% บนบิล) เท่านั้น · ไม่ track accrual</td><td></td><td></td><td></td><td class="nx fin">🏁 หักบนบิล</td><td class="stt fin">หักบนบิลแล้ว</td><td class="mn">po4</td></tr>
+          <tr><td class="stp">2.S1b Sell-in ลดตามหลัง</td><td>แจ้งก่อน → accrue → รอ CN</td><td></td><td></td><td></td><td class="nx">3.1 Accrued</td><td class="stt">เข้า accrual</td><td class="mn">po7</td></tr>
+          <tr><td class="stp">2.S2 Sell-out</td><td>จ่ายเมื่อ<b>ขายออกสำเร็จ</b> — พิสูจน์ serial/SL-4 match</td><td></td><td></td><td></td><td class="nx">3.1 Accrued</td><td class="stt">รอ match ขายออก</td><td class="mn">po7</td></tr>
+          <tr><td class="stp">2.M MOU / Co-op</td><td>ซื้อถึงเป้า / Event → accrue</td><td></td><td></td><td></td><td class="nx">3.1 Accrued</td><td class="stt">เข้า accrual</td><td class="mn">po7</td></tr>
+          <tr class="grp"><td colspan="8">lifecycle: Accrued → Doc Received → Realized → Recon</td></tr>
+          <tr><td class="stp">3.1 Accrued</td><td>Confirm & Send</td><td></td><td>GL: Dr.Accrued Revenue / Cr.Vendor Obligation</td><td></td><td class="nx">3.2 Doc Received</td><td class="stt">Accrued</td><td class="mn">po7</td></tr>
+          <tr><td class="stp">3.2 Doc Received</td><td>รับเอกสาร · <b>audit + Category (1/2/3)</b> · match Agreement</td><td></td><td></td><td>ออก CN/Invoice/Statement</td><td class="nx">3.3 Realized</td><td class="stt">ได้เอกสารแล้ว</td><td class="mn">po7</td></tr>
+          <tr><td class="stp">3.3 Realized (offset)</td><td></td><td></td><td><b>Record Payment ที่ PO-7 เท่านั้น</b> 🔒 · Reverse Accrual · <b>offset CN → PO-6 AP (ตัดหนี้)</b> หรือ รับเงิน</td><td></td><td class="nx">3.4 Recon</td><td class="stt">Realized</td><td class="mn">po7·po6</td></tr>
+          <tr><td class="stp">3.4 Monthly Recon (กระทบยอด)</td><td></td><td></td><td><b>reconcile Accrual vs รับจริง</b> ทุกเดือน · netting ห้าง (ลูกหนี้↔เจ้าหนี้ §13.1a)</td><td></td><td class="nx fin">🏁</td><td class="stt fin">กระทบยอดแล้ว</td><td class="mn">fi8</td></tr>
+          <tr class="grp"><td colspan="8">แขนง (sanction/aging)</td></tr>
+          <tr><td class="stp">4.1 Aging alert</td><td>เกิน 30 วันไม่ได้เอกสาร → reminder · <b>60 วัน → STOP NEW PO</b></td><td></td><td></td><td></td><td class="nx">ทวง</td><td class="stt">ค้างเกิน SLA</td><td class="mn">po7·fi8</td></tr>
+          <tr><td class="stp">4.2 ยอดไม่ตรง (Adjust)</td><td>รับจริง &lt; Agreement เกิน 10% → <b>Flag สอบสวน</b> + แก้ + อนุมัติ</td><td></td><td></td><td></td><td class="nx">→ 3.2</td><td class="stt">Adjust</td><td class="mn">po7</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:10.5px;color:#059669;margin-top:6px">✅ เคาะ 07-31: หลัก = แจ้ง/เอกสารก่อน → งบตามหลัง (accrue→realized) · <b>Sell-in 2 โหมด: ลดบนบิล (ส่วนลด PO ทันที Case 4) / ลดตามหลัง (accrue→CN)</b> · Sell-out=match SL-4 · รับปาก=accrue+flag🟡 · Realized offset เข้า PO-6 AP (ตัดหนี้) · 🔒 Record Payment ที่ PO-7 เท่านั้น (FI-8 read-only) · Monthly Recon+netting · ⏭️ po7 Form view 5 types</div>
     </div>
   </div>
   <script>
