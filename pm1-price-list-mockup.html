@@ -58,7 +58,7 @@ td input,td select{width:100%;padding:5px 7px;border:1px solid #E5E7EB;border-ra
   <div class="swt-mh-left">
     <div class="swt-mh-title">
       <div class="swt-mh-ico">🏷️</div>
-      <div><h1>รายการราคา (Price List)</h1><p>PM-1 · ราคาขายมาตรฐาน + ช่วงโปรฯ → sync BC</p></div>
+      <div><h1>รายการราคา (Price List)</h1><p>PM-1 · ราคาขายมาตรฐานต่อช่องทาง → sync BC (โปรฯ ที่ PM-2)</p></div>
     </div>
     <div class="swt-mh-divider"></div>
     <div class="swt-mh-meta">
@@ -91,19 +91,20 @@ td input,td select{width:100%;padding:5px 7px;border:1px solid #E5E7EB;border-ra
 </div>
 
 <div style="display:flex;gap:10px;align-items:center;background:#F0FDF4;border:1px solid #86EFAC;border-radius:8px;padding:9px 14px;margin-bottom:12px;font-size:12.5px;color:#065F46;flex-wrap:wrap">
-  <span style="font-weight:700">⚖️ ลำดับราคาตอนขาย (Price Priority)</span>
-  <span class="chip chip-g">1) โปรโมชั่น (ช่วงเวลา active)</span> <span style="color:#9CA3AF">→</span>
-  <span class="chip chip-b">2) ราคามาตรฐานตามกลุ่มลูกค้า (default)</span>
-  <span style="color:#9CA3AF">·</span> <span>🔒 ทำ<b>ใบจอง</b>แล้ว = <b>ล็อกราคา</b> อ้างอิงราคาเดิมได้แม้ลิสต์เปลี่ยน</span>
+  <span style="font-weight:700">⚖️ ลำดับราคาตอนขาย</span>
+  <span class="chip chip-b">1) ราคามาตรฐานตามช่องทาง (fallback)</span> <span style="color:#9CA3AF">→</span>
+  <span class="chip chip-g">2) มีโปรเข้าเงื่อนไข = ราคาโปร (PM-2)</span> <span style="color:#9CA3AF">→</span>
+  <span class="chip" style="background:#EDE9FE;color:#5B21B6">3) + VAT ท้ายสุด</span>
+  <span style="color:#9CA3AF">·</span> <span>🔒 ทำ<b>ใบจอง</b>แล้ว = <b>ล็อกราคา</b></span>
 </div>
 
 <div class="section-card">
   <div class="section-title">🏷️ PM-1.1 · ข้อมูลรายการราคา</div>
   <div class="form-grid">
     <div class="field"><label>รหัสรายการ</label><input value="PL-2607-0004" readonly style="background:#F9FAFB"></div>
-    <div class="field"><label>ประเภท</label><select><option>มาตรฐาน (Standard)</option><option selected>ตามฤดู/โปรฯ (Seasonal)</option><option>เฉพาะกิจ (Promo)</option></select></div>
+    <div class="field"><label>ประเภท</label><input value="มาตรฐาน (Standard)" readonly style="background:#F9FAFB"><div style="font-size:10.5px;color:#9CA3AF;margin-top:3px">โปรฯ/ส่วนลด ตั้งแยกที่ <a href="pm2-promotion-mockup.html" style="color:#2563EB">PM-2 ↗</a></div></div>
     <div class="field"><label>สกุลเงิน</label><select><option>THB (บาท)</option></select></div>
-    <div class="field"><label>ใช้กับ</label><select><option>ลูกค้าทุกราย</option><option selected>กลุ่มลูกค้า: ตัวแทนจำหน่าย</option><option>ลูกค้าเฉพาะราย</option></select></div>
+    <div class="field"><label>ใช้กับ <span style="font-weight:400;color:#9CA3AF">(precedence)</span></label><select><option selected>ลูกค้าทุกราย (ราคามาตรฐาน)</option><option>ลูกค้าเฉพาะราย (override · เจาะจงสุดชนะ)</option></select></div>
     <div class="field"><label>มีผลตั้งแต่ <span style="color:#DC2626">*</span></label><input value="01/07/26"></div>
     <div class="field"><label>ถึง</label><input value="30/09/26"></div>
     <div class="field" style="grid-column:span 2"><label>คำอธิบาย</label><input value="ราคาตัวแทนจำหน่าย ไตรมาส 3/2569 (โปรฤดูร้อน)"></div>
@@ -111,95 +112,102 @@ td input,td select{width:100%;padding:5px 7px;border:1px solid #E5E7EB;border-ra
 </div>
 
 <div class="section-card">
-  <div class="section-title">📦 PM-1.2 · รายการสินค้า + ราคา <span class="tag">ราคาก่อน VAT · ต้นทุนซ่อนจากฝ่ายขาย</span></div>
-  <!-- แถบค้นกลุ่ม + ปรับราคาชุด (ตั้งราคาทีละรายการ แต่ค้น/ปรับเป็นกลุ่มได้) -->
+  <div class="section-title">📦 PM-1.2 · ราคามาตรฐานต่อช่องทาง <span class="tag">ราคาก่อน VAT · 1 สินค้า/แถว · ช่องทางจาก MD ช่องทางการขาย</span></div>
+  <!-- ค้นกลุ่ม + ปรับราคาชุด (เลือกช่องที่จะปรับ) -->
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;padding:9px 12px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px">
-    <span style="font-size:12px;font-weight:700;color:#374151">🔎 ค้นเป็นกลุ่ม</span>
-    <input id="pmSearch" placeholder="รหัส/ชื่อสินค้า…" oninput="pmFilter()" style="padding:6px 10px;border:1px solid #E5E7EB;border-radius:6px;font-size:12.5px;font-family:inherit;width:170px">
+    <span style="font-size:12px;font-weight:700;color:#374151">🔎 ค้น</span>
+    <input id="pmSearch" placeholder="รหัส/ชื่อสินค้า…" oninput="pmFilter()" style="padding:6px 10px;border:1px solid #E5E7EB;border-radius:6px;font-size:12.5px;font-family:inherit;width:160px">
     <select id="pmCat" onchange="pmFilter()" style="padding:6px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:12.5px;font-family:inherit"><option value="">หมวด: ทั้งหมด</option><option>แอร์</option><option>อะไหล่</option></select>
     <select id="pmBrand" onchange="pmFilter()" style="padding:6px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:12.5px;font-family:inherit"><option value="">ยี่ห้อ: ทั้งหมด</option><option>Daikin</option><option>Mitsubishi</option></select>
     <span id="pmCount" style="font-size:12px;color:#6B7280;font-weight:600"></span>
     <div style="flex:1;min-width:12px"></div>
-    <span style="font-size:12px;color:#6B7280">ปรับราคาที่เลือก:</span>
-    <select id="pmMode" style="padding:6px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:12.5px;font-family:inherit"><option value="set">ตั้งเป็น (บาท)</option><option value="pct+">+ %</option><option value="pct-">− %</option><option value="amt+">+ บาท</option><option value="amt-">− บาท</option></select>
-    <input id="pmVal" placeholder="0" style="width:78px;text-align:right;padding:6px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:12.5px;font-family:inherit">
+    <span style="font-size:12px;color:#6B7280">ปรับ<b>ช่อง</b>:</span>
+    <select id="pmCh" style="padding:6px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:12.5px;font-family:inherit"><option value="ปลีก">🛍️ ปลีก</option><option value="ส่ง">📦 ส่ง</option><option value="ออนไลน์">💻 ออนไลน์</option><option value="ส่งออก">🌏 ส่งออก</option></select>
+    <select id="pmMode" style="padding:6px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:12.5px;font-family:inherit"><option value="set">ตั้งเป็น</option><option value="pct+">+ %</option><option value="pct-">− %</option><option value="amt+">+ บาท</option><option value="amt-">− บาท</option></select>
+    <input id="pmVal" placeholder="0" style="width:70px;text-align:right;padding:6px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:12.5px;font-family:inherit">
     <button class="btn btn-primary" style="padding:6px 12px;font-size:12px" onclick="pmBulkApply()">ใช้กับที่เลือก (<span id="pmSelN">0</span>)</button>
   </div>
-  <table>
+  <div id="pmFloorBadge" style="display:none;font-size:12px;color:#991B1B;background:#FEE2E2;border:1px solid #FCA5A5;border-radius:6px;padding:6px 11px;margin-bottom:10px;font-weight:600"></div>
+  <div style="overflow-x:auto">
+  <table style="min-width:920px">
     <thead><tr>
       <th style="width:34px"><input type="checkbox" onchange="pmSelAll(this)" title="เลือกทั้งหมดที่กรองอยู่"></th>
-      <th style="width:140px">รหัสสินค้า</th>
-      <th>ชื่อสินค้า</th>
-      <th style="width:70px">หน่วย</th>
-      <th style="width:110px" class="num">จำนวน (ตั้งแต่-ถึง)</th>
-      <th style="width:120px" class="num">ราคาขาย (ก่อน VAT)</th>
-      <th style="width:100px" class="num">ต้นทุน</th>
-      <th style="width:120px">กลุ่มลูกค้า</th>
+      <th style="width:128px">รหัสสินค้า</th>
+      <th style="min-width:210px">ชื่อสินค้า</th>
+      <th style="width:58px">หน่วย</th>
+      <th style="width:98px" class="num">🛍️ ปลีก</th>
+      <th style="width:98px" class="num">📦 ส่ง</th>
+      <th style="width:98px" class="num">💻 ออนไลน์</th>
+      <th style="width:98px" class="num">🌏 ส่งออก</th>
+      <th style="width:88px" class="num">ต้นทุน 🔒</th>
+      <th style="width:42px" title="ราคาต่ำกว่าทุน">⚠️</th>
     </tr></thead>
     <tbody id="plRows">
-      <tr data-cat="แอร์" data-brand="Daikin">
+      <tr data-cat="แอร์" data-brand="Daikin" data-cost="17200">
         <td><input type="checkbox" class="pmChk" onchange="pmSelCount()"></td>
         <td><input value="DAI-FTKM24" style="font-family:monospace"></td>
         <td><input value="แอร์ Daikin FTKM24 24000 BTU"></td>
         <td><input value="เครื่อง"></td>
-        <td class="num"><input value="1 - 4" style="text-align:center"></td>
-        <td class="num"><input class="pm-price" value="18,900.00" style="text-align:right;font-weight:600"></td>
-        <td class="num"><span class="hidecost">🔒 ซ่อน</span></td>
-        <td><input value="ตัวแทน"></td>
+        <td class="num"><input class="pm-price" data-ch="ปลีก" value="19,900.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ส่ง" value="18,900.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ออนไลน์" value="19,500.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ส่งออก" value="18,500.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><span style="font-size:12px;color:#6B7280" title="เห็นเฉพาะ role การเงิน/pricing">17,200</span></td>
+        <td class="fl" style="text-align:center"></td>
       </tr>
-      <tr data-cat="แอร์" data-brand="Daikin">
-        <td><input type="checkbox" class="pmChk" onchange="pmSelCount()"></td>
-        <td><input value="DAI-FTKM24" style="font-family:monospace"></td>
-        <td><input value="แอร์ Daikin FTKM24 (ซื้อ 5+ เครื่อง)"></td>
-        <td><input value="เครื่อง"></td>
-        <td class="num"><input value="5 ขึ้นไป" style="text-align:center"></td>
-        <td class="num"><input class="pm-price" value="18,200.00" style="text-align:right;font-weight:600"></td>
-        <td class="num"><span class="hidecost">🔒 ซ่อน</span></td>
-        <td><input value="ตัวแทน"></td>
-      </tr>
-      <tr data-cat="แอร์" data-brand="Daikin">
+      <tr data-cat="แอร์" data-brand="Daikin" data-cost="15100">
         <td><input type="checkbox" class="pmChk" onchange="pmSelCount()"></td>
         <td><input value="DAI-FTKM18" style="font-family:monospace"></td>
         <td><input value="แอร์ Daikin FTKM18 18000 BTU"></td>
         <td><input value="เครื่อง"></td>
-        <td class="num"><input value="1 - 4" style="text-align:center"></td>
-        <td class="num"><input class="pm-price" value="16,400.00" style="text-align:right;font-weight:600"></td>
-        <td class="num"><span class="hidecost">🔒 ซ่อน</span></td>
-        <td><input value="ตัวแทน"></td>
+        <td class="num"><input class="pm-price" data-ch="ปลีก" value="17,200.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ส่ง" value="16,400.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ออนไลน์" value="16,900.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ส่งออก" value="16,000.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><span style="font-size:12px;color:#6B7280">15,100</span></td>
+        <td class="fl" style="text-align:center"></td>
       </tr>
-      <tr data-cat="แอร์" data-brand="Mitsubishi">
+      <tr data-cat="แอร์" data-brand="Mitsubishi" data-cost="12800">
         <td><input type="checkbox" class="pmChk" onchange="pmSelCount()"></td>
         <td><input value="MIT-MSY13" style="font-family:monospace"></td>
         <td><input value="แอร์ Mitsubishi MSY-13 13000 BTU"></td>
         <td><input value="เครื่อง"></td>
-        <td class="num"><input value="1 - 9" style="text-align:center"></td>
-        <td class="num"><input class="pm-price" value="13,500.00" style="text-align:right;font-weight:600"></td>
-        <td class="num"><span class="hidecost">🔒 ซ่อน</span></td>
-        <td><input value="ตัวแทน"></td>
+        <td class="num"><input class="pm-price" data-ch="ปลีก" value="14,200.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ส่ง" value="13,500.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ออนไลน์" value="13,900.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ส่งออก" value="13,200.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><span style="font-size:12px;color:#6B7280">12,800</span></td>
+        <td class="fl" style="text-align:center"></td>
       </tr>
-      <tr data-cat="แอร์" data-brand="Mitsubishi">
+      <tr data-cat="แอร์" data-brand="Mitsubishi" data-cost="19400">
         <td><input type="checkbox" class="pmChk" onchange="pmSelCount()"></td>
         <td><input value="MIT-MSZ24" style="font-family:monospace"></td>
         <td><input value="แอร์ Mitsubishi MSZ-24 24000 BTU"></td>
         <td><input value="เครื่อง"></td>
-        <td class="num"><input value="1 - 4" style="text-align:center"></td>
-        <td class="num"><input class="pm-price" value="21,300.00" style="text-align:right;font-weight:600"></td>
-        <td class="num"><span class="hidecost">🔒 ซ่อน</span></td>
-        <td><input value="ตัวแทน"></td>
+        <td class="num"><input class="pm-price" data-ch="ปลีก" value="22,300.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ส่ง" value="21,300.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ออนไลน์" value="21,900.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ส่งออก" value="20,900.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><span style="font-size:12px;color:#6B7280">19,400</span></td>
+        <td class="fl" style="text-align:center"></td>
       </tr>
-      <tr data-cat="อะไหล่" data-brand="Daikin">
+      <tr data-cat="อะไหล่" data-brand="Daikin" data-cost="4700">
         <td><input type="checkbox" class="pmChk" onchange="pmSelCount()"></td>
         <td><input value="SP-COMP-DAI" style="font-family:monospace"></td>
         <td><input value="คอมเพรสเซอร์ Daikin (อะไหล่)"></td>
         <td><input value="ตัว"></td>
-        <td class="num"><input value="1 ขึ้นไป" style="text-align:center"></td>
-        <td class="num"><input class="pm-price" value="4,850.00" style="text-align:right;font-weight:600"></td>
-        <td class="num"><span class="hidecost">🔒 ซ่อน</span></td>
-        <td><input value="ตัวแทน"></td>
+        <td class="num"><input class="pm-price" data-ch="ปลีก" value="5,200.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ส่ง" value="4,850.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ออนไลน์" value="5,050.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600"></td>
+        <td class="num"><input class="pm-price" data-ch="ส่งออก" value="4,600.00" oninput="pmFloorCheck()" style="text-align:right;font-weight:600" title="ต่ำกว่าทุน"></td>
+        <td class="num"><span style="font-size:12px;color:#6B7280">4,700</span></td>
+        <td class="fl" style="text-align:center"></td>
       </tr>
     </tbody>
   </table>
+  </div>
   <div style="margin-top:8px;font-size:12.5px;color:#2563EB;font-weight:600;cursor:pointer" onclick="addPl()">➕ เพิ่มรายการสินค้า</div>
+  <div style="margin-top:6px;font-size:11px;color:#9CA3AF">💡 ราคาต่างช่องทาง = ส่วนลดช่องทางฝังในราคาแล้ว (ส่วนลด/โปร แยกที่ <a href="pm2-promotion-mockup.html" style="color:#2563EB">PM-2</a>) · ต้นทุน 🔒 ซ่อนจาก role ขาย · ราคา &lt; ต้นทุน → กรอบแดง + บล็อกตอน Post (cost floor · legacy "ราคาขั้นต่ำจากการซื้อ")</div>
 </div>
 
 <div class="section-card" style="padding:12px 16px">
@@ -228,18 +236,18 @@ td input,td select{width:100%;padding:5px 7px;border:1px solid #E5E7EB;border-ra
       <th style="width:110px">มีผลตั้งแต่</th>
       <th style="width:110px" class="num">ราคา (ก่อน VAT)</th>
       <th style="width:150px" class="num">เปลี่ยนแปลง</th>
-      <th style="width:100px">กลุ่มลูกค้า</th>
-      <th style="width:150px">ใบขอเปลี่ยน (PM-3)</th>
+      <th style="width:100px">ช่องทาง</th>
+      <th style="width:150px">ใบขอเปลี่ยนราคา (PCR)</th>
       <th>เหตุผล / ผู้อนุมัติ</th>
       <th style="width:96px">สถานะ</th>
     </tr></thead>
     <tbody id="pm13Rows"></tbody>
   </table>
-  <div style="margin-top:8px;font-size:11.5px;color:#6B7280">💡 <b>ทุกการเปลี่ยนราคาต้องผ่านใบขอเปลี่ยนราคา (PM-3)</b> → อนุมัติ CF-2.6 → ลงเวอร์ชันใหม่ที่นี่อัตโนมัติ · ✅ ราคาล่าสุด = ราคาที่ระบบใช้ตอนขาย (ถ้าไม่มีโปรฯ active) · เก็บครบทุกเวอร์ชัน (แก้ปัญหาระบบเดิมที่ไม่เก็บประวัติ)</div>
+  <div style="margin-top:8px;font-size:11.5px;color:#6B7280">💡 <b>ทุกการเปลี่ยนราคาต้องผ่านใบขอเปลี่ยนราคา (PCR)</b> → อนุมัติ <b>Maker≠Checker</b> (คนตั้ง≠คนอนุมัติ) → ลงเวอร์ชันใหม่ที่นี่อัตโนมัติ · ✅ ราคาล่าสุด = ราคาที่ระบบใช้ตอนขาย (ถ้าไม่มีโปรฯ active) · เก็บครบทุกเวอร์ชัน (แก้ปัญหาระบบเดิมที่ไม่เก็บประวัติ)</div>
 </div>
 
 <!-- irreversible warning (safety) — ปุ่ม action อยู่บนหัวที่เดียว -->
-<div style="font-size:12px;color:#92400E;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:8px 12px;margin-top:10px">🔒 Post แล้วแก้ไม่ได้ · ผ่านอนุมัติ (Pricing Manager) ก่อน Post → sync BC salesPriceLists</div>
+<div style="font-size:12px;color:#92400E;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:8px 12px;margin-top:10px">🔒 Post แล้วแก้ไม่ได้ · ผ่านอนุมัติ <b>Maker≠Checker</b> (Pricing Mgr คนละคน) + ผ่าน cost floor (ไม่มีราคาต่ำกว่าทุน) ก่อน Post → sync BC salesPriceLists</div>
 
 </div></div></div>
 <script src="swt-link.js"></script>
@@ -247,10 +255,26 @@ td input,td select{width:100%;padding:5px 7px;border:1px solid #E5E7EB;border-ra
 <script>
 function addPl(){
   var tb=document.getElementById('plRows');
-  var tr=document.createElement('tr');
+  var tr=document.createElement('tr'); tr.setAttribute('data-cost','0');
   var i='width:100%;padding:5px 7px;border:1px solid #E5E7EB;border-radius:5px;font-size:12.5px;font-family:inherit';
-  tr.innerHTML='<td><input type="checkbox" class="pmChk" onchange="pmSelCount()"></td><td><input placeholder="รหัส..." style="'+i+';font-family:monospace"></td><td><input placeholder="ชื่อสินค้า..." style="'+i+'"></td><td><input value="เครื่อง" style="'+i+'"></td><td class="num"><input placeholder="1 - ..." style="'+i+';text-align:center"></td><td class="num"><input class="pm-price" placeholder="0.00" style="'+i+';text-align:right"></td><td class="num"><span class="hidecost">🔒 ซ่อน</span></td><td><input placeholder="กลุ่ม" style="'+i+'"></td>';
+  function pc(ch){return '<td class="num"><input class="pm-price" data-ch="'+ch+'" placeholder="0.00" oninput="pmFloorCheck()" style="'+i+';text-align:right"></td>';}
+  tr.innerHTML='<td><input type="checkbox" class="pmChk" onchange="pmSelCount()"></td><td><input placeholder="รหัส..." style="'+i+';font-family:monospace"></td><td><input placeholder="ชื่อสินค้า..." style="'+i+'"></td><td><input value="เครื่อง" style="'+i+'"></td>'+pc('ปลีก')+pc('ส่ง')+pc('ออนไลน์')+pc('ส่งออก')+'<td class="num"><span style="font-size:12px;color:#6B7280">—</span></td><td class="fl" style="text-align:center"></td>';
   tb.appendChild(tr);
+}
+/* cost floor: ราคาช่องใด < ต้นทุน → กรอบแดง + นับ (บล็อกตอน Post) */
+function pmFloorCheck(){
+  var bad=0;
+  document.querySelectorAll('#plRows tr').forEach(function(tr){
+    var cost=parseFloat(tr.getAttribute('data-cost'))||0, rowBad=false;
+    tr.querySelectorAll('.pm-price').forEach(function(inp){
+      var p=pmNum(inp.value);
+      if(cost&&p&&p<cost){inp.style.outline='2px solid #DC2626';rowBad=true;} else {inp.style.outline='';}
+    });
+    var fl=tr.querySelector('.fl'); if(fl)fl.innerHTML=rowBad?'<span style="color:#DC2626" title="มีราคาต่ำกว่าทุน">⚠️</span>':'';
+    if(rowBad)bad++;
+  });
+  var b=document.getElementById('pmFloorBadge');
+  if(b){ if(bad){b.style.display='';b.textContent='🔴 '+bad+' รายการมีราคาต่ำกว่าทุน — ต้องแก้/อนุมัติพิเศษก่อน Post (cost floor)';} else b.style.display='none'; }
 }
 
 /* PM-1.2 ค้นเป็นกลุ่ม + ปรับราคาชุด (ทุกการเปลี่ยนต้องผ่านขออนุมัติ) */
@@ -279,10 +303,10 @@ function pmSelCount(){
   document.getElementById('pmSelN').textContent=n;
 }
 function pmBulkApply(){
-  var mode=document.getElementById('pmMode').value, val=pmNum(document.getElementById('pmVal').value), n=0;
+  var ch=document.getElementById('pmCh').value, mode=document.getElementById('pmMode').value, val=pmNum(document.getElementById('pmVal').value), n=0;
   document.querySelectorAll('#plRows .pmChk').forEach(function(c){
     if(!c.checked||c.closest('tr').style.display==='none')return;
-    var inp=c.closest('tr').querySelector('.pm-price'); if(!inp)return;
+    var inp=c.closest('tr').querySelector('.pm-price[data-ch="'+ch+'"]'); if(!inp)return;
     var cur=pmNum(inp.value), nv=cur;
     if(mode==='set')nv=val; else if(mode==='pct+')nv=cur*(1+val/100); else if(mode==='pct-')nv=cur*(1-val/100);
     else if(mode==='amt+')nv=cur+val; else if(mode==='amt-')nv=cur-val;
@@ -290,20 +314,21 @@ function pmBulkApply(){
     inp.value=pmMoney(nv); inp.style.background='#FEF9C3'; n++;
   });
   if(!n){alert('ยังไม่ได้เลือกรายการ (ติ๊กช่องหน้ารายการที่จะปรับ)');return;}
-  alert('ปรับราคา '+n+' รายการแล้ว (ไฮไลต์เหลือง = แก้ยังไม่บันทึก)\n\n🔒 ทุกการเปลี่ยนราคาต้องผ่านใบขอเปลี่ยนราคา (PM-3) → อนุมัติ CF-2.6 · กด "ส่งขออนุมัติ" ด้านบน');
+  pmFloorCheck();
+  alert('ปรับราคาช่อง "'+ch+'" '+n+' รายการแล้ว (ไฮไลต์เหลือง = แก้ยังไม่บันทึก)\n\n🔒 ทุกการเปลี่ยนราคาต้องผ่านใบขอเปลี่ยนราคา (PCR) → อนุมัติ (Maker≠Checker) · กด "ส่งขออนุมัติ" ด้านบน');
 }
-pmFilter();
+pmFilter(); pmFloorCheck();
 
 /* PM-1.3 ประวัติราคา (timeline ต่อสินค้า · เก็บทุกเวอร์ชัน SUB) */
 var PM13={
   'DAI-FTKM24':{name:'แอร์ Daikin FTKM24 24000 BTU', rows:[
-    {v:'v3',date:'01/07/26',price:'18,900.00',chg:'▼ จาก 19,500 (−3.1%)',chgc:'#B45309',grp:'ตัวแทน',req:'PCR-2607-0012',reason:'โปรฤดูร้อน Q3/2569',by:'คุณสมชาย (Pricing Mgr)',cur:true},
-    {v:'v2',date:'01/04/26',price:'19,500.00',chg:'▼ จาก 20,000 (−2.5%)',chgc:'#B45309',grp:'ตัวแทน',req:'PCR-2604-0007',reason:'ปรับตามต้นทุนนำเข้าลดลง',by:'คุณสมชาย (Pricing Mgr)',cur:false},
-    {v:'v1',date:'01/01/26',price:'20,000.00',chg:'— ตั้งครั้งแรก',chgc:'#6B7280',grp:'ตัวแทน',req:'PCR-2601-0001',reason:'ตั้งราคาเริ่มต้นปี 2569',by:'คุณสมชาย (Pricing Mgr)',cur:false}
+    {v:'v3',date:'01/07/26',price:'18,900.00',chg:'▼ จาก 19,500 (−3.1%)',chgc:'#B45309',grp:'ส่ง',req:'PCR-2607-0012',reason:'โปรฤดูร้อน Q3/2569',by:'คุณสมชาย (Pricing Mgr)',cur:true},
+    {v:'v2',date:'01/04/26',price:'19,500.00',chg:'▼ จาก 20,000 (−2.5%)',chgc:'#B45309',grp:'ส่ง',req:'PCR-2604-0007',reason:'ปรับตามต้นทุนนำเข้าลดลง',by:'คุณสมชาย (Pricing Mgr)',cur:false},
+    {v:'v1',date:'01/01/26',price:'20,000.00',chg:'— ตั้งครั้งแรก',chgc:'#6B7280',grp:'ส่ง',req:'PCR-2601-0001',reason:'ตั้งราคาเริ่มต้นปี 2569',by:'คุณสมชาย (Pricing Mgr)',cur:false}
   ]},
   'MIT-MSY13':{name:'แอร์ Mitsubishi MSY-13 13000 BTU', rows:[
-    {v:'v2',date:'01/05/26',price:'13,500.00',chg:'▲ จาก 13,200 (+2.3%)',chgc:'#065F46',grp:'ตัวแทน',req:'PCR-2605-0009',reason:'ปรับขึ้นตามค่าเงินเยน',by:'คุณสมชาย (Pricing Mgr)',cur:true},
-    {v:'v1',date:'01/01/26',price:'13,200.00',chg:'— ตั้งครั้งแรก',chgc:'#6B7280',grp:'ตัวแทน',req:'PCR-2601-0002',reason:'ตั้งราคาเริ่มต้นปี 2569',by:'คุณสมชาย (Pricing Mgr)',cur:false}
+    {v:'v2',date:'01/05/26',price:'13,500.00',chg:'▲ จาก 13,200 (+2.3%)',chgc:'#065F46',grp:'ส่ง',req:'PCR-2605-0009',reason:'ปรับขึ้นตามค่าเงินเยน',by:'คุณสมชาย (Pricing Mgr)',cur:true},
+    {v:'v1',date:'01/01/26',price:'13,200.00',chg:'— ตั้งครั้งแรก',chgc:'#6B7280',grp:'ส่ง',req:'PCR-2601-0002',reason:'ตั้งราคาเริ่มต้นปี 2569',by:'คุณสมชาย (Pricing Mgr)',cur:false}
   ]}
 };
 function pm13Render(){
