@@ -87,6 +87,11 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
 .tab-pane{display:none}
 .tab-pane.active{display:block}
 
+/* ช่องทางส่งมอบ radio */
+.chsel{display:flex;gap:8px;margin-bottom:12px}
+.chsel label{flex:1;display:flex;align-items:center;gap:7px;padding:9px 12px;border:1.5px solid #E5E7EB;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+.chsel label.on{border-color:#2563EB;background:#EFF6FF}
+
 /* Signature pad */
 .sig-pad{border:2px dashed #CBD5E1;border-radius:8px;background:#F8FAFC;padding:30px 20px;text-align:center;color:#94A3B8;font-style:italic;font-size:14px;min-height:120px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;cursor:pointer;transition:all 0.2s}
 .sig-pad:hover{border-color:#4472C4;background:#EFF6FF;color:#4472C4}
@@ -341,23 +346,48 @@ td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align
 
   <!-- Tab 1: Signature + Rating -->
   <div class="tab-pane active" id="tab-sign">
-    <div class="form-grid-2">
-      <div class="field">
-        <label>ลูกค้าเซ็นรับงาน <span class="req">*</span> <span class="en">Customer Signature</span></label>
-        <div class="sig-pad signed">
-          ✍️ คุณสมหญิง เจริญสุข
-          <div class="sig-meta">เซ็นเมื่อ 23 เม.ย. 26 · 14:15 น. · ยืนยัน OTP: 081-xxx-1234</div>
-          <button class="sig-btn">🗑️ ลบลายเซ็น</button>
+    <!-- ช่องทางส่งมอบ branch -->
+    <div class="chsel">
+      <label class="on" id="sv7LabTeam"><input type="radio" name="sv7PodCh" value="team" checked onclick="sv7PodCh('team')"> 🚚 ทีมเอง (เซ็นรับหน้างาน)</label>
+      <label id="sv7Lab3pl"><input type="radio" name="sv7PodCh" value="3pl" onclick="sv7PodCh('3pl')"> 📦 ขนส่งภายนอก 3PL (tracking + POD)</label>
+    </div>
+
+    <!-- ทีมเอง: signature -->
+    <div id="sv7PodTeam">
+      <div class="form-grid-2">
+        <div class="field">
+          <label>ลูกค้าเซ็นรับงาน <span class="req">*</span> <span class="en">Customer Signature</span></label>
+          <div class="sig-pad signed">
+            ✍️ คุณสมหญิง เจริญสุข
+            <div class="sig-meta">เซ็นเมื่อ 23 เม.ย. 26 · 14:15 น. · ยืนยัน OTP: 081-xxx-1234</div>
+            <button class="sig-btn">🗑️ ลบลายเซ็น</button>
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <label>Admin/ช่างส่งงาน <span class="en">Staff Signature</span></label>
-        <div class="sig-pad signed">
-          ✍️ คุณปภาวรินทร์ (Admin)
-          <div class="sig-meta">เซ็นเมื่อ 23 เม.ย. 26 · 14:12 น. · Device: Desktop</div>
+        <div class="field">
+          <label>Admin/ช่างส่งงาน <span class="en">Staff Signature</span></label>
+          <div class="sig-pad signed">
+            ✍️ คุณปภาวรินทร์ (Admin)
+            <div class="sig-meta">เซ็นเมื่อ 23 เม.ย. 26 · 14:12 น. · Device: Desktop</div>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- 3PL: carrier + tracking + สลิป POD -->
+    <div id="sv7Pod3pl" style="display:none">
+      <div class="form-grid-2">
+        <div class="field"><label>เจ้าขนส่ง (carrier)</label><input value="Kerry Express" readonly></div>
+        <div class="field"><label>เลข tracking <span class="req">*</span></label><input value="KEX-TH-2604-146553"></div>
+        <div class="field"><label>สถานะจาก carrier</label><input value="✓ Delivered · 23 เม.ย. 26 15:40" readonly style="background:#F0FDF4;color:#065F46;font-weight:600"></div>
+        <div class="field"><label>ผู้รับ (ตามระบบ carrier)</label><input value="สมหญิง (ลายเซ็น carrier)"></div>
+      </div>
+      <div class="field" style="margin-top:12px">
+        <label>แนบสลิป POD จาก carrier <span class="req">*</span></label>
+        <div class="sig-pad">📎 อัปโหลดสลิป / หลักฐาน delivered จาก Kerry / Flash</div>
+      </div>
+      <div style="margin-top:10px;padding:9px 12px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;font-size:11.5px;color:#92400E">💡 <b>COD 3PL:</b> เงินปลายทางเข้าเป็น<b>รอบ</b>จาก carrier → กระทบยอด <a href="fi3-bank-reconciliation-mockup.html" style="color:#B45309;font-weight:700">FI-3 กระทบยอดธนาคาร</a> (ไม่ใช่รับสดหน้างาน)</div>
+    </div>
+
     <div class="form-grid-2" style="margin-top:14px">
       <div class="field">
         <label>Rating จากลูกค้า (1-5 ⭐) <span class="en">Customer Rating</span></label>
@@ -468,6 +498,12 @@ function switchTab(e,id){
   card.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
   e.target.closest('.tab-btn').classList.add('active');
   card.querySelector('#'+id).classList.add('active');
+}
+function sv7PodCh(v){
+  document.getElementById('sv7PodTeam').style.display=(v==='team')?'':'none';
+  document.getElementById('sv7Pod3pl').style.display=(v==='3pl')?'':'none';
+  document.getElementById('sv7LabTeam').classList.toggle('on',v==='team');
+  document.getElementById('sv7Lab3pl').classList.toggle('on',v==='3pl');
 }
 document.querySelectorAll('.pay-card').forEach(function(c){
   c.addEventListener('click',function(){

@@ -199,6 +199,7 @@ table.items th:last-child,table.items td:last-child{border-right:none}
         <button class="mh-btn mh-btn-ghost" title="แนบ CN/เอกสารจากห้าง" style="padding:6px 9px">📎</button>
         <button class="mh-btn mh-btn-ghost" title="พิมพ์" onclick="window.print()" style="padding:6px 9px">🖨️</button>
         <span style="width:1px;height:22px;background:rgba(255,255,255,0.2);margin:0 4px"></span>
+        <button class="mh-btn mh-btn-ghost" onclick="po7OpenNew()" title="สร้าง Accrual รายตัว ต่อประเภทงบ">➕ สร้าง Accrual</button>
         <button class="mh-btn mh-btn-ghost">💾 Save Draft</button>
         <button class="mh-btn mh-btn-primary" onclick="po7Realize()">✅ Confirm & Realize → ตั้งหนี้</button>
         <button class="mh-btn mh-btn-ghost" title="ยกเลิก" style="color:#FCA5A5;padding:6px 9px">❌</button>
@@ -358,6 +359,57 @@ table.items th:last-child,table.items td:last-child{border-right:none}
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="po7CloseBills()">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<!-- POPUP: สร้าง Accrual ใหม่ รายตัว ต่อประเภทงบ (Doc Header) -->
+<div class="modal-overlay" id="mPo7New" onclick="po7CloseNew()">
+  <div class="modal" style="width:min(560px,96vw)" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="ttl">➕ สร้าง Accrual ใหม่</div>
+      <div class="sub">Doc Header · 1 ประเภทงบ ต่อ 1 Accrual</div>
+      <button class="modal-close-x" onclick="po7CloseNew()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-grid-2">
+        <div class="field"><span class="field-label">Accrual No (auto)</span><input class="mini-input mono" style="width:100%" value="ACR-2607-0016" readonly></div>
+        <div class="field"><span class="field-label">ประเภทงบ</span>
+          <select id="po7NewType" class="mini-input" style="width:100%" onchange="po7NewTypeChange()">
+            <option value="mou">MOU (กรอบยอดซื้อ)</option>
+            <option value="si" selected>Sell-in (กรอบยอดซื้อ)</option>
+            <option value="so">Sell-out (ยอดขายออก)</option>
+            <option value="coop">Co-op (บันทึกความเข้าใจ)</option>
+          </select>
+        </div>
+        <div class="field"><span class="field-label">อ้างอิง Trade Agreement (PO-2)</span>
+          <select id="po7NewAgreement" class="mini-input" style="width:100%">
+            <option value="AG-MOU-2604-001">AG-MOU-2604-001 · MOU</option>
+            <option value="AG-SI-2604-005" selected>AG-SI-2604-005 · Sell-in</option>
+            <option value="AG-SO-2604-008">AG-SO-2604-008 · Sell-out</option>
+            <option value="AG-CO-2604-012">AG-CO-2604-012 · Co-op</option>
+          </select>
+        </div>
+        <div class="field"><span class="field-label">Vendor</span><input id="po7NewVendor" class="mini-input" style="width:100%" value="V-00045 · Daikin Industries (TH) Ltd."></div>
+        <div class="field"><span class="field-label">งวด Claim</span><input id="po7NewPeriod" class="mini-input" style="width:100%" value="Q2/2026 (เม.ย.–มิ.ย.)"></div>
+        <div class="field" id="po7NewDiscWrap"><span class="field-label">วิธีให้ส่วนลด (Sell-in)</span>
+          <select id="po7NewDisc" class="mini-input" style="width:100%">
+            <option value="onbill">หักบนบิล (on-invoice)</option>
+            <option value="accrue" selected>accrue ตามหลัง (off-invoice)</option>
+          </select>
+        </div>
+        <div class="field"><span class="field-label">ระดับหลักฐาน (confidence)</span>
+          <select id="po7NewConf" class="mini-input" style="width:100%">
+            <option value="signed">✍️ เซ็นแล้ว (solid)</option>
+            <option value="verbal">🟡 รับปาก (เสี่ยง)</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:#6B7280">💡 บันทึกเป็น Draft ก่อน · ดึงยอดจริง + Realize ทำที่หน้า Dashboard หลังบันทึก</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="po7CloseNew()">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="po7SaveNew()">💾 บันทึก Accrual (Draft)</button>
     </div>
   </div>
 </div>
@@ -626,7 +678,7 @@ function po7ShowBills(code,idx){
   document.getElementById('mPo7Bills').classList.add('open');
 }
 function po7CloseBills(){document.getElementById('mPo7Bills').classList.remove('open');}
-document.addEventListener('keydown',function(e){if(e.key==='Escape')po7CloseBills();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){po7CloseBills();po7CloseNew();}});
 function po7ChangeAgreement(code){
   po7State.po2Loaded=false;
   po7State.actualLoaded=false;
@@ -661,6 +713,29 @@ function po7ToggleConf(){
 }
 function po7OpenCompanyDocs(){
   alert('แนบเอกสารยืนยันยอดจริงของบริษัท (mock):\n- หนังสือยืนยันยอดจากบริษัท\n- ใบแจ้งยอดส่งเสริมการขาย\n- เอกสารอนุมัติจ่ายจริงภายใน');
+}
+/* ➕ สร้าง Accrual ใหม่ รายตัว ต่อประเภทงบ (Doc Header) */
+var po7NewTypeToAg={mou:'AG-MOU-2604-001',si:'AG-SI-2604-005',so:'AG-SO-2604-008',coop:'AG-CO-2604-012'};
+function po7OpenNew(){po7NewTypeChange();document.getElementById('mPo7New').classList.add('open');}
+function po7CloseNew(){document.getElementById('mPo7New').classList.remove('open');}
+function po7NewTypeChange(){
+  var t=document.getElementById('po7NewType').value;
+  document.getElementById('po7NewDiscWrap').style.display=(t==='si')?'flex':'none';
+  var ag=document.getElementById('po7NewAgreement'); if(ag&&po7NewTypeToAg[t]) ag.value=po7NewTypeToAg[t];
+}
+function po7SaveNew(){
+  var t=document.getElementById('po7NewType').value;
+  var ag=document.getElementById('po7NewAgreement').value;
+  var vendor=document.getElementById('po7NewVendor').value;
+  var period=document.getElementById('po7NewPeriod').value;
+  var conf=document.getElementById('po7NewConf').value;
+  var disc=(t==='si')?('\n• วิธีให้ส่วนลด: '+document.getElementById('po7NewDisc').options[document.getElementById('po7NewDisc').selectedIndex].text):'';
+  if(confirm('บันทึก Accrual ใหม่ (Draft · mock):\n\n• Accrual No: ACR-2607-0016 (auto)\n• ประเภทงบ: '+document.getElementById('po7NewType').options[document.getElementById('po7NewType').selectedIndex].text+'\n• อ้างอิง PO-2: '+ag+'\n• Vendor: '+vendor+'\n• งวด Claim: '+period+disc+'\n• ระดับหลักฐาน: '+(conf==='signed'?'✍️ เซ็นแล้ว':'🟡 รับปาก')+'\n\nเปิดข้อตกลงนี้บน Dashboard เพื่อดึงยอดจริงต่อ?')){
+    var sel=document.getElementById('po7AgreementSelect'); if(sel){sel.value=ag; po7ChangeAgreement(ag);}
+    var cf=document.getElementById('po7Conf');
+    if(cf && cf.getAttribute('data-conf')!==conf){po7ToggleConf();}
+    po7CloseNew();
+  }
 }
 function po7InitPatterns(){
   swtRenderStatusStrip('#po7Sc12',{
