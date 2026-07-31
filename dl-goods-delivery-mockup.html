@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DL ส่งมอบของขาย — Sangwijit ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="swt-patterns.css">
+<style>
+/* DL ส่งมอบของขาย (SL-4 delivery) — reuse pattern จาก SV-7 · SV-7=ซ่อมคืน · หน้านี้=ของขาย ปิดกลับบิลขาย */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;min-width:1440px}
+.app-container{display:flex;min-height:100vh}
+.main-content{flex:1;margin-left:240px;padding:0;background:#F8FAFC}
+.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.breadcrumb{font-size:13px;color:#6B7280}.breadcrumb strong{color:#111827}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.search-box{width:320px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;background:#F9FAFB}
+.branch-tag{background:#EFF6FF;color:#1E40AF;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.content-wrapper{padding:16px 24px}
+.section-card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:12px 16px;margin-bottom:10px}
+.section-title{font-size:15px;font-weight:600;color:#111827;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.section-title .tag{font-size:11px;background:#EFF6FF;color:#1E40AF;padding:2px 8px;border-radius:4px;font-weight:600}
+.status-pills{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.status-pill{padding:6px 12px;border-radius:16px;font-size:12px;font-weight:600;border:1px solid #E5E7EB;background:#F9FAFB;color:#6B7280}
+.status-pill.active{background:#2563EB;color:#fff;border-color:#2563EB}
+.status-pill.done{background:#D1FAE5;color:#065F46;border-color:#86EFAC}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;color:#6B7280;font-weight:500;display:flex;gap:6px;align-items:baseline}
+.field label .req{color:#C55A11;margin-left:2px}
+.field input,.field select,.field textarea{padding:8px 10px;border:1px solid #E5E7EB;border-radius:6px;font-size:13px;font-family:inherit;background:#fff;color:#111827;outline:none;width:100%}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#F9FAFB;padding:7px 10px;text-align:left;font-weight:600;color:#374151;border-bottom:1px solid #E5E7EB;font-size:12px}
+td{padding:7px 10px;border-bottom:1px solid #F3F4F6;color:#111827;vertical-align:top}
+.num{text-align:right;font-variant-numeric:tabular-nums}.mono{font-family:monospace}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.chip-green{background:#D1FAE5;color:#065F46}.chip-yellow{background:#FEF3C7;color:#92400E}.chip-blue{background:#DBEAFE;color:#1E40AF}
+.tabs{display:flex;gap:0;border-bottom:2px solid #E5E7EB;margin-bottom:12px;overflow-x:auto}
+.tab-btn{padding:10px 16px;border:none;background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:#6B7280;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.tab-btn.active{color:#4472C4;border-bottom-color:#4472C4}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.sig-pad{border:2px dashed #CBD5E1;border-radius:8px;background:#F8FAFC;padding:30px 20px;text-align:center;color:#94A3B8;font-style:italic;font-size:14px;min-height:120px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;cursor:pointer}
+.sig-pad.signed{border:1px solid #4472C4;border-style:solid;background:#EFF6FF;color:#1E40AF;font-style:normal;font-weight:600;font-size:16px}
+.sig-pad .sig-meta{font-size:11px;color:#64748B;font-weight:400;margin-top:4px;font-style:normal}
+.upl{border:2px dashed #CBD5E1;border-radius:8px;background:#F8FAFC;padding:22px;text-align:center;color:#94A3B8;font-size:13px;cursor:pointer}
+.upl:hover{border-color:#4472C4;background:#EFF6FF;color:#4472C4}
+.sum-box{background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:16px 20px}
+.sum-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}
+.sum-row.total{border-top:2px solid #111827;margin-top:8px;padding-top:12px;font-weight:700;font-size:18px}
+.sum-row.subtotal{border-top:1px solid #E5E7EB;margin-top:6px;padding-top:10px;font-weight:600}
+.sum-row .label{color:#6B7280}
+.chsel{display:flex;gap:8px;margin-bottom:12px}
+.chsel label{flex:1;display:flex;align-items:center;gap:7px;padding:9px 12px;border:1.5px solid #E5E7EB;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+.chsel label.on{border-color:#2563EB;background:#EFF6FF}
+</style>
+</head>
+<body>
+<div class="app-container"><div class="main-content"><div class="topbar">
+<div class="breadcrumb">หน้าแรก › จัดส่ง › <strong>DL ส่งมอบของขาย</strong></div>
+<div class="topbar-right"><input class="search-box" placeholder="ค้นหา... (Ctrl+K)"><span>🔔</span><span class="branch-tag">BKK · SWT</span><div class="avatar">P</div></div>
+</div><div class="content-wrapper">
+
+<!-- Header -->
+<header class="swt-mh">
+  <div class="swt-mh-left">
+    <div class="swt-mh-title">
+      <div class="swt-mh-ico">🚚</div>
+      <div><h1>ส่งมอบของขาย + ปิดบิล</h1><p>Goods Delivery &amp; Close (DL) · SV-7 = ซ่อมคืน · หน้านี้ = ของขาย</p></div>
+    </div>
+    <div class="swt-mh-divider"></div>
+    <div class="swt-mh-meta">
+      <div class="swt-mh-meta-item"><div class="lbl">เลขที่ใบส่งมอบ</div><div class="val">DL-2607-0031</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">อ้างอิงบิลขาย (SL-4)</div><div class="val">IV-B01-2607-0128</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">วันส่งมอบ</div><div class="val">31 ก.ค. 26</div></div>
+      <div class="swt-mh-meta-item"><div class="lbl">Admin</div><div class="val">คุณปภาวรินทร์</div></div>
+    </div>
+  </div>
+  <div class="swt-mh-right">
+    <span class="swt-mh-badge pending">🟠 รอส่งมอบ</span>
+    <button class="swt-mh-btn swt-mh-btn-ghost" title="เปิดเอกสารเก่า" style="padding:6px 9px">📂</button>
+    <button class="swt-mh-btn swt-mh-btn-ghost" onclick="dlOpenPrint()" title="พิมพ์" style="padding:6px 9px">📄</button>
+    <span style="width:1px;height:22px;background:#D1D5DB;margin:0 4px"></span>
+    <button class="swt-mh-btn swt-mh-btn-ghost">💾 Draft</button>
+    <button class="swt-mh-btn swt-mh-btn-primary" title="POD+ชำระครบ → ปิดบิลขาย SL-4 (BC AR) · ย้อนไม่ได้">✓ ปิดบิล</button>
+  </div>
+</header>
+
+<!-- Status pills -->
+<div class="status-pills">
+  <span class="status-pill done">1. บิลขาย (SL-4)</span>
+  <span class="status-pill done">2. คิวจัดส่ง (SV-6)</span>
+  <span class="status-pill done">3. ออกส่ง</span>
+  <span class="status-pill active">4. ส่งมอบ + POD (ปัจจุบัน)</span>
+  <span class="status-pill">5. ปิดบิลขาย</span>
+</div>
+
+<!-- Row: Customer + Delivery info (ช่องทางส่ง) -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:10px">
+  <div class="swt-cust-card">
+    <div class="swt-cust-head"><div class="swt-cust-title"><span class="ico">👤</span>DL-1 · ลูกค้า <span style="font-size:9px;background:#F3F4F6;color:#6B7280;padding:1px 5px;border-radius:3px;font-weight:700;margin-left:4px">SC-1 · Read-only</span></div><div class="swt-cust-head-spacer"></div><a href="md2-customer-master-mockup-v3.html" class="swt-cust-btn">👁️ ดูบัตร</a></div>
+    <div class="swt-cust-grid">
+      <div class="swt-cust-field"><div class="swt-cust-label">รหัส · ชื่อ</div><div class="swt-cust-value"><span class="highlight">C-00125</span> · คุณสมหญิง</div></div>
+      <div class="swt-cust-field"><div class="swt-cust-label">เบอร์ · LINE</div><div class="swt-cust-value">081-xxx-1234 · @somying</div></div>
+    </div>
+    <div class="swt-credit-line">
+      <div class="cell"><span class="lbl">ยอดบิล</span><span class="val">฿37,450</span></div>
+      <div class="cell"><span class="lbl">ชำระแล้ว</span><span class="val g">มัดจำ 10,000</span></div>
+      <div class="cell"><span class="lbl">เก็บปลายทาง (COD)</span><span class="val r">฿27,450</span></div>
+      <div class="cell"><span class="lbl">AR ค้าง</span><span class="val">0</span></div>
+    </div>
+    <details class="swt-addr"><summary>📍 ที่อยู่ส่ง</summary><div class="swt-addr-line"><strong>🏠 ที่ส่ง</strong>123 ซ.สุขุมวิท 71 แขวงคลองตัน เขตวัฒนา กรุงเทพฯ 10110</div></details>
+  </div>
+
+  <div class="swt-cust-card">
+    <div class="swt-cust-head"><div class="swt-cust-title"><span class="ico">🚚</span>DL-1b · การส่งมอบ</div><div class="swt-cust-head-spacer"></div></div>
+    <div class="swt-cust-grid">
+      <div class="swt-cust-field"><div class="swt-cust-label">ช่องทางส่ง (จาก SV-6)</div><div class="swt-cust-value" id="dlChLabel">🚚 ทีมส่งเอง</div></div>
+      <div class="swt-cust-field"><div class="swt-cust-label">ทีม/คนขับ · Ref JOB</div><div class="swt-cust-value">ทีมส่ง A · <span class="mono">JOB-26-0201</span></div></div>
+      <div class="swt-cust-field"><div class="swt-cust-label">วันส่งมอบ <span style="color:#C55A11">*</span></div><div class="swt-cust-value"><input value="31 ก.ค. 26 · 14:00" style="width:100%;padding:4px 6px;border:1px solid #E5E7EB;border-radius:4px;font-size:12px;font-family:inherit"></div></div>
+      <div class="swt-cust-field"><div class="swt-cust-label">เบิกของ (WH-2)</div><div class="swt-cust-value"><a href="wh2-issue-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:700">08ISR-2607-0042</a></div></div>
+    </div>
+    <details class="swt-addr"><summary>🔗 เอกสารที่เกี่ยวข้อง (Chain)</summary>
+      <div class="swt-addr-line"><strong>บิลขาย SL-4</strong><a href="sl4-invoice-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:700">IV-B01-2607-0128</a></div>
+      <div class="swt-addr-line"><strong>คิวจัดส่ง SV-6</strong><a href="sv6-delivery-install-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:700">JOB-26-0201</a></div>
+      <div class="swt-addr-line"><strong>ใบเบิก WH-2</strong><a href="wh2-issue-mockup.html" style="color:#2563EB;font-family:monospace;font-weight:700">08ISR-2607-0042</a></div>
+    </details>
+  </div>
+</div>
+
+<!-- DL-2 สรุปการส่งมอบ (รายการจากบิลขาย) -->
+<div class="section-card">
+  <div class="section-title">📋 DL-2 · สรุปการส่งมอบ <span class="tag" style="margin-left:auto">จากบิลขาย SL-4 · serial</span></div>
+  <table>
+    <thead><tr><th style="width:150px">รหัส</th><th>รายการ</th><th style="width:70px" class="num">จำนวน</th><th style="width:70px">หน่วย</th><th>Serial</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">DAI-FTKM24</td><td>แอร์ Daikin FTKM24 24,000 BTU</td><td class="num">1</td><td>เครื่อง</td><td class="mono">SN-2506-8891 ✓</td></tr>
+      <tr><td class="mono">DAI-FTKM18</td><td>แอร์ Daikin FTKM18 18,000 BTU</td><td class="num">1</td><td>เครื่อง</td><td class="mono">SN-2506-8892 ✓</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- DL-3 ยอดต้องจ่าย (COD) -->
+<div class="section-card">
+  <div class="section-title">💵 DL-3 · ยอดที่ลูกค้าต้องจ่าย (เก็บปลายทาง) <span class="tag" style="margin-left:auto">จาก SL-4 · หักมัดจำแล้ว</span></div>
+  <div class="form-grid-2">
+    <div class="sum-box">
+      <div class="sum-row"><span class="label">ยอดบิลขาย (รวม VAT)</span><span class="val">37,450.00</span></div>
+      <div class="sum-row"><span class="label">หัก มัดจำที่รับแล้ว</span><span class="val">−10,000.00</span></div>
+      <div class="sum-row total"><span class="label">เก็บปลายทาง (COD)</span><span class="val" style="color:#DC2626">฿27,450.00</span></div>
+    </div>
+    <div class="sum-box" style="background:#F0FDF4;border-color:#86EFAC">
+      <div style="font-size:13px;font-weight:700;color:#065F46;margin-bottom:8px">🎯 สถานะการส่งมอบ</div>
+      <div class="sum-row"><span class="label">POD</span><span class="val"><span class="chip chip-yellow">รอเซ็นรับ</span></span></div>
+      <div class="sum-row"><span class="label">ชำระ COD</span><span class="val"><span class="chip chip-yellow">รอรับ</span></span></div>
+      <div class="sum-row"><span class="label">ปิดบิล SL-4</span><span class="val"><span class="chip chip-gray" style="background:#F3F4F6;color:#9CA3AF">รอ POD+ชำระครบ</span></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- DL-4 POD + ชำระ -->
+<div class="section-card">
+  <div class="section-title">✍️ DL-4 · POD (หลักฐานการส่งมอบ) + ชำระเงิน</div>
+
+  <!-- ช่องทางส่ง branch -->
+  <div class="chsel">
+    <label class="on" id="labTeam"><input type="radio" name="podCh" value="team" checked onclick="dlPodCh('team')"> 🚚 ทีมส่งเอง (เซ็นรับ + COD สด)</label>
+    <label id="lab3pl"><input type="radio" name="podCh" value="3pl" onclick="dlPodCh('3pl')"> 📦 ขนส่งภายนอก 3PL (delivered + tracking + COD รอบ)</label>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(event,'tab-pod')">✍️ POD</button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-pay')">💳 รับชำระ (COD)</button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-tl')">🕑 Timeline</button>
+  </div>
+
+  <!-- Tab POD -->
+  <div class="tab-pane active" id="tab-pod">
+    <!-- ทีมเอง: signature -->
+    <div id="podTeam">
+      <div class="form-grid-2">
+        <div class="field"><label>ลูกค้าเซ็นรับของ (POD) <span class="req">*</span></label>
+          <div class="sig-pad signed">✍️ คุณสมหญิง เจริญสุข<div class="sig-meta">เซ็นเมื่อ 31 ก.ค. 26 · 14:15 · ยืนยัน OTP: 081-xxx-1234</div></div>
+        </div>
+        <div class="field"><label>ทีมส่ง (ผู้ส่งมอบ)</label>
+          <div class="sig-pad signed">✍️ ทีมส่ง A · สมชาย<div class="sig-meta">31 ก.ค. 26 · 14:12 · Device: Mobile</div></div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:12px"><label>รูปถ่ายส่งมอบ (optional)</label><div class="upl">📷 แนบรูปหน้างาน / ของที่ส่ง (ลากไฟล์ / กดเลือก)</div></div>
+    </div>
+    <!-- 3PL: tracking + สลิป -->
+    <div id="pod3pl" style="display:none">
+      <div class="form-grid-2">
+        <div class="field"><label>เจ้าขนส่ง (carrier)</label><input value="Kerry Express" readonly style="background:#F9FAFB"></div>
+        <div class="field"><label>เลข tracking <span class="req">*</span></label><input value="KEX-TH-2607-889231"></div>
+        <div class="field"><label>สถานะจาก carrier</label><input value="✓ Delivered · 31 ก.ค. 26 15:40" readonly style="background:#F0FDF4;color:#065F46;font-weight:600"></div>
+        <div class="field"><label>ผู้รับ (ตามระบบ carrier)</label><input value="สมหญิง (ลายเซ็น carrier)"></div>
+      </div>
+      <div class="field" style="margin-top:12px"><label>แนบสลิป POD จาก carrier <span class="req">*</span></label><div class="upl">📎 อัปโหลดสลิป/หลักฐาน delivered จาก Kerry/Flash</div></div>
+      <div style="margin-top:10px;padding:9px 12px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;font-size:11.5px;color:#92400E">💡 <b>COD 3PL:</b> เงินปลายทางเข้าเป็น<b>รอบ</b>จาก carrier → กระทบยอด <a href="fi3-bank-reconciliation-mockup.html" style="color:#B45309;font-weight:700">FI-3 กระทบยอดธนาคาร</a> (ไม่ใช่รับสดหน้างาน)</div>
+    </div>
+  </div>
+
+  <!-- Tab Pay (COD) -->
+  <div class="tab-pane" id="tab-pay">
+    <div id="dlPayHost"></div>
+    <div id="dlPay3plNote" style="display:none;padding:12px 14px;background:#DBEAFE;border:1px solid #93C5FD;border-radius:8px;font-size:12.5px;color:#1E40AF">📦 <b>ช่องทาง 3PL:</b> ไม่รับชำระที่หน้านี้ — COD เก็บโดย carrier → เข้าเป็นรอบ → <b>กระทบยอด FI-3</b> · ปิดบิลเมื่อยอด COD เข้าครบ</div>
+  </div>
+
+  <!-- Tab Timeline -->
+  <div class="tab-pane" id="tab-tl">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:13px"><b>บิลขาย SL-4</b> · 30 ก.ค. 26 · รับมัดจำ 10,000 (โอน)</div>
+      <div style="font-size:13px"><b>เข้าคิวจัดส่ง SV-6</b> · 30 ก.ค. 26 · มอบหมายทีมส่ง A</div>
+      <div style="font-size:13px"><b>เบิกของ WH-2</b> · 31 ก.ค. 26 08:30 · ตัดสต็อก 2 เครื่อง</div>
+      <div style="font-size:13px;color:#2563EB;font-weight:600"><b>ส่งมอบ (ปัจจุบัน)</b> · 31 ก.ค. 26 14:00 · รอ POD + COD 27,450</div>
+      <div style="font-size:13px;color:#9CA3AF"><b>ปิดบิล SL-4</b> · รอ — เมื่อ POD+ชำระครบ → Post ปิดบิลขาย (BC AR)</div>
+    </div>
+  </div>
+</div>
+
+<!-- DOC-CHAIN -->
+<div class="dc-strip">
+  <span class="dc-lbl">เอกสารขาย → จัดส่ง</span>
+  <div class="dc-chain">
+    <a class="dc-node done" href="sl1-quotation-mockup.html">SL-1 เสนอราคา</a><span class="dc-arrow">→</span>
+    <a class="dc-node done" href="sl2-reservation-mockup.html">SL-2 ใบจอง</a><span class="dc-arrow">→</span>
+    <a class="dc-node done" href="sl4-invoice-mockup.html">SL-4 บิลขาย</a><span class="dc-arrow">→</span>
+    <a class="dc-node done" href="sv6-delivery-install-mockup.html">SV-6 คิวจัดส่ง</a><span class="dc-arrow">→</span>
+    <span class="dc-node current">DL ส่งมอบ (นี้)</span>
+  </div>
+</div>
+
+<div style="font-size:12px;color:#92400E;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:8px 12px;margin-top:10px">🔒 กด <strong>"ปิดบิล"</strong> (บนขวา) = POD + ชำระครบ → <b>ปิดบิลขาย SL-4</b> (Post BC AR) · <strong>ย้อนไม่ได้</strong> · ต่างจาก SV-7 (ซ่อมคืน → ARI/vendor)</div>
+
+</div></div></div>
+
+<script>
+function dlOpenPrint(){alert('พิมพ์ใบส่งมอบ / POD (mock)');}
+function switchTab(e,id){
+  var card=e.target.closest('.section-card');
+  card.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  card.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  e.target.closest('.tab-btn').classList.add('active');
+  card.querySelector('#'+id).classList.add('active');
+}
+function dlPodCh(v){
+  document.getElementById('podTeam').style.display=(v==='team')?'':'none';
+  document.getElementById('pod3pl').style.display=(v==='3pl')?'':'none';
+  document.getElementById('dlPayHost').style.display=(v==='team')?'':'none';
+  document.getElementById('dlPay3plNote').style.display=(v==='3pl')?'':'none';
+  document.getElementById('dlChLabel').textContent=(v==='team')?'🚚 ทีมส่งเอง':'📦 ขนส่งภายนอก (3PL)';
+  document.getElementById('labTeam').classList.toggle('on',v==='team');
+  document.getElementById('lab3pl').classList.toggle('on',v==='3pl');
+}
+document.addEventListener('DOMContentLoaded',function(){
+  if(typeof swtRenderPayment==='function') swtRenderPayment(document.getElementById('dlPayHost'),{
+    total:27450.00, ref:'DL-2607-0031 · C-00125 คุณสมหญิง (COD)',
+    accounts:['547-2-55623-9 · กสิกรไทย (SWT)'],
+    promptpay:{biller:'SWT 099-4-12345-6', ref1:'DL-2607-0031 (ส่งมอบ)', ref2:'C-00125 (ลูกค้า)'},
+    onConfirm:function(paid){ alert('รับชำระ COD '+paid.reduce(function(s,p){return s+p.amount;},0).toFixed(2)+' ฿ → ปิดบิลขาย SL-4'); }
+  });
+});
+</script>
+<script src="swt-link.js"></script>
+<script src="swt-panels.js"></script>
+<script src="swt-sidebar.js"></script>
+</body>
+</html>

@@ -27,7 +27,7 @@
     'sv1-service-intake-mockup.html','sv-q-service-queue-mockup.html',
     'sv2-service-assignment-mockup.html','sv3-spare-part-issue-mockup.html',
     'sv4-service-close-mockup.html','sv5-job-card-mockup.html',
-    'sv7-service-delivery-mockup.html','sv6-delivery-install-mockup.html',
+    'sv7-service-delivery-mockup.html','sv6-delivery-install-mockup.html','dl-goods-delivery-mockup.html',
     'sv-order-parts-request-mockup.html','clm-vendor-claim-mockup.html',
     'sv-ma-contract-mockup.html',
 
@@ -154,6 +154,7 @@
       ['SV-4','sv4-service-close-mockup.html','SV-4 ปิดงาน/QA + บิล','new'],
       ['SV-6','sv6-delivery-install-mockup.html','SV-6 ส่ง+ติดตั้ง','new'],
       ['SV-7','sv7-service-delivery-mockup.html','SV-7 ส่งงานคืนลูกค้า','new'],
+      ['DL','dl-goods-delivery-mockup.html','DL ส่งมอบของขาย (ปิด SL-4)','new'],
       ['SQT','sqt-service-quotation-mockup.html','SV-SQT เสนอราคางานบริการ','new'],
       ['CLM','clm-vendor-claim-mockup.html','CLM ใบเคลม Vendor','new'],
       ['SVWH','wh-svc-center-mockup.html','คลังศูนย์ซ่อม','new'],
