@@ -538,6 +538,7 @@
                 <div class="job-actions">
                   <button class="job-btn success" onclick="openCloseModal()">✓ ปิดงาน (Admin ตรวจรับ)</button>
                   <button class="job-btn warn" onclick="openPartialModal()">⏳ มี Partial</button>
+                  <button class="job-btn danger" onclick="if(confirm('ส่งไม่สำเร็จ = ยกเลิกงานเลย (ไม่นัดใหม่)\n• ของกลับคืนคลัง WH-1\n• แจ้งฝ่ายขาย SL\n\nยืนยันยกเลิก?')) alert('❌ ยกเลิกงานจัดส่ง · ของคืน WH-1 · แจ้ง SL')">❌ ส่งไม่สำเร็จ (ยกเลิก)</button>
                   <button class="job-btn ghost">📷 Photos</button>
                 </div>
               </div>
@@ -790,10 +791,18 @@
       <button class="modal-close-x" onclick="closeModal('mAssign')">✕</button>
     </div>
     <div class="modal-body">
+      <!-- ช่องทางส่ง (ทีมเอง / 3PL) -->
       <div class="field-row">
-        <label class="form-label">เลือกช่าง <span class="required">*</span> <span class="swt-tip warn" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">🔒 <b>Sticky Assignment</b> — หลังกดมอบหมาย ช่างคนนี้จะถูก lock ติดงาน · ช่างส่งต่อไม่ได้ · admin เท่านั้นที่ reassign ได้</span></span></label>
+        <label class="form-label">ช่องทางส่ง <span class="required">*</span></label>
+        <div style="display:flex;gap:8px">
+          <label style="flex:1;display:flex;align-items:center;gap:7px;padding:8px 11px;border:1.5px solid #2563EB;background:#EFF6FF;border-radius:7px;cursor:pointer;font-size:12.5px;font-weight:600"><input type="radio" name="asgCh" value="team" checked onclick="asgChannel('team')"> 🚚 ทีมส่งเอง</label>
+          <label style="flex:1;display:flex;align-items:center;gap:7px;padding:8px 11px;border:1.5px solid #E5E7EB;border-radius:7px;cursor:pointer;font-size:12.5px;font-weight:600"><input type="radio" name="asgCh" value="3pl" onclick="asgChannel('3pl')"> 📦 ขนส่งภายนอก (3PL)</label>
+        </div>
+      </div>
+      <div class="field-row" id="asgTeam">
+        <label class="form-label">เลือกช่าง / ทีมส่ง <span class="required">*</span> <span class="swt-tip warn" onclick="swtTipToggle(this,event)">i<span class="swt-tip-pop">🔒 <b>Sticky Assignment</b> — หลังกดมอบหมาย ช่างคนนี้จะถูก lock ติดงาน · ช่างส่งต่อไม่ได้ · admin เท่านั้นที่ reassign ได้</span></span></label>
         <select class="form-select">
-          <option value="">-- เลือกช่าง --</option>
+          <option value="">-- เลือกช่าง / ทีมส่ง --</option>
           <optgroup label="🏢 ช่างภายใน (Internal)">
             <option>TECH-007 สมศักดิ์ · AC expert · 3/4 slots</option>
             <option>TECH-012 ประเสริฐ · Trainee · 2/4 slots</option>
@@ -805,6 +814,13 @@
             <option>V-00057 สมหมาย ต่างจว. · 0/3 · rate +50%</option>
           </optgroup>
         </select>
+      </div>
+      <div id="asg3pl" style="display:none">
+        <div class="form-2col">
+          <div class="field-row"><label class="form-label">เจ้าขนส่ง (carrier) <span class="required">*</span></label><select class="form-select"><option>Kerry Express</option><option>Flash Express</option><option>J&amp;T Express</option><option>ไปรษณีย์ไทย (EMS)</option><option>Best Express</option></select></div>
+          <div class="field-row"><label class="form-label">เลข tracking</label><input class="form-input" placeholder="เลขพัสดุ (กรอกเมื่อส่งจริง)"></div>
+        </div>
+        <div style="padding:8px 11px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;font-size:11.5px;color:#92400E;margin-top:4px">💡 3PL: เบิก+แพ็ค → ส่งมอบ carrier · POD = สถานะ <b>delivered</b> / สลิป · COD เข้าเป็นรอบ → กระทบยอด FI-3 (API carrier เฟสหลัง)</div>
       </div>
       <div class="form-2col">
         <div class="field-row">
@@ -1047,6 +1063,12 @@
   });
 
   function openAssignModal(){ openModal('mAssign'); }
+  function asgChannel(v){
+    var team=document.getElementById('asgTeam'), tpl=document.getElementById('asg3pl');
+    if(team) team.style.display=(v==='team')?'':'none';
+    if(tpl) tpl.style.display=(v==='3pl')?'':'none';
+    document.querySelectorAll('input[name=asgCh]').forEach(function(r){var lb=r.closest('label'); lb.style.borderColor=r.checked?'#2563EB':'#E5E7EB'; lb.style.background=r.checked?'#EFF6FF':'#fff';});
+  }
   function openSplitModal(){ openModal('mSplit'); }
   function openReassignModal(){ openModal('mReassign'); }
   function openPartialModal(){ openModal('mPartial'); }
