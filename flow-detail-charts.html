@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Flowchart รายละเอียด — เคสแตกสาขา (Waterfall · เคลม · ขนส่ง · บริการ · ส่งเสริมการขาย)</title>
+<title>Flowchart รายละเอียด — เคสแตกสาขา (Waterfall · เคลม · ขนส่ง · บริการ · ส่งเสริมการขาย · ราคา)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -74,6 +74,7 @@ table.tc .no{color:#CBD5E1}
     <div class="tab" data-p="dl">🚚 ขนส่ง — ช่องทาง · ติดตั้ง · COD · ยกเลิก</div>
     <div class="tab" data-p="sv">🔧 บริการ — job lifecycle + 4 แกนหลังบ้าน</div>
     <div class="tab" data-p="pm">🎁 ส่งเสริมการขาย — type · stack · GP guard</div>
+    <div class="tab" data-p="price">💵 ราคา — มาตรฐาน/โปร · channel · cost floor</div>
   </div>
 
   <!-- ═══════════ WATERFALL ═══════════ -->
@@ -366,6 +367,54 @@ flowchart TD
       <div class="note"><b>🔑 อนุมัติโปร = ตอนสร้าง (PM-2) · เปิดบิลไม่ขออนุมัติโปรซ้ำ:</b> เลือกสินค้า → SC9 เช็คเงื่อนไข (สาขา/กลุ่มลูกค้า/จำนวน) → เข้าเงื่อนไข = โปรขึ้นให้เลือก · <b>พนักงานเลือกเอง: ใช้โปร หรือ ราคามาตรฐานปกติ</b> · ล็อกตอน post · <b>VAT บวกท้ายสุด</b> (ส่วนลดทุกชั้นคิดจากราคาก่อน VAT) · stack ≤2 ชั้น + GP guard = ด่านกันพลาด (ไม่ใช่การอนุมัติตัวโปร)</div>
       <div class="note warn"><b>rebate ฝั่งซื้อ = คนละฝั่ง:</b> PO-2 Trade Agreement → PO-7 Sale-In Accrual → ได้ใบลดหนี้ vendor → <b>หักตอนตั้งหนี้ PO-6 / รับวางบิล</b> (PO-CN) เพื่อทำจ่าย · ไม่อยู่ในผังนี้ (ดูตาราง PO/FI)</div>
       <div class="legend-src">ที่มา: <a href=".agents/topics/pm-status-transition-table.md">pm-status-transition-table.md (เคาะ 4 จุด 07-30)</a> · <a href="pm2-promotion-mockup.html">PM-2 สร้างโปร</a> · <a href="pm4-promo-quota-mockup.html">PM-4 โควตา</a> · <a href="pm5-price-simulator-mockup.html">PM-5 จำลอง</a> · <a href="pmq-promo-dashboard-mockup.html">PM-Q Dashboard</a></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PRICE / ราคา ═══════════ -->
+  <div class="panel" id="p-price">
+    <div class="card">
+      <h2>💵 ราคา — มาตรฐาน / โปร · channel extensible · cost floor</h2>
+      <div class="lead">ราคา <b>2 ส่วน</b>: ① <b>มาตรฐาน</b> (base/fallback + เกณฑ์ตั้งโปร · ต่อ<b>ช่องทาง</b>จาก channel master · เพิ่มช่องได้) ‖ ② <b>โปร</b> (PM-2 · conditional) · ตั้ง/แก้ราคา = <b>PCR → อนุมัติ (Maker≠Checker) → Post</b> · Posted แก้ไม่ได้→เวอร์ชันใหม่ · <b>cost floor</b> กันตั้งราคาต่ำกว่าทุน · ตอนขาย: มาตรฐานก่อน → โปรเข้าเงื่อนไข → ไม่เข้ากลับมาตรฐาน → <b>VAT ท้ายสุด</b> (Golden Rule)</div>
+      <div class="chart-box">
+<pre class="mermaid">
+flowchart TD
+  A["ตั้งราคา PM-1<br/>ราคาต่อช่องทาง (channel master · extensible)"] --> PCR{"สร้างใหม่ / แก้ราคาที่มีผล?"}
+  PCR -->|"สร้างใหม่"| APV["อนุมัติ (Maker≠Checker)"]:::appr
+  PCR -->|"แก้ · TC-5"| PCRD["PCR + เหตุผล"]
+  PCRD --> APV
+  APV --> FLOOR{"ราคา ผ่านเพดานทุน?<br/>(cost floor)"}
+  FLOOR -->|"ต่ำกว่าทุน · TC-6"| BLK["🔴 เตือน/บล็อก"]:::stop
+  FLOOR -->|"ผ่าน"| POST["Post → sync BC<br/>Posted แก้ไม่ได้ → เวอร์ชันใหม่ (history)"]:::done
+  POST -.->|"เป็นฐาน SC9"| USE["ตอนขาย: หาราคามาตรฐาน<br/>ตามช่องทาง/สาขา/กลุ่มลูกค้า (เจาะจงสุดชนะ)"]
+  USE --> PROMO{"มีโปรตาม สินค้า/ยี่ห้อ/หมวด<br/>+ เข้าเงื่อนไข?"}
+  PROMO -->|"เข้า · TC-2"| PR["ราคาโปร (PM-2 · อ้างอิงมาตรฐาน)"]
+  PROMO -->|"ไม่เข้า · TC-1"| FB["ราคามาตรฐานตามช่องทาง (fallback)"]
+  PR --> VAT["บวก VAT ท้ายสุด (Golden Rule)"]:::done
+  FB --> VAT
+  SIM["PM-5 Simulator<br/>net cost / reverse-calc หากำไรเป้า"] --> SIMG{"GP guard"}
+  SIMG -->|"GP ติดลบ · TC-4"| SIMB["🔴 บล็อก save quote"]:::stop
+  SIMG -->|"GP ต่ำกว่า 10% · TC-3"| SIMW["🟡 เตือน (ผ่านได้)"]
+  SIMG -->|"GP ผ่าน"| SIMQ["save → draft quote (SL-1)"]:::done
+  classDef appr fill:#F3E8FF,stroke:#7C3AED,color:#5B21B6,font-weight:600;
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
+  classDef stop fill:#FEE2E2,stroke:#DC2626,color:#991B1B;
+</pre>
+      </div>
+
+      <table class="tc">
+        <thead><tr><th>TC</th><th>เคส</th><th>เงื่อนไข</th><th>ผลลัพธ์คาด</th></tr></thead>
+        <tbody>
+          <tr><td>TC-1</td><td>ขายปกติ ไม่มีโปร</td><td>สินค้าไม่เข้าโปร</td><td>ราคามาตรฐานตามช่องทาง (fallback) + VAT</td></tr>
+          <tr><td>TC-2</td><td>มีโปรเข้าเงื่อนไข</td><td>สินค้า/ยี่ห้อ/หมวด เข้าโปร + เงื่อนไขครบ (รุ่น/โควต้า/จำนวน/งบ)</td><td>ราคาโปร (อ้างอิงมาตรฐาน) + VAT</td></tr>
+          <tr><td>TC-3</td><td>simulator กำไรน้อย</td><td>GP ต่ำกว่า 10%</td><td>🟡 เตือน — save quote ได้</td></tr>
+          <tr><td>TC-4</td><td>simulator ขาดทุน</td><td>GP ติดลบ</td><td>🔴 บล็อก save quote</td></tr>
+          <tr><td>TC-5</td><td>แก้ราคาที่ Posted</td><td>ราคามีผลแล้ว</td><td>PCR + เหตุผล → อนุมัติ (Maker≠Checker) → เวอร์ชันใหม่ · history เก็บ</td></tr>
+          <tr><td>TC-6</td><td>ตั้งราคาต่ำกว่าทุน</td><td>ราคา ต่ำกว่า ต้นทุน</td><td>🔴 เตือน/บล็อก (cost floor · legacy "ราคาขั้นต่ำจากการซื้อ ON") ตอน Post</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>ราคา 2 ส่วน:</b> ① มาตรฐาน = base/fallback ต่อ<b>ช่องทาง</b> (channel master · เพิ่มช่องได้ · ไม่ fix column) · สร้างทีละสินค้า หลายช่องทาง · เป็นเกณฑ์ตั้งโปร ‖ ② โปร = PM-2 overlay อ้างอิงมาตรฐาน · <b>VAT บวกท้ายสุด</b> (ทุกส่วนลดคิดจากราคาก่อน VAT)</div>
+      <div class="note warn"><b>ต้องมี channel master table:</b> ช่องทางการขาย (ปลีก/ส่ง/ออนไลน์/ส่งออก/...) เป็น config เพิ่มได้ · ราคา reference by code — mockup pm1 ปัจจุบัน key แค่ "กลุ่มลูกค้า 1 ค่า" → ต้องแก้เป็น multi-channel</div>
+      <div class="legend-src">ที่มา: <a href=".agents/topics/price-status-transition-table.md">price-status-transition-table.md (เคาะ 07-30 รอบ 2)</a> · <a href="pm1-price-list-mockup.html">PM-1 รายการราคา</a> · <a href="pm5-price-simulator-mockup.html">PM-5 จำลองราคา</a> · db ระบบเก่า erpHero (แท็บราคาขาย)</div>
     </div>
   </div>
 
