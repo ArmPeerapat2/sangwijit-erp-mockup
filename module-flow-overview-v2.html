@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Module Flow Overview v2 — Flow-by-Flow Gap Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Noto Sans Thai',sans-serif;background:#F8FAFC;color:#111827;font-size:13px;line-height:1.45}
+.wrap{max-width:1160px;margin:0 auto;padding:22px 24px 70px}
+.page-head h1{font-size:23px;font-weight:800;letter-spacing:-0.01em}
+.page-head p{font-size:12px;color:#6B7280;margin-top:3px;max-width:880px}
+.kpi{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.kpi .box{background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:7px 14px;text-align:center}
+.kpi .n{font-size:19px;font-weight:800;color:#2563EB}
+.kpi .n.red{color:#EF4444}.kpi .n.amber{color:#F59E0B}
+.kpi .l{font-size:9.5px;color:#6B7280;text-transform:uppercase;letter-spacing:0.05em}
+
+.legend{display:flex;gap:14px;flex-wrap:wrap;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:10px 14px;margin:16px 0;font-size:11.5px;align-items:center}
+.legend b{font-size:11px;color:#374151}
+.lg{display:inline-flex;align-items:center;gap:5px}
+.sv{width:11px;height:11px;border-radius:50%;display:inline-block}
+.sv.h{background:#EF4444}.sv.m{background:#F59E0B}.sv.l{background:#10B981}.sv.ok{background:#2563EB}
+.tag{font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;border:1px solid}
+.tag.A{background:#F5F3FF;color:#7C3AED;border-color:#C4B5FD}
+.tag.B{background:#ECFEFF;color:#0891B2;border-color:#67E8F9}
+.tag.C{background:#FDF2F8;color:#DB2777;border-color:#F9A8D4}
+.tag.SYS{background:#F1F5F9;color:#64748B;border-color:#CBD5E1}
+.ic{font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap}
+.ic.post{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
+.ic.appr{background:#DCFCE7;color:#166534;border:1px solid #86EFAC}
+.ic.del{background:#FEE2E2;color:#B91C1C;border:1px solid #FCA5A5}
+.ic.good{background:#EFF6FF;color:#1D4ED8;border:1px solid #93C5FD}
+
+/* cross-cutting callout */
+.cross{background:#0F172A;color:#E2E8F0;border-radius:12px;padding:16px 20px;margin-bottom:18px}
+.cross h2{font-size:15px;color:#fff;margin-bottom:9px}
+.cross ul{list-style:none;font-size:12.5px}
+.cross li{padding:5px 0;border-bottom:1px solid #1E293B;display:flex;gap:9px}
+.cross li:last-child{border-bottom:none}
+.cross .k{flex:none}
+.cross code{background:#1E293B;color:#93C5FD;padding:1px 5px;border-radius:4px;font-size:11px}
+
+/* module nav */
+.nav{position:sticky;top:0;z-index:30;background:#F8FAFCEE;backdrop-filter:blur(6px);padding:10px 0;margin-bottom:14px;border-bottom:1px solid #E5E7EB;display:flex;gap:6px;flex-wrap:wrap}
+.nav a{font-size:11.5px;font-weight:700;color:#475569;background:#fff;border:1px solid #E5E7EB;border-radius:16px;padding:5px 12px;text-decoration:none}
+.nav a:hover{background:#EFF6FF;border-color:#93C5FD;color:#1D4ED8}
+.nav a .c{font-size:9.5px;color:#94A3B8;font-weight:800;margin-left:3px}
+
+/* module */
+.mod{background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:16px 18px 18px;margin-bottom:18px;scroll-margin-top:60px}
+.mod-head{display:flex;align-items:center;gap:10px;margin-bottom:3px}
+.mod-head .ico{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;background:#EFF6FF}
+.mod-head h2{font-size:16px;font-weight:800}
+.mod-head .cnt{font-size:10px;font-weight:700;color:#6B7280;background:#F3F4F6;border-radius:9px;padding:2px 8px}
+.mod-head .phase{font-size:10px;font-weight:700;border-radius:9px;padding:2px 8px}
+.phase.p1{background:#DCFCE7;color:#166534}.phase.p2{background:#FEF3C7;color:#92400E}.phase.p3{background:#F3E8FF;color:#6D28D9}
+.mod-sub{font-size:11.5px;color:#6B7280;margin:0 0 10px 44px}
+.src{margin:0 0 14px 44px;background:#F8FAFC;border:1px solid #EEF2F7;border-radius:8px;padding:9px 12px}
+.src-row{display:flex;flex-wrap:wrap;gap:5px;align-items:baseline;padding:2px 0}
+.src-lbl{font-weight:700;color:#475569;font-size:10.5px;min-width:158px;flex:none}
+.sc{font-family:'Inter',monospace;font-size:10px;padding:2px 7px;border-radius:5px;text-decoration:none;border:1px solid;white-space:nowrap}
+.sc.cur{background:#ECFDF5;color:#047857;border-color:#6EE7B7}
+.sc.cur:hover{background:#D1FAE5}
+.sc.flow-ok{background:#EFF6FF;color:#1D4ED8;border-color:#93C5FD}
+.sc.flow-todo{background:#FFFBEB;color:#92400E;border-color:#FCD34D}
+.sc.ref{background:#FFF7ED;color:#9A3412;border-color:#FDBA74}
+.sc.old{background:#F1F5F9;color:#94A3B8;border-color:#E2E8F0;text-decoration:line-through}
+.sc.none{background:#FEF2F2;color:#B91C1C;border-color:#FCA5A5;font-style:italic}
+
+/* flow-by-flow */
+.fl{border:1px solid #E5E7EB;border-left:4px solid #CBD5E1;border-radius:9px;padding:11px 13px;margin-bottom:9px;background:#fff}
+.fl.h{border-left-color:#EF4444}.fl.m{border-left-color:#F59E0B}.fl.l{border-left-color:#10B981}.fl.ok{border-left-color:#2563EB;background:#F8FBFF}
+.fl-head{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+.fl-code{font-family:'Inter',monospace;font-weight:800;color:#2563EB;background:#EFF6FF;padding:2px 8px;border-radius:5px;font-size:11px}
+.fl-name{font-weight:700;font-size:13px}
+.fl-pdf{font-family:'Inter',monospace;font-size:9.5px;color:#7C3AED;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:4px;padding:1px 6px;margin-left:auto}
+.fl-chain{margin:8px 0 3px;display:flex;flex-wrap:wrap;gap:3px;align-items:center}
+.nd{background:#F1F5F9;border:1px solid #E5E7EB;border-radius:5px;padding:1px 7px;font-size:10px;color:#334155;white-space:nowrap}
+.nd.post{background:#FEF3C7;border-color:#FCD34D;color:#92400E;font-weight:700}
+.nd.gate{background:#DCFCE7;border-color:#86EFAC;color:#166534;font-weight:700}
+.sep{color:#94A3B8;font-size:11px}
+.find{display:flex;gap:7px;padding:6px 0 4px;border-top:1px dashed #EEF2F7;font-size:11.5px;align-items:flex-start}
+.find .sv{margin-top:4px}
+.find .body{flex:1}
+.find .fix{color:#047857}
+.find .fix b{color:#047857}
+.good{color:#1D4ED8;font-size:11px;margin-top:6px;background:#EFF6FF;border:1px solid #DBEAFE;border-radius:6px;padding:5px 9px}
+.good b{color:#1E40AF}
+
+.foot{margin-top:30px;padding-top:16px;border-top:1px solid #E5E7EB;font-size:11.5px;color:#6B7280;text-align:center;line-height:1.7}
+@media(max-width:720px){.fl-pdf{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="page-head">
+    <h1>🗺️ Module Flow Overview <span style="color:#EF4444">v2</span> — Flow-by-Flow Gap Analysis</h1>
+    <p>เรียบเรียงจาก <b>สเปกปัจจุบันที่ผ่าน grill แล้ว</b> (spec .md + status-table + routing รายโมดูล · <b>คัดของเก่า/superseded ออก</b>) + <b>Flow PDF ต้นฉบับ 56 ผัง</b> · แต่ละโมดูลบอกแหล่งที่เรียบเรียง → แต่ละผังแสดง โซ่ node → BC Post/Approval/Delete → รูรั่ว (สี=รุนแรง · A/B/C=ชนิด) + วิธีแก้ · ยังไม่เทียบ Odoo · ไม่ commit git</p>
+    <div class="kpi">
+      <div class="box"><div class="n">56</div><div class="l">Flow PDF อ่านครบ</div></div>
+      <div class="box"><div class="n red">~46</div><div class="l">จุดข้ามขั้น</div></div>
+      <div class="box"><div class="n amber">9</div><div class="l">โมดูล</div></div>
+      <div class="box"><div class="n red">A</div><div class="l">ชนิดพบมากสุด</div></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <b>ความรุนแรง:</b>
+    <span class="lg"><span class="sv h"></span>สูง</span>
+    <span class="lg"><span class="sv m"></span>กลาง</span>
+    <span class="lg"><span class="sv l"></span>ต่ำ</span>
+    <span class="lg"><span class="sv ok"></span>ของดี</span>
+    <b style="margin-left:8px">ชนิด:</b>
+    <span class="lg"><span class="tag A">A</span>ผังไม่มี gate</span>
+    <span class="lg"><span class="tag B">B</span>mockup หลุด flow</span>
+    <span class="lg"><span class="tag C">C</span>ผังขัด/ไม่เคาะ</span>
+    <b style="margin-left:8px">ไอคอน:</b>
+    <span class="ic post">⚡ BC Post</span>
+    <span class="ic appr">✅ มี Approval</span>
+    <span class="ic del">🗑️ Delete ในผัง</span>
+  </div>
+
+  <div class="cross">
+    <h2>🔦 4 ข้อสรุปข้ามโมดูล (จากการอ่านผังครบ 56)</h2>
+    <ul>
+      <li><span class="k">⚖️</span><div><b>ความไม่สมมาตรของ Approval</b> — ฝั่งซื้อ (AP/APCN/PR/Payment) มี gate อนุมัติ · แต่ <b>ฝั่งขาย (AR/ARCN) · General Journal · ปิดงวด/ปิดปี · Master · Fixed Asset · Data Transfer ไม่มีเลย</b> ทั้งที่หลายจุดกระทบ G/L โดยตรง</div></li>
+      <li><span class="k">🔒</span><div><b>Master ใช้ “Block-default” ถูกทาง แต่ประตูปลด Block ไม่มียาม</b> — Customer/Vendor/Item เกิดมาแบบ Block ก่อน (ปลอดภัย) แต่ปลด Block + ตั้งวงเงินเองได้ ไม่มี KYC/checker</div></li>
+      <li><span class="k">🏦</span><div><b>ผังบัญชีปลายน้ำอยู่ BC-lane ล้วน (Web Portal ว่าง)</b> — <code>GL/VAT/Close/Payment/Cash Receive</code> ยืนยัน portal เป็น thin UI · ต้องตัดสินว่าทำผ่าน BC ตรง (ไม่ต้อง mockup) หรือเติมเลน Portal + ยกชั้นอนุมัติมา</div></li>
+      <li><span class="k">📕</span><div><b>legend “Process ที่ไม่ทราบแน่ชัด ณ ปัจจุบัน” มีทุกผัง แต่ไม่เคยวาดใช้จริง</b> — ผู้ออกแบบถือว่า flow “เคาะแล้ว” ทั้งที่หลายจุดยังไม่มี control (จุด A ทั้งหมด)</div></li>
+    </ul>
+  </div>
+
+  <div class="src" style="margin-left:0;border-color:#FCA5A5;background:#FEF6F8">
+    <div class="src-row"><span class="src-lbl" style="color:#B91C1C">⚠️ คัดออก (เก่า/superseded · ไม่นับ):</span>
+      <span class="sc old">PM_promotion.md · 04-19 รอ grill</span>
+      <span class="sc old">reconcile-mockup-vs-flow-matrix.md · stale</span>
+      <span class="sc old">IA_integration.md · 04-19 thin</span>
+      <span class="sc old">README/plan/research · 04-19</span>
+      <span class="sc old">ui_design_pattern_guideline.md</span>
+    </div>
+    <div class="src-row"><span class="src-lbl">อ้างอิงเสริม (ระบบเดิม):</span>
+      <a class="sc ref" href=".agents/topics/legacy-ar-settlement-5-8.md">legacy-ar-settlement</a>
+      <a class="sc ref" href=".agents/topics/legacy-ap-payment.md">legacy-ap-payment</a>
+      <a class="sc ref" href=".agents/topics/legacy-permission-model.md">legacy-permission</a>
+      <span style="font-size:10px;color:#94A3B8">— บันทึกพฤติกรรมระบบเดิมไว้เทียบ ไม่ใช่สเปกปัจจุบัน</span>
+    </div>
+    <div class="src-row"><span class="src-lbl">เกณฑ์ current/เก่า:</span>
+      <a class="sc cur" href=".agents/file-status-audit.md">file-status-audit.md</a>
+      <span style="font-size:10px;color:#64748B">— ตัวตัดสินว่าไฟล์ไหนใช้อยู่ (07-03)</span>
+    </div>
+  </div>
+
+  <div style="background:#F0FDF4;border:1px solid #86EFAC;border-left:4px solid #16A34A;border-radius:10px;padding:14px 18px;margin-bottom:18px">
+    <div style="font-size:14px;font-weight:800;color:#166534;margin-bottom:8px">✅ เคาะแล้ว (grill session) — 3 จุดที่ State×Role ขัดกับ Flow PDF ตอนนี้ตัดสินแล้ว</div>
+    <div style="display:grid;grid-template-columns:1fr;gap:8px;font-size:12.5px;color:#14532D">
+      <div style="background:#fff;border:1px solid #BBF7D0;border-radius:8px;padding:9px 12px">
+        <b>① FI-1 รับเงิน → มีอนุมัติทุกใบ</b> — ทุกใบเข้า <b>list รอตรวจใน FI-Q</b> → checker ตรวจทุกรายการ → อนุมัติ+Post (ไม่ auto-post)
+        <div style="font-size:11px;color:#059669;margin-top:3px">💡 reuse FI-Q ไม่สร้างหน้าใหม่ · Maker≠Checker = constraint ระดับระบบ (server-side) ไม่ใช่แค่ซ่อนปุ่ม</div>
+      </div>
+      <div style="background:#fff;border:1px solid #BBF7D0;border-radius:8px;padding:9px 12px">
+        <b>② งบส่งเสริมการขาย (rebate) → ฝั่งซื้อ</b> — PO-7 → PO-CN → ตัด PO-6 AP · P&amp;L = Other Income (CF-4) · ตรงกับที่ build ไว้
+        <div style="font-size:11px;color:#B45309;margin-top:3px">⚠️ pending accounting sign-off — Flow PDF เดิม (ทีมบัญชี BC) เลือกฝั่งขาย อาจมีเหตุผล VAT/ใบกำกับ · ให้บัญชี/ผู้สอบยืนยันก่อน go-live</div>
+      </div>
+      <div style="background:#fff;border:1px solid #BBF7D0;border-radius:8px;padding:9px 12px">
+        <b>③ ด่านเครดิตขาย → ที่ SO-confirm ทุกเส้น</b> — ใบเสนอราคาทำได้อิสระ · ตั้งแต่ SO/ใบจองเป็นต้นไป (รวมสั่งขายตรง) ต้องผ่านด่านเครดิตก่อน
+        <div style="font-size:11px;color:#059669;margin-top:3px">💡 exposure = AR ค้าง <b>+ บิล open รวม</b> (ไม่งั้นเปิดหลายบิลพร้อมกันยังเลี่ยงได้ · §3.1) · เกิน → เด้ง SL-F1 → CF-2.6</div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:#64748B;margin-top:8px">ที่มา: grill 3 จุด (session นี้) · State×Role v1 ↔ Flow PDF ต้นฉบับ · ยังไม่ commit git — บันทึกลง active.md แยก</div>
+  </div>
+
+  <div class="nav">
+    <a href="#sl">💼 SL ขาย<span class="c">10</span></a>
+    <a href="#po">🛒 PO ซื้อ<span class="c">7</span></a>
+    <a href="#wh">📦 WH คลัง<span class="c">3</span></a>
+    <a href="#fi">💵 FI การเงิน<span class="c">3</span></a>
+    <a href="#ac">🧮 Account บัญชี<span class="c">12</span></a>
+    <a href="#sv">🔧 SV บริการ<span class="c">6</span></a>
+    <a href="#pm">🎁 PM โปรฯ<span class="c">2</span></a>
+    <a href="#md">🗂️ MD ข้อมูลหลัก<span class="c">7</span></a>
+    <a href="#dt">🔁 Data Transfer<span class="c">6</span></a>
+  </div>
+
+  <!-- ═══════════ SL ═══════════ -->
+  <div class="mod" id="sl">
+    <div class="mod-head"><div class="ico">💼</div><h2>งานขาย (SL)</h2><span class="cnt">10 ผัง</span><span class="phase p1">Phase 1</span></div>
+    <div class="mod-sub">Quote → Order → มัดจำ → ส่งของ → ตั้งหนี้ → ลดหนี้</div>
+    <div class="src">
+      <div class="src-row"><span class="src-lbl">📚 สเปกปัจจุบัน (grill แล้ว):</span>
+        <a class="sc cur" href=".claude/skills/sangwijit-portal/modules/SL_sales.md">SL_sales.md</a>
+        <a class="sc cur" href=".agents/topics/sl-status-transition-table.md">sl-status-transition-table.md</a>
+        <a class="sc cur" href=".agents/topics/sl-post-save-routing.md">sl-post-save-routing.md</a>
+        <a class="sc cur" href=".agents/topics/dl-status-transition-table.md">dl-status-transition-table.md</a>
+      </div>
+      <div class="src-row"><span class="src-lbl">🗺️ Flow ต้นฉบับ:</span>
+        <span class="sc flow-ok">✅ Sales/00–09 ครบ 10 ใบ</span>
+      </div>
+    </div>
+
+    <div class="fl l">
+      <div class="fl-head"><span class="fl-code">01</span><span class="fl-name">Sales Quote (การเสนอราคา)</span><span class="ic appr">✅ Approval</span><span class="fl-pdf">01 Sales - Sales Quote.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Master Data</span><span class="sep">→</span><span class="nd">Quote (Open)</span><span class="sep">→</span><span class="nd gate">Approval</span><span class="sep">→</span><span class="nd">Quote (Approved)</span><span class="sep">→</span><span class="nd">Print</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag B">B</span> ผังมี Approval gate ถูก แต่<b>ไม่ระบุ Maker≠Checker</b> บนผัง · <span class="fix">🛠️ ต้องยืนยัน mockup บล็อกผู้สร้างกดอนุมัติเอง</span></div></div>
+      <div class="good">👍 ผูก Promotion + Sales Price แบบมี Period Start-End เข้ากับ Quote → รองรับราคาตามช่วงเวลา + VAT Golden Rule</div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">02</span><span class="fl-name">Sales Order จาก Quote</span><span class="ic del">🗑️ Delete Quote</span><span class="fl-pdf">02 Sales - SO from Quote.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Quote (Approved)</span><span class="sep">→</span><span class="nd">Make Order</span><span class="sep">→</span><span class="nd">ปลีก/ส่ง</span><span class="sep">→</span><span class="nd">SO</span><span class="sep">→</span><span class="nd">Reservation</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag C">C</span> <b>auto-Delete Quote (Approved) ทิ้ง</b>หลัง Make Order → ทำลาย audit trail ใบเสนอราคาที่อนุมัติแล้ว (ต่าง BC ปกติที่ Quote = converted ไม่ลบ) · <span class="fix">🛠️ เคาะให้ Quote เป็นสถานะ converted ไม่ hard-delete</span></div></div>
+      <div class="good">👍 แยก Document No. ปลีก/ส่ง + Reservation ผูก Sales Line ตั้งแต่สร้าง Order (กัน over-commit)</div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">03</span><span class="fl-name">Sales Order (สั่งขายตรง ไม่ผ่าน Quote)</span><span class="fl-pdf">03 Sales - Sales Order.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Master Data</span><span class="sep">→</span><span class="nd">SO</span><span class="sep">→</span><span class="nd">ปลีก/ส่ง</span><span class="sep">→</span><span class="nd">Reservation</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> <b>เส้นทาง bypass Approval</b> — สร้าง SO ตรงจาก Master โดยไม่ผ่านอนุมัติ ขณะที่เส้นผ่าน Quote (01) ต้องอนุมัติ → เลี่ยง credit/ราคาได้ด้วยการ “ไม่ทำ Quote” · <span class="fix">🛠️ ผูก CF-2.6 Approval Matrix + credit tier ที่ระดับ Order</span></div></div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">04</span><span class="fl-name">Sales Shipment &amp; Invoice (ส่ง+ตั้งหนี้)</span><span class="ic post">⚡ Post Ship+Invoice</span><span class="fl-pdf">04 Sales - Shipment &amp; Invoice.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Reservation</span><span class="sep">→</span><span class="nd">SO</span><span class="sep">→</span><span class="nd post">Post Ship+Invoice</span><span class="sep">→</span><span class="nd">Posted Shipment + Invoice</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> ผังมี Item Reservation (auto) แต่<b>ไม่มี node บล็อกเมื่อสต๊อกไม่พอ</b> → ขายเกิน/ติดลบ · <span class="fix">🛠️ hard block เมื่อ reserve ไม่พอ</span></div></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> <b>ไม่มี node เช็ควงเงิน</b>ในผังหลัก (credit อยู่คนละ branch) → SO ไป Post ตรงข้าม credit ได้ · <span class="fix">🛠️ เพิ่ม credit-check + รวม exposure บิลเปิดทั้งหมด</span> · <span style="color:#166534;font-weight:700">✅ เคาะ 08-09: ด่านเครดิตที่ SO-confirm ทุกเส้น (ใบเสนอราคาอิสระ) + รวม exposure บิล open</span></div></div>
+      <div class="good">👍 Ship+Invoice เป็น post เดียว (atomic) · บังคับระบุ warranty date (Ending) ตอนขาย</div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">05</span><span class="fl-name">Deposit (สร้างเงินมัดจำ)</span><span class="ic post">⚡ Post Invoice</span><span class="fl-pdf">05 Sales - Deposit (Create).pdf</span></div>
+      <div class="fl-chain"><span class="nd">Master</span><span class="sep">→</span><span class="nd">SO (G/L)(+)</span><span class="sep">→</span><span class="nd post">Post Invoice</span><span class="sep">→</span><span class="nd">Customer Ledger (มัดจำ)</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> เงินมัดจำ post เข้า Ledger <b>โดยไม่มีขั้นอนุมัติ</b> (financial posting) · ผังไม่แสดง link การหักมัดจำตอนออก Invoice (09) → รูรั่ว reconcile · <span class="fix">🛠️ เพิ่มเส้นเชื่อมหักมัดจำ + พิจารณา gate</span></div></div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">06</span><span class="fl-name">Deposit (ขั้นตอนหักลบมัดจำ)</span><span class="ic post">⚡ Post Invoice</span><span class="fl-pdf">06 Sales - Deposit (Deduction).pdf</span></div>
+      <div class="fl-chain"><span class="nd">Customer Ledger (มัดจำ)</span><span class="sep">→ apply →</span><span class="nd">SO(-)</span><span class="sep">→</span><span class="nd post">Post Invoice</span><span class="sep">→</span><span class="nd">หักมัดจำ/ตั้งหนี้</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag B">B</span> ผังใช้ <b>Customer Ledger Entry (apply)</b> — กลไกถูก (กันซ้ำต่อ entry) · ความเสี่ยงอยู่ที่ mockup SC6 หัก “ทั้งหมด” ไม่อ่านยอดคงเหลือ ledger → SO แตก 2 บิลหัก 2 รอบ · <span class="fix">🛠️ ยึด ledger เป็นยอดคงเหลือ</span></div></div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">07</span><span class="fl-name">Sales Credit Memo (ลดหนี้)</span><span class="ic post">⚡ Post</span><span class="fl-pdf">07 Sales - Credit Memo.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Posted Invoice</span><span class="sep">→ apply →</span><span class="nd">Credit Memo</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">ลดหนี้ลูกหนี้</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> อ้างบิลต้นทาง ✅ แต่<b>ไม่มี node รับของคืน และไม่มี node อนุมัติ</b>ก่อน Post → โหมด “ปรับราคา” ออกเต็มมูลค่าได้โดยของยังอยู่ลูกค้า · <span class="fix">🛠️ ผูกใบรับของคืน + อนุมัติทุกใบ (CF-2.6)</span></div></div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">08</span><span class="fl-name">Sales Shipment (ส่งของ/ตัดของ)</span><span class="ic post">⚡ Release + Post</span><span class="ic del">🗑️</span><span class="fl-pdf">08 Sales - Sales Shipment.pdf</span></div>
+      <div class="fl-chain"><span class="nd">SO</span><span class="sep">→</span><span class="nd gate">Release</span><span class="sep">→</span><span class="nd">Shipment</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">Posted Shipment</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag C">C</span> มีเส้น <b>Delete แตะโซน Posted Shipment</b> → ขัดหลัก immutability ถ้าลบเอกสารที่ post แล้วได้ · <span class="fix">🛠️ ยืนยัน Delete = เฉพาะ draft/unpost</span></div></div>
+      <div class="good">👍 ลำดับ Release → Post ถูกหลัก BC + แยกใบหยิบ (pick) กับใบส่งของ</div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">09</span><span class="fl-name">Sales Invoice (ตั้งหนี้)</span><span class="ic post">⚡ Post Invoice</span><span class="fl-pdf">09 Sales - Sales Invoice.pdf</span></div>
+      <div class="fl-chain"><span class="nd gate">SO (ส่งของแล้ว)</span><span class="sep">→</span><span class="nd post">Post Invoice</span><span class="sep">→</span><span class="nd">Posted Invoice</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag B">B</span> precondition “ต้อง Post ส่งของก่อน” ✅ แต่<b>ไม่แสดงการหักมัดจำ</b> (จากผัง 05) → ถ้า mockup ไม่ดึงมาหักจะตั้งหนี้เกิน · <span class="fix">🛠️ ดึงมัดจำมา net</span></div></div>
+      <div class="good">👍 precondition ผูกลำดับ Shipment→Invoice ชัด กัน invoice ลอย</div>
+    </div>
+
+    <div class="fl l">
+      <div class="fl-head"><span class="fl-code">00</span><span class="fl-name">Queues &amp; Dashboard</span><span class="fl-pdf">00 Sales - Queues.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Login</span><span class="sep">→</span><span class="nd">8 การ์ดคิว (Quote/SO/Invoice/มัดจำ)</span></div>
+      <div class="find"><span class="sv l"></span><div class="body"><span class="tag B">B</span> read-only · ไม่ระบุ role-filter (พนักงานเห็นของตัวเอง vs หัวหน้าเห็นหมด) · <span class="fix">🛠️ เช็ค RBAC scope ของคิวใน mockup</span></div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PO ═══════════ -->
+  <div class="mod" id="po">
+    <div class="mod-head"><div class="ico" style="background:#FEF3C7">🛒</div><h2>จัดซื้อ (PO)</h2><span class="cnt">7 ผัง</span><span class="phase p1">Phase 1</span></div>
+    <div class="mod-sub">Vendor → PR → PO → รับของ → ตั้งหนี้ · บิลฝาก</div>
+    <div class="src">
+      <div class="src-row"><span class="src-lbl">📚 สเปกปัจจุบัน (grill แล้ว):</span>
+        <a class="sc cur" href=".claude/skills/sangwijit-portal/modules/PO_purchase.md">PO_purchase.md</a>
+        <a class="sc cur" href=".agents/topics/po-status-transition-table.md">po-status-transition-table.md</a>
+        <a class="sc cur" href=".agents/topics/po-wh-gap-kpi-matrix.md">po-wh-gap-kpi-matrix.md</a>
+      </div>
+      <div class="src-row"><span class="src-lbl">🗺️ Flow ต้นฉบับ:</span>
+        <span class="sc flow-ok">✅ Purchase/00–06 ครบ 7 ใบ</span>
+      </div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">01</span><span class="fl-name">Vendor (สร้างเจ้าหนี้)</span><span class="fl-pdf">01 Purchase - Vendor.pdf</span></div>
+      <div class="fl-chain"><span class="nd">สร้าง Vendor</span><span class="sep">→</span><span class="nd">Check VAT ซ้ำ</span><span class="sep">→</span><span class="nd">Master (Vendor)</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> <b>ไม่มี gate อนุมัติก่อนใช้งาน</b> — ด่านเดียว = เช็ค VAT ซ้ำ (data-quality ไม่ใช่ authorization) → เจ้าหนี้ใหม่พร้อมออก PO ทันที = <b>phantom vendor</b> · <span class="fix">🛠️ เพิ่ม approval ก่อน activate vendor</span></div></div>
+      <div class="good">👍 บังคับ Check VAT Registration กัน vendor ซ้ำ</div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">02</span><span class="fl-name">PR (การขอซื้อ)</span><span class="ic appr">✅ Approval</span><span class="fl-pdf">02 Purchase - PR.pdf</span></div>
+      <div class="fl-chain"><span class="nd">PR (Open)</span><span class="sep">→</span><span class="nd gate">Approval</span><span class="sep">→</span><span class="nd">PR (Approved)</span><span class="sep">→</span><span class="nd">Purchase Quote (BC)</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag A">A</span> node Approval ลอย <b>ไม่ผูก Maker≠Checker / CF-2.6 / tier วงเงิน</b> → ผัง PR self-approve ได้ · <span class="fix">🛠️ enforce creator≠approver + ผูก matrix</span></div></div>
+      <div class="good">👍 loop “ไม่ผ่าน→Update→ยื่นใหม่” ครบ + ผูก Master Price ตั้งแต่ต้น</div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">03</span><span class="fl-name">PO (การสั่งซื้อ)</span><span class="ic appr">✅ Approval</span><span class="ic del">🗑️</span><span class="fl-pdf">03 Purchase - PO.pdf</span></div>
+      <div class="fl-chain"><span class="nd">PR (Approved)</span><span class="sep">→</span><span class="nd">Make To</span><span class="sep">→</span><span class="nd">PO (Open)</span><span class="sep">→</span><span class="nd gate">Approval</span><span class="sep">→</span><span class="nd">PO (Approved)</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> Approval มี แต่<b>ไม่มีชั้น tier / รวมยอด (aggregation)</b> → ซอยใบเลี่ยงชั้นอนุมัติได้ · <span class="fix">🛠️ rolling aggregation ต่อ vendor/period + flag split</span></div></div>
+      <div class="good">👍 มี node RFQ &amp; Quotation Compare (เปรียบเทียบราคาก่อน PO)</div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">04</span><span class="fl-name">Receipt (รับสินค้า/บริการ)</span><span class="ic post">⚡ Post Receive</span><span class="fl-pdf">04 Purchase - Receipt.pdf</span></div>
+      <div class="fl-chain"><span class="nd">PO (Approved)</span><span class="sep">→</span><span class="nd post">Post Receive</span><span class="sep">→</span><span class="nd">ใบรับของ</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag A">A</span> <b>ไม่มี node คุมจำนวนรับต่อ PO line</b> (idempotency) → 2 ใบรับอ้าง PO เดียว = สต๊อกเข้า 2 เท่า · ผังนี้ไม่ผูกกลับไปใบตั้งหนี้ (05) · <span class="fix">🛠️ guard received-qty ฝั่ง server</span></div></div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">05</span><span class="fl-name">Invoice (ตั้งหนี้เจ้าหนี้ &amp; ภาษี)</span><span class="ic post">⚡ Post Invoice</span><span class="ic del">🗑️</span><span class="fl-pdf">05 Purchase - Invoice.pdf</span></div>
+      <div class="fl-chain"><span class="nd">PO (Open)</span><span class="sep">→</span><span class="nd gate">Approval</span><span class="sep">→</span><span class="nd">PO (Approved)</span><span class="sep">→</span><span class="nd post">Post Invoice</span><span class="sep">→</span><span class="nd">Posted Invoice</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> ⭐ <b>ผังไม่มีกล่อง “รับของ (GRN)” คั่น</b> — ตั้งหนี้จาก PO Approved ตรง (การรับของอยู่ผัง 04 แยก ไม่ผูกกลับ) → <b>3-way match ไม่เคยถูกวางใน flow</b> · <span class="fix">🛠️ เพิ่ม node จับคู่ใบรับคั่น PO Approved → Post Invoice + tolerance</span></div></div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">06</span><span class="fl-name">Deposit bill (PO บิลฝาก)</span><span class="ic post">⚡ Post ×2</span><span class="fl-pdf">06 Purchase - Deposit bill.pdf</span></div>
+      <div class="fl-chain"><span class="nd">PO (Approved)</span><span class="sep">→</span><span class="nd post">Post Receive/Invoice</span><span class="sep">→</span><span class="nd post">Post Invoice (ตามรอบ)</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag C">C</span> โครง receipt-then-invoice ถูกทิศ แต่ decision Post <b>ไม่ระบุเกณฑ์ match</b> (2-way/3-way, qty/amount/tolerance) · ไม่เห็น VAT Golden Rule / Entity Tag (Dual-Book) · <span class="fix">🛠️ เคาะเกณฑ์ match + Entity Tag</span></div></div>
+      <div class="good">👍 แยก Post 2 จังหวะ (รับของ vs ตั้งหนี้ตามรอบส่ง) ตรงธรรมชาติบิลฝาก</div>
+    </div>
+
+    <div class="fl ok">
+      <div class="fl-head"><span class="fl-code">00</span><span class="fl-name">Dashboard</span><span class="fl-pdf">00 Purchase - Dash board.pdf</span></div>
+      <div class="fl-chain"><span class="nd">7 การ์ดคิว (PR/PO/รับ/ตั้งหนี้/ใกล้หมดอายุ)</span></div>
+      <div class="good">👍 แยกคิว “ค้างอนุมัติ” ออกจาก “ค้างทำ” ชัด — maker/checker เห็นงานคนละกอง</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ WH ═══════════ -->
+  <div class="mod" id="wh">
+    <div class="mod-head"><div class="ico" style="background:#DCFCE7">📦</div><h2>คลังสินค้า (WH)</h2><span class="cnt">3 ผัง</span><span class="phase p1">Phase 1</span></div>
+    <div class="mod-sub">รับของ (ใช้ผัง Purchase/04) · โอน · นับ</div>
+    <div class="src">
+      <div class="src-row"><span class="src-lbl">📚 สเปกปัจจุบัน (grill แล้ว):</span>
+        <a class="sc cur" href=".claude/skills/sangwijit-portal/modules/WH_warehouse.md">WH_warehouse.md</a>
+        <a class="sc cur" href=".agents/topics/wh-status-transition-table.md">wh-status-transition-table.md</a>
+        <a class="sc cur" href=".agents/topics/wh-renumber-plan.md">wh-renumber-plan.md</a>
+        <a class="sc cur" href=".agents/topics/po-wh-gap-kpi-matrix.md">po-wh-gap-kpi-matrix.md</a>
+      </div>
+      <div class="src-row"><span class="src-lbl">🗺️ Flow ต้นฉบับ:</span>
+        <span class="sc flow-ok">✅ Warehouse/00–02 ครบ 3 ใบ</span>
+        <span class="sc ref">รับของ = Purchase/04</span>
+      </div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">01</span><span class="fl-name">Transfer Order (โอนย้ายสินค้า)</span><span class="ic post">⚡ Post Ship + Receive</span><span class="fl-pdf">01 Warehouse - Transfer Order.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Transfer From</span><span class="sep">→</span><span class="nd post">Post Ship</span><span class="sep">→</span><span class="nd">In-Transit</span><span class="sep">→</span><span class="nd post">Post Receive</span><span class="sep">→</span><span class="nd">Received</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> <b>ไม่มี node บล็อกสต๊อกไม่พอ</b> ตอน Post Ship → ติดลบ · <span class="fix">🛠️ hard block negative stock</span></div></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag A">A</span> <b>ไม่มี node ระบุ variance/เหตุผล</b> เมื่อรับ &lt; ส่ง → ของหายมองไม่เห็นจนนับรอบหน้า · <span class="fix">🛠️ บังคับ reason-code ตอนรับ In-Transit</span></div></div>
+      <div class="good">👍 In-Transit 2 จังหวะจริง (ตัดต้นทางทันที ของไม่หายจากระบบระหว่างทาง)</div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">02</span><span class="fl-name">Stock Counting (นับสต๊อก)</span><span class="ic post">⚡ Post ×2</span><span class="ic del">🗑️</span><span class="fl-pdf">02 Warehouse - Stock Counting.pdf</span></div>
+      <div class="fl-chain"><span class="nd">PIJ (Run by Location)</span><span class="sep">→</span><span class="nd">Scan (Bin/Serial)</span><span class="sep">→</span><span class="nd">Update Qty/Status</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">ILE (ปรับสต๊อก)</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> <b>ไม่มีบังคับนับซ้ำ (recount) และไม่มี variance approval</b> → คนนับคนเดียว Post ปรับ ILE/ตั้งหนี้ได้เอง + <b>ลบ journal เองได้</b> = ปกปิดส่วนต่าง · <span class="fix">🛠️ บังคับ recount เมื่อเกิน tolerance + อนุมัติ variance + ล็อกการลบ</span></div></div>
+      <div class="good">👍 scan ระดับ Serial/Bin ละเอียด + Print ใบนับเป็นหลักฐาน</div>
+    </div>
+
+    <div class="fl ok">
+      <div class="fl-head"><span class="fl-code">00</span><span class="fl-name">Dashboard</span><span class="fl-pdf">00 Warehouse - Dash board.pdf</span></div>
+      <div class="fl-chain"><span class="nd">5 การ์ดคิว (รอโอน/ระหว่างคลัง/รอรับ/รอจัดส่ง)</span></div>
+      <div class="good">👍 map คิวเข้ากับ 3 แหล่ง (Transfer/PO/SO) ครบ 3 outstanding condition</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ FI ═══════════ -->
+  <div class="mod" id="fi">
+    <div class="mod-head"><div class="ico" style="background:#E0E7FF">💵</div><h2>การเงิน (FI)</h2><span class="cnt">3 ผัง</span><span class="phase p1">Phase 1</span></div>
+    <div class="mod-sub">รับเงิน · จ่ายเงิน + WHT · กระทบยอดธนาคาร · <b>ทุกผังอยู่ BC-lane ล้วน (Portal ว่าง)</b></div>
+    <div class="src">
+      <div class="src-row"><span class="src-lbl">📚 สเปกปัจจุบัน (grill แล้ว):</span>
+        <a class="sc cur" href=".claude/skills/sangwijit-portal/modules/FI_finance.md">FI_finance.md</a>
+        <a class="sc cur" href=".agents/topics/fi-status-transition-table.md">fi-status-transition-table.md</a>
+        <a class="sc cur" href=".agents/topics/finance-flow-understanding.md">finance-flow-understanding.md</a>
+      </div>
+      <div class="src-row"><span class="src-lbl">อ้างอิงเสริม (ระบบเดิม):</span>
+        <a class="sc ref" href=".agents/topics/legacy-ar-settlement-5-8.md">legacy-ar-settlement</a>
+        <a class="sc ref" href=".agents/topics/legacy-ap-payment.md">legacy-ap-payment</a>
+      </div>
+      <div class="src-row"><span class="src-lbl">🗺️ Flow ต้นฉบับ:</span>
+        <span class="sc flow-ok">✅ Finance/01–03 ครบ 3 ใบ</span>
+        <span class="sc flow-ok">✅ Account/07 WHT</span>
+      </div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">01</span><span class="fl-name">Cash Receive (รับเงินลูกหนี้)</span><span class="ic post">⚡ Post</span><span class="ic del">🗑️</span><span class="fl-pdf">Finance/01 - Cash Receive.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Posted Invoice</span><span class="sep">→ apply →</span><span class="nd">Cash Receive (AR)</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">G/L + ลดหนี้ลูกหนี้</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> <b>ไม่มี node WHT-รับ / ค่าธรรมเนียม</b> → ลูกค้าหัก 3% เงินเข้า &lt; บิล → ตัดยอดไม่ลง bank recon ไม่ tie · <span class="fix">🛠️ เพิ่มช่อง WHT-รับ + fee</span></div></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag A">A</span> ผังโพสต์ตรง<b>ไม่มี node อนุมัติ</b> (ขัด status-table ที่เติม Maker≠Checker) + จุดรับเงิน 2 ทาง (SL-4/FI-1) ไม่ lock · <span class="fix">🛠️ ยึดแบบมีอนุมัติ + lock กันรับซ้ำ</span> · <span style="color:#166534;font-weight:700">✅ เคาะ 08-09: มีอนุมัติทุกใบ เข้า list รอตรวจใน FI-Q · Maker≠Checker server-side</span></div></div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">02</span><span class="fl-name">Payment (จ่ายเจ้าหนี้ + WHT)</span><span class="ic post">⚡ Post</span><span class="ic appr">✅ Approval</span><span class="fl-pdf">Finance/02 - Payment.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Posted Purchase Invoice</span><span class="sep">→ apply →</span><span class="nd">Payment+WHT (Open)</span><span class="sep">→</span><span class="nd gate">Approval</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">ลดหนี้เจ้าหนี้</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag B">B</span> <b>ไม่มี gate กันจ่ายซ้ำ</b> — ไม่เช็คว่า Posted Invoice ใบนี้ Apply/จ่ายแล้วหรือยัง · Maker≠Checker ไม่ระบุในผัง · <span class="fix">🛠️ เพิ่ม double-payment guard</span></div></div>
+      <div class="good">👍 WHT อยู่ในตัว node จ่าย (หักถูกจังหวะ) + ออก PND อัตโนมัติ + Approval reject-loop ชัด</div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">03</span><span class="fl-name">Bank Reconciliation (กระทบยอดธนาคาร)</span><span class="ic post">⚡ Post</span><span class="ic del">🗑️</span><span class="fl-pdf">Finance/03 - Bank Recon.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Import Statement</span><span class="sep">→</span><span class="nd gate">Matching</span><span class="sep">→</span><span class="nd post">Post Recon</span><span class="sep">→</span><span class="nd">Bank Ledger</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag B">B</span> <b>Delete ล้าง reconciliation กลับได้ ไม่มี guard/approval</b> → แก้ยอดกระทบธนาคารย้อนหลังได้ · <span class="fix">🛠️ approval/audit ก่อนย้อน recon ที่ post แล้ว</span></div></div>
+      <div class="good">👍 Matching เป็น hard gate ก่อน Post (กัน post ยอดไม่ตรง) + จำกัดทีละ 1 Bank Code</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ Account ═══════════ -->
+  <div class="mod" id="ac">
+    <div class="mod-head"><div class="ico" style="background:#F3E8FF">🧮</div><h2>บัญชี (Account)</h2><span class="cnt">12 ผัง</span><span class="phase p1">P1–P3</span></div>
+    <div class="mod-sub">AR/AP/CN · GL · VAT · ปิดงวด/ปิดปี · Fixed Asset · <b>BC-lane ล้วน · ความไม่สมมาตร: AP มี Approval / AR ไม่มี</b></div>
+    <div class="src">
+      <div class="src-row"><span class="src-lbl">📚 สเปกปัจจุบัน:</span>
+        <span class="sc none">ไม่มีสเปก .md เฉพาะโมดูล</span>
+        <a class="sc cur" href=".claude/skills/sangwijit-portal/modules/FI_finance.md">อิง FI_finance.md</a>
+        <a class="sc cur" href=".agents/topics/fi-status-transition-table.md">fi-status-transition-table</a>
+      </div>
+      <div class="src-row"><span class="src-lbl">🗺️ Flow ต้นฉบับ:</span>
+        <span class="sc flow-ok">✅ Account/00–12 ครบ 12 ใบ</span>
+        <span class="sc ref">งานบัญชี BC-native (portal thin-UI)</span>
+      </div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">01</span><span class="fl-name">Accounts Receivable (ตั้งหนี้ลูกหนี้)</span><span class="ic post">⚡ Post</span><span class="fl-pdf">01 - AR.pdf</span></div>
+      <div class="fl-chain"><span class="nd">SO</span><span class="sep">→</span><span class="nd post">Post Invoice</span><span class="sep">→</span><span class="nd">Posted Invoice</span><span class="sep">→</span><span class="nd">เพิ่มหนี้ลูกหนี้</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag A">A</span> <b>ตั้งหนี้ AR ไม่มีชั้นอนุมัติ</b> (ต่างจาก AP ผัง 03) → คนออก = คนตั้งหนี้เอง · <span class="fix">🛠️ เพิ่ม Approval ให้สมมาตรกับ AP</span></div></div>
+      <div class="good">👍 Posted immutable แก้ผ่าน CN · เลข/โพสต์อยู่ BC</div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">02</span><span class="fl-name">AR Credit Note (ลดหนี้ลูกหนี้)</span><span class="ic post">⚡ Post</span><span class="fl-pdf">02 - ARCN.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Sales Credit Memo</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">ลดหนี้ลูกหนี้</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> ใบลดหนี้ = ลดรายได้ (คุมเข้ม) แต่<b>ไม่มี gate อนุมัติ และไม่ผูกการรับของคืน</b> → ลดหนี้ลอยได้ เสี่ยงกว่า AR ตั้งหนี้ · <span class="fix">🛠️ อนุมัติ + ผูก WH goods-return</span></div></div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">03</span><span class="fl-name">Accounts Payable (ตั้งหนี้ผู้ขาย)</span><span class="ic post">⚡ Post</span><span class="ic appr">✅ Approval</span><span class="fl-pdf">03 - AP.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Purchase Invoice (Open)</span><span class="sep">→</span><span class="nd gate">Approval</span><span class="sep">→</span><span class="nd">Approved</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">เพิ่มหนี้เจ้าหนี้</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag C">C</span> <b>ไม่มี node หัก WHT ที่ตัวใบตั้งหนี้</b> — WHT ไปทำ batch ตอนปิดงวด (08) → เสี่ยงหักผิดงวด/ตกหล่น · ไม่เห็น Entity Tag (Dual-Book) · <span class="fix">🛠️ ยืนยัน WHT คิดที่จุดจ่ายจริง</span></div></div>
+      <div class="good">👍 มีชั้น Approval ชัด (สมมาตรที่ควรยกไปใช้ฝั่ง AR)</div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">04</span><span class="fl-name">AP Credit Note (ลดหนี้ผู้ขาย)</span><span class="ic post">⚡ Post</span><span class="ic appr">✅ Approval</span><span class="fl-pdf">04 - APCN.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Purch. Credit Memo (Open)</span><span class="sep">→</span><span class="nd gate">Approval</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">ลดหนี้เจ้าหนี้</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag A">A</span> มี Approval (ดีกว่า ARCN) แต่<b>ไม่ผูกการรับ/ส่งของคืนผู้ขาย</b> (WH return) · WHT reversal ไม่แสดง · <span class="fix">🛠️ ผูก return receipt</span></div></div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">05</span><span class="fl-name">General Journal (ลงบัญชีทั่วไป)</span><span class="ic post">⚡ Post→G/L</span><span class="ic del">🗑️</span><span class="fl-pdf">05 - General Journal.pdf</span></div>
+      <div class="fl-chain"><span class="nd">General Journal</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">G/L Entry</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> ⭐ <b>ลง G/L ตรง ไม่มี gate อนุมัติ</b> = top-side entry ปรับแต่งบัญชีคนเดียวได้ · Delete พาดโซน G/L (ยังไม่นิยามว่าลบหลัง post ได้ไหม) · <span class="fix">🛠️ บังคับ Approval + Maker≠Checker + ล็อกลบหลัง post</span></div></div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">11</span><span class="fl-name">Fixed Asset — ขายสินทรัพย์</span><span class="ic post">⚡ Post→G/L</span><span class="fl-pdf">11 - Fixed Asset ขาย.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Sales Order (เลือกสินทรัพย์)</span><span class="sep">→</span><span class="nd post">Post Ship+Invoice</span><span class="sep">→</span><span class="nd">รายได้ + ตัดสินทรัพย์</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> ⭐ <b>ตัดสินทรัพย์ออกจากบัญชี ไม่มีชั้นอนุมัติเลย</b> · ไม่เทียบราคาขาย vs มูลค่าคงเหลือ → สินทรัพย์ถูกจำหน่ายโดยไม่มีใครสอบทาน · <span class="fix">🛠️ Approval + validate ราคา vs net book value</span></div></div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">12</span><span class="fl-name">Fixed Asset — ทำลาย/สูญหาย (write-off)</span><span class="ic post">⚡ Post→G/L</span><span class="fl-pdf">12 - Fixed Asset ทำลาย.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Fixed Asset G/L Journal</span><span class="sep">→</span><span class="nd post">Post to G/L</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> ⭐⭐ <b>ผังสั้น 3 node ตัดสินทรัพย์ออกจากบัญชีโดยไม่มีอนุมัติ ไม่มีแนบหลักฐาน</b> — ไม่มีคู่ค้าภายนอกเป็น check = <b>ช่องยักยอกสินทรัพย์คลาสสิก</b> (จุดเสี่ยงสูงสุดทั้งระบบ) · <span class="fix">🛠️ อนุมัติหลายระดับ + แนบใบแจ้งความ/ภาพ/รายงานสอบสวน ก่อน Post</span></div></div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">10</span><span class="fl-name">Fixed Asset — สร้าง + รันค่าเสื่อม</span><span class="ic post">⚡ Post→G/L</span><span class="fl-pdf">10 - Fixed Asset สร้าง.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Create FA (มูลค่า/อายุ)</span><span class="sep">→</span><span class="nd">Calculate Depreciation</span><span class="sep">→</span><span class="nd post">Post to GL</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag A">A</span> ตั้งมูลค่าสินทรัพย์ + รันค่าเสื่อมเข้าบัญชีได้เองทั้งเส้น <b>ไม่มีอนุมัติ / ไม่มี preview ก่อน Post</b> (กระทบงบโดยตรง) · <span class="fix">🛠️ review ก่อน post ค่าเสื่อม</span></div></div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">08</span><span class="fl-name">Close Period (ปิดงวด)</span><span class="ic post">⚡ Post</span><span class="ic del">🗑️</span><span class="fl-pdf">08 - Close Period.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Inventory Period</span><span class="sep">→</span><span class="nd post">Close+Post</span><span class="sep">→</span><span class="nd gate">Closed + วันตัดรายการ</span><span class="sep">·</span><span class="nd">สรุป WHT</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag A">A</span> การปิดงวด<b>ไม่มี Approval</b> (คนปิดเอง) · WHT ทำ batch สรุปตอนปิด ไม่หักรายบิล · <span class="fix">🛠️ อนุมัติปิดงวด + WHT รายบิล</span></div></div>
+      <div class="good">👍 มีกลไก lock 2 ชั้น: Inventory Period Closed + posting-date range (กันโพสต์ย้อนหลังดีสุดในชุด)</div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">09</span><span class="fl-name">Close Year (ปิดปี)</span><span class="ic post">⚡ Post→G/L</span><span class="ic del">🗑️</span><span class="fl-pdf">09 - Close Year.pdf</span></div>
+      <div class="fl-chain"><span class="nd">GJ ปรับปรุงยอด</span><span class="sep">→</span><span class="nd">Run Close Income Statement</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">กำไรสะสม</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> ปรับปรุง G/L ปิดปี + รันกำไรสะสม <b>โพสต์ตรงไม่มีอนุมัติ</b> = top-side adjustment คนเดียว · <span class="fix">🛠️ Approval หลายระดับ</span></div></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag C">C</span> <b>ไม่วาด gate ล็อกปีที่ปิดแล้ว</b> (พึ่งแค่ setup ปีถัดไป) → กันโพสต์ย้อนเข้าปีที่ปิดไม่ชัด · <span class="fix">🛠️ เพิ่ม lock/allow-posting flag ของปีที่ปิด</span></div></div>
+    </div>
+
+    <div class="fl l">
+      <div class="fl-head"><span class="fl-code">06</span><span class="fl-name">Sales/Purchase VAT (ภาษีซื้อ-ขาย)</span><span class="fl-pdf">06 - Sales/Purchase VAT.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Posted Invoice</span><span class="sep">→</span><span class="nd">Get VAT Data</span><span class="sep">→</span><span class="nd gate">Release</span><span class="sep">→</span><span class="nd">Print VAT</span></div>
+      <div class="find"><span class="sv l"></span><div class="body"><span class="tag C">C</span> ป้ายกำกับดูสลับ “Sales VAT (ภาษีซื้อ)”/“Purchase VAT (ภาษีขาย)” — ควรตรวจว่าพิมพ์สลับ · Release ไม่มีชั้นสอบทาน (ความเสี่ยงต่ำ อ่านจาก Posted) · <span class="fix">🛠️ ตรวจ label</span></div></div>
+      <div class="good">👍 read-only ดึงจาก Posted Invoice · ไม่แก้ย้อน ไม่มี Delete = สะอาดสุดในชุด</div>
+    </div>
+
+    <div class="fl ok">
+      <div class="fl-head"><span class="fl-code">00</span><span class="fl-name">Account Dashboard</span><span class="fl-pdf">00 - Account - Dash board.pdf</span></div>
+      <div class="fl-chain"><span class="nd">4 การ์ดคิว (AR/AP/ภาษีซื้อ/ภาษีขาย)</span></div>
+      <div class="good">👍 filter Qty.Invoiced&lt;&gt;0 จับเอกสารตั้งหนี้ไม่ครบ · ดึงตรงจาก BC ตาม thin-UI</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SV ═══════════ -->
+  <div class="mod" id="sv">
+    <div class="mod-head"><div class="ico" style="background:#F3E8FF">🔧</div><h2>บริการ (SV)</h2><span class="cnt">6 ผัง</span><span class="phase p2">Phase 2</span></div>
+    <div class="mod-sub">รับงาน → มอบหมาย → เบิกอะไหล่ → QA ปิดงาน → เคลม</div>
+    <div class="src">
+      <div class="src-row"><span class="src-lbl">📚 สเปกปัจจุบัน (grill 07-03):</span>
+        <a class="sc cur" href=".claude/skills/sangwijit-portal/modules/SV_service.md">SV_service.md</a>
+        <a class="sc cur" href=".claude/skills/sangwijit-portal/modules/SV_service_knowhow.md">SV_service_knowhow.md</a>
+        <a class="sc cur" href=".agents/topics/sv-status-transition-table.md">sv-status-transition-table.md</a>
+        <a class="sc cur" href=".agents/topics/clm-status-transition-table.md">clm-status-transition-table.md</a>
+        <a class="sc cur" href=".agents/svc-claim-jobtype-spec.md">svc-claim-jobtype-spec.md</a>
+      </div>
+      <div class="src-row"><span class="src-lbl">🗺️ Flow ต้นฉบับ:</span>
+        <span class="sc flow-ok">✅ Service/00–06 ครบ 6 ใบ</span>
+      </div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">01</span><span class="fl-name">Service Intake (งานซ่อม) + Warranty</span><span class="ic good">👍 warranty gate</span><span class="fl-pdf">01 Service Intake (Repair).pdf</span></div>
+      <div class="fl-chain"><span class="nd">Intake (Repair)</span><span class="sep">→</span><span class="nd gate">อยู่ Warranty? (จาก Item Ledger)</span><span class="sep">→</span><span class="nd">In/Out Warranty</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag B">B</span> decision auto-คำนวณ แต่การกด In/Out เป็น <b>manual toggle ที่ override ได้</b> ไม่มี guard/เหตุผล · <span class="fix">🛠️ override ต้องมีสิทธิ์+เหตุผล</span></div></div>
+      <div class="good">👍 ตรวจ warranty จาก <b>Item Ledger Entry + Serial + วันซื้อจริง</b> (ไม่ให้กรอกมือ) + แยกทางเคลม vendor ตั้งแต่ต้น</div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">02</span><span class="fl-name">Service Intake (งานติดตั้ง)</span><span class="fl-pdf">02 Service Intake (Installation).pdf</span></div>
+      <div class="fl-chain"><span class="nd">Intake (Installation)</span><span class="sep">→</span><span class="nd">Warranty=Release</span><span class="sep">→</span><span class="nd">Process 03</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag A">A</span> งานติดตั้ง<b>ข้าม warranty โดยไม่มี decision node</b> (Release เลย) · ผูก Sales Shipment แบบ get data ไม่ validate ลูกค้า/ใบจองตรงงาน · <span class="fix">🛠️ เพิ่ม node เหตุผล + validate</span></div></div>
+      <div class="good">👍 reuse item/serial จาก Sales Shipment จริง (กัน data-entry error)</div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">03</span><span class="fl-name">Appointment &amp; Assignment (นัด+มอบหมายช่าง)</span><span class="fl-pdf">03 Appointment &amp; Assignment.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Intake</span><span class="sep">→</span><span class="nd">Admin เลือกช่าง+วันที่</span><span class="sep">→</span><span class="nd">Confirm Assignment</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> <b>Admin มอบหมาย + ยืนยันคนเดียว</b> (assign = confirm) → ถ้า Admin = ช่าง เกิดช่างรับ/ยืนยันงานตัวเอง · เลือกช่าง&gt;1 แต่<b>ไม่มี availability/งานชน check</b> · <span class="fix">🛠️ แยกบทบาท + capacity check</span></div></div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">04</span><span class="fl-name">Parts Requisition &amp; Work Order (เบิกอะไหล่)</span><span class="ic post">⚡ Post Ship+Invoice</span><span class="fl-pdf">04 Parts Requisition.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Confirm Assignment</span><span class="sep">→</span><span class="nd">เบิกอะไหล่?</span><span class="sep">→</span><span class="nd">Sales Order</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">ตัดสต๊อก + ตั้งหนี้ + ใบงาน</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> ⭐ อะไหล่เบิกผ่าน SO → ตั้งหนี้ขาย<b>เสมอ แต่ไม่เชื่อม Warranty Status</b> → งาน In-Warranty ก็คิดเงินลูกค้าเหมือนนอกประกัน = <b>warranty gate (01) ถูก bypass ตอน billing</b> · <span class="fix">🛠️ branch In-Warranty → เบิกไม่ตั้งหนี้ลูกค้า/เคลม vendor</span></div></div>
+      <div class="good">👍 เบิกอะไหล่ผ่าน inventory posting จริง (ตัดสต๊อก + ใบหยิบ) ไม่เบิกลอย</div>
+    </div>
+
+    <div class="fl ok">
+      <div class="fl-head"><span class="fl-code">05</span><span class="fl-name">QA &amp; Close Work Order</span><span class="ic good">👍 QA gate + Service→Sales</span><span class="fl-pdf">05 QA and Close.pdf</span></div>
+      <div class="fl-chain"><span class="nd">ช่าง Finished</span><span class="sep">→</span><span class="nd gate">Admin ตรวจ (ใน/นอก)</span><span class="sep">→</span><span class="nd">แจ้ง Sales ออกใบคืนของ/ลดหนี้</span><span class="sep">→</span><span class="nd">Close</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag B">B</span> ผัง<b>ถูกแล้ว</b> (มี QA gate + สั่งให้ Sales ออก CN) แต่ mockup status-table ยิงค่าแรงจาก “ช่างส่งงาน” ข้าม QA + ให้ Service ออก CN เอง · <span class="fix">🛠️ ดึง mockup กลับตามผัง</span></div></div>
+      <div class="good">👍 flow วางกำแพง Service→Sales ถูก + Admin QA ก่อนทำจ่าย (คนละคนกับช่าง)</div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">06</span><span class="fl-name">Claim Intake (รับเคลม → Vendor)</span><span class="fl-pdf">06 Claim Intake.pdf</span></div>
+      <div class="fl-chain"><span class="nd">ระบุ Vendor</span><span class="sep">→</span><span class="nd">ตรวจสินค้า</span><span class="sep">→</span><span class="nd">Return Order / Credit Memo (Sales ทำ)</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag B">B</span> case “เปลี่ยนเครื่องใหม่เลย” จ่ายก่อน vendor ตัดสิน <b>ไม่มี node อนุมัติ/กันสำรอง</b> → vendor ปฏิเสธ = SWT กินทั้งคู่ · <span class="fix">🛠️ กันสำรอง+อนุมัติก่อนจ่าย</span></div></div>
+      <div class="good">👍 ผังสั่งชัด 3 กรณี → Return Order / Credit Memo (Sales เป็นคนออก ไม่ใช่ Service)</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PM ═══════════ -->
+  <div class="mod" id="pm">
+    <div class="mod-head"><div class="ico" style="background:#FCE7F3">🎁</div><h2>โปรโมชั่น (PM)</h2><span class="cnt">2 ผัง</span><span class="phase p2">Phase 2</span></div>
+    <div class="mod-sub">Price List → โปรโมชั่น + งบส่งเสริมการขาย</div>
+    <div class="src">
+      <div class="src-row"><span class="src-lbl">📚 สเปกปัจจุบัน (grill 07-30):</span>
+        <a class="sc cur" href=".agents/topics/pm-status-transition-table.md">pm-status-transition-table.md</a>
+        <a class="sc cur" href=".agents/topics/price-status-transition-table.md">price-status-transition-table.md</a>
+        <a class="sc cur" href=".agents/topics/rebate-status-transition-table.md">rebate-status-transition-table.md</a>
+      </div>
+      <div class="src-row"><span class="src-lbl">⚠️ ไม่เอา (เก่า):</span>
+        <span class="sc old">PM_promotion.md · 04-19 stale · รอ grill+rewrite</span>
+      </div>
+      <div class="src-row"><span class="src-lbl">🗺️ Flow ต้นฉบับ:</span>
+        <span class="sc flow-ok">✅ Promotion/00–02 ครบ 2 ใบ</span>
+      </div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">02</span><span class="fl-name">Promotion &amp; Accrual Claim</span><span class="ic post">⚡ Post CN</span><span class="fl-pdf">02 Promotion - Accrual Claim.pdf</span></div>
+      <div class="fl-chain"><span class="nd">SO/Invoice (มี Promo by line)</span><span class="sep">→</span><span class="nd">Power BI + Vendor ตรวจ</span><span class="sep">→</span><span class="nd post">Sales Credit Memo</span><span class="sep">→</span><span class="nd">G/L รายได้ส่วนลด</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag C">C</span> ⭐ ผังลง GL เป็น <b>Sales Credit Memo (รายได้ฝั่งขาย)</b> · แต่ portal ทำ <b>หักลดหนี้ฝั่งซื้อ (PO-7/PO-6/PO-CN)</b> = ทิศ GL ตรงข้าม · เคลมเช็คด้วย Power BI+Vendor นอกระบบ ไม่มี gate กันได้ประโยชน์ซ้ำ · <span class="fix">🛠️ แยกลดบนบิลจากเงินคืน</span> · <span style="color:#166534;font-weight:700">✅ เคาะ 08-09: <b>ฝั่งซื้อ</b> (PO-7→PO-CN→PO-6 AP · Other Income CF-4) · ⚠️ pending accounting sign-off</span></div></div>
+    </div>
+
+    <div class="fl l">
+      <div class="fl-head"><span class="fl-code">00</span><span class="fl-name">Dashboard</span><span class="fl-pdf">00 Promotion - Dash board.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Active / Not Active</span><span class="sep">→</span><span class="nd">Sales Price List (BC)</span></div>
+      <div class="good">👍 read-only แยก active/not active · อ่านจาก BC เป็น source of truth</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ MD ═══════════ -->
+  <div class="mod" id="md">
+    <div class="mod-head"><div class="ico" style="background:#EFF6FF">🗂️</div><h2>ข้อมูลหลัก (MD / Master)</h2><span class="cnt">7 ผัง</span><span class="phase p1">Phase 1</span></div>
+    <div class="mod-sub"><b>ทั้งชุดใช้ “Block-default” แต่ประตูปลด Block ไม่มียาม</b></div>
+    <div class="src">
+      <div class="src-row"><span class="src-lbl">📚 สเปกปัจจุบัน (grill 07-21):</span>
+        <a class="sc cur" href=".claude/skills/sangwijit-portal/modules/MD_master.md">MD_master.md</a>
+        <a class="sc cur" href=".agents/topics/master-flows.md">master-flows.md</a>
+        <a class="sc cur" href=".agents/topics/master-data-analysis-2026-07-21.md">master-data-analysis-2026-07-21.md</a>
+        <a class="sc cur" href=".agents/topics/master-data-and-settings-backlog.md">master-data-and-settings-backlog.md</a>
+      </div>
+      <div class="src-row"><span class="src-lbl">🗺️ Flow ต้นฉบับ:</span>
+        <span class="sc flow-ok">✅ Master/ ครบ 7 ใบ (Customer/Vendor/Item/Employee/Location/Sales PL/Purchase PL)</span>
+      </div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">Cust</span><span class="fl-name">Master — Customer</span><span class="fl-pdf">Master - Customer.pdf</span></div>
+      <div class="fl-chain"><span class="nd gate">Block All</span><span class="sep">→</span><span class="nd">ตั้ง Credit Limit</span><span class="sep">→</span><span class="nd">Block=ว่าง</span><span class="sep">→</span><span class="nd">Active</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> ⭐ <b>ตั้ง Credit Limit + ปลด Block เอง → เปิดบิลได้ทันที ไม่มี KYC/อนุมัติ</b> (ขัด SL-F1/CF-2.6 + Maker≠Checker) · <span class="fix">🛠️ เพิ่ม approver ก่อน unblock+credit</span></div></div>
+      <div class="good">👍 default Block All (ปลอดภัยตอนเกิด — เจตนาถูก แค่ขาดคนอนุมัติปลด)</div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">Vend</span><span class="fl-name">Master — Vendor</span><span class="fl-pdf">Master - Vendor.pdf</span></div>
+      <div class="fl-chain"><span class="nd gate">Block All</span><span class="sep">→</span><span class="nd">ตั้ง Credit Limit</span><span class="sep">→</span><span class="nd">Block=ว่าง</span><span class="sep">→</span><span class="nd">Active</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> สร้าง Vendor + ปลด Block เอง → <b>ตั้งหนี้/จ่ายได้ทันทีโดยไม่อนุมัติ</b> = phantom vendor (ยิ่งผูก Dual-Book ยิ่งต้องคุมต้นทาง) · <span class="fix">🛠️ checker ก่อน Active</span></div></div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">SPL</span><span class="fl-name">Master — Sales Price List</span><span class="fl-pdf">Master - Sales Price List.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Draft</span><span class="sep">→</span><span class="nd">ระบุราคา (วันหมดอายุ)</span><span class="sep">→</span><span class="nd">Change Status</span><span class="sep">→</span><span class="nd">Active</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag A">A</span> <b>แก้ราคา→กด Active เอง มีผลทันที ไม่มี Maker≠Checker</b> · ราคาขายกระทบ VAT Golden Rule/ส่วนลดก่อน VAT · <span class="fix">🛠️ อนุมัติก่อน active</span></div></div>
+      <div class="good">👍 state machine ครบ Draft→Active→Inactive + field วันหมดอายุ</div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">PPL</span><span class="fl-name">Master — Purchase Price List</span><span class="fl-pdf">Master - Purchase Price List.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Draft</span><span class="sep">→</span><span class="nd">ระบุราคาซื้อ</span><span class="sep">→</span><span class="nd">Change Status</span><span class="sep">→</span><span class="nd">Active</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag A">A</span> แก้ราคาซื้อ→Active เอง มีผลทันที (กระทบต้นทุน/ตั้งหนี้) · <span class="tag B">B</span> <b>ทับซ้อนกับ Promotion/01 (Price List &amp; Contract)</b> ที่ทำราคาซื้อเช่นกัน + ผังนั้นตั้งชื่อกล่องเป็น “Sales Price List” ผิดฝั่ง · <span class="fix">🛠️ อนุมัติ + รวม/ตัดสินให้เหลือแหล่งเดียว</span></div></div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">Item</span><span class="fl-name">Master — Item</span><span class="fl-pdf">Master - Item.pdf</span></div>
+      <div class="fl-chain"><span class="nd gate">Block=Yes</span><span class="sep">→</span><span class="nd">ระบุข้อมูลสำคัญ</span><span class="sep">→</span><span class="nd">Block=No</span><span class="sep">→</span><span class="nd">Active</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag B">B</span> ผังยุบเป็น “ระบุข้อมูลสำคัญ” ก้อนเดียว <b>ไม่เห็น lock ฟิลด์วิกฤต</b> (Serial/Lot flag, Costing Method, ต้นทุน) ที่ปกติแก้ไม่ได้หลังมี transaction → ตั้ง Serial ผิด = สต๊อกเพี้ยนถาวร · <span class="fix">🛠️ lock ฟิลด์วิกฤตหลังมี transaction</span></div></div>
+    </div>
+
+    <div class="fl m">
+      <div class="fl-head"><span class="fl-code">Emp</span><span class="fl-name">Master — Employee</span><span class="fl-pdf">Master - Employee.pdf</span></div>
+      <div class="fl-chain"><span class="nd gate">Block=Yes</span><span class="sep">→</span><span class="nd">ระบุข้อมูล</span><span class="sep">→</span><span class="nd">Block=No</span><span class="sep">→</span><span class="nd">Active</span></div>
+      <div class="find"><span class="sv m"></span><div class="body"><span class="tag B">B</span> ผูก Salesperson/Commission/RBAC · สร้าง+ปลด Block เอง <b>ไม่อนุมัติ</b> → ตั้งพนักงานผี/แก้สังกัดคอมมิชชันได้เงียบ · <span class="fix">🛠️ HR checker ก่อน Active</span></div></div>
+    </div>
+
+    <div class="fl l">
+      <div class="fl-head"><span class="fl-code">Loc</span><span class="fl-name">Master — Location &amp; Bin</span><span class="fl-pdf">Master - Location and Bin.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Location / Bin</span><span class="sep">→</span><span class="nd">ระบุข้อมูล</span><span class="sep">→</span><span class="nd">Active ทันที</span></div>
+      <div class="find"><span class="sv l"></span><div class="body"><span class="tag B">B</span> <b>ไม่มี Block state / ไม่มี Active-Inactive lifecycle</b> (หลุด pattern จาก Master อื่น) → ไม่มีทางปิด bin ที่เลิกใช้ · <span class="fix">🛠️ เพิ่ม lifecycle ให้สม่ำเสมอ</span></div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ Data Transfer ═══════════ -->
+  <div class="mod" id="dt">
+    <div class="mod-head"><div class="ico" style="background:#FEE2E2">🔁</div><h2>Data Transfer (ข้ามบริษัท · Intercompany)</h2><span class="cnt">6 ผัง</span><span class="phase p3">sync ต่อเนื่อง</span></div>
+    <div class="mod-sub">โมดูลใหม่ · <b>ทุกผังใช้ Temp staging → Select Company → Post To Company · sync ราย document ต่อเนื่อง (ไม่ใช่ migration ครั้งเดียว)</b> · ทุกผัง = A+B+C</div>
+    <div class="src">
+      <div class="src-row"><span class="src-lbl">📚 สเปกปัจจุบัน:</span>
+        <span class="sc none">ไม่มีสเปก .md — Flow PDF เท่านั้น (ยังไม่ grill)</span>
+      </div>
+      <div class="src-row"><span class="src-lbl">🗺️ Flow ต้นฉบับ:</span>
+        <span class="sc flow-ok">✅ Data Transfer/01–06 ครบ 6 ใบ</span>
+        <span class="sc none">โมดูลนี้ยังไม่มีในสเปก portal — เจอจาก Flow อย่างเดียว</span>
+      </div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">06</span><span class="fl-name">Payment Journal (จ่ายเงินข้ามบริษัท)</span><span class="ic post">⚡ Post ×2</span><span class="fl-pdf">06 Data Transfer - Payment Journal.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Payment Journal (+ WHT)</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">Temp</span><span class="sep">→ Select Company →</span><span class="nd post">Post To Company</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> ⭐ <b>จ่ายเงินข้ามบริษัทไม่มี Approval/Maker≠Checker เลย</b> (เสี่ยงทุจริตจ่ายสูงสุดในชุด) · <span class="tag B">B</span> ไม่มี dedup/idempotency → import ซ้ำ = จ่ายซ้ำ 2 บริษัท · <span class="fix">🛠️ Approval + idempotency key + reconcile</span></div></div>
+      <div class="good">👍 Temp ระบุ “รวมรายการที่มี WHT” + Apply Document ผูก Posted Invoice</div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">02/05</span><span class="fl-name">Sales/Purchase Credit Memo (ลดหนี้ข้ามบริษัท)</span><span class="ic post">⚡ Post ×2</span><span class="fl-pdf">02/05 Data Transfer - Credit Memo.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Credit Memo (← Return Receipt)</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">Temp</span><span class="sep">→</span><span class="nd post">Post To Company</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> ลดหนี้ (จุดเสี่ยงออกใบลดหนี้ปลอม) <b>ไม่มี Approval</b> · <span class="tag B">B</span> ไม่มี dedup กัน import ซ้ำ · <span class="fix">🛠️ Approval + idempotency</span></div></div>
+      <div class="good">👍 “Get Return Receipt” ผูก credit memo กับ Return Shipment จริง (referential integrity)</div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">03</span><span class="fl-name">Cash Receipt Journal (รับเงินข้ามบริษัท)</span><span class="ic post">⚡ Post ×2</span><span class="fl-pdf">03 Data Transfer - Cash Receipt.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Cash Receipt (← Apply Invoice)</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">Temp</span><span class="sep">→</span><span class="nd post">Post To Company</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> <span class="tag B">B</span> รายการเงินสดรับ — <b>ถ้า import ซ้ำ = รับเงินซ้ำ 2 บริษัท</b> · ไม่มี node กัน double-post · <span class="fix">🛠️ idempotency + reconcile</span></div></div>
+      <div class="good">👍 Apply Document ผูกใบรับเงินกับ Posted Invoice (ตัดยอดลูกหนี้ถูกตัว)</div>
+    </div>
+
+    <div class="fl h">
+      <div class="fl-head"><span class="fl-code">01/04</span><span class="fl-name">Sales/Purchase Process (ขาย/ซื้อข้ามบริษัท)</span><span class="ic post">⚡ Post ×2</span><span class="fl-pdf">01/04 Data Transfer - Process.pdf</span></div>
+      <div class="fl-chain"><span class="nd">Create Order</span><span class="sep">→</span><span class="nd post">Post</span><span class="sep">→</span><span class="nd">Temp (Flag/Mark)</span><span class="sep">→ Select Company →</span><span class="nd post">Post To Company</span></div>
+      <div class="find"><span class="sv h"></span><div class="body"><span class="tag A">A</span> ไม่มี Approval · <span class="tag B">B</span> <b>Select Company เลือกปลายทางมือ = โพสต์ผิดบริษัทได้</b> · Flag/Mark ช่วยได้แต่ไม่มี node “เช็คว่าโอนแล้ว/ยัง” · <span class="tag C">C</span> ไม่มี reconcile ยอด · Purchase ไม่ติด Entity Tag (Dual-Book) · <span class="fix">🛠️ validation + dedup + reconcile + auto-route</span></div></div>
+      <div class="good">👍 Temp staging decouple ต้นทาง/ปลายทาง (async ทนล้ม) + แยก Item/Customer/Vendor Ledger ชัด</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    เรียบเรียงจากการอ่าน <b>Flow PDF ต้นฉบับครบ 56 ผัง</b> (Flow Design/) · ยึดโครง module-flow-overview.html · ยังไม่เทียบ Odoo/Dynamics<br>
+    แก้ตามชนิด: <b>A</b> = แก้ที่ผังก่อน · <b>B</b> = ดึง mockup กลับตามผัง · <b>C</b> = เคาะ business ก่อน build · เอกสารภายในไม่ commit git
+  </div>
+
+</div>
+</body>
+</html>

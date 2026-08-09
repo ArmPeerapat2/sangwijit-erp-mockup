@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>วิเคราะห์ช่องข้ามขั้นตอน (ยึด Flow) — ระบบ ERP แสงวิจิตร</title>
+<style>
+  :root{
+    --hi:#EF4444; --hi-bg:#FEF2F2; --hi-br:#FCA5A5;
+    --md:#F59E0B; --md-bg:#FFFBEB; --md-br:#FCD34D;
+    --lo:#10B981; --lo-bg:#ECFDF5; --lo-br:#6EE7B7;
+    --ok:#2563EB; --ok-bg:#EFF6FF; --ok-br:#93C5FD;
+    --tA:#7C3AED; --tA-bg:#F5F3FF; --tA-br:#C4B5FD;   /* flow ไม่มี gate */
+    --tB:#0891B2; --tB-bg:#ECFEFF; --tB-br:#67E8F9;   /* mockup หลุด flow */
+    --tC:#DB2777; --tC-bg:#FDF2F8; --tC-br:#F9A8D4;   /* flow ขัด/ไม่เคาะ */
+    --sys:#64748B; --sys-bg:#F1F5F9; --sys-br:#CBD5E1;
+    --ink:#1E293B; --sub:#64748B; --line:#E2E8F0; --nav:#1E3A5F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter','Segoe UI','Sarabun',-apple-system,sans-serif;background:#F8FAFC;color:var(--ink);line-height:1.6;padding-bottom:60px}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  header{background:linear-gradient(135deg,#1E3A5F,#2563EB);color:#fff;padding:34px 0 30px}
+  header h1{font-size:26px;font-weight:800;margin-bottom:8px}
+  header p{font-size:14px;opacity:.92;max-width:820px}
+  .meta{font-size:12px;opacity:.8;margin-top:12px}
+
+  .howto{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:22px 0 14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .howto h2{font-size:15px;margin-bottom:10px;color:var(--nav)}
+  .howto ol{margin-left:18px;font-size:13.5px;color:#334155}
+  .howto li{margin-bottom:4px}
+  .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .lg{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 11px;border-radius:20px}
+  .lg.h{background:var(--hi-bg);color:#B91C1C;border:1px solid var(--hi-br)}
+  .lg.m{background:var(--md-bg);color:#B45309;border:1px solid var(--md-br)}
+  .lg.l{background:var(--lo-bg);color:#047857;border:1px solid var(--lo-br)}
+  .dot{width:9px;height:9px;border-radius:50%}
+  .dot.h{background:var(--hi)}.dot.m{background:var(--md)}.dot.l{background:var(--lo)}
+
+  /* type explainer */
+  .types{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .types h2{font-size:15px;margin-bottom:4px;color:var(--nav)}
+  .types .sub{font-size:12.5px;color:var(--sub);margin-bottom:12px}
+  .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .tcard{border-radius:10px;padding:12px 14px;font-size:12.5px}
+  .tcard.A{background:var(--tA-bg);border:1px solid var(--tA-br)}
+  .tcard.B{background:var(--tB-bg);border:1px solid var(--tB-br)}
+  .tcard.C{background:var(--tC-bg);border:1px solid var(--tC-br)}
+  .tcard b{display:block;font-size:13px;margin-bottom:3px}
+  .tcard.A b{color:var(--tA)}.tcard.B b{color:var(--tB)}.tcard.C b{color:var(--tC)}
+  .tcard .fix{margin-top:6px;font-size:11.5px;color:#475569}
+
+  /* cross-cutting flow observations */
+  .cross{background:#0F172A;color:#E2E8F0;border-radius:12px;padding:18px 20px;margin-bottom:20px}
+  .cross h2{font-size:15px;margin-bottom:10px;color:#fff}
+  .cross ul{list-style:none;font-size:13px}
+  .cross li{padding:6px 0;border-bottom:1px solid #1E293B;display:flex;gap:9px}
+  .cross li:last-child{border-bottom:none}
+  .cross .k{flex:none;font-size:15px}
+  .cross code{background:#1E293B;color:#93C5FD;padding:1px 6px;border-radius:4px;font-size:11.5px}
+
+  .bar{position:sticky;top:0;z-index:20;background:#F8FAFCEE;backdrop-filter:blur(6px);padding:12px 0;border-bottom:1px solid var(--line);display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+  .bar b{font-size:12.5px;color:var(--sub);margin-right:2px}
+  .bar .sepv{width:1px;height:20px;background:var(--line);margin:0 4px}
+  .fbtn{font:inherit;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:#fff;color:#475569;cursor:pointer}
+  .fbtn.active{background:var(--nav);color:#fff;border-color:var(--nav)}
+  .fbtn.tA.active{background:var(--tA);border-color:var(--tA)}
+  .fbtn.tB.active{background:var(--tB);border-color:var(--tB)}
+  .fbtn.tC.active{background:var(--tC);border-color:var(--tC)}
+
+  section{margin-top:30px}
+  .sec-h{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+  .sec-h .num{font-size:12px;font-weight:800;color:#fff;background:var(--nav);border-radius:6px;padding:3px 9px}
+  .sec-h h2{font-size:19px;font-weight:800}
+  .sec-desc{font-size:13.5px;color:var(--sub);margin-bottom:16px;max-width:840px}
+
+  .card{background:#fff;border:1px solid var(--line);border-left-width:5px;border-radius:10px;margin-bottom:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .card.h{border-left-color:var(--hi)}
+  .card.m{border-left-color:var(--md)}
+  .card.l{border-left-color:var(--lo)}
+  .card.ok{border-left-color:var(--ok)}
+  .chead{display:flex;align-items:flex-start;gap:11px;padding:15px 18px;cursor:pointer;user-select:none}
+  .chead:hover{background:#FafBff}
+  .badges{flex:none;display:flex;flex-direction:column;gap:5px;align-items:flex-start;margin-top:1px}
+  .sev{font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:6px;white-space:nowrap}
+  .sev.h{background:var(--hi-bg);color:#B91C1C}
+  .sev.m{background:var(--md-bg);color:#B45309}
+  .sev.l{background:var(--lo-bg);color:#047857}
+  .sev.ok{background:var(--ok-bg);color:#1D4ED8}
+  .ft{font-size:9.5px;font-weight:800;padding:3px 7px;border-radius:5px;white-space:nowrap;letter-spacing:.02em}
+  .ft.A{background:var(--tA-bg);color:var(--tA);border:1px solid var(--tA-br)}
+  .ft.B{background:var(--tB-bg);color:var(--tB);border:1px solid var(--tB-br)}
+  .ft.C{background:var(--tC-bg);color:var(--tC);border:1px solid var(--tC-br)}
+  .ft.SYS{background:var(--sys-bg);color:var(--sys);border:1px solid var(--sys-br)}
+  .ctitle{flex:1}
+  .ctitle .t{font-size:15.5px;font-weight:700;margin-bottom:5px}
+  .ctitle .plain{font-size:13px;color:#475569}
+  .toggle{flex:none;color:#94A3B8;font-size:18px;transition:transform .2s;margin-top:2px}
+  .card.open .toggle{transform:rotate(180deg)}
+
+  .cbody{display:none;padding:0 18px 18px;border-top:1px solid var(--line);margin-top:2px}
+  .card.open .cbody{display:block}
+  .row{display:flex;gap:10px;padding:12px 0;border-bottom:1px dashed var(--line)}
+  .row:last-child{border-bottom:none}
+  .ric{flex:none;width:26px;font-size:16px;text-align:center}
+  .rtx{flex:1;font-size:13.5px}
+  .rtx .lb{font-weight:700;font-size:11.5px;letter-spacing:.02em;text-transform:uppercase;color:var(--sub);display:block;margin-bottom:3px}
+  .flowref{background:var(--tA-bg);border:1px solid var(--tA-br);border-radius:8px;padding:10px 12px;font-size:12.5px}
+  .flowref .pdf{font-family:'Consolas',monospace;font-size:11.5px;color:var(--tA);font-weight:700;display:block;margin-bottom:3px}
+  .money{background:var(--hi-bg);border:1px solid var(--hi-br);border-radius:8px;padding:10px 12px;font-size:13.5px}
+  .money b{color:#B91C1C}
+  .fix{background:var(--lo-bg);border:1px solid var(--lo-br);border-radius:8px;padding:10px 12px;font-size:13.5px}
+  .fix b{color:#047857}
+
+  .menus{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+  .chip{font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:16px;background:#F1F5F9;color:#334155;border:1px solid var(--line);text-decoration:none}
+  a.chip:hover{background:var(--ok-bg);border-color:var(--ok-br);color:#1D4ED8}
+  .chip .code{color:#2563EB;font-weight:800}
+
+  footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--sub);text-align:center}
+  .count{font-size:12px;color:var(--sub);font-weight:600;margin-left:auto}
+  /* view tabs + table view */
+  .viewtabs{display:inline-flex;gap:4px;background:#EEF2F7;border-radius:22px;padding:3px}
+  .vtab{font:inherit;font-size:12.5px;font-weight:700;padding:6px 16px;border-radius:20px;border:none;background:transparent;color:#475569;cursor:pointer}
+  .vtab.active{background:#fff;color:var(--nav);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+  #tableWrap{display:none;margin-top:18px;overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+  #tableWrap.show{display:block}
+  table.tv{border-collapse:collapse;width:100%;min-width:940px;font-size:12.5px}
+  table.tv th{background:#F1F5F9;text-align:left;padding:10px 12px;font-size:11.5px;color:#475569;border-bottom:2px solid var(--line);white-space:nowrap}
+  table.tv td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.tv tbody tr{cursor:pointer}
+  table.tv tbody tr:hover td{background:#F8FAFF}
+  td.c-title{min-width:240px}
+  td.c-title span{display:block;color:var(--sub);font-size:11px;margin-top:2px}
+  td.c-flow{font-family:'Consolas',monospace;font-size:11px;color:var(--tA);min-width:180px}
+  td.c-fix{min-width:230px;color:#334155;font-size:12px}
+  td.c-menu{min-width:140px}
+  .tvsev{font-weight:800;padding:3px 8px;border-radius:5px;font-size:10.5px;white-space:nowrap}
+  .tvsev.h{background:var(--hi-bg);color:#B91C1C}
+  .tvsev.m{background:var(--md-bg);color:#B45309}
+  .tvsev.l{background:var(--lo-bg);color:#047857}
+  .tvsev.ok{background:var(--ok-bg);color:#1D4ED8}
+  .tvft{font-weight:800;padding:3px 7px;border-radius:5px;font-size:10px;border:1px solid}
+  .tvft.A{background:var(--tA-bg);color:var(--tA);border-color:var(--tA-br)}
+  .tvft.B{background:var(--tB-bg);color:var(--tB);border-color:var(--tB-br)}
+  .tvft.C{background:var(--tC-bg);color:var(--tC);border-color:var(--tC-br)}
+  .tvft.SYS{background:var(--sys-bg);color:var(--sys);border-color:var(--sys-br)}
+  .tvchip{display:inline-block;font-size:10.5px;font-weight:700;color:#2563EB;background:#F1F5F9;border:1px solid var(--line);border-radius:12px;padding:2px 7px;margin:1px 2px 1px 0}
+  @media(max-width:720px){.tgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>🔍 วิเคราะห์ช่องข้ามขั้นตอน (ยึด Flow เป็นแกน) — ระบบ ERP แสงวิจิตร</h1>
+    <p>อ้างอิง <b>Flow PDF ต้นฉบับ</b> (Flow Design/) + flow rail ที่ออกแบบไว้ เทียบกับจุดควบคุมมาตรฐาน — หาว่าจุดข้ามขั้นอยู่<b>ในตัวผัง</b> หรือ<b>ที่หน้าจอ mockup drift ออกจากผัง</b> โดยยังไม่เทียบ Odoo</p>
+    <div class="meta">ฉบับอ่านง่าย · ทุกข้อมี 📄 อ้างอิง flow + ป้ายชนิด A/B/C + ตัวอย่างเงินจริง + วิธีแก้ · คลิกการ์ดเพื่อดูรายละเอียด</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="howto">
+    <h2>📖 วิธีอ่านหน้านี้</h2>
+    <ol>
+      <li><b>“ช่องข้ามขั้นตอน”</b> = จุดที่ระบบ<b>ยอมให้ทำขั้นถัดไปได้ทั้งที่ยังไม่ควร</b> เช่น จ่ายเงินก่อนของมาถึง / อนุมัติงานตัวเอง</li>
+      <li>แต่ละข้อมี: <b>📄 อ้างอิง flow</b> (ผังไหน node ไหน) · <b>🧩 แปลว่าอะไร</b> · <b>💥 ตัวอย่างจริง</b> (เป็นเงิน) · <b>⚠️ ถ้าไม่แก้</b> · <b>🛠️ แก้ยังไง</b></li>
+      <li>ป้ายซ้าย = ความรุนแรง (สี) + ชนิด (A/B/C) · ป้ายฟ้า = เมนู/หน้าจอที่เกี่ยวข้อง (คลิกเปิดหน้า mockup)</li>
+    </ol>
+    <div class="legend">
+      <span class="lg h"><span class="dot h"></span>สูง — เสียเงิน/ของ หรือผิดภาษีได้ทันที</span>
+      <span class="lg m"><span class="dot m"></span>กลาง — เสี่ยงพลาด ต้องพึ่งวินัยคน</span>
+      <span class="lg l"><span class="dot l"></span>ต่ำ — ควรปรับ แต่ไม่วิกฤต</span>
+    </div>
+  </div>
+
+  <div class="types">
+    <h2>🧭 จุดข้ามขั้น 3 ชนิด (แยกเพราะยึด flow)</h2>
+    <div class="sub">การแยกชนิดสำคัญ เพราะแต่ละชนิด<b>แก้คนละที่</b> — บางอันต้องแก้ที่ผัง บางอันแก้ที่หน้าจอ บางอันต้องเคาะ business ก่อน</div>
+    <div class="tgrid">
+      <div class="tcard A"><b>A · flow ไม่มี gate</b>รูรั่วอยู่ใน Flow PDF ต้นฉบับเอง — ผังไม่ได้วางด่านไว้ตั้งแต่ต้น<div class="fix">→ แก้ที่ผังก่อน แล้วค่อยลง mockup</div></div>
+      <div class="tcard B"><b>B · mockup หลุด flow</b>ผังออกแบบถูกแล้ว แต่หน้าจอ/สถานะทำต่างจากผัง<div class="fix">→ ดึง mockup กลับให้ตรงผัง</div></div>
+      <div class="tcard C"><b>C · flow ขัด/ไม่เคาะ</b>ผัง/สเปกยังตัดสินใจไม่จบ หรือลง GL คนละทิศ<div class="fix">→ เคาะ business ก่อน build</div></div>
+    </div>
+  </div>
+
+  <div class="cross">
+    <h2>🔦 4 สิ่งที่ Flow PDF ต้นฉบับเผย (spec มองไม่เห็น)</h2>
+    <ul>
+      <li><span class="k">⚠️</span><div><b>ทุกผังมี legend “Process ที่ไม่ทราบแน่ชัด ณ ปัจจุบัน”</b> — ผังต้นฉบับเองยังมีหลาย step ที่ยังไม่เคาะ ไม่ใช่ผัง final</div></li>
+      <li><span class="k">🗑️</span><div><b>ผังส่วนใหญ่มีลูกศร “Delete”</b> (ลบทั้งที่ Web Portal และ BC365) — hard-delete ของ draft ถูกวาดไว้ในผัง เห็นชัดใน <code>Purchase/03,05</code> · <code>Sales/06,07</code> · <code>Finance/01</code></div></li>
+      <li><span class="k">🏦</span><div><b>ผัง AR/AP/WHT อยู่ใน BC365-lane ล้วน</b> (Web Portal lane ว่าง) — การเงิน portal เป็น thin UI เหนือ BC ตามเจตนา ✅ เห็นใน <code>Finance/01</code> · <code>Account/07</code></div></li>
+      <li><span class="k">🔓</span><div><b>ผังโพสต์หลายใบไม่มี node อนุมัติเลย</b> (รับเงิน/ลดหนี้/หักมัดจำ) — Maker≠Checker เป็นสิ่งที่ต้อง “เติม” ตอน build ไม่ได้มาจากผัง เห็นใน <code>Finance/01</code> · <code>Sales/06,07</code></div></li>
+    </ul>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap">
+    <div class="viewtabs">
+      <button class="vtab active" data-v="cards">🃏 การ์ด</button>
+      <button class="vtab" data-v="table">📊 ตาราง</button>
+    </div>
+    <span style="font-size:12px;color:var(--sub)">สลับมุมมอง — ฟิลเตอร์ด้านล่างใช้ได้กับทั้งสองแบบ · คลิกแถวตารางเพื่อกระโดดไปการ์ด</span>
+  </div>
+
+  <div class="bar">
+    <b>รุนแรง:</b>
+    <button class="fbtn active" data-f="all">ทั้งหมด</button>
+    <button class="fbtn" data-f="h">🔴 สูง</button>
+    <button class="fbtn" data-f="m">🟠 กลาง</button>
+    <button class="fbtn" data-f="l">🟢 ต่ำ</button>
+    <span class="sepv"></span>
+    <b>ชนิด:</b>
+    <button class="fbtn tA" data-f="A">A · flow ไม่มี gate</button>
+    <button class="fbtn tB" data-f="B">B · mockup หลุด flow</button>
+    <button class="fbtn tC" data-f="C">C · flow ขัด/ไม่เคาะ</button>
+    <span class="sepv"></span>
+    <button class="fbtn" data-f="ok">🔵 ของดี</button>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div id="tableWrap">
+    <table class="tv">
+      <thead><tr><th>#</th><th>รุนแรง</th><th>ชนิด</th><th>หัวข้อ</th><th>📄 อ้างอิง flow</th><th>🛠️ แก้ยังไง</th><th>เมนู</th></tr></thead>
+      <tbody id="tvbody"></tbody>
+    </table>
+  </div>
+
+  <div style="background:#F0FDF4;border:1px solid #86EFAC;border-left:4px solid #16A34A;border-radius:10px;padding:14px 18px;margin-bottom:20px">
+    <div style="font-size:14px;font-weight:800;color:#166534;margin-bottom:8px">✅ เคาะแล้ว (grill 2026-08-09) — 3 จุดที่เคยขัดกันตอนนี้ตัดสินแล้ว</div>
+    <div style="display:grid;grid-template-columns:1fr;gap:7px;font-size:12.5px;color:#14532D">
+      <div style="background:#fff;border:1px solid #BBF7D0;border-radius:8px;padding:8px 12px"><b>① FI-1 รับเงิน</b> = อนุมัติทุกใบ เข้า list รอตรวจใน FI-Q · Maker≠Checker server-side (§5.3)</div>
+      <div style="background:#fff;border:1px solid #BBF7D0;border-radius:8px;padding:8px 12px"><b>② rebate</b> = ฝั่งซื้อ PO-7→PO-CN→PO-6 AP · Other Income CF-4 · <span style="color:#B45309">⚠️ pending accounting sign-off</span> (§4.4)</div>
+      <div style="background:#fff;border:1px solid #BBF7D0;border-radius:8px;padding:8px 12px"><b>③ ด่านเครดิตขาย</b> = ที่ SO-confirm ทุกเส้น (ใบเสนอราคาอิสระ) + รวม exposure บิล open (§3.1)</div>
+    </div>
+  </div>
+
+  <!-- ============ ชั้น 0 ============ -->
+  <section>
+    <div class="sec-h"><span class="num">ชั้น 0</span><h2>โครงสร้างพื้นฐาน (รากของทุกปัญหา)</h2></div>
+    <p class="sec-desc">เปรียบเหมือน “ระบบล็อกประตูของตึก” — flow ทุกผังแบ่ง 2 เลน (Web Portal / BC365) สะท้อนว่า control อยู่ชั้น portal ล้วน</p>
+
+    <div class="card h" data-sev="h" data-ftype="SYS">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft SYS">สถาปัตย์</span></div>
+        <div class="ctitle">
+          <div class="t">0.1 · ตรวจสิทธิ์ที่ “หน้าจอ” ไม่ใช่ที่ “ฐานข้อมูล”</div>
+          <div class="plain">พนักงานเข้าผ่านบัญชีกลางบัญชีเดียวที่แก้ได้ทุกอย่าง — ตัวกั้นสิทธิ์อยู่หน้าบ้านล้วน</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">ทุก Flow PDF — เลน Web Portal / BC365</span>ทุกผังแยก 2 เลนชัด · การกระทำที่กั้นสิทธิ์อยู่ฝั่ง Web Portal ทั้งหมด · BC365 รับคำสั่งจาก service account เดียว</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>เหมือนตึกที่มี รปภ. เช็คบัตรที่ประตูหน้าเท่านั้น ประตูหลังเปิดโล่ง — BC มองพนักงานทุกคนเป็น “ผู้จัดการใหญ่” คนเดียว</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">โปรแกรมเมอร์ลืมเช็คสิทธิ์ในหน้าเดียว → ฝ่ายขายเรียกดู/แก้ <b>ต้นทุนสินค้า / วงเงินลูกค้า</b> ได้ เพราะหลังบ้านไม่มีด่านที่สอง</div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>ทุกข้อเรื่อง “อนุมัติ/สิทธิ์” อ่อนตามหมด</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">ให้<b>หลังบ้านบังคับสิทธิ์เอง</b> (record rule / security role ต่อผู้ใช้จริง) · พนักงานมี identity ของตัวเอง ไม่ใช้บัญชีกลาง</div></div></div>
+        <div class="menus"><a class="chip" href="index.html"><span class="code">IA-1</span> ตรวจการเชื่อมต่อ</a><span class="chip"><span class="code">CF-3</span> ผู้ใช้และสิทธิ์</span></div>
+      </div>
+    </div>
+
+    <div class="card h" data-sev="h" data-ftype="SYS">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft SYS">สถาปัตย์</span></div>
+        <div class="ctitle">
+          <div class="t">0.2 · ส่งคำสั่งซ้ำได้ → บันทึกบัญชี/รับของ “เบิ้ล”</div>
+          <div class="plain">เน็ตช้า ระบบยิงซ้ำอัตโนมัติ แต่ไม่มี “ลายเซ็นกันซ้ำ”</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">ทุกผัง — กล่อง “Function Post …”</span>ผังทุกใบโพสต์ผ่าน Function Post ครั้งเดียว · ไม่มี idempotency key ในผัง (เป็นเรื่อง implementation ที่ผังไม่ครอบ)</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>เหมือนกดโอนเงินแล้วแอปค้าง เลยกดซ้ำ → เงินออก 2 รอบ · หลังบ้านทำสำเร็จแล้วแต่คำตอบส่งกลับไม่ถึง → retry = ทำซ้ำ</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">รับของ 100 ชิ้น เน็ตสะดุด ยิงซ้ำ → สต๊อกขึ้น <b>200</b> · หรือตั้งหนี้ซ้ำ → <b>เตรียมจ่ายเบิ้ล</b></div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>ความผิดพลาดที่เจอ<b>บ่อยที่สุด</b>ในงานจริง — สต๊อก/บัญชีเพี้ยนหาสาเหตุยาก</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">แนบ <b>“รหัสกันซ้ำ” (Idempotency Key)</b> ทุกคำสั่ง — หลังบ้านเจอรหัสเดิมคืนผลเดิม ไม่ทำใหม่</div></div></div>
+        <div class="menus"><a class="chip" href="index.html"><span class="code">IA-2</span> บันทึกข้อผิดพลาด</a><span class="chip">ทุกหน้าที่กดโพสต์</span></div>
+      </div>
+    </div>
+
+    <div class="card m" data-sev="m" data-ftype="SYS">
+      <div class="chead">
+        <div class="badges"><span class="sev m">🟠 กลาง</span><span class="ft SYS">สถาปัตย์</span></div>
+        <div class="ctitle">
+          <div class="t">0.3 · หน้าจอโชว์สถานะเก่า → กดซ้ำบนเอกสารที่เดินไปแล้ว</div>
+          <div class="plain">ข้อมูลรีเฟรชทุก 5–10 นาที ระหว่างนั้นเห็นของเก่า</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Return Data / Update Data (เส้นประ API ในทุกผัง)</span>ผังส่งข้อมูลกลับผ่าน API เป็นจังหวะ · ไม่มี node เช็คเวอร์ชันก่อน action</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>เหมือนดูยอดเงินในแอปที่ยังไม่อัปเดต เลยจ่ายบิลซ้ำ · หน้าจอยังขึ้น “รออนุมัติ” ทั้งที่ BC โพสต์ไปแล้ว</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">บัญชีเห็นบิลยัง “ค้างรับเงิน” เลยบันทึกรับเงินอีกใบ → <b>ลูกค้าถูกบันทึกว่าจ่าย 2 รอบ</b></div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>action ซ้ำเงียบ ๆ ทุกวัน สะสมเป็นงานตรวจย้อนหลัง</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">ทุกปุ่มสำคัญเช็ค <b>“เวอร์ชันล่าสุด” ก่อนทำ</b> (optimistic lock) — ของจริงเปลี่ยนแล้วเด้งเตือน + รีเฟรช</div></div></div>
+        <div class="menus"><a class="chip" href="index.html"><span class="code">IA-1</span> ตรวจการเชื่อมต่อ</a></div>
+      </div>
+    </div>
+
+    <div class="card m" data-sev="m" data-ftype="A">
+      <div class="chead">
+        <div class="badges"><span class="sev m">🟠 กลาง</span><span class="ft A">A</span></div>
+        <div class="ctitle">
+          <div class="t">0.4 · สมุดประวัติ (Audit Log) ลบได้ + ผังต้นฉบับมี “Delete”</div>
+          <div class="plain">ประวัติเขียนด้วยบัญชีเดียวกับที่ทำงาน และผังเองก็มีลูกศรลบ</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Purchase/03 PO · Purchase/05 Invoice · Sales/06 · Sales/07 · Finance/01</span>ทุกผังนี้มีลูกศร <b>“Delete”</b> ลบเอกสารทั้งที่ Web Portal และ BC365 — hard-delete อยู่ในผังต้นฉบับ</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>ประวัติควรเป็นกล้องวงจรปิดที่ลบไม่ได้ แต่คนที่ทำผิดเป็นคนเดียวกับที่ลบร่องรอยได้</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">มีคนแก้ราคา/ลบเอกสารผิดปกติ แล้ว<b>ลบร่องรอย</b>ทิ้ง → ตรวจย้อนหลังไม่เจอว่าใครทำ</div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>ระบบ “ดูเหมือนมี” audit แต่ใช้เป็นหลักฐานไม่ได้ (สำคัญเมื่อโดนสรรพากร/ผู้สอบบัญชี)</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">แยก “ลบ draft ก่อนโพสต์” (พอได้) ออกจาก “ประวัติหลังโพสต์” ที่ต้อง <b>append-only ลบไม่ได้</b> · เอกสารที่มีเลขแล้วห้าม hard-delete</div></div></div>
+        <div class="menus"><span class="chip"><span class="code">SC7</span> ไทม์ไลน์/ประวัติ</span><span class="chip"><span class="code">CF-9</span> ป้ายกำกับกิจการ</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ชั้น 1 ============ -->
+  <section>
+    <div class="sec-h"><span class="num">ชั้น 1</span><h2>การอนุมัติ &amp; แบ่งแยกหน้าที่</h2></div>
+    <p class="sec-desc">กฎทองบัญชี: “คนทำ ต้องไม่ใช่คนอนุมัติ” และ “ยอดใหญ่ต้องมีหัวหน้าเซ็น” — ผังหลายใบมี Approval diamond แต่ไม่มี tier/creator-check</p>
+
+    <div class="card h" data-sev="h" data-ftype="A">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft A">A</span></div>
+        <div class="ctitle">
+          <div class="t">1.1 · ซอยยอดหนีการอนุมัติได้</div>
+          <div class="plain">ยอดใหญ่ที่ต้องให้หัวหน้าเซ็น ถูกแบ่งเป็นใบเล็ก ๆ ให้ผ่านคนเดียว</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Purchase/03 PO — กล่อง “Approval”</span>ผัง PO มี Approval diamond เดียว ไม่มีชั้น tier/รวมยอด · SL-F1 อนุมัติวงเงินขายไม่ได้อยู่ในผัง Sales/04 (เป็น branch แยก)</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>ระบบตัดสิน “ใครอนุมัติ” จากยอด<b>ต่อใบ</b> ไม่ดูยอดรวม → แบ่งใบเลี่ยงชั้นอนุมัติได้</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">ของ 1,000,000 ที่ต้องให้ GM เซ็น → แตกเป็น 4 ใบ ใบละ 250,000 · แต่ละใบผ่านหัวหน้าจัดซื้อคนเดียว · <b>GM ไม่เคยเห็นยอดจริง</b></div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>ช่องคลาสสิกของทุจริตจัดซื้อ/ขายเชื่อเกินวงเงิน</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">ให้ระบบ<b>รวมยอด</b>ลูกค้า/ผู้ขายรายเดียวในช่วงเวลาเดียว ก่อนตัดสินชั้นอนุมัติ + เตือนการแตกใบ</div></div></div>
+        <div class="menus"><a class="chip" href="po4-purchase-order-mockup.html"><span class="code">PO-4</span> ใบสั่งซื้อ</a><a class="chip" href="index.html"><span class="code">CF-2.6</span> เมทริกซ์อนุมัติ</a><span class="chip"><span class="code">SL-F1</span> อนุมัติวงเงิน</span></div>
+      </div>
+    </div>
+
+    <div class="card h" data-sev="h" data-ftype="A">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft A">A</span></div>
+        <div class="ctitle">
+          <div class="t">1.2 · จุดที่ “เงินหายจริง” หลบการอนุมัติได้</div>
+          <div class="plain">ตัดจำหน่ายสต๊อก / เคลมตัดหนี้ — บางอันไม่มีผังเลย หรือใส่หมายเหตุก็จบ</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">ปรับสต๊อก (WH-5): ไม่มี Flow PDF · Service/06 Claim Intake (write-off)</span>“ปรับสต๊อก” ไม่มีผังต้นฉบับเลย (core-erp-flows ยืนยันเป็น gap) · ผังเคลม 06 ปิดงานเคลมโดยไม่มี node อนุมัติ write-off</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>รายการที่ทำให้ของ/เงินหายบางประเภท<b>ไม่ถูกบังคับให้ผ่าน</b>การอนุมัติกลาง</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">พนักงานคลัง “ปรับสต๊อกลด” 20 เครื่อง อ้างของเสีย — <b>ไม่มีชั้นอนุมัติเฉพาะ</b> · เงิน/ของหายจริงโดยไม่มีคนเซ็น</div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>ของหาย/ยอดขาดถูกกลบด้วยการปรับบัญชีเงียบ ๆ</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">เพิ่มผัง + ลาก<b>ทุกรายการที่ลดของ/เพิ่มค่าใช้จ่าย</b>เข้าชั้นอนุมัติกลาง + บังคับเหตุผล + คนเซ็น ≠ คนทำ</div></div></div>
+        <div class="menus"><span class="chip"><span class="code">WH-5</span> ปรับสต๊อก</span><a class="chip" href="clm-vendor-claim-mockup.html"><span class="code">CLM</span> เคลมผู้ขาย</a></div>
+      </div>
+    </div>
+
+    <div class="card m" data-sev="m" data-ftype="B">
+      <div class="chead">
+        <div class="badges"><span class="sev m">🟠 กลาง</span><span class="ft B">B</span></div>
+        <div class="ctitle">
+          <div class="t">1.3 · “คนทำ = คนอนุมัติ” ยังหลุดหลายจุด</div>
+          <div class="plain">กฎห้ามอนุมัติงานตัวเองมีในกระดาษ แต่ผังโพสต์หลายใบไม่มี node อนุมัติเลย</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Finance/01 Cash Receive · Sales/07 Credit Memo</span>ทั้ง 2 ผังโพสต์ตรงไม่มี node “Approval” · Maker≠Checker เป็นสิ่งที่ portal เติมเข้ามา ไม่ได้มาจากผัง → ต้องออกแบบให้ครบเอง</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>บางหน้ายอมให้คนเดียวทั้งสร้างและอนุมัติ เช่น ช่างกดจบงานเอง, ผจก.โปรฯ เปิดโปรเอง</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">ผจก.โปรฯ สร้างโปรลดแรง ๆ แล้ว<b>กดเปิดใช้เอง</b>โดยไม่มีคนที่สองเซ็น → ทั้งบริษัทขายราคานั้นทันที</div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>กฎทองสำคัญที่สุดกลายเป็นแค่คำแนะนำ</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">เติม node อนุมัติในผังที่ขาด + ให้ระบบ<b>เช็ค “คนอนุมัติ ≠ คนสร้าง” ทุกจุด</b> รวม escalation</div></div></div>
+        <div class="menus"><a class="chip" href="sv4-service-close-mockup.html"><span class="code">SV-4</span> ปิดงานบริการ</a><span class="chip"><span class="code">PM-2</span> ผังโปรโมชั่น</span><a class="chip" href="fi1-ar-receive-mockup.html"><span class="code">FI-1</span> รับชำระ</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ชั้น 2 ============ -->
+  <section>
+    <div class="sec-h"><span class="num">ชั้น 2</span><h2>ฝั่งซื้อ &amp; คลังสินค้า</h2></div>
+    <p class="sec-desc">หัวใจ: “จ่ายเงินให้ตรงกับของที่ได้รับจริง” — และนี่คือจุดที่ผังต้นฉบับมีรูรั่วชัดที่สุด</p>
+
+    <div class="card h" data-sev="h" data-ftype="A">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft A">A</span></div>
+        <div class="ctitle">
+          <div class="t">2.1 · ⭐ ตั้งหนี้ตรงจาก PO — ผังไม่มีกล่อง “รับของ” คั่น (3-way match หายตั้งแต่ผัง)</div>
+          <div class="plain">Flow ต้นฉบับข้ามการเทียบ “สั่ง–รับ–วางบิล” เลย</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Purchase/05 Invoice  vs  Purchase/04 Receipt (คนละผัง)</span>ผัง 05 วาด: <b>PO Approved → Post Invoice → Posted Invoice</b> — <b>ไม่มีกล่อง GRN/รับของคั่นเลย</b> · การรับของอยู่ผัง 04 แยกต่างหาก ไม่ผูกกลับมาเทียบ → 3-way match ไม่เคยถูกวางใน flow</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>มาตรฐานคือ ใบสั่งซื้อ = ใบรับของ = ใบวางบิล ต้องตรงกัน · แต่ผังตั้งหนี้จาก PO ที่อนุมัติแล้วตรง ๆ ไม่ได้ผูกใบรับของ</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">สั่ง 100 รับจริง 100 · vendor วางบิล <b>105 ชิ้น ราคาเกิน 4%</b> → ผังไม่มีจุดเทียบ → <b>จ่ายค่าของผี 5 ชิ้น + ราคาเกิน</b></div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>รั่วที่กระเป๋าเงินโดยตรง แบบจับไม่ได้ — และแก้ที่หน้าจออย่างเดียวไม่พอ ต้องแก้ที่ผัง</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">เพิ่ม node “จับคู่ใบรับ (GRN)” คั่นระหว่าง <b>PO Approved → Post Invoice</b> · ตั้งเพดานคลาดเคลื่อนชัด · เกินต้องบล็อก (ERP มี 3-way match ในตัว)</div></div></div>
+        <div class="menus"><a class="chip" href="po6-ap-invoice-mockup.html"><span class="code">PO-6</span> ใบตั้งหนี้เจ้าหนี้</a><a class="chip" href="wh1-receive-mockup.html"><span class="code">WH-1</span> ใบรับสินค้า</a><a class="chip" href="po4-purchase-order-mockup.html"><span class="code">PO-4</span> ใบสั่งซื้อ</a></div>
+      </div>
+    </div>
+
+    <div class="card m" data-sev="m" data-ftype="A">
+      <div class="chead">
+        <div class="badges"><span class="sev m">🟠 กลาง</span><span class="ft A">A</span></div>
+        <div class="ctitle">
+          <div class="t">2.2 · ของชุดเดียว วางบิลจ่ายได้ 2 รอบ</div>
+          <div class="plain">ผังรับของไม่มี node คุมว่า “ใบรับนี้ถูกวางบิลไปแล้ว”</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Purchase/04 Receipt</span>ผังจบที่ “Create Purchase Receive” · ไม่มี node ติดตามจำนวนที่ถูกวางบิลไปแล้วต่อใบรับ → 1 ใบรับถูกอ้างซ้ำได้</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>1 ใบวางบิลอ้างใบรับได้หลายใบ แต่ไม่กันใบรับ<b>ใบเดิม</b>ถูกวางบิลซ้ำในอีกใบ</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">vendor ส่งบิล 2 ใบ อ้างใบรับทับกัน → ผ่านทั้งคู่ → <b>จ่ายค่าของชุดเดิม 2 รอบ</b></div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>จ่ายซ้ำกับ vendor ที่ส่งบิลบ่อย</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix"><b>สมุดคุมจำนวนวางบิลแล้ว</b>ต่อใบรับ (รับกี่ชิ้น วางบิลกี่ชิ้น เหลือกี่ชิ้น) — ERP มีในตัว</div></div></div>
+        <div class="menus"><a class="chip" href="po6-ap-invoice-mockup.html"><span class="code">PO-6</span> ใบตั้งหนี้เจ้าหนี้</a><a class="chip" href="wh1-receive-mockup.html"><span class="code">WH-1</span> ใบรับสินค้า</a></div>
+      </div>
+    </div>
+
+    <div class="card h" data-sev="h" data-ftype="C">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft C">C</span></div>
+        <div class="ctitle">
+          <div class="t">2.3 · “โหมดมัดจำ” ใช้เป็นช่องลัดจ่ายก่อนได้ของ</div>
+          <div class="plain">พลิกบิลเป็นโหมดมัดจำเองได้ → ข้ามการเช็ค “ของมาถึงหรือยัง”</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Purchase/06 Deposit bill (PO บิลฝาก)</span>ผังบิลฝาก = 2-way match (ทยอยรับตามรอบ) · ต้องเคาะเงื่อนไขว่าใครเปิดโหมดนี้ได้เมื่อไร ไม่งั้นเป็น bypass ของ full-receive</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>ปกติต้องได้ของก่อนตั้งหนี้ แต่โหมดมัดจำลดการเช็คเหลือ 2 ทาง · ใครก็พลิกได้โดยไม่ต้องมีเอกสารมัดจำจริง</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">การซื้อปกติที่ของยังไม่มา → พลิกเป็นโหมดมัดจำ → <b>ตั้งหนี้/เตรียมจ่ายได้ทั้งที่ของยังไม่เข้าคลัง</b></div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>ประตูหลังของกฎ “ของก่อนเงิน” เปิดค้าง</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">เปิดโหมดมัดจำได้<b>เฉพาะเมื่อมีเอกสารมัดจำจริงผูกอยู่</b> + ยอดไม่เกิน PO · เคาะสิทธิ์คนพลิกโหมด</div></div></div>
+        <div class="menus"><a class="chip" href="po6-ap-invoice-mockup.html"><span class="code">PO-6</span> ใบตั้งหนี้เจ้าหนี้</a><span class="chip"><span class="code">PO-8</span> สั่งซื้อสินค้าฝาก</span></div>
+      </div>
+    </div>
+
+    <div class="card h" data-sev="h" data-ftype="A">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft A">A</span></div>
+        <div class="ctitle">
+          <div class="t">2.4 · เบิก/โอนของเกินที่มีจริงได้ (สต๊อกติดลบ)</div>
+          <div class="plain">ผังไม่มี node บล็อกเมื่อของไม่พอ</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Warehouse/01 Transfer (Post Ship) · Sales/04 (Item Reservation)</span>ผังโอนไป Post Ship ตรง · ผังขายมี Item Reservation แบบ auto แต่<b>ไม่มี node บล็อก</b>เมื่อ reserve ไม่พอ</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>ของไม่พอแล้วยัง Post ได้ → สต๊อกในระบบติดลบ หรือส่งของที่ไม่มีจริง</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">ระบบขึ้นมี 3 เครื่อง (ข้อมูลเก่า) โอนออก 5 → <b>สต๊อก 2 คลังเพี้ยนพร้อมกัน</b> ต้นทุนผิด</div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>ตัวเลขสต๊อกเชื่อไม่ได้ กระทบสั่งซื้อ/ขายทั้งระบบ</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">เพิ่ม node <b>บล็อกเมื่อของไม่พอ</b>ตอน Post · ถ้าต้องยอมติดลบให้เป็นสิทธิ์พิเศษเฉพาะบางคน</div></div></div>
+        <div class="menus"><a class="chip" href="wh2-issue-mockup.html"><span class="code">WH-2</span> ใบเบิก</a><a class="chip" href="wh3-transfer-mockup.html"><span class="code">WH-3</span> โอนสินค้า</a></div>
+      </div>
+    </div>
+
+    <div class="card m" data-sev="m" data-ftype="A">
+      <div class="chead">
+        <div class="badges"><span class="sev m">🟠 กลาง</span><span class="ft A">A</span></div>
+        <div class="ctitle">
+          <div class="t">2.5 · ของหายระหว่างโอนสาขา ไม่ถูกสอบตอนรับ</div>
+          <div class="plain">ผังโอนไม่มี node ระบุส่วนต่างตอน Post Receive</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Warehouse/01 Transfer</span>ผัง: Post Ship → In-Transit → Post Receive → Received · <b>ไม่มี node ระบุ variance/เหตุผล</b>เมื่อรับ &lt; ที่ส่ง</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>รับไม่ครบให้บันทึกค้างยอดไว้ โดยไม่บังคับระบุสาเหตุ → ไปเจ๊าตอนนับสต๊อกรอบหน้า ซึ่งสืบไม่ได้แล้ว</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">ของหายระหว่างทาง 5 เครื่อง → รับ 95 จบ → เดือนหน้านับเจอขาด แต่<b>โยงกลับไม่ได้ว่าหายเที่ยวไหน</b></div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>ซ่อนการรั่วไหล/ขโมยระหว่างขนส่งได้สนิท</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">รับไม่ครบต้อง<b>ระบุสาเหตุทันที</b> (หาย/แตก/ส่งไม่ครบ) + เปิดเรื่องสอบ ไม่ปล่อยค้างเงียบ</div></div></div>
+        <div class="menus"><a class="chip" href="wh3-transfer-mockup.html"><span class="code">WH-3</span> โอนสินค้า</a><a class="chip" href="wh1-receive-mockup.html"><span class="code">WH-1</span> รับปลายทาง</a><a class="chip" href="wh4-count-mockup.html"><span class="code">WH-4</span> ตรวจนับ</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ชั้น 3 ============ -->
+  <section>
+    <div class="sec-h"><span class="num">ชั้น 3</span><h2>ฝั่งขาย &amp; รับเงิน</h2></div>
+    <p class="sec-desc">คุม “ขายเชื่อไม่เกินวงเงิน” “มัดจำไม่หัวหาย” “คืนเงินต้องได้ของก่อน” — ผังขายมีจุดดี (reserve, CN อ้างต้นทาง) แต่ยังขาด gate หลายจุด</p>
+
+    <div class="card h" data-sev="h" data-ftype="A">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft A">A</span></div>
+        <div class="ctitle">
+          <div class="t">3.1 · ขายเชื่อเกินวงเงินได้ ด้วยการเปิดหลายบิลพร้อมกัน</div>
+          <div class="plain">ผังขายหลักไม่มี node เช็ควงเงิน (credit เป็น branch แยก)</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Sales/04 Shipment &amp; Invoice</span>ผังหลักไป Post Ship+Invoice ตรง · <b>ไม่มี node เช็ควงเงิน</b>ในผังนี้ (SL-F1 อยู่คนละ branch) → ถ้า SO ไป Post ตรงก็ข้าม credit ได้</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>ตอนเช็ควงเงินนับแค่หนี้ที่บันทึกเสร็จ ไม่นับบิลที่กำลังเปิดค้างพร้อมกัน</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">เปิด 5 บิลพร้อมกันใบละ ~45,000 · แต่ละใบดู “เกินนิดเดียว” ผ่านหัวหน้าขายคนเดียว → <b>ปล่อยเชื่อเกิน 225,000</b> โดยการเงิน/GM ไม่เห็น</div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>หนี้เสียก้อนใหญ่ที่อนุมัติจากคนระดับล่างสุด</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">เพิ่ม node credit-check ในผังขายหลัก + คิดวงเงินจาก<b>ยอดค้าง + บิลเปิดทั้งหมดรวมกัน</b> · ✅ <b>เคาะ 08-09: ด่านที่ SO-confirm ทุกเส้น</b> (ใบเสนอราคาอิสระ) + รวม exposure บิล open</div></div></div>
+        <div class="menus"><a class="chip" href="slf1-credit-approval-mockup.html"><span class="code">SL-F1</span> อนุมัติวงเงิน</a><a class="chip" href="sl4-invoice-mockup.html"><span class="code">SL-4</span> บิลขาย</a></div>
+      </div>
+    </div>
+
+    <div class="card h" data-sev="h" data-ftype="B">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft B">B</span></div>
+        <div class="ctitle">
+          <div class="t">3.2 · อนุมัติวงเงินครั้งเดียว → เปิดวงเงินค้างยาว</div>
+          <div class="plain">อนุมัติให้เกิน 1 ครั้ง แต่ไปดันวงเงินที่ “ทะเบียนลูกค้า”</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">SL-F1 = portal เติม (ไม่มี Flow PDF ต้นฉบับ)</span>flow อนุมัติวงเงินเป็นสิ่งที่ portal ออกแบบเพิ่ม — ต้องนิยาม scope ของการอนุมัติให้ชัดเอง</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>อนุมัติควรมีผลกับ “บิลใบนั้น” แต่ระบบไปเพิ่มวงเงินในทะเบียนลูกค้า → มีผลกับทุกบิลถัดไปจนหมดอายุ</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">อนุมัติเกิน 40,000 ครั้งเดียว → วงเงินถูกดันค้าง → ฝ่ายขายเปิดบิลใหม่ใต้วงเงินพอง<b>ได้เรื่อย ๆ ไม่ต้องขออนุมัติอีก</b></div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>อนุมัติ 1 ครั้ง = ใบเบิกทางถาวร</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">การอนุมัติผูกกับ<b>บิลใบที่ขอเท่านั้น</b> ไม่แตะวงเงินหลักของลูกค้า</div></div></div>
+        <div class="menus"><a class="chip" href="slf1-credit-approval-mockup.html"><span class="code">SL-F1</span> อนุมัติวงเงิน</a><span class="chip"><span class="code">MD-2</span> ข้อมูลลูกค้า</span></div>
+      </div>
+    </div>
+
+    <div class="card h" data-sev="h" data-ftype="B">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft B">B</span></div>
+        <div class="ctitle">
+          <div class="t">3.3 · เงินมัดจำถูกหักซ้ำ 2 บิล (ผังทำถูก แต่ mockup เสี่ยง)</div>
+          <div class="plain">Flow ใช้ ledger apply ที่ถูกต้อง — ความเสี่ยงอยู่ที่หน้าจอหัก “ทั้งหมด”</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Sales/06 Deposit (Deduction procedure)</span>ผังหักมัดจำผ่าน <b>Customer Ledger Entry (Apply)</b> — กลไกถูกต้อง (BC apply ต่อ entry กันซ้ำในตัว) · <b>ความเสี่ยงอยู่ที่ mockup</b> SC6 ที่หัก “ทั้งหมด” โดยไม่อ่านยอดคงเหลือ ledger</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>ถ้า build ตามผัง (หักจาก ledger จริง) จะปลอดภัย · แต่ถ้าหน้าจอหัก “ทั้งก้อน” ทุกบิลโดยไม่ดู ledger → SO แตก 2 บิลหัก 2 รอบ</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">มัดจำ 100,000 · ส่งของ 2 รอบ ออก 2 บิล · หน้าจอหัก 100,000 ทั้ง 2 ใบ → เครดิตลูกค้ารวม 200,000 = <b>เสีย 100,000</b></div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>เงินหายตรง ๆ กับทุกดีลที่แบ่งส่งของ</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">ยึดกลไกผัง: หักมัดจำจาก <b>Customer Ledger Entry เป็นยอดคงเหลือ</b> ไม่ให้ SC6 หักเป็นก้อนอิสระ</div></div></div>
+        <div class="menus"><a class="chip" href="sl3-deposit-mockup.html"><span class="code">SL-3</span> รับมัดจำ</a><a class="chip" href="sl4-invoice-mockup.html"><span class="code">SL-4</span> บิลขาย</a><span class="chip"><span class="code">SC6</span> แผงมัดจำ</span></div>
+      </div>
+    </div>
+
+    <div class="card h" data-sev="h" data-ftype="A">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft A">A</span></div>
+        <div class="ctitle">
+          <div class="t">3.4 · ออกใบลดหนี้/คืนเงิน โดยของยังไม่กลับเข้าคลัง</div>
+          <div class="plain">ผังลดหนี้ไม่มี node รับของคืน + ไม่มี node อนุมัติ</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Sales/07 Sales Credit Memo</span>ผัง: Posted Invoice → (Apply) → Credit Memo → Post → ลดหนี้ · <b>อ้างบิลต้นทาง ✅</b> แต่<b>ไม่มี node รับของคืน และไม่มี node อนุมัติ</b> ก่อน Post</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>ผังลดหนี้โพสต์ได้โดยไม่ต้องมีใบรับของคืน · โหมด “ปรับราคา” จึงออกเต็มมูลค่าได้โดยของยังอยู่กับลูกค้า</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">อยากคืนเงินโดยไม่รับของกลับ → เลือกโหมด “ปรับราคา” เต็มมูลค่า → <b>ลดหนี้/คืนเงินผ่าน โดยของยังอยู่กับลูกค้า</b></div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>ช่องคลาสสิก “คืนเงินแล้วของไม่เคยกลับมา”</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">เพิ่มในผัง: โหมดคืนของต้องผูก<b>ใบรับของคืน</b> + node <b>อนุมัติทุกใบ</b>ก่อน Post · คุมโหมดปรับราคาไม่ให้ใช้แทนการคืนของ</div></div></div>
+        <div class="menus"><a class="chip" href="slcn-credit-memo-mockup.html"><span class="code">SL-CN</span> ใบลดหนี้ขาย</a><a class="chip" href="wh1-receive-mockup.html"><span class="code">WH-1</span> รับของคืน</a></div>
+      </div>
+    </div>
+
+    <div class="card m" data-sev="m" data-ftype="A">
+      <div class="chead">
+        <div class="badges"><span class="sev m">🟠 กลาง</span><span class="ft A">A</span></div>
+        <div class="ctitle">
+          <div class="t">3.5 · รับเงินลูกค้าซ้ำได้ 2 ทาง</div>
+          <div class="plain">เก็บเงินที่หน้าบิลได้ และการเงินก็สร้างใบรับเงินได้อีก</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Finance/01 Cash Receive (BC-lane) + Sales/04 (จุดรับเงินที่บิล)</span>ผังรับเงินอยู่ BC ล้วน apply กับ Posted Invoice · แต่ SL-4 ก็มีจุดรับเงิน → 2 ทางไม่มี lock ร่วม</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>2 ประตูบันทึกรับเงิน (ที่บิลขาย / ที่การเงิน) ไม่มีตัวล็อกว่าบิลนี้เก็บเงินแล้ว</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">แคชเชียร์เก็บเงินสดที่บิล · การเงินเห็นบิล “ยังค้าง” (ยังไม่ sync) เลยบันทึกอีกใบ → <b>ลูกค้าถูกบันทึกว่าจ่าย 2 เท่า</b></div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>ยอดลูกหนี้เพี้ยน กระทบยอดธนาคาร</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">บิลที่เก็บเงินที่ SL-4 แล้วต้อง<b>ล็อกจากการรับเงินซ้ำที่ FI-1</b></div></div></div>
+        <div class="menus"><a class="chip" href="sl4-invoice-mockup.html"><span class="code">SL-4</span> บิลขาย</a><a class="chip" href="fi1-ar-receive-mockup.html"><span class="code">FI-1</span> รับชำระลูกหนี้</a></div>
+      </div>
+    </div>
+
+    <div class="card m" data-sev="m" data-ftype="A">
+      <div class="chead">
+        <div class="badges"><span class="sev m">🟠 กลาง</span><span class="ft A">A</span></div>
+        <div class="ctitle">
+          <div class="t">3.6 · ไม่มีช่องหัก ณ ที่จ่าย/ค่าธรรมเนียม ตอนรับเงิน</div>
+          <div class="plain">ลูกค้าองค์กรหัก 3% เงินเข้าน้อยกว่าบิล → ตัดยอดไม่ลง</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Finance/01 Cash Receive</span>ผังมีแค่ Apply Document → Post → G/L · <b>ไม่มี node WHT-รับ / ค่าธรรมเนียมโอน</b> → เงินจริงที่เข้าไม่เท่ายอดบิล</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>ไม่มีช่องกรอกภาษีหัก ณ ที่จ่าย/ค่าธรรมเนียม → บิลปิดไม่ลงหรือฝืนตัดแล้วภาษีหาย</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">บิล 100,000 · ลูกค้าหัก 3% เหลือโอน 97,000 · ไม่มีช่องภาษี → <b>บิลไม่ปิด</b> หรือภาษี 3,000 หาย · ยอดธนาคารไม่ตรง</div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>งานปิดบัญชี/กระทบยอดธนาคารทำไม่จบ</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">เพิ่ม node/ช่อง <b>WHT-รับ + ค่าธรรมเนียม</b> ตอนรับเงิน — ERP มีบรรทัดปรับส่วนต่างในตัว</div></div></div>
+        <div class="menus"><a class="chip" href="fi1-ar-receive-mockup.html"><span class="code">FI-1</span> รับชำระลูกหนี้</a><span class="chip"><span class="code">FI-3</span> กระทบยอดธนาคาร</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ชั้น 4 ============ -->
+  <section>
+    <div class="sec-h"><span class="num">ชั้น 4</span><h2>งานบริการ · เคลม · โปรโมชั่น</h2></div>
+    <p class="sec-desc">จุดสำคัญ: ผังบริการ 05/06 ออกแบบ<b>ถูกแล้ว</b> (มี QA gate + สั่งให้ Sales ออก CN) — ปัญหาคือ mockup drift ออกจากผัง</p>
+
+    <div class="card h" data-sev="h" data-ftype="B">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft B">B</span></div>
+        <div class="ctitle">
+          <div class="t">4.1 · ค่าแรงช่างตั้งเบิกทันทีที่ช่างกด “ส่งงาน” เอง</div>
+          <div class="plain">ผังมี Admin QA gate อยู่แล้ว — status ของ mockup ต่างหากที่ข้าม</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Service/05 QA and Close Work Order</span>ผังวางลำดับถูก: ช่างกด <b>Service Status=Finished → Admin ตรวจ (ช่างใน/นอก) → นำ Work Order แจ้งบัญชีทำจ่าย</b> · <b>QA gate มีในผัง</b> · แต่ status-table ของ mockup ยิงค่าแรงจาก 4.1 (ช่างส่งงาน) ข้ามขั้น Admin</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>ผังต้องให้ Admin ตรวจก่อนถึงทำจ่าย · แต่หน้าจอปล่อยให้ค่าแรง (+WHT 3%) ตั้งเบิกตั้งแต่ช่างกดจบเอง</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">ช่างนอกซ่อมไม่เสร็จ/ไม่ผ่าน แต่กด “ส่งงาน” → mockup <b>ตั้งเบิกค่าแรงทันที</b> ก่อน Admin ตรวจ = ช่างสั่งจ่ายเงินให้ตัวเอง</div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>จ่ายค่าแรงงานที่ยังไม่เสร็จ/ไม่มีคุณภาพ</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">ดึง mockup กลับตามผัง: ตั้งค่าแรงได้<b>หลัง Admin QA ปิดงาน</b>เท่านั้น · Admin/QA ≠ ช่างที่ทำ</div></div></div>
+        <div class="menus"><a class="chip" href="sv4-service-close-mockup.html"><span class="code">SV-4</span> ปิดงาน/QA</a><a class="chip" href="sv2-service-assignment-mockup.html"><span class="code">SV-2</span> มอบหมายช่าง</a><a class="chip" href="fi2-ap-payment-mockup.html"><span class="code">FI-2</span> จ่ายเจ้าหนี้</a></div>
+      </div>
+    </div>
+
+    <div class="card h" data-sev="h" data-ftype="B">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft B">B</span></div>
+        <div class="ctitle">
+          <div class="t">4.2 · ⭐ งานบริการไป “ออกเอกสารบัญชี” เอง (ผังสั่งให้ Sales ทำ)</div>
+          <div class="plain">Flow บอกชัด “ช่างแจ้ง Sales ให้ Sales เบิกใบคืนของ+ลดหนี้” — mockup ให้ Service ทำเอง</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Service/05 QA and Close · Service/06 Claim Intake</span>ผัง 05 เขียนชัด: <b>“ช่างต้องแจ้ง Sales เพื่อให้ Sales เบิกเอกสารการคืนของและลดหนี้”</b> · ผัง 06 ระบุ 3 กรณี → ทำ <b>Return Order / Credit Memo</b> (Sales เป็นคนออก) · <b>ผังวางกำแพงถูกแล้ว</b> แต่ status-table ของ mockup (SV/CLM) ให้ปิดเคลมพร้อม “ส่วนลด/คืนเงิน” ในฝั่ง Service เอง</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>กฎ “งานบริการเป็นแค่หน้าจอ ห้ามลงบัญชีเอง” — ผังทำถูก แต่หน้าจอ drift ไปให้แอดมินบริการแตะเอกสารบัญชีลูกค้า</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">แอดมินบริการปิดเคลมพร้อม “คืนเงินลูกค้า” → ยอดลูกหนี้ถูกปรับ<b>นอกสายตาบัญชี</b> ผิดหลักแบ่งแยกหน้าที่</div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>เอกสารบัญชีถูกสร้างโดยคนที่ไม่ควรมีสิทธิ์</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">ดึง mockup กลับตามผัง: ฝ่ายบริการ<b>ส่ง “คำขอ”</b> → Sales/บัญชีออก <b>SL-CN/Return Order</b> จริง</div></div></div>
+        <div class="menus"><a class="chip" href="sv1-service-intake-mockup.html"><span class="code">SV-1</span> รับงานบริการ</a><a class="chip" href="clm-vendor-claim-mockup.html"><span class="code">CLM</span> เคลมผู้ขาย</a><a class="chip" href="slcn-credit-memo-mockup.html"><span class="code">SL-CN</span> ใบลดหนี้ขาย</a></div>
+      </div>
+    </div>
+
+    <div class="card m" data-sev="m" data-ftype="B">
+      <div class="chead">
+        <div class="badges"><span class="sev m">🟠 กลาง</span><span class="ft B">B</span></div>
+        <div class="ctitle">
+          <div class="t">4.3 · เคลมในประกัน: จ่ายเครื่องใหม่ก่อน vendor ตัดสิน</div>
+          <div class="plain">ผังมี case “เปลี่ยนเครื่องใหม่เลย” แต่ไม่มี node กันสำรอง/อนุมัติก่อนจ่าย</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Service/06 Claim Intake</span>ผังระบุ case “ทำเรื่องเคลม Vendor โดยไม่ได้นำสินค้าจากลูกค้ากลับมา (เปลี่ยนเครื่องใหม่เลย)” · แต่<b>ไม่มี node อนุมัติ/กันสำรอง</b>ก่อนจ่ายเครื่อง</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>จ่ายเครื่องใหม่ให้ลูกค้าก่อน แล้วค่อยเคลมกับ vendor — vendor อาจปฏิเสธ</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">จ่ายเครื่องใหม่แล้ว · vendor บอก “ไม่เข้าเงื่อนไข” → <b>บริษัทรับภาระเครื่องใหม่ + ของเสีย</b> รู้ตอนของออกไปแล้ว</div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>ขาดทุนจากเคลมที่ vendor ไม่รับ ควบคุมไม่ได้</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">ถ้าจ่ายก่อน ต้อง<b>กันสำรอง + อนุมัติตามวงเงิน + ระบุเหตุผล</b> (ยอมรับความเสี่ยง) ไม่ปล่อยผ่านอัตโนมัติ</div></div></div>
+        <div class="menus"><a class="chip" href="clm-vendor-claim-mockup.html"><span class="code">CLM</span> เคลมผู้ขาย</a><a class="chip" href="wh2-issue-mockup.html"><span class="code">WH-2</span> ใบเบิก</a><a class="chip" href="po-cn-credit-note-mockup.html"><span class="code">PO-CN</span> ใบลดหนี้ซื้อ</a></div>
+      </div>
+    </div>
+
+    <div class="card h" data-sev="h" data-ftype="C">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft C">C</span></div>
+        <div class="ctitle">
+          <div class="t">4.4 · ⭐ เงินคืน vendor (rebate) ลง GL คนละทิศ + ได้ประโยชน์ซ้ำ</div>
+          <div class="plain">Flow ลงเป็นรายได้ฝั่งขาย · portal ทำหักฝั่งซื้อ — ทิศตรงข้าม</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Promotion/02 Promotion and Accrual Claim</span>ผังต้นฉบับลงเคลมเป็น <b>Sales Credit Memo → G/L Entry (บันทึกรายได้จากส่วนลด)</b> = รายได้<b>ฝั่งขาย</b> · แต่ portal (PO-7→PO-6 net/PO-CN) ทำเป็น<b>หักลดหนี้ฝั่งซื้อ</b> = <b>ทิศ GL ตรงข้าม</b> · เคลมยังเช็คด้วย Power BI + Vendor นอกระบบ ไม่มี gate กันได้ประโยชน์ซ้ำ</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>“ส่วนลด” (ลดตอนซื้อ) กับ “เงินคืนทีหลัง” (rebate) ต้องแยก · แต่ยอมให้ลดบนบิลแล้วยังเคลมคืนได้อีก · และตัดสินใจว่าจะลงบัญชีทิศไหนยังไม่เคาะ</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">ได้ส่วนลดหน้าบิล 2% แล้ว · ยังตั้งเคลม rebate อีก 2% จากยอดเดิม → <b>ได้ประโยชน์ซ้ำ + เสี่ยงภาษี</b> · ถ้าลง GL ผิดฝั่งทั้งระบบผิดตาม</div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>ตัวเลขรายได้ส่งเสริมเชื่อไม่ได้ + งบการเงินลงผิดฝั่ง</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">✅ <b>เคาะ 08-09: ฝั่งซื้อ</b> (PO-7→PO-CN→ตัด PO-6 AP · Other Income CF-4 · ⚠️ pending accounting sign-off) · แยก “ลดบนบิล” จาก “เงินคืน” · เงินคืนต้องมีเอกสารจริงก่อนลงบัญชี</div></div></div>
+        <div class="menus"><a class="chip" href="po7-rebate-dashboard.html"><span class="code">PO-7</span> รับส่งเสริมการขาย</a><a class="chip" href="po2-rfq-mockup.html"><span class="code">PO-2</span> ข้อตกลง vendor</a><span class="chip"><span class="code">PM-2</span> ผังโปรโมชั่น</span></div>
+      </div>
+    </div>
+
+    <div class="card m" data-sev="m" data-ftype="A">
+      <div class="chead">
+        <div class="badges"><span class="sev m">🟠 กลาง</span><span class="ft A">A</span></div>
+        <div class="ctitle">
+          <div class="t">4.5 · โปรหมดอายุยังใช้ได้ / ขายต่ำกว่าทุนแค่เตือน</div>
+          <div class="plain">ผังโปรไม่มี gate วันหมดอายุ/floor ตอนออกบิล</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow</span><div class="flowref"><span class="pdf">Promotion/02 Promotion and Accrual Claim</span>ผังเก็บ promo code by line ทุกเอกสารขาย แต่การเช็คเงื่อนไขทำผ่าน Power BI + Vendor ทีหลัง · <b>ไม่มี gate วันหมดอายุ/floor</b>ในผังตอนออกบิล</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>โปรฯ หมดอายุพึ่งงานรันเป็นรอบ + cache → ช่วงคาบเกี่ยวยังใช้โปรเก่าได้ · ราคากำไร 0–10% แค่เตือนเหลือง</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">โปรหมดเที่ยงคืน · บิลเช้าวันรุ่งขึ้นยังได้ส่วนลด · หรือขายกำไร 2% <b>ผ่านฉลุย commission เต็ม</b></div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>กำไรหดจากส่วนลดที่ไม่ควรให้</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">เช็ควันหมดอายุ<b>ทันทีตอนคิดราคา</b> · ต่ำกว่าพื้นต้อง<b>ขออนุมัติ + กระทบคอมมิชชั่น</b></div></div></div>
+        <div class="menus"><span class="chip"><span class="code">PM-2</span> ผังโปรโมชั่น</span><span class="chip"><span class="code">PM-5</span> จำลองราคา</span><a class="chip" href="sl4-invoice-mockup.html"><span class="code">SL-4</span> บิลขาย</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ชั้น 5 ============ -->
+  <section>
+    <div class="sec-h"><span class="num">ชั้น 5</span><h2>เอกสารกำกับ &amp; “สเปกขัดกันเอง”</h2></div>
+    <p class="sec-desc">อันตรายเงียบ: บางเรื่องผังต้นฉบับ<b>ไม่มี node</b> แต่ mockup/สเปกเติมมาคนละแบบ — คนพัฒนาหยิบไฟล์ไหนก็ได้ระบบคนละแบบ ต้องเคาะก่อน build</p>
+
+    <div class="card h" data-sev="h" data-ftype="C">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft C">C</span></div>
+        <div class="ctitle">
+          <div class="t">5.1 · เลขที่เอกสารอาจซ้ำข้ามเดือน (ปัญหาภาษี)</div>
+          <div class="plain">ไฟล์หนึ่งบอก “ห้ามรีเซ็ต” อีกไฟล์บอก “รีเซ็ตทุกเดือน”</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow / สเปก</span><div class="flowref"><span class="pdf">CF_config CF-2 (ไม่มี Flow PDF) vs ADR-0004</span>CF-2 “รีเซ็ตไม่ได้ กัน unique” ↔ ADR-0004 “portal reset รายเดือน” · portal + BC = 2 ตัวออกเลข ไม่มี lock</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>เลขที่เอกสารต้องไม่ซ้ำ แต่สเปกขัดกัน + มี 2 ตัวออกเลข → เสี่ยงเลขซ้ำ/ชนกัน</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">รีเซ็ตต้นเดือนโดยรูปแบบเลขไม่ผูกเดือน/สาขา → <b>ใบกำกับภาษีเลขซ้ำข้ามเดือน</b> = ปัญหาสรรพากร</div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>เอกสารภาษีไม่ถูกกฎหมาย</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">ผู้ออกเลข<b>เจ้าเดียว</b> · รูปแบบ = สาขา+เดือน+running ที่ unique แม้รีเซ็ต · atomic sequence</div></div></div>
+        <div class="menus"><span class="chip"><span class="code">CF-2.2</span> เลขที่เอกสาร</span></div>
+      </div>
+    </div>
+
+    <div class="card h" data-sev="h" data-ftype="C">
+      <div class="chead">
+        <div class="badges"><span class="sev h">🔴 สูง</span><span class="ft C">C</span></div>
+        <div class="ctitle">
+          <div class="t">5.2 · ใบลดหนี้ก้อนเล็กอาจไม่ต้องอนุมัติ (ขัดกฎกันโกง)</div>
+          <div class="plain">ผังไม่มี node อนุมัติเลย · สเปก 2 ไฟล์ขัดกัน</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow / สเปก</span><div class="flowref"><span class="pdf">Sales/07 Credit Memo (ไม่มี node อนุมัติ) · SL_sales vs sl-post-save-routing</span>ผัง 07 โพสต์ตรงไม่มีอนุมัติ → “ทุกใบอนุมัติ” เป็นนโยบายเหนือผัง · แต่ 2 ไฟล์สเปกขัดกัน: “ทุกใบ CF-2.6” ↔ “เกิน threshold ค่อยอนุมัติ”</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>ใบลดหนี้ = ลดยอดหนี้ลูกค้า (เสี่ยงโกงสูง) · ถ้าทำตามไฟล์หลัง = ใต้เพดานผ่านเลย</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">ออกใบลดหนี้เล็ก ๆ หลายใบใต้เพดาน<b>ไม่ต้องอนุมัติเลย</b> = ช่องโกงที่กฎแรกตั้งใจปิด</div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>จุดควบคุมสำคัญสุดขึ้นกับว่าคนทำหยิบไฟล์ไหน</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">เคาะ <b>“ทุกใบผ่านอนุมัติ ไม่มีเพดานยกเว้น”</b> + เติม node อนุมัติในผัง 07 · ลบบรรทัดที่ขัด</div></div></div>
+        <div class="menus"><a class="chip" href="slcn-credit-memo-mockup.html"><span class="code">SL-CN</span> ใบลดหนี้ขาย</a><a class="chip" href="index.html"><span class="code">CF-2.6</span> เมทริกซ์อนุมัติ</a></div>
+      </div>
+    </div>
+
+    <div class="card m" data-sev="m" data-ftype="C">
+      <div class="chead">
+        <div class="badges"><span class="sev m">🟠 กลาง</span><span class="ft C">C</span></div>
+        <div class="ctitle">
+          <div class="t">5.3 · หน้ารับเงิน &amp; การยกเลิกบิล สเปกไม่ตรงกัน</div>
+          <div class="plain">รับเงินมี/ไม่มีอนุมัติ · ยกเลิกบิลตรง หรือต้องออกใบลดหนี้</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📄</div><div class="rtx"><span class="lb">อ้างอิง flow / สเปก</span><div class="flowref"><span class="pdf">Finance/01 Cash Receive (ไม่มี node อนุมัติ) · Sales/07 (ทางกลับรายการ)</span>ผัง 01 โพสต์ตรงไม่มีอนุมัติ (ยืนยันฝั่ง “ไม่มีอนุมัติ”) ↔ status-table เติม Maker≠Checker · SL-4 RBAC “ยกเลิกได้” ↔ rule “ต้องออก CN”</div></div></div>
+        <div class="row"><div class="ric">🧩</div><div class="rtx"><span class="lb">แปลว่าอะไร</span>2 ความขัดแย้ง: รับเงินมี/ไม่มีชั้นอนุมัติ · บิลโพสต์แล้วยกเลิกตรงหรือต้องออกใบลดหนี้</div></div>
+        <div class="row"><div class="ric">💥</div><div class="rtx"><span class="lb">ตัวอย่างจริง</span><div class="money">ถ้าทำตาม “ยกเลิกบิลได้” → ยกเลิกใบกำกับที่ลง VAT ไปแล้วโดยไม่ย้อน VAT → <b>ยื่น ภ.พ.30 เกินจริง</b></div></div></div>
+        <div class="row"><div class="ric">⚠️</div><div class="rtx"><span class="lb">ถ้าไม่แก้</span>ภาษีผิด + ช่องยักยอกเงินรับ</div></div>
+        <div class="row"><div class="ric">🛠️</div><div class="rtx"><span class="lb">แก้ยังไง</span><div class="fix">รับเงิน = <b>ยึดแบบมีชั้นอนุมัติ</b> · บิลโพสต์แล้ว = <b>แก้ผ่าน CN เท่านั้น</b> ปิดปุ่มยกเลิกตรง · ✅ <b>เคาะ 08-09: FI-1 มีอนุมัติทุกใบ เข้า list รอตรวจใน FI-Q</b> (Maker≠Checker server-side)</div></div></div>
+        <div class="menus"><a class="chip" href="fi1-ar-receive-mockup.html"><span class="code">FI-1</span> รับชำระลูกหนี้</a><a class="chip" href="sl4-invoice-mockup.html"><span class="code">SL-4</span> บิลขาย</a><a class="chip" href="slcn-credit-memo-mockup.html"><span class="code">SL-CN</span> ใบลดหนี้ขาย</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ของดี ============ -->
+  <section>
+    <div class="sec-h"><span class="num">✔ ของดี</span><h2>สิ่งที่ Flow ต้นฉบับออกแบบถูกแล้ว — “รักษาไว้ตอนย้ายเข้า ERP”</h2></div>
+    <p class="sec-desc">การอ่านผังยืนยันว่าหลายจุดคิดมาดีระดับมาตรฐาน — บอกคนพัฒนาให้คงกลไกนี้ อย่าทำหาย</p>
+
+    <div class="card ok" data-sev="ok" data-ftype="ok">
+      <div class="chead">
+        <div class="badges"><span class="sev ok">🔵 ของดี</span></div>
+        <div class="ctitle">
+          <div class="t">การควบคุมที่ผังออกแบบถูกตามมาตรฐาน (6 จุด · ยืนยันจาก Flow PDF)</div>
+          <div class="plain">คลิกเพื่อดูว่าดีอย่างไร + อ้างผังไหน</div>
+        </div>
+        <span class="toggle">▾</span>
+      </div>
+      <div class="cbody">
+        <div class="row"><div class="ric">📦</div><div class="rtx"><span class="lb">โอนของ In-Transit 2 จังหวะ · Warehouse/01</span>ผังมี Post Ship → In-Transit → Post Receive จริง = ตัดต้นทางทันที ของไม่หายจากระบบระหว่างทาง ✅ <span class="menus" style="display:inline-flex;margin-left:6px"><a class="chip" href="wh3-transfer-mockup.html"><span class="code">WH-3</span> โอนสินค้า</a></span></div></div>
+        <div class="row"><div class="ric">🧾</div><div class="rtx"><span class="lb">WHT จุดเดียว · Account/07 WHT</span>ผังดึง WHT จาก Payment Journal → Release → Print ที่ WHT List จุดเดียว = กันออกหนังสือรับรองซ้ำ ✅ <span class="menus" style="display:inline-flex;margin-left:6px"><span class="chip"><span class="code">FI-12</span> ภาษีหัก ณ ที่จ่าย</span></span></div></div>
+        <div class="row"><div class="ric">🔗</div><div class="rtx"><span class="lb">ใบลดหนี้อ้างบิลต้นทาง · Sales/07</span>ผัง CN ต้อง Apply กับ Posted Invoice เสมอ = ตามรอยได้ ✅ (เหลือเติม gate รับของ+อนุมัติ ดูข้อ 3.4) <span class="menus" style="display:inline-flex;margin-left:6px"><a class="chip" href="slcn-credit-memo-mockup.html"><span class="code">SL-CN</span> ลดหนี้ขาย</a></span></div></div>
+        <div class="row"><div class="ric">⚖️</div><div class="rtx"><span class="lb">เปรียบเทียบราคาก่อน PO · Purchase/03</span>ผังมี node “RFQ &amp; Quotation Compare” ก่อนสั่งซื้อ = คุมราคาตั้งแต่ต้น ✅ <span class="menus" style="display:inline-flex;margin-left:6px"><a class="chip" href="po2-rfq-mockup.html"><span class="code">PO-2</span> ขอ/เทียบราคา</a></span></div></div>
+        <div class="row"><div class="ric">🏦</div><div class="rtx"><span class="lb">การเงิน = BC-native · Finance/01, Account/07</span>ผัง AR/AP/WHT อยู่ BC-lane ล้วน = portal เป็น thin UI ไม่ post เอง (ตามเจตนา) ✅ <span class="menus" style="display:inline-flex;margin-left:6px"><a class="chip" href="fi1-ar-receive-mockup.html"><span class="code">FI-1</span> รับชำระ</a></span></div></div>
+        <div class="row"><div class="ric">🛡️</div><div class="rtx"><span class="lb">มี QA gate + กำแพง Service→Sales · Service/05</span>ผังปิดงานให้ Admin ตรวจก่อนจ่าย + สั่งให้ Sales ออก CN = ออกแบบถูก (mockup ต่างหากที่ต้อง drift กลับ ดูข้อ 4.1/4.2) ✅ <span class="menus" style="display:inline-flex;margin-left:6px"><a class="chip" href="sv4-service-close-mockup.html"><span class="code">SV-4</span> ปิดงาน/QA</a></span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    วิเคราะห์โดยยึด <b>Flow PDF ต้นฉบับ</b> (Flow Design/) + flow rail · ยังไม่เทียบ Odoo/Dynamics · เอกสารภายในไม่เผยแพร่ · ไม่ commit ขึ้น git<br>
+    แก้ตามชนิด: <b>A</b> = แก้ที่ผังก่อน · <b>B</b> = ดึง mockup กลับตามผัง · <b>C</b> = เคาะ business ก่อน build
+  </footer>
+
+</div>
+
+<script>
+  // expand/collapse cards
+  document.querySelectorAll('.chead').forEach(function(h){
+    h.addEventListener('click',function(){ h.parentElement.classList.toggle('open'); });
+  });
+
+  var cards=document.querySelectorAll('.card');
+  var countEl=document.getElementById('count');
+  var sevLabel={h:'สูง',m:'กลาง',l:'ต่ำ',ok:'ของดี'};
+
+  // ---- build table view from the same cards (single source) ----
+  var tvbody=document.getElementById('tvbody');
+  cards.forEach(function(c,i){
+    var sev=c.dataset.sev, ft=c.dataset.ftype||'';
+    var tEl=c.querySelector('.ctitle .t'); var t=tEl?tEl.textContent.trim():'';
+    var pEl=c.querySelector('.ctitle .plain'); var plain=pEl?pEl.textContent.trim():'';
+    var fEl=c.querySelector('.flowref .pdf'); var pdf=fEl?fEl.textContent.trim():'—';
+    var xEl=c.querySelector('.fix'); var fix=xEl?xEl.textContent.trim():'—';
+    var codes=[];
+    c.querySelectorAll('.chip .code').forEach(function(x){ var v=x.textContent.trim(); if(codes.indexOf(v)<0) codes.push(v); });
+    var num = sev==='ok' ? '✔' : (t.match(/^[\d.]+/)||[String(i+1)])[0];
+    var titleTxt = t.replace(/^[\d.]+\s*·?\s*/,'');
+    var ftHtml = (ft && ft!=='ok') ? '<span class="tvft '+ft+'">'+ft+'</span>' : '—';
+    var chips = codes.length ? codes.map(function(v){return '<span class="tvchip">'+v+'</span>';}).join(' ') : '—';
+    var tr=document.createElement('tr');
+    tr.dataset.sev=sev; tr.dataset.ftype=ft;
+    tr.innerHTML='<td><b>'+num+'</b></td>'+
+      '<td><span class="tvsev '+sev+'">'+(sevLabel[sev]||sev)+'</span></td>'+
+      '<td>'+ftHtml+'</td>'+
+      '<td class="c-title"><b>'+titleTxt+'</b><span>'+plain+'</span></td>'+
+      '<td class="c-flow">'+pdf+'</td>'+
+      '<td class="c-fix">'+fix+'</td>'+
+      '<td class="c-menu">'+chips+'</td>';
+    tr.addEventListener('click',function(){
+      setView('cards');
+      c.classList.add('open');
+      c.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+    tvbody.appendChild(tr);
+  });
+  var trows=tvbody.querySelectorAll('tr');
+
+  // ---- view toggle ----
+  var tableWrap=document.getElementById('tableWrap');
+  var sections=document.querySelectorAll('section');
+  var curView='cards', curFilter='all';
+  function setView(v){
+    curView=v;
+    document.querySelectorAll('.vtab').forEach(function(b){ b.classList.toggle('active', b.dataset.v===v); });
+    if(v==='table'){ tableWrap.classList.add('show'); sections.forEach(function(s){s.style.display='none';}); }
+    else{ tableWrap.classList.remove('show'); applyFilter(curFilter); }
+  }
+  document.querySelectorAll('.vtab').forEach(function(b){
+    b.addEventListener('click',function(){ setView(b.dataset.v); });
+  });
+
+  // ---- filter (applies to both views) ----
+  function applyFilter(f){
+    curFilter=f;
+    var n=0;
+    cards.forEach(function(c){
+      var show=(f==='all')||(c.dataset.sev===f)||(c.dataset.ftype===f);
+      c.style.display=show?'':'none';
+      if(show) n++;
+    });
+    trows.forEach(function(r){
+      var show=(f==='all')||(r.dataset.sev===f)||(r.dataset.ftype===f);
+      r.style.display=show?'':'none';
+    });
+    if(curView==='cards'){
+      sections.forEach(function(s){
+        var any=[].slice.call(s.querySelectorAll('.card')).some(function(c){return c.style.display!=='none';});
+        s.style.display=any?'':'none';
+      });
+    }
+    countEl.textContent='แสดง '+n+' รายการ';
+  }
+  document.querySelectorAll('.fbtn').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.fbtn').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active');
+      applyFilter(b.dataset.f);
+    });
+  });
+  applyFilter('all');
+</script>
+</body>
+</html>
