@@ -134,6 +134,23 @@ a.pg:hover{background:#EFF6FF;border-color:#93C5FD;color:#1D4ED8}
 .v2ptr a{color:#BE185D;font-weight:700}
 .dsrc{font-size:11px;color:#94A3B8;margin-top:8px}
 .dsrc a{color:#2563EB;text-decoration:none}
+.rtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.rtab{font-size:12px;font-weight:700;color:#374151;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:7px 13px;cursor:pointer}
+.rtab.active{background:#1E3A5F;color:#fff;border-color:#1E3A5F}
+.rpanel{display:none}
+.rpanel.active{display:block}
+.srt-wrap{overflow-x:auto;border:1px solid #E5E7EB;border-radius:10px;background:#fff}
+.srt-tbl{width:100%;border-collapse:collapse;font-size:11px;min-width:720px}
+.srt-tbl th{background:#F1F5F9;text-align:left;padding:7px 10px;font-weight:700;color:#374151;border:1px solid #E5E7EB;white-space:nowrap}
+.srt-tbl td{padding:7px 10px;border:1px solid #E5E7EB;vertical-align:top;line-height:1.5}
+.srt-tbl td.stp{font-weight:700;color:#2563EB;white-space:nowrap}
+.srt-tbl td.stt{color:#64748B;font-size:10px;white-space:nowrap}
+.srt-tbl td.nx{color:#475569;font-size:10.5px}
+.srt-tbl td.mn{font-family:'Inter',monospace;font-size:10px;color:#2563EB;font-weight:700;white-space:nowrap}
+.srt-tbl .fin{color:#166534;font-weight:700}
+.flowchk{margin-top:9px;font-size:11.5px;border-radius:7px;padding:8px 12px;line-height:1.65}
+.flowchk.ok{background:#ECFDF5;border:1px solid #6EE7B7;color:#065F46}
+.flowchk.warn{background:#FFFBEB;border:1px solid #FCD34D;color:#92400E}
 .foot{margin-top:32px;padding-top:16px;border-top:1px solid #E5E7EB;font-size:11.5px;color:#6B7280;text-align:center;line-height:1.8}
 @media(max-width:820px){.rules{grid-template-columns:1fr}.twocol{grid-template-columns:1fr}.gloss{columns:1}.fmap{grid-template-columns:1fr}}
 </style>
@@ -162,6 +179,7 @@ a.pg:hover{background:#EFF6FF;border-color:#93C5FD;color:#1D4ED8}
     <a href="#phase">⑨ Phase</a>
     <a href="#files">⑩ แผนที่ไฟล์</a>
     <a href="#detail" style="background:#1E3A5F;color:#fff;border-color:#1E3A5F">⑪ Flow ละเอียด 🔀</a>
+    <a href="#srt" style="background:#1E3A5F;color:#fff;border-color:#1E3A5F">⑫ State × Role 📋</a>
   </div>
 
   <!-- ① -->
@@ -515,6 +533,14 @@ a.pg:hover{background:#EFF6FF;border-color:#93C5FD;color:#1D4ED8}
       <div class="dtab" data-p="pm">🎁 โปรฯ (GP guard)</div>
       <div class="dtab" data-p="price">💵 ราคา</div>
       <div class="dtab" data-p="rb">🤝 rebate ฝั่งซื้อ</div>
+      <div class="dtab" data-p="tax" style="background:#FEF2F2;color:#B91C1C;border-color:#FCA5A5">🧾 ร่าง ใบกำกับภาษี</div>
+      <div class="dtab" data-p="sl" style="background:#EFF6FF;border-color:#BFDBFE">🛒 ขาย o2c + เครดิต</div>
+      <div class="dtab" data-p="po" style="background:#EFF6FF;border-color:#BFDBFE">🧾 ซื้อ + 3-way match</div>
+      <div class="dtab" data-p="whr" style="background:#EFF6FF;border-color:#BFDBFE">📥 รับเข้า + เช็ค</div>
+      <div class="dtab" data-p="whc" style="background:#EFF6FF;border-color:#BFDBFE">🔢 ตรวจนับสต๊อก</div>
+      <div class="dtab" data-p="fir" style="background:#EFF6FF;border-color:#BFDBFE">💵 รับเงิน AR</div>
+      <div class="dtab" data-p="fip" style="background:#EFF6FF;border-color:#BFDBFE">💸 จ่าย AP + WHT</div>
+      <div class="dtab" data-p="slcn" style="background:#EFF6FF;border-color:#BFDBFE">↩️ ลดหนี้ขาย</div>
     </div>
 
     <div class="dpanel active" id="p-wf">
@@ -543,7 +569,7 @@ flowchart TD
 </pre>
         </div>
         <div class="v2ptr"><b>🔎 v2 ชี้:</b> In-Transit + reserve ออกแบบดี ✅ · แต่ตอน Post เบิก/โอน “ของไม่พอ = เตือน ไม่บล็อก” → สต๊อกติดลบได้ · ดู <a href="module-flow-overview-v2.html">v2 §2.4</a></div>
-        <div class="dsrc">ที่มา: <a href=".claude/skills/sangwijit-portal/modules/WH_warehouse.md">WH_warehouse.md §Waterfall</a> · <a href=".agents/topics/wh-status-transition-table.md">wh-status-transition-table.md</a></div>
+        <div class="dsrc">ที่มา: <a href=".claude/skills/sangwijit-portal/modules/WH_warehouse.md">WH_warehouse.md §Waterfall</a> · <a href=".agents/topics/wh-status-transition-table.md">wh-status-transition-table.md</a> · <a href="#srt" onclick="goSRT('wh');return false" style="color:#7C3AED;font-weight:700">📋 State×Role คลัง →</a></div>
       </div>
     </div>
 
@@ -576,7 +602,7 @@ flowchart TD
 </pre>
         </div>
         <div class="v2ptr"><b>🔎 v2 ชี้:</b> ผัง 06 สั่งให้ Sales ออกใบคืนของ/ลดหนี้ (ถูก) ✅ · จุดเสี่ยง: “เปลี่ยนเครื่องใหม่ก่อน vendor ตัดสิน” (S4 ปฏิเสธ = SWT กิน) <a href="module-flow-overview-v2.html">v2 §4.3</a> · เบิกอะไหล่ตั้งหนี้ขายไม่เชื่อม warranty <a href="module-flow-overview-v2.html">§4.2</a></div>
-        <div class="dsrc">ที่มา: <a href=".agents/svc-claim-jobtype-spec.md">svc-claim-jobtype-spec.md</a> · <a href=".agents/topics/clm-status-transition-table.md">clm-status-transition-table.md</a></div>
+        <div class="dsrc">ที่มา: <a href=".agents/svc-claim-jobtype-spec.md">svc-claim-jobtype-spec.md</a> · <a href=".agents/topics/clm-status-transition-table.md">clm-status-transition-table.md</a> · <a href="#srt" onclick="goSRT('clm');return false" style="color:#7C3AED;font-weight:700">📋 State×Role เคลม →</a></div>
       </div>
     </div>
 
@@ -612,7 +638,7 @@ flowchart TD
 </pre>
         </div>
         <div class="v2ptr"><b>🔎 v2 ชี้:</b> ออกแบบครบดี — “ส่งไม่สำเร็จ = ยกเลิกงานเลย + คืนคลัง” มี gate ชัด ✅ (ไม่มีจุดข้ามขั้นเด่น)</div>
-        <div class="dsrc">ที่มา: <a href=".agents/topics/dl-status-transition-table.md">dl-status-transition-table.md (เคาะ 07-29)</a></div>
+        <div class="dsrc">ที่มา: <a href=".agents/topics/dl-status-transition-table.md">dl-status-transition-table.md (เคาะ 07-29)</a> · <a href="#srt" onclick="goSRT('dl');return false" style="color:#7C3AED;font-weight:700">📋 State×Role จัดส่ง →</a></div>
       </div>
     </div>
 
@@ -650,7 +676,7 @@ flowchart TD
 </pre>
         </div>
         <div class="v2ptr"><b>🔎 v2 ชี้:</b> Flow ผัง 05 มี QA gate (Admin ตรวจก่อนจ่าย) ถูก ✅ · แต่แกน 9 “ค่าแรง” ยิงจาก <b>T2 ช่างส่งงาน</b> (ข้าม QA) ใน mockup → ช่างอนุมัติจ่ายตัวเอง <a href="module-flow-overview-v2.html">v2 §4.1</a></div>
-        <div class="dsrc">ที่มา: <a href=".agents/topics/sv-status-transition-table.md">sv-status-transition-table.md (เคาะ 07-29)</a></div>
+        <div class="dsrc">ที่มา: <a href=".agents/topics/sv-status-transition-table.md">sv-status-transition-table.md (เคาะ 07-29)</a> · <a href="#srt" onclick="goSRT('sv');return false" style="color:#7C3AED;font-weight:700">📋 State×Role บริการ →</a></div>
       </div>
     </div>
 
@@ -690,7 +716,7 @@ flowchart TD
 </pre>
         </div>
         <div class="v2ptr"><b>🔎 v2 ชี้:</b> ✅ <b>ทิศ GL เคาะแล้ว = ฝั่งซื้อ</b> (PO-7→PO-CN→ตัด PO-6 AP · Other Income CF-4 · grill 2026-08-09 · ⚠️ pending accounting sign-off) — เดิม Flow PDF ลง Sales CN ฝั่งขาย <a href="module-flow-overview-v2.html">v2 §4.4</a> · เหลือ: GP 0-10% แค่เตือนไม่บล็อก · โปรหมดอายุพึ่ง batch</div>
-        <div class="dsrc">ที่มา: <a href=".agents/topics/pm-status-transition-table.md">pm-status-transition-table.md (เคาะ 07-30)</a></div>
+        <div class="dsrc">ที่มา: <a href=".agents/topics/pm-status-transition-table.md">pm-status-transition-table.md (เคาะ 07-30)</a> · <a href="#srt" onclick="goSRT('pm');return false" style="color:#7C3AED;font-weight:700">📋 State×Role โปรฯ →</a></div>
       </div>
     </div>
 
@@ -720,7 +746,7 @@ flowchart TD
 </pre>
         </div>
         <div class="v2ptr"><b>🔎 v2 ชี้:</b> ผังนี้ออกแบบ approval + cost floor ถูก · แต่ Master Price List จริง “แก้ราคา→กด Active เอง มีผลทันที ไม่มี checker” <a href="module-flow-overview-v2.html">v2 MD/PM</a> · floor GP 0-10% แค่เตือน</div>
-        <div class="dsrc">ที่มา: <a href=".agents/topics/price-status-transition-table.md">price-status-transition-table.md (เคาะ 07-30)</a></div>
+        <div class="dsrc">ที่มา: <a href=".agents/topics/price-status-transition-table.md">price-status-transition-table.md (เคาะ 07-30)</a> · <a href="#srt" onclick="goSRT('price');return false" style="color:#7C3AED;font-weight:700">📋 State×Role ราคา →</a></div>
       </div>
     </div>
 
@@ -750,8 +776,559 @@ flowchart TD
 </pre>
         </div>
         <div class="v2ptr"><b>🔎 v2 ชี้:</b> ออกแบบดี — Accrued ไม่ลง GL จนได้ CN · จ่ายจุดเดียว PO-7 ✅ · ✅ <b>ทิศ GL เคาะ = ฝั่งซื้อ</b> (grill 2026-08-09 · pending accounting) · เหลือ: on-bill + accrue = ได้ประโยชน์ซ้ำ <a href="module-flow-overview-v2.html">v2 §4.4</a></div>
-        <div class="dsrc">ที่มา: <a href=".agents/topics/rebate-status-transition-table.md">rebate-status-transition-table.md (เคาะ 07-31)</a></div>
+        <div class="dsrc">ที่มา: <a href=".agents/topics/rebate-status-transition-table.md">rebate-status-transition-table.md (เคาะ 07-31)</a> · <a href="#srt" onclick="goSRT('rb');return false" style="color:#7C3AED;font-weight:700">📋 State×Role rebate →</a></div>
       </div>
+    </div>
+
+    <!-- ร่าง: ออกใบกำกับภาษี -->
+    <div class="dpanel" id="p-tax">
+      <div class="dcard">
+        <h3 style="display:flex;align-items:center;gap:8px">🧾 ออกใบกำกับภาษี (Tax Invoice Issuance) · ต่อจาก SL-4 ใบส่งของ/บิลขาย
+          <span style="font-size:12px;font-weight:800;background:#FEF2F2;color:#B91C1C;border:1px solid #FCA5A5;border-radius:6px;padding:2px 8px">ร่าง · DRAFT · รอเคาะ 08-10</span></h3>
+        <div class="dlead">หลังเปิดบิลขาย ผู้ขายเลือกได้ว่าจะออกใบกำกับภาษี "รายการไหนบ้าง" ในบิล แล้วกดส่งให้ลูกค้าเพื่อออกใบกำกับ · ส่งมอบได้ 3 แบบ (พิมพ์รับกลับเลย / ส่งไปรษณีย์ตามหลัง / e-Tax) · กรณีออกตามหลัง เพิ่มส่วนลดได้ โดยส่วนลดต่อรายการจะถูกสรุปเป็น "ส่งเสริมการขายท้ายบิล" และราคาสินค้าแยกเป็น "ราคาตั้ง" กับ "ราคาขาย" เพื่อดูงบส่งเสริมการขายที่ใช้ไป</div>
+
+        <div class="chart-box">
+          <pre class="mermaid">
+flowchart TD
+  A["SL-4 ใบส่งของ/บิลขาย (Posted)"] --> SEL["เลือกรายการที่จะออกใบกำกับภาษี<br/>(ต่อบรรทัด · ออกบางรายการได้)"]
+  SEL --> TAXN["👤 เลือกผู้รับใบกำกับภาษี (Bill-to)<br/>จากรายการที่ผูกกับลูกค้า · +เพิ่มใหม่ได้<br/>เลขภาษี 13 หลัก+สาขา ตรวจครั้งเดียวตอนตั้ง · audit ผู้ซื้อ↔ผู้รับ"]
+  TAXN --> SEND["กด &quot;ส่งให้ลูกค้า / ออกใบกำกับภาษี&quot;"]
+  SEND --> MODE{"เลือกรูปแบบส่งมอบ"}
+  MODE -->|"① พิมพ์ให้ลูกค้ารับกลับเลย"| M1["พิมพ์ใบกำกับ · ลูกค้ารับทันที<br/>สถานะ: ส่งมอบแล้ว"]
+  MODE -->|"② ส่งไปรษณีย์ตามหลัง"| M2["ออกตามหลัง · จ่าหน้า+จัดส่งไปรษณีย์<br/>สถานะ: รอส่ง → ส่งแล้ว (แนบ tracking)"]
+  MODE -->|"③ e-Tax (สรรพากร)"| M3["สร้าง XML · Digital Sign<br/>ส่ง RD/ETDA · สถานะ: ส่งกรมแล้ว"]
+  M2 --> DISC{"ออกตามหลัง →<br/>เพิ่มส่วนลดได้"}
+  DISC -->|"เพิ่มส่วนลดต่อรายการ"| PR["ราคาขาย = ราคาตั้ง − ส่วนต่าง(ส่วนลด)<br/>⚠️ ลดก่อน VAT (Golden Rule)"]
+  PR --> SUM["รวมส่วนลดต่อตัว → สรุปเป็น<br/>ส่งเสริมการขายท้ายบิล (เห็นงบที่ใช้)"]
+  SUM --> ISS["ออกใบกำกับตามยอดหลังส่วนลด"]
+  DISC -->|"ไม่เพิ่ม"| ISS2["ออกตามราคาบิลเดิม"]
+  M1 --> DONE["ออกใบกำกับสำเร็จ · อัปเดตสถานะ"]
+  M3 --> DONE
+  ISS --> DONE
+  ISS2 --> DONE
+  DONE --> REG["📋 ทะเบียนใบกำกับ (หน้าสรุป)<br/>สถานะ① เปิดครบทุกสินค้าหรือยัง · สถานะ② การจัดส่ง<br/>เห็นรายการ: เปิดแล้ว / ยังไม่เปิด 🏁"]
+  classDef s0 fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F;
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
+  classDef warn fill:#FEF3C7,stroke:#F59E0B,color:#92400E;
+  class A,SEL,SEND s0;
+  class M1,M3,ISS,ISS2,DONE,REG done;
+  class PR,SUM,TAXN warn;
+          </pre>
+        </div>
+
+        <div class="flowchk" style="margin-top:10px;background:#ECFDF5;border-color:#6EE7B7;color:#065F46">✅ <b>เคาะ 08-10 (5 จุด):</b>
+          <b>①</b> ออกใบกำกับ <b>บางรายการได้ (partial per line)</b> · mark ต่อบรรทัด "ออกแล้ว/ยังไม่ออก" กันออกซ้ำ ·
+          <b>②</b> ส่วนลดตามหลัง = <b>หักส่วนลดท้ายบิลตรง ๆ ก่อน issue</b> (ไม่อ้างอิงใบลดหนี้ · ยอดบนใบกำกับคือยอดหลังหักแล้ว) ·
+          <b>③</b> ราคาตั้งดึงจาก <b>PM-1 Price List</b> เดิม (ไม่สร้างใหม่) ·
+          <b>④</b> มี <b>หน้าทะเบียนใบกำกับ</b> สรุป "เปิดแล้ว/ยังไม่เปิด" + 2 สถานะ: (1) เปิดใบกำกับครบทุกสินค้าหรือยัง · (2) การจัดส่ง ·
+          <b>⑤</b> <b>ผู้รับใบกำกับภาษีแยกได้ (อาจ ≠ ชื่อในระบบ)</b> — bill-to ≠ sold-to · <b>เก็บเป็น master "ผู้รับใบกำกับ (Bill-to)" ผูกกับลูกค้า</b> (แบบ ข · เหมือน Bill-to Customer ของ BC) → เลือกจากรายการ/เพิ่มใหม่ได้ · เลขผู้เสียภาษี 13 หลัก+สาขา ตรวจ<b>ครั้งเดียวตอนตั้ง</b> (พนักงานบัญชี) · reuse ได้ · เก็บ audit ผู้ซื้อ ↔ ผู้รับใบกำกับ · โยง Master Data ทะเบียนลูกค้าตอน build จริง</div>
+
+        <div class="flowchk" style="margin-top:8px;background:#F5F3FF;border-color:#C4B5FD;color:#5B21B6">📐 <b>โมเดลราคา (ต่อยอด PM-1 Price List):</b> ทุกสินค้าเก็บ 2 ค่า — <b>ราคาตั้ง (List)</b> ที่ประกาศ + <b>ราคาขาย (Net)</b> ที่ขายจริง · ผลต่าง = <b>ส่วนลด/ส่งเสริมการขาย</b> ที่ใช้ไป → รวมท้ายบิลเป็นยอดส่งเสริมการขายรวม (report ดูงบโปรโมชั่นได้)</div>
+
+        <div class="flowchk warn" style="margin-top:8px">⚠️ <b>ภาษี — ยังรอบัญชี/ผู้สอบยืนยันก่อน go-live:</b> ส่วนลดท้ายบิลที่เพิ่มตอนออกใบกำกับตามหลัง ต้องเป็น <b>ส่วนลดจริงที่ให้ลูกค้า</b> + ลด <b>ก่อน VAT</b> (Golden Rule) · เนื่องจากยอดบนใบกำกับคือยอดสุทธิหลังหักแล้ว (ยังไม่ issue จนกว่าจะเคาะส่วนลด) จึง<b>ไม่ต้องใช้ใบลดหนี้</b> — แต่ต้องมั่นใจว่า "บิลขาย/ใบส่งของ" ที่ออกก่อนหน้ายังไม่ถือเป็นใบกำกับภาษี (แยกใบส่งของ ≠ ใบกำกับ) · <b>กรณีผู้รับใบกำกับ ≠ ชื่อในระบบ:</b> ต้องเป็นนิติบุคคล/บุคคลจริงที่มีเลขผู้เสียภาษีถูกต้อง และลูกค้ามีสิทธิ์ให้ออกในนามนั้น (กันออกใบผิดคน/เครดิต VAT ผิด) · e-Tax ตาม RD/ETDA standard (Phase 2)</div>
+
+        <div class="dsrc">ที่มา: ไอเดีย Peerapat + เคาะ session 08-10 · ต่อยอด SL-4 ใบส่งของ/บิลขาย · PM-1 Price List · e-Tax (TX Phase 2) · VAT Golden Rule · <a href="#srt" onclick="goSRT('tax');return false" style="color:#7C3AED;font-weight:700">📋 State×Role ใบกำกับ →</a></div>
+      </div>
+    </div>
+
+    <!-- ขาย order-to-cash + ด่านเครดิต -->
+    <div class="dpanel" id="p-sl">
+      <div class="dcard">
+        <h3>🛒 ขาย Order-to-Cash + ด่านเครดิต (Sales o2c) <span class="pdfref">📄 Sales/01–09</span></h3>
+        <div class="dlead">เสนอราคา → <b>ด่านเครดิตที่ SO-confirm ทุกเส้น</b> (เกิน→SL-F1→CF-2.6) → จอง/เช็คสต็อก (ไม่พอ→เบิก/โอน/ซื้อ) → มัดจำ → บิล → ส่ง/ติดตั้ง → รับเงิน → คอมฯ · แขนงคืนของ→ใบลดหนี้</div>
+        <div class="chart-box">
+          <pre class="mermaid">
+flowchart TD
+  Q["SL-1 ใบเสนอราคา (QT)<br/>ราคาจาก PM-1 + โปรฯ PM-2"] --> CR{"🚦 ด่านเครดิต (ที่ SO-confirm ทุกเส้น)<br/>exposure = AR posted + บิล open"}
+  CR -->|"เกินวงเงิน"| BLK["บล็อก → SL-F1 ขออนุมัติ<br/>→ CF-2.6 Approval Matrix"]:::stop
+  BLK -->|"อนุมัติ"| SO
+  CR -->|"ผ่าน"| SO["SL-2 ใบจอง (SO) · เช็ค+กันสต็อก"]
+  SO --> STK{"สต็อกพอ?"}
+  STK -->|"ไม่พอ"| SRC["ขอเบิก/โอน WH-3 · หรือขอซื้อ PR (PO-1)"]:::warn
+  SRC --> SO
+  STK -->|"พอ"| DEP["(option) SL-3 รับมัดจำ → Post"]
+  DEP --> BILL["SL-4 ออกบิลขาย · Post VAT+AR · หักมัดจำ"]
+  BILL --> DLV["จัดส่ง WH-2 (เบิก) / ติดตั้ง SV-6"]
+  DLV --> POD["POD ลูกค้าเซ็นรับ"]
+  POD --> RCV["FI-1 รับชำระ · หักส่งเสริมการขาย"]
+  RCV --> COM["คอมมิชชั่น CM-1"]
+  COM --> DONE["🏁 ปิดสมบูรณ์"]
+  BILL -.->|"ลูกค้าคืนของ"| CN["SL-CN ใบลดหนี้ → ลด AR"]:::warn
+  classDef s0 fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F;
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
+  classDef warn fill:#FEF3C7,stroke:#F59E0B,color:#92400E;
+  classDef stop fill:#FEE2E2,stroke:#DC2626,color:#991B1B;
+  class Q,SO s0; class DONE done; class BILL,RCV done;
+          </pre>
+        </div>
+        <div class="flowchk ok">🔎 <b>จุดคุม:</b> ด่านเครดิตที่ SO-confirm ทุกเส้น (มติ 08-09 · รวมสั่งขายตรง Sales/03 ที่ผังเดิมไม่มี gate) · exposure = AR + บิล open (กันซอยใบ) · Maker≠Checker ที่อนุมัติเครดิต</div>
+        <div class="dsrc">ที่มา: <a href=".claude/skills/sangwijit-portal/modules/SL_sales.md">SL_sales.md</a> · Flow Sales/01–09 · เคาะ 08-09 · <a href="#srt" onclick="goSRT('sl');return false" style="color:#7C3AED;font-weight:700">📋 State×Role ขาย →</a></div>
+      </div>
+    </div>
+
+    <!-- ซื้อ P2P + 3-way match -->
+    <div class="dpanel" id="p-po">
+      <div class="dcard">
+        <h3>🧾 ซื้อ Procure-to-Pay + 3-way match (Purchase) <span class="pdfref">📄 Purchase/02–05</span></h3>
+        <div class="dlead">ขอซื้อ PR → อนุมัติ → PO (ราคา/rebate จาก PO-2) → อนุมัติ (Maker≠Checker) → ส่ง → รับของ GR → <b>🔺 จับคู่ 3 ทาง PO=GR=บิล</b> → ตั้งหนี้ AP → จ่าย · แขนงคืน/ชำรุด→ลดหนี้ซื้อ</div>
+        <div class="chart-box">
+          <pre class="mermaid">
+flowchart TD
+  PR["PO-1 ใบขอซื้อ (PR)<br/>3 ที่มา: ระบบ / ขาย·service / vendor"] --> PRA{"อนุมัติ PR · CF-2.6"}
+  PRA -->|"อนุมัติ"| PO["PO-4 ใบสั่งซื้อ<br/>ราคา/ส่วนลด/rebate จาก PO-2 Trade Agreement"]
+  PO --> POA{"อนุมัติ PO · Maker≠Checker · CF-2.6"}
+  POA -->|"อนุมัติ"| SEND["ส่ง PO → vendor"]
+  SEND --> DEP["(option) จ่ายมัดจำ SC-3P · G/L 1160"]
+  DEP --> GR
+  SEND --> GR["WH-1 รับของ (GR) · Post → ledger"]
+  GR --> M3{"🔺 3-way match<br/>PO = GR = บิล ?"}
+  M3 -->|"ไม่ตรง"| HOLD["พักไว้ · สอบส่วนต่าง (ห้ามตั้งหนี้)"]:::stop
+  M3 -->|"ตรง"| AP["PO-6 ตั้งหนี้ AP · Post · Entity Tag"]
+  AP --> PAY["FI-2 จ่าย · หัก CN/มัดจำ/WHT · Maker≠Checker"]
+  PAY --> DONE["🏁 จ่ายแล้ว"]
+  GR -.->|"คืน/ชำรุด/ส่วนลด"| PCN["PO-CN ลดหนี้ → ลด AP (หักที่ FI-2)"]:::warn
+  classDef s0 fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F;
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
+  classDef warn fill:#FEF3C7,stroke:#F59E0B,color:#92400E;
+  classDef stop fill:#FEE2E2,stroke:#DC2626,color:#991B1B;
+  class PR,PO s0; class M3 warn; class AP,DONE done;
+          </pre>
+        </div>
+        <div class="flowchk warn">🔎 <b>ปิด gap:</b> ผังนี้เพิ่ม <b>node 3-way match คั่นก่อนตั้งหนี้</b> ที่ Flow PDF <code>Purchase/05</code> ไม่มี (ตั้งหนี้จาก PO Approved ตรง) · ตรงกับ State×Role 5.1 · Maker≠Checker ที่อนุมัติ PO + จ่าย</div>
+        <div class="dsrc">ที่มา: <a href=".claude/skills/sangwijit-portal/modules/PO_purchase.md">PO_purchase.md</a> · Flow Purchase/02–05 · v2 §2.1 · <a href="#srt" onclick="goSRT('po');return false" style="color:#7C3AED;font-weight:700">📋 State×Role ซื้อ →</a></div>
+      </div>
+    </div>
+
+    <!-- คลัง รับเข้า + เช็ค -->
+    <div class="dpanel" id="p-whr">
+      <div class="dcard">
+        <h3>📥 คลัง รับเข้า + ตรวจเช็ค (Goods Receipt) <span class="pdfref">📄 Purchase/04 · Warehouse</span></h3>
+        <div class="dlead">คิวรับ WH-Q1 → เปิดใบรับ WH-1 → ตรวจรับ (จำนวน/Bin/Serial/QC) → ของมีปัญหา→เปิด job SV → Serial ครบ → Post (กัน Post ซ้ำ) → รับครบ → 3-way → ตั้งหนี้</div>
+        <div class="chart-box">
+          <pre class="mermaid">
+flowchart TD
+  Q["WH-Q1 คิวรับสินค้า (จาก PO ค้างรับ)"] --> OPEN["WH-1 เปิดใบรับ<br/>ประเภท: Vendor / รับโอน / ฝาก"]
+  OPEN --> CHK["ตรวจรับ: กรอกจำนวน · Bin · Serial · QC เอง"]
+  CHK --> PROB{"ของมีปัญหา?"}
+  PROB -->|"ชำรุด"| SVJOB["เปิด job SV (ตรวจ/เคลม)"]:::warn
+  PROB -->|"ปกติ"| SER{"Serial ครบ?"}
+  SER -->|"ไม่ครบ"| CHK
+  SER -->|"ครบ"| POST["Post รับ → ledger<br/>🔒 กัน Post ซ้ำ (idempotent)"]
+  POST --> FULL{"รับครบ?"}
+  FULL -->|"ทยอย"| Q
+  FULL -->|"ครบ"| M3["🔺 3-way match → PO-6 ตั้งหนี้"]
+  M3 --> DONE["🏁 ฝั่งคลังจบ"]
+  OPEN -.->|"ปิดไม่ครบ"| SHORT["ปิดค้างรับที่ PO + เหตุผล<br/>(คลังปิดเองไม่ได้)"]:::warn
+  classDef s0 fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F;
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
+  classDef warn fill:#FEF3C7,stroke:#F59E0B,color:#92400E;
+  class Q,OPEN s0; class POST,M3,DONE done;
+          </pre>
+        </div>
+        <div class="flowchk ok">🔎 <b>จุดคุม:</b> ตรวจรับ + Serial ก่อน Post · idempotent (กัน Post ซ้ำ) · คลังปิดค้างรับเองไม่ได้ (ต้องปิดที่ PO + เหตุผล) · เชื่อมเข้า 3-way match ก่อนตั้งหนี้</div>
+        <div class="dsrc">ที่มา: <a href=".claude/skills/sangwijit-portal/modules/WH_warehouse.md">WH_warehouse.md §GR</a> · Flow Purchase/04 · <a href="#srt" onclick="goSRT('wh');return false" style="color:#7C3AED;font-weight:700">📋 State×Role คลัง →</a></div>
+      </div>
+    </div>
+
+    <!-- คลัง ตรวจนับสต๊อก -->
+    <div class="dpanel" id="p-whc">
+      <div class="dcard">
+        <h3>🔢 คลัง ตรวจนับสต๊อก + ปรับยอด (Stock Count) <span class="pdfref">📄 Warehouse/02</span></h3>
+        <div class="dlead">เตรียมนับ WH-4R (freeze snapshot) → นับจริง WH-4 → ส่วนต่าง≠0 <b>บังคับ Recount ทุกกรณี</b> → หัวหน้าอนุมัติ → BC post Stock Adjustment · แขนงปรับ ad-hoc WH-5 (นอกรอบ)</div>
+        <div class="chart-box">
+          <pre class="mermaid">
+flowchart TD
+  PREP["WH-4R เตรียมนับ<br/>เลือก SKU · freeze snapshot (แช่ยอด)"] --> COUNT["WH-4 นับจริง"]
+  COUNT --> DIFF{"ส่วนต่าง ≠ 0 ?"}
+  DIFF -->|"= 0"| OK["ไม่ต้องปรับ 🏁"]:::done
+  DIFF -->|"≠ 0"| RECOUNT["🔁 Recount บังคับ (ทุกกรณี)"]:::warn
+  RECOUNT --> SUBMIT["Submit ขออนุมัติ"]
+  SUBMIT --> APP{"หัวหน้าอนุมัติ · Maker≠Checker"}
+  APP -->|"อนุมัติ"| POST["BC post Stock Adjustment"]
+  POST --> DONE["🏁 ปรับจากรอบนับ"]
+  ADHOC["WH-5 ปรับยอด ad-hoc (นอกรอบ)<br/>เหตุผล +/− · แนบรูปถ้าตัดจำหน่าย"] --> APP2{"อนุมัติ AP-1 · CF-2.6 · Maker≠Checker"}
+  APP2 -->|"อนุมัติ"| POST2["Post → ledger + GL 🏁"]:::done
+  classDef s0 fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F;
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
+  classDef warn fill:#FEF3C7,stroke:#F59E0B,color:#92400E;
+  class PREP,COUNT,ADHOC s0; class POST,DONE done;
+          </pre>
+        </div>
+        <div class="flowchk warn">🔎 <b>ปิด gap:</b> ผังนี้บังคับ <b>Recount + หัวหน้าอนุมัติ</b> ที่ Flow PDF <code>Warehouse/02</code> ไม่มี (และเดิมลบ journal ได้) · ปรับสต๊อก = จุดคุมแข็ง (Maker≠Checker) · ตรงกับ State×Role 6/7</div>
+        <div class="dsrc">ที่มา: <a href=".claude/skills/sangwijit-portal/modules/WH_warehouse.md">WH_warehouse.md §Count</a> · Flow Warehouse/02 · v2 N9 · <a href="#srt" onclick="goSRT('wh');return false" style="color:#7C3AED;font-weight:700">📋 State×Role คลัง →</a></div>
+      </div>
+    </div>
+
+    <!-- การเงิน รับเงิน AR -->
+    <div class="dpanel" id="p-fir">
+      <div class="dcard">
+        <h3>💵 การเงิน รับชำระลูกหนี้ (AR · FI-1) <span class="pdfref">📄 Finance/01</span></h3>
+        <div class="dlead">ทุกใบรับเงินเข้าคิว FI-Q รอตรวจ → ร่าง RV (เลือกคู่สัญญา/วิธีรับ) → ประกบบิลค้าง SL-4 (หักมัดจำ/WHT/fee) → <b>อนุมัติ+Post ทุกใบ (Maker≠Checker)</b> → BC เงินเข้า ปิด AR</div>
+        <div class="chart-box">
+          <pre class="mermaid">
+flowchart TD
+  Q["FI-Q คิวรับเงิน<br/>(ทุกใบเข้า list รอตรวจ)"] --> RV["FI-1 ร่างใบรับเงิน (RV)<br/>เลือกคู่สัญญา · วิธีรับ SC-3P"]
+  RV --> MATCH["ประกบบิลค้าง (SL-4)<br/>หัก มัดจำ / WHT / fee · gate ครบ"]
+  MATCH --> APP{"🔐 อนุมัติ + Post<br/>Maker≠Checker (server-side)"}
+  APP -->|"อนุมัติ"| POST["BC: เงินเข้า Bank · ปิด AR"]
+  POST --> DONE["🏁 รับชำระแล้ว"]
+  RV -.->|"ค้างชำระ"| AGE["AR aging → ทวงหนี้"]:::warn
+  classDef s0 fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F;
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
+  classDef warn fill:#FEF3C7,stroke:#F59E0B,color:#92400E;
+  class Q,RV s0; class APP warn; class POST,DONE done;
+          </pre>
+        </div>
+        <div class="flowchk ok">🔎 <b>ปักมติ 08-09:</b> FI-1 <b>อนุมัติทุกใบ</b> (เข้า FI-Q · Maker≠Checker server-side) — Flow PDF <code>Finance/01</code> ไม่มี node อนุมัติ (BC-view เก่า · State×Role ถูก) · ไม่ auto-post</div>
+        <div class="dsrc">ที่มา: <a href=".claude/skills/sangwijit-portal/modules/FI_finance.md">FI_finance.md</a> · Flow Finance/01 · เคาะ 08-09 · <a href="#srt" onclick="goSRT('fi');return false" style="color:#7C3AED;font-weight:700">📋 State×Role การเงิน →</a></div>
+      </div>
+    </div>
+
+    <!-- การเงิน จ่าย AP + WHT -->
+    <div class="dpanel" id="p-fip">
+      <div class="dcard">
+        <h3>💸 การเงิน จ่ายเจ้าหนี้ + ภาษีหัก ณ ที่จ่าย (AP · FI-2 → FI-12) <span class="pdfref">📄 Finance/02 · Account/07</span></h3>
+        <div class="dlead">ดึงใบตั้งหนี้ PO-6 (1 ใบ=1 เจ้าหนี้) → หัก มัดจำ/CN/WHT + ระบุวิธีจ่าย → <b>อนุมัติ+Post (Maker≠Checker)</b> → BC จ่ายออก → <b>WHT ออกที่ FI-12 จุดเดียว</b> (ภ.ง.ด.3/53)</div>
+        <div class="chart-box">
+          <pre class="mermaid">
+flowchart TD
+  PULL["FI-2 ดึงใบตั้งหนี้ (PO-6)<br/>1 ใบ = 1 เจ้าหนี้"] --> DED["หัก มัดจำ / CN / WHT<br/>ระบุวิธีจ่าย SC-3P (โอน/เช็ค+ทะเบียน)"]
+  DED --> APP{"🔐 อนุมัติ + Post<br/>Maker≠Checker (AP-1 / CF-2.6)"}
+  APP -->|"อนุมัติ"| PAY["BC จ่ายออก"]
+  PAY --> WHT["FI-12 WHT (ภ.ง.ด.3/53)<br/>auto จาก FI-2 · Release · พิมพ์ Cert · Export"]
+  WHT --> FILE["🏁 ยื่น ~วันที่ 7"]
+  PAY --> DONE["🏁 จ่ายแล้ว"]
+  classDef s0 fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F;
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
+  classDef warn fill:#FEF3C7,stroke:#F59E0B,color:#92400E;
+  class PULL s0; class APP warn; class PAY,WHT,DONE,FILE done;
+          </pre>
+        </div>
+        <div class="flowchk ok">🔎 <b>จุดคุม:</b> Maker≠Checker ที่อนุมัติจ่าย · <b>WHT ออกที่ FI-12 จุดเดียว</b> (auto จาก FI-2) ตรง Account/07 · หัก มัดจำ/CN ก่อนจ่าย</div>
+        <div class="dsrc">ที่มา: <a href=".claude/skills/sangwijit-portal/modules/FI_finance.md">FI_finance.md</a> · Flow Finance/02 · Account/07 · <a href="#srt" onclick="goSRT('fi');return false" style="color:#7C3AED;font-weight:700">📋 State×Role การเงิน →</a></div>
+      </div>
+    </div>
+
+    <!-- ลดหนี้ขาย SL-CN -->
+    <div class="dpanel" id="p-slcn">
+      <div class="dcard">
+        <h3>↩️ ใบลดหนี้ขาย (Sales Credit Memo · SL-CN) <span class="pdfref">📄 Sales/07</span></h3>
+        <div class="dlead">ลูกค้าคืนของ / ยกเลิกบางส่วน / ส่วนลดหลังขาย → <b>ต้องอ้างบิล SL-4 เดิม</b> → ออกใบลดหนี้ → ของคืนเข้าคลัง (WH-1) ถ้ามี → Post กลับรายการ ลด AR+VAT</div>
+        <div class="chart-box">
+          <pre class="mermaid">
+flowchart TD
+  TRIG["ลูกค้าคืนของ / ยกเลิกบางส่วน / ส่วนลดหลังขาย"] --> CHK{"มีบิล SL-4 อ้างอิง?"}
+  CHK -->|"ไม่มี"| STOP["ทำไม่ได้ · ต้องอ้างบิลเดิม"]:::stop
+  CHK -->|"มี"| CN["SL-CN ออกใบลดหนี้<br/>อ้าง SL-4 · ระบุรายการ + เหตุผล"]
+  CN --> RET{"มีของคืนเข้าคลัง?"}
+  RET -->|"มี"| WH1["WH-1 รับคืนเข้าสต็อก"]
+  RET -->|"ไม่มี"| POST
+  WH1 --> POST["Post: ลด AR + VAT<br/>(กลับรายการตามยอดที่ลด)"]
+  POST --> DONE["🏁 ลดหนี้แล้ว"]
+  classDef s0 fill:#DBEAFE,stroke:#2563EB,color:#1E3A5F;
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#166534;
+  classDef stop fill:#FEE2E2,stroke:#DC2626,color:#991B1B;
+  class TRIG,CN s0; class POST,DONE done;
+          </pre>
+        </div>
+        <div class="flowchk ok">🔎 <b>จุดคุม:</b> ออกใบลดหนี้ต้อง<b>อ้างบิลเดิมเสมอ</b> (ไม่ลอย) · ของคืนเข้าสต็อกจริงผ่าน WH-1 · Post กลับรายการตามยอด (immutability: ไม่แก้บิลเดิม)</div>
+        <div class="dsrc">ที่มา: <a href=".claude/skills/sangwijit-portal/modules/SL_sales.md">SL_sales.md §CN</a> · Flow Sales/07 · <a href="#srt" onclick="goSRT('sl');return false" style="color:#7C3AED;font-weight:700">📋 State×Role ขาย →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑫ State × Role -->
+  <section id="srt">
+    <div class="sec-h"><span class="n">⑫</span><h2>ตารางขั้นตอน × ตำแหน่ง (State × Role)</h2><span class="s">แต่ละขั้น "ใครทำอะไร" + เทียบ Flow PDF จริง</span></div>
+    <p style="font-size:12px;color:#64748B;margin-bottom:12px"><b>ครบ 10 pane (role-matrix เต็ม · ทุก sub-step · เมนูคลิกเปิดหน้าจริง)</b> — พอร์ตจาก v1 · แต่ละ pane มี <b style="color:#065F46">🔎 เทียบ flow</b> (ตรง/ต่างกับ Flow PDF ต้นฉบับ + มติ grill 08-09) + ปุ่ม <b style="color:#7C3AED">🔀 ดูผัง</b> เชื่อมไป §⑪ Flow รายละเอียด · <b>นี่คือกรอบสำหรับสื่อสาร dev</b></p>
+
+    <div class="rtabs">
+      <div class="rtab active" data-r="sl">💼 ขาย SL</div>
+      <div class="rtab" data-r="po">🛒 ซื้อ PO</div>
+      <div class="rtab" data-r="wh">📦 คลัง WH</div>
+      <div class="rtab" data-r="fi">💵 การเงิน FI</div>
+      <div class="rtab" data-r="sv">🔧 บริการ SV</div>
+      <div class="rtab" data-r="dl">🚚 จัดส่ง DL</div>
+      <div class="rtab" data-r="clm">♻️ เคลม CLM</div>
+      <div class="rtab" data-r="pm">🎁 โปรฯ PM</div>
+      <div class="rtab" data-r="price">💵 ราคา</div>
+      <div class="rtab" data-r="rb">🤝 rebate ซื้อ</div>
+      <div class="rtab" data-r="tax" style="background:#FEF2F2;color:#B91C1C;border-color:#FCA5A5">🧾 ร่าง ใบกำกับ</div>
+    </div>
+
+    <div class="rpanel active" id="r-sl">
+      <div class="srt-wrap"><table class="srt-tbl">
+        <thead><tr><th style="width:140px">ขั้นตอน</th><th>🧑‍💼 ขาย</th><th>🏭 คลัง</th><th>🛒 จัดซื้อ</th><th>💰 บัญชี/การเงิน</th><th>🔧 ช่าง</th><th>→ ถัดไป</th><th>สถานะ</th><th>เมนู</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="9">1 · ใบเสนอราคา (QT)</td></tr>
+          <tr><td class="stp">1.1 ร่าง</td><td>บันทึก · เสนอราคา · <b>ราคาจาก PM-1(กลุ่ม)+โปรฯ PM-2</b> · สร้างลูกค้าใหม่ได้</td><td></td><td></td><td></td><td></td><td class="nx">1.2 เช็ควงเงิน</td><td class="stt">Draft</td><td class="mn">sl1 · pm1/pm2</td></tr>
+          <tr><td class="stp">1.2 เช็ควงเงิน</td><td>ส่งขออนุมัติ</td><td></td><td></td><td>อนุมัติเครดิต · เกิน→บล็อก</td><td></td><td class="nx">1.3 เครดิตผ่าน / บล็อก→SL-F1</td><td class="stt">รออนุมัติ</td><td class="mn">slf1</td></tr>
+          <tr><td class="stp">1.3 เครดิตผ่าน</td><td>แปลงเป็นใบจอง</td><td></td><td></td><td></td><td></td><td class="nx">2.1 จอง/เช็คสต็อก</td><td class="stt">✓ ผ่าน</td><td class="mn">sl1</td></tr>
+          <tr class="grp"><td colspan="9">2 · ใบจอง (SO) — จองสต็อก + จัดหา</td></tr>
+          <tr><td class="stp">2.1 จอง/เช็คสต็อก</td><td>ทำใบจอง</td><td>เช็ค+กันสต็อก</td><td></td><td></td><td></td><td class="nx">พอ→3.1/4.1 · ไม่พอ→2.4/2.5</td><td class="stt">Confirmed/รอของ</td><td class="mn">sl2</td></tr>
+          <tr><td class="stp">2.4 ขอเบิก/โอน</td><td>(ขอ)</td><td>โอน/เบิกสาขาอื่น</td><td></td><td></td><td></td><td class="nx">2.1 จอง</td><td class="stt">รอโอน</td><td class="mn">wh3</td></tr>
+          <tr><td class="stp">2.5 ขอสั่งซื้อ</td><td>(แจ้ง)</td><td>(แจ้ง)</td><td>เปิดใบขอซื้อ PR</td><td></td><td></td><td class="nx">2.1 จอง</td><td class="stt">รอสั่งซื้อ</td><td class="mn">po1</td></tr>
+          <tr><td class="stp">2.2 รับมัดจำ</td><td>รับมัดจำ</td><td></td><td></td><td></td><td></td><td class="nx">3.1 Post มัดจำ</td><td class="stt"></td><td class="mn">sl3</td></tr>
+          <tr class="grp"><td colspan="9">3 · มัดจำ · 4 · บิลขาย</td></tr>
+          <tr><td class="stp">3.1 Post มัดจำ</td><td></td><td></td><td></td><td>Post · รับเงิน SC-3P</td><td></td><td class="nx">4.1 Post บิล</td><td class="stt">มัดจำรับแล้ว</td><td class="mn">sl3</td></tr>
+          <tr><td class="stp">4.1 Post บิล</td><td>ออกบิล</td><td></td><td></td><td>Post VAT+AR · หักมัดจำ</td><td></td><td class="nx">4.2 วางบิล/เก็บเงิน</td><td class="stt"></td><td class="mn">sl4</td></tr>
+          <tr><td class="stp">4.2 วางบิล/เก็บเงิน</td><td></td><td></td><td></td><td>รับชำระ · หักส่งเสริมการขาย · ของคืน</td><td></td><td class="nx">ส่ง→6 · ครบ→7 · คืน→5.1 CN</td><td class="stt">รอเก็บเงินครบ</td><td class="mn">sl4/fi1</td></tr>
+          <tr class="grp"><td colspan="9">6 · จัดส่ง (ส่ง vs ติดตั้ง) · 7 · ปิด loop</td></tr>
+          <tr><td class="stp">6.1 ส่งเฉยๆ</td><td></td><td>เบิก WH-2 · จัดส่ง</td><td></td><td></td><td></td><td class="nx">7.1 POD</td><td class="stt">กำลังส่ง</td><td class="mn">wh2</td></tr>
+          <tr><td class="stp">6.2 มีติดตั้ง</td><td></td><td>เบิกของ</td><td></td><td></td><td>service order · ติดตั้ง</td><td class="nx">7.1 POD</td><td class="stt">กำลังติดตั้ง</td><td class="mn">sv6</td></tr>
+          <tr><td class="stp">7.1 POD รับของ</td><td></td><td>ทีมส่ง (หลักฐาน)</td><td></td><td></td><td></td><td class="nx">7.2 คอมมิชชั่น</td><td class="stt">ลูกค้าเซ็นรับ</td><td class="mn">—</td></tr>
+          <tr><td class="stp">7.2 คอมมิชชั่น</td><td>(ได้คอม)</td><td></td><td></td><td>คิดคอม CM-1</td><td></td><td class="nx fin">🏁</td><td class="stt fin">ปิดสมบูรณ์</td><td class="mn">cm1</td></tr>
+          <tr class="grp"><td colspan="9">แขนง (option)</td></tr>
+          <tr><td class="stp">5.1 CN ลดหนี้ · 7.4 ทวงหนี้</td><td>ออกใบ CN</td><td></td><td></td><td>Post ลด AR · AR aging ทวงหนี้</td><td></td><td class="nx fin">🏁</td><td class="stt">ของคืน · ค้างชำระ</td><td class="mn">slcn/fi</td></tr>
+        </tbody>
+      </table></div>
+      <div class="flowchk ok"><b>🔎 เทียบ flow:</b> ✅ ตรง Flow Sales/01–09 · ✅ <b>เคาะ 08-09:</b> ด่านเครดิต (1.2) = ที่ SO-confirm <b>ทุกเส้น</b> (รวมสั่งขายตรง Sales/03 ที่ผังเดิมไม่มี gate) + รวม exposure บิล open · <a href="#detail" onclick="goDetail('sl');return false" style="color:#7C3AED;font-weight:700">🔀 ดูผังขาย o2c §⑪ →</a> · <a href="#detail" onclick="goDetail('slcn');return false" style="color:#7C3AED;font-weight:700">↩️ ผังลดหนี้ →</a></div>
+    </div>
+
+    <div class="rpanel" id="r-po">
+      <div class="srt-wrap"><table class="srt-tbl">
+        <thead><tr><th style="width:140px">ขั้นตอน</th><th>📋 ผู้ขอ</th><th>🛒 จัดซื้อ</th><th>🏭 คลัง</th><th>💰 บัญชี/การเงิน</th><th>🚚 vendor</th><th>→ ถัดไป</th><th>สถานะ</th><th>เมนู</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="9">1 · ใบขอซื้อ (PR) — 3 ที่มา: 🤖ระบบ / service·ขาย / vendor</td></tr>
+          <tr><td class="stp">1.1 ร่าง</td><td>ระบุสินค้า/จำนวน</td><td></td><td></td><td></td><td>(เสนอผ่าน Portal)</td><td class="nx">1.2 รออนุมัติ</td><td class="stt">Draft</td><td class="mn">po1</td></tr>
+          <tr><td class="stp">1.2 รออนุมัติ</td><td>ส่งขออนุมัติ</td><td></td><td></td><td>อนุมัติ CF-2.6</td><td></td><td class="nx">1.3 อนุมัติ</td><td class="stt">รออนุมัติ</td><td class="mn">CF-2.6</td></tr>
+          <tr><td class="stp">1.3 อนุมัติ</td><td></td><td>สร้างใบสั่งซื้อ</td><td></td><td></td><td></td><td class="nx">2.1 ร่าง PO</td><td class="stt">อนุมัติ</td><td class="mn">po1</td></tr>
+          <tr class="grp"><td colspan="9">2 · ใบสั่งซื้อ (PO)</td></tr>
+          <tr><td class="stp">2.1 ร่าง PO</td><td></td><td>เลือก vendor · <b>ราคา/ส่วนลด/ของแถม/rebate จาก PO-2 Trade Agreement</b> · ติดตาม PO-7</td><td></td><td></td><td></td><td class="nx">2.2 รออนุมัติ</td><td class="stt">Draft</td><td class="mn">po4 · po2/po7</td></tr>
+          <tr><td class="stp">2.2 รออนุมัติ</td><td></td><td>ส่งขออนุมัติ</td><td></td><td>อนุมัติ (Maker≠Checker)</td><td></td><td class="nx">2.3 ส่ง PO</td><td class="stt">รออนุมัติ</td><td class="mn">CF-2.6</td></tr>
+          <tr><td class="stp">2.3 ส่ง PO</td><td></td><td>Send PO</td><td></td><td></td><td>รับ PO</td><td class="nx">2.4 ค้างรับ</td><td class="stt">ค้างรับ</td><td class="mn">po4</td></tr>
+          <tr><td class="stp">2.4 ค้างรับ</td><td></td><td></td><td>(รอรับ)</td><td></td><td>ส่งของ (บางเจ้าขอมัดจำ·ไม่ฟิกส์)</td><td class="nx">มัดจำ→3.1 · รับ→4.1 · ไม่ครบ→2.5</td><td class="stt">ค้างรับ</td><td class="mn">po4</td></tr>
+          <tr><td class="stp">2.5 short-close</td><td></td><td>ปิด (เหตุผล)</td><td></td><td></td><td>ส่งไม่ครบ</td><td class="nx">ปิด · ของค้าง=ยกเลิก</td><td class="stt">ปิดบางส่วน</td><td class="mn">po4</td></tr>
+          <tr class="grp"><td colspan="9">3 · มัดจำจ่าย · 4 · รับของ · 5 · ตั้งหนี้ · 6 · จ่าย</td></tr>
+          <tr><td class="stp">3.1 จ่ายมัดจำ</td><td></td><td></td><td></td><td>จ่าย SC-3P · G/L 1160</td><td></td><td class="nx">4.1 รับของ (หักที่ FI-2)</td><td class="stt">จ่ายมัดจำแล้ว</td><td class="mn">po-dp</td></tr>
+          <tr><td class="stp">4.1 รับของ GR</td><td></td><td></td><td>กดรับ · Post→ledger</td><td></td><td>ส่งของถึง</td><td class="nx">5.1 ตั้งหนี้ AP</td><td class="stt">รับของแล้ว</td><td class="mn">wh1</td></tr>
+          <tr><td class="stp">5.1 ตั้งหนี้ AP</td><td></td><td>จับคู่ 3 ทาง (PO=GR=บิล)</td><td></td><td>Post ตั้งหนี้ · Entity Tag</td><td>วางบิล</td><td class="nx">6.1 จ่าย</td><td class="stt">Posted</td><td class="mn">po6</td></tr>
+          <tr><td class="stp">6.1 จ่าย</td><td></td><td></td><td></td><td>Post จ่าย · หัก CN/มัดจำ/WHT · Maker≠Checker</td><td></td><td class="nx fin">🏁</td><td class="stt fin">จ่ายแล้ว</td><td class="mn">fi2</td></tr>
+          <tr class="grp"><td colspan="9">แขนง · ระบบ Vendor Portal (SM-3)</td></tr>
+          <tr><td class="stp">CN ลดหนี้</td><td></td><td></td><td></td><td>Post ลด AP · หักที่ FI-2</td><td>คืน/ชำรุด/ส่วนลด</td><td class="nx fin">🏁</td><td class="stt">ลดหนี้แล้ว</td><td class="mn">po-cn</td></tr>
+          <tr><td class="stp">Vendor Portal V0–V7</td><td></td><td>ด่านตรวจ/อนุมัติ</td><td></td><td></td><td>เสนอ PR/ราคา/โอน/โปรฯ/สินค้าใหม่ · อ่าน สต๊อก/ยอดขาย/ค้างเคลม</td><td class="nx">เข้าคิวอนุมัติเรา</td><td class="stt">SM-3 (P2)</td><td class="mn">—</td></tr>
+        </tbody>
+      </table></div>
+      <div class="flowchk warn"><b>🔎 เทียบ flow:</b> ⚠️ <b>3-way match:</b> State×Role ว่าจับคู่ 3 ทางที่ 5.1 · แต่ Flow PDF <code>Purchase/05</code> ตั้งหนี้จาก PO Approved ตรง <b>ไม่มี node รับของคั่น</b> → ต้องเพิ่ม node match ในผัง (v2 §2.1) · ✅ Approval/Maker≠Checker ตรง · <a href="#detail" onclick="goDetail('po');return false" style="color:#7C3AED;font-weight:700">🔀 ดูผังซื้อ 3-way §⑪ →</a></div>
+    </div>
+
+    <div class="rpanel" id="r-wh">
+      <div class="srt-wrap"><table class="srt-tbl">
+        <thead><tr><th style="width:140px">ขั้นตอน</th><th>🏭 คลัง</th><th>🧑‍💼 ผู้ขอ (ขาย/svc)</th><th>🛒 จัดซื้อ</th><th>🚚 vendor</th><th>✅ อนุมัติ</th><th>→ ถัดไป</th><th>สถานะ</th><th>เมนู</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="9">รับของ (WH-1 GR) — แกนของเข้า</td></tr>
+          <tr><td class="stp">1.1 รอรับ</td><td>เปิดใบ · ประเภท Vendor/รับโอน/ฝาก</td><td></td><td></td><td>ส่งของ</td><td></td><td class="nx">1.2 ตรวจรับ</td><td class="stt">รอรับ</td><td class="mn">wh1</td></tr>
+          <tr><td class="stp">1.2 ตรวจรับ</td><td>กรอกรับ · Bin · Serial · QC เอง · ของมีปัญหา→เปิด job SV</td><td></td><td></td><td></td><td></td><td class="nx">Serial ครบ→1.3 Post รับ</td><td class="stt">กำลังตรวจรับ</td><td class="mn">wh1</td></tr>
+          <tr><td class="stp">1.3 Post รับ</td><td>Post→ledger (กัน Post ซ้ำ)</td><td></td><td></td><td></td><td></td><td class="nx">ครบ→PO-6 ตั้งหนี้ · ทยอย→1.1</td><td class="stt">รับครบ 🏁ฝั่งคลัง</td><td class="mn">wh1 · po6</td></tr>
+          <tr><td class="stp">1.4 ปิดค้างรับ</td><td>แจ้ง (คลังปิดเองไม่ได้)</td><td></td><td>ปิดที่ PO + เหตุผล</td><td></td><td></td><td class="nx">ของค้าง=ยกเลิก</td><td class="stt">ปิดรับไม่ครบ</td><td class="mn">po4</td></tr>
+          <tr class="grp"><td colspan="9">เบิก/จ่ายออก (WH-2R→WH-2) — ผู้ขอ ≠ ผู้เบิก</td></tr>
+          <tr><td class="stp">2R ขอเบิก/กันสต็อก</td><td></td><td>auto จากใบขาย · ส่งคิว WH-Q2</td><td></td><td></td><td></td><td class="nx">3.1 เบิก/Post</td><td class="stt">กันสต๊อกแล้ว</td><td class="mn">wh2r</td></tr>
+          <tr><td class="stp">3.1–3.2 เบิก/Post</td><td>หยิบ · Serial · Post ตัดสต็อก</td><td>(ขอ · ไม่เห็นปุ่ม Post)</td><td></td><td></td><td></td><td class="nx">SL-6 จัดส่ง/ติดตั้ง</td><td class="stt">เบิกแล้ว</td><td class="mn">wh2</td></tr>
+          <tr class="grp"><td colspan="9">โอนสาขา (WH-3R→WH-3)</td></tr>
+          <tr><td class="stp">4R ขอโอน</td><td>คลังปลายทางขอ</td><td></td><td></td><td></td><td></td><td class="nx">5.1 โอน→รับ</td><td class="stt">รอเจ้าของใบโอน</td><td class="mn">wh3r</td></tr>
+          <tr><td class="stp">5.1–5.3 โอน→รับ</td><td>ต้นทาง Ship→In-Transit · ปลายทางกดรับ (ไม่ครบ→ยอดค้าง · ของหาย→ขั้นตรวจนับ)</td><td></td><td></td><td></td><td>ผจก.คลัง (ไม่ CF-2.6)</td><td class="nx">รับปลายทาง (=WH-1 TR-In)</td><td class="stt">In-Transit→รับแล้ว</td><td class="mn">wh3</td></tr>
+          <tr class="grp"><td colspan="9">นับ+ปรับยอด (WH-4R→WH-4→WH-5) — แกนควบคุม</td></tr>
+          <tr><td class="stp">6R เตรียมนับ+แช่ยอด</td><td>เลือก SKU · freeze snapshot</td><td></td><td></td><td></td><td></td><td class="nx">WH-4 นับจริง</td><td class="stt">แช่ยอดแล้ว</td><td class="mn">wh4r</td></tr>
+          <tr><td class="stp">6 นับจริง+ปรับ (WH-4)</td><td>นับ · ส่วนต่าง≠0 → <b>Recount บังคับทุกกรณี</b> → Submit</td><td></td><td></td><td></td><td>หัวหน้าอนุมัติ → BC post Stock Adj</td><td class="nx fin">🏁 ปรับจากรอบนับ</td><td class="stt">นับ→อนุมัติ→Posted</td><td class="mn">wh4</td></tr>
+          <tr><td class="stp">7 ปรับยอด ad-hoc (WH-5)</td><td>นอกรอบนับ · เหตุผล→+/− (แนบรูปถ้าตัดจำหน่าย)</td><td></td><td></td><td></td><td>AP-1 (CF-2.6 · Maker≠Checker)</td><td class="nx fin">🏁 Post→ledger+GL</td><td class="stt">Posted</td><td class="mn">wh5</td></tr>
+        </tbody>
+      </table></div>
+      <div class="flowchk warn"><b>🔎 เทียบ flow:</b> ✅ In-Transit + รับครั้งเดียว (idempotent) ตรง <code>Warehouse/01</code> · ⚠️ <b>นับ (6):</b> State×Role ว่า Recount บังคับ + หัวหน้าอนุมัติ · แต่ Flow PDF <code>Warehouse/02</code> ไม่มี recount/approval + ลบ journal ได้ (v2 N9) · ⚠️ ของไม่พอ = warning ไม่ block · <a href="#detail" onclick="goDetail('wf');return false" style="color:#7C3AED;font-weight:700">🔀 Waterfall</a> · <a href="#detail" onclick="goDetail('whr');return false" style="color:#7C3AED;font-weight:700">📥 รับเข้า</a> · <a href="#detail" onclick="goDetail('whc');return false" style="color:#7C3AED;font-weight:700">🔢 ตรวจนับ §⑪ →</a></div>
+    </div>
+
+    <div class="rpanel" id="r-fi">
+      <div class="srt-wrap"><table class="srt-tbl">
+        <thead><tr><th style="width:140px">ขั้นตอน</th><th>📗 บัญชี</th><th>💰 การเงิน</th><th>👤/🚚 คู่ค้า</th><th>✅ อนุมัติ / BC</th><th>→ ถัดไป</th><th>สถานะ</th><th>เมนู</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="8">รับชำระลูกหนี้ AR (FI-1) — แกนรับ</td></tr>
+          <tr><td class="stp">1.1 ร่าง RV</td><td>เลือกคู่สัญญา (ลูกค้า/พนักงาน) · วิธีรับ SC-3P</td><td></td><td>ลูกค้าจ่าย</td><td></td><td class="nx">1.2 ประกบบิล</td><td class="stt">ร่าง</td><td class="mn">fi1</td></tr>
+          <tr><td class="stp">1.2–1.3 ประกบบิล</td><td>ดึงบิลค้าง (SL-4) · หักมัดจำ/WHT/fee · gate ครบ</td><td></td><td></td><td></td><td class="nx">1.4 อนุมัติ+Post</td><td class="stt">รอประกบครบ</td><td class="mn">fi1</td></tr>
+          <tr><td class="stp">1.4 อนุมัติ+Post</td><td>Post (Maker)</td><td></td><td></td><td>Maker≠Checker · BC: Bank เข้า·ปิด AR</td><td class="nx fin">🏁</td><td class="stt fin">รับชำระแล้ว</td><td class="mn">fi1</td></tr>
+          <tr class="grp"><td colspan="8">จ่ายเจ้าหนี้ AP (FI-2) — แกนจ่าย</td></tr>
+          <tr><td class="stp">2.1 ดึงใบตั้งหนี้</td><td></td><td>เลือกเจ้าหนี้ · ดึง PO-6 (1 ใบ=1 เจ้าหนี้)</td><td>เจ้าหนี้วางบิล</td><td></td><td class="nx">2.2 หัก+ระบุจ่าย</td><td class="stt">ร่าง</td><td class="mn">fi2</td></tr>
+          <tr><td class="stp">2.2–2.3 หัก+ระบุจ่าย</td><td></td><td>หัก มัดจำ/CN/WHT · SC-3P (โอน/สด/เช็ค+ทะเบียน)</td><td></td><td></td><td class="nx">2.4 อนุมัติ+Post</td><td class="stt">รอจ่าย</td><td class="mn">fi2</td></tr>
+          <tr><td class="stp">2.4–2.5 อนุมัติ+Post</td><td></td><td>เตรียมจ่าย</td><td></td><td>Maker≠Checker (AP-1/CF-2.6) · BC จ่ายออก</td><td class="nx fin">🏁 → WHT FI-12</td><td class="stt fin">จ่ายแล้ว</td><td class="mn">fi2</td></tr>
+          <tr class="grp"><td colspan="8">กระทบยอด + ภาษี</td></tr>
+          <tr><td class="stp">FI-3 กระทบยอดธนาคาร</td><td></td><td>นำเข้า statement · จับคู่</td><td></td><td>Post เมื่อผลต่าง=0 (BC)</td><td class="nx">🏁</td><td class="stt">กระทบยอดแล้ว</td><td class="mn">fi3</td></tr>
+          <tr><td class="stp">FI-12 WHT (ภ.ง.ด.3/53)</td><td></td><td>Release · พิมพ์ Cert · Export</td><td></td><td>auto จาก FI-2</td><td class="nx">🏁 ยื่น ~วันที่ 7</td><td class="stt">Released</td><td class="mn">fi12</td></tr>
+          <tr><td class="stp">FI-7 VAT (ภ.พ.30)</td><td></td><td>ดึง VAT · Release ขาย/ซื้อ · สรุป</td><td></td><td></td><td class="nx">🏁 ยื่นวันที่ 15</td><td class="stt">ภาษีขาย−ซื้อ</td><td class="mn">fi7</td></tr>
+          <tr><td class="stp">FI-4 ใบสำคัญค่าใช้จ่าย</td><td></td><td>บันทึก (ไม่ผ่าน PO · ค่าเช่า/น้ำไฟ/ที่ปรึกษา) · จ่าย</td><td>ผู้รับ</td><td>อนุมัติ CF-2.6 · WHT→FI-12</td><td class="nx fin">🏁</td><td class="stt">จ่ายแล้ว</td><td class="mn">fi4</td></tr>
+        </tbody>
+      </table></div>
+      <div class="flowchk ok"><b>🔎 เทียบ flow:</b> ✅ <b>เคาะ 08-09:</b> FI-1 มีอนุมัติทุกใบ เข้า list รอตรวจใน FI-Q (Maker≠Checker server-side) · ⚠️ Flow PDF <code>Finance/01</code> ไม่มี node อนุมัติ (ของเก่า BC-view · State×Role ถูก) · ✅ WHT ออกที่ FI-12 จุดเดียว ตรง Account/07 · <a href="#detail" onclick="goDetail('fir');return false" style="color:#7C3AED;font-weight:700">🔀 ผังรับเงิน AR</a> · <a href="#detail" onclick="goDetail('fip');return false" style="color:#7C3AED;font-weight:700">💸 ผังจ่าย AP §⑪ →</a></div>
+    </div>
+
+    <div class="rpanel" id="r-sv">
+      <div class="srt-wrap"><table class="srt-tbl">
+        <thead><tr><th style="width:140px">ขั้นตอน</th><th>🧑‍💼 ขาย</th><th>🔧 ช่าง</th><th>🗂️ แอดมิน</th><th>→ ถัดไป</th><th>สถานะเปลี่ยนเป็น</th><th>เมนู</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="7">1 · รับงานซ่อม — แอดมิน: ตรวจ s/n · แยกงาน · เช็คเงื่อนไข</td></tr>
+          <tr><td class="stp">1.1 เคลมคืนสินค้าใหม่</td><td></td><td></td><td>รับเรื่อง</td><td class="nx">2.1 นัดหมาย</td><td class="stt"></td><td class="mn">A1 · sv1</td></tr>
+          <tr><td class="stp">1.2 ซ่อม ใน-นอกประกัน</td><td></td><td></td><td>สรุปเบิก · นัด · เช็คประกัน</td><td class="nx">ได้วัน→2.2 · ไม่ได้→2.1 รอนัด</td><td class="stt"></td><td class="mn">A1</td></tr>
+          <tr><td class="stp">1.3 ซ่อมซ้ำ/นัดถัดไป</td><td></td><td></td><td>รับเรื่อง</td><td class="nx">2.1 นัดหมาย</td><td class="stt"></td><td class="mn">A1</td></tr>
+          <tr><td class="stp">1.4 ติดตั้ง</td><td></td><td>เปิดงาน</td><td></td><td class="nx">2.1 นัดหมาย</td><td class="stt"></td><td class="mn">A1</td></tr>
+          <tr><td class="stp">1.5 ล้าง · 1.6 ตรวจเช็ค</td><td></td><td></td><td>รับเรื่อง</td><td class="nx">2.1 นัดหมาย</td><td class="stt"></td><td class="mn">A1</td></tr>
+          <tr class="grp"><td colspan="7">2 · นัดหมาย — สถานะ: รอนัดหมาย</td></tr>
+          <tr><td class="stp">2.1 รอวันนัด</td><td></td><td></td><td>กดรับเคส · ลิสวันมอบ · ระบุประเภท</td><td class="nx">2.2 นัดชัดเจน</td><td class="stt">รอนัดหมาย</td><td class="mn">Popup1 · sv2</td></tr>
+          <tr><td class="stp">2.2 นัดชัดเจน</td><td></td><td>กดรับงาน</td><td>เลือกช่าง · มอบหมาย</td><td class="nx">3.1 ช่างรับสินค้า</td><td class="stt">รอช่างกดรับ→เดินทาง</td><td class="mn">Popup1</td></tr>
+          <tr class="grp"><td colspan="7">3 · ช่างรับงาน (มือถือช่าง)</td></tr>
+          <tr><td class="stp">3.1 รับสินค้า</td><td></td><td>ถ่ายรูป/กดรับ</td><td></td><td class="nx">3.2 เริ่มงาน</td><td class="stt">กำลังเดินทาง</td><td class="mn">Mobile1 · sv5</td></tr>
+          <tr><td class="stp">3.2 เริ่มงาน</td><td></td><td>กดเริ่มงาน</td><td></td><td class="nx">4 ช่างส่งงาน</td><td class="stt">กำลังให้บริการ</td><td class="mn">Mobile1</td></tr>
+          <tr class="grp"><td colspan="7">4 · ช่างส่งงาน (มือถือช่าง)</td></tr>
+          <tr><td class="stp">4.1 ส่งงานเสร็จ</td><td></td><td>ภาพ · รายงาน · คืนอะไหล่เก่า(ในประกัน)</td><td></td><td class="nx">5 ปิดงาน · 6.5 คืนอะไหล่</td><td class="stt">ช่างส่งงานแล้ว</td><td class="mn">Mobile2</td></tr>
+          <tr><td class="stp">4.2 สั่งอะไหล่</td><td></td><td></td><td>รับมัดจำ · ใบเสร็จ</td><td class="nx">6.1 มัดจำอะไหล่</td><td class="stt"></td><td class="mn">Mobile2</td></tr>
+          <tr><td class="stp">4.3 นัดครั้งถัดไป</td><td></td><td></td><td>ส่งกลับนัด</td><td class="nx">2.1 นัดหมาย</td><td class="stt"></td><td class="mn">Mobile2</td></tr>
+          <tr><td class="stp">4.4 ยกเลิกงาน</td><td></td><td></td><td>ใส่เหตุผล</td><td class="nx fin">🏁 จบ (ยกเลิก)</td><td class="stt">ยกเลิก</td><td class="mn">Mobile2</td></tr>
+          <tr><td class="stp">4.5 เคลมสินค้าใหม่</td><td></td><td></td><td>ส่งเคลม 8 · เบิกค่าแรง 5.1</td><td class="nx">8 เคลมใหม่ · 5.1 ปิด+ตั้งหนี้</td><td class="stt"></td><td class="mn">Mobile2</td></tr>
+          <tr class="grp"><td colspan="7">5 · ปิดงาน</td></tr>
+          <tr><td class="stp">5.1 ปิด+ตั้งหนี้ (ในประกัน)</td><td></td><td></td><td>เปิดบิลส่งสินค้า</td><td class="nx">7.1 วางบิล vendor</td><td class="stt"></td><td class="mn">Popup2 · sv4</td></tr>
+          <tr><td class="stp">5.2 ปิด+เก็บเงิน (นอกประกัน)</td><td></td><td></td><td>ส่งบัญชีตัดหนี้</td><td class="nx">7.3 รับชำระ</td><td class="stt"></td><td class="mn">Popup2</td></tr>
+          <tr><td class="stp">5.3 ปิดไม่สมบูรณ์</td><td></td><td></td><td>ปรับสถานะ</td><td class="nx">2.1 นัดหมาย</td><td class="stt">รอรับสินค้า</td><td class="mn">Popup2</td></tr>
+          <tr><td class="stp">5.4 ปิดสมบูรณ์ ชำระครบ</td><td></td><td></td><td>รับจาก 7.3 รับชำระ</td><td class="nx fin">🏁 จบงาน</td><td class="stt fin">จบงาน</td><td class="mn">Popup2</td></tr>
+          <tr class="grp"><td colspan="7">6 · อะไหล่ · 7 · วางบิลบริษัท · 8 · เคลม · 9 · ค่าแรงช่าง (แกนหลังบ้าน · แอดมิน)</td></tr>
+          <tr><td class="stp">6.1–6.5 อะไหล่</td><td></td><td></td><td>มัดจำ→สั่ง(ใน/นอกประกัน)→รับ→คืนบริษัท</td><td class="nx">6.4 รับ→2.1/3.1 · 6.5 คืน→5.1</td><td class="stt">รอสั่ง/รอรับอะไหล่</td><td class="mn">A2 · sv3</td></tr>
+          <tr><td class="stp">7.1–7.3 วางบิล</td><td></td><td></td><td>สรุป job → วางบิล vendor → รับชำระ</td><td class="nx">7.3 รับชำระ→5.4 จบงาน</td><td class="stt"></td><td class="mn">A3</td></tr>
+          <tr><td class="stp">8.1–8.5 เคลมใหม่</td><td></td><td></td><td>ส่งเรื่อง→รอรถ→ลดหนี้/รับใหม่→คืนลูกค้า · <b>fast-replace(มีสต็อก)=ข้าม 8.3–8.5</b></td><td class="nx">8.5 คืนลูกค้า 🏁</td><td class="stt">ส่งเรื่องบริษัทแล้ว</td><td class="mn">A4 · clm</td></tr>
+          <tr><td class="stp">9.1–9.2 ค่าแรงช่าง</td><td></td><td></td><td>สรุปช่าง+เรท (ใน→incentive · นอก→เหมา) → วางบิลบัญชี</td><td class="nx fin">🏁 วางบิลบัญชี</td><td class="stt"></td><td class="mn">A5 · cm1</td></tr>
+        </tbody>
+      </table></div>
+      <div class="flowchk warn"><b>🔎 เทียบ flow:</b> ✅ warranty gate (จาก Item Ledger) + QA + กำแพง Service→Sales ตรง <code>Service/01,05,06</code> · ⚠️ mockup: ค่าแรง (แกน 9) ยิงจาก "ช่างส่งงาน" ข้าม QA (v2 §4.1) · เบิกอะไหล่ตั้งหนี้ขายไม่เชื่อม warranty (§4.2) · <a href="#detail" onclick="goDetail('sv');return false" style="color:#7C3AED;font-weight:700">🔀 ดูผังบริการ §⑪ →</a></div>
+    </div>
+
+    <div class="rpanel" id="r-pm">
+      <div class="srt-wrap"><table class="srt-tbl">
+        <thead><tr><th style="width:140px">ขั้นตอน</th><th>🎁 Promo Mgr</th><th>🧑‍💼 Sales</th><th>✅ อนุมัติ</th><th>🏭 คลัง</th><th>→ ถัดไป</th><th>สถานะ</th><th>เมนู</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="8">ฝั่งขาย (PM) · rebate ฝั่งซื้อ = คนละฝั่ง (PO-2/PO-7→PO-CN) · SC9 = เครื่องคิดราคา+โปร (VAT ท้ายสุด)</td></tr>
+          <tr class="grp"><td colspan="8">สร้าง/คุมโปร (lifecycle · PM-2)</td></tr>
+          <tr><td class="stp">1.1 ร่างโปร</td><td></td><td>สร้างร่าง · type (%ลด/ลดคงที่/ของแถม/bundle/BuyXGetY) · scope · period · priority</td><td></td><td></td><td class="nx">1.2 อนุมัติ</td><td class="stt">Draft</td><td class="mn">pm2</td></tr>
+          <tr><td class="stp">1.2 อนุมัติ</td><td>อนุมัติ · <b>conflict check</b> (ห้ามซ้ำ item+ลูกค้า+ช่วง)</td><td></td><td></td><td></td><td class="nx">1.3 Live</td><td class="stt">Confirmed</td><td class="mn">pm2</td></tr>
+          <tr><td class="stp">1.3 Live</td><td>activate + โชว์ impact · <b>Live แก้ไม่ได้ → deactivate+สร้างใหม่</b></td><td></td><td></td><td></td><td class="nx">ใช้ขาย 2.1 · 1.4/1.5</td><td class="stt">Live</td><td class="mn">pm2</td></tr>
+          <tr><td class="stp">1.4 หมดอายุ</td><td>auto พ้น Valid To (batch)</td><td></td><td></td><td></td><td class="nx fin">🏁</td><td class="stt fin">Expired</td><td class="mn">pm2</td></tr>
+          <tr><td class="stp">1.5 ยกเลิก/พัก</td><td>ยกเลิก+เหตุ / พัก (reactivate ได้ถ้ายังใน period)</td><td></td><td></td><td></td><td class="nx">🏁 / กลับ Live</td><td class="stt">ยกเลิก/พัก</td><td class="mn">pm2</td></tr>
+          <tr class="grp"><td colspan="8">ใช้โปรตอนขาย (SC9) — 🔑 โปรอนุมัติแล้วตอนสร้าง (1.2) · เปิดบิลไม่ขออนุมัติโปรซ้ำ</td></tr>
+          <tr><td class="stp">2.1 เลือกสินค้า→เช็คเงื่อนไข</td><td></td><td>เลือกสินค้า → <b>SC9 เช็ค: สาขา (SITECODE) / กลุ่มลูกค้า / จำนวน / ช่วง</b> → เข้าเงื่อนไข = โปรขึ้นให้เลือก</td><td></td><td></td><td class="nx">2.2 เลือก</td><td class="stt">โปร eligible</td><td class="mn">sc9</td></tr>
+          <tr><td class="stp">2.2 เลือกใช้โปร/มาตรฐาน</td><td></td><td><b>พนักงานเลือกเอง: ใช้โปร หรือ ราคามาตรฐาน</b></td><td>(อนุมัติแล้วที่ 1.2 · ไม่ขอซ้ำ)</td><td></td><td class="nx">2.3 safety</td><td class="stt">เลือกแล้ว</td><td class="mn">sc9</td></tr>
+          <tr><td class="stp">2.3 safety net</td><td></td><td>stack ≤2 ชั้น (priority สูงก่อน)</td><td>ชั้น 3+ → Sales Mgr · GP&lt;0% → 🔴 GM block (ด่านกันพลาด ไม่ใช่อนุมัติโปร)</td><td></td><td class="nx">2.4 ล็อก</td><td class="stt">ปกติผ่านเลย</td><td class="mn">sc9</td></tr>
+          <tr><td class="stp">2.4 ล็อกราคา/โปร</td><td></td><td>ล็อกตอน <b>post (SO/บิล)</b> · snapshot โปร · <b>หักส่งเสริมตอนวางบิล (SL 4.2)</b></td><td></td><td></td><td class="nx fin">🏁</td><td class="stt fin">ล็อกแล้ว</td><td class="mn">sl4</td></tr>
+          <tr class="grp"><td colspan="8">ของแถม / bundle / Buy X Get Y</td></tr>
+          <tr><td class="stp">3.1 ตัดสต็อกของแถม</td><td></td><td></td><td></td><td>เบิก WH-2 <b>ตัดสต็อกจริง</b> · <b>gate เช็คของพอก่อน activate</b> · BuyXGetY เช็ค 2 ตัว</td><td class="nx">→ 2.4 ล็อก</td><td class="stt">ตัดของแถม</td><td class="mn">wh2</td></tr>
+        </tbody>
+      </table></div>
+      <div class="flowchk warn"><b>🔎 เทียบ flow:</b> ✅ อนุมัติตอนสร้าง · stack ≤2 · ของแถม gate ตรง status-table · ⚠️ <b>ทิศ GL rebate:</b> Flow PDF <code>Promotion/02</code> = Sales CN (ฝั่งขาย) · ✅ <b>เคาะ 08-09: ฝั่งซื้อ</b> (PO-6 AP · Other Income CF-4) · ⚠️ pending accounting sign-off · <a href="#detail" onclick="goDetail('pm');return false" style="color:#7C3AED;font-weight:700">🔀 ดูผังโปรฯ §⑪ →</a></div>
+    </div>
+
+    <div class="rpanel" id="r-dl">
+      <div class="srt-wrap"><table class="srt-tbl">
+        <thead><tr><th style="width:140px">ขั้นตอน</th><th>🗂️ แอดมินขาย</th><th>🚚 ทีมส่ง / 📦 3PL</th><th>🔧 ช่าง / 🏭 คลัง</th><th>👤 ลูกค้า</th><th>→ ถัดไป</th><th>สถานะ</th><th>เมนู</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="8">รับงาน + แยกประเภท (จาก SL-4 บิลขาย / งานซ่อมเสร็จ)</td></tr>
+          <tr><td class="stp">1.1 รับงานจัดส่ง</td><td>รับเข้าคิว SV-6 · แยก: ส่งเฉยๆ / ส่ง+ติดตั้ง / ส่งงานซ่อมคืน</td><td></td><td></td><td></td><td class="nx">2.1 รอมอบหมาย</td><td class="stt">รอมอบหมาย</td><td class="mn">sv6</td></tr>
+          <tr class="grp"><td colspan="8">คิว + มอบหมาย (SV-6) — แอดมินฝั่งขายมอบหมาย</td></tr>
+          <tr><td class="stp">2.2 มอบหมาย+ช่องทางส่ง</td><td>เลือก <b>ช่องทาง (ทีมเอง/3PL)</b> · จัดรถ/เจ้าขนส่ง+tracking · นัดวัน · lock ช่าง</td><td>กดรับงาน</td><td>กดรับงาน (ถ้าติดตั้ง)</td><td></td><td class="nx">3.1 เบิก+ออกส่ง</td><td class="stt">มอบหมายแล้ว</td><td class="mn">sv6</td></tr>
+          <tr class="grp"><td colspan="8">ออกส่ง (+ ติดตั้ง)</td></tr>
+          <tr><td class="stp">3.1 เบิก+ออกส่ง</td><td></td><td>ทีมเอง: รับของ·เดินทาง · 3PL: แพ็ค·carrier·tracking</td><td>🏭 เบิก WH-2</td><td></td><td class="nx">3.2 ติดตั้ง / 4.1 ส่งมอบ</td><td class="stt">กำลังส่ง</td><td class="mn">wh2 · sv5</td></tr>
+          <tr><td class="stp">3.2 ติดตั้ง+QA</td><td></td><td></td><td>🔧 ติดตั้งหน้างาน · ถ่ายรูป · ผ่าน QA</td><td></td><td class="nx">4.1 สรุปส่งมอบ</td><td class="stt">ติดตั้งเสร็จ</td><td class="mn">sv5</td></tr>
+          <tr class="grp"><td colspan="8">ส่งมอบ + POD + ชำระ (ของขาย=DL · ซ่อมคืน=SV-7)</td></tr>
+          <tr><td class="stp">4.2 เซ็นรับ POD + ชำระ</td><td></td><td>ทีมเอง: COD รับสด SC-3P · 3PL: delivered/สลิป · COD เข้ารอบ→FI-3</td><td></td><td>✍️ เซ็นรับ (POD)</td><td class="nx">4.3 ปิดงาน</td><td class="stt">รับของแล้ว</td><td class="mn">dl · sv7</td></tr>
+          <tr><td class="stp">4.3 ปิดงานจัดส่ง</td><td>ปิดงาน · อัปเดตบิล/งานซ่อม</td><td></td><td></td><td></td><td class="nx fin">🏁</td><td class="stt fin">ส่งมอบแล้ว</td><td class="mn">dl · sv7</td></tr>
+          <tr class="grp"><td colspan="8">แขนง (option)</td></tr>
+          <tr><td class="stp">5.1 ส่งไม่สำเร็จ</td><td>บันทึกเหตุ → ยกเลิกงาน · แจ้งขาย SL</td><td>ลูกค้าไม่รับ/ไม่อยู่</td><td>🏭 ของคืนคลัง WH-1</td><td></td><td class="nx fin">🏁 ยกเลิก</td><td class="stt">ยกเลิก (ไม่นัดใหม่)</td><td class="mn">sv6</td></tr>
+          <tr><td class="stp">5.2 ของเสีย/ส่งผิด</td><td></td><td>ของเสียระหว่างส่ง</td><td>🏭 คืนคลัง WH-1</td><td></td><td class="nx">→ CLM/WH-1</td><td class="stt">คืน/เคลม</td><td class="mn">clm · wh1</td></tr>
+        </tbody>
+      </table></div>
+      <div class="flowchk ok"><b>🔎 เทียบ flow:</b> ✅ ตรง <code>dl-status-transition-table</code> (เคาะ 07-29) · ส่งไม่สำเร็จ = ยกเลิกงานเลย + คืนคลัง (ไม่นัดใหม่) · ช่องทาง 2 ทาง (ทีมเอง/3PL) · <a href="#detail" onclick="goDetail('dl');return false" style="color:#7C3AED;font-weight:700">🔀 ดูผังขนส่ง §⑪ →</a></div>
+    </div>
+
+    <div class="rpanel" id="r-clm">
+      <div class="srt-wrap"><table class="srt-tbl">
+        <thead><tr><th style="width:140px">ขั้นตอน</th><th>🏢 แอดมินเคลม</th><th>🔵 vendor/แบรนด์</th><th>🏭 คลัง</th><th>🛒/💰/✅</th><th>→ ถัดไป</th><th>สถานะ</th><th>เมนู</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="8">① เคลมสินค้า (ของเราซื้อมาเสีย → คืน vendor) · ② เคลมงานบริการ อยู่ตาราง SV</td></tr>
+          <tr><td class="stp">1.1a มีสต็อก → เปลี่ยนเลย</td><td>เปลี่ยนเครื่องให้ลูกค้าทันที · เครื่องเก่าเข้าเคลม · <b>ไม่ออก SL-CN</b></td><td></td><td>🏭 ใบขอเบิก WH-2R (อ้างเลข job)</td><td></td><td class="nx">2.1 ส่งคืน vendor</td><td class="stt">ข้าม SV 8.3–8.5</td><td class="mn">clm · wh2</td></tr>
+          <tr><td class="stp">1.1b ไม่มีสต็อก → รอ vendor</td><td>ยืมเครื่องสำรอง (loaner) ให้ลูกค้าระหว่างรอ</td><td></td><td>🏭 ใบขอเบิก loaner · รอ S2/S3</td><td></td><td class="nx">2.1 ส่งคืน vendor</td><td class="stt">รอส่งเรื่อง · ยืม loaner</td><td class="mn">clm · wh2</td></tr>
+          <tr><td class="stp">1.2 pre-sale/DOA</td><td>ของเราเองเสียก่อนขาย · อ้างบิลซื้อ · ไม่ส่งคืนลูกค้า</td><td></td><td></td><td></td><td class="nx">2.1 ส่งคืน vendor</td><td class="stt">รอส่งเรื่อง</td><td class="mn">clm</td></tr>
+          <tr class="grp"><td colspan="8">ส่งคืน vendor</td></tr>
+          <tr><td class="stp">2.1 ส่งคืน vendor</td><td>ส่งคืน + tracking · <b>guard: reply ≤7 วัน → ทวงอัตโนมัติ</b></td><td>รับของคืน</td><td>🏭 bin 6 (ของคืน/ซาก)</td><td></td><td class="nx">3.x vendor ตอบ (S1-S4)</td><td class="stt">รอ vendor</td><td class="mn">clm</td></tr>
+          <tr class="grp"><td colspan="8">vendor ตอบ S1-S4 (แตก 4 branch)</td></tr>
+          <tr><td class="stp">3.S1 ส่วนลด CN</td><td>เข้าคิวรอหักหนี้</td><td>✅ ให้ CN</td><td></td><td>PO-CN → PO-6 ดึงตัด</td><td class="nx">4.1 หักกลบ</td><td class="stt">รับ CN</td><td class="mn">po-cn · po6</td></tr>
+          <tr><td class="stp">3.S2 ส่งของใหม่</td><td>รอ→ยืม loaner WH-3</td><td>✅ ส่งใหม่</td><td>🏭 รับที่ WH-1</td><td></td><td class="nx">4.2 ปิดเคลม</td><td class="stt">รอรับใหม่</td><td class="mn">wh1 · wh3</td></tr>
+          <tr><td class="stp">3.S3 ซ่อมส่งกลับ</td><td></td><td>✅ ซ่อมคืน</td><td>🏭 รับที่ WH-1</td><td></td><td class="nx">4.2 ปิดเคลม</td><td class="stt">รอรับซ่อม</td><td class="mn">wh1</td></tr>
+          <tr><td class="stp">3.S4 ปฏิเสธ → SWT รับภาระ</td><td>ออก VRA + เหตุผล</td><td>❌ ปฏิเสธ</td><td></td><td>✅ <b>อนุมัติตาม tier + เหตุผล</b></td><td class="nx fin">🏁</td><td class="stt">SWT รับภาระ</td><td class="mn">clm</td></tr>
+          <tr class="grp"><td colspan="8">หักกลบ + ปิด</td></tr>
+          <tr><td class="stp">4.1 หักกลบ ลูกหนี้↔เจ้าหนี้</td><td>(เฉพาะในประกันมี ARI)</td><td></td><td></td><td>💰 Net C/V · Maker≠Checker (post=FI/BC)</td><td class="nx">4.2 ปิดเคลม</td><td class="stt">รอหักกลบ</td><td class="mn">fi</td></tr>
+          <tr><td class="stp">4.2 ปิดเคลม / คืนลูกค้า</td><td>บันทึกคืน/ส่วนลด · ปิดเคลม</td><td></td><td></td><td></td><td class="nx fin">🏁</td><td class="stt fin">ปิดเคลม</td><td class="mn">clm</td></tr>
+        </tbody>
+      </table></div>
+      <div class="flowchk warn"><b>🔎 เทียบ flow:</b> ✅ S1-S4 + fast-replace/loaner + S4 อนุมัติ tier ตรง <code>Service/06 + clm-status-table</code> · ⚠️ 1.1a เปลี่ยนเครื่องก่อน vendor ตัดสิน — vendor ปฏิเสธ = SWT กินทั้งคู่ (v2 §4.3) · <a href="#detail" onclick="goDetail('clm');return false" style="color:#7C3AED;font-weight:700">🔀 ดูผังเคลม §⑪ →</a></div>
+    </div>
+
+    <div class="rpanel" id="r-price">
+      <div class="srt-wrap"><table class="srt-tbl">
+        <thead><tr><th style="width:140px">ขั้นตอน</th><th>🏷️ Pricing Mgr</th><th>✅ อนุมัติ</th><th>🧑‍💼 Sales</th><th>💰 Finance</th><th>→ ถัดไป</th><th>สถานะ</th><th>เมนู</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="8">สร้าง/แก้ราคา (lifecycle + PCR · PM-1) — ราคาต่อช่องทาง (ปลีก/ส่ง/ออนไลน์/ส่งออก)</td></tr>
+          <tr><td class="stp">1.1 ร่างรายการราคา</td><td>เลือกประเภท · ช่วงมีผล · กรอกราคา<b>ต่อช่องทาง</b>+Disc · ต้นทุน auto MD-1</td><td></td><td></td><td>ต้นทุน 🔒 (เห็นเฉพาะ finance)</td><td class="nx">ใหม่→1.3 · แก้→1.2 PCR</td><td class="stt">Draft</td><td class="mn">pm1</td></tr>
+          <tr><td class="stp">1.2 PCR แก้ราคาที่มีผล</td><td>ราคาใหม่ + <b>เหตุผล</b></td><td></td><td></td><td></td><td class="nx">1.3 อนุมัติ</td><td class="stt">รออนุมัติ PCR</td><td class="mn">pm1</td></tr>
+          <tr><td class="stp">1.3 อนุมัติ</td><td>(ผู้ทำ)</td><td><b>Maker≠Checker</b> · guard <b>ราคา &lt; ทุน (cost floor) → เตือน/บล็อก</b></td><td></td><td></td><td class="nx">1.4 Post</td><td class="stt">Confirmed</td><td class="mn">pm1</td></tr>
+          <tr><td class="stp">1.4 Post (มีผล+sync BC)</td><td>เข้า BC salesPriceList · เป็นฐาน SC9 · <b>Posted แก้ไม่ได้</b></td><td></td><td></td><td></td><td class="nx">1.5 เวอร์ชันใหม่</td><td class="stt fin">Posted (มีผล)</td><td class="mn">pm1</td></tr>
+          <tr class="grp"><td colspan="8">ใช้ราคาตอนขาย (SC9) — มาตรฐานก่อน → โปรเข้าเงื่อนไข → ไม่เข้ากลับมาตรฐาน</td></tr>
+          <tr><td class="stp">3.1 หาราคามาตรฐาน</td><td></td><td></td><td>ตามช่องทาง/สาขา/กลุ่มลูกค้า (เจาะจงสุดชนะ)</td><td></td><td class="nx">3.2 เช็คโปร</td><td class="stt">ได้ราคามาตรฐาน</td><td class="mn">sc9</td></tr>
+          <tr><td class="stp">3.3/3.4 โปร/มาตรฐาน</td><td></td><td></td><td>เข้าเงื่อนไข→ราคาโปร · ไม่เข้า→กลับมาตรฐาน</td><td></td><td class="nx">3.5 VAT</td><td class="stt">ราคาก่อน VAT</td><td class="mn">sc9</td></tr>
+          <tr><td class="stp">3.5 → VAT ท้ายสุด</td><td></td><td></td><td><b>VAT บวกท้ายสุด</b> (Golden Rule)</td><td></td><td class="nx fin">🏁</td><td class="stt fin">ราคาสุทธิ</td><td class="mn">sc9</td></tr>
+          <tr class="grp"><td colspan="8">Simulator + cost floor (PM-5)</td></tr>
+          <tr><td class="stp">4.1 จำลองราคา</td><td></td><td></td><td>net cost / reverse-calc หากำไรเป้า</td><td>cost 🔒 · <b>GP&lt;10% 🟡 · GP&lt;0% 🔴 block</b></td><td class="nx">→ draft quote SL-1</td><td class="stt">จำลอง</td><td class="mn">pm5</td></tr>
+        </tbody>
+      </table></div>
+      <div class="flowchk warn"><b>🔎 เทียบ flow:</b> ✅ PCR→อนุมัติ (Maker≠Checker)→Post · cost floor · VAT ท้ายสุด ตรง <code>price-status-table</code> · ⚠️ Master Price List จริง "แก้ราคา→Active เอง ไม่มี checker" (v2 MD/PM) · floor GP 0–10% แค่เตือน · <a href="#detail" onclick="goDetail('price');return false" style="color:#7C3AED;font-weight:700">🔀 ดูผังราคา §⑪ →</a></div>
+    </div>
+
+    <div class="rpanel" id="r-rb">
+      <div class="srt-wrap"><table class="srt-tbl">
+        <thead><tr><th style="width:140px">ขั้นตอน</th><th>📋 จัดซื้อ</th><th>🧑‍💼 Sales</th><th>💰 Finance</th><th>🏢 ห้าง/Vendor</th><th>→ ถัดไป</th><th>สถานะ</th><th>เมนู</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="8">4 types: ① MOU ② Sell-in ③ Sell-out ④ Co-op · หลัก: แจ้ง/เอกสารก่อน → งบตามหลัง · ⚠️ Rebate≠Discount (Other Income CF-4)</td></tr>
+          <tr><td class="stp">1.1 Trade Agreement (PO-2)</td><td>เจรจา · <b>บันทึกข้อตกลงงบ</b> · ไม่มีผลภาษี</td><td></td><td></td><td></td><td class="nx">1.3 Accrual</td><td class="stt">บันทึกแล้ว</td><td class="mn">po2</td></tr>
+          <tr><td class="stp">1.2 รับปาก (verbal)</td><td></td><td><b>เซลรับปาก</b> ผลประโยชน์</td><td></td><td></td><td class="nx">1.3 Accrual</td><td class="stt">🟡 รับปาก (เสี่ยง)</td><td class="mn">po7</td></tr>
+          <tr><td class="stp">1.3 บันทึก Accrual (PO-7)</td><td>เลือก type · อ้าง PO-2 · งวด claim</td><td></td><td></td><td></td><td class="nx">2.x ตาม type</td><td class="stt">Draft (ยังไม่มี GL)</td><td class="mn">po7</td></tr>
+          <tr class="grp"><td colspan="8">แยกตาม type (⭐ Sell-in 2 โหมด)</td></tr>
+          <tr><td class="stp">2.S1a Sell-in ลดบนบิล</td><td><b>ใส่ส่วนลดบนบิลซื้อ (PO) เลย</b> → ลดต้นทุนทันที · ไม่ track</td><td></td><td></td><td></td><td class="nx fin">🏁 หักบนบิล</td><td class="stt fin">หักบนบิลแล้ว</td><td class="mn">po4</td></tr>
+          <tr><td class="stp">2.S1b Sell-in ลดตามหลัง</td><td>แจ้งก่อน → accrue → รอ CN</td><td></td><td></td><td></td><td class="nx">3.1 Accrued</td><td class="stt">เข้า accrual</td><td class="mn">po7</td></tr>
+          <tr><td class="stp">2.S2 Sell-out</td><td>จ่ายเมื่อ<b>ขายออกสำเร็จ</b> — พิสูจน์ serial/SL-4</td><td></td><td></td><td></td><td class="nx">3.1 Accrued</td><td class="stt">รอ match ขายออก</td><td class="mn">po7</td></tr>
+          <tr><td class="stp">2.M MOU / Co-op</td><td>ซื้อถึงเป้า / Event → accrue</td><td></td><td></td><td></td><td class="nx">3.1 Accrued</td><td class="stt">เข้า accrual</td><td class="mn">po7</td></tr>
+          <tr class="grp"><td colspan="8">lifecycle: Accrued → Doc Received → Realized → Recon</td></tr>
+          <tr><td class="stp">3.1 Accrued</td><td>Confirm &amp; Send</td><td></td><td><b>บันทึกความจำ · ยังไม่ลง GL</b></td><td></td><td class="nx">3.2 Doc Received</td><td class="stt">Accrued (memo)</td><td class="mn">po7</td></tr>
+          <tr><td class="stp">3.2 Doc Received</td><td>รับเอกสาร · <b>audit + Category</b></td><td></td><td></td><td>ออก CN/Invoice</td><td class="nx">3.3 Realized</td><td class="stt">ได้เอกสารแล้ว</td><td class="mn">po7</td></tr>
+          <tr><td class="stp">3.3 Realized (offset · ลง GL)</td><td></td><td></td><td><b>Record Payment ที่ PO-7 เท่านั้น</b> 🔒 · ลง GL · <b>offset CN → PO-6 AP</b></td><td></td><td class="nx">3.4 Recon</td><td class="stt">Realized</td><td class="mn">po7 · po6</td></tr>
+          <tr><td class="stp">3.4 Monthly Recon</td><td></td><td></td><td>reconcile Accrual vs จริง · netting ห้าง</td><td></td><td class="nx fin">🏁</td><td class="stt fin">กระทบยอดแล้ว</td><td class="mn">fi8</td></tr>
+          <tr class="grp"><td colspan="8">แขนง (sanction/aging)</td></tr>
+          <tr><td class="stp">4.1 Aging alert</td><td>เกิน 30 วัน → reminder · <b>60 วัน → STOP NEW PO</b></td><td></td><td></td><td></td><td class="nx">ทวง</td><td class="stt">ค้างเกิน SLA</td><td class="mn">po7 · fi8</td></tr>
+        </tbody>
+      </table></div>
+      <div class="flowchk warn"><b>🔎 เทียบ flow:</b> ✅ Accrued ไม่ลง GL จนได้ CN · จ่ายจุดเดียว PO-7 · Sell-in 2 โหมด ตรง <code>rebate-status-table</code> (เคาะ 07-31) · ✅ <b>เคาะ 08-09: ทิศ GL = ฝั่งซื้อ</b> (offset PO-6 AP · pending บัญชี) · <a href="#detail" onclick="goDetail('rb');return false" style="color:#7C3AED;font-weight:700">🔀 ดูผัง rebate §⑪ →</a></div>
+    </div>
+
+    <!-- ร่าง: ใบกำกับภาษี -->
+    <div class="rpanel" id="r-tax">
+      <div class="srt-wrap"><table class="srt-tbl">
+        <thead><tr><th style="width:150px">ขั้นตอน</th><th>🧑‍💼 ผู้ขาย</th><th>🧾 พนักงานบัญชี<br><span style="font-weight:400;font-size:11px">(ออกใบกำกับ)</span></th><th>🚚 จัดส่ง</th><th>⚙️ ระบบ/BC</th><th>→ ถัดไป</th><th>สถานะ</th><th>เมนู</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="8">ร่าง · เคาะ 08-10 — หลัก: บิลขาย/ใบส่งของมาก่อน → เลือกรายการออกใบกำกับ → (ออกตามหลังเพิ่มส่วนลดท้ายบิลได้) → issue → ส่งมอบ 3 แบบ → ทะเบียนสรุป · ⚠️ ใบส่งของ ≠ ใบกำกับ</td></tr>
+          <tr><td class="stp">1 บิลขาย/ใบส่งของ (SL-4)</td><td><b>เปิดบิล · ส่งของ</b></td><td></td><td></td><td>Post บิล · ให้เลขที่</td><td class="nx">2 เลือกรายการ</td><td class="stt">บิล Posted</td><td class="mn">sl4</td></tr>
+          <tr><td class="stp">2 เลือกรายการออกใบกำกับ</td><td>tick รายการที่จะออก (per line)</td><td><b>ตรวจ/ยืนยันรายการ</b></td><td></td><td>mark ต่อบรรทัด: ออกแล้ว/ยังไม่ออก</td><td class="nx">2.5 ผู้รับใบ</td><td class="stt">เลือกแล้ว</td><td class="mn">sl4</td></tr>
+          <tr><td class="stp">2.5 เลือกผู้รับใบกำกับ (Bill-to)</td><td><b>เลือกจากรายการ</b>ที่ผูกกับลูกค้า (หรือขอเพิ่มใหม่)</td><td><b>ตั้ง/อนุมัติ master + ตรวจเลข 13 หลัก+สาขา</b> (ครั้งเดียว)</td><td></td><td>ผูก Bill-to กับลูกค้า · reuse · เก็บ sold-to ↔ bill-to</td><td class="nx">3 หรือ 4</td><td class="stt">🟡 อาจ ≠ ชื่อระบบ</td><td class="mn">sl4</td></tr>
+          <tr class="grp"><td colspan="8">แขนงส่วนลด (เฉพาะออกตามหลัง)</td></tr>
+          <tr><td class="stp">3 หักส่วนลดท้ายบิล</td><td><b>ใส่ราคาขาย</b> (ราคาตั้ง−ส่วนต่าง)</td><td>รวมส่วนลดต่อตัว → <b>ส่งเสริมการขายท้ายบิล</b></td><td></td><td>คำนวณ <b>ลดก่อน VAT</b> (Golden Rule)</td><td class="nx">4 ออกใบ</td><td class="stt">🟡 ยอดสุทธิหลังหัก</td><td class="mn">pm1</td></tr>
+          <tr><td class="stp">4 ออกใบกำกับ (issue)</td><td></td><td><b>กดออกใบกำกับ</b> · ยอดสุทธิ</td><td></td><td>ให้เลขที่ใบกำกับ · ล็อกยอด (immutable)</td><td class="nx">5 ส่งมอบ</td><td class="stt">ออกใบแล้ว</td><td class="mn">sl4</td></tr>
+          <tr class="grp"><td colspan="8">ส่งมอบ 3 แบบ (→ สถานะ② การจัดส่ง)</td></tr>
+          <tr><td class="stp">5a ① พิมพ์รับกลับเลย</td><td></td><td><b>พิมพ์ · มอบลูกค้า</b></td><td></td><td></td><td class="nx fin">🏁</td><td class="stt fin">ส่งมอบแล้ว</td><td class="mn">sl4</td></tr>
+          <tr><td class="stp">5b ② ไปรษณีย์ตามหลัง</td><td></td><td>จ่าหน้า · ปิดซอง</td><td><b>ส่ง · แนบ tracking</b></td><td></td><td class="nx">6 ทะเบียน</td><td class="stt">🟡 รอส่ง → ส่งแล้ว</td><td class="mn">sl4</td></tr>
+          <tr><td class="stp">5c ③ e-Tax (P2)</td><td></td><td>trigger e-Tax</td><td></td><td><b>XML · Sign · ส่ง RD/ETDA</b></td><td class="nx">6 ทะเบียน</td><td class="stt">ส่งกรมแล้ว</td><td class="mn">—</td></tr>
+          <tr class="grp"><td colspan="8">ทะเบียน + 2 สถานะ</td></tr>
+          <tr><td class="stp">6 ทะเบียนใบกำกับ (หน้าสรุป)</td><td>ดูรายการค้าง</td><td><b>ดูรายการ: เปิดแล้ว/ยังไม่เปิด</b></td><td>อัปเดตสถานะจัดส่ง</td><td>รวมสถานะต่อบิล</td><td class="nx fin">🏁</td><td class="stt fin">① เปิดครบ? · ② จัดส่ง</td><td class="mn">—</td></tr>
+        </tbody>
+      </table></div>
+      <div class="flowchk warn"><b>🔎 เทียบ flow / เคาะ 08-10:</b> <b>ผู้ออกใบกำกับ = พนักงานบัญชี</b> (แยกจากผู้ขายที่เปิดบิล → Maker≠Checker โดยธรรมชาติ) · ส่วนลด = <b>หักท้ายบิลก่อน issue · ไม่ใช้ใบลดหนี้</b> (ยอดบนใบกำกับ = ยอดสุทธิ) · ราคาตั้งจาก <b>PM-1 Price List</b> · 2 สถานะ: เปิดครบ / จัดส่ง · ⚠️ <b>ยังรอบัญชี/ผู้สอบยืนยันการรับรู้ภาษีส่วนลดตามหลัง + ยืนยัน "ใบส่งของ ≠ ใบกำกับ"</b> ก่อน go-live · e-Tax = Phase 2 · <a href="#detail" onclick="goDetail('tax');return false" style="color:#7C3AED;font-weight:700">🔀 ดูผังใบกำกับ §⑪ →</a></div>
     </div>
   </section>
 
@@ -786,6 +1363,45 @@ flowchart TD
   function initFirst(){ renderPanel(document.querySelector('.dpanel.active')); }
   if(document.readyState==='complete') initFirst();
   else window.addEventListener('load', initFirst);
+
+  // §12 State × Role tabs
+  document.querySelectorAll('.rtab').forEach(function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('.rtab').forEach(function(x){x.classList.remove('active')});
+      document.querySelectorAll('.rpanel').forEach(function(x){x.classList.remove('active')});
+      t.classList.add('active');
+      var p=document.getElementById('r-'+t.dataset.r);
+      if(p) p.classList.add('active');
+    });
+  });
+
+  // §12 Menu column → linkify เปิดหน้าจริง (surface label A1/Popup/Mobile/sc9/fi8/SM-3/CF-2.6 = ไม่มีหน้า)
+  var MN_MAP={
+    sv1:'sv1-service-intake-mockup.html',sv2:'sv2-service-assignment-mockup.html',sv3:'sv3-spare-part-issue-mockup.html',sv4:'sv4-service-close-mockup.html',sv5:'sv5-job-card-mockup.html',sv7:'sv7-service-delivery-mockup.html',clm:'clm-vendor-claim-mockup.html',
+    wh1:'wh1-receive-mockup.html',wh2:'wh2-issue-mockup.html',wh2r:'wh2r-issue-request-mockup.html',wh3:'wh3-transfer-mockup.html',wh3r:'wh3r-transfer-request-mockup.html',wh4:'wh4-count-mockup.html',wh4r:'wh4r-count-prep-mockup.html',
+    po1:'po1-purchase-request-mockup.html',po2:'po2-rfq-mockup.html',po4:'po4-purchase-order-mockup.html',po6:'po6-ap-invoice-mockup.html',po7:'po7-rebate-dashboard.html','po-cn':'po-cn-credit-note-mockup.html','po-dp':'po-dp-deposit-payment-mockup.html',
+    pm1:'pm1-price-list-mockup.html',pm2:'pm2-promotion-mockup.html',pm5:'pm5-price-simulator-mockup.html',
+    fi1:'fi1-ar-receive-mockup.html',fi2:'fi2-ap-payment-mockup.html',fi3:'fi3-bank-reconciliation-mockup.html',fi4:'fi4-expense-wht-mockup.html',fi7:'fi7-vat-report-mockup.html',fi12:'fi12-wht-mockup.html',
+    sl1:'sl1-quotation-mockup.html',sl2:'sl2-reservation-mockup.html',sl3:'sl3-deposit-mockup.html',sl4:'sl4-invoice-mockup.html',slcn:'slcn-credit-memo-mockup.html',slf1:'slf1-credit-approval-mockup.html'
+  };
+  document.querySelectorAll('.srt-tbl td.mn').forEach(function(td){
+    if(td.dataset.linked) return; td.dataset.linked='1';
+    var parts=td.textContent.split(/([·/→\s]+)/);
+    td.innerHTML=parts.map(function(t){
+      var k=t.trim();
+      return MN_MAP[k]?'<a href="'+MN_MAP[k]+'" style="color:#2563EB;text-decoration:none;font-weight:700" title="เปิด '+MN_MAP[k]+'">'+t+'</a>':t;
+    }).join('');
+  });
+
+  // เชื่อม §11 (flow detail) ↔ §12 (state×role)
+  window.goDetail=function(p){
+    var tab=document.querySelector('.dtab[data-p="'+p+'"]'); if(tab) tab.click();
+    var el=document.getElementById('detail'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+  window.goSRT=function(r){
+    var tab=document.querySelector('.rtab[data-r="'+r+'"]'); if(tab) tab.click();
+    var el=document.getElementById('srt'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  };
 </script>
 </body>
 </html>
